@@ -33,6 +33,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/tree.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -51,6 +57,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_struct_decl
+struct_decl|struct
+name|msdosfs_fileno
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/*  * Layout of the mount control block for a msdos filesystem.  */
@@ -216,6 +228,43 @@ modifier|*
 name|pm_d2u
 decl_stmt|;
 comment|/* DOS->Local iconv handle */
+name|u_int32_t
+name|pm_nfileno
+decl_stmt|;
+comment|/* next 32-bit fileno */
+name|RB_HEAD
+argument_list|(
+argument|msdosfs_filenotree
+argument_list|,
+argument|msdosfs_fileno
+argument_list|)
+name|pm_filenos
+expr_stmt|;
+comment|/* 64<->32-bit fileno mapping */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * A 64-bit file number and the 32-bit file number to which it is mapped,  * in a red-black tree node.  */
+end_comment
+
+begin_struct
+struct|struct
+name|msdosfs_fileno
+block|{
+name|RB_ENTRY
+argument_list|(
+argument|msdosfs_fileno
+argument_list|)
+name|mf_tree
+expr_stmt|;
+name|uint32_t
+name|mf_fileno32
+decl_stmt|;
+name|uint64_t
+name|mf_fileno64
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -570,6 +619,41 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|msdosfs_fileno_init
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|msdosfs_fileno_free
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|msdosfs_fileno_map
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|,
+name|uint64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -738,6 +822,17 @@ end_define
 
 begin_comment
 comment|/* FAT is mirrored */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSDOSFS_LARGEFS
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* perform fileno mapping */
 end_comment
 
 begin_define
