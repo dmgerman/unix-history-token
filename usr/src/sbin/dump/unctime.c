@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unctime.c	5.1 (Berkeley) %G%"
+literal|"@(#)unctime.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -41,6 +44,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -92,6 +107,14 @@ directive|define
 name|E_YEAR
 value|20
 end_define
+
+begin_function_decl
+specifier|static
+name|int
+name|lookup
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|time_t
@@ -169,15 +192,12 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-empty_stmt|;
-block|}
 name|then
 operator|.
 name|tm_mday
@@ -267,19 +287,17 @@ literal|"JanFebMarAprMayJunJulAugSepOctNovDec"
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|lookup
-argument_list|(
-argument|str
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|str
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|char
+modifier|*
+name|str
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -339,7 +357,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Routine to convert a localtime(3) format date back into  * a system format date.  *  *	Use a binary search.  */
@@ -350,6 +368,14 @@ name|struct
 name|tm
 modifier|*
 name|localtime
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|dcmp
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -461,24 +487,25 @@ define|\
 value|if (dp->a> dp2->a) \ 		return(1); \ 	if (dp->a< dp2->a) \ 		return(-1)
 end_define
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|dcmp
-argument_list|(
+parameter_list|(
 name|dp
-argument_list|,
+parameter_list|,
 name|dp2
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tm
-operator|*
+modifier|*
 name|dp
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|dp2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
