@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.2	%G%	*/
+comment|/*	uba.c	4.3	%G%	*/
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"../h/conf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/mtpr.h"
 end_include
 
 begin_comment
@@ -806,7 +812,7 @@ name|mfree
 argument_list|(
 name|bdpmap
 argument_list|,
-literal|15
+name|NUBABDP
 argument_list|,
 literal|1
 argument_list|)
@@ -857,6 +863,11 @@ operator|=
 name|spl6
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
 name|printf
 argument_list|(
 literal|"UBA RESET:"
@@ -893,6 +904,32 @@ operator|==
 literal|0
 condition|)
 empty_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX
+operator|==
+literal|750
+name|printf
+argument_list|(
+literal|"UNIBUS INIT:"
+argument_list|)
+expr_stmt|;
+name|mtpr
+argument_list|(
+name|IUR
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100000
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|cdp
