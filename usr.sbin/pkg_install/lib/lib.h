@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.4 1993/09/18 03:39:49 jkh Exp $ */
+comment|/* $Id: lib.h,v 1.5 1994/04/05 14:08:46 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -680,8 +680,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Boolean
-name|in_plist
+name|PackingList
+name|find_plist
 parameter_list|(
 name|Package
 modifier|*

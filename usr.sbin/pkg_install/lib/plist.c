@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: plist.c,v 1.4 1993/09/12 20:45:53 jkh Exp $"
+literal|"$Id: plist.c,v 1.5 1993/09/18 03:39:50 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -266,12 +266,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return whether or not there is an item of 'type' in the list */
+comment|/* Find a given item in a packing list and, if so, return it (else NULL) */
 end_comment
 
 begin_function
-name|Boolean
-name|in_plist
+name|PackingList
+name|find_plist
 parameter_list|(
 name|Package
 modifier|*
@@ -302,7 +302,7 @@ operator|==
 name|type
 condition|)
 return|return
-name|TRUE
+name|p
 return|;
 name|p
 operator|=
@@ -312,7 +312,7 @@ name|next
 expr_stmt|;
 block|}
 return|return
-name|FALSE
+name|NULL
 return|;
 block|}
 end_function
