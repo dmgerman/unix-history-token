@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)create.c	5.18 (Berkeley) %G%"
+literal|"@(#)create.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1122,6 +1122,8 @@ operator|=
 name|fts_children
 argument_list|(
 name|t
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|==
