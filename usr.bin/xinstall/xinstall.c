@@ -1950,7 +1950,7 @@ name|utb
 operator|.
 name|actime
 operator|=
-name|from_sb
+name|timestamp_sb
 operator|.
 name|st_atime
 expr_stmt|;
@@ -1958,7 +1958,7 @@ name|utb
 operator|.
 name|modtime
 operator|=
-name|from_sb
+name|timestamp_sb
 operator|.
 name|st_mtime
 expr_stmt|;
