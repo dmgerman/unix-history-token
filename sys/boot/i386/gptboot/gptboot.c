@@ -216,7 +216,7 @@ begin_define
 define|#
 directive|define
 name|RBX_MASK
-value|0xffff
+value|0x2000ffff
 end_define
 
 begin_define
