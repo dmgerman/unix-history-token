@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989  Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989  Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -877,6 +877,9 @@ parameter_list|)
 name|caddr_t
 name|v
 decl_stmt|;
+name|int
+name|b
+decl_stmt|;
 name|struct
 name|radix_node
 name|nodes
@@ -1416,6 +1419,11 @@ parameter_list|)
 name|caddr_t
 name|netmask
 decl_stmt|;
+name|int
+name|search
+decl_stmt|,
+name|skip
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1699,15 +1707,15 @@ name|head
 parameter_list|,
 name|treenodes
 parameter_list|)
+name|caddr_t
+name|v
+decl_stmt|,
+name|netmask
+decl_stmt|;
 name|struct
 name|radix_node
 modifier|*
 name|head
-decl_stmt|;
-name|caddr_t
-name|netmask
-decl_stmt|,
-name|v
 decl_stmt|;
 name|struct
 name|radix_node
