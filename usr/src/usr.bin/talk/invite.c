@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)invite.c	5.2 (Berkeley) %G%"
+literal|"@(#)invite.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -373,21 +373,24 @@ name|answers
 index|[]
 init|=
 block|{
+literal|"answer #0"
+block|,
+comment|/* SUCCESS */
 literal|"Your party is not logged on"
 block|,
 comment|/* NOT_HERE */
-literal|"Target machine does not recognize us"
-block|,
-comment|/* MACHINE_UNKNOWN */
-literal|"Target machine can not handle remote talk"
-block|,
-comment|/* UNKNOWN_REQUEST */
 literal|"Target machine is too confused to talk to us"
 block|,
 comment|/* FAILED */
+literal|"Target machine does not recognize us"
+block|,
+comment|/* MACHINE_UNKNOWN */
 literal|"Your party is refusing messages"
 block|,
 comment|/* PERMISSION_REFUSED */
+literal|"Target machine can not handle remote talk"
+block|,
+comment|/* UNKNOWN_REQUEST */
 literal|"Target machine indicates protocol mismatch"
 block|,
 comment|/* BADVERSION */
