@@ -42,6 +42,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/vmparam.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pc/bios.h>
 end_include
 
@@ -199,6 +217,9 @@ return|return
 operator|(
 operator|(
 name|u_int32_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|BIOS_VADDRTOPADDR
 argument_list|(

@@ -77,11 +77,19 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -157,10 +165,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* __i386__ */
-end_comment
 
 begin_include
 include|#
@@ -975,9 +979,17 @@ modifier|*
 name|values
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 name|u_int8_t
 name|shift
 decl_stmt|;
@@ -1073,15 +1085,8 @@ else|:
 literal|0
 operator|)
 expr_stmt|;
-name|values
-operator|->
-name|bell_pitch
-operator|=
-name|BELL_PITCH
-expr_stmt|;
 else|#
 directive|else
-comment|/* !__i386__ */
 name|values
 operator|->
 name|cursor_start
@@ -1100,15 +1105,14 @@ name|shift_state
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|values
 operator|->
 name|bell_pitch
 operator|=
 name|BELL_PITCH
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* __i386__ */
 block|}
 end_function
 
@@ -1120,9 +1124,17 @@ name|int
 name|herz
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 name|int
 name|pitch
 decl_stmt|;
@@ -1202,7 +1214,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* __i386__ */
 return|return
 literal|0
 return|;
