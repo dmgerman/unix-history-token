@@ -43,46 +43,14 @@ define|\
 value|"Copyright (c) 1994-2001 FreeBSD(98) porting team.\nCopyright (c) 1992  A.Kojima F.Ukai M.Ishii (KMC).\n"
 end_define
 
-begin_comment
-comment|/* HP + Motorola */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COPYRIGHT_HPFPLIB
-define|\
-value|"Copyright (c) 1992 Hewlett-Packard Company.\nCopyright (c) 1992 Motorola Inc.\nAll rights reserved.\n"
-end_define
-
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|HPFPLIB
-argument_list|)
-end_if
-
-begin_decl_stmt
-name|char
-name|copyright
-index|[]
-init|=
-name|COPYRIGHT_UCB
-comment|/**/
-name|COPYRIGHT_HPFPLIB
-decl_stmt|;
-end_decl_stmt
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
 name|PC98
 argument_list|)
-end_elif
+end_if
 
 begin_decl_stmt
 name|char
