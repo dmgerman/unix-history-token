@@ -762,7 +762,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"nindir\t%d\tinopb\t%d\tnspf\t%d\n"
+literal|"nindir\t%d\tinopb\t%d\tnspf\t%d\tmaxfilesize\t%qu\n"
 argument_list|,
 name|afs
 operator|.
@@ -775,6 +775,10 @@ argument_list|,
 name|afs
 operator|.
 name|fs_nspf
+argument_list|,
+name|afs
+operator|.
+name|fs_maxfilesize
 argument_list|)
 expr_stmt|;
 name|printf
