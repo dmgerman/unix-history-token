@@ -636,6 +636,8 @@ name|struct
 name|address_info
 modifier|*
 name|mpu_config
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|mpu_base
@@ -644,13 +646,12 @@ name|mpu_irq
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|mpu_config
-operator|=
+operator|!=
 name|NULL
-operator|)
 condition|)
 block|{
+comment|/* XXX dead code? */
 name|mpu_base
 operator|=
 name|mpu_config
