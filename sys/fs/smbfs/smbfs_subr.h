@@ -394,13 +394,6 @@ name|f_t2
 value|f_urq.uf_t2
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|smbfs_debuglevel
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * smb level  */
 end_comment

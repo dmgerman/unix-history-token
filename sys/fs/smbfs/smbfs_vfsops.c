@@ -141,6 +141,7 @@ file|<fs/smbfs/smbfs_subr.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|smbfs_debuglevel
 init|=
