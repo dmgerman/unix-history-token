@@ -1684,9 +1684,15 @@ name|retval
 operator|!=
 name|PAM_SUCCESS
 condition|)
+block|{
+name|retval
+operator|=
+name|PAM_CRED_UNAVAIL
+expr_stmt|;
 goto|goto
 name|cleanup3
 goto|;
+block|}
 name|krbret
 operator|=
 name|krb5_cc_resolve
@@ -1719,6 +1725,10 @@ argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+name|PAM_SERVICE_ERR
 expr_stmt|;
 goto|goto
 name|cleanup3
