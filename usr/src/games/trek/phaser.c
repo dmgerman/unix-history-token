@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)phaser.c	4.1	(Berkeley)	%G%"
+literal|"@(#)phaser.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,32 +100,40 @@ begin_comment
 comment|/* **  Phaser Control ** **	There are up to NBANKS phaser banks which may be fired **	simultaneously.  There are two modes, "manual" and **	"automatic".  In manual mode, you specify exactly which **	direction you want each bank to be aimed, the number **	of units to fire, and the spread angle.  In automatic **	mode, you give only the total number of units to fire. ** **	The spread is specified as a number between zero and **	one, with zero being minimum spread and one being maximum **	spread.  You  will normally want zero spread, unless your **	short range scanners are out, in which case you probably **	don't know exactly where the Klingons are.  In that case, **	you really don't have any choice except to specify a **	fairly large spread. ** **	Phasers spread slightly, even if you specify zero spread. ** **	Uses trace flag 30 */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|cvntab
 name|Matab
 index|[]
+init|=
 block|{
 literal|"m"
-operator|,
+block|,
 literal|"anual"
-operator|,
+block|,
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 literal|1
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|"a"
-operator|,
+block|,
 literal|"utomatic"
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
 block|}
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -134,10 +142,10 @@ block|{
 name|int
 name|units
 decl_stmt|;
-name|float
+name|double
 name|angle
 decl_stmt|;
-name|float
+name|double
 name|spread
 decl_stmt|;
 block|}
@@ -361,6 +369,9 @@ argument_list|)
 expr_stmt|;
 name|manual
 operator|=
+operator|(
+name|int
+operator|)
 name|ptr
 operator|->
 name|value
@@ -497,8 +508,7 @@ literal|0
 condition|)
 break|break;
 name|extra
-operator|=
-operator|+
+operator|+=
 name|hit
 expr_stmt|;
 if|if
@@ -585,8 +595,7 @@ block|}
 name|Ship
 operator|.
 name|energy
-operator|=
-operator|-
+operator|-=
 name|extra
 expr_stmt|;
 block|}
@@ -675,8 +684,7 @@ expr_stmt|;
 name|Ship
 operator|.
 name|energy
-operator|=
-operator|-
+operator|-=
 name|hit
 expr_stmt|;
 name|extra
@@ -766,8 +774,7 @@ name|EPSILON
 operator|)
 expr_stmt|;
 name|anglefactor
-operator|=
-operator|*
+operator|*=
 name|GAMMA
 expr_stmt|;
 name|distfactor
@@ -777,8 +784,7 @@ operator|->
 name|power
 expr_stmt|;
 name|distfactor
-operator|=
-operator|/
+operator|/=
 name|anglefactor
 expr_stmt|;
 name|hitreqd
@@ -875,8 +881,7 @@ block|}
 endif|#
 directive|endif
 name|extra
-operator|=
-operator|-
+operator|-=
 name|b
 operator|->
 name|units
@@ -900,15 +905,13 @@ literal|0
 condition|)
 block|{
 name|extra
-operator|=
-operator|+
+operator|+=
 name|hit
 expr_stmt|;
 name|b
 operator|->
 name|units
-operator|=
-operator|-
+operator|-=
 name|hit
 expr_stmt|;
 block|}
@@ -971,8 +974,7 @@ block|{
 name|b
 operator|->
 name|units
-operator|=
-operator|+
+operator|+=
 name|extra
 expr_stmt|;
 name|extra
@@ -991,8 +993,7 @@ name|i
 index|]
 expr_stmt|;
 name|extra
-operator|=
-operator|-
+operator|-=
 name|hit
 expr_stmt|;
 block|}
@@ -1175,8 +1176,7 @@ name|franf
 argument_list|()
 expr_stmt|;
 name|distfactor
-operator|=
-operator|*
+operator|*=
 name|ALPHA
 operator|+
 name|b
@@ -1184,8 +1184,7 @@ operator|->
 name|spread
 expr_stmt|;
 name|distfactor
-operator|=
-operator|*
+operator|*=
 name|OMEGA
 expr_stmt|;
 name|anglefactor
@@ -1195,8 +1194,7 @@ operator|->
 name|dist
 expr_stmt|;
 name|distfactor
-operator|=
-operator|/
+operator|/=
 name|anglefactor
 operator|*
 name|anglefactor
@@ -1204,8 +1202,7 @@ operator|+
 name|EPSILON
 expr_stmt|;
 name|distfactor
-operator|=
-operator|*
+operator|*=
 name|b
 operator|->
 name|units
@@ -1281,8 +1278,7 @@ expr_stmt|;
 name|k
 operator|->
 name|power
-operator|=
-operator|-
+operator|-=
 name|hit
 expr_stmt|;
 name|printf
@@ -1321,8 +1317,7 @@ expr_stmt|;
 name|b
 operator|->
 name|units
-operator|=
-operator|-
+operator|-=
 name|hit
 expr_stmt|;
 if|if
@@ -1367,8 +1362,7 @@ name|i
 operator|++
 control|)
 name|extra
-operator|=
-operator|+
+operator|+=
 name|bank
 index|[
 name|i

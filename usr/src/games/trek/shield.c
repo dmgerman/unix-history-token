@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shield.c	4.1	(Berkeley)	%G%"
+literal|"@(#)shield.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,32 +37,40 @@ begin_comment
 comment|/* **  SHIELD AND CLOAKING DEVICE CONTROL ** **	'f' is one for auto shield up (in case of Condition RED), **	zero for shield control, and negative one for cloaking **	device control. ** **	Called with an 'up' or 'down' on the same line, it puts **	the shields/cloak into the specified mode.  Otherwise it **	reports to the user the current mode, and asks if she wishes **	to change. ** **	This is not a free move.  Hits that occur as a result of **	this move appear as though the shields are half up/down, **	so you get partial hits. */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|cvntab
 name|Udtab
 index|[]
+init|=
 block|{
 literal|"u"
-operator|,
+block|,
 literal|"p"
-operator|,
+block|,
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 literal|1
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|"d"
-operator|,
+block|,
 literal|"own"
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
 block|}
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|shield
@@ -270,6 +278,9 @@ argument_list|)
 expr_stmt|;
 name|i
 operator|=
+operator|(
+name|int
+operator|)
 name|r
 operator|->
 name|value
@@ -282,11 +293,8 @@ condition|(
 operator|*
 name|stat
 condition|)
-name|printf
+name|sprintf
 argument_list|(
-operator|-
-literal|1
-argument_list|,
 name|s
 argument_list|,
 literal|"%s %s up.  Do you want %s down"
@@ -299,11 +307,8 @@ name|dev3
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|sprintf
 argument_list|(
-operator|-
-literal|1
-argument_list|,
 name|s
 argument_list|,
 literal|"%s %s down.  Do you want %s up"
@@ -376,8 +381,7 @@ condition|)
 name|Ship
 operator|.
 name|energy
-operator|=
-operator|-
+operator|-=
 name|Param
 operator|.
 name|shupengy
