@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_disksubr.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ufs_disksubr.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -31,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dir.h"
 end_include
 
 begin_include
@@ -491,27 +485,14 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|biowait
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_ERROR
 condition|)
 block|{
-name|u
-operator|.
-name|u_error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX */
 name|msg
 operator|=
 literal|"I/O error"
@@ -1104,37 +1085,18 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|=
 name|biowait
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_ERROR
 condition|)
-block|{
-name|error
-operator|=
-name|u
-operator|.
-name|u_error
-expr_stmt|;
-comment|/* XXX */
-name|u
-operator|.
-name|u_error
-operator|=
-literal|0
-expr_stmt|;
 goto|goto
 name|done
 goto|;
-block|}
 for|for
 control|(
 name|dlp
@@ -1238,34 +1200,13 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|biowait
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_ERROR
-condition|)
-block|{
-name|error
-operator|=
-name|u
-operator|.
-name|u_error
-expr_stmt|;
-comment|/* XXX */
-name|u
-operator|.
-name|u_error
-operator|=
-literal|0
-expr_stmt|;
-block|}
 goto|goto
 name|done
 goto|;
