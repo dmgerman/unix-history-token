@@ -222,7 +222,7 @@ begin_define
 define|#
 directive|define
 name|AUTHNAMELEN
-value|32
+value|42
 end_define
 
 begin_define
