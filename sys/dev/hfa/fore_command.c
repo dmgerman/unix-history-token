@@ -286,7 +286,7 @@ if|if
 condition|(
 name|pmemp
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 return|return
@@ -1280,7 +1280,7 @@ name|fup
 operator|->
 name|fu_cmd_statd
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 return|return;

@@ -272,7 +272,7 @@ if|if
 condition|(
 name|pmemp
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 return|return
@@ -360,7 +360,7 @@ name|hxp
 operator|->
 name|hxq_descr_dma
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 return|return
@@ -1012,7 +1012,7 @@ name|fup
 operator|->
 name|fu_xmit_statd
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Free the transmit descriptors 	 */
@@ -1051,7 +1051,7 @@ name|hxp
 operator|->
 name|hxq_descr_dma
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 if|if

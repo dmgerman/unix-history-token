@@ -1292,7 +1292,7 @@ if|if
 condition|(
 name|dma
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|fup
