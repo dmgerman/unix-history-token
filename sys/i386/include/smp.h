@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.5 1997/07/06 23:36:49 smp Exp smp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.6 1997/07/08 23:29:48 smp Exp smp $  *  */
 end_comment
 
 begin_ifndef
@@ -569,7 +569,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|configure_local_apic
+name|bsp_apic_configure
 name|__P
 argument_list|(
 operator|(
@@ -688,7 +688,7 @@ name|apic_initialize
 name|__P
 argument_list|(
 operator|(
-name|int
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
