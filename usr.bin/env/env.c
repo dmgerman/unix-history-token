@@ -153,7 +153,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-"
+literal|"-i"
 argument_list|)
 operator|)
 operator|!=
@@ -167,6 +167,9 @@ condition|)
 block|{
 case|case
 literal|'-'
+case|:
+case|case
+literal|'i'
 case|:
 name|environ
 operator|=
@@ -295,7 +298,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: env [-] [name=value ...] [command]\n"
+literal|"usage: env [-] [-i] [name=value ...] [command]\n"
 argument_list|)
 expr_stmt|;
 name|exit
