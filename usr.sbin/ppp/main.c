@@ -1790,13 +1790,12 @@ name|sw
 operator|.
 name|nat
 condition|)
+name|opt_enable
+argument_list|(
 name|bundle
-operator|->
-name|cfg
-operator|.
-name|opt
-operator||=
+argument_list|,
 name|OPT_IFACEALIAS
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

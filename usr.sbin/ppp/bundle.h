@@ -66,14 +66,14 @@ begin_define
 define|#
 directive|define
 name|OPT_FILTERDECAP
-value|0x0001
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_FORCE_SCRIPTS
-value|0x0002
+value|2
 end_define
 
 begin_comment
@@ -84,14 +84,14 @@ begin_define
 define|#
 directive|define
 name|OPT_IDCHECK
-value|0x0004
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_IFACEALIAS
-value|0x0008
+value|4
 end_define
 
 begin_ifndef
@@ -104,14 +104,14 @@ begin_define
 define|#
 directive|define
 name|OPT_IPCP
-value|0x0010
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_IPV6CP
-value|0x0020
+value|6
 end_define
 
 begin_endif
@@ -123,63 +123,84 @@ begin_define
 define|#
 directive|define
 name|OPT_KEEPSESSION
-value|0x0040
+value|7
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_LOOPBACK
-value|0x0080
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_NAS_IP_ADDRESS
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_NAS_IDENTIFIER
+value|10
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_PASSWDAUTH
-value|0x0100
+value|11
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_PROXY
-value|0x0200
+value|12
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_PROXYALL
-value|0x0400
+value|13
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_SROUTES
-value|0x0800
+value|14
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_TCPMSSFIXUP
-value|0x1000
+value|15
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_THROUGHPUT
-value|0x2000
+value|16
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_UTMP
-value|0x4000
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_MAX
+value|17
 end_define
 
 begin_define
@@ -198,7 +219,31 @@ name|b
 parameter_list|,
 name|o
 parameter_list|)
-value|((b)->cfg.opt& (o))
+value|((b)->cfg.optmask& (1ull<< (o)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|opt_enable
+parameter_list|(
+name|b
+parameter_list|,
+name|o
+parameter_list|)
+value|((b)->cfg.optmask |= (1ull<< (o)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|opt_disable
+parameter_list|(
+name|b
+parameter_list|,
+name|o
+parameter_list|)
+value|((b)->cfg.optmask&= ~(1ull<< (o)))
 end_define
 
 begin_comment
@@ -389,7 +434,9 @@ block|}
 name|auth
 struct|;
 name|unsigned
-name|opt
+name|long
+name|long
+name|optmask
 decl_stmt|;
 comment|/* Uses OPT_ bits from above */
 name|char
