@@ -3178,13 +3178,6 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* client */
-name|pos
-operator|+=
-name|xprintf
-argument_list|(
-literal|"-> "
-argument_list|)
-expr_stmt|;
 name|p
 operator|=
 operator|*
@@ -3197,6 +3190,29 @@ operator|&
 name|s
 operator|->
 name|faddr
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+name|pos
+operator|+=
+name|xprintf
+argument_list|(
+literal|"(not connected)"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|pos
+operator|+=
+name|xprintf
+argument_list|(
+literal|"-> "
+argument_list|)
 expr_stmt|;
 for|for
 control|(
