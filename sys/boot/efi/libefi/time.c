@@ -1,10 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*  * Copyright (c) 1999, 2000  * Intel Corporation.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *   *    This product includes software developed by Intel Corporation and  *    its contributors.  *   * 4. Neither the name of Intel Corporation or its contributors may be  *    used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY INTEL CORPORATION AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL INTEL CORPORATION OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *   */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Copyright (c) 1999, 2000  * Intel Corporation.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *   *    This product includes software developed by Intel Corporation and  *    its contributors.  *   * 4. Neither the name of Intel Corporation or its contributors may be  *    used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY INTEL CORPORATION AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL INTEL CORPORATION OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *   */
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -32,27 +54,7 @@ file|<sys/time.h>
 end_include
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Accurate only for the past couple of centuries;
-end_comment
-
-begin_comment
-comment|// that will probably do.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// (#defines From FreeBSD 3.2 lib/libc/stdtime/tzfile.h)
-end_comment
-
-begin_comment
-comment|//
+comment|/* // Accurate only for the past couple of centuries; // that will probably do. // // (#defines From FreeBSD 3.2 lib/libc/stdtime/tzfile.h) */
 end_comment
 
 begin_define
@@ -88,11 +90,7 @@ modifier|*
 name|ETime
 parameter_list|)
 block|{
-comment|//
-comment|//  These arrays give the cumulative number of days up to the first of the
-comment|//  month number used as the index (1 -> 12) for regular and leap years.
-comment|//  The value at index 13 is for the whole year.
-comment|//
+comment|/*     //  These arrays give the cumulative number of days up to the first of the     //  month number used as the index (1 -> 12) for regular and leap years.     //  The value at index 13 is for the whole year.     */
 specifier|static
 name|time_t
 name|CumulativeDays
@@ -435,9 +433,7 @@ decl_stmt|;
 name|int
 name|Year
 decl_stmt|;
-comment|//
-comment|//  Do a santity check
-comment|//
+comment|/*     //  Do a santity check     */
 if|if
 condition|(
 name|ETime
@@ -522,9 +518,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|//
-comment|// Years
-comment|//
+comment|/*     // Years     */
 name|UTime
 operator|=
 literal|0
@@ -563,11 +557,7 @@ name|SECSPERDAY
 operator|)
 expr_stmt|;
 block|}
-comment|//
-comment|// UTime should now be set to 00:00:00 on Jan 1 of the file's year.
-comment|//
-comment|// Months
-comment|//
+comment|/*     // UTime should now be set to 00:00:00 on Jan 1 of the file's year.     //     // Months       */
 name|UTime
 operator|+=
 operator|(
@@ -589,11 +579,7 @@ operator|*
 name|SECSPERDAY
 operator|)
 expr_stmt|;
-comment|//
-comment|// UTime should now be set to 00:00:00 on the first of the file's month and year
-comment|//
-comment|// Days -- Don't count the file's day
-comment|//
+comment|/*     // UTime should now be set to 00:00:00 on the first of the file's month and year     //     // Days -- Don't count the file's day     */
 name|UTime
 operator|+=
 operator|(
@@ -618,9 +604,7 @@ operator|*
 name|SECSPERDAY
 operator|)
 expr_stmt|;
-comment|//
-comment|// Hours
-comment|//
+comment|/*     // Hours     */
 name|UTime
 operator|+=
 operator|(
@@ -631,9 +615,7 @@ operator|*
 name|SECSPERHOUR
 operator|)
 expr_stmt|;
-comment|//
-comment|// Minutes
-comment|//
+comment|/*     // Minutes     */
 name|UTime
 operator|+=
 operator|(
@@ -644,19 +626,14 @@ operator|*
 literal|60
 operator|)
 expr_stmt|;
-comment|//
-comment|// Seconds
-comment|//
+comment|/*     // Seconds     */
 name|UTime
 operator|+=
 name|ETime
 operator|->
 name|Second
 expr_stmt|;
-comment|//
-comment|//  EFI time is repored in local time.  Adjust for any time zone offset to
-comment|//  get true UT
-comment|//
+comment|/*     //  EFI time is repored in local time.  Adjust for any time zone offset to     //  get true UT     */
 if|if
 condition|(
 name|ETime
@@ -666,9 +643,7 @@ operator|!=
 name|EFI_UNSPECIFIED_TIMEZONE
 condition|)
 block|{
-comment|//
-comment|//  TimeZone is kept in minues...
-comment|//
+comment|/*     	//  TimeZone is kept in minues...     	*/
 name|UTime
 operator|+=
 operator|(
@@ -712,9 +687,7 @@ decl_stmt|;
 name|EFI_STATUS
 name|Status
 decl_stmt|;
-comment|//
-comment|//  Get time from EFI
-comment|//
+comment|/* 	//  Get time from EFI 	*/
 name|Status
 operator|=
 name|RS
@@ -741,9 +714,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|//
-comment|//  Convert to UNIX time (ie seconds since the epoch
-comment|//
+comment|/* 	//  Convert to UNIX time (ie seconds since the epoch 	*/
 name|tp
 operator|->
 name|tv_sec
@@ -760,10 +731,8 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
-comment|// EfiTime.Nanosecond * 1000;
-comment|//
-comment|//  Do something with the timezone if needed
-comment|//
+comment|/* EfiTime.Nanosecond * 1000; */
+comment|/* 	//  Do something with the timezone if needed 	*/
 if|if
 condition|(
 name|tzp
@@ -785,9 +754,7 @@ name|EfiTime
 operator|.
 name|TimeZone
 expr_stmt|;
-comment|//
-comment|//  This isn't quit right since it doesn't deal with EFI_TIME_IN_DAYLIGHT
-comment|//
+comment|/* 		//  This isn't quit right since it doesn't deal with EFI_TIME_IN_DAYLIGHT 		*/
 name|tzp
 operator|->
 name|tz_dsttime
