@@ -2261,7 +2261,7 @@ name|free
 argument_list|(
 name|ftmp
 argument_list|,
-name|M_SOOPTS
+name|M_IPFW
 argument_list|)
 expr_stmt|;
 block|}
@@ -2375,7 +2375,7 @@ expr|struct
 name|ip_fw
 argument_list|)
 argument_list|,
-name|M_SOOPTS
+name|M_IPFW
 argument_list|,
 name|M_DONTWAIT
 argument_list|)
@@ -3345,7 +3345,7 @@ name|free
 argument_list|(
 name|ftmp
 argument_list|,
-name|M_SOOPTS
+name|M_IPFW
 argument_list|)
 expr_stmt|;
 name|ftmp
@@ -3368,7 +3368,7 @@ name|free
 argument_list|(
 name|ftmp
 argument_list|,
-name|M_SOOPTS
+name|M_IPFW
 argument_list|)
 expr_stmt|;
 name|ftmp
