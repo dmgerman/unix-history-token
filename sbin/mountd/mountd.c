@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.27 1997/12/13 19:50:14 guido Exp $"
+literal|"$Id: mountd.c,v 1.28 1998/01/20 15:22:27 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5106,6 +5106,24 @@ condition|(
 name|netgrp
 condition|)
 block|{
+if|if
+condition|(
+name|hst
+operator|==
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Null hostname in netgroup %s, skipping"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|get_host
