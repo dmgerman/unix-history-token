@@ -9497,7 +9497,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Free any directory additions that have been committed. 	 */
+comment|/* 	 * If the pagedep is still linked onto the directory buffer 	 * dependency chain, then some of the entries on the 	 * pd_pendinghd list may not be committed to disk yet. In 	 * this case, we will simply clear the NEWBLOCK flag and 	 * let the pd_pendinghd list be processed when the pagedep 	 * is next written. If the pagedep is no longer on the buffer 	 * dependency chain, then all the entries on the pd_pending 	 * list are committed to disk and we can free them here. 	 */
 name|pagedep
 operator|=
 name|newdirblk
@@ -9511,6 +9511,18 @@ operator|&=
 operator|~
 name|NEWBLOCK
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pagedep
+operator|->
+name|pd_state
+operator|&
+name|ONWORKLIST
+operator|)
+operator|==
+literal|0
+condition|)
 while|while
 condition|(
 operator|(
