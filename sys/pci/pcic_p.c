@@ -904,6 +904,14 @@ operator|=
 literal|"Ricoh RL5C478 PCI-CardBus Bridge"
 expr_stmt|;
 break|break;
+case|case
+name|PCI_DEVICE_ID_PCIC_OZ6832
+case|:
+name|desc
+operator|=
+literal|"O2micro 6832 PCI-Cardbus Bridge"
+expr_stmt|;
+break|break;
 comment|/* 16bit PC-card bridges */
 case|case
 name|PCI_DEVICE_ID_PCIC_CLPD6729
@@ -958,7 +966,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * General PCI based card dispatch routine.  Right now  * it only understands the CL-PD6832.  */
+comment|/*  * General PCI based card dispatch routine.  Right now  * it only understands the CL-PD6832 and TI parts.  It does  * try to do generic things with other parts.  */
 end_comment
 
 begin_function
