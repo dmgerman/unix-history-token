@@ -133,6 +133,18 @@ begin_comment
 comment|/* Delete deltas after ctm applies them. */
 end_comment
 
+begin_decl_stmt
+name|int
+name|apply_verbose
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Run with '-v' */
+end_comment
+
 begin_function_decl
 name|void
 name|apply_complete
@@ -278,6 +290,12 @@ argument_list|(
 literal|'f'
 argument_list|,
 argument|fork_ctm
+argument_list|)
+name|FLAG
+argument_list|(
+literal|'v'
+argument_list|,
+argument|apply_verbose
 argument_list|)
 name|STRING
 argument_list|(
@@ -727,9 +745,15 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"(cd %s&& ctm %s%s) 2>&1"
+literal|"(cd %s&& ctm %s%s%s) 2>&1"
 argument_list|,
 name|base_dir
+argument_list|,
+name|apply_verbose
+condition|?
+literal|"-v "
+else|:
+literal|""
 argument_list|,
 name|here
 argument_list|,
