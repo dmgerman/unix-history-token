@@ -211,14 +211,6 @@ operator|(
 name|size_t
 operator|)
 operator|-
-literal|2
-operator|||
-name|nconv
-operator|==
-operator|(
-name|size_t
-operator|)
-operator|-
 literal|1
 condition|)
 break|break;
