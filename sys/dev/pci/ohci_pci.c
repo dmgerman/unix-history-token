@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	FreeBSD $Id: ohci_pci.c,v 1.8 1999/01/06 19:55:49 n_hibma Exp $ */
+comment|/*	$FreeBSD$ */
 end_comment
 
 begin_comment
@@ -465,9 +465,6 @@ modifier|*
 name|sc
 init|=
 name|NULL
-decl_stmt|;
-name|int
-name|rev
 decl_stmt|;
 name|vm_offset_t
 name|pbase
