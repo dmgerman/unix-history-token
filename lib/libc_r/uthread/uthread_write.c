@@ -360,6 +360,13 @@ name|ret
 operator|=
 name|n
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+break|break;
 comment|/* Check if the write has completed: */
 block|}
 elseif|else
