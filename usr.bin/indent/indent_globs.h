@@ -944,6 +944,10 @@ name|decl_indent
 decl_stmt|;
 comment|/* column to indent declared identifiers to */
 name|int
+name|local_decl_indent
+decl_stmt|;
+comment|/* like decl_indent but for locals */
+name|int
 name|its_a_keyword
 decl_stmt|;
 name|int

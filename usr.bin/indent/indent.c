@@ -682,6 +682,14 @@ expr_stmt|;
 comment|/* -di16 */
 name|ps
 operator|.
+name|local_decl_indent
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* if this is not set to some nonnegative value 				 * by an arg, we will set this equal to 				 * ps.decl_ind */
+name|ps
+operator|.
 name|indent_parameters
 operator|=
 literal|1
@@ -1183,6 +1191,23 @@ condition|)
 name|block_comment_max_col
 operator|=
 name|max_col
+expr_stmt|;
+if|if
+condition|(
+name|ps
+operator|.
+name|local_decl_indent
+operator|<
+literal|0
+condition|)
+comment|/* if not specified by user, set this */
+name|ps
+operator|.
+name|local_decl_indent
+operator|=
+name|ps
+operator|.
+name|decl_indent
 expr_stmt|;
 if|if
 condition|(
@@ -4188,6 +4213,22 @@ condition|;
 control|)
 empty_stmt|;
 comment|/* get length of token */
+if|if
+condition|(
+name|ps
+operator|.
+name|ind_level
+operator|==
+literal|0
+operator|||
+name|ps
+operator|.
+name|dec_nest
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* global variable or struct member in local variable */
 name|dec_ind
 operator|=
 name|ps
@@ -4210,6 +4251,33 @@ name|decl_indent
 operator|>
 literal|0
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* local variable */
+name|dec_ind
+operator|=
+name|ps
+operator|.
+name|local_decl_indent
+operator|>
+literal|0
+condition|?
+name|ps
+operator|.
+name|local_decl_indent
+else|:
+name|i
+expr_stmt|;
+name|use_tabs
+operator|=
+name|ps
+operator|.
+name|local_decl_indent
+operator|>
+literal|0
+expr_stmt|;
+block|}
 goto|goto
 name|copy_id
 goto|;
