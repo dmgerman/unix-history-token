@@ -3308,7 +3308,9 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|uma_zone_t
+name|struct
+name|uma_zone
+modifier|*
 name|proc_zone
 decl_stmt|;
 end_decl_stmt
