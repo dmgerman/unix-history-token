@@ -4482,8 +4482,6 @@ goto|goto
 name|outunlocked
 goto|;
 block|}
-else|else
-block|{
 name|INP_LOCK
 argument_list|(
 name|inp
@@ -4505,7 +4503,6 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
-block|}
 block|}
 name|error
 operator|=
@@ -4874,8 +4871,6 @@ goto|goto
 name|outunlocked
 goto|;
 block|}
-else|else
-block|{
 name|INP_LOCK
 argument_list|(
 name|inp
@@ -4897,7 +4892,6 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
-block|}
 block|}
 name|error
 operator|=
