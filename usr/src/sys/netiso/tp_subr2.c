@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_subr2.c,v 5.5 88/11/18 17:28:55 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_subr2.c,v $  *	@(#)tp_subr2.c	7.3 (Berkeley) %G% *  *  * Some auxiliary routines:  * 		tp_protocol_error: required by xebec- called when a combo of state,  *			event, predicate isn't covered for by the transition file.  *		tp_indicate: gives indications(signals) to the user process  *		tp_getoptions: initializes variables that are affected by the options  *          chosen.  */
+comment|/*   * ARGO TP  *  * $Header: tp_subr2.c,v 5.5 88/11/18 17:28:55 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_subr2.c,v $  *	@(#)tp_subr2.c	7.4 (Berkeley) %G%  *  * Some auxiliary routines:  * 		tp_protocol_error: required by xebec- called when a combo of state,  *			event, predicate isn't covered for by the transition file.  *		tp_indicate: gives indications(signals) to the user process  *		tp_getoptions: initializes variables that are affected by the options  *          chosen.  */
 end_comment
 
 begin_ifndef
@@ -412,7 +412,7 @@ name|ind
 argument_list|,
 operator|*
 operator|(
-name|int
+name|u_short
 operator|*
 operator|)
 operator|(
@@ -423,7 +423,7 @@ operator|)
 argument_list|,
 operator|*
 operator|(
-name|int
+name|u_short
 operator|*
 operator|)
 operator|(
@@ -736,7 +736,7 @@ name|tp_lref
 argument_list|,
 operator|*
 operator|(
-name|int
+name|u_short
 operator|*
 operator|)
 operator|(
