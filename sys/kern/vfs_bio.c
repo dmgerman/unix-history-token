@@ -7346,6 +7346,12 @@ name|char
 modifier|*
 name|waitmsg
 decl_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bqlock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|defrag
