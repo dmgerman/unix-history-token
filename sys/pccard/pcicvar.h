@@ -188,14 +188,6 @@ name|device_t
 name|dev
 decl_stmt|;
 comment|/* Our device */
-name|bus_space_tag_t
-name|bst
-decl_stmt|;
-comment|/* Bus tag for our regs */
-name|bus_space_handle_t
-name|bsh
-decl_stmt|;
-comment|/* Bus handle for our regs */
 name|void
 function_decl|(
 modifier|*
@@ -228,6 +220,13 @@ begin_decl_stmt
 specifier|extern
 name|devclass_t
 name|pcic_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pcic_override_irq
 decl_stmt|;
 end_decl_stmt
 
@@ -457,17 +456,10 @@ name|rid
 parameter_list|,
 name|u_int32_t
 name|offset
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 parameter_list|,
 name|u_int32_t
 modifier|*
 name|deltap
-endif|#
-directive|endif
 parameter_list|)
 function_decl|;
 end_function_decl
