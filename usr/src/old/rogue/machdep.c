@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)machdep.c	5.1 (Berkeley) %G%"
+literal|"@(#)machdep.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"extern.h"
+file|"machdep.h"
 end_include
 
 begin_include
@@ -96,12 +96,6 @@ directive|ifdef
 name|SCOREFILE
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCK_EX
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -111,11 +105,6 @@ init|=
 literal|"/tmp/.fredlock"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -575,6 +564,16 @@ name|Ltc
 operator|.
 name|t_dsuspc
 expr_stmt|;
+if|if
+condition|(
+name|Orig_dsusp
+operator|==
+name|CTRL
+argument_list|(
+name|Y
+argument_list|)
+condition|)
+block|{
 name|Ltc
 operator|.
 name|t_dsuspc
@@ -593,6 +592,7 @@ operator|&
 name|Ltc
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|TIOCGLTC
