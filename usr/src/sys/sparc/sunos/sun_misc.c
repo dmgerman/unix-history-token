@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sun_misc.c	8.2 (Berkeley) %G%  *  * from: $Header: sun_misc.c,v 1.16 93/04/07 02:46:27 torek Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sun_misc.c	8.3 (Berkeley) %G%  *  * from: $Header: sun_misc.c,v 1.16 93/04/07 02:46:27 torek Exp $  */
 end_comment
 
 begin_comment
@@ -1342,6 +1342,14 @@ name|f_cred
 argument_list|,
 operator|&
 name|eofflag
+argument_list|,
+operator|(
+name|u_long
+operator|*
+operator|)
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 goto|goto
