@@ -357,6 +357,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVFS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -375,6 +381,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -5723,6 +5734,12 @@ comment|/* DEVFS */
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVFS
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -5741,9 +5758,6 @@ modifier|*
 name|ssp
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|DEVFS
 name|struct
 name|disklabel
 modifier|*
@@ -5995,11 +6009,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* DEVFS */
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEVFS */
+end_comment
 
 begin_function
 specifier|static
