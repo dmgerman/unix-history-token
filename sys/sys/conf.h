@@ -1071,20 +1071,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|devtoname
-parameter_list|(
-name|struct
-name|cdev
-modifier|*
-name|_dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dev_named
 parameter_list|(
