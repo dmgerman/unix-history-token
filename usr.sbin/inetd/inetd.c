@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.41 1998/11/04 19:39:46 phk Exp $"
+literal|"$Id: inetd.c,v 1.44 1998/12/28 15:09:43 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2293,10 +2293,23 @@ argument_list|,
 operator|&
 name|n
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"ioctl: %m"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|--
@@ -2322,10 +2335,23 @@ name|c
 argument_list|,
 literal|1
 argument_list|)
-operator|==
+operator|!=
 literal|1
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"read: %m"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|debug
@@ -2367,38 +2393,6 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-block|}
-else|else
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"read: %m"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_OSERR
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-else|else
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"ioctl: %m"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_OSERR
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 for|for
