@@ -409,23 +409,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * NOTE: Leave the RCS ID _after_ __start(), in case it gets placed in .text.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_asm
+asm|__asm__(".ident\t\"$FreeBSD$\"");
+end_asm
 
 end_unit
 
