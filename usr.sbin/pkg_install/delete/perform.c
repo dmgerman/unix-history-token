@@ -743,6 +743,8 @@ argument_list|(
 literal|2
 argument_list|,
 literal|"unable to return to working directory %s!"
+argument_list|,
+name|home
 argument_list|)
 expr_stmt|;
 block|}
@@ -875,6 +877,8 @@ argument_list|(
 literal|2
 argument_list|,
 literal|"unable to return to working directory %s!"
+argument_list|,
+name|home
 argument_list|)
 expr_stmt|;
 block|}
