@@ -102,7 +102,7 @@ argument|regs
 argument_list|,
 argument|REGS
 argument_list|,
-argument|u_int *
+argument|struct macio_reg *
 argument_list|)
 end_macro
 
@@ -111,17 +111,6 @@ undef|#
 directive|undef
 name|MACIO_ACCESSOR
 end_undef
-
-begin_comment
-comment|/*  * Upper limit on OpenFirmware reg array  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MACIO_MAXREG
-value|16
-end_define
 
 begin_comment
 comment|/*  * The addr space size  * XXX it would be better if this could be determined by querying the  *     PCI device, but there isn't an access method for this  */
@@ -154,6 +143,24 @@ decl_stmt|;
 name|struct
 name|rman
 name|sc_mem_rman
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Format of a macio reg property entry.  */
+end_comment
+
+begin_struct
+struct|struct
+name|macio_reg
+block|{
+name|u_int32_t
+name|mr_base
+decl_stmt|;
+name|u_int32_t
+name|mr_size
 decl_stmt|;
 block|}
 struct|;
@@ -193,11 +200,10 @@ decl_stmt|;
 name|int
 name|mdi_nregs
 decl_stmt|;
-name|u_int
-name|mdi_reg
-index|[
-name|MACIO_MAXREG
-index|]
+name|struct
+name|macio_reg
+modifier|*
+name|mdi_regs
 decl_stmt|;
 name|struct
 name|resource_list

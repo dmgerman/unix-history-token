@@ -256,7 +256,7 @@ parameter_list|,
 name|bshp
 parameter_list|)
 define|\
-value|((*(bshp) = (bus_space_handle_t)__ppc_ba(t, bsh, offset)), 0)
+value|((*(bshp) = (bus_space_handle_t)__ppc_ba(	\ 	    (t& ~PPC_BUS_MEM_MASK), bsh, offset)), 0)
 end_define
 
 begin_comment
