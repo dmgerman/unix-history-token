@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	5.2 (Berkeley) %G%"
+literal|"@(#)file.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1005,6 +1005,34 @@ block|}
 break|break;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|MID_MIPSI
+case|case
+name|MID_MIPSI
+case|:
+name|printf
+argument_list|(
+literal|"MIPS R3000 "
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MID_MIPSII
+case|case
+name|MID_MIPSII
+case|:
+name|printf
+argument_list|(
+literal|"MIPS R4000 "
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 if|#
 directive|if
 name|BYTE_ORDER
@@ -1091,9 +1119,9 @@ literal|8
 operator|)
 expr_stmt|;
 break|break;
-block|}
 endif|#
 directive|endif
+block|}
 endif|#
 directive|endif
 comment|/* MID_ZERO, a_mid */
