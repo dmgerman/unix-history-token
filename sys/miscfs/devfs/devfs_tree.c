@@ -7,7 +7,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.40 1997/09/07 16:20:50 bde Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.41 1997/09/16 09:10:18 julian Exp $  */
 end_comment
 
 begin_include
@@ -2278,7 +2278,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * then free the main node 	 */
+comment|/* 	 * then free the main node 	 * If we are not running in SPLIT_DEVS mode, then 	 * THIS is what gets rid of the propogated nodes. 	 */
+while|while
+condition|(
+name|dnp
+operator|->
+name|linklist
+condition|)
+block|{
+name|dev_free_name
+argument_list|(
+name|dnp
+operator|->
+name|linklist
+argument_list|)
+expr_stmt|;
+block|}
 name|dev_free_name
 argument_list|(
 operator|(
