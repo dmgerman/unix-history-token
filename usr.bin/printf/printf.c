@@ -492,10 +492,6 @@ block|{
 name|warnx
 argument_list|(
 literal|"missing format character"
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -722,10 +718,6 @@ block|{
 name|warnx
 argument_list|(
 literal|"missing format character"
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -905,8 +897,6 @@ argument_list|(
 literal|"illegal format character %c"
 argument_list|,
 name|convch
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -1481,8 +1471,6 @@ literal|"%s: illegal number"
 argument_list|,
 operator|*
 name|gargv
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 return|return
