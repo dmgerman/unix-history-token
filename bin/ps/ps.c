@@ -148,6 +148,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nlist.h>
 end_include
 
@@ -179,12 +185,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<locale.h>
 end_include
 
 begin_include
@@ -1149,7 +1149,7 @@ name|ttypath
 decl_stmt|,
 name|pathbuf
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 if|if
