@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vmparam.h	5.9 (Berkeley) 5/12/91  *	$Id: vmparam.h,v 1.18 1995/05/25 07:41:28 davidg Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vmparam.h	5.9 (Berkeley) 5/12/91  *	$Id: vmparam.h,v 1.19 1996/03/12 15:37:58 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -194,32 +194,63 @@ value|20
 end_define
 
 begin_comment
-comment|/*  * Mach derived constants  */
-end_comment
-
-begin_comment
-comment|/* user/kernel map constants */
+comment|/*  * Virtual addresses of things.  Derived from the page directory and  * page table indexes from pmap.h for precision.  * Because of the page that is both a PD and PT, it looks a little  * messy at times, but hey, we'll do anything to save a page :-)  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|KERNBASE
-value|((0x400-1-NKPDE)*(NBPG*NPTEPG))
+name|VM_MAX_KERNEL_ADDRESS
+value|VADDR(KPTDI+NKPDE, 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_MIN_ADDRESS
-value|((vm_offset_t)0)
+name|VM_MIN_KERNEL_ADDRESS
+value|VADDR(PTDPTDI, PTDPTDI)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNBASE
+value|VADDR(KPTDI, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KPT_MAX_ADDRESS
+value|VADDR(PTDPTDI, APTDPTDI)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KPT_MIN_ADDRESS
+value|VADDR(PTDPTDI, KPTDI)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UPT_MAX_ADDRESS
+value|VADDR(PTDPTDI, PTDPTDI)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UPT_MIN_ADDRESS
+value|VADDR(PTDPTDI, 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
-value|((vm_offset_t)KERNBASE - (NBPG*(NPTEPG+UPAGES)))
+value|VADDR(KSTKPTDI, KSTKPTEOFF)
 end_define
 
 begin_define
@@ -232,57 +263,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|UPT_MIN_ADDRESS
-value|((vm_offset_t)KERNBASE - (NBPG*NPTEPG))
-end_define
-
-begin_define
-define|#
-directive|define
-name|UPT_MAX_ADDRESS
-value|((vm_offset_t)KERNBASE - (NBPG*(NKPDE+2)))
-end_define
-
-begin_define
-define|#
-directive|define
 name|VM_MAX_ADDRESS
-value|UPT_MAX_ADDRESS
+value|VADDR(PTDPTDI, PTDPTDI)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_MIN_KERNEL_ADDRESS
-value|((vm_offset_t)KERNBASE - (NBPG*(NKPDE+2)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|UPDT
-value|VM_MIN_KERNEL_ADDRESS
-end_define
-
-begin_define
-define|#
-directive|define
-name|KPT_MIN_ADDRESS
-value|((vm_offset_t)KERNBASE - NBPG*(NKPDE+1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|KPT_MAX_ADDRESS
-value|((vm_offset_t)KERNBASE - NBPG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_MAX_KERNEL_ADDRESS
-value|((vm_offset_t)KERNBASE + NKPDE*NBPG*NPTEPG)
+name|VM_MIN_ADDRESS
+value|((vm_offset_t)0)
 end_define
 
 begin_comment
