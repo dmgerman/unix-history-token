@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	1.24 (Berkeley) %G%"
+literal|"@(#)commands.c	1.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,6 +221,37 @@ end_endif
 begin_comment
 comment|/* SRCRT */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CRAY
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|IP_TOS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAS_IP_TOS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAS_IP_TOS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|char
@@ -7355,11 +7386,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|IP_TOS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
 name|NEED_GETTOS
 argument_list|)
 end_if
@@ -7551,9 +7577,17 @@ name|srlen
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|IP_TOS
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAS_IP_TOS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NEED_GETTOS
+argument_list|)
 name|struct
 name|tosent
 modifier|*
@@ -7561,7 +7595,7 @@ name|tp
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* IP_TOS */
+comment|/* defined(HAS_IP_TOS) || defined(NEED_GETTOS) */
 if|if
 condition|(
 name|connected
@@ -8233,9 +8267,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|IP_TOS
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAS_IP_TOS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NEED_GETTOS
+argument_list|)
 if|if
 condition|(
 operator|(
@@ -8279,7 +8321,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* IP_TOS */
+comment|/* defined(HAS_IP_TOS) || defined(NEED_GETTOS) */
 if|if
 condition|(
 name|debug
