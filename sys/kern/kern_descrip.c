@@ -492,7 +492,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|openfiles
+name|nfiles
 decl_stmt|;
 end_decl_stmt
 
@@ -6012,7 +6012,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|openfiles
+name|nfiles
 operator|>=
 name|maxuserfiles
 operator|&&
@@ -6034,7 +6034,7 @@ argument_list|)
 operator|)
 operator|)
 operator|||
-name|openfiles
+name|nfiles
 operator|>=
 name|maxfiles
 condition|)
@@ -6084,7 +6084,7 @@ name|ENFILE
 operator|)
 return|;
 block|}
-name|openfiles
+name|nfiles
 operator|++
 expr_stmt|;
 comment|/* 	 * If the process has file descriptor zero open, add the new file 	 * descriptor to the list of open files at that point, otherwise 	 * put it at the front of the list of open files. 	 */
@@ -9707,7 +9707,7 @@ argument_list|,
 name|f_list
 argument_list|)
 expr_stmt|;
-name|openfiles
+name|nfiles
 operator|--
 expr_stmt|;
 name|sx_xunlock
@@ -11194,7 +11194,7 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|openfiles
+name|nfiles
 argument_list|,
 literal|0
 argument_list|,
