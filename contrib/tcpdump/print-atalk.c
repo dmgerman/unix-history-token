@@ -2546,7 +2546,9 @@ decl_stmt|;
 name|char
 name|nambuf
 index|[
-literal|256
+name|MAXHOSTNAMELEN
+operator|+
+literal|20
 index|]
 decl_stmt|;
 specifier|static
@@ -2852,9 +2854,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|nambuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|nambuf
+argument_list|)
 argument_list|,
 literal|"%s.%d"
 argument_list|,
