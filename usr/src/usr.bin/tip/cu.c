@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cu.c	5.4 (Berkeley) %G%"
+literal|"@(#)cu.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -378,13 +378,9 @@ name|cleanup
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The "cu" host name is used to define the 	 * attributes of the generic dialer. 	 */
-if|if
-condition|(
 operator|(
-name|i
-operator|=
-name|hunt
-argument_list|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|sbuf
@@ -393,6 +389,15 @@ literal|"cu%d"
 argument_list|,
 name|BR
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|hunt
+argument_list|(
+name|sbuf
 argument_list|)
 operator|)
 operator|==

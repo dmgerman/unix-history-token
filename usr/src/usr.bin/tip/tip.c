@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tip.c	5.5 (Berkeley) %G%"
+literal|"@(#)tip.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,15 +155,6 @@ end_decl_stmt
 begin_comment
 comment|/* This limits the size of a number */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 name|main
@@ -490,8 +481,9 @@ name|PN
 operator|=
 name|PNbuf
 expr_stmt|;
-name|system
-operator|=
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|sbuf
@@ -500,6 +492,10 @@ literal|"tip%d"
 argument_list|,
 name|BR
 argument_list|)
+expr_stmt|;
+name|system
+operator|=
+name|sbuf
 expr_stmt|;
 name|notnumber
 label|:
