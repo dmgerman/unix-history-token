@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.134.2.59 1997/10/06 08:35:15 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.134.2.60 1997/10/06 08:37:40 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -802,6 +802,13 @@ operator|!
 name|vardev
 operator|&&
 name|whinge
+operator|&&
+name|variable_cmp
+argument_list|(
+name|SYSTEM_STATE
+argument_list|,
+literal|"upgrade"
+argument_list|)
 condition|)
 block|{
 name|msgConfirm
@@ -1941,6 +1948,15 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|tries
+init|=
+literal|0
+decl_stmt|;
+name|Device
+modifier|*
+modifier|*
+name|devs
 decl_stmt|;
 name|variable_set2
 argument_list|(
@@ -1962,6 +1978,8 @@ literal|"by a (Q)uit.  If you wish to allocate only free space to FreeBSD, move 
 literal|"partition marked \"unused\" and use the (C)reate command."
 argument_list|)
 expr_stmt|;
+name|nodisks
+label|:
 if|if
 condition|(
 name|DITEM_STATUS
@@ -1977,6 +1995,34 @@ condition|)
 return|return
 name|DITEM_FAILURE
 return|;
+if|if
+condition|(
+name|diskGetSelectCount
+argument_list|(
+operator|&
+name|devs
+argument_list|)
+operator|<=
+literal|0
+operator|&&
+name|tries
+operator|<
+literal|3
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"You need to select some disks to operate on!  Be sure to use SPACE\n"
+literal|"instead of RETURN in the disk selection menu when selecting a disk."
+argument_list|)
+expr_stmt|;
+operator|++
+name|tries
+expr_stmt|;
+goto|goto
+name|nodisks
+goto|;
+block|}
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -2879,12 +2925,9 @@ comment|/* Snapshot any boot -c changes back to the GENERIC kernel */
 if|if
 condition|(
 operator|!
-name|strcmp
-argument_list|(
-name|variable_get
+name|variable_cmp
 argument_list|(
 name|VAR_RELNAME
-argument_list|)
 argument_list|,
 name|RELEASE_NAME
 argument_list|)
@@ -3276,9 +3319,6 @@ name|dname
 index|[
 literal|80
 index|]
-decl_stmt|,
-modifier|*
-name|str
 decl_stmt|;
 specifier|extern
 name|int
@@ -3301,19 +3341,10 @@ decl_stmt|;
 comment|/* If we've already done this, bail out */
 if|if
 condition|(
-operator|(
-name|str
-operator|=
-name|variable_get
+operator|!
+name|variable_cmp
 argument_list|(
 name|DISK_LABELLED
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|str
 argument_list|,
 literal|"written"
 argument_list|)
@@ -3321,11 +3352,14 @@ condition|)
 return|return
 name|DITEM_SUCCESS
 return|;
-name|str
+name|upgrade
 operator|=
-name|variable_get
+operator|!
+name|variable_cmp
 argument_list|(
 name|SYSTEM_STATE
+argument_list|,
+literal|"upgrade"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3372,18 +3406,6 @@ name|NULL
 expr_stmt|;
 name|command_clear
 argument_list|()
-expr_stmt|;
-name|upgrade
-operator|=
-name|str
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|str
-argument_list|,
-literal|"upgrade"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
