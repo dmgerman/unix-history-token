@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trace.h	4.4	81/03/09	*/
+comment|/*	trace.h	4.5	81/03/09	*/
 end_comment
 
 begin_comment
@@ -65,7 +65,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TR_XFOD
+name|TR_XFODMISS
 value|5
 end_define
 
@@ -76,8 +76,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TR_BRELSE
+name|TR_XFODHIT
 value|6
+end_define
+
+begin_comment
+comment|/* exe fod read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TR_BRELSE
+value|7
 end_define
 
 begin_comment
