@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: repquota.c,v 1.3.6.2 1997/11/05 07:29:16 charnier Exp $"
+literal|"$Id: repquota.c,v 1.3.6.3 1998/03/09 13:52:17 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1104,12 +1104,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                        Block limits               File limits\n"
+literal|"                          Block limits                     File limits\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"User            used    soft    hard  grace    used  soft  hard  grace\n"
+literal|"User             used     soft     hard  grace     used    soft    hard  grace\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1175,7 +1175,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%c%c%8lu%8lu%8lu%7s"
+literal|"%c%c %8lu %8lu %8lu %6s"
 argument_list|,
 name|fup
 operator|->
@@ -1301,7 +1301,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  %6lu%6lu%6lu%7s\n"
+literal|"  %7lu %7lu %7lu %6s\n"
 argument_list|,
 name|fup
 operator|->
