@@ -1685,7 +1685,7 @@ literal|"unable to setup a data xmit queue!\n"
 argument_list|)
 expr_stmt|;
 goto|goto
-name|bad
+name|bad2
 goto|;
 block|}
 name|sc
@@ -1723,7 +1723,7 @@ literal|"unable to setup a beacon xmit queue!\n"
 argument_list|)
 expr_stmt|;
 goto|goto
-name|bad
+name|bad2
 goto|;
 block|}
 name|ifp
@@ -2006,6 +2006,13 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+name|bad2
+label|:
+name|ath_desc_free
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|bad
 label|:
 if|if
