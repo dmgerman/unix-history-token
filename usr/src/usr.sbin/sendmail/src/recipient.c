@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.62 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.63 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3463,11 +3463,6 @@ name|uname
 operator|=
 name|DefUser
 expr_stmt|;
-name|saveduid
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3489,6 +3484,7 @@ name|ca
 operator|->
 name|q_user
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|HASSETREUID
@@ -3556,7 +3552,6 @@ block|}
 block|}
 endif|#
 directive|endif
-block|}
 if|if
 condition|(
 name|tTd
