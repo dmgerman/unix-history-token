@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termios.c	5.8 (Berkeley) %G%"
+literal|"@(#)termios.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -270,6 +270,13 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|pgrp
+expr_stmt|;
 return|return
 operator|(
 name|ioctl
@@ -279,7 +286,7 @@ argument_list|,
 name|TIOCSPGRP
 argument_list|,
 operator|&
-name|pgrp
+name|s
 argument_list|)
 operator|)
 return|;
