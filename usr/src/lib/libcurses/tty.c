@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.4 (Berkeley) %G%"
+literal|"@(#)tty.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,8 +59,6 @@ end_include
 begin_decl_stmt
 name|struct
 name|termios
-name|newtermio
-decl_stmt|,
 name|origtermio
 decl_stmt|;
 end_decl_stmt
@@ -91,6 +89,10 @@ name|int
 name|gettmode
 parameter_list|()
 block|{
+name|useraw
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|tcgetattr
@@ -599,10 +601,7 @@ block|{
 if|if
 condition|(
 name|curscr
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|curscr
 operator|->
 name|flags
@@ -625,11 +624,6 @@ name|flags
 operator|&=
 operator|~
 name|__WSTANDOUT
-expr_stmt|;
-block|}
-name|__endwin
-operator|=
-literal|1
 expr_stmt|;
 block|}
 operator|(
