@@ -601,11 +601,6 @@ name|ip
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Purge old data structures associated with the inode. 	 */
-name|cache_purge
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|vrele
 argument_list|(
 name|ip
