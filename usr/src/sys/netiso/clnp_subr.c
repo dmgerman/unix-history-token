@@ -8,11 +8,11 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: clnp_subr.c,v 4.10 88/09/14 11:31:33 hagens Exp $ */
+comment|/* $Header: /var/src/sys/netiso/RCS/clnp_subr.c,v 5.1 89/02/09 16:20:46 hagens Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /usr/argo/sys/netiso/RCS/clnp_subr.c,v $ */
+comment|/* $Source: /var/src/sys/netiso/RCS/clnp_subr.c,v $ */
 end_comment
 
 begin_ifndef
@@ -27,7 +27,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Header: clnp_subr.c,v 4.10 88/09/14 11:31:33 hagens Exp $"
+literal|"$Header: /var/src/sys/netiso/RCS/clnp_subr.c,v 5.1 89/02/09 16:20:46 hagens Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -567,6 +567,18 @@ block|}
 end_block
 
 begin_comment
+comment|/* Dec bit set if ifp qlen is greater than congest_threshold */
+end_comment
+
+begin_decl_stmt
+name|int
+name|congest_threshold
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * FUNCTION:		clnp_forward  *  * PURPOSE:			Forward the datagram passed  *					clnpintr guarantees that the header will be  *					contigious (a cluster mbuf will be used if necessary).  *  *					If oidx is NULL, no options are present.  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	  *  * NOTES:			  */
 end_comment
 
@@ -1069,6 +1081,105 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|DECBIT
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_len
+operator|>
+name|congest_threshold
+condition|)
+block|{
+comment|/* 		 *	Congestion! Set the Dec Bit and thank Dave Oran 		 */
+name|IFDEBUG
+argument_list|(
+argument|D_FORWARD
+argument_list|)
+name|printf
+argument_list|(
+literal|"clnp_forward: congestion experienced\n"
+argument_list|)
+expr_stmt|;
+name|ENDDEBUG
+if|if
+condition|(
+operator|(
+name|oidx
+operator|)
+operator|&&
+operator|(
+name|oidx
+operator|->
+name|cni_qos_formatp
+operator|)
+condition|)
+block|{
+name|caddr_t
+name|qosp
+init|=
+name|CLNP_OFFTOOPT
+argument_list|(
+name|m
+argument_list|,
+name|oidx
+operator|->
+name|cni_qos_formatp
+argument_list|)
+decl_stmt|;
+name|u_char
+name|qos
+init|=
+operator|*
+name|qosp
+decl_stmt|;
+name|IFDEBUG
+argument_list|(
+argument|D_FORWARD
+argument_list|)
+name|printf
+argument_list|(
+literal|"clnp_forward: setting congestion bit (qos x%x)\n"
+argument_list|,
+name|qos
+argument_list|)
+expr_stmt|;
+name|ENDDEBUG
+if|if
+condition|(
+operator|(
+name|qos
+operator|&
+name|CLNPOVAL_GLOBAL
+operator|)
+operator|==
+name|CLNPOVAL_GLOBAL
+condition|)
+block|{
+name|qos
+operator||=
+name|CLNPOVAL_CONGESTED
+expr_stmt|;
+name|INCSTAT
+argument_list|(
+name|cns_congest_set
+argument_list|)
+expr_stmt|;
+operator|*
+name|qosp
+operator|=
+name|qos
+expr_stmt|;
+block|}
+block|}
+block|}
+endif|#
+directive|endif
+endif|DECBIT
 comment|/* 	 *	Dispatch the datagram if it is small enough, otherwise fragment 	 */
 if|if
 condition|(
