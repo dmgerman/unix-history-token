@@ -13785,9 +13785,12 @@ literal|"object format unknown"
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* not FREEBSD_NATIVE */
+endif|#
+directive|endif
+comment|/* FREEBSD_NATIVE */
+ifndef|#
+directive|ifndef
+name|FREEBSD_NATIVE
 ifndef|#
 directive|ifndef
 name|OS2
@@ -13859,7 +13862,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* FREEBSD_NATIVE */
+comment|/* not FREEBSD_NATIVE */
 name|tooldir_prefix
 operator|=
 name|concat
@@ -21756,9 +21759,16 @@ operator|=
 name|n_default_compilers
 expr_stmt|;
 comment|/* Read specs from a file if there is one.  */
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|FREEBSD_NATIVE
+name|just_machine_suffix
+operator|=
+literal|""
+expr_stmt|;
+else|#
+directive|else
+comment|/* FREEBSD_NATIVE */
 name|machine_suffix
 operator|=
 name|concat
@@ -21784,13 +21794,6 @@ name|dir_separator_str
 argument_list|,
 name|NULL_PTR
 argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* FREEBSD_NATIVE */
-name|just_machine_suffix
-operator|=
-literal|""
 expr_stmt|;
 endif|#
 directive|endif
@@ -22131,6 +22134,9 @@ argument_list|,
 name|NULL_PTR
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* FREEBSD_NATIVE */
 if|#
 directive|if
 literal|0
@@ -22138,9 +22144,6 @@ comment|/* Can cause surprises, and one can use -B./ instead.  */
 block|add_prefix (&startfile_prefixes, "./", NULL_PTR, 0, 1, NULL_PTR);
 endif|#
 directive|endif
-endif|#
-directive|endif
-comment|/* FREEBSD_NATIVE */
 block|}
 else|else
 block|{
