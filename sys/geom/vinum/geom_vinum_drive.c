@@ -1792,7 +1792,9 @@ name|cp
 argument_list|,
 name|GV_HDR_OFFSET
 argument_list|,
-name|GV_HDR_LEN
+name|pp
+operator|->
+name|sectorsize
 argument_list|,
 operator|&
 name|error
