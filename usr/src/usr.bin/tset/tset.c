@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tset.c	1.8 (Berkeley) %G%"
+literal|"@(#)tset.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  TSET -- set terminal modes ** **	This program does sophisticated terminal initialization. **	I recommend that you include it in your .start_up or .login **	file to initialize whatever terminal you are on. ** **	There are several features: ** **	A special file or sequence (as controlled by the ttycap file) **	is sent to the terminal. ** **	Mode bits are set on a per-terminal_type basis (much better **	than UNIX itself).  This allows special delays, automatic **	tabs, etc. ** **	Erase and Kill characters can be set to whatever you want. **	Default is to change erase to control-H on a terminal which **	can overstrike, and leave it alone on anything else.  Kill **	is always left alone unless specifically requested.  These **	characters can be represented as "^X" meaning control-X; **	X is any character. ** **	Terminals which are dialups or plugboard types can be aliased **	to whatever type you may have in your home or office.  Thus, **	if you know that when you dial up you will always be on a **	TI 733, you can specify that fact to tset.  You can represent **	a type as "?type".  This will ask you what type you want it **	to be -- if you reply with just a newline, it will default **	to the type given. ** **	The htmp file, used by ex, etc., can be updated. ** **	The current terminal type can be queried. ** **	Usage: **		tset [-] [-EC] [-eC] [-kC] [-s] [-h] [-u] [-r] **			[-m [ident] [test baudrate] :type] **			[-Q] [-I] [-S] [type] ** **		In systems with environments, use: **			eval `tset -s ...` **		Actually, this doesn't work in old csh's. **		Instead, use: **			tset -s ...> tset.tmp **			source tset.tmp **			rm tset.tmp **		or: **			set noglob **			set term=(`tset -S ....`) **			setenv TERM $term[1] **			setenv TERMCAP "$term[2]" **			unset term **			unset noglob ** **	Positional Parameters: **		type -- the terminal type to force.  If this is **			specified, initialization is for this **			terminal type. ** **	Flags: **		- -- report terminal type.  Whatever type is **			decided on is reported.  If no other flags **			are stated, the only affect is to write **			the terminal type on the standard output. **		-r -- report to user in addition to other flags. **		-EC -- set the erase character to C on all terminals **			except those which cannot backspace (e.g., **			a TTY 33).  C defaults to control-H. **		-eC -- set the erase character to C on all terminals. **			C defaults to control-H.  If neither -E or -e **			are specified, the erase character is set to **			control-H if the terminal can both backspace **			and not overstrike (e.g., a CRT).  If the erase **			character is NULL (zero byte), it will be reset **			to '#' if nothing else is specified. **		-kC -- set the kill character to C on all terminals. **			Default for C is control-X.  If not specified, **			the kill character is untouched; however, if **			not specified and the kill character is NULL **			(zero byte), the kill character is set to '@'. **		-iC -- reserved for setable interrupt character. **		-qC -- reserved for setable quit character. **		-m -- map the system identified type to some user **			specified type. The mapping can be baud rate **			dependent. This replaces the old -d, -p flags. **			(-d type  ->  -m dialup:type) **			(-p type  ->  -m plug:type) **			Syntax:	-m identifier [test baudrate] :type **			where: ``identifier'' is whatever is found in **			/etc/ttytype for this port, (abscence of an identifier **			matches any identifier); ``test'' may be any combination **			of>  =<  !  @; ``baudrate'' is as with stty(1); **			``type'' is the actual terminal type to use if the **			mapping condition is met. Multiple maps are scanned **			in order and the first match prevails. **		-n -- If the new tty driver from UCB is available, this flag **			will activate the new options for erase and kill **			processing. This will be different for printers **			and crt's. For crts, if the baud rate is< 1200 then **			erase and kill don't remove characters from the screen. **		-h -- don't read htmp file.  Normally the terminal type **			is determined by reading the htmp file or the **			environment (unless some mapping is specified). **			This forces a read of the ttytype file -- useful **			when htmp is somehow wrong. (V6 only) **		-u -- don't update htmp.  It seemed like this should **			be put in.  Note that htmp is never actually **			written if there are no changes, so don't bother **			bother using this for efficiency reasons alone. **		-s -- output setenv commands for TERM.  This can be **			used with **				`tset -s ...` **			and is to be prefered to: **				setenv TERM `tset - ...` **			because -s sets the TERMCAP variable also. **		-S -- Similar to -s but outputs 2 strings suitable for **			use in csh .login files as follows: **				set noglob **				set term=(`tset -S .....`) **				setenv TERM $term[1] **				setenv TERMCAP "$term[2]" **				unset term **				unset noglob **		-Q -- be quiet.  don't output 'Erase set to' etc. **		-I -- don't do terminal initialization (is& if **			strings). **		-v -- On virtual terminal systems, don't set up a **			virtual terminal.  Otherwise tset will tell **			the operating system what kind of terminal you **			are on (if it is a known terminal) and fix up **			the output of -s to use virtual terminal sequences. ** **	Files: **		/etc/ttytype **			contains a terminal id -> terminal type **			mapping; used when any user mapping is specified, **			or the environment doesn't have TERM set. **		/etc/termcap **			a terminal_type -> terminal_capabilities **			mapping. ** **	Return Codes: **		-1 -- couldn't open ttycap. **		1 -- bad terminal type, or standard output not tty. **		0 -- ok. ** **	Defined Constants: **		DIALUP -- the type code for a dialup port. **		PLUGBOARD -- the type code for a plugboard port. **		ARPANET -- the type code for an arpanet port. **		BACKSPACE -- control-H, the default for -e. **		CTRL('X') -- control-X, the default for -k. **		OLDERASE -- the system default erase character. **		OLDKILL -- the system default kill character. **		FILEDES -- the file descriptor to do the operation **			on, nominally 1 or 2. **		STDOUT -- the standard output file descriptor. **		UIDMASK -- the bit pattern to mask with the getuid() **			call to get just the user id. **		GTTYN -- defines file containing generalized ttynames **			and compiles code to look there. ** **	Requires: **		Routines to handle htmp, ttytype, and ttycap. ** **	Compilation Flags: **		OLDFLAGS -- must be defined to compile code for any of **			the -d, -p, or -a flags. **		OLDDIALUP -- accept the -d flag. **		OLDPLUGBOARD -- accept the -p flag. **		OLDARPANET -- accept the -a flag. **		FULLLOGIN -- if defined, login sets the ttytype from **			/etc/ttytype file. **		V6 -- if clear, use environments, not htmp. **			also use TIOCSETN rather than stty to avoid flushing **		GTTYN -- if set, compiles code to look at /etc/ttytype. **		UCB_NTTY -- set to handle new tty driver modes. ** **	Trace Flags: **		none ** **	Diagnostics: **		Bad flag **			An incorrect option was specified. **		Too few args **			more command line arguments are required. **		Unexpected arg **			wrong type of argument was encountered. **		Cannot open ... **			The specified file could not be openned. **		Type ... unknown **			An unknown terminal type was specified. **		Cannot update htmp **			Cannot update htmp file when the standard **			output is not a terminal. **		Erase set to ... **			Telling that the erase character has been **			set to the specified character. **		Kill set to ... **			Ditto for kill **		Erase is ...    Kill is ... **			Tells that the erase/kill characters were **			wierd before, but they are being left as-is. **		Not a terminal **			Set if FILEDES is not a terminal. ** **	Compilation Instructions: **		cc -n -O tset.c -ltermlib **		mv a.out tset **		chown bin tset **		chmod 4755 tset ** **		where 'bin' should be whoever owns the 'htmp' file. **		If 'htmp' is 666, then tset need not be setuid. ** **		For version 6 the compile command should be: **		cc -n -O -I/usr/include/retrofit tset.c -ltermlib -lretro -lS ** **	Author: **		Eric Allman **		Electronics Research Labs **		U.C. Berkeley ** **	History: **		1/81 -- Added alias checking for mapping identifiers. **		9/80 -- Added UCB_NTTY mods to setup the new tty driver. **			Added the 'reset ...' invocation. **		7/80 -- '-S' added. '-m' mapping added. TERMCAP string **			cleaned up. **		3/80 -- Changed to use tputs.  Prc& flush added. **		10/79 -- '-s' option extended to handle TERMCAP **			variable, set noglob, quote the entry, **			and know about the Bourne shell.  Terminal **			initialization moved to before any information **			output so screen clears would not screw you. **			'-Q' option added. **		8/79 -- '-' option alone changed to only output **			type.  '-s' option added.  'VERSION7' **			changed to 'V6' for compatibility. **		12/78 -- modified for eventual migration to VAX/UNIX, **			so the '-' option is changed to output only **			the terminal type to STDOUT instead of **			FILEDES.  FULLLOGIN flag added. **		9/78 -- '-' and '-p' options added (now fully **			compatible with ttytype!), and spaces are **			permitted between the -d and the type. **		8/78 -- The sense of -h and -u were reversed, and the **			-f flag is dropped -- same effect is available **			by just stating the terminal type. **		10/77 -- Written. */
+comment|/* **  TSET -- set terminal modes ** **	This program does sophisticated terminal initialization. **	I recommend that you include it in your .start_up or .login **	file to initialize whatever terminal you are on. ** **	There are several features: ** **	A special file or sequence (as controlled by the ttycap file) **	is sent to the terminal. ** **	Mode bits are set on a per-terminal_type basis (much better **	than UNIX itself).  This allows special delays, automatic **	tabs, etc. ** **	Erase and Kill characters can be set to whatever you want. **	Default is to change erase to control-H on a terminal which **	can overstrike, and leave it alone on anything else.  Kill **	is always left alone unless specifically requested.  These **	characters can be represented as "^X" meaning control-X; **	X is any character. ** **	Terminals which are dialups or plugboard types can be aliased **	to whatever type you may have in your home or office.  Thus, **	if you know that when you dial up you will always be on a **	TI 733, you can specify that fact to tset.  You can represent **	a type as "?type".  This will ask you what type you want it **	to be -- if you reply with just a newline, it will default **	to the type given. ** **	The htmp file, used by ex, etc., can be updated. ** **	The current terminal type can be queried. ** **	Usage: **		tset [-] [-EC] [-eC] [-kC] [-s] [-h] [-u] [-r] **			[-m [ident] [test baudrate] :type] **			[-Q] [-I] [-S] [type] ** **		In systems with environments, use: **			eval `tset -s ...` **		Actually, this doesn't work in old csh's. **		Instead, use: **			tset -s ...> tset.tmp **			source tset.tmp **			rm tset.tmp **		or: **			set noglob **			set term=(`tset -S ....`) **			setenv TERM $term[1] **			setenv TERMCAP "$term[2]" **			unset term **			unset noglob ** **	Positional Parameters: **		type -- the terminal type to force.  If this is **			specified, initialization is for this **			terminal type. ** **	Flags: **		- -- report terminal type.  Whatever type is **			decided on is reported.  If no other flags **			are stated, the only affect is to write **			the terminal type on the standard output. **		-r -- report to user in addition to other flags. **		-EC -- set the erase character to C on all terminals **			except those which cannot backspace (e.g., **			a TTY 33).  C defaults to control-H. **		-eC -- set the erase character to C on all terminals. **			C defaults to control-H.  If neither -E or -e **			are specified, the erase character is set to **			control-H if the terminal can both backspace **			and not overstrike (e.g., a CRT).  If the erase **			character is NULL (zero byte), it will be reset **			to '#' if nothing else is specified. **		-kC -- set the kill character to C on all terminals. **			Default for C is control-X.  If not specified, **			the kill character is untouched; however, if **			not specified and the kill character is NULL **			(zero byte), the kill character is set to '@'. **		-iC -- reserved for setable interrupt character. **		-qC -- reserved for setable quit character. **		-m -- map the system identified type to some user **			specified type. The mapping can be baud rate **			dependent. This replaces the old -d, -p flags. **			(-d type  ->  -m dialup:type) **			(-p type  ->  -m plug:type) **			Syntax:	-m identifier [test baudrate] :type **			where: ``identifier'' is terminal type found in **			/etc/ttys for this port, (abscence of an identifier **			matches any identifier); ``test'' may be any combination **			of>  =<  !  @; ``baudrate'' is as with stty(1); **			``type'' is the actual terminal type to use if the **			mapping condition is met. Multiple maps are scanned **			in order and the first match prevails. **		-n -- If the new tty driver from UCB is available, this flag **			will activate the new options for erase and kill **			processing. This will be different for printers **			and crt's. For crts, if the baud rate is< 1200 then **			erase and kill don't remove characters from the screen. **		-h -- don't read htmp file.  Normally the terminal type **			is determined by reading the htmp file or the **			environment (unless some mapping is specified). **			This forces a read of the ttytype file -- useful **			when htmp is somehow wrong. (V6 only) **		-u -- don't update htmp.  It seemed like this should **			be put in.  Note that htmp is never actually **			written if there are no changes, so don't bother **			bother using this for efficiency reasons alone. **		-s -- output setenv commands for TERM.  This can be **			used with **				`tset -s ...` **			and is to be prefered to: **				setenv TERM `tset - ...` **			because -s sets the TERMCAP variable also. **		-S -- Similar to -s but outputs 2 strings suitable for **			use in csh .login files as follows: **				set noglob **				set term=(`tset -S .....`) **				setenv TERM $term[1] **				setenv TERMCAP "$term[2]" **				unset term **				unset noglob **		-Q -- be quiet.  don't output 'Erase set to' etc. **		-I -- don't do terminal initialization (is& if **			strings). **		-v -- On virtual terminal systems, don't set up a **			virtual terminal.  Otherwise tset will tell **			the operating system what kind of terminal you **			are on (if it is a known terminal) and fix up **			the output of -s to use virtual terminal sequences. ** **	Files: **		/etc/ttys **			contains a terminal id -> terminal type **			mapping; used when any user mapping is specified, **			or the environment doesn't have TERM set. **		/etc/termcap **			a terminal_type -> terminal_capabilities **			mapping. ** **	Return Codes: **		-1 -- couldn't open ttycap. **		1 -- bad terminal type, or standard output not tty. **		0 -- ok. ** **	Defined Constants: **		DIALUP -- the type code for a dialup port. **		PLUGBOARD -- the type code for a plugboard port. **		ARPANET -- the type code for an arpanet port. **		BACKSPACE -- control-H, the default for -e. **		CTRL('X') -- control-X, the default for -k. **		OLDERASE -- the system default erase character. **		OLDKILL -- the system default kill character. **		FILEDES -- the file descriptor to do the operation **			on, nominally 1 or 2. **		STDOUT -- the standard output file descriptor. **		UIDMASK -- the bit pattern to mask with the getuid() **			call to get just the user id. **		GTTYN -- defines file containing generalized ttynames **			and compiles code to look there. ** **	Requires: **		Routines to handle htmp, ttys, and ttycap. ** **	Compilation Flags: **		OLDFLAGS -- must be defined to compile code for any of **			the -d, -p, or -a flags. **		OLDDIALUP -- accept the -d flag. **		OLDPLUGBOARD -- accept the -p flag. **		OLDARPANET -- accept the -a flag. **		V6 -- if clear, use environments, not htmp. **			also use TIOCSETN rather than stty to avoid flushing **		GTTYN -- if set, compiles code to look at /etc/ttys. **		UCB_NTTY -- set to handle new tty driver modes. ** **	Trace Flags: **		none ** **	Diagnostics: **		Bad flag **			An incorrect option was specified. **		Too few args **			more command line arguments are required. **		Unexpected arg **			wrong type of argument was encountered. **		Cannot open ... **			The specified file could not be openned. **		Type ... unknown **			An unknown terminal type was specified. **		Cannot update htmp **			Cannot update htmp file when the standard **			output is not a terminal. **		Erase set to ... **			Telling that the erase character has been **			set to the specified character. **		Kill set to ... **			Ditto for kill **		Erase is ...    Kill is ... **			Tells that the erase/kill characters were **			wierd before, but they are being left as-is. **		Not a terminal **			Set if FILEDES is not a terminal. ** **	Compilation Instructions: **		cc -n -O tset.c -ltermlib **		mv a.out tset **		chown bin tset **		chmod 4755 tset ** **		where 'bin' should be whoever owns the 'htmp' file. **		If 'htmp' is 666, then tset need not be setuid. ** **		For version 6 the compile command should be: **		cc -n -O -I/usr/include/retrofit tset.c -ltermlib -lretro -lS ** **	Author: **		Eric Allman **		Electronics Research Labs **		U.C. Berkeley ** **	History: **		1/81 -- Added alias checking for mapping identifiers. **		9/80 -- Added UCB_NTTY mods to setup the new tty driver. **			Added the 'reset ...' invocation. **		7/80 -- '-S' added. '-m' mapping added. TERMCAP string **			cleaned up. **		3/80 -- Changed to use tputs.  Prc& flush added. **		10/79 -- '-s' option extended to handle TERMCAP **			variable, set noglob, quote the entry, **			and know about the Bourne shell.  Terminal **			initialization moved to before any information **			output so screen clears would not screw you. **			'-Q' option added. **		8/79 -- '-' option alone changed to only output **			type.  '-s' option added.  'VERSION7' **			changed to 'V6' for compatibility. **		12/78 -- modified for eventual migration to VAX/UNIX, **			so the '-' option is changed to output only **			the terminal type to STDOUT instead of **			FILEDES. **		9/78 -- '-' and '-p' options added (now fully **			compatible with ttytype!), and spaces are **			permitted between the -d and the type. **		8/78 -- The sense of -h and -u were reversed, and the **			-f flag is dropped -- same effect is available **			by just stating the terminal type. **		10/77 -- Written. */
 end_comment
 
 begin_ifdef
@@ -110,10 +110,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* # define	FULLLOGIN	1 /*/
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -124,8 +120,13 @@ begin_define
 define|#
 directive|define
 name|GTTYN
-value|"/etc/ttytype"
 end_define
+
+begin_include
+include|#
+directive|include
+file|<ttyent.h>
+end_include
 
 begin_endif
 endif|#
@@ -6779,13 +6780,6 @@ modifier|*
 name|ttyid
 decl_stmt|;
 block|{
-specifier|static
-name|char
-name|typebuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -6801,41 +6795,16 @@ name|char
 modifier|*
 name|TtyId
 decl_stmt|;
-specifier|register
-name|char
+name|struct
+name|ttyent
 modifier|*
-name|p
-decl_stmt|;
-specifier|register
-name|FILE
-modifier|*
-name|f
+name|t
 decl_stmt|;
 if|if
 condition|(
 name|ttyid
 operator|==
 name|NOTTY
-condition|)
-return|return
-operator|(
-name|DEFTYPE
-operator|)
-return|;
-name|f
-operator|=
-name|fopen
-argument_list|(
-name|GTTYN
-argument_list|,
-literal|"r"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|f
-operator|==
-name|NULL
 condition|)
 return|return
 operator|(
@@ -6865,103 +6834,25 @@ operator|=
 name|ttyid
 expr_stmt|;
 comment|/* scan the file */
-while|while
+if|if
 condition|(
-name|fgets
+operator|(
+name|t
+operator|=
+name|getttynam
 argument_list|(
-name|typebuf
-argument_list|,
-sizeof|sizeof
-name|typebuf
-argument_list|,
-name|f
+name|TtyId
 argument_list|)
+operator|)
 operator|!=
 name|NULL
 condition|)
 block|{
-name|p
-operator|=
 name|PortType
 operator|=
-name|typebuf
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|p
-operator|&&
-name|isalnum
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|)
-name|p
-operator|++
-expr_stmt|;
-operator|*
-name|p
-operator|++
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* skip separator */
-while|while
-condition|(
-operator|*
-name|p
-operator|&&
-operator|!
-name|isalnum
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|)
-name|p
-operator|++
-expr_stmt|;
-name|PortName
-operator|=
-name|p
-expr_stmt|;
-comment|/* put NULL at end of name */
-while|while
-condition|(
-operator|*
-name|p
-operator|&&
-name|isalnum
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|)
-name|p
-operator|++
-expr_stmt|;
-operator|*
-name|p
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* check match on port name */
-if|if
-condition|(
-name|sequal
-argument_list|(
-name|PortName
-argument_list|,
-name|TtyId
-argument_list|)
-condition|)
-comment|/* found it */
-block|{
-name|fclose
-argument_list|(
-name|f
-argument_list|)
+name|t
+operator|->
+name|ty_type
 expr_stmt|;
 comment|/* get aliases from termcap entry */
 if|if
@@ -7014,12 +6905,6 @@ name|PortType
 operator|)
 return|;
 block|}
-block|}
-name|fclose
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|DEFTYPE
