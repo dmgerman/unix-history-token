@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.41 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2583,14 +2583,8 @@ name|d
 decl_stmt|;
 name|char
 modifier|*
-name|bufp
-decl_stmt|,
-decl|*
 name|signp
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 specifier|register
 struct|struct
@@ -2645,21 +2639,6 @@ if|if
 condition|(
 name|ip
 operator|->
-name|manh
-operator|||
-name|ip
-operator|->
-name|manl
-condition|)
-return|return
-operator|(
-literal|"NaN"
-operator|)
-return|;
-if|if
-condition|(
-name|ip
-operator|->
 name|sign
 condition|)
 operator|*
@@ -2669,11 +2648,21 @@ literal|'-'
 expr_stmt|;
 return|return
 operator|(
+name|ip
+operator|->
+name|manh
+operator|||
+name|ip
+operator|->
+name|manl
+condition|?
+literal|"NaN"
+else|:
 literal|"Inf"
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
