@@ -7321,38 +7321,19 @@ name|td_flags
 operator||=
 name|TDF_NEEDRESCHED
 expr_stmt|;
+if|#
+directive|if
+literal|0
 ifdef|#
 directive|ifdef
 name|SMP
 comment|/* 	 * Only try to preempt if the thread is unpinned or pinned to the 	 * current CPU. 	 */
-if|if
-condition|(
-name|KSE_CAN_MIGRATE
-argument_list|(
-name|ke
-argument_list|,
-name|class
-argument_list|)
-operator|||
-name|ke
-operator|->
-name|ke_cpu
-operator|==
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-condition|)
+block|if (KSE_CAN_MIGRATE(ke, class) || ke->ke_cpu == PCPU_GET(cpuid))
 endif|#
 directive|endif
-if|if
-condition|(
-name|maybe_preempt
-argument_list|(
-name|td
-argument_list|)
-condition|)
-return|return;
+block|if (maybe_preempt(td)) 		return;
+endif|#
+directive|endif
 name|ke
 operator|->
 name|ke_ksegrp
