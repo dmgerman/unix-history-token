@@ -1353,6 +1353,7 @@ name|brk
 operator|=
 literal|1
 expr_stmt|;
+comment|/* FALLTHROUGH */
 default|default:
 operator|*
 name|state
