@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mountd.c	5.21 (Berkeley) %G%"
+literal|"@(#)mountd.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3057,7 +3057,7 @@ argument_list|(
 operator|&
 name|fsp
 argument_list|,
-name|MNT_WAIT
+name|MNT_NOWAIT
 argument_list|)
 expr_stmt|;
 for|for
