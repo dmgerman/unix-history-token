@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usleep.c	5.2 (Berkeley) %G%"
+literal|"@(#)usleep.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,8 +105,9 @@ begin_block
 block|{
 name|int
 name|sleepx
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+name|long
 name|omask
 decl_stmt|;
 name|struct
