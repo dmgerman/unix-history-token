@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.23 (Berkeley) 84/07/04"
+literal|"@(#)rwhod.c	4.24 (Berkeley) 84/07/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,6 +107,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"rwhod.h"
 end_include
 
@@ -118,7 +124,7 @@ begin_define
 define|#
 directive|define
 name|AL_INTERVAL
-value|(5 * 60)
+value|(3 * 60)
 end_define
 
 begin_decl_stmt
@@ -325,6 +331,25 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
+if|if
+condition|(
+name|getuid
+argument_list|()
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"rwhod: not super user\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|sp
 operator|=
 name|getservbyname
@@ -477,25 +502,15 @@ argument_list|,
 name|getkmem
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|getuid
-argument_list|()
-condition|)
-block|{
-name|fprintf
+name|openlog
 argument_list|(
-name|stderr
+literal|"rwhod"
 argument_list|,
-literal|"rwhod: not super user\n"
+name|LOG_PID
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Establish host name as returned by system. 	 */
 if|if
 condition|(
@@ -514,9 +529,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"gethostname"
+name|LOG_ERR
+argument_list|,
+literal|"gethostname: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -587,9 +604,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"rwhod: /etc/utmp"
+name|LOG_ERR
+argument_list|,
+literal|"/etc/utmp: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -619,9 +638,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"rwhod: socket"
+name|LOG_ERR
+argument_list|,
+literal|"socket: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -644,11 +665,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"%s: don't know my own name\n"
+literal|"%s: don't know my own name"
 argument_list|,
 name|myname
 argument_list|)
@@ -693,9 +714,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"rwhod: bind"
+name|LOG_ERR
+argument_list|,
+literal|"bind: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -794,9 +817,11 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-name|perror
+name|syslog
 argument_list|(
-literal|"rwhod: recv"
+name|LOG_WARNING
+argument_list|,
+literal|"recv: %m"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -812,11 +837,11 @@ operator|->
 name|s_port
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_WARNING
 argument_list|,
-literal|"rwhod: %d: bad from port\n"
+literal|"%d: bad from port"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -843,11 +868,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_WARNING
 argument_list|,
-literal|"rwhod: %s: unknown host\n"
+literal|"%s: unknown host"
 argument_list|,
 name|wd
 operator|.
@@ -887,11 +912,11 @@ name|wd_hostname
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_WARNING
 argument_list|,
-literal|"rwhod: malformed host name from %x\n"
+literal|"malformed host name from %x"
 argument_list|,
 name|from
 operator|.
@@ -932,15 +957,12 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_WARNING
 argument_list|,
-literal|"rwhod: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"%s: %m"
+argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
@@ -1811,71 +1833,21 @@ argument_list|)
 expr_stmt|;
 name|loop
 label|:
-for|for
-control|(
-name|nlp
-operator|=
-operator|&
-name|nl
-index|[
-sizeof|sizeof
-argument_list|(
-name|nl
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|nl
-index|[
-literal|0
-index|]
-argument_list|)
-index|]
-init|;
-operator|--
-name|nlp
-operator|>=
-name|nl
-condition|;
-control|)
-block|{
-name|nlp
-operator|->
-name|n_value
-operator|=
-literal|0
-expr_stmt|;
-name|nlp
-operator|->
-name|n_type
-operator|=
-literal|0
-expr_stmt|;
-block|}
+if|if
+condition|(
 name|nlist
 argument_list|(
 literal|"/vmunix"
 argument_list|,
 name|nl
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nl
-index|[
-literal|0
-index|]
-operator|.
-name|n_value
-operator|==
-literal|0
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_WARNING
 argument_list|,
-literal|"/vmunix namelist botch\n"
+literal|"/vmunix namelist botch"
 argument_list|)
 expr_stmt|;
 name|sleep
@@ -1903,19 +1875,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"/dev/kmem"
+name|LOG_ERR
+argument_list|,
+literal|"/dev/kmem: %m"
 argument_list|)
 expr_stmt|;
-name|sleep
+name|exit
 argument_list|(
-literal|300
+literal|1
 argument_list|)
 expr_stmt|;
-goto|goto
-name|loop
-goto|;
 block|}
 operator|(
 name|void
@@ -2059,9 +2030,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"rwhod: ioctl (get interface configuration)"
+name|LOG_ERR
+argument_list|,
+literal|"ioctl (get interface configuration)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2307,9 +2280,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"rwhod: ioctl (get interface flags)"
+name|LOG_ERR
+argument_list|,
+literal|"ioctl (get interface flags)"
 argument_list|)
 expr_stmt|;
 name|free
@@ -2387,9 +2362,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"rwhod: ioctl (get dstaddr)"
+name|LOG_ERR
+argument_list|,
+literal|"ioctl (get dstaddr)"
 argument_list|)
 expr_stmt|;
 name|free
