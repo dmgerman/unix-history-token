@@ -3214,7 +3214,7 @@ name|CB_SS_NOTCARD
 condition|)
 return|return
 operator|(
-literal|"Cardtype unrecognized by bridge"
+literal|"unrecognized by bridge"
 operator|)
 return|;
 if|if
