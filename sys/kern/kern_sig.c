@@ -9801,11 +9801,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|p
+name|td
 operator|->
-name|p_flag
+name|td_flags
 operator|&
-name|P_SA
+name|TDF_SA
 condition|)
 name|thread_signal_add
 argument_list|(

@@ -206,6 +206,13 @@ name|KMF_DONE
 value|0x04
 end_define
 
+begin_define
+define|#
+directive|define
+name|KMF_BOUND
+value|0x08
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

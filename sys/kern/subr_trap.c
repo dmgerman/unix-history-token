@@ -997,11 +997,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
+operator|(
+name|td
 operator|->
-name|p_flag
+name|td_flags
 operator|&
-name|P_SA
+name|TDF_SA
+operator|)
 operator|&&
 name|sigs
 condition|)
