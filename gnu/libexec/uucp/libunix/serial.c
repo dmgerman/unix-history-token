@@ -21,7 +21,7 @@ name|char
 name|serial_rcsid
 index|[]
 init|=
-literal|"$Id: serial.c,v 1.6 1995/08/19 21:25:56 ache Exp $"
+literal|"$Id: serial.c,v 1.7 1996/10/12 10:41:56 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4215,6 +4215,17 @@ block|{
 name|B115200
 block|,
 literal|115200
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|B230400
+block|{
+name|B230400
+block|,
+literal|230400
 block|}
 block|,
 endif|#
