@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ufs_inode.c	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ufs_inode.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"proc.h"
 end_include
 
 begin_include
@@ -3255,6 +3261,33 @@ name|i_flag
 operator||=
 name|IWANT
 expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_spare0
+operator|==
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_pid
+condition|)
+name|panic
+argument_list|(
+literal|"locking against myself"
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|i_spare1
+operator|=
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_pid
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3269,6 +3302,30 @@ name|PINOD
 argument_list|)
 expr_stmt|;
 block|}
+name|ip
+operator|->
+name|i_spare1
+operator|=
+literal|0
+expr_stmt|;
+name|ip
+operator|->
+name|i_spare0
+operator|=
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_pid
+expr_stmt|;
+name|u
+operator|.
+name|u_spare
+index|[
+literal|0
+index|]
+operator|++
+expr_stmt|;
 name|ip
 operator|->
 name|i_flag
@@ -3318,6 +3375,20 @@ argument_list|(
 name|ip
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|i_spare0
+operator|=
+literal|0
+expr_stmt|;
+name|u
+operator|.
+name|u_spare
+index|[
+literal|0
+index|]
+operator|--
 expr_stmt|;
 name|ip
 operator|->
