@@ -1501,5 +1501,18 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|int
+name|tipabort
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
