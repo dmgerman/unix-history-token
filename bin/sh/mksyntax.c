@@ -1833,7 +1833,7 @@ name|fprintf
 argument_list|(
 name|cfile
 argument_list|,
-literal|"      %d,\n"
+literal|"      %td,\n"
 argument_list|,
 name|p
 operator|-

@@ -1066,7 +1066,7 @@ name|s
 argument_list|,
 literal|64
 argument_list|,
-literal|"[%d] "
+literal|"[%td] "
 argument_list|,
 name|jp
 operator|-
