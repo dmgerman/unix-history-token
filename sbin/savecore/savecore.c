@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: savecore.c,v 1.21 1998/07/28 06:38:57 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,6 +169,33 @@ directive|include
 file|"zopen.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ok
+parameter_list|(
+name|number
+parameter_list|)
+value|ALPHA_K0SEG_TO_PHYS(number)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -178,6 +205,11 @@ name|number
 parameter_list|)
 value|((number) - KERNBASE)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
