@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	5.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	5.16 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -348,7 +348,7 @@ name|TELCMD_OK
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<= TELCMD_LAST&& (x)>= TELCMD_FIRST)
+value|((unsigned int)(x)<= TELCMD_LAST&& \ 			 (unsigned int)(x)>= TELCMD_FIRST)
 end_define
 
 begin_define
@@ -933,7 +933,7 @@ name|TELOPT_OK
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<= TELOPT_LAST&& (x)>= TELOPT_FIRST)
+value|((unsigned int)(x)<= TELOPT_LAST)
 end_define
 
 begin_define
@@ -1355,7 +1355,7 @@ name|SLC_NAME_OK
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)>= 0&& (x)<= NSLC)
+value|((unsigned int)(x)<= NSLC)
 end_define
 
 begin_define
@@ -1638,7 +1638,7 @@ name|AUTHTYPE_NAME_OK
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)>= 0&& (x)< AUTHTYPE_CNT)
+value|((unsigned int)(x)< AUTHTYPE_CNT)
 end_define
 
 begin_define
@@ -1870,7 +1870,7 @@ name|ENCRYPT_NAME_OK
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)>= 0&& (x)< ENCRYPT_CNT)
+value|((unsigned int)(x)< ENCRYPT_CNT)
 end_define
 
 begin_define
@@ -1890,7 +1890,7 @@ name|ENCTYPE_NAME_OK
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)>= 0&& (x)< ENCTYPE_CNT)
+value|((unsigned int)(x)< ENCTYPE_CNT)
 end_define
 
 begin_define
