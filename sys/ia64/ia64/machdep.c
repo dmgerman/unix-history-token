@@ -330,6 +330,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|map_pal_code
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -451,6 +460,12 @@ begin_decl_stmt
 name|FPSWA_INTERFACE
 modifier|*
 name|fpswa_interface
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int64_t
+name|ia64_pal_base
 decl_stmt|;
 end_decl_stmt
 
@@ -728,36 +743,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* amount of memory reserved for PROM */
-end_comment
-
-begin_decl_stmt
-name|int
-name|unusedmem
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* amount of memory for OS that we don't use */
-end_comment
-
-begin_decl_stmt
-name|int
-name|unknownmem
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* amount of memory with an unknown use */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ncpus
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of cpus */
 end_comment
 
 begin_decl_stmt
@@ -1141,6 +1126,9 @@ name|printf
 argument_list|(
 literal|"FPSWA Revision = 0x%lx, Entry = %p\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|fpswa_interface
 operator|->
 name|Revision
@@ -1183,7 +1171,44 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|)
-block|{ }
+block|{
+name|KASSERT
+argument_list|(
+name|size
+operator|>=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcpu
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcb
+argument_list|)
+argument_list|,
+operator|(
+name|__func__
+literal|": too small an allocation for pcpu"
+operator|)
+argument_list|)
+expr_stmt|;
+name|pcpu
+operator|->
+name|pc_pcb
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|pcpu
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -1472,166 +1497,26 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-specifier|static
 name|void
 name|map_pal_code
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|EFI_MEMORY_DESCRIPTOR
-modifier|*
-name|md
-decl_stmt|,
-modifier|*
-name|mdp
-decl_stmt|;
-name|int
-name|mdcount
-decl_stmt|,
-name|i
-decl_stmt|;
-name|u_int64_t
-name|psr
-decl_stmt|;
 name|struct
 name|ia64_pte
 name|pte
 decl_stmt|;
-name|vm_offset_t
-name|addr
+name|u_int64_t
+name|psr
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|bootinfo
-operator|.
-name|bi_systab
-condition|)
-return|return;
-name|mdcount
-operator|=
-name|bootinfo
-operator|.
-name|bi_memmap_size
-operator|/
-name|bootinfo
-operator|.
-name|bi_memdesc_size
-expr_stmt|;
-name|md
-operator|=
-operator|(
-name|EFI_MEMORY_DESCRIPTOR
-operator|*
-operator|)
-name|IA64_PHYS_TO_RR7
-argument_list|(
-name|bootinfo
-operator|.
-name|bi_memmap
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-operator|,
-name|mdp
-operator|=
-name|md
-init|;
-name|i
-operator|<
-name|mdcount
-condition|;
-name|i
-operator|++
-operator|,
-name|mdp
-operator|=
-name|NextMemoryDescriptor
-argument_list|(
-name|mdp
-argument_list|,
-name|bootinfo
-operator|.
-name|bi_memdesc_size
-argument_list|)
-control|)
-block|{
-if|if
-condition|(
-name|mdp
-operator|->
-name|Type
-operator|==
-name|EfiPalCode
-condition|)
-break|break;
-block|}
-if|if
-condition|(
-name|i
-operator|==
-name|mdcount
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Can't find PAL Code\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* 	 * We use a TR to map the first 256M of memory - this might 	 * cover the palcode too. 	 */
-if|if
-condition|(
-operator|(
-name|mdp
-operator|->
-name|PhysicalStart
-operator|&
-operator|~
-operator|(
-operator|(
-literal|1
-operator|<<
-literal|28
-operator|)
-operator|-
-literal|1
-operator|)
-operator|)
+name|ia64_pal_base
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"PAL Code is mapped by the kernel's TR\n"
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
-name|addr
-operator|=
-name|mdp
-operator|->
-name|PhysicalStart
-operator|&
-operator|~
-operator|(
-operator|(
-literal|1
-operator|<<
-literal|28
-operator|)
-operator|-
-literal|1
-operator|)
-expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -1683,17 +1568,37 @@ name|pte
 operator|.
 name|pte_ppn
 operator|=
-name|addr
+name|ia64_pal_base
 operator|>>
 literal|12
 expr_stmt|;
 asm|__asm __volatile("mov %0=psr;;" : "=r" (psr));
 asm|__asm __volatile("rsm psr.ic|psr.i;; srlz.i;;");
-asm|__asm __volatile("mov cr.ifa=%0" :: "r"(IA64_PHYS_TO_RR7(addr)));
+asm|__asm __volatile("mov cr.ifa=%0" ::
+literal|"r"
+operator|(
+name|IA64_PHYS_TO_RR7
+argument_list|(
+name|ia64_pal_base
+argument_list|)
+operator|)
+block|)
+function|;
+end_function
+
+begin_asm
 asm|__asm __volatile("mov cr.itir=%0" :: "r"(28<< 2));
+end_asm
+
+begin_asm
 asm|__asm __volatile("srlz.i;;");
-asm|__asm __volatile("itr.i itr[%0]=%1;;"
-operator|::
+end_asm
+
+begin_asm
+asm|__asm __volatile("itr.i itr[%0]=%1;;" ::
+end_asm
+
+begin_expr_stmt
 literal|"r"
 operator|(
 literal|2
@@ -1709,9 +1614,12 @@ operator|)
 operator|&
 name|pte
 operator|)
-block|)
-function|;
-end_function
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_asm
 asm|__asm __volatile("srlz.i;;");
@@ -2315,7 +2223,6 @@ name|Type
 operator|==
 name|EfiMemoryMappedIOPortSpace
 condition|)
-block|{
 name|ia64_port_base
 operator|=
 name|IA64_PHYS_TO_RR6
@@ -2325,8 +2232,73 @@ operator|->
 name|PhysicalStart
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|mdp
+operator|->
+name|Type
+operator|==
+name|EfiPalCode
+condition|)
+name|ia64_pal_base
+operator|=
+name|mdp
+operator|->
+name|PhysicalStart
+expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|ia64_port_base
+operator|!=
+literal|0
+argument_list|,
+operator|(
+name|__func__
+literal|": no I/O memory region"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ia64_pal_base
+operator|!=
+literal|0
+condition|)
+block|{
+name|ia64_pal_base
+operator|&=
+operator|~
+operator|(
+operator|(
+literal|1
+operator|<<
+literal|28
+operator|)
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+comment|/* 		 * We use a TR to map the first 256M of memory - this might 		 * cover the palcode too. 		 */
+if|if
+condition|(
+name|ia64_pal_base
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"PAL code mapped by the kernel's TR\n"
+argument_list|)
+expr_stmt|;
 block|}
+else|else
+name|printf
+argument_list|(
+literal|"PAL code not found\n"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Look at arguments passed to us and compute boothowto. 	 */
 name|boothowto
 operator|=
@@ -3102,18 +3074,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* 	 * Setup the global data for the bootstrap cpu. 	 */
-block|{
-comment|/* This is not a 'struct user' */
-name|size_t
-name|sz
-init|=
-name|round_page
-argument_list|(
-name|KSTACK_PAGES
-operator|*
-name|PAGE_SIZE
-argument_list|)
-decl_stmt|;
 name|pcpup
 operator|=
 operator|(
@@ -3123,7 +3083,7 @@ operator|*
 operator|)
 name|pmap_steal_memory
 argument_list|(
-name|sz
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|pcpu_init
@@ -3132,7 +3092,7 @@ name|pcpup
 argument_list|,
 literal|0
 argument_list|,
-name|sz
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|ia64_set_k4
@@ -3143,15 +3103,6 @@ operator|)
 name|pcpup
 argument_list|)
 expr_stmt|;
-name|PCPU_GET
-argument_list|(
-name|next_asn
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
-comment|/* 0 used for proc0 pmap */
-block|}
 comment|/* 	 * Initialize the virtual memory system. 	 */
 name|pmap_bootstrap
 argument_list|()
