@@ -1727,6 +1727,10 @@ operator|)
 return|;
 comment|/* XXX Should be EBUSY, but nobody cares anyway. */
 block|}
+if|if
+condition|(
+name|pitch
+condition|)
 name|pitch
 operator|=
 name|TIMER_DIV
@@ -1759,6 +1763,10 @@ name|beeping
 condition|)
 block|{
 comment|/* enable counter2 output to speaker */
+if|if
+condition|(
+name|pitch
+condition|)
 name|outb
 argument_list|(
 name|IO_PPI
