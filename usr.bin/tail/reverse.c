@@ -811,12 +811,10 @@ if|if
 condition|(
 operator|!
 name|len
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|enomem
 condition|)
+block|{
 name|enomem
 operator|-=
 name|tl
