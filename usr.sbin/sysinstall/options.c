@@ -364,6 +364,20 @@ name|varCheck
 block|}
 block|,
 block|{
+literal|"Skip PCCARD"
+block|,
+literal|"Skip PC-card probing, do not use PC-card devices for installation"
+block|,
+name|OPT_IS_VAR
+block|,
+name|NULL
+block|,
+name|VAR_SKIP_PCCARD
+block|,
+name|varCheck
+block|}
+block|,
+block|{
 literal|"FTP username"
 block|,
 literal|"Username and password to use instead of anonymous"

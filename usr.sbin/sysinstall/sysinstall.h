@@ -1012,6 +1012,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_SKIP_PCCARD
+value|"skipPCCARD"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_UFS_PATH
 value|"ufs"
 end_define

@@ -5025,6 +5025,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|variable_set2
+argument_list|(
+name|VAR_SKIP_PCCARD
+argument_list|,
+literal|"NO"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 name|getenv
