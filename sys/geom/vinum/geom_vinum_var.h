@@ -289,6 +289,31 @@ value|65536
 end_define
 
 begin_comment
+comment|/* Flags for BIOs, as they are processed within vinum. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_BIO_DONE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_BIO_MALLOC
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_BIO_ONHOLD
+value|0x04
+end_define
+
+begin_comment
 comment|/*  * hostname is 256 bytes long, but we don't need to shlep multiple copies in  * vinum.  We use the host name just to identify this system, and 32 bytes  * should be ample for that purpose.  */
 end_comment
 
@@ -392,6 +417,29 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Since we share structures between userland and kernel, we need this helper  * struct instead of struct bio_queue_head and friends.  Maybe I find a proper  * solution some day.  */
+end_comment
+
+begin_struct
+struct|struct
+name|gv_bioq
+block|{
+name|struct
+name|bio
+modifier|*
+name|bp
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|gv_bioq
+argument_list|)
+name|queue
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* This struct contains the main vinum config. */
 end_comment
 
@@ -489,6 +537,24 @@ name|int
 name|sdcount
 decl_stmt|;
 comment|/* Number of subdisks. */
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|GV_DRIVE_THREAD_ACTIVE
+value|0x01
+comment|/* Drive has an active worker thread. */
+define|#
+directive|define
+name|GV_DRIVE_THREAD_DIE
+value|0x02
+comment|/* Signal the worker thread to die. */
+define|#
+directive|define
+name|GV_DRIVE_THREAD_DEAD
+value|0x04
+comment|/* The worker thread has died. */
 name|struct
 name|gv_hdr
 modifier|*
@@ -522,6 +588,19 @@ argument_list|)
 name|drive
 expr_stmt|;
 comment|/* Entry in the vinum config. */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|gv_bioq
+argument_list|)
+name|bqueue
+expr_stmt|;
+comment|/* BIO queue of this drive. */
+name|struct
+name|mtx
+name|bqueue_mtx
+decl_stmt|;
+comment|/* Mtx. to protect the queue. */
 name|struct
 name|g_geom
 modifier|*

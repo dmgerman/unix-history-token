@@ -1660,6 +1660,11 @@ argument_list|,
 name|drive
 argument_list|)
 expr_stmt|;
+name|gv_kill_drive_thread
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 name|gp
 operator|=
 name|d

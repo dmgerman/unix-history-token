@@ -414,6 +414,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|gv_kill_drive_thread
+parameter_list|(
+name|struct
+name|gv_drive
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|gv_kill_plex_thread
 parameter_list|(
 name|struct
