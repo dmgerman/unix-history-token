@@ -3570,7 +3570,7 @@ name|nkpt
 argument_list|,
 name|VM_ALLOC_NOOBJ
 operator||
-name|VM_ALLOC_SYSTEM
+name|VM_ALLOC_INTERRUPT
 operator||
 name|VM_ALLOC_WIRED
 argument_list|)
