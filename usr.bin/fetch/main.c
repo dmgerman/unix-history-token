@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.17 1996/08/22 21:30:51 jkh Exp $ */
+comment|/* $Id: main.c,v 1.18 1996/08/22 23:25:24 jkh Exp $ */
 end_comment
 
 begin_include
@@ -850,21 +850,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"-m and -r are mutually exclusive."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ftp
-operator|||
-name|http
-operator|)
-operator|&&
-name|linkfile
-condition|)
-name|warnx
-argument_list|(
-literal|"-l flag is meaningless with http or ftp URL specifications"
 argument_list|)
 expr_stmt|;
 name|output_file_name
