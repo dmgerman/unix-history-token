@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/include/cpufunc.h>
+file|<machine/clock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/include/clock.h>
+file|<machine/cpufunc.h>
 end_include
 
 begin_ifdef

@@ -122,7 +122,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<i386/include/cpufunc.h>
+file|<machine/cpufunc.h>
 end_include
 
 begin_include
