@@ -825,9 +825,6 @@ block|{
 name|device_t
 name|mlxd_dev
 decl_stmt|;
-name|dev_t
-name|mlxd_dev_t
-decl_stmt|;
 name|struct
 name|mlx_softc
 modifier|*
