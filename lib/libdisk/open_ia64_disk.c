@@ -580,7 +580,7 @@ operator|(
 name|disk
 operator|->
 name|media_size
-operator|*
+operator|/
 name|disk
 operator|->
 name|sector_size
@@ -589,8 +589,6 @@ operator|-
 name|disk
 operator|->
 name|lba_start
-operator|+
-literal|1
 expr_stmt|;
 block|}
 else|else
