@@ -177,7 +177,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* resource limit (XXX not unsigned) */
+comment|/* resource limit - intentionally */
+end_comment
+
+begin_comment
+comment|/* signed, because of legacy code */
+end_comment
+
+begin_comment
+comment|/* that uses -1 for RLIM_INFINITY */
 end_comment
 
 begin_typedef

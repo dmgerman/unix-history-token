@@ -323,7 +323,7 @@ begin_define
 define|#
 directive|define
 name|RLIM_INFINITY
-value|((rlim_t)(((u_quad_t)1<< 63) - 1))
+value|((rlim_t)INT64_MAX)
 end_define
 
 begin_comment
