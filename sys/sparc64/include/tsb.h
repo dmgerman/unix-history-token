@@ -19,14 +19,14 @@ begin_define
 define|#
 directive|define
 name|TSB_KERNEL_MIN_ADDRESS
-value|(0x6e000000000)
+value|(0xd0000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TSB_USER_MIN_ADDRESS
-value|(0x6f000000000)
+value|(0xe0000000)
 end_define
 
 begin_define
@@ -81,16 +81,16 @@ end_define
 begin_define
 define|#
 directive|define
-name|TSB_SECONDARY_STTE_SHIFT
+name|TSB_PRIMARY_STTE_SHIFT
 define|\
-value|(STTE_SHIFT + TSB_SECONDARY_BUCKET_SHIFT)
+value|(STTE_SHIFT + TSB_PRIMARY_BUCKET_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TSB_SECONDARY_STTE_MASK
-value|(1<< TSB_SECONDARY_STTE_SHIFT)
+name|TSB_PRIMARY_STTE_MASK
+value|((1<< TSB_PRIMARY_STTE_SHIFT) - 1)
 end_define
 
 begin_define
@@ -646,86 +646,6 @@ operator|)
 return|;
 block|}
 end_expr_stmt
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|tsb_tte_enter_kernel
-parameter_list|(
-name|vm_offset_t
-name|va
-parameter_list|,
-name|struct
-name|tte
-name|tte
-parameter_list|)
-block|{
-name|struct
-name|stte
-modifier|*
-name|stp
-decl_stmt|;
-name|stp
-operator|=
-name|tsb_kvtostte
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
-name|stp
-operator|->
-name|st_tte
-operator|=
-name|tte
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|pv_insert(kernel_pmap, TD_PA(tte.tte_data), va, stp);
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|tsb_remove_kernel
-parameter_list|(
-name|vm_offset_t
-name|va
-parameter_list|)
-block|{
-name|struct
-name|stte
-modifier|*
-name|stp
-decl_stmt|;
-name|stp
-operator|=
-name|tsb_kvtostte
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
-name|tte_invalidate
-argument_list|(
-operator|&
-name|stp
-operator|->
-name|st_tte
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|pv_remove_virt(stp);
-endif|#
-directive|endif
-block|}
-end_function
 
 begin_function_decl
 name|struct
