@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rlogin.c,v 1.18 1998/10/09 06:45:28 markm Exp $"
+literal|"$Id: rlogin.c,v 1.19 1999/05/25 11:14:33 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -757,6 +757,9 @@ modifier|*
 name|host
 decl_stmt|,
 modifier|*
+name|localname
+decl_stmt|,
+modifier|*
 name|p
 decl_stmt|,
 modifier|*
@@ -776,12 +779,6 @@ name|k
 decl_stmt|;
 endif|#
 directive|endif
-name|char
-modifier|*
-name|localname
-init|=
-name|NULL
-decl_stmt|;
 name|argoff
 operator|=
 name|dflag
@@ -795,6 +792,8 @@ operator|=
 literal|1
 expr_stmt|;
 name|host
+operator|=
+name|localname
 operator|=
 name|user
 operator|=
@@ -993,20 +992,13 @@ argument_list|()
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rlogin: -i user: permission denied\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"-i user: permission denied"
 argument_list|)
 expr_stmt|;
-block|}
 name|localname
 operator|=
 name|optarg
@@ -4301,7 +4293,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rlogin [ -%s]%s[-e char] [ -l username ] host\n"
+literal|"usage: rlogin [-%s]%s[-e char] [-i localname] [-l username] host\n"
 argument_list|,
 ifdef|#
 directive|ifdef
@@ -4309,14 +4301,14 @@ name|KERBEROS
 ifdef|#
 directive|ifdef
 name|CRYPT
-literal|"8DEKLx"
+literal|"8DEKLdx"
 argument_list|,
 literal|" [-k realm] "
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-literal|"8DEKL"
+literal|"8DEKLd"
 operator|,
 literal|" [-k realm] "
 block|)
@@ -4334,7 +4326,7 @@ directive|else
 end_else
 
 begin_expr_stmt
-literal|"8DEL"
+literal|"8DELd"
 operator|,
 literal|" "
 end_expr_stmt
