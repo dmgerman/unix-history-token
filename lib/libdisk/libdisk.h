@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.16 1995/05/12 18:49:58 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.17 1995/05/25 06:14:49 phk Exp $  *  */
 end_comment
 
 begin_define
@@ -149,12 +149,12 @@ define|#
 directive|define
 name|CHUNK_PAST_1024
 value|1
-comment|/* this chunk cannot be booted from because it  			 * extends past cylinder 1024 			 */
+comment|/* this chunk cannot be booted from because it 			 * extends past cylinder 1024 			 */
 define|#
 directive|define
 name|CHUNK_BSD_COMPAT
 value|2
-comment|/* this chunk is in the BSD-compatibility, and has a  			 * short name too, ie wd0s4f -> wd0f          		*/
+comment|/* this chunk is in the BSD-compatibility, and has a 			 * short name too, ie wd0s4f -> wd0f          		*/
 define|#
 directive|define
 name|CHUNK_BAD144
@@ -341,7 +341,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Free a chunk of disk_space  	 */
+comment|/* Free a chunk of disk_space 	 */
 end_comment
 
 begin_function_decl
@@ -687,7 +687,7 @@ comment|/* Make device nodes for all chunks on this disk */
 end_comment
 
 begin_comment
-comment|/*   * Implementation details>>> DO NOT USE<<<  */
+comment|/*  * Implementation details>>> DO NOT USE<<<  */
 end_comment
 
 begin_function_decl
@@ -869,7 +869,7 @@ value|printf
 end_define
 
 begin_comment
-comment|/* TODO  *  * Need a error string mechanism from the functions instead of warn()  *   * Make sure only FreeBSD start at offset==0  *   * Collapse must align.  *   * Make Write_Disk(struct disk*)  *   * Consider booting from OnTrack'ed disks.  *  * Get Bios-geom, ST506& OnTrack from driver (or otherwise)  *  * Make Create_DWIM().  *  * Make Is_Unchanged(struct disk *d1, struct chunk *c1)  *   * don't rename slices unless we have to  *  *Sample output from tst01:  *  * Debug_Disk(wd0)  flags=0  real_geom=0/0/0  bios_geom=0/0/0  *>>        0x3d040          0    1411200    1411199 wd0      0 whole    0 0  *>>>>      0x3d080          0     960120     960119 wd0s1    3 freebsd  0 8  *>>>>>>    0x3d100          0      40960      40959 wd0s1a   5 part     0 0  *>>>>>>    0x3d180      40960     131072     172031 wd0s1b   5 part     0 0  *>>>>>>    0x3d1c0     172032     409600     581631 wd0s1e   5 part     0 0  *>>>>>>    0x3d200     581632     378488     960119 wd0s1f   5 part     0 0  *>>>>      0x3d140     960120       5670     965789 wd0s2    4 extended 0 8  *>>>>>>    0x3d2c0     960120         63     960182 -        6 unused   0 0  *>>>>>>    0x3d0c0     960183       5607     965789 wd0s5    2 fat      0 8  *>>>>      0x3d280     965790       1890     967679 wd0s3    1 foo      -2 8  *>>>>      0x3d300     967680     443520    1411199 wd0s4    3 freebsd  0 8  *>>>>>>    0x3d340     967680     443520    1411199 wd0s4a   5 part     0 0  *  * ^            ^           ^          ^          ^     ^      ^ ^        ^ ^  * level    chunkptr      start      size        end  name    type  subtype flags  *  * Underlying data structure:  *  *	Legend:  *<struct chunk> --> part  *			|  *			v next  *  *<wd0> --><wd0s1> --><wd0s1a>  *		     |           |  *		     |           v  *		     |<wd0s1b>  *		     |           |  *		     |           v  *		     |<wd0s1e>  *		     |           |  *		     |           v  *		     |<wd0s1f>  *		     |  *		     v  *<wd0s2> --><unused>  *		     |           |  *		     |           v  *		     |<wd0s5>  *		     |  *		     v  *<wd0s3>	  *		     |  *		     v  *<wd0s4> --><wd0s4a>  *  *  */
+comment|/* TODO  *  * Need a error string mechanism from the functions instead of warn()  *  * Make sure only FreeBSD start at offset==0  *  * Collapse must align.  *  * Make Write_Disk(struct disk*)  *  * Consider booting from OnTrack'ed disks.  *  * Get Bios-geom, ST506& OnTrack from driver (or otherwise)  *  * Make Create_DWIM().  *  * Make Is_Unchanged(struct disk *d1, struct chunk *c1)  *  * don't rename slices unless we have to  *  *Sample output from tst01:  *  * Debug_Disk(wd0)  flags=0  real_geom=0/0/0  bios_geom=0/0/0  *>>        0x3d040          0    1411200    1411199 wd0      0 whole    0 0  *>>>>      0x3d080          0     960120     960119 wd0s1    3 freebsd  0 8  *>>>>>>    0x3d100          0      40960      40959 wd0s1a   5 part     0 0  *>>>>>>    0x3d180      40960     131072     172031 wd0s1b   5 part     0 0  *>>>>>>    0x3d1c0     172032     409600     581631 wd0s1e   5 part     0 0  *>>>>>>    0x3d200     581632     378488     960119 wd0s1f   5 part     0 0  *>>>>      0x3d140     960120       5670     965789 wd0s2    4 extended 0 8  *>>>>>>    0x3d2c0     960120         63     960182 -        6 unused   0 0  *>>>>>>    0x3d0c0     960183       5607     965789 wd0s5    2 fat      0 8  *>>>>      0x3d280     965790       1890     967679 wd0s3    1 foo      -2 8  *>>>>      0x3d300     967680     443520    1411199 wd0s4    3 freebsd  0 8  *>>>>>>    0x3d340     967680     443520    1411199 wd0s4a   5 part     0 0  *  * ^            ^           ^          ^          ^     ^      ^ ^        ^ ^  * level    chunkptr      start      size        end  name    type  subtype flags  *  * Underlying data structure:  *  *	Legend:  *<struct chunk> --> part  *			|  *			v next  *  *<wd0> --><wd0s1> --><wd0s1a>  *		     |           |  *		     |           v  *		     |<wd0s1b>  *		     |           |  *		     |           v  *		     |<wd0s1e>  *		     |           |  *		     |           v  *		     |<wd0s1f>  *		     |  *		     v  *<wd0s2> --><unused>  *		     |           |  *		     |           v  *		     |<wd0s5>  *		     |  *		     v  *<wd0s3>  *		     |  *		     v  *<wd0s4> --><wd0s4a>  *  *  */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: rules.c,v 1.8 1995/05/06 03:28:31 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: rules.c,v 1.9 1995/05/08 01:34:31 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -463,7 +463,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Rule#1:  *	All children of 'whole' and 'extended'  must be track-aligned.  *	Exception: the end can be unaligned if it matches the end of 'whole'  */
+comment|/*  * Rule#1:  *	All children of 'whole' and 'extended'  must be track-aligned.  *	Exception: the end can be unaligned if it matches the end of 'whole'  */
 end_comment
 
 begin_function
@@ -640,7 +640,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Rule#2:  *	Max one 'fat' as child of 'whole'  */
+comment|/*  * Rule#2:  *	Max one 'fat' as child of 'whole'  */
 end_comment
 
 begin_function
@@ -737,7 +737,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Rule#3:  *	Max one extended as child of 'whole'  */
+comment|/*  * Rule#3:  *	Max one extended as child of 'whole'  */
 end_comment
 
 begin_function
@@ -834,7 +834,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Rule#4:  *	Max seven 'part' as children of 'freebsd'  *	Max one FS_SWAP child per 'freebsd'  *	Max one CHUNK_IS_ROOT child per 'freebsd'  */
+comment|/*  * Rule#4:  *	Max seven 'part' as children of 'freebsd'  *	Max one FS_SWAP child per 'freebsd'  *	Max one CHUNK_IS_ROOT child per 'freebsd'  */
 end_comment
 
 begin_function
