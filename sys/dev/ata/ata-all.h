@@ -1152,10 +1152,6 @@ name|ATA_R_REQUEUE
 value|0x0400
 define|#
 directive|define
-name|ATA_R_SKIPSTART
-value|0x0800
-define|#
-directive|define
 name|ATA_R_DEBUG
 value|0x1000
 name|void
@@ -1197,6 +1193,12 @@ name|task
 name|task
 decl_stmt|;
 comment|/* task management */
+name|struct
+name|bio
+modifier|*
+name|bio
+decl_stmt|;
+comment|/* bio for this request */
 name|TAILQ_ENTRY
 argument_list|(
 argument|ata_request

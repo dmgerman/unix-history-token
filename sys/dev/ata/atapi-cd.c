@@ -7164,8 +7164,6 @@ name|request
 operator|->
 name|flags
 operator|=
-name|ATA_R_SKIPSTART
-operator||
 name|ATA_R_ATAPI
 expr_stmt|;
 if|if
