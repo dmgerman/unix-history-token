@@ -4217,7 +4217,7 @@ argument_list|,
 operator|(
 name|dev_priv
 operator|->
-name|agp_vm_start
+name|gart_vm_start
 operator|-
 literal|1
 operator|)
@@ -4225,6 +4225,9 @@ operator|&
 literal|0xffff0000
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__REALLY_HAVE_AGP
 if|if
 condition|(
 operator|!
@@ -4242,13 +4245,13 @@ operator|(
 operator|(
 name|dev_priv
 operator|->
-name|agp_vm_start
+name|gart_vm_start
 operator|-
 literal|1
 operator|+
 name|dev_priv
 operator|->
-name|agp_size
+name|gart_size
 operator|)
 operator|&
 literal|0xffff0000
@@ -4257,24 +4260,13 @@ operator||
 operator|(
 name|dev_priv
 operator|->
-name|agp_vm_start
+name|gart_vm_start
 operator|>>
 literal|16
 operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
-if|#
-directive|if
-name|__REALLY_HAVE_AGP
-if|if
-condition|(
-operator|!
-name|dev_priv
-operator|->
-name|is_pci
-condition|)
 name|ring_start
 operator|=
 operator|(
@@ -4292,9 +4284,10 @@ name|base
 operator|+
 name|dev_priv
 operator|->
-name|agp_vm_start
+name|gart_vm_start
 operator|)
 expr_stmt|;
+block|}
 else|else
 endif|#
 directive|endif
@@ -4315,7 +4308,7 @@ name|handle
 operator|+
 name|dev_priv
 operator|->
-name|agp_vm_start
+name|gart_vm_start
 operator|)
 expr_stmt|;
 name|RADEON_WRITE
@@ -4392,7 +4385,7 @@ name|base
 operator|+
 name|dev_priv
 operator|->
-name|agp_vm_start
+name|gart_vm_start
 argument_list|)
 expr_stmt|;
 block|}
@@ -4821,7 +4814,7 @@ name|RADEON_AIC_LO_ADDR
 argument_list|,
 name|dev_priv
 operator|->
-name|agp_vm_start
+name|gart_vm_start
 argument_list|)
 expr_stmt|;
 name|RADEON_WRITE
@@ -4830,16 +4823,16 @@ name|RADEON_AIC_HI_ADDR
 argument_list|,
 name|dev_priv
 operator|->
-name|agp_vm_start
+name|gart_vm_start
 operator|+
 name|dev_priv
 operator|->
-name|agp_size
+name|gart_size
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Turn off AGP aperture -- is this required for PCIGART? 		 */
+comment|/* Turn off AGP aperture -- is this required for PCI GART? 		 */
 name|RADEON_WRITE
 argument_list|(
 name|RADEON_MC_AGP_LOCATION
@@ -5417,11 +5410,11 @@ name|buffers_offset
 expr_stmt|;
 name|dev_priv
 operator|->
-name|agp_textures_offset
+name|gart_textures_offset
 operator|=
 name|init
 operator|->
-name|agp_textures_offset
+name|gart_textures_offset
 expr_stmt|;
 if|if
 condition|(
@@ -5690,21 +5683,20 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-name|dev_priv
+name|init
 operator|->
-name|is_pci
+name|gart_textures_offset
 condition|)
 block|{
 name|DRM_FIND_MAP
 argument_list|(
 name|dev_priv
 operator|->
-name|agp_textures
+name|gart_textures
 argument_list|,
 name|init
 operator|->
-name|agp_textures_offset
+name|gart_textures_offset
 argument_list|)
 expr_stmt|;
 if|if
@@ -5712,12 +5704,12 @@ condition|(
 operator|!
 name|dev_priv
 operator|->
-name|agp_textures
+name|gart_textures
 condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"could not find agp texture region!\n"
+literal|"could not find GART texture region!\n"
 argument_list|)
 expr_stmt|;
 name|dev
@@ -5945,15 +5937,15 @@ expr_stmt|;
 block|}
 name|dev_priv
 operator|->
-name|agp_size
+name|gart_size
 operator|=
 name|init
 operator|->
-name|agp_size
+name|gart_size
 expr_stmt|;
 name|dev_priv
 operator|->
-name|agp_vm_start
+name|gart_vm_start
 operator|=
 name|RADEON_READ
 argument_list|(
@@ -5972,7 +5964,7 @@ name|is_pci
 condition|)
 name|dev_priv
 operator|->
-name|agp_buffers_offset
+name|gart_buffers_offset
 operator|=
 operator|(
 name|dev_priv
@@ -5989,7 +5981,7 @@ name|base
 operator|+
 name|dev_priv
 operator|->
-name|agp_vm_start
+name|gart_vm_start
 operator|)
 expr_stmt|;
 else|else
@@ -5997,7 +5989,7 @@ endif|#
 directive|endif
 name|dev_priv
 operator|->
-name|agp_buffers_offset
+name|gart_buffers_offset
 operator|=
 operator|(
 name|dev_priv
@@ -6014,34 +6006,34 @@ name|handle
 operator|+
 name|dev_priv
 operator|->
-name|agp_vm_start
+name|gart_vm_start
 operator|)
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"dev_priv->agp_size %d\n"
+literal|"dev_priv->gart_size %d\n"
 argument_list|,
 name|dev_priv
 operator|->
-name|agp_size
+name|gart_size
 argument_list|)
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"dev_priv->agp_vm_start 0x%x\n"
+literal|"dev_priv->gart_vm_start 0x%x\n"
 argument_list|,
 name|dev_priv
 operator|->
-name|agp_vm_start
+name|gart_vm_start
 argument_list|)
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"dev_priv->agp_buffers_offset 0x%lx\n"
+literal|"dev_priv->gart_buffers_offset 0x%lx\n"
 argument_list|,
 name|dev_priv
 operator|->
-name|agp_buffers_offset
+name|gart_buffers_offset
 argument_list|)
 expr_stmt|;
 name|dev_priv
@@ -6923,7 +6915,7 @@ operator|&
 operator|(
 name|dev_priv
 operator|->
-name|agp_heap
+name|gart_heap
 operator|)
 argument_list|)
 expr_stmt|;

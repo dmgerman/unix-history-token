@@ -72,16 +72,6 @@ block|,
 block|{
 literal|0x1002
 block|,
-literal|0x4336
-block|,
-literal|1
-block|,
-literal|"ATI Radeon Mobility U1"
-block|}
-block|,
-block|{
-literal|0x1002
-block|,
 literal|0x4964
 block|,
 literal|1
@@ -246,7 +236,7 @@ literal|0x5148
 block|,
 literal|1
 block|,
-literal|"ATI Radeon QH FireGL 8x00"
+literal|"ATI Radeon QH R200 8500"
 block|}
 block|,
 block|{
@@ -346,7 +336,7 @@ literal|0x5159
 block|,
 literal|1
 block|,
-literal|"ATI Radeon QY RV100 VE"
+literal|"ATI Radeon QY RV100 7000/VE"
 block|}
 block|,
 block|{
@@ -356,7 +346,7 @@ literal|0x515A
 block|,
 literal|1
 block|,
-literal|"ATI Radeon QZ RV100 VE"
+literal|"ATI Radeon QZ RV100 7000/VE"
 block|}
 block|,
 block|{
@@ -407,6 +397,16 @@ block|,
 literal|1
 block|,
 literal|"ATI Radeon Ql R200"
+block|}
+block|,
+block|{
+literal|0x1002
+block|,
+literal|0x5961
+block|,
+literal|1
+block|,
+literal|"ATI Radeon RV280 9200"
 block|}
 block|,
 block|{

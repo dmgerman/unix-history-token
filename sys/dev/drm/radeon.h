@@ -125,7 +125,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Interface history:  *  * 1.1 - ??  * 1.2 - Add vertex2 ioctl (keith)  *     - Add stencil capability to clear ioctl (gareth, keith)  *     - Increase MAX_TEXTURE_LEVELS (brian)  * 1.3 - Add cmdbuf ioctl (keith)  *     - Add support for new radeon packets (keith)  *     - Add getparam ioctl (keith)  *     - Add flip-buffers ioctl, deprecate fullscreen foo (keith).  * 1.4 - Add scratch registers to get_param ioctl.  * 1.5 - Add r200 packets to cmdbuf ioctl  *     - Add r200 function to init ioctl  *     - Add 'scalar2' instruction to cmdbuf  * 1.6 - Add static agp memory manager  *       Add irq handler (won't be turned on unless X server knows to)  *       Add irq ioctls and irq_active getparam.  *       Add wait command for cmdbuf ioctl  *       Add agp offset query for getparam  * 1.7 - Add support for cube map registers: R200_PP_CUBIC_FACES_[0..5]  *       and R200_PP_CUBIC_OFFSET_F1_[0..5].  *       Added packets R200_EMIT_PP_CUBIC_FACES_[0..5] and  *       R200_EMIT_PP_CUBIC_OFFSETS_[0..5].  (brian)  * 1.8 - Remove need to call cleanup ioctls on last client exit (keith)  *       Add 'GET' queries for starting additional clients on different VT's.  * 1.9 - Add DRM_IOCTL_RADEON_CP_RESUME ioctl.  *       Add texture rectangle support for r100.  */
+comment|/* Interface history:  *  * 1.1 - ??  * 1.2 - Add vertex2 ioctl (keith)  *     - Add stencil capability to clear ioctl (gareth, keith)  *     - Increase MAX_TEXTURE_LEVELS (brian)  * 1.3 - Add cmdbuf ioctl (keith)  *     - Add support for new radeon packets (keith)  *     - Add getparam ioctl (keith)  *     - Add flip-buffers ioctl, deprecate fullscreen foo (keith).  * 1.4 - Add scratch registers to get_param ioctl.  * 1.5 - Add r200 packets to cmdbuf ioctl  *     - Add r200 function to init ioctl  *     - Add 'scalar2' instruction to cmdbuf  * 1.6 - Add static GART memory manager  *       Add irq handler (won't be turned on unless X server knows to)  *       Add irq ioctls and irq_active getparam.  *       Add wait command for cmdbuf ioctl  *       Add GART offset query for getparam  * 1.7 - Add support for cube map registers: R200_PP_CUBIC_FACES_[0..5]  *       and R200_PP_CUBIC_OFFSET_F1_[0..5].  *       Added packets R200_EMIT_PP_CUBIC_FACES_[0..5] and  *       R200_EMIT_PP_CUBIC_OFFSETS_[0..5].  (brian)  * 1.8 - Remove need to call cleanup ioctls on last client exit (keith)  *       Add 'GET' queries for starting additional clients on different VT's.  * 1.9 - Add DRM_IOCTL_RADEON_CP_RESUME ioctl.  *       Add texture rectangle support for r100.  */
 end_comment
 
 begin_define
@@ -137,7 +137,7 @@ value|[DRM_IOCTL_NR(DRM_IOCTL_DMA)]               = { radeon_cp_buffers,  1, 0 }
 end_define
 
 begin_comment
-comment|/* When a client dies:  *    - Check for and clean up flipped page state  *    - Free any alloced agp memory.  *  * DRM infrastructure takes care of reclaiming dma buffers.  */
+comment|/* When a client dies:  *    - Check for and clean up flipped page state  *    - Free any alloced GART memory.  *  * DRM infrastructure takes care of reclaiming dma buffers.  */
 end_comment
 
 begin_define
@@ -146,7 +146,7 @@ directive|define
 name|DRIVER_PRERELEASE
 parameter_list|()
 define|\
-value|do {									\ 	if ( dev->dev_private ) {					\ 		drm_radeon_private_t *dev_priv = dev->dev_private;	\ 		if ( dev_priv->page_flipping ) {			\ 			radeon_do_cleanup_pageflip( dev );		\ 		}							\                 radeon_mem_release( filp, dev_priv->agp_heap );		\                 radeon_mem_release( filp, dev_priv->fb_heap );		\ 	}								\ } while (0)
+value|do {									\ 	if ( dev->dev_private ) {					\ 		drm_radeon_private_t *dev_priv = dev->dev_private;	\ 		if ( dev_priv->page_flipping ) {			\ 			radeon_do_cleanup_pageflip( dev );		\ 		}							\                 radeon_mem_release( filp, dev_priv->gart_heap );	\                 radeon_mem_release( filp, dev_priv->fb_heap );		\ 	}								\ } while (0)
 end_define
 
 begin_comment

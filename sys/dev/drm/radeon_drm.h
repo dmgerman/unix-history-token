@@ -1289,7 +1289,7 @@ value|12
 end_define
 
 begin_comment
-comment|/* There are 2 heaps (local/AGP).  Each region within a heap is a  * minimum of 64k, and there are at most 64 of them per heap.  */
+comment|/* There are 2 heaps (local/GART).  Each region within a heap is a  * minimum of 64k, and there are at most 64 of them per heap.  */
 end_comment
 
 begin_define
@@ -1302,7 +1302,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|RADEON_AGP_TEX_HEAP
+name|RADEON_GART_TEX_HEAP
 value|1
 end_define
 
@@ -1957,7 +1957,7 @@ name|int
 name|cp_mode
 decl_stmt|;
 name|int
-name|agp_size
+name|gart_size
 decl_stmt|;
 name|int
 name|ring_size
@@ -2013,7 +2013,7 @@ name|buffers_offset
 decl_stmt|;
 name|unsigned
 name|long
-name|agp_textures_offset
+name|gart_textures_offset
 decl_stmt|;
 block|}
 name|drm_radeon_init_t
@@ -2368,12 +2368,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RADEON_PARAM_AGP_BUFFER_OFFSET
+name|RADEON_PARAM_GART_BUFFER_OFFSET
 value|1
 end_define
 
 begin_comment
-comment|/* card offset of 1st agp buffer */
+comment|/* card offset of 1st GART buffer */
 end_comment
 
 begin_define
@@ -2411,12 +2411,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|RADEON_PARAM_AGP_BASE
+name|RADEON_PARAM_GART_BASE
 value|6
 end_define
 
 begin_comment
-comment|/* card offset of agp base */
+comment|/* card offset of GART base */
 end_comment
 
 begin_comment
@@ -2451,7 +2451,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|RADEON_PARAM_AGP_TEX_HANDLE
+name|RADEON_PARAM_GART_TEX_HANDLE
 value|10
 end_define
 
@@ -2479,7 +2479,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RADEON_MEM_REGION_AGP
+name|RADEON_MEM_REGION_GART
 value|1
 end_define
 
@@ -2508,7 +2508,7 @@ name|int
 modifier|*
 name|region_offset
 decl_stmt|;
-comment|/* offset from start of fb or agp */
+comment|/* offset from start of fb or GART */
 block|}
 name|drm_radeon_mem_alloc_t
 typedef|;

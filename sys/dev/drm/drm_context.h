@@ -1171,6 +1171,27 @@ name|ENOMEM
 argument_list|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|DRIVER_CTX_CTOR
+if|if
+condition|(
+name|ctx
+operator|.
+name|handle
+operator|!=
+name|DRM_KERNEL_CONTEXT
+condition|)
+name|DRIVER_CTX_CTOR
+argument_list|(
+name|ctx
+operator|.
+name|handle
+argument_list|)
+expr_stmt|;
+comment|/* XXX: also pass dev ? */
+endif|#
+directive|endif
 name|DRM_COPY_TO_USER_IOCTL
 argument_list|(
 operator|(
@@ -1435,6 +1456,19 @@ operator|!=
 name|DRM_KERNEL_CONTEXT
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DRIVER_CTX_DTOR
+name|DRIVER_CTX_DTOR
+argument_list|(
+name|ctx
+operator|.
+name|handle
+argument_list|)
+expr_stmt|;
+comment|/* XXX: also pass dev ? */
+endif|#
+directive|endif
 name|DRM
 function_decl|(
 name|ctxbitmap_free
