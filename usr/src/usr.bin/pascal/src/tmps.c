@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmps.c 1.12 %G%"
+literal|"@(#)tmps.c 1.9.1.1 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -214,9 +225,15 @@ index|[
 name|cbn
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PC
 name|int
 name|i
 decl_stmt|;
+endif|#
+directive|endif
+endif|PC
 name|sizesp
 operator|->
 name|om_max
@@ -291,6 +308,10 @@ end_block
 
 begin_comment
 comment|/*  * allocate runtime temporary variables  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -759,6 +780,10 @@ name|nlp
 operator|=
 name|defnl
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|,
 name|VAR
@@ -797,6 +822,10 @@ begin_comment
 comment|/*  * deallocate runtime temporary variables  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_expr_stmt
 name|tmpfree
 argument_list|(
@@ -812,6 +841,9 @@ end_expr_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|PC
 specifier|register
 name|struct
 name|om
@@ -829,9 +861,6 @@ name|change
 init|=
 name|FALSE
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PC
 ifdef|#
 directive|ifdef
 name|vax
@@ -964,9 +993,6 @@ block|}
 endif|#
 directive|endif
 endif|mc68000
-endif|#
-directive|endif
-endif|PC
 if|if
 condition|(
 name|restore
@@ -995,9 +1021,6 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|PC
 if|if
 condition|(
 name|change
