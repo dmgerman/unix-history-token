@@ -1046,7 +1046,7 @@ name|sc
 operator|->
 name|bif
 operator|.
-name|unit
+name|units
 argument_list|,
 name|end
 argument_list|)
@@ -1786,13 +1786,13 @@ name|bif
 expr_stmt|;
 name|bifp
 operator|->
-name|unit
+name|units
 operator|=
 name|sc
 operator|->
 name|bif
 operator|.
-name|unit
+name|units
 expr_stmt|;
 name|bifp
 operator|->

@@ -90,7 +90,7 @@ struct|struct
 name|acpi_bif
 block|{
 name|u_int32_t
-name|unit
+name|units
 decl_stmt|;
 comment|/* 0 for mWh, 1 for mAh */
 name|u_int32_t
@@ -104,7 +104,7 @@ comment|/* Last Full capacity */
 name|u_int32_t
 name|btech
 decl_stmt|;
-comment|/* Battery Technorogy */
+comment|/* Battery Technology */
 name|u_int32_t
 name|dvol
 decl_stmt|;
