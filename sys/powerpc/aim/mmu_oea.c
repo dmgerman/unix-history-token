@@ -2289,7 +2289,8 @@ argument_list|,
 name|BAT_PP_RW
 argument_list|)
 expr_stmt|;
-asm|__asm ("mtibatu 0,%0; mtibatl 0,%1; mtdbatu 0,%0; mtdbatl 0,%1"
+asm|__asm ("mtibatu 0,%0; mtibatl 0,%1; isync; \n"
+literal|"mtdbatu 0,%0; mtdbatl 0,%1; isync"
 operator|::
 literal|"r"
 operator|(
@@ -2315,7 +2316,7 @@ comment|/* map frame buffer */
 end_comment
 
 begin_endif
-unit|batu = BATU(0x90000000, BAT_BL_256M, BAT_Vs); 	batl = BATL(0x90000000, BAT_I|BAT_G, BAT_PP_RW); 	__asm ("mtdbatu 1,%0; mtdbatl 1,%1" 	    :: "r"(batu), "r"(batl));
+unit|batu = BATU(0x90000000, BAT_BL_256M, BAT_Vs); 	batl = BATL(0x90000000, BAT_I|BAT_G, BAT_PP_RW); 	__asm ("mtdbatu 1,%0; mtdbatl 1,%1; isync" 	    :: "r"(batu), "r"(batl));
 endif|#
 directive|endif
 end_endif
@@ -2361,7 +2362,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_asm
-asm|__asm ("mtdbatu 1,%0; mtdbatl 1,%1"
+asm|__asm ("mtdbatu 1,%0; mtdbatl 1,%1; isync"
 end_asm
 
 begin_expr_stmt
