@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.5 (Berkeley) %G%"
+literal|"@(#)ls.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<time.h>
 end_include
 
 begin_include
@@ -55,13 +55,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utmp.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -107,10 +125,6 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|group_from_gid
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strerror
 argument_list|()
 decl_stmt|;
 operator|(
@@ -451,10 +465,6 @@ name|MAXPATHLEN
 operator|+
 literal|1
 index|]
-decl_stmt|,
-modifier|*
-name|strerror
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
