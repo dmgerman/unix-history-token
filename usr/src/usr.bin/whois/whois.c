@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whois.c	5.6 (Berkeley) %G%"
+literal|"@(#)whois.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,20 +73,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<netdb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netdb.h>
+file|<stdio.h>
 end_include
 
 begin_define
 define|#
 directive|define
 name|NICHOST
-value|"sri-nic.arpa"
+value|"nic.ddn.mil"
 end_define
 
 begin_function
@@ -101,8 +101,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
 specifier|extern
@@ -124,7 +124,7 @@ name|sfo
 decl_stmt|;
 specifier|register
 name|int
-name|c
+name|ch
 decl_stmt|;
 name|struct
 name|sockaddr_in
@@ -141,8 +141,6 @@ modifier|*
 name|sp
 decl_stmt|;
 name|int
-name|ch
-decl_stmt|,
 name|s
 decl_stmt|;
 name|char
@@ -225,6 +223,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -373,6 +374,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -456,9 +460,12 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"fdopen"
+literal|"whois: fdopen"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|s
@@ -470,6 +477,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|sfo
@@ -491,7 +501,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-name|c
+name|ch
 operator|=
 name|getc
 argument_list|(
@@ -503,7 +513,7 @@ name|EOF
 condition|)
 name|putchar
 argument_list|(
-name|c
+name|ch
 argument_list|)
 expr_stmt|;
 block|}
@@ -514,6 +524,9 @@ specifier|static
 name|usage
 argument_list|()
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
