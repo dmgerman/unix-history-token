@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	6.2	84/05/22	*/
+comment|/*	kern_synch.c	6.3	84/07/31	*/
 end_comment
 
 begin_include
@@ -178,6 +178,21 @@ end_macro
 begin_block
 block|{
 specifier|register
+name|double
+name|ccpu1
+init|=
+operator|(
+literal|1.0
+operator|-
+name|ccpu
+operator|)
+operator|/
+operator|(
+name|double
+operator|)
+name|hz
+decl_stmt|;
+specifier|register
 name|struct
 name|proc
 modifier|*
@@ -273,22 +288,11 @@ name|p
 operator|->
 name|p_pctcpu
 operator|+
-operator|(
-literal|1.0
-operator|-
-name|ccpu
-operator|)
+name|ccpu1
 operator|*
-operator|(
 name|p
 operator|->
 name|p_cpticks
-operator|/
-operator|(
-name|float
-operator|)
-name|hz
-operator|)
 expr_stmt|;
 name|p
 operator|->
@@ -371,6 +375,10 @@ operator|>=
 name|PUSER
 condition|)
 block|{
+define|#
+directive|define
+name|PPQ
+value|(128 / NQS)
 if|if
 condition|(
 operator|(
@@ -397,13 +405,21 @@ operator|&
 name|SLOAD
 operator|)
 operator|&&
+operator|(
 name|p
 operator|->
 name|p_pri
+operator|/
+name|PPQ
+operator|)
 operator|!=
+operator|(
 name|p
 operator|->
 name|p_usrpri
+operator|/
+name|PPQ
+operator|)
 condition|)
 block|{
 name|remrq
@@ -754,6 +770,12 @@ name|swtch
 argument_list|()
 expr_stmt|;
 block|}
+name|curpri
+operator|=
+name|rp
+operator|->
+name|p_usrpri
+expr_stmt|;
 name|out
 label|:
 name|splx
@@ -1015,22 +1037,13 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|p_pri
-operator|<
-name|curpri
-condition|)
-block|{
+comment|/* 				 * Since curpri is a usrpri, 				 * p->p_pri is always better than curpri. 				 */
 name|runrun
 operator|++
 expr_stmt|;
 name|aston
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
