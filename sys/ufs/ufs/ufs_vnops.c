@@ -1196,6 +1196,18 @@ operator|(
 name|EPERM
 operator|)
 return|;
+comment|/* XXX: if we have the size we should pass it for speed */
+name|vnode_create_vobject
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|ap
+operator|->
+name|a_td
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
