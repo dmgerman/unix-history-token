@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (C) 1992, 1993, 1994 Søren Schmidt  *  *  This program is free software; you may redistribute it and/or   *  modify it, provided that it retain the above copyright notice   *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   *  *	Søren Schmidt 		Email:	sos@login.dkuug.dk  *	Tritonvej 36		UUCP:	...uunet!dkuug!login!sos  *	DK9210 Aalborg SO	Phone:  +45 9814 8076  *  *	@(#)kbdtables.h	1.3 940123  *	$Id: kbdtables.h,v 1.11 1994/02/01 09:27:43 ache Exp $  */
+comment|/*  *  Copyright (C) 1992, 1993, 1994 Søren Schmidt  *  *  This program is free software; you may redistribute it and/or   *  modify it, provided that it retain the above copyright notice   *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   *  *	Søren Schmidt 		Email:	sos@login.dkuug.dk  *	Tritonvej 36		UUCP:	...uunet!dkuug!login!sos  *	DK9210 Aalborg SO	Phone:  +45 9814 8076  *  *	@(#)kbdtables.h	1.3 940123  *	$Id: kbdtables.h,v 1.12 1994/04/26 09:24:06 sos Exp $  */
 end_comment
 
 begin_define
@@ -13679,11 +13679,9 @@ literal|0x7F
 block|,
 name|RBT
 block|,
-name|SET8
-operator||
-literal|0x7F
+name|RBT
 block|,
-literal|0x82
+literal|0x83
 block|,
 literal|0x02
 block|,
@@ -17397,11 +17395,9 @@ literal|0x7F
 block|,
 name|RBT
 block|,
-name|SET8
-operator||
-literal|0x7F
+name|RBT
 block|,
-literal|0x82
+literal|0x83
 block|,
 literal|0x02
 block|,
