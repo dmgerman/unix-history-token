@@ -153,10 +153,6 @@ directive|include
 file|<netinet/ip_icmp.h>
 end_include
 
-begin_comment
-comment|/* for ICMP_BANDLIM		*/
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -243,10 +239,6 @@ include|#
 directive|include
 file|<netinet/icmp_var.h>
 end_include
-
-begin_comment
-comment|/* for ICMP_BANDLIM		*/
-end_comment
 
 begin_include
 include|#
@@ -8620,9 +8612,6 @@ return|return;
 comment|/* 	 * Conditionally drop with reset or just drop depending on whether 	 * we think we are under attack or not. 	 */
 name|maybedropwithreset
 label|:
-ifdef|#
-directive|ifdef
-name|ICMP_BANDLIM
 if|if
 condition|(
 name|badport_bandlim
@@ -8635,8 +8624,6 @@ condition|)
 goto|goto
 name|drop
 goto|;
-endif|#
-directive|endif
 comment|/* fall through */
 name|dropwithreset
 label|:

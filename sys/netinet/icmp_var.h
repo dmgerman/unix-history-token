@@ -15,27 +15,6 @@ directive|define
 name|_NETINET_ICMP_VAR_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"opt_icmp_bandlim.h"
-end_include
-
-begin_comment
-comment|/* for ICMP_BANDLIM     */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Variables related to this implementation  * of the internet control message protocol.  */
 end_comment
@@ -167,12 +146,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ICMP_BANDLIM
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -185,11 +158,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

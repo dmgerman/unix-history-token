@@ -299,16 +299,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ICMP_BANDLIM
-end_ifdef
-
-begin_comment
-comment|/*      * ICMP error-response bandwidth limiting sysctl.  If not enabled, sysctl  *      variable content is -1 and read-only.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -339,17 +329,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
 name|int
-name|icmplim
+name|icmplim_output
 init|=
-operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
@@ -359,14 +343,14 @@ name|SYSCTL_INT
 argument_list|(
 name|_net_inet_icmp
 argument_list|,
-name|ICMPCTL_ICMPLIM
+name|OID_AUTO
 argument_list|,
-name|icmplim
+name|icmplim_output
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|icmplim
+name|icmplim_output
 argument_list|,
 literal|0
 argument_list|,
@@ -374,11 +358,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * ICMP broadcast echo sysctl  */
@@ -3821,12 +3800,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ICMP_BANDLIM
-end_ifdef
-
 begin_comment
 comment|/*  * badport_bandlim() - check for ICMP bandwidth limit  *  *	Return 0 if it is ok to send an ICMP error response, -1 if we have  *	hit our bandwidth limit and it is not ok.    *  *	If icmplim is<= 0, the feature is disabled and 0 is returned.  *  *	For now we separate the TCP and UDP subsystems w/ different 'which'  *	values.  We may eventually remove this separation (and simplify the  *	code further).  *  *	Note that the printing of the error message is delayed so we can  *	properly print the icmp error rate that the system was trying to do  *	(i.e. 22000/100 pps, etc...).  This can cause long delays in printing  *	the 'final' error, but it doesn't make sense to solve the printing   *	delay with more complex code.  */
 end_comment
@@ -3905,11 +3878,10 @@ name|which
 index|]
 operator|>
 name|icmplim
+operator|&&
+name|icmplim_output
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|ICMP_BANDLIM_SUPPRESS_OUTPUT
 name|printf
 argument_list|(
 literal|"icmp-response bandwidth limit %d/%d pps\n"
@@ -3922,8 +3894,6 @@ argument_list|,
 name|icmplim
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|lticks
 index|[
@@ -3966,11 +3936,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

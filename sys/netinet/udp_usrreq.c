@@ -1563,9 +1563,6 @@ name|ip
 operator|=
 name|save_ip
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ICMP_BANDLIM
 if|if
 condition|(
 name|badport_bandlim
@@ -1578,8 +1575,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
