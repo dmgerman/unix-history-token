@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.23 1997/09/29 03:53:51 imp Exp $"
+literal|"$Id: main.c,v 1.24 1998/06/13 11:55:57 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -720,17 +720,18 @@ name|printVars
 operator|=
 name|TRUE
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|asprintf
-argument_list|(
-operator|&
 name|p
-argument_list|,
-literal|"${%s}"
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
 name|optarg
+argument_list|)
+operator|+
+literal|1
+operator|+
+literal|3
 argument_list|)
 expr_stmt|;
 if|if
@@ -741,6 +742,19 @@ condition|)
 name|Punt
 argument_list|(
 literal|"make: cannot allocate memory."
+argument_list|)
+expr_stmt|;
+comment|/* This sprintf is safe, because of the malloc above */
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|p
+argument_list|,
+literal|"${%s}"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 operator|(
