@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	3.20	%G%	*/
+comment|/*	up.c	3.21	%G%	*/
 end_comment
 
 begin_comment
-comment|/*  * Emulex UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * NB: This driver works reliably only on an SC-11B controller with  *     rev. level at least J (in particular rev. level H will not work well).  *     If you have an newer controller you should change olducode below to:  *		int	olducode = 0;  *     which saves time by stalling less in the system.  *  * Controller switch settings:  *	SW1-1	5/19 surfaces	(off, 19 surfaces on Ampex 9300)  *	SW1-2	chksum enable	(off, checksum disabled)  *	SW1-3	volume select	(off, 815 cylinders)  *	SW1-4	sector select	(on, 32 sectors)  *	SW1-5	unused		(off)  *	SW1-6	port select	(on, single port)  *	SW1-7	npr delay	(off, disable)  *	SW1-8	ecc test mode	(off, disable)  * and top mounted switches:  *	SW2-1	extend opcodes	(off=open, disable)  *	SW2-2	extend diag	(off=open, disable)  *	SW2-3	4 wd dma burst	(on=closed, enable)  *	SW2-4	unused		(off=open)  */
+comment|/*  * UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * This driver works marginally on an Emulex SC-11B controller with rev  * level J microcode, defining:  *	int	olducode = 1;  * to force CPU stalling delays.  *  * It has worked with no delays and no problems on a prototype  * SC-21 controller.  Emulex intends to upgrade all SC-11s on VAXes to SC-21s.  * You should get a SC-21 to replace any SC-11 on a VAX.  *  * SC-11B Controller switch settings:  *	SW1-1	5/19 surfaces	(off, 19 surfaces on Ampex 9300)  *	SW1-2	chksum enable	(off, checksum disabled)  *	SW1-3	volume select	(off, 815 cylinders)  *	SW1-4	sector select	(on, 32 sectors)  *	SW1-5	unused		(off)  *	SW1-6	port select	(on, single port)  *	SW1-7	npr delay	(off, disable)  *	SW1-8	ecc test mode	(off, disable)  * and top mounted switches:  *	SW2-1	extend opcodes	(off=open, disable)  *	SW2-2	extend diag	(off=open, disable)  *	SW2-3	4 wd dma burst	(on=closed, enable)  *	SW2-4	unused		(off=open)  */
 end_comment
 
 begin_include
@@ -2342,11 +2342,21 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|upaddr
 operator|->
 name|upds
 operator|&
 name|ERR
+operator|)
+operator|||
+operator|(
+name|upaddr
+operator|->
+name|upcs1
+operator|&
+name|TRE
+operator|)
 condition|)
 block|{
 comment|/* 			 * An error occurred, indeed.  Select this unit 			 * to get at the drive status (a SEARCH may have 			 * intervened to change the selected unit), and 			 * wait for the command which caused the interrupt 			 * to complete (DRY). 			 */
