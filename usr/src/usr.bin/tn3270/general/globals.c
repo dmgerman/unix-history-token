@@ -41,18 +41,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ascii/ascebc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ctlr/dctype.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../ctlr/oia.h"
 end_include
 
@@ -66,12 +54,6 @@ begin_include
 include|#
 directive|include
 file|"../ctlr/screen.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ascii/state.h"
 end_include
 
 begin_define
