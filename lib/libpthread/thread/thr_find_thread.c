@@ -269,9 +269,9 @@ operator|&&
 operator|(
 name|thread
 operator|->
-name|flags
+name|tlflags
 operator|&
-name|THR_FLAGS_GC_SAFE
+name|TLFLAGS_GC_SAFE
 operator|)
 operator|!=
 literal|0

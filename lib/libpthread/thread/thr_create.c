@@ -850,6 +850,12 @@ literal|0
 expr_stmt|;
 name|new_thread
 operator|->
+name|tlflags
+operator|=
+literal|0
+expr_stmt|;
+name|new_thread
+operator|->
 name|continuation
 operator|=
 name|NULL
