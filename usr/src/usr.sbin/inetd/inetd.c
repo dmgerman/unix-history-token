@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.32 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2475,6 +2475,14 @@ operator|.
 name|sin_port
 condition|)
 block|{
+name|sep
+operator|->
+name|se_ctrladdr
+operator|.
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
 name|sep
 operator|->
 name|se_ctrladdr
