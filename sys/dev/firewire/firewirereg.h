@@ -1887,6 +1887,46 @@ begin_comment
 comment|/* __alpha__ */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
+begin_define
+define|#
+directive|define
+name|CALLOUT_INIT
+parameter_list|(
+name|x
+parameter_list|)
+value|callout_init(x, 0
+comment|/* mpsafe */
+value|)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CALLOUT_INIT
+parameter_list|(
+name|x
+parameter_list|)
+value|callout_init(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
