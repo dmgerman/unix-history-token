@@ -44,7 +44,8 @@ name|fgets
 argument_list|(
 name|buf
 argument_list|,
-literal|80
+sizeof|sizeof
+name|buf
 argument_list|,
 name|stdin
 argument_list|)
@@ -90,10 +91,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * EOF -- This file has not been truncated  */
-end_comment
 
 end_unit
 

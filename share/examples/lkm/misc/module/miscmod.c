@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
@@ -79,13 +85,33 @@ directive|include
 file|<sys/errno.h>
 end_include
 
-begin_function_decl
+begin_comment
+comment|/* XXX this should be in a header. */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|misccall
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|,
+name|void
+operator|*
+name|uap
+operator|,
+name|int
+name|retval
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * These two entries define our system call and module information.  We  * have 0 arguments to our system call.  */
@@ -133,21 +159,22 @@ name|nsysent
 value|(aout_sysvec.sv_size)
 end_define
 
-begin_macro
+begin_expr_stmt
 name|MOD_MISC
 argument_list|(
-literal|"misc_mod"
+name|misc
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/*  * This function is called each time the module is loaded or unloaded.  * Since we are a miscellaneous module, we have to provide whatever  * code is necessary to patch ourselves into the area we are being  * loaded to change.  *  * For the system call table, we duplicate the code in the kern_lkm.c  * file for patching into the system call table.  We can tell what  * has been allocated, etc. by virtue of the fact that we know the  * criteria used by the system call loader interface.  We still  * kick out the copyright to the console here (to give an example).  *  * The stat information is basically common to all modules, so there  * is no real issue involved with stat; we will leave it nosys(),  * cince we don't have to do anything about it.  */
+comment|/*  * This function is called each time the module is loaded or unloaded.  * Since we are a miscellaneous module, we have to provide whatever  * code is necessary to patch ourselves into the area we are being  * loaded to change.  *  * For the system call table, we duplicate the code in the kern_lkm.c  * file for patching into the system call table.  We can tell what  * has been allocated, etc. by virtue of the fact that we know the  * criteria used by the system call loader interface.  We still  * kick out the copyright to the console here (to give an example).  *  * The stat information is basically common to all modules, so there  * is no real issue involved with stat; we will leave it lkm_nullcmd(),  * cince we don't have to do anything about it.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|miscmod_handle
+name|misc_load
 parameter_list|(
 name|lkmtp
 parameter_list|,
@@ -182,12 +209,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* default = success*/
-specifier|extern
-name|int
-name|lkmnosys
-parameter_list|()
-function_decl|;
-comment|/* allocable slot*/
 switch|switch
 condition|(
 name|cmd
@@ -233,6 +254,10 @@ index|]
 operator|.
 name|sy_call
 operator|==
+operator|(
+name|sy_call_t
+operator|*
+operator|)
 name|lkmnosys
 condition|)
 break|break;
@@ -368,62 +393,48 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * External entry point; should generally match name of .o file.  The  * arguments are always the same for all loaded modules.  The "load",  * "unload", and "stat" functions in "DISPATCH" will be called under  * their respective circumstances unless their value is "nosys".  If  * called, they are called with the same arguments (cmd is included to  * allow the use of a single function, ver is included for version  * matching between modules and the kernel loader for the modules).  *  * Since we expect to link in the kernel and add external symbols to  * the kernel symbol name space in a future version, generally all  * functions used in the implementation of a particular module should  * be static unless they are expected to be seen in other modules or  * to resolve unresolved symbols alread existing in the kernel (the  * second case is not likely to ever occur).  *  * The entry point should return 0 unless it is refusing load (in which  * case it should return an errno from errno.h).  */
+comment|/*  * External entry point; should generally match name of .o file.  The  * arguments are always the same for all loaded modules.  The "load",  * "unload", and "stat" functions in "DISPATCH" will be called under  * their respective circumstances unless their value is "lkm_nullcmd".  If  * called, they are called with the same arguments (cmd is included to  * allow the use of a single function, ver is included for version  * matching between modules and the kernel loader for the modules).  *  * Since we expect to link in the kernel and add external symbols to  * the kernel symbol name space in a future version, generally all  * functions used in the implementation of a particular module should  * be static unless they are expected to be seen in other modules or  * to resolve unresolved symbols alread existing in the kernel (the  * second case is not likely to ever occur).  *  * The entry point should return 0 unless it is refusing load (in which  * case it should return an errno from errno.h).  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|misc_mod
-argument_list|(
-argument|lkmtp
-argument_list|,
-argument|cmd
-argument_list|,
-argument|ver
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|lkmtp
+parameter_list|,
+name|cmd
+parameter_list|,
+name|ver
+parameter_list|)
 name|struct
 name|lkm_table
 modifier|*
 name|lkmtp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|ver
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|DISPATCH
 argument_list|(
-argument|lkmtp
+name|lkmtp
 argument_list|,
-argument|cmd
+name|cmd
 argument_list|,
-argument|ver
+name|ver
 argument_list|,
-argument|miscmod_handle
+name|misc_load
 argument_list|,
-argument|miscmod_handle
+name|misc_load
 argument_list|,
-argument|nosys
+name|lkm_nullcmd
 argument_list|)
+expr_stmt|;
 block|}
-end_block
-
-begin_comment
-comment|/*  * EOF -- This file has not been truncated.  */
-end_comment
+end_function
 
 end_unit
 
