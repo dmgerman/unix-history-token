@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 103 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 104 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -601,11 +601,9 @@ operator|==
 name|AE_NOT_EXIST
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
-operator|,
 literal|"Region %s(%X) has no handler\n"
 operator|,
 name|AcpiUtGetRegionName

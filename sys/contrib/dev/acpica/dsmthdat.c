@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 77 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 78 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1433,7 +1433,7 @@ name|CurrentObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*                  * Store this object to the Node                  * (perform the indirect store)                  */
+comment|/*                  * Store this object to the Node (perform the indirect store)                  * NOTE: No implicit conversion is performed, as per the ACPI                  * specification rules on storing to Locals/Args.                  */
 name|Status
 operator|=
 name|AcpiExStoreObjectToNode
@@ -1447,6 +1447,8 @@ operator|.
 name|Object
 argument_list|,
 name|WalkState
+argument_list|,
+name|ACPI_NO_IMPLICIT_CONVERSION
 argument_list|)
 expr_stmt|;
 comment|/* Remove local reference if we copied the object above */

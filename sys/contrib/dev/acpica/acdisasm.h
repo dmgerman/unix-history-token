@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdisasm.h - AML disassembler  *       $Revision: 11 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdisasm.h - AML disassembler  *       $Revision: 12 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -52,6 +52,33 @@ directive|define
 name|BLOCK_COMMA_LIST
 value|4
 end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_external_list
+block|{
+name|char
+modifier|*
+name|Path
+decl_stmt|;
+name|struct
+name|acpi_external_list
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+name|ACPI_EXTERNAL_LIST
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_EXTERNAL_LIST
+modifier|*
+name|AcpiGbl_ExternalList
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1138,6 +1165,21 @@ name|Length
 parameter_list|,
 name|UINT32
 name|Level
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * dmutils  */
+end_comment
+
+begin_function_decl
+name|void
+name|AcpiDmAddToExternalList
+parameter_list|(
+name|char
+modifier|*
+name|Path
 parameter_list|)
 function_decl|;
 end_function_decl

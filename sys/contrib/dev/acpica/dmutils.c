@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dmutils - AML disassembler utilities  *              $Revision: 9 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dmutils - AML disassembler utilities  *              $Revision: 10 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -25,6 +25,12 @@ directive|include
 file|"acdisasm.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acnamesp.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -44,6 +50,15 @@ argument_list|(
 literal|"dmutils"
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|ACPI_EXTERNAL_LIST
+modifier|*
+name|AcpiGbl_ExternalList
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Data used in keeping track of fields */
@@ -458,6 +473,99 @@ literal|"InvalidSize"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmAddToExternalList  *  * PARAMETERS:  Path            - Internal (AML) path to the object  *  * RETURN:      None  *  * DESCRIPTION: Insert a new path into the list of Externals which will in  *              turn be emitted as an External() declaration in the disassembled  *              output.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiDmAddToExternalList
+parameter_list|(
+name|char
+modifier|*
+name|Path
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|ExternalPath
+decl_stmt|;
+name|ACPI_EXTERNAL_LIST
+modifier|*
+name|NewExternal
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Path
+condition|)
+block|{
+return|return;
+block|}
+comment|/* Externalize the ACPI path */
+name|Status
+operator|=
+name|AcpiNsExternalizeName
+argument_list|(
+name|ACPI_UINT32_MAX
+argument_list|,
+name|Path
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|ExternalPath
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+comment|/* Allocate and init a new External() descriptor */
+name|NewExternal
+operator|=
+name|ACPI_MEM_CALLOCATE
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ACPI_EXTERNAL_LIST
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|NewExternal
+operator|->
+name|Path
+operator|=
+name|ExternalPath
+expr_stmt|;
+comment|/* Link the new descriptor into the global list */
+if|if
+condition|(
+name|AcpiGbl_ExternalList
+condition|)
+block|{
+name|NewExternal
+operator|->
+name|Next
+operator|=
+name|AcpiGbl_ExternalList
+expr_stmt|;
+block|}
+name|AcpiGbl_ExternalList
+operator|=
+name|NewExternal
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDecodeAttribute  *  * PARAMETERS:  Attribute       - Attribute field of AccessAs keyword  *  * RETURN:      None  *  * DESCRIPTION: Decode the AccessAs attribute byte.  (Mostly SMBus stuff)  *  ******************************************************************************/

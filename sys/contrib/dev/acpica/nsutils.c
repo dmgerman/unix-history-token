@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 133 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 134 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -474,7 +474,7 @@ block|{
 name|ACPI_REPORT_WARNING
 argument_list|(
 operator|(
-literal|"NsGetType: Null Node ptr"
+literal|"NsGetType: Null Node input pointer\n"
 operator|)
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsaddr - Address resource descriptors (16/32/64)  *              $Revision: 34 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsaddr - Address resource descriptors (16/32/64)  *              $Revision: 35 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -324,7 +324,7 @@ operator|>>
 literal|1
 operator|)
 operator|&
-literal|0x0F
+literal|0x03
 argument_list|)
 expr_stmt|;
 block|}
@@ -936,7 +936,7 @@ name|Memory
 operator|.
 name|CacheAttribute
 operator|&
-literal|0x0F
+literal|0x03
 operator|)
 operator|<<
 literal|1
@@ -1516,7 +1516,7 @@ operator|>>
 literal|1
 operator|)
 operator|&
-literal|0x0F
+literal|0x03
 argument_list|)
 expr_stmt|;
 block|}
@@ -2130,7 +2130,7 @@ name|Memory
 operator|.
 name|CacheAttribute
 operator|&
-literal|0x0F
+literal|0x03
 operator|)
 operator|<<
 literal|1
@@ -2707,7 +2707,7 @@ operator|>>
 literal|1
 operator|)
 operator|&
-literal|0x0F
+literal|0x03
 argument_list|)
 expr_stmt|;
 block|}
@@ -3321,7 +3321,7 @@ name|Memory
 operator|.
 name|CacheAttribute
 operator|&
-literal|0x0F
+literal|0x03
 operator|)
 operator|<<
 literal|1

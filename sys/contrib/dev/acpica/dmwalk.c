@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dmwalk - AML disassembly tree walk  *              $Revision: 11 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dmwalk - AML disassembly tree walk  *              $Revision: 12 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -691,6 +691,10 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|NextOp
 decl_stmt|;
+name|ACPI_EXTERNAL_LIST
+modifier|*
+name|NextExternal
+decl_stmt|;
 if|if
 condition|(
 name|Op
@@ -709,6 +713,7 @@ name|AE_CTRL_DEPTH
 operator|)
 return|;
 block|}
+comment|/* Level 0 is at the Definition Block level */
 if|if
 condition|(
 name|Level
@@ -750,11 +755,67 @@ operator|==
 name|AML_SCOPE_OP
 condition|)
 block|{
+comment|/* This is the beginning of the Definition Block */
 name|AcpiOsPrintf
 argument_list|(
 literal|"{\n"
 argument_list|)
 expr_stmt|;
+comment|/* Emit all External() declarations here */
+if|if
+condition|(
+name|AcpiGbl_ExternalList
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"    /*\n     * These objects were referenced but not defined in this table\n     */\n"
+argument_list|)
+expr_stmt|;
+comment|/* Walk the list of externals (unresolved references) found during parsing */
+while|while
+condition|(
+name|AcpiGbl_ExternalList
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"    External (%s)\n"
+argument_list|,
+name|AcpiGbl_ExternalList
+operator|->
+name|Path
+argument_list|)
+expr_stmt|;
+name|NextExternal
+operator|=
+name|AcpiGbl_ExternalList
+operator|->
+name|Next
+expr_stmt|;
+name|ACPI_MEM_FREE
+argument_list|(
+name|AcpiGbl_ExternalList
+operator|->
+name|Path
+argument_list|)
+expr_stmt|;
+name|ACPI_MEM_FREE
+argument_list|(
+name|AcpiGbl_ExternalList
+argument_list|)
+expr_stmt|;
+name|AcpiGbl_ExternalList
+operator|=
+name|NextExternal
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_OK

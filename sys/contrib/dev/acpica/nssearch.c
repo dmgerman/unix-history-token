@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 100 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 101 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -156,6 +156,29 @@ operator|==
 name|TargetName
 condition|)
 block|{
+comment|/* Resolve a control method alias if any */
+if|if
+condition|(
+name|AcpiNsGetType
+argument_list|(
+name|NextNode
+argument_list|)
+operator|==
+name|ACPI_TYPE_LOCAL_METHOD_ALIAS
+condition|)
+block|{
+name|NextNode
+operator|=
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_NAMESPACE_NODE
+argument_list|,
+name|NextNode
+operator|->
+name|Object
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*              * Found matching entry.              */
 name|ACPI_DEBUG_PRINT
 argument_list|(

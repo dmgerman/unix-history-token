@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 198 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 199 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -938,6 +938,24 @@ decl_stmt|;
 comment|/* System interrupt level */
 block|}
 name|ACPI_GPE_XRUPT_INFO
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_gpe_walk_info
+block|{
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|GpeDevice
+decl_stmt|;
+name|ACPI_GPE_BLOCK_INFO
+modifier|*
+name|GpeBlock
+decl_stmt|;
+block|}
+name|ACPI_GPE_WALK_INFO
 typedef|;
 end_typedef
 

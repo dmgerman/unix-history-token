@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evgpe - General Purpose Event handling and dispatch  *              $Revision: 34 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evgpe - General Purpose Event handling and dispatch  *              $Revision: 35 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -155,7 +155,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/*      * A Non-null GpeDevice means this is a GPE Block Device.      */
+comment|/* A Non-NULL GpeDevice means this is a GPE Block Device */
 name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
@@ -735,11 +735,15 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
 name|LocalGpeEventInfo
 operator|.
 name|Flags
 operator|&
-name|ACPI_EVENT_LEVEL_TRIGGERED
+name|ACPI_GPE_XRUPT_TYPE_MASK
+operator|)
+operator|==
+name|ACPI_GPE_LEVEL_TRIGGERED
 condition|)
 block|{
 comment|/*          * GPE is level-triggered, we clear the GPE status bit after handling          * the event.          */
@@ -805,11 +809,15 @@ expr_stmt|;
 comment|/*      * If edge-triggered, clear the GPE status bit now.  Note that      * level-triggered events are cleared after the GPE is serviced.      */
 if|if
 condition|(
+operator|(
 name|GpeEventInfo
 operator|->
 name|Flags
 operator|&
-name|ACPI_EVENT_EDGE_TRIGGERED
+name|ACPI_GPE_XRUPT_TYPE_MASK
+operator|)
+operator|==
+name|ACPI_GPE_EDGE_TRIGGERED
 condition|)
 block|{
 name|Status
@@ -864,11 +872,15 @@ expr_stmt|;
 comment|/* It is now safe to clear level-triggered events. */
 if|if
 condition|(
+operator|(
 name|GpeEventInfo
 operator|->
 name|Flags
 operator|&
-name|ACPI_EVENT_LEVEL_TRIGGERED
+name|ACPI_GPE_XRUPT_TYPE_MASK
+operator|)
+operator|==
+name|ACPI_GPE_LEVEL_TRIGGERED
 condition|)
 block|{
 name|Status

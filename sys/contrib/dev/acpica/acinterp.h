@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 147 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 148 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1426,9 +1426,26 @@ parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
+parameter_list|,
+name|UINT8
+name|ImplicitConversion
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ACPI_IMPLICIT_CONVERSION
+value|TRUE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NO_IMPLICIT_CONVERSION
+value|FALSE
+end_define
 
 begin_comment
 comment|/*  * exstoren  */

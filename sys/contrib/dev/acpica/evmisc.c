@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 70 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 72 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -97,6 +97,45 @@ begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvQueueNotifyRequest  *  * PARAMETERS:  *  * RETURN:      None.  *  * DESCRIPTION: Dispatch a device notification event to a previously  *              installed handler.  *  ******************************************************************************/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG_OUTPUT
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiNotifyValueNames
+index|[]
+init|=
+block|{
+literal|"Bus Check"
+block|,
+literal|"Device Check"
+block|,
+literal|"Device Wake"
+block|,
+literal|"Eject request"
+block|,
+literal|"Device Check Light"
+block|,
+literal|"Frequency Mismatch"
+block|,
+literal|"Bus Mode Mismatch"
+block|,
+literal|"Power Fault"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|ACPI_STATUS
 name|AcpiEvQueueNotifyRequest
@@ -133,7 +172,7 @@ argument_list|(
 literal|"EvQueueNotifyRequest"
 argument_list|)
 expr_stmt|;
-comment|/*      * For value 1 (Ejection Request), some device method may need to be run.      * For value 2 (Device Wake) if _PRW exists, the _PS0 method may need to be run.      * For value 0x80 (Status Change) on the power button or sleep button,      * initiate soft-off or sleep operation?      */
+comment|/*      * For value 3 (Ejection Request), some device method may need to be run.      * For value 2 (Device Wake) if _PRW exists, the _PS0 method may need to be run.      * For value 0x80 (Status Change) on the power button or sleep button,      * initiate soft-off or sleep operation?      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -147,76 +186,41 @@ name|Node
 operator|)
 argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
 name|NotifyValue
+operator|<=
+literal|7
 condition|)
 block|{
-case|case
-literal|0
-case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Notify value: Re-enumerate Devices\n"
+literal|"Notify value: %s\n"
+operator|,
+name|AcpiNotifyValueNames
+index|[
+name|NotifyValue
+index|]
 operator|)
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
+block|}
+else|else
+block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Notify value: Ejection Request\n"
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"Notify value: Device Wake\n"
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0x80
-case|:
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"Notify value: Status Change\n"
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"Unknown Notify Value: %X \n"
+literal|"Notify value: 0x%2.2X **Device Specific**\n"
 operator|,
 name|NotifyValue
 operator|)
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 comment|/*      * Get the notify object attached to the NS Node      */
 name|ObjDesc

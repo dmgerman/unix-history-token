@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 180 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 181 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -146,6 +146,8 @@ operator|)
 name|DestDesc
 argument_list|,
 name|WalkState
+argument_list|,
+name|ACPI_IMPLICIT_CONVERSION
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -262,6 +264,8 @@ operator|.
 name|Object
 argument_list|,
 name|WalkState
+argument_list|,
+name|ACPI_IMPLICIT_CONVERSION
 argument_list|)
 expr_stmt|;
 break|break;
@@ -864,7 +868,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToNode  *  * PARAMETERS:  SourceDesc              - Value to be stored  *              Node                    - Named object to receive the value  *              WalkState               - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to the named object.  *  *              The Assignment of an object to a named object is handled here  *              The value passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object.  This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation.  *  *              Assumes parameters are already validated.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToNode  *  * PARAMETERS:  SourceDesc              - Value to be stored  *              Node                    - Named object to receive the value  *              WalkState               - Current walk state  *              ImplicitConversion      - Perform implicit conversion (yes/no)  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to the named object.  *  *              The Assignment of an object to a named object is handled here  *              The value passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object.  This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation.  *  *              Assumes parameters are already validated.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -882,6 +886,9 @@ parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
+parameter_list|,
+name|UINT8
+name|ImplicitConversion
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -970,6 +977,19 @@ name|return_ACPI_STATUS
 argument_list|(
 name|Status
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* If no implicit conversion, drop into the default case below */
+if|if
+condition|(
+operator|!
+name|ImplicitConversion
+condition|)
+block|{
+comment|/* Force execution of default (no implicit conversion) */
+name|TargetType
+operator|=
+name|ACPI_TYPE_ANY
 expr_stmt|;
 block|}
 comment|/*      * Do the actual store operation      */

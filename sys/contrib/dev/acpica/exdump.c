@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 172 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 173 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2588,6 +2588,9 @@ expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_LOCAL_ALIAS
+case|:
+case|case
+name|ACPI_TYPE_LOCAL_METHOD_ALIAS
 case|:
 case|case
 name|ACPI_TYPE_LOCAL_EXTRA

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 65 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 66 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -657,9 +657,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/*      * 1) Disable all runtime GPEs       * 2) Enable all wakeup GPEs      */
 name|Status
 operator|=
-name|AcpiHwDisableNonWakeupGpes
+name|AcpiHwPrepareGpesForSleep
 argument_list|()
 expr_stmt|;
 if|if
@@ -1026,9 +1027,10 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * 1) Disable all runtime GPEs       * 2) Enable all wakeup GPEs      */
 name|Status
 operator|=
-name|AcpiHwDisableNonWakeupGpes
+name|AcpiHwPrepareGpesForSleep
 argument_list|()
 expr_stmt|;
 if|if
@@ -1436,10 +1438,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* _WAK returns stuff - do we want to look at it? */
+comment|/* TBD: _WAK "sometimes" returns stuff - do we want to look at it? */
+comment|/*      * Restore the GPEs:      * 1) Disable all wakeup GPEs       * 2) Enable all runtime GPEs      */
 name|Status
 operator|=
-name|AcpiHwEnableNonWakeupGpes
+name|AcpiHwRestoreGpesOnWake
 argument_list|()
 expr_stmt|;
 if|if
