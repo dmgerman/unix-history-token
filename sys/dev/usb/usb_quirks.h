@@ -22,43 +22,53 @@ comment|/* Device problems: */
 define|#
 directive|define
 name|UQ_NO_SET_PROTO
-value|0x01
+value|0x0001
 comment|/* cannot handle SET PROTOCOL. */
 define|#
 directive|define
 name|UQ_SWAP_UNICODE
-value|0x02
+value|0x0002
 comment|/* has some Unicode strings swapped. */
 define|#
 directive|define
 name|UQ_MS_REVZ
-value|0x04
+value|0x0004
 comment|/* mouse has Z-axis reversed */
 define|#
 directive|define
 name|UQ_NO_STRINGS
-value|0x08
+value|0x0008
 comment|/* string descriptors are broken. */
 define|#
 directive|define
 name|UQ_BAD_ADC
-value|0x10
+value|0x0010
 comment|/* bad audio spec version number. */
 define|#
 directive|define
 name|UQ_BUS_POWERED
-value|0x20
+value|0x0020
 comment|/* device is bus powered, despite claim */
 define|#
 directive|define
 name|UQ_BAD_AUDIO
-value|0x40
+value|0x0040
 comment|/* device claims audio class, but isn't */
 define|#
 directive|define
 name|UQ_SPUR_BUT_UP
-value|0x80
+value|0x0080
 comment|/* spurious mouse button up events */
+define|#
+directive|define
+name|UQ_NO_XU
+value|0x0100
+comment|/* audio device has broken extension unit */
+define|#
+directive|define
+name|UQ_ASSUME_CM_OVER_DATA
+value|0x0200
+comment|/* modem device breaks on cm over data */
 block|}
 struct|;
 end_struct
