@@ -1203,30 +1203,13 @@ operator|&
 name|ATA_R_TIMEOUT
 condition|)
 block|{
-name|int
-name|error
-init|=
+comment|/* 	 * if reinit succeeds, retries still permit and device didn't 	 * get removed by the reinit, reinject request 	 */
+if|if
+condition|(
 name|ata_reinit
 argument_list|(
 name|ch
 argument_list|)
-decl_stmt|;
-comment|/* if our device disappeared return as cleanup was done already */
-if|if
-condition|(
-operator|!
-name|request
-operator|->
-name|device
-operator|->
-name|param
-condition|)
-return|return;
-comment|/* if reinit succeeded and retries still permit, reinject request */
-if|if
-condition|(
-operator|!
-name|error
 operator|&&
 name|request
 operator|->
@@ -1234,6 +1217,12 @@ name|retries
 operator|--
 operator|>
 literal|0
+operator|&&
+name|request
+operator|->
+name|device
+operator|->
+name|param
 condition|)
 block|{
 name|request
