@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	time.h	4.2	83/05/21	*/
+comment|/*	time.h	4.3	83/06/10	*/
 end_comment
 
 begin_comment
@@ -73,7 +73,7 @@ comment|/* Australian style dst */
 end_comment
 
 begin_comment
-comment|/*  * Operations on timevals.  */
+comment|/*  * Operations on timevals.  *  * NB: timercmp does not work for>= or<=.  */
 end_comment
 
 begin_define
