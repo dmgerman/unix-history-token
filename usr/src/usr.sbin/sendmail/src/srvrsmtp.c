@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.8 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.9 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.8 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.9 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,12 +64,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_ifdef
@@ -1925,15 +1919,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Errors
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|abortmessage
-goto|;
 comment|/* 			**  Arrange to send to everyone. 			**	If sending to multiple people, mail back 			**		errors rather than reporting directly. 			**	In any case, don't mail back errors for 			**		anything that has happened up to 			**		now (the other end will do this). 			**	Truncate our transcript -- the mail has gotten 			**		to us successfully, and if we have 			**		to mail this back, it will be easier 			**		on the reader. 			**	Then send to everyone. 			**	Finally give a reply code.  If an error has 			**		already been given, don't mail a 			**		message back. 			**	We goose error returns by clearing error bit. 			*/
 name|SmtpPhase
 operator|=
