@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.49 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.50 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2094,6 +2094,8 @@ operator|=
 name|vp
 operator|->
 name|v_dirtyblkhd
+operator|.
+name|le_next
 init|;
 name|bp
 condition|;
@@ -2106,7 +2108,9 @@ name|nbp
 operator|=
 name|bp
 operator|->
-name|b_blockf
+name|b_vnbufs
+operator|.
+name|qe_next
 expr_stmt|;
 if|if
 condition|(
@@ -2215,6 +2219,8 @@ condition|(
 name|vp
 operator|->
 name|v_dirtyblkhd
+operator|.
+name|le_next
 condition|)
 block|{
 name|vprint
