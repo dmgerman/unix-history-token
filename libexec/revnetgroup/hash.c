@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: hash.c,v 1.1.1.1 1995/10/26 16:25:29 wpaul Exp $  */
 end_comment
 
 begin_include
@@ -32,6 +32,28 @@ include|#
 directive|include
 file|"hash.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This hash function is stolen directly from the  * Berkeley DB package. It already exists inside libc, but  * it's declared static which prevents us from calling it  * from here.  */
@@ -182,7 +204,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Generate a hash value for a given key (character string).  * We mask off all but the lower 8 bits since our table array  * can only hole 256 elements.  */
+comment|/*  * Generate a hash value for a given key (character string).  * We mask off all but the lower 8 bits since our table array  * can only hold 256 elements.  */
 end_comment
 
 begin_function
@@ -309,7 +331,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Store an entry in the main netgroup hash table. Here's how this  * works: the table can only be so big when we initialize it (TABLESIZE)  * but the number of netgroups in the /etc/netgroup file could easily be  * much larger than the table. Since our hash values are adjusted to  * never be greater than TABLESIZE too, this means it won't be long before  * we find ourselves with two keys that hash to the same value.  *  * One way to deal with this is to malloc(2) a second table and start  * doing indirection, but this is a pain in the butt and it's not worth  * going to all that trouble for a dinky littke program like this. Instead,  * we turn each table entry into a linked list and simply link keys  * with the same hash value together at the same index location within  * the table.  *  * That's a lot of comment for such a small piece of code, isn't it.  */
+comment|/*  * Store an entry in the main netgroup hash table. Here's how this  * works: the table can only be so big when we initialize it (TABLESIZE)  * but the number of netgroups in the /etc/netgroup file could easily be  * much larger than the table. Since our hash values are adjusted to  * never be greater than TABLESIZE too, this means it won't be long before  * we find ourselves with two keys that hash to the same value.  *  * One way to deal with this is to malloc(2) a second table and start  * doing indirection, but this is a pain in the butt and it's not worth  * going to all that trouble for a dinky little program like this. Instead,  * we turn each table entry into a linked list and simply link keys  * with the same hash value together at the same index location within  * the table.  *  * That's a lot of comment for such a small piece of code, isn't it.  */
 end_comment
 
 begin_function
@@ -409,7 +431,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Store an group member entry and/or update its grouplist. This is  * a bit more complicated than the previous function since we have to  * maintain not only the hash table of group members, each group member  * structure also has a linked list of groups hung off it. If handed  * a member name that we haven't encountered before, we have to do  * two things: add that member to the table (possibly hanging them  * off the end of a linked list, as above), and add a group name to  * the member's grouplist list. If we're handed a name that already has  * an entry in the table, then we just have to do one thing, which is  * to update its grouplist.  */
+comment|/*  * Store a group member entry and/or update its grouplist. This is  * a bit more complicated than the previous function since we have to  * maintain not only the hash table of group members, each group member  * structure also has a linked list of groups hung off it. If handed  * a member name that we haven't encountered before, we have to do  * two things: add that member to the table (possibly hanging them  * off the end of a linked list, as above), and add a group name to  * the member's grouplist list. If we're handed a name that already has  * an entry in the table, then we just have to do one thing, which is  * to update its grouplist.  */
 end_comment
 
 begin_function

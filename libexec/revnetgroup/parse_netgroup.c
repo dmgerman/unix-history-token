@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: parse_netgroup.c,v 1.1.1.1 1995/10/26 16:25:29 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,28 @@ include|#
 directive|include
 file|"hash.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Static Variables and functions used by setnetgrent(), getnetgrent() and  * __endnetgrent().  * There are two linked lists:  * - linelist is just used by setnetgrent() to parse the net group file via.  *   parse_netgrp()  * - netgrp is the list of entries for the current netgroup  */
