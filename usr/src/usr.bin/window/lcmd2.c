@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd2.c	3.23 (Berkeley) %G%"
+literal|"@(#)lcmd2.c	3.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -328,14 +328,14 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"read\terror\tzero\tchar\n"
+literal|"read\terror\tzero\tchar\terrorc\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%d\t%d\t%d\t%d\n"
+literal|"%d\t%d\t%d\t%d\t%d\n"
 argument_list|,
 name|wwnread
 argument_list|,
@@ -344,6 +344,8 @@ argument_list|,
 name|wwnreadz
 argument_list|,
 name|wwnreadc
+argument_list|,
+name|wwnreadec
 argument_list|)
 expr_stmt|;
 name|wwprintf

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwrint.c	3.11 (Berkeley) %G%"
+literal|"@(#)wwrint.c	3.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|"ww.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tt.h"
 end_include
 
 begin_include
@@ -76,7 +82,7 @@ literal|0
 argument_list|,
 name|F_SETFL
 argument_list|,
-name|FNDELAY
+name|O_NONBLOCK
 operator||
 name|wwnewtty
 operator|.
@@ -117,6 +123,26 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|tt
+operator|.
+name|tt_rint
+condition|)
+name|n
+operator|=
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_rint
+call|)
+argument_list|(
+name|wwibq
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
 name|wwibq
 operator|+=
 name|n
