@@ -364,6 +364,8 @@ argument_list|)
 block|,
 endif|#
 directive|endif
+endif|#
+directive|endif
 name|keypair
 argument_list|(
 name|attach
@@ -508,8 +510,6 @@ name|keypair
 argument_list|(
 argument|resetstats
 argument_list|)
-endif|#
-directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
