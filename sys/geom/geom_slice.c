@@ -737,7 +737,9 @@ name|struct
 name|g_slice
 modifier|*
 name|gsl
-decl_stmt|,
+decl_stmt|;
+name|struct
+name|g_slice_hot
 modifier|*
 name|gmp
 decl_stmt|;
@@ -881,7 +883,7 @@ name|m_index
 operator|<
 name|gsp
 operator|->
-name|nhot
+name|nhotspot
 condition|;
 name|m_index
 operator|++
@@ -892,7 +894,7 @@ operator|=
 operator|&
 name|gsp
 operator|->
-name|hot
+name|hotspot
 index|[
 name|m_index
 index|]
@@ -1902,7 +1904,7 @@ modifier|*
 name|gsp
 decl_stmt|;
 name|struct
-name|g_slice
+name|g_slice_hot
 modifier|*
 name|gsl
 decl_stmt|,
@@ -1929,7 +1931,7 @@ name|gsl
 operator|=
 name|gsp
 operator|->
-name|hot
+name|hotspot
 expr_stmt|;
 if|if
 condition|(
@@ -1937,7 +1939,7 @@ name|idx
 operator|>=
 name|gsp
 operator|->
-name|nhot
+name|nhotspot
 condition|)
 block|{
 name|gsl2
@@ -1963,7 +1965,7 @@ if|if
 condition|(
 name|gsp
 operator|->
-name|hot
+name|hotspot
 operator|!=
 name|NULL
 condition|)
@@ -1971,13 +1973,13 @@ name|bcopy
 argument_list|(
 name|gsp
 operator|->
-name|hot
+name|hotspot
 argument_list|,
 name|gsl2
 argument_list|,
 name|gsp
 operator|->
-name|nhot
+name|nhotspot
 operator|*
 sizeof|sizeof
 expr|*
@@ -1986,7 +1988,7 @@ argument_list|)
 expr_stmt|;
 name|gsp
 operator|->
-name|hot
+name|hotspot
 operator|=
 name|gsl2
 expr_stmt|;
@@ -1994,7 +1996,7 @@ if|if
 condition|(
 name|gsp
 operator|->
-name|hot
+name|hotspot
 operator|!=
 name|NULL
 condition|)
@@ -2009,7 +2011,7 @@ name|gsl2
 expr_stmt|;
 name|gsp
 operator|->
-name|nhot
+name|nhotspot
 operator|=
 name|idx
 operator|+
