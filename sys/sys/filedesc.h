@@ -468,6 +468,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|fdcheckstd
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|filedesc
 modifier|*

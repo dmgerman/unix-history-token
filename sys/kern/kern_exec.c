@@ -1556,6 +1556,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Make sure file descriptors 0..2 are in use.  */
+name|error
+operator|=
+name|fdcheckstd
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|exec_fail_dealloc
+goto|;
 comment|/* 		 * Set the new credentials. 		 */
 name|newcred
 operator|=
