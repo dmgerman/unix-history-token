@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sub1.c	4.3 (Berkeley) %G%"
+literal|"@(#)sub1.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2763,6 +2763,9 @@ expr_stmt|;
 comment|/* watch out for this */
 name|peek
 operator|=
+operator|(
+name|int
+operator|)
 name|p
 expr_stmt|;
 block|}
