@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: main.c,v 1.9 1998/10/02 16:33:43 msmith Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: main.c,v 1.10 1998/10/03 18:27:50 rnordier Exp $  */
 end_comment
 
 begin_comment
@@ -82,6 +82,21 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
+name|u_int32_t
+name|initial_howto
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int32_t
+name|initial_bootdev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|bootinfo
 modifier|*
@@ -162,6 +177,18 @@ operator|*
 operator|)
 name|__args
 expr_stmt|;
+name|initial_howto
+operator|=
+name|kargs
+operator|->
+name|howto
+expr_stmt|;
+name|initial_bootdev
+operator|=
+name|kargs
+operator|->
+name|bootdev
+expr_stmt|;
 name|initial_bootinfo
 operator|=
 operator|(
@@ -203,9 +230,7 @@ expr_stmt|;
 comment|/*       * XXX Chicken-and-egg problem; we want to have console output early, but some      * console attributes may depend on reading from eg. the boot device, which we      * can't do yet.      *      * We can use printf() etc. once this is done.      * If the previous boot stage has requested a serial console, prefer that.      */
 if|if
 condition|(
-name|kargs
-operator|->
-name|howto
+name|initial_howto
 operator|&
 name|RB_SERIAL
 condition|)
@@ -267,11 +292,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s, Revision %s\n"
+literal|"%s, Revision %s  %d/%dkB\n"
 argument_list|,
 name|bootprog_name
 argument_list|,
 name|bootprog_rev
+argument_list|,
+name|getbasemem
+argument_list|()
+argument_list|,
+name|getextmem
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|printf
@@ -283,21 +314,10 @@ argument_list|,
 name|bootprog_date
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"memory: %d/%dkB\n"
-argument_list|,
-name|getbasemem
-argument_list|()
-argument_list|,
-name|getextmem
-argument_list|()
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("diskbuf at %p, %d sectors\n",&diskbuf, diskbuf_size);     printf("using %d bytes of stack at %p\n",  (&stacktop -&stackbase),&stacktop);
+block|printf("recovered args howto = 0x%x bootdev = 0x%x bootinfo = %p\n", 	   initial_howto, initial_bootdev, initial_bootinfo);
 endif|#
 directive|endif
 name|extract_currdev
@@ -344,14 +364,6 @@ name|arch_readin
 operator|=
 name|i386_readin
 expr_stmt|;
-comment|/*      * XXX should these be in the MI source?      */
-if|#
-directive|if
-literal|0
-block|legacy_config();
-comment|/* read old /boot.config file */
-endif|#
-directive|endif
 name|interact
 argument_list|()
 expr_stmt|;
@@ -379,8 +391,6 @@ name|int
 name|major
 decl_stmt|,
 name|biosdev
-decl_stmt|,
-name|i
 decl_stmt|;
 comment|/* We're booting from a BIOS disk, try to spiff this */
 name|currdev
@@ -403,6 +413,47 @@ name|d_dev
 operator|->
 name|dv_type
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|initial_bootdev
+operator|&
+name|B_MAGICMASK
+operator|)
+operator|!=
+name|B_DEVMAGIC
+condition|)
+block|{
+comment|/* The passed-in boot device is bad */
+name|currdev
+operator|.
+name|d_kind
+operator|.
+name|biosdisk
+operator|.
+name|slice
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|currdev
+operator|.
+name|d_kind
+operator|.
+name|biosdisk
+operator|.
+name|partition
+operator|=
+literal|0
+expr_stmt|;
+name|biosdev
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 name|currdev
 operator|.
 name|d_kind
@@ -414,9 +465,7 @@ operator|=
 operator|(
 name|B_ADAPTOR
 argument_list|(
-name|kargs
-operator|->
-name|bootdev
+name|initial_bootdev
 argument_list|)
 operator|<<
 literal|4
@@ -424,9 +473,7 @@ operator|)
 operator|+
 name|B_CONTROLLER
 argument_list|(
-name|kargs
-operator|->
-name|bootdev
+name|initial_bootdev
 argument_list|)
 operator|-
 literal|1
@@ -441,9 +488,7 @@ name|partition
 operator|=
 name|B_PARTITION
 argument_list|(
-name|kargs
-operator|->
-name|bootdev
+name|initial_bootdev
 argument_list|)
 expr_stmt|;
 name|biosdev
@@ -456,12 +501,10 @@ name|major
 operator|=
 name|B_TYPE
 argument_list|(
-name|kargs
-operator|->
-name|bootdev
+name|initial_bootdev
 argument_list|)
 expr_stmt|;
-comment|/*      * If we are booted by an old bootstrap, we have to guess at the BIOS      * unit number.  We will loose if there is more than one disk type      * and we are not booting from the lowest-numbered disk type.      */
+comment|/* 	 * If we are booted by an old bootstrap, we have to guess at the BIOS 	 * unit number.  We will loose if there is more than one disk type 	 * and we are not booting from the lowest-numbered disk type  	 * (ie. SCSI when IDE also exists). 	 */
 if|if
 condition|(
 operator|(
@@ -471,7 +514,10 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|major
+name|B_TYPE
+argument_list|(
+name|initial_bootdev
+argument_list|)
 operator|!=
 literal|2
 operator|)
@@ -483,12 +529,11 @@ literal|0x80
 operator|+
 name|B_UNIT
 argument_list|(
-name|kargs
-operator|->
-name|bootdev
+name|initial_bootdev
 argument_list|)
 expr_stmt|;
 comment|/* assume harddisk */
+block|}
 if|if
 condition|(
 operator|(
@@ -512,7 +557,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Can't work out which disk we are booting from, defaulting to disk0:\n"
+literal|"Can't work out which disk we are booting from.\n"
+literal|"Guessed BIOS device 0x%x not found by probes, defaulting to disk0:\n"
+argument_list|,
+name|biosdev
 argument_list|)
 expr_stmt|;
 name|currdev
@@ -522,6 +570,8 @@ operator|.
 name|biosdisk
 operator|.
 name|unit
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|env_setenv
