@@ -219,7 +219,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"is %s%s\n"
+literal|"is %s\n"
 argument_list|,
 name|sb
 operator|.
