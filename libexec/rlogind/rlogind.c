@@ -3078,20 +3078,6 @@ operator|-
 literal|1
 operator|)
 return|;
-if|if
-condition|(
-name|pwd
-operator|->
-name|pw_uid
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 comment|/* XXX why don't we syslog() failure? */
 return|return
 operator|(
@@ -3103,6 +3089,10 @@ name|sin_addr
 operator|.
 name|s_addr
 argument_list|,
+name|pwd
+operator|->
+name|pw_uid
+operator|==
 literal|0
 argument_list|,
 name|rusername
