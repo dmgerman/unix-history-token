@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)param.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)param.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -13,23 +13,6 @@ directive|define
 name|MACHINE
 value|"i386"
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BYTE_ORDER
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<machine/endian.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -204,6 +187,113 @@ end_define
 begin_comment
 comment|/* pages of u-area */
 end_comment
+
+begin_comment
+comment|/*  * Constants related to network buffer management.  * MCLBYTES must be no larger than CLBYTES (the software page size), and,  * on machines that exchange pages of input or output buffers with mbuf  * clusters (MAPPED_MBUFS), MCLBYTES must also be an integral multiple  * of the hardware page size.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSIZE
+value|128
+end_define
+
+begin_comment
+comment|/* size of an mbuf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCLBYTES
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCLSHIFT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCLOFSET
+value|(MCLBYTES - 1)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NMBCLUSTERS
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GATEWAY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NMBCLUSTERS
+value|512
+end_define
+
+begin_comment
+comment|/* map size, max cluster allocation */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NMBCLUSTERS
+value|256
+end_define
+
+begin_comment
+comment|/* map size, max cluster allocation */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Size of kernel malloc arena in CLBYTES-sized logical pages  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NKMEMCLUSTERS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NKMEMCLUSTERS
+value|(512*1024/CLBYTES)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Some macros for units conversion  */

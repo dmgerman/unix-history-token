@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)pcb.h	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)pcb.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../i386/npx.h"
+file|"npx.h"
 end_include
 
 begin_struct
@@ -37,6 +37,10 @@ name|pcb_ptd
 value|pcbtss.tss_cr3
 define|#
 directive|define
+name|pcb_cr3
+value|pcb_ptd
+define|#
+directive|define
 name|pcb_pc
 value|pcbtss.tss_eip
 define|#
@@ -53,22 +57,27 @@ name|pcb_fp
 value|pcbtss.tss_ebp
 comment|/*  * Software pcb (extension)  */
 name|int
-name|pcb_fpsav
+name|pcb_flags
 decl_stmt|;
 define|#
 directive|define
-name|FP_NEEDSAVE
+name|FP_WASUSED
 value|0x1
-comment|/* need save on next context switch */
+comment|/* floating point has been used in this proc */
 define|#
 directive|define
-name|FP_NEEDRESTORE
+name|FP_NEEDSSAVE
 value|0x2
+comment|/* needs save on next context switch */
+define|#
+directive|define
+name|FP_NEEDSRESTORE
+value|0x4
 comment|/* need restore on next DNA fault */
 define|#
 directive|define
 name|FP_USESEMC
-value|0x4
+value|0x8
 comment|/* process uses EMC memory-mapped mode */
 name|struct
 name|save87
@@ -111,7 +120,6 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* sigcode actually 19 bytes */
 name|int
 name|pcb_iml
 decl_stmt|;

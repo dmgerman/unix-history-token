@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)vmparam.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)vmparam.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Machine dependent constants for 386.  */
 end_comment
 
 begin_comment
-comment|/*  * Virtual address space arrangement. On 386, both user and kernel  * share the address space, not unlike the arrangements on the vax.  * USRTEXT is the start of the user text/data space, while USRSTACK  * is the top (end) of the user stack. Immediately above the user stack  * resides the user structure, which is UPAGES long and contains the  * kernel stack. As such, UPAGES is the number of pages from the beginning  * of the P1 region to the beginning of the user stack. Also, the P0  * region begins with user text and ends with user data.  * Immediately after the user structure is the kernal address space.  */
+comment|/*  * Virtual address space arrangement. On 386, both user and kernel  * share the address space, not unlike the vax.  * USRTEXT is the start of the user text/data space, while USRSTACK  * is the top (end) of the user stack. Immediately above the user stack  * resides the user structure, which is UPAGES long and contains the  * kernel stack. As such, UPAGES is the number of pages from the beginning  * of the P1 region to the beginning of the user stack. Also, the P0  * region begins with user text and ends with user data.  * Immediately after the user structure is the kernal address space.  */
 end_comment
 
 begin_define
@@ -227,7 +227,7 @@ begin_define
 define|#
 directive|define
 name|USRIOSIZE
-value|30
+value|300
 end_define
 
 begin_comment
@@ -437,7 +437,7 @@ parameter_list|,
 name|prot
 parameter_list|)
 define|\
-value|{(*(int *)(pte) = ((pfnum)<<PGSHIFT) | (prot)); tlbflush(); }
+value|{(*(int *)(pte) = ((pfnum)<<PGSHIFT) | (prot)) ; }
 end_define
 
 begin_comment
@@ -467,20 +467,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * inline assembler macros  */
-end_comment
-
-begin_comment
 comment|/*  * Flush MMU TLB  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|tlbflush
-parameter_list|()
-value|asm(" movl %%cr3,%%eax; movl %%eax,%%cr3 " ::: "ax")
-end_define
 
 begin_ifndef
 ifndef|#
@@ -516,6 +504,14 @@ parameter_list|(
 name|s
 parameter_list|)
 value|({ u_long val; \ 	val = (s) | I386_CR3PAT; \ 	asm ("movl %0,%%eax; movl %%eax,%%cr3" \ 		:  \ 		: "g" (val) \ 		: "ax"); \ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|tlbflush
+parameter_list|()
+value|({ u_long val; \ 	val = u.u_pcb.pcb_ptd | I386_CR3PAT; \ 	asm ("movl %0,%%eax; movl %%eax,%%cr3" \ 		:  \ 		: "g" (val) \ 		: "ax"); \ })
 end_define
 
 end_unit
