@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * from: hp300/hp300/machdep.c	7.35 (Berkeley) 12/28/92  *  *	@(#)machdep.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * from: hp300/hp300/machdep.c	7.35 (Berkeley) 12/28/92  *  *	@(#)machdep.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -144,12 +144,6 @@ begin_include
 include|#
 directive|include
 file|<machine/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<hp300/hp300/isr.h>
 end_include
 
 begin_include
