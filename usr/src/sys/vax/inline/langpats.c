@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c	2.1 (Berkeley) %G%"
+literal|"@(#)langpats.c	2.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -257,25 +257,25 @@ block|,
 block|{
 literal|"1,_htons\n"
 block|,
-literal|"	movl	(sp)+,r5\n\ 	rotl	$8,r5,r0\n\ 	movb	1(r5),r0\n\ 	movzwl	r0,r0\n"
+literal|"	movl	(sp)+,r5\n\ 	rotl	$8,r5,r0\n\ 	rotl	$-8,r5,r1\n\ 	movb	r1,r0\n\ 	movzwl	r0,r0\n"
 block|}
 block|,
 block|{
 literal|"1,_ntohs\n"
 block|,
-literal|"	movl	(sp)+,r5\n\ 	rotl	$8,(r5),r0\n\ 	movb	1(r5),r0\n\ 	movzwl	r0,r0\n"
+literal|"	movl	(sp)+,r5\n\ 	rotl	$8,r5,r0\n\ 	rotl	$-8,r5,r1\n\ 	movb	r1,r0\n\ 	movzwl	r0,r0\n"
 block|}
 block|,
 block|{
 literal|"1,_htonl\n"
 block|,
-literal|"	movl	(sp)+,r5\n\ 	rotl	$-8,(r5),r0\n\ 	insv	r0,$16,$8,r0\n\ 	movb	3(sp),r0\n"
+literal|"	movl	(sp)+,r5\n\ 	rotl	$-8,r5,r0\n\ 	insv	r0,$16,$8,r0\n\ 	rotl	$8,r5,r1\n\ 	movb	r1,r0\n"
 block|}
 block|,
 block|{
 literal|"1,_ntohl\n"
 block|,
-literal|"	movl	(sp)+,r5\n\ 	rotl	$-8,(r5),r0\n\ 	insv	r0,$16,$8,r0\n\ 	movb	3(r5),r0\n"
+literal|"	movl	(sp)+,r5\n\ 	rotl	$-8,r5,r0\n\ 	insv	r0,$16,$8,r0\n\ 	rotl	$8,r5,r1\n\ 	movb	r1,r0\n"
 block|}
 block|,
 block|{
