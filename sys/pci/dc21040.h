@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994, 1995 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: dc21040.h,v 1.7 1996/06/14 05:25:31 davidg Exp $  *  */
+comment|/*-  * Copyright (c) 1994, 1995, 1996 Matt Thomas<matt@3am-software.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: dc21040.h,v 1.9 1996/12/01 06:00:58 rgrimes Exp $  */
 end_comment
 
 begin_if
@@ -18,94 +18,6 @@ define|#
 directive|define
 name|_DC21040_H
 end_define
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|tulip_uint8_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|tulip_uint16_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|tulip_uint32_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * The various controllers support.  Technically the DE425 is just  * a 21040 on EISA.  But since it remarkably difference from normal  * 21040s, we give it its own chip id.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|TULIP_DC21040
-block|,
-name|TULIP_DE425
-block|,
-name|TULIP_DC21041
-block|,
-name|TULIP_DC21140
-block|,
-name|TULIP_DC21140A
-block|,
-name|TULIP_DC21142
-block|,
-name|TULIP_DC21143
-block|,
-name|TULIP_CHIPID_UNKNOWN
-block|}
-name|tulip_chipid_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * Various physical media types supported.  * BNCAUI is BNC or AUI since on the 21040 you can't really tell  * which is in use.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|TULIP_MEDIA_UNKNOWN
-block|,
-name|TULIP_MEDIA_10BASET
-block|,
-name|TULIP_MEDIA_BNC
-block|,
-name|TULIP_MEDIA_AUI
-block|,
-name|TULIP_MEDIA_BNCAUI
-block|,
-name|TULIP_MEDIA_10BASET_FD
-block|,
-name|TULIP_MEDIA_100BASETX
-block|,
-name|TULIP_MEDIA_100BASETX_FD
-block|,
-name|TULIP_MEDIA_100BASET4
-block|,
-name|TULIP_MEDIA_100BASEFX
-block|,
-name|TULIP_MEDIA_100BASEFX_FD
-block|,
-name|TULIP_MEDIA_MAX
-block|}
-name|tulip_media_t
-typedef|;
-end_typedef
 
 begin_if
 if|#
@@ -218,10 +130,10 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|tulip_uint32_t
+name|u_int32_t
 name|d_status
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|TULIP_BITFIELD3
 argument_list|(
 name|d_length1
@@ -237,10 +149,10 @@ operator|:
 literal|10
 argument_list|)
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|d_addr1
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|d_addr2
 decl_stmt|;
 block|}
@@ -256,7 +168,7 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/* Owner (1 = DC21040) */
+comment|/* Owner (1 = 21040) */
 end_comment
 
 begin_define
@@ -653,7 +565,7 @@ comment|/* Hash/Perfect Filtering */
 end_comment
 
 begin_comment
-comment|/*  * The DC21040 Registers (IO Space Addresses)  */
+comment|/*  * The 21040 Registers (IO Space Addresses)  */
 end_comment
 
 begin_define
@@ -1126,7 +1038,7 @@ value|0x00001000L
 end_define
 
 begin_comment
-comment|/* (RW)  Link Failure (DC21040) */
+comment|/* (RW)  Link Failure (21040) */
 end_comment
 
 begin_define
@@ -1137,7 +1049,7 @@ value|0x00000800L
 end_define
 
 begin_comment
-comment|/* (RW)  Full Duplex Short Fram Rcvd (DC21040) */
+comment|/* (RW)  Full Duplex Short Fram Rcvd (21040) */
 end_comment
 
 begin_define
@@ -1148,7 +1060,7 @@ value|0x00000800L
 end_define
 
 begin_comment
-comment|/* (RW)  General Purpose Timeout (DC21140) */
+comment|/* (RW)  General Purpose Timeout (21140) */
 end_comment
 
 begin_define
@@ -1159,7 +1071,7 @@ value|0x00000400L
 end_define
 
 begin_comment
-comment|/* (RW)  AUI/TP Switch (DC21040) */
+comment|/* (RW)  AUI/TP Switch (21040) */
 end_comment
 
 begin_define
@@ -1225,7 +1137,7 @@ value|0x00000010L
 end_define
 
 begin_comment
-comment|/* (RW)  LinkPass (DC21041) */
+comment|/* (RW)  LinkPass (21041) */
 end_comment
 
 begin_define
@@ -1284,7 +1196,7 @@ value|0x02000000L
 end_define
 
 begin_comment
-comment|/* (RW)  Must Be One (DC21140) */
+comment|/* (RW)  Must Be One (21140) */
 end_comment
 
 begin_define
@@ -1295,7 +1207,7 @@ value|0x01000000L
 end_define
 
 begin_comment
-comment|/* (RW)  Scrambler Mode (DC21140) */
+comment|/* (RW)  Scrambler Mode (21140) */
 end_comment
 
 begin_define
@@ -1306,7 +1218,7 @@ value|0x00800000L
 end_define
 
 begin_comment
-comment|/* (RW)  PCS Function (DC21140) */
+comment|/* (RW)  PCS Function (21140) */
 end_comment
 
 begin_define
@@ -1317,7 +1229,7 @@ value|0x00400000L
 end_define
 
 begin_comment
-comment|/* (RW)  Transmit Threshold Mode (DC21140) */
+comment|/* (RW)  Transmit Threshold Mode (21140) */
 end_comment
 
 begin_define
@@ -1328,7 +1240,7 @@ value|0x00200000L
 end_define
 
 begin_comment
-comment|/* (RW)  Store and Foward (DC21140) */
+comment|/* (RW)  Store and Foward (21140) */
 end_comment
 
 begin_define
@@ -1339,7 +1251,7 @@ value|0x00080000L
 end_define
 
 begin_comment
-comment|/* (RW)  No Heartbeat (DC21140) */
+comment|/* (RW)  No Heartbeat (21140) */
 end_comment
 
 begin_define
@@ -1350,7 +1262,7 @@ value|0x00040000L
 end_define
 
 begin_comment
-comment|/* (RW)  Post Select (100Mb) (DC21140) */
+comment|/* (RW)  Post Select (100Mb) (21140) */
 end_comment
 
 begin_define
@@ -1361,7 +1273,7 @@ value|0x00040000L
 end_define
 
 begin_comment
-comment|/* (RW)  Enhanced Capture Effecty (DC21041) */
+comment|/* (RW)  Enhanced Capture Effecty (21041) */
 end_comment
 
 begin_define
@@ -1383,7 +1295,7 @@ value|0x00010000L
 end_define
 
 begin_comment
-comment|/* (RW)  Back Pressure (!802.3) (DC21040) */
+comment|/* (RW)  Back Pressure (!802.3) (21040) */
 end_comment
 
 begin_define
@@ -1629,70 +1541,70 @@ end_define
 begin_define
 define|#
 directive|define
-name|TULIP_DC21041_SIACONN_10BASET
+name|TULIP_21041_SIACONN_10BASET
 value|0x0000EF01L
 end_define
 
 begin_define
 define|#
 directive|define
-name|TULIP_DC21041_SIATXRX_10BASET
+name|TULIP_21041_SIATXRX_10BASET
 value|0x0000FF3FL
 end_define
 
 begin_define
 define|#
 directive|define
-name|TULIP_DC21041_SIATXRX_10BASET_FD
+name|TULIP_21041_SIATXRX_10BASET_FD
 value|0x0000FF3DL
 end_define
 
 begin_define
 define|#
 directive|define
-name|TULIP_DC21041_SIAGEN_10BASET
+name|TULIP_21041_SIAGEN_10BASET
 value|0x00000000L
 end_define
 
 begin_define
 define|#
 directive|define
-name|TULIP_DC21041_SIACONN_AUI
+name|TULIP_21041_SIACONN_AUI
 value|0x0000EF09L
 end_define
 
 begin_define
 define|#
 directive|define
-name|TULIP_DC21041_SIATXRX_AUI
+name|TULIP_21041_SIATXRX_AUI
 value|0x0000F73DL
 end_define
 
 begin_define
 define|#
 directive|define
-name|TULIP_DC21041_SIAGEN_AUI
+name|TULIP_21041_SIAGEN_AUI
 value|0x0000000EL
 end_define
 
 begin_define
 define|#
 directive|define
-name|TULIP_DC21041_SIACONN_BNC
+name|TULIP_21041_SIACONN_BNC
 value|0x0000EF09L
 end_define
 
 begin_define
 define|#
 directive|define
-name|TULIP_DC21041_SIATXRX_BNC
+name|TULIP_21041_SIATXRX_BNC
 value|0x0000F73DL
 end_define
 
 begin_define
 define|#
 directive|define
-name|TULIP_DC21041_SIAGEN_BNC
+name|TULIP_21041_SIAGEN_BNC
 value|0x00000006L
 end_define
 
@@ -1851,7 +1763,7 @@ value|0x00080000L
 end_define
 
 begin_comment
-comment|/* DC21041 only */
+comment|/* 21041 only */
 end_comment
 
 begin_define
@@ -1862,7 +1774,7 @@ value|0x000A0000L
 end_define
 
 begin_comment
-comment|/* DC21041 only */
+comment|/* 21041 only */
 end_comment
 
 begin_define
@@ -1873,7 +1785,7 @@ value|0x000C0000L
 end_define
 
 begin_comment
-comment|/* DC21041 only */
+comment|/* 21041 only */
 end_comment
 
 begin_define
@@ -1884,7 +1796,7 @@ value|0x000E0000L
 end_define
 
 begin_comment
-comment|/* DC21041 only */
+comment|/* 21041 only */
 end_comment
 
 begin_define
@@ -1895,7 +1807,7 @@ value|0x00100000L
 end_define
 
 begin_comment
-comment|/* DC21041 only */
+comment|/* 21041 only */
 end_comment
 
 begin_define
@@ -1920,7 +1832,7 @@ value|0x40000000L
 end_define
 
 begin_comment
-comment|/*  * These are the defintitions used for the DEC DC21140  * evaluation board.  */
+comment|/*  * These are the defintitions used for the DEC 21140  * evaluation board.  */
 end_comment
 
 begin_define
@@ -1968,7 +1880,7 @@ comment|/* No loopback --- point-to-point */
 end_comment
 
 begin_comment
-comment|/*  * These are the defintitions used for the SMC9332 (DC21140) board.  */
+comment|/*  * These are the defintitions used for the SMC9332 (21140) board.  */
 end_comment
 
 begin_define
@@ -2104,7 +2016,7 @@ value|0x00000001L
 end_define
 
 begin_comment
-comment|/*  * These are the defintitions used for the Cogent EM100  * DC21140 board.  */
+comment|/*  * These are the defintitions used for the Cogent EM100  * 21140 board.  */
 end_comment
 
 begin_define
@@ -2223,7 +2135,7 @@ value|0x95
 end_define
 
 begin_comment
-comment|/*  * Compex's OUI.  We need to twiddle a bit on their DC21041 card.  */
+comment|/*  * Compex's OUI.  We need to twiddle a bit on their 21041 card.  */
 end_comment
 
 begin_define
@@ -2250,12 +2162,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|TULIP_DC21041_COMPEX_XREGDATA
+name|TULIP_21041_COMPEX_XREGDATA
 value|1
 end_define
 
 begin_comment
-comment|/*  * SROM definitions for the DC21140 and DC21041.  */
+comment|/*  * SROM definitions for the 21140 and 21041.  */
 end_comment
 
 begin_define
@@ -2378,7 +2290,7 @@ value|6
 end_define
 
 begin_comment
-comment|/*  * MII Definitions for the DC21041 and DC21140/DC21140A/DC21142  */
+comment|/*  * MII Definitions for the 21041 and 21140/21140A/21142  */
 end_comment
 
 begin_define
@@ -2824,21 +2736,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|DC21040_CHIPID
+name|CHIPID_21040
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|DC21140_CHIPID
+name|CHIPID_21140
 value|0x0009
 end_define
 
 begin_define
 define|#
 directive|define
-name|DC21041_CHIPID
+name|CHIPID_21041
 value|0x0014
 end_define
 
@@ -2870,19 +2782,19 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|tulip_uint8_t
+name|u_int8_t
 name|sh_idbuf
 index|[
 literal|18
 index|]
 decl_stmt|;
-name|tulip_uint8_t
+name|u_int8_t
 name|sh_version
 decl_stmt|;
-name|tulip_uint8_t
+name|u_int8_t
 name|sh_adapter_count
 decl_stmt|;
-name|tulip_uint8_t
+name|u_int8_t
 name|sh_ieee802_address
 index|[
 literal|6
@@ -3028,35 +2940,35 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|TULIP_SROM_DC21041_EXTENDED
+name|TULIP_SROM_21041_EXTENDED
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|TULIP_SROM_DC2114X_NOINDICATOR
+name|TULIP_SROM_2114X_NOINDICATOR
 value|0x8000
 end_define
 
 begin_define
 define|#
 directive|define
-name|TULIP_SROM_DC2114X_DEFAULT
+name|TULIP_SROM_2114X_DEFAULT
 value|0x4000
 end_define
 
 begin_define
 define|#
 directive|define
-name|TULIP_SROM_DC2114X_POLARITY
+name|TULIP_SROM_2114X_POLARITY
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|TULIP_SROM_DC2114X_CMDBITS
+name|TULIP_SROM_2114X_CMDBITS
 parameter_list|(
 name|n
 parameter_list|)
@@ -3066,7 +2978,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TULIP_SROM_DC2114X_BITPOS
+name|TULIP_SROM_2114X_BITPOS
 parameter_list|(
 name|b
 parameter_list|)
