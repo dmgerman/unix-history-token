@@ -2616,7 +2616,7 @@ condition|(
 name|uio
 operator|->
 name|uio_resid
-operator|<
+operator|<=
 literal|0
 operator|||
 name|uio
