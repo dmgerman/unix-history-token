@@ -31,46 +31,39 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  *	This routine performs an insert-char on the line, leaving  * (_cury,_curx) unchanged.  *  */
+comment|/*  * wdelch --  *	Do an insert-char on the line, leaving (_cury, _curx) unchanged.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|wdelch
-argument_list|(
-argument|win
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|reg
+parameter_list|(
+name|win
+parameter_list|)
+specifier|register
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|reg
+specifier|register
+name|int
+name|lch
+decl_stmt|;
+specifier|register
 name|char
+modifier|*
+name|end
+decl_stmt|,
 modifier|*
 name|temp1
 decl_stmt|,
 modifier|*
 name|temp2
-decl_stmt|;
-name|reg
-name|char
-modifier|*
-name|end
-decl_stmt|;
-name|reg
-name|int
-name|lch
 decl_stmt|;
 name|end
 operator|=
@@ -153,10 +146,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|OK
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
