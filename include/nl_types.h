@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: nl_types.h,v 1.4 1997/02/23 09:17:14 peter Exp $ */
+comment|/*	$Id: nl_types.h,v 1.5 1998/04/30 10:09:58 ache Exp $ */
 end_comment
 
 begin_comment
@@ -55,6 +55,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+name|__BEGIN_DECLS
 specifier|extern
 name|nl_catd
 name|catopen
@@ -105,6 +106,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
