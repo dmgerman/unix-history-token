@@ -110,6 +110,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|u_int16_t
@@ -121,12 +127,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
 
 begin_function_decl
 specifier|static
@@ -263,6 +263,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -327,6 +333,11 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -389,6 +400,12 @@ end_decl_stmt
 begin_comment
 comment|/*  * We get eeprom data from the id_port given an offset into the eeprom.  * Basically; after the ID_sequence is sent to all of the cards; they enter  * the ID_CMD state where they will accept command requests. 0x80-0xbf loads  * the eeprom data.  We then read the port 16 times and with every read; the  * cards check for contention (ie: if one card writes a 0 bit and another  * writes a 1 bit then the host sees a 0. At the end of the cycle; each card  * compares the data on the bus; if there is a difference then that card goes  * into ID_WAIT state again). In the meantime; one bit of data is returned in  * the AX register which is conveniently returned to us by inb().  Hence; we  * read 16 times getting one bit of data with each read.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
 
 begin_function
 specifier|static
@@ -474,6 +491,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|const
