@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spec.c	5.12 (Berkeley) %G%"
+literal|"@(#)spec.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,7 +185,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"mtree: line %d too long, ignored.\n"
+literal|"mtree: line %d too long.\n"
 argument_list|,
 name|lineno
 argument_list|)
