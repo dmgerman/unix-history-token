@@ -2544,6 +2544,12 @@ argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
+else|else
+name|INP_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
