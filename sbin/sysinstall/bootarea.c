@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dialog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mbr.h"
 end_include
 
@@ -88,24 +94,6 @@ file|"sysinstall.h"
 end_include
 
 begin_decl_stmt
-name|char
-name|boot1
-index|[]
-init|=
-name|BOOT1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|boot2
-index|[]
-init|=
-name|BOOT2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
@@ -119,6 +107,22 @@ name|struct
 name|mbr
 modifier|*
 name|mbr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|boot1
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|boot2
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -380,6 +384,28 @@ block|{
 name|int
 name|fd
 decl_stmt|;
+name|sprintf
+argument_list|(
+name|scratch
+argument_list|,
+literal|"\nLoading boot code from %s\n"
+argument_list|,
+name|boot1
+argument_list|)
+expr_stmt|;
+name|dialog_msgbox
+argument_list|(
+name|TITLE
+argument_list|,
+name|scratch
+argument_list|,
+literal|5
+argument_list|,
+literal|60
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|fd
 operator|=
 name|open
@@ -420,12 +446,7 @@ name|fd
 argument_list|,
 name|bootblocks
 argument_list|,
-operator|(
-name|int
-operator|)
-name|label
-operator|->
-name|d_secsize
+name|MBRSIZE
 argument_list|)
 operator|<
 literal|0
@@ -474,6 +495,31 @@ literal|1
 operator|)
 return|;
 block|}
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|scratch
+argument_list|,
+literal|"\nLoading boot code from %s\n"
+argument_list|,
+name|boot1
+argument_list|)
+expr_stmt|;
+name|dialog_msgbox
+argument_list|(
+name|TITLE
+argument_list|,
+name|scratch
+argument_list|,
+literal|5
+argument_list|,
+literal|60
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|fd
 operator|=
 name|open
@@ -515,9 +561,7 @@ argument_list|,
 operator|&
 name|bootblocks
 index|[
-name|label
-operator|->
-name|d_secsize
+name|MBRSIZE
 index|]
 argument_list|,
 call|(
@@ -528,9 +572,7 @@ name|label
 operator|->
 name|d_bbsize
 operator|-
-name|label
-operator|->
-name|d_secsize
+name|MBRSIZE
 argument_list|)
 argument_list|)
 operator|<
@@ -580,7 +622,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* Write mbr partition table into bootblocks */
+comment|/* Copy DOS partition area into bootblocks */
 name|bcopy
 argument_list|(
 name|mbr
@@ -599,8 +641,11 @@ expr|struct
 name|dos_partition
 argument_list|)
 operator|*
-name|NDOSPART
+literal|4
 argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
 expr_stmt|;
 comment|/* Write the disklabel into the bootblocks */
 name|label

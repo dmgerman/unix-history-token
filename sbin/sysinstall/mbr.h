@@ -155,11 +155,14 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|clear_mbr
 parameter_list|(
 name|struct
 name|mbr
+modifier|*
+parameter_list|,
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -188,6 +191,9 @@ name|build_mbr
 parameter_list|(
 name|struct
 name|mbr
+modifier|*
+parameter_list|,
+name|char
 modifier|*
 parameter_list|,
 name|struct

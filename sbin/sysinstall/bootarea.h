@@ -7,14 +7,14 @@ begin_define
 define|#
 directive|define
 name|BOOT1
-value|"/usr/mdec/sdboot"
+value|"/stand/sdboot"
 end_define
 
 begin_define
 define|#
 directive|define
 name|BOOT2
-value|"/usr/mdec/bootsd"
+value|"/stand/bootsd"
 end_define
 
 begin_comment
