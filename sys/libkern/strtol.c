@@ -46,7 +46,6 @@ name|char
 modifier|*
 name|nptr
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -373,7 +372,6 @@ operator|*
 name|endptr
 operator|=
 operator|(
-specifier|const
 name|char
 operator|*
 operator|)

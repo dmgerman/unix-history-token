@@ -2288,7 +2288,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|p
@@ -2371,6 +2370,11 @@ condition|)
 block|{
 name|s
 operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|p
 operator|+
 literal|1
@@ -2392,6 +2396,11 @@ name|i
 expr_stmt|;
 name|s
 operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|p
 operator|+
 literal|1

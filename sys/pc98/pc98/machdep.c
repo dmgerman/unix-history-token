@@ -8023,7 +8023,6 @@ name|AllowMem
 decl_stmt|,
 name|sanity
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|ep

@@ -1517,7 +1517,6 @@ argument_list|(
 name|name
 argument_list|)
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|eptr

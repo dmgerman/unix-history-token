@@ -237,7 +237,8 @@ specifier|const
 name|char
 modifier|*
 name|value
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|vtp
 decl_stmt|;
@@ -286,7 +287,7 @@ operator|(
 operator|*
 name|vtp
 operator|!=
-literal|0
+literal|'\0'
 operator|)
 condition|)
 return|return

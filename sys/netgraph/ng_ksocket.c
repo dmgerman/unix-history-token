@@ -1968,7 +1968,6 @@ name|k
 decl_stmt|,
 name|val
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|eptr

@@ -10968,7 +10968,6 @@ condition|(
 literal|1
 condition|)
 block|{
-specifier|const
 name|char
 modifier|*
 name|ptr
@@ -11145,6 +11144,11 @@ block|}
 comment|/* XXX else should require end of token. */
 name|cmd
 operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|ptr
 expr_stmt|;
 block|}
@@ -11229,6 +11233,11 @@ return|;
 block|}
 name|cmd
 operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|ptr
 expr_stmt|;
 operator|++
@@ -11288,6 +11297,11 @@ return|;
 block|}
 name|cmd
 operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|ptr
 expr_stmt|;
 operator|++
@@ -11954,7 +11968,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|q

@@ -1208,7 +1208,8 @@ specifier|const
 name|char
 modifier|*
 name|cp
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|eptr
 decl_stmt|;

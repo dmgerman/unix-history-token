@@ -244,7 +244,6 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1895,7 +1894,6 @@ argument_list|(
 name|buf
 argument_list|,
 operator|(
-specifier|const
 name|char
 operator|*
 operator|*

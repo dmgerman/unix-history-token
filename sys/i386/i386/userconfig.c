@@ -10872,7 +10872,6 @@ condition|(
 literal|1
 condition|)
 block|{
-specifier|const
 name|char
 modifier|*
 name|ptr
@@ -11872,7 +11871,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|q

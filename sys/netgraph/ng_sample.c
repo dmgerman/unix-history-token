@@ -484,7 +484,6 @@ operator|==
 literal|0
 condition|)
 block|{
-specifier|const
 name|char
 modifier|*
 name|eptr

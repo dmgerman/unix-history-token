@@ -843,7 +843,6 @@ specifier|const
 name|char
 operator|*
 operator|,
-specifier|const
 name|char
 operator|*
 operator|*
@@ -865,7 +864,6 @@ specifier|const
 name|char
 operator|*
 operator|,
-specifier|const
 name|char
 operator|*
 operator|*
@@ -887,7 +885,6 @@ specifier|const
 name|char
 operator|*
 operator|,
-specifier|const
 name|char
 operator|*
 operator|*
@@ -909,7 +906,6 @@ specifier|const
 name|char
 operator|*
 operator|,
-specifier|const
 name|char
 operator|*
 operator|*

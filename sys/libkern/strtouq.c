@@ -40,7 +40,6 @@ name|char
 modifier|*
 name|nptr
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -364,7 +363,6 @@ operator|*
 name|endptr
 operator|=
 operator|(
-specifier|const
 name|char
 operator|*
 operator|)
