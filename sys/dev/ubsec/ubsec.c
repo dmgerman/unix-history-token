@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -14846,7 +14852,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"%s: rsapriv: invalid msgin %x(0x%x)"
+literal|"%s: rsapriv: invalid msgin %x(0x%jx)"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -14861,6 +14867,9 @@ name|rpr_msgin
 operator|.
 name|dma_paddr
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rp
 operator|->
 name|rpr_msgin
@@ -14890,7 +14899,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"%s: rsapriv: invalid msgout %x(0x%x)"
+literal|"%s: rsapriv: invalid msgout %x(0x%jx)"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -14905,6 +14914,9 @@ name|rpr_msgout
 operator|.
 name|dma_paddr
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rp
 operator|->
 name|rpr_msgout
