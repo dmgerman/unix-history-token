@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -107,13 +107,17 @@ begin_comment
 comment|/*  * Arguments to hardclock, softclock and gatherstats  * encapsulate the previous machine state in an opaque  * clockframe; for now, use generic intrframe.  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
+struct|struct
+name|clockframe
+block|{
 name|struct
 name|intrframe
-name|clockframe
-typedef|;
-end_typedef
+name|cf_if
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -122,7 +126,7 @@ name|CLKF_USERMODE
 parameter_list|(
 name|framep
 parameter_list|)
-value|(ISPL((framep)->if_cs) == SEL_UPL)
+value|(ISPL((framep)->cf_if.if_cs) == SEL_UPL)
 end_define
 
 begin_define
@@ -132,7 +136,7 @@ name|CLKF_BASEPRI
 parameter_list|(
 name|framep
 parameter_list|)
-value|((framep)->if_ppl == 0)
+value|((framep)->cf_if.if_ppl == 0)
 end_define
 
 begin_define
@@ -142,7 +146,7 @@ name|CLKF_PC
 parameter_list|(
 name|framep
 parameter_list|)
-value|((framep)->if_eip)
+value|((framep)->cf_if.if_eip)
 end_define
 
 begin_define
