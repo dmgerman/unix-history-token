@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_resource.c	7.14 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_resource.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -920,6 +920,24 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+name|alim
+operator|.
+name|rlim_cur
+operator|>
+name|alim
+operator|.
+name|rlim_max
+condition|)
+name|alim
+operator|.
+name|rlim_cur
+operator|=
+name|alim
+operator|.
+name|rlim_max
+expr_stmt|;
 if|if
 condition|(
 name|p
