@@ -890,6 +890,24 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|wi
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"Wireless driver parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -929,11 +947,11 @@ end_comment
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_kern
+name|_hw_wi
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|wi
+name|txerate
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -942,7 +960,7 @@ name|wi_txerate
 argument_list|,
 literal|0
 argument_list|,
-literal|"Wireless driver max tx error msgs/sec; 0 disables msgs"
+literal|"max tx error msgs/sec; 0 disables msgs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -971,11 +989,11 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_debug
+name|_hw_wi
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|wi
+name|debug
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -984,7 +1002,7 @@ name|wi_debug
 argument_list|,
 literal|0
 argument_list|,
-literal|"Wireless driver debugging printfs"
+literal|"control debugging printfs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
