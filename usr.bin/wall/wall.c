@@ -1081,6 +1081,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
+else|else
+block|{
 name|putc
 argument_list|(
 name|ch
@@ -1088,6 +1090,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 operator|(
 name|void
