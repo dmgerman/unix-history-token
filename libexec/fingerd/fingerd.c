@@ -70,6 +70,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -113,6 +119,12 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_include
@@ -425,6 +437,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|t
 operator|=
 name|malloc
@@ -435,6 +450,19 @@ name|line
 argument_list|)
 operator|+
 literal|1
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|logerr
+argument_list|(
+literal|"malloc: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -462,11 +490,27 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|(
 name|t
 operator|=
 name|strdup
 argument_list|(
 name|line
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|logerr
+argument_list|(
+literal|"strdup: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
