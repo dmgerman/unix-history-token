@@ -4415,21 +4415,19 @@ name|dp
 operator|->
 name|d_portn
 operator|==
-operator|-
-literal|1
+name|PORT_AUTO
 operator|||
 name|dp
 operator|->
 name|d_portn
 operator|==
-operator|-
-literal|2
+name|PORT_NONE
 condition|)
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"       %2d,"
+literal|"       %d,"
 argument_list|,
 name|dp
 operator|->
