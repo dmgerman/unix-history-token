@@ -12,6 +12,67 @@ name|PRIVATE_H
 end_define
 
 begin_comment
+comment|/* Stuff moved from Makefile.inc to reduce clutter */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TM_GMTOFF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TM_GMTOFF
+value|tm_gmtoff
+end_define
+
+begin_define
+define|#
+directive|define
+name|TM_ZONE
+value|tm_zone
+end_define
+
+begin_define
+define|#
+directive|define
+name|STD_INSPIRED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCTS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_LONG_DOUBLE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TZDIR
+value|"/usr/share/zoneinfo"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ndef TM_GMTOFF */
+end_comment
+
+begin_comment
 comment|/* ** This header is for use ONLY with the time conversion code. ** There is no guarantee that it will remain unchanged, ** or that it will remain at all. ** Do NOT copy it to any system include directory. ** Thank you! */
 end_comment
 
