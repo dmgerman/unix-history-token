@@ -1501,12 +1501,14 @@ expr_stmt|;
 comment|/* 	 * Allocate memory to hold the argument list, and 	 * a NULL at the tail. 	 */
 name|tmp
 operator|=
-name|calloc
+name|malloc
 argument_list|(
+operator|(
 name|argc
 operator|+
 literal|1
-argument_list|,
+operator|)
+operator|*
 sizeof|sizeof
 argument_list|(
 name|char
@@ -1525,7 +1527,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"calloc"
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 name|tmp2
@@ -1636,6 +1638,11 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Run it. 	 */
+operator|*
+name|tmp
+operator|=
+name|NULL
+expr_stmt|;
 name|run
 argument_list|(
 name|tmp2
