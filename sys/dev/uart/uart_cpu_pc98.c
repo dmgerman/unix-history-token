@@ -139,7 +139,7 @@ name|ivar
 decl_stmt|,
 name|flags
 decl_stmt|;
-comment|/* 	 * There are 2 built-in serial ports on pc98 hardware.  The  	 * first one is 8251 and the second one is I think an enhance 	 * version of that.  However, for sio flags told the story 	 * so make a lame attempt to sort this out. 	 */
+comment|/* 	 * There are 2 built-in serial ports on pc98 hardware.  The  	 * first one is 8251 and the second one is I think an enhance 	 * version of that.  However, for the sio driver, flags selected 	 * which type of uart was in the sytem.  We use something similar 	 * to sort things out. 	 */
 for|for
 control|(
 name|i
@@ -268,7 +268,11 @@ name|I386_BUS_SPACE_IO
 expr_stmt|;
 name|i386_bus_space_handle_alloc
 argument_list|(
-name|I386_BUS_SPACE_IO
+name|di
+operator|->
+name|bas
+operator|.
+name|bst
 argument_list|,
 name|ivar
 argument_list|,
