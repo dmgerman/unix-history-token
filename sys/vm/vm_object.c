@@ -232,6 +232,34 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|old_msync
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|old_msync
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|old_msync
+argument_list|,
+literal|0
+argument_list|,
+literal|"Use old (insecure) msync behavior"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -3895,7 +3923,11 @@ operator|+
 name|PAGE_MASK
 argument_list|)
 argument_list|,
+name|old_msync
+condition|?
 name|FALSE
+else|:
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
