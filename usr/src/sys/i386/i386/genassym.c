@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	5.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)genassym.c	5.9 (Berkeley) %G%"
+literal|"@(#)genassym.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -590,7 +590,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_link
 argument_list|)
@@ -602,7 +602,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_esp0
 argument_list|)
@@ -614,7 +614,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_ss0
 argument_list|)
@@ -626,7 +626,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_esp1
 argument_list|)
@@ -638,7 +638,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_ss1
 argument_list|)
@@ -650,7 +650,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_esp2
 argument_list|)
@@ -662,7 +662,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_ss2
 argument_list|)
@@ -674,7 +674,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_cr3
 argument_list|)
@@ -686,7 +686,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_eip
 argument_list|)
@@ -698,7 +698,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_eflags
 argument_list|)
@@ -710,7 +710,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_eax
 argument_list|)
@@ -722,7 +722,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_ecx
 argument_list|)
@@ -734,7 +734,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_edx
 argument_list|)
@@ -746,7 +746,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_ebx
 argument_list|)
@@ -758,7 +758,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_esp
 argument_list|)
@@ -770,7 +770,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_ebp
 argument_list|)
@@ -782,7 +782,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_esi
 argument_list|)
@@ -794,7 +794,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_edi
 argument_list|)
@@ -806,7 +806,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_es
 argument_list|)
@@ -818,7 +818,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_cs
 argument_list|)
@@ -830,7 +830,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_ss
 argument_list|)
@@ -842,7 +842,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_ds
 argument_list|)
@@ -854,7 +854,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_fs
 argument_list|)
@@ -866,7 +866,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_gs
 argument_list|)
@@ -878,7 +878,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_ldt
 argument_list|)
@@ -890,7 +890,7 @@ argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_ioopt
 argument_list|)
@@ -1048,16 +1048,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_SSWAP %d\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_sswap
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#define\tPCB_SIGC %d\n"
 argument_list|,
 name|pcb
@@ -1073,6 +1063,16 @@ operator|&
 name|pcb
 operator|->
 name|pcb_iml
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPCB_ONFAULT %d\n"
+argument_list|,
+operator|&
+name|pcb
+operator|->
+name|pcb_onfault
 argument_list|)
 expr_stmt|;
 name|printf
