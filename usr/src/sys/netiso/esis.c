@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*	@(#)esis.c	7.12 (Berkeley) %G% */
+comment|/*	@(#)esis.c	7.13 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -3914,10 +3914,16 @@ specifier|register
 name|int
 name|type
 decl_stmt|;
+specifier|register
 name|struct
 name|rawcb
 modifier|*
 name|rp
+decl_stmt|,
+modifier|*
+name|first_rp
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|ifnet
@@ -3927,13 +3933,6 @@ init|=
 name|shp
 operator|->
 name|snh_ifp
-decl_stmt|;
-name|struct
-name|sockbuf
-modifier|*
-name|sb
-init|=
-literal|0
 decl_stmt|;
 name|char
 name|workbuf
@@ -4109,19 +4108,14 @@ control|)
 block|{
 if|if
 condition|(
-name|sb
+name|first_rp
 operator|==
 literal|0
 condition|)
 block|{
-name|sb
+name|first_rp
 operator|=
-operator|&
 name|rp
-operator|->
-name|rcb_socket
-operator|->
-name|so_rcv
 expr_stmt|;
 continue|continue;
 block|}
@@ -4197,15 +4191,12 @@ block|}
 block|}
 if|if
 condition|(
-name|sb
-condition|)
-block|{
-if|if
-condition|(
+name|first_rp
+operator|&&
 name|sbappendaddr
 argument_list|(
 operator|&
-name|rp
+name|first_rp
 operator|->
 name|rcb_socket
 operator|->
@@ -4226,20 +4217,21 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|sorwakeup
 argument_list|(
-name|rp
+name|first_rp
 operator|->
 name|rcb_socket
 argument_list|)
 expr_stmt|;
-else|else
+return|return;
+block|}
 name|m_freem
 argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
