@@ -470,7 +470,7 @@ name|msg
 operator|.
 name|msg_flags
 operator|=
-name|MSG_EOF
+literal|0
 expr_stmt|;
 comment|/* -l flag for remote fingerd  */
 if|if
@@ -592,7 +592,7 @@ argument_list|,
 operator|&
 name|msg
 argument_list|,
-name|MSG_EOF
+literal|0
 argument_list|)
 operator|<
 literal|0
