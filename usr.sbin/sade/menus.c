@@ -4683,7 +4683,7 @@ directive|endif
 if|#
 directive|if
 name|__FreeBSD__
-operator|>
+operator|>=
 literal|4
 block|{
 literal|" compat4x"
