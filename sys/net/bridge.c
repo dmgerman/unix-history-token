@@ -2023,7 +2023,6 @@ argument_list|,
 name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
-comment|/* ??? ticks on a P90 */
 if|if
 condition|(
 name|m
@@ -2095,9 +2094,22 @@ name|off
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|canfree
+operator|==
+literal|0
+condition|)
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 goto|goto
 name|forward
 goto|;
+block|}
 ifdef|#
 directive|ifdef
 name|DUMMYNET
