@@ -611,6 +611,7 @@ argument_list|(
 literal|"ip6_init"
 argument_list|)
 expr_stmt|;
+comment|/* Initialize the entire ip_protox[] array to IPPROTO_RAW. */
 for|for
 control|(
 name|i
@@ -633,6 +634,7 @@ name|pr
 operator|-
 name|inet6sw
 expr_stmt|;
+comment|/* 	 * Cycle through IP protocols and put them into the appropriate place 	 * in ip6_protox[]. 	 */
 for|for
 control|(
 name|pr
@@ -680,6 +682,16 @@ name|pr_protocol
 operator|!=
 name|IPPROTO_RAW
 condition|)
+block|{
+comment|/* Be careful to only index valid IP protocols. */
+if|if
+condition|(
+name|pr
+operator|->
+name|pr_protocol
+operator|<=
+name|IPPROTO_MAX
+condition|)
 name|ip6_protox
 index|[
 name|pr
@@ -691,6 +703,7 @@ name|pr
 operator|-
 name|inet6sw
 expr_stmt|;
+block|}
 comment|/* Initialize packet filter hooks. */
 name|inet6_pfil_hook
 operator|.
