@@ -157,22 +157,34 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
 name|__END_DECLS
-end_macro
-
-begin_define
-define|#
-directive|define
-name|__word_swap_long
+specifier|static
+name|__inline
+name|uint32_t
+name|__uint16_swap_uint32
 parameter_list|(
+name|uint32_t
 name|x
 parameter_list|)
-define|\
-value|__extension__ ({ register u_long __X = (x); \    __asm ("rorl $16, %1" \ 	: "=r" (__X) \ 	: "0" (__X)); \    __X; })
-end_define
+block|{
+asm|__asm ("rorl $16, %1" : "=r" (x) : "0" (x));
+return|return
+name|x
+return|;
+block|}
+end_function
 
-begin_if
+begin_function
+specifier|static
+name|__inline
+name|uint32_t
+name|__uint8_swap_uint32
+parameter_list|(
+name|uint32_t
+name|x
+parameter_list|)
+block|{
 if|#
 directive|if
 name|defined
@@ -202,50 +214,51 @@ name|defined
 argument_list|(
 name|I386_CPU
 argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|__byte_swap_long
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|__extension__ ({ register u_long __X = (x); \    __asm ("bswap %0" \ 	: "=r" (__X) \ 	: "0" (__X)); \    __X; })
-end_define
-
-begin_else
+asm|__asm ("bswap %0" : "=r" (x) : "0" (x));
 else|#
 directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__byte_swap_long
-parameter_list|(
+asm|__asm ("xchgb %h1, %b1\n\trorl $16, %1\n\txchgb %h1, %b1"
+block|:
+literal|"=q"
+operator|(
 name|x
-parameter_list|)
-define|\
-value|__extension__ ({ register u_long __X = (x); \    __asm ("xchgb %h1, %b1\n\trorl $16, %1\n\txchgb %h1, %b1" \ 	: "=q" (__X) \ 	: "0" (__X)); \    __X; })
-end_define
+operator|)
+operator|:
+literal|"0"
+operator|(
+name|x
+operator|)
+block|)
+function|;
+end_function
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|__byte_swap_word
+begin_return
+return|return
+name|x
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|uint16_t
+name|__uint8_swap_uint16
 parameter_list|(
+name|uint16_t
 name|x
 parameter_list|)
-define|\
-value|__extension__ ({ register u_short __X = (x); \    __asm ("xchgb %h1, %b1" \ 	: "=q" (__X) \ 	: "0" (__X)); \    __X; })
-end_define
+block|{
+asm|__asm ("xchgb %h1, %b1" : "=q" (x) : "0" (x));
+return|return
+name|x
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Macros for network/external number representation conversion.  */
@@ -261,28 +274,28 @@ begin_define
 define|#
 directive|define
 name|ntohl
-value|__byte_swap_long
+value|__uint8_swap_uint32
 end_define
 
 begin_define
 define|#
 directive|define
 name|ntohs
-value|__byte_swap_word
+value|__uint8_swap_uint16
 end_define
 
 begin_define
 define|#
 directive|define
 name|htonl
-value|__byte_swap_long
+value|__uint8_swap_uint32
 end_define
 
 begin_define
 define|#
 directive|define
 name|htons
-value|__byte_swap_word
+value|__uint8_swap_uint16
 end_define
 
 begin_endif
@@ -297,7 +310,7 @@ name|NTOHL
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) = ntohl((u_long)(x)))
+value|((x) = ntohl(x))
 end_define
 
 begin_define
@@ -307,7 +320,7 @@ name|NTOHS
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) = ntohs((u_short)(x)))
+value|((x) = ntohs(x))
 end_define
 
 begin_define
@@ -317,7 +330,7 @@ name|HTONL
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) = htonl((u_long)(x)))
+value|((x) = htonl(x))
 end_define
 
 begin_define
@@ -327,7 +340,7 @@ name|HTONS
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) = htons((u_short)(x)))
+value|((x) = htons(x))
 end_define
 
 begin_endif
