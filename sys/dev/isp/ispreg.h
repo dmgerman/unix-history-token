@@ -1909,6 +1909,38 @@ value|8
 end_define
 
 begin_comment
+comment|/*  * Fibre Protocol Module and Frame Buffer Register Offsets/Definitions (2X00).  * NB: The RISC processor must be paused and the appropriate register  * bank selected via BIU2100_CSR bits.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPM_DIAG_CONFIG
+value|(BIU_BLOCK + 0x96)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FPM_SOFT_RESET
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|FBM_CMD
+value|(BIU_BLOCK + 0xB8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FBMCMD_FIFO_RESET_ALL
+value|0xA000
+end_define
+
+begin_comment
 comment|/*  * SXP Block Register Offsets  */
 end_comment
 
@@ -3977,6 +4009,17 @@ end_define
 
 begin_comment
 comment|/* Single Step RISC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HCCR_2X00_DISABLE_PARITY_PAUSE
+value|0x4001
+end_define
+
+begin_comment
+comment|/* 						 * Disable RISC pause on FPM 						 * parity error. 						 */
 end_comment
 
 begin_define
