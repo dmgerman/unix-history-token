@@ -1627,6 +1627,15 @@ operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
+name|__syncicache
+argument_list|(
+name|EXC_RSVD
+argument_list|,
+name|EXC_LAST
+operator|-
+name|EXC_RSVD
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Start initializing proc0 and thread0. 	 */
 name|proc_linkup
 argument_list|(
