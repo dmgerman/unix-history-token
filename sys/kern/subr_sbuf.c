@@ -2057,6 +2057,9 @@ modifier|*
 name|s
 parameter_list|)
 block|{
+name|int
+name|isdyn
+decl_stmt|;
 name|assert_sbuf_integrity
 argument_list|(
 name|s
@@ -2077,6 +2080,13 @@ operator|->
 name|s_buf
 argument_list|)
 expr_stmt|;
+name|isdyn
+operator|=
+name|SBUF_ISDYNSTRUCT
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 name|s
@@ -2088,10 +2098,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SBUF_ISDYNSTRUCT
-argument_list|(
-name|s
-argument_list|)
+name|isdyn
 condition|)
 name|SBFREE
 argument_list|(
