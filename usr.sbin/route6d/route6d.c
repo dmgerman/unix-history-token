@@ -309,7 +309,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* Wait to submit an initial riprequest. */
+comment|/* Wait to submit an initial riprequest */
 end_comment
 
 begin_endif
@@ -539,18 +539,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* pointing to loopback */
-end_comment
-
-begin_decl_stmt
-name|int
-name|loopifindex
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ditto */
 end_comment
 
 begin_decl_stmt
@@ -2416,12 +2404,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|loopifindex
-operator|=
-name|loopifcp
-operator|->
-name|ifc_index
-expr_stmt|;
 for|for
 control|(
 name|ifcp
@@ -16752,7 +16734,9 @@ name|rrt
 operator|->
 name|rrt_index
 operator|=
-name|loopifindex
+name|loopifcp
+operator|->
+name|ifc_index
 expr_stmt|;
 if|#
 directive|if
