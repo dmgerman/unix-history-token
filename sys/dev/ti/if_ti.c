@@ -284,7 +284,7 @@ name|ALT_VENDORID
 block|,
 name|ALT_DEVICEID_ACENIC
 block|,
-literal|"Alteon AceNIC Gigabit Ethernet"
+literal|"Alteon AceNIC 1000baseSX Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -292,7 +292,7 @@ name|ALT_VENDORID
 block|,
 name|ALT_DEVICEID_ACENIC_COPPER
 block|,
-literal|"Alteon AceNIC 1000baseTX Gigabit Ethernet"
+literal|"Alteon AceNIC 1000baseT Gigabit Ethernet"
 block|}
 block|,
 block|{
