@@ -8040,12 +8040,14 @@ decl_stmt|;
 comment|/* if these are present they should be masked out at an earlier 	 * stage. 	 */
 name|KASSERT
 argument_list|(
+operator|(
 name|a
 operator|&
 name|LE
 argument_list|(
 name|OHCI_TAILMASK
 argument_list|)
+operator|)
 operator|==
 literal|0
 argument_list|,
