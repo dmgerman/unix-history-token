@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	4.9 (Berkeley) %G%"
+literal|"@(#)gmon.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,15 @@ end_include
 begin_comment
 comment|/*      *	froms is actually a bunch of unsigned shorts indexing tos      */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|profiling
+init|=
+literal|3
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -165,10 +174,6 @@ modifier|*
 name|sbrk
 parameter_list|()
 function_decl|;
-name|unsigned
-name|long
-name|limit
-decl_stmt|;
 comment|/* 	 *	round lowpc and highpc to multiples of the density we're using 	 *	so the rest of the scaling (here and in gprof) stays in ints. 	 */
 name|lowpc
 operator|=
@@ -318,7 +323,7 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-name|limit
+name|tolimit
 operator|=
 name|s_textsize
 operator|*
@@ -328,12 +333,12 @@ literal|100
 expr_stmt|;
 if|if
 condition|(
-name|limit
+name|tolimit
 operator|<
 name|MINARCS
 condition|)
 block|{
-name|limit
+name|tolimit
 operator|=
 name|MINARCS
 expr_stmt|;
@@ -341,12 +346,12 @@ block|}
 elseif|else
 if|if
 condition|(
-name|limit
+name|tolimit
 operator|>
 literal|65534
 condition|)
 block|{
-name|limit
+name|tolimit
 operator|=
 literal|65534
 expr_stmt|;
@@ -360,7 +365,7 @@ operator|*
 operator|)
 name|sbrk
 argument_list|(
-name|limit
+name|tolimit
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -420,11 +425,6 @@ name|link
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 *	tolimit is what mcount checks to see if 	 *	all the data structures are ready!!! 	 *	make sure it won't overflow. 	 */
-name|tolimit
-operator|=
-name|limit
-expr_stmt|;
 name|monitor
 argument_list|(
 name|lowpc
@@ -437,6 +437,11 @@ name|monsize
 argument_list|,
 name|tolimit
 argument_list|)
+expr_stmt|;
+comment|/* 	 *	profiling is what mcount checks to see if 	 *	all the data structures are ready!!! 	 */
+name|profiling
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_block
@@ -733,12 +738,6 @@ name|long
 name|toindex
 decl_stmt|;
 comment|/* r7  => r1 */
-specifier|static
-name|int
-name|profiling
-init|=
-literal|0
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -770,17 +769,6 @@ endif|not lint
 comment|/* 	 *	check that we are profiling 	 *	and that we aren't recursively invoked. 	 */
 if|if
 condition|(
-name|tolimit
-operator|==
-literal|0
-condition|)
-block|{
-goto|goto
-name|out
-goto|;
-block|}
-if|if
-condition|(
 name|profiling
 condition|)
 block|{
@@ -789,8 +777,7 @@ name|out
 goto|;
 block|}
 name|profiling
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 comment|/* 	 *	check that frompcindex is a reasonable pc value. 	 *	for example:	signal catchers get called from the stack, 	 *			not from text space.  too bad. 	 */
 name|frompcindex
@@ -1085,8 +1072,7 @@ block|}
 name|done
 label|:
 name|profiling
-operator|=
-literal|0
+operator|--
 expr_stmt|;
 comment|/* and fall through */
 name|out
@@ -1094,10 +1080,10 @@ label|:
 asm|asm("	rsb");
 name|overflow
 label|:
-name|tolimit
-operator|=
-literal|0
+name|profiling
+operator|++
 expr_stmt|;
+comment|/* halt further profiling */
 define|#
 directive|define
 name|TOLIMIT
@@ -1196,6 +1182,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|profiling
+operator|++
+expr_stmt|;
+comment|/* halt profiling */
 name|profil
 argument_list|(
 operator|(
