@@ -46,7 +46,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	2.11 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	2.12 %G%";  */
 end_comment
 
 begin_comment
@@ -1197,6 +1197,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Truncate a file to the last character written. This is  * useful just before closing an old file that was opened  * for read/write.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|trunc
+parameter_list|(
+name|stream
+parameter_list|)
+value|ftruncate(fileno(stream), (long) ftell(stream))
+end_define
 
 begin_comment
 comment|/*  * Forward declarations of routine types to keep lint and cc happy.  */

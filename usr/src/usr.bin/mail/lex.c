@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	2.12 %G%"
+literal|"@(#)lex.c	2.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -432,6 +432,14 @@ condition|(
 name|shudprompt
 condition|)
 block|{
+name|printf
+argument_list|(
+name|prompt
+argument_list|)
+expr_stmt|;
+name|flush
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VMUNIX
@@ -445,12 +453,8 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|VMUNIX
-name|printf
-argument_list|(
-name|prompt
-argument_list|)
-expr_stmt|;
 block|}
+else|else
 name|flush
 argument_list|()
 expr_stmt|;
