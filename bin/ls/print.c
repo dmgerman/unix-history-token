@@ -392,7 +392,7 @@ specifier|static
 name|unit_t
 name|unit_adjust
 parameter_list|(
-name|off_t
+name|double
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3123,6 +3123,9 @@ name|off_t
 name|bytes
 parameter_list|)
 block|{
+name|double
+name|dbytes
+decl_stmt|;
 name|unit_t
 name|unit
 decl_stmt|;
@@ -3131,17 +3134,21 @@ condition|(
 name|f_humanval
 condition|)
 block|{
+name|dbytes
+operator|=
+name|bytes
+expr_stmt|;
 name|unit
 operator|=
 name|unit_adjust
 argument_list|(
 operator|&
-name|bytes
+name|dbytes
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bytes
+name|dbytes
 operator|==
 literal|0
 condition|)
@@ -3163,13 +3170,21 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%*lld%c "
+literal|"%*.*f%c "
 argument_list|,
 name|width
 operator|-
 literal|1
 argument_list|,
-name|bytes
+name|dbytes
+operator|>
+literal|10
+condition|?
+literal|0
+else|:
+literal|1
+argument_list|,
+name|dbytes
 argument_list|,
 literal|"BKMGTPE"
 index|[
@@ -3202,7 +3217,7 @@ begin_function
 name|unit_t
 name|unit_adjust
 parameter_list|(
-name|off_t
+name|double
 modifier|*
 name|val
 parameter_list|)
@@ -3221,9 +3236,6 @@ name|abval
 operator|=
 name|fabs
 argument_list|(
-operator|(
-name|double
-operator|)
 operator|*
 name|val
 argument_list|)
