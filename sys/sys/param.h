@@ -707,8 +707,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Basic byte order function prototypes for non-inline functions.  *  * XXX temporarily exposed to userland for bogus software.  */
+comment|/*  * Basic byte order function prototypes for non-inline functions.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_ifndef
 ifndef|#
@@ -767,10 +773,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* XXX temporarily exposed to userland for bogus software. */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -832,12 +834,6 @@ end_endif
 begin_comment
 comment|/* !_BYTEORDER_FUNC_DEFINED */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_define
 define|#
