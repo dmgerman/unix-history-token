@@ -346,6 +346,13 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|doverbose
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -3281,7 +3288,7 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|verbose
+name|doverbose
 condition|)
 name|printf
 argument_list|(
