@@ -487,32 +487,44 @@ name|p
 parameter_list|)
 block|{
 asm|__asm __volatile(
-literal|".byte	0x0f, 0xa2;"
-literal|"movl	%%eax, (%2);"
-literal|"movl	%%ebx, 4(%2);"
-literal|"movl	%%ecx, 8(%2);"
-literal|"movl	%%edx, 12(%2);"
+literal|"cpuid"
 operator|:
 literal|"=a"
 operator|(
-name|ax
+name|p
+index|[
+literal|0
+index|]
+operator|)
+operator|,
+literal|"=b"
+operator|(
+name|p
+index|[
+literal|1
+index|]
+operator|)
+operator|,
+literal|"=c"
+operator|(
+name|p
+index|[
+literal|2
+index|]
+operator|)
+operator|,
+literal|"=d"
+operator|(
+name|p
+index|[
+literal|3
+index|]
 operator|)
 operator|:
 literal|"0"
 operator|(
 name|ax
 operator|)
-operator|,
-literal|"S"
-operator|(
-name|p
-operator|)
-operator|:
-literal|"bx"
-operator|,
-literal|"cx"
-operator|,
-literal|"dx"
 block|)
 function|;
 end_function
