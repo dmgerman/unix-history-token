@@ -7252,7 +7252,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Figure out a unit attention condition. 			 * 			 * If UA has been forced, proceed. 			 * 			 * If motor is off, turn it on for a moment 			 * and select our drive, in order to read the 			 * UA hardware signal. 			 * 			 * If motor is on, and our drive is currently 			 * selected, just read the hardware bit. 			 * 			 * If motor is on, but active for another 			 * drive on that controller, we are lost.  We 			 * cannot risk to deselect the other drive, so 			 * we just assume a forced UA condition to be 			 * on the safe side. 			 */
+comment|/* 			 * Figure out a unit attention condition. 			 * 			 * If UA has been forced, proceed. 			 * 			 * If the drive has no changeline support, 			 * or if the drive parameters have been lost 			 * due to previous non-blocking access, 			 * assume a forced UA condition. 			 * 			 * If motor is off, turn it on for a moment 			 * and select our drive, in order to read the 			 * UA hardware signal. 			 * 			 * If motor is on, and our drive is currently 			 * selected, just read the hardware bit. 			 * 			 * If motor is on, but active for another 			 * drive on that controller, we are lost.  We 			 * cannot risk to deselect the other drive, so 			 * we just assume a forced UA condition to be 			 * on the safe side. 			 */
 name|unitattn
 operator|=
 literal|0
@@ -7275,6 +7275,12 @@ operator|&
 name|FD_UA
 operator|)
 operator|!=
+literal|0
+operator|||
+name|fd
+operator|->
+name|ft
+operator|==
 literal|0
 condition|)
 block|{
