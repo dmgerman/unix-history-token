@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: xlint.c,v 1.26 2002/01/22 01:14:03 thorpej Exp $ */
+comment|/* $NetBSD: xlint.c,v 1.27 2002/01/31 19:09:33 tv Exp $ */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: xlint.c,v 1.26 2002/01/22 01:14:03 thorpej Exp $"
+literal|"$NetBSD: xlint.c,v 1.27 2002/01/31 19:09:33 tv Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -124,6 +124,19 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"findcc.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PATH
+value|_PATH_DEFPATH
+end_define
 
 begin_function_decl
 name|int
@@ -2822,7 +2835,10 @@ modifier|*
 name|ofn
 decl_stmt|,
 modifier|*
-name|path
+name|pathname
+decl_stmt|,
+modifier|*
+name|CC
 decl_stmt|;
 name|size_t
 name|len
@@ -3154,52 +3170,78 @@ expr_stmt|;
 comment|/* run cc */
 if|if
 condition|(
+operator|(
+name|CC
+operator|=
 name|getenv
 argument_list|(
 literal|"CC"
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|CC
+operator|=
+name|DEFAULT_CC
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pathname
+operator|=
+name|findcc
+argument_list|(
+name|CC
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+if|if
+condition|(
+operator|!
+name|setenv
+argument_list|(
+literal|"PATH"
+argument_list|,
+name|DEFAULT_PATH
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|pathname
+operator|=
+name|findcc
+argument_list|(
+name|CC
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pathname
 operator|==
 name|NULL
 condition|)
 block|{
-name|path
-operator|=
-name|xmalloc
-argument_list|(
-name|strlen
-argument_list|(
-name|PATH_USRBIN
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-literal|"/cc"
-argument_list|)
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|fprintf
 argument_list|(
-name|path
+name|stderr
 argument_list|,
-literal|"%s/cc"
+literal|"%s: %s: not found\n"
 argument_list|,
-name|PATH_USRBIN
+name|getprogname
+argument_list|()
+argument_list|,
+name|CC
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|path
-operator|=
-name|strdup
+name|exit
 argument_list|(
-name|getenv
-argument_list|(
-literal|"CC"
-argument_list|)
+name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
@@ -3208,7 +3250,7 @@ argument_list|(
 operator|&
 name|args
 argument_list|,
-name|path
+name|pathname
 argument_list|)
 expr_stmt|;
 name|applst
@@ -3294,7 +3336,7 @@ expr_stmt|;
 block|}
 name|runchild
 argument_list|(
-name|path
+name|pathname
 argument_list|,
 name|args
 argument_list|,
@@ -3305,7 +3347,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|path
+name|pathname
 argument_list|)
 expr_stmt|;
 name|freelst
@@ -3321,7 +3363,7 @@ operator|!
 name|Bflag
 condition|)
 block|{
-name|path
+name|pathname
 operator|=
 name|xmalloc
 argument_list|(
@@ -3346,7 +3388,7 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|path
+name|pathname
 argument_list|,
 literal|"%s/%slint1"
 argument_list|,
@@ -3359,7 +3401,7 @@ block|}
 else|else
 block|{
 comment|/* 		 * XXX Unclear whether we should be using target_prefix 		 * XXX here.  --thorpej@wasabisystems.com 		 */
-name|path
+name|pathname
 operator|=
 name|xmalloc
 argument_list|(
@@ -3379,7 +3421,7 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|path
+name|pathname
 argument_list|,
 literal|"%s/lint1"
 argument_list|,
@@ -3392,7 +3434,7 @@ argument_list|(
 operator|&
 name|args
 argument_list|,
-name|path
+name|pathname
 argument_list|)
 expr_stmt|;
 name|applst
@@ -3421,7 +3463,7 @@ argument_list|)
 expr_stmt|;
 name|runchild
 argument_list|(
-name|path
+name|pathname
 argument_list|,
 name|args
 argument_list|,
@@ -3433,7 +3475,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|path
+name|pathname
 argument_list|)
 expr_stmt|;
 name|freelst

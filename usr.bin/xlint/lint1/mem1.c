@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: mem1.c,v 1.6 2002/01/29 02:43:39 tv Exp $	*/
+comment|/*	$NetBSD: mem1.c,v 1.7 2002/01/31 19:36:54 tv Exp $	*/
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: mem1.c,v 1.6 2002/01/29 02:43:39 tv Exp $"
+literal|"$NetBSD: mem1.c,v 1.7 2002/01/31 19:36:54 tv Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -713,6 +713,11 @@ name|void
 modifier|*
 name|p
 decl_stmt|;
+name|size_t
+name|t
+init|=
+literal|0
+decl_stmt|;
 name|s
 operator|=
 name|ALIGN
@@ -749,10 +754,34 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|s
+operator|>
+name|mblklen
+condition|)
+block|{
+name|t
+operator|=
+name|mblklen
+expr_stmt|;
+name|mblklen
+operator|=
+name|s
+expr_stmt|;
+block|}
 name|mb
 operator|=
 name|xnewblk
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|t
+condition|)
+name|mblklen
+operator|=
+name|t
 expr_stmt|;
 operator|(
 name|void

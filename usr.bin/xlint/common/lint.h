@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: lint.h,v 1.3 2002/01/31 22:44:00 tv Exp $	*/
+comment|/*	$NetBSD: lint.h,v 1.5 2002/03/07 18:29:56 tv Exp $	*/
 end_comment
 
 begin_comment
