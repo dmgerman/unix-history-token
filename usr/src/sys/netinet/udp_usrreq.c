@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.16	81/12/09	*/
+comment|/*	udp_usrreq.c	4.17	81/12/12	*/
 end_comment
 
 begin_include
@@ -179,7 +179,7 @@ argument_list|(
 name|UDP_INPUT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get ip and udp header together in first mbuf. 	 */
+comment|/* 	 * Get IP and UDP header together in first mbuf. 	 */
 name|m
 operator|=
 name|m0
@@ -232,15 +232,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
 name|ui
+operator|)
 operator|->
-name|ui_len
+name|ip_hl
 operator|>
+operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ip
 argument_list|)
+operator|>>
+literal|2
+operator|)
 condition|)
 name|ip_stripoptions
 argument_list|(
@@ -259,7 +270,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make mbuf data length reflect udp length. 	 * If not enough data to reflect udp length, drop. 	 */
+comment|/* 	 * Make mbuf data length reflect UDP length. 	 * If not enough data to reflect UDP length, drop. 	 */
 name|ulen
 operator|=
 name|ntohs
@@ -343,7 +354,7 @@ argument_list|)
 expr_stmt|;
 comment|/* (struct ip *)ui->ip_len = len; */
 block|}
-comment|/* 	 * Checksum extended udp header and data. 	 */
+comment|/* 	 * Checksum extended UDP header and data. 	 */
 if|if
 condition|(
 name|udpcksum
@@ -567,10 +578,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_macro
 name|udp_output
 argument_list|(
@@ -621,7 +628,7 @@ argument_list|(
 name|UDP_OUTPUT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Calculate data length and get a mbuf 	 * for udp and ip headers. 	 */
+comment|/* 	 * Calculate data length and get a mbuf 	 * for UDP and IP headers. 	 */
 for|for
 control|(
 name|m
@@ -658,7 +665,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* 	 * Fill in mbuf with extended udp header 	 * and addresses and length put into network format. 	 */
+comment|/* 	 * Fill in mbuf with extended UDP header 	 * and addresses and length put into network format. 	 */
 name|m
 operator|->
 name|m_off
@@ -857,10 +864,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_macro
 name|udp_usrreq

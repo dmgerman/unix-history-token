@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.h	4.2	81/12/02	*/
+comment|/*	tcp_timer.h	4.3	81/12/12	*/
 end_comment
 
 begin_comment
@@ -66,7 +66,7 @@ begin_define
 define|#
 directive|define
 name|TCP_TTL
-value|60
+value|15
 end_define
 
 begin_comment
@@ -81,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|TCPTV_MSL
-value|(120*PR_SLOWHZ)
+value|( 30*PR_SLOWHZ)
 end_define
 
 begin_comment
@@ -103,11 +103,11 @@ begin_define
 define|#
 directive|define
 name|TCPTV_KEEP
-value|(240*PR_SLOWHZ)
+value|( 60*PR_SLOWHZ)
 end_define
 
 begin_comment
-comment|/* keep alive - 4 mins */
+comment|/* keep alive - 1 min */
 end_comment
 
 begin_define
@@ -147,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|TCPTV_MAX
-value|(480*PR_SLOWHZ)
+value|(120*PR_SLOWHZ)
 end_define
 
 begin_comment
@@ -230,8 +230,7 @@ name|tvmin
 parameter_list|,
 name|tvmax
 parameter_list|)
-define|\
-value|(tv) = (value); \ 	if ((tv)< (tvmin)) \ 		(tv) = (tvmin); \ 	if ((tv)> (tvmax)) \ 		(tv) = (tvmax);
+value|{ \ 	(tv) = (value); \ 	if ((tv)< (tvmin)) \ 		(tv) = (tvmin); \ 	if ((tv)> (tvmax)) \ 		(tv) = (tvmax); \ }
 end_define
 
 end_unit

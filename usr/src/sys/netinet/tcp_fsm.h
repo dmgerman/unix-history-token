@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_fsm.h	4.10	81/12/03	*/
+comment|/*	tcp_fsm.h	4.11	81/12/12	*/
 end_comment
 
 begin_comment
@@ -223,12 +223,8 @@ name|TH_FIN
 operator||
 name|TH_ACK
 block|,
-name|TH_FIN
-operator||
 name|TH_ACK
 block|,
-name|TH_FIN
-operator||
 name|TH_ACK
 block|, }
 decl_stmt|;
@@ -289,13 +285,13 @@ literal|"CLOSE_WAIT"
 block|,
 literal|"FIN_WAIT_1"
 block|,
-literal|"FIN_WAIT_2"
-block|,
-literal|"TIME_WAIT"
-block|,
 literal|"CLOSING"
 block|,
 literal|"LAST_ACK"
+block|,
+literal|"FIN_WAIT_2"
+block|,
+literal|"TIME_WAIT"
 block|, }
 decl_stmt|;
 end_decl_stmt

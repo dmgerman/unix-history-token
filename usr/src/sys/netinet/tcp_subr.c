@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_subr.c 4.6 81/12/03 */
+comment|/* tcp_subr.c 4.7 81/12/12 */
 end_comment
 
 begin_include
@@ -203,6 +203,13 @@ decl_stmt|;
 name|COUNT
 argument_list|(
 name|TCP_TEMPLATE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"tcp_template %x\n"
+argument_list|,
+name|tp
 argument_list|)
 expr_stmt|;
 name|m
@@ -434,6 +441,17 @@ argument_list|(
 name|TCP_RESPOND
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"tcp_respond ack %x seq %x flags %x\n"
+argument_list|,
+name|ack
+argument_list|,
+name|seq
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -502,6 +520,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|m
+operator|=
+name|dtom
+argument_list|(
+name|ti
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -590,13 +615,36 @@ name|ti
 operator|->
 name|ti_len
 operator|=
-name|htons
-argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|tcphdr
 argument_list|)
+expr_stmt|;
+name|ti
+operator|->
+name|ti_seq
+operator|=
+name|seq
+expr_stmt|;
+name|ti
+operator|->
+name|ti_ack
+operator|=
+name|ack
+expr_stmt|;
+if|#
+directive|if
+name|vax
+name|ti
+operator|->
+name|ti_len
+operator|=
+name|htons
+argument_list|(
+name|ti
+operator|->
+name|ti_len
 argument_list|)
 expr_stmt|;
 name|ti
@@ -605,7 +653,9 @@ name|ti_seq
 operator|=
 name|htonl
 argument_list|(
-name|seq
+name|ti
+operator|->
+name|ti_seq
 argument_list|)
 expr_stmt|;
 name|ti
@@ -614,9 +664,13 @@ name|ti_ack
 operator|=
 name|htonl
 argument_list|(
-name|ack
+name|ti
+operator|->
+name|ti_ack
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ti
 operator|->
 name|ti_x2
@@ -650,6 +704,15 @@ operator|->
 name|ti_urp
 operator|=
 literal|0
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"before cksum m->m_len %d\n"
+argument_list|,
+name|m
+operator|->
+name|m_len
+argument_list|)
 expr_stmt|;
 name|ti
 operator|->
@@ -695,6 +758,24 @@ operator|->
 name|ip_ttl
 operator|=
 name|TCP_TTL
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"to ip_output ip_len %d, m %x\n"
+argument_list|,
+operator|(
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
+name|ti
+operator|)
+operator|->
+name|ip_len
+argument_list|,
+name|m
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -751,6 +832,13 @@ decl_stmt|;
 name|COUNT
 argument_list|(
 name|TCP_NEWTCPCB
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"tcp_newtcpcb %x\n"
+argument_list|,
+name|inp
 argument_list|)
 expr_stmt|;
 if|if
@@ -864,6 +952,15 @@ argument_list|(
 name|TCP_DROP
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"tcp_drop %x %d\n"
+argument_list|,
+name|tp
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TCPS_HAVERCVDSYN
@@ -953,6 +1050,13 @@ decl_stmt|;
 name|COUNT
 argument_list|(
 name|TCP_CLOSE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"tcp_close %x\n"
+argument_list|,
+name|tp
 argument_list|)
 expr_stmt|;
 name|t
@@ -1060,12 +1164,7 @@ name|tp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|socantrcvmore
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|socantsendmore
+name|soisdisconnected
 argument_list|(
 name|so
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.25 81/12/11 */
+comment|/* ip_input.c 1.26 81/12/12 */
 end_comment
 
 begin_include
@@ -1778,20 +1778,33 @@ argument_list|(
 name|IP_SLOWTIMO
 argument_list|)
 expr_stmt|;
-for|for
-control|(
 name|fp
 operator|=
 name|ipq
 operator|.
 name|next
-init|;
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+literal|0
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+while|while
+condition|(
 name|fp
 operator|!=
 operator|&
 name|ipq
-condition|;
-control|)
+condition|)
 if|if
 condition|(
 operator|--
@@ -2475,7 +2488,7 @@ name|m
 operator|->
 name|m_len
 operator|-=
-name|i
+name|olen
 expr_stmt|;
 block|}
 end_block

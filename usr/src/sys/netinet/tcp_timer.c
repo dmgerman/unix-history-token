@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_timer.c 4.5 81/12/02 */
+comment|/* tcp_timer.c 4.6 81/12/12 */
 end_comment
 
 begin_include
@@ -175,13 +175,28 @@ name|TCP_SLOWTIMO
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Search through tcb's and update active timers. 	 */
-for|for
-control|(
 name|ip
 operator|=
 name|tcb
 operator|.
 name|inp_next
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|==
+literal|0
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+for|for
+control|(
 init|;
 name|ip
 operator|!=
@@ -324,6 +339,13 @@ argument_list|(
 name|TCP_CANCELTIMERS
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"tcp_canceltimers %x\n"
+argument_list|,
+name|tp
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -381,6 +403,15 @@ argument_list|(
 name|TCP_TIMERS
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"tcp_timers %x %d\n"
+argument_list|,
+name|tp
+argument_list|,
+name|timer
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|timer
@@ -434,6 +465,18 @@ argument_list|,
 name|TCPTV_MIN
 argument_list|,
 name|TCPTV_MAX
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"rexmt timer now %d\n"
+argument_list|,
+name|tp
+operator|->
+name|t_timer
+index|[
+name|TCPT_REXMT
+index|]
 argument_list|)
 expr_stmt|;
 name|tp
@@ -498,6 +541,18 @@ argument_list|,
 name|TCPTV_MAX
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"persist timer now %d\n"
+argument_list|,
+name|tp
+operator|->
+name|t_timer
+index|[
+name|TCPT_PERSIST
+index|]
+argument_list|)
+expr_stmt|;
 return|return;
 comment|/* 	 * Keep-alive timer went off; send something 	 * or drop connection if idle for too long. 	 */
 case|case
@@ -518,6 +573,11 @@ operator|>=
 name|TCPTV_MAXIDLE
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"drop because of keep alive\n"
+argument_list|)
+expr_stmt|;
 name|tcp_drop
 argument_list|(
 name|tp
@@ -527,6 +587,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|printf
+argument_list|(
+literal|"send keep alive\n"
+argument_list|)
+expr_stmt|;
 name|tcp_respond
 argument_list|(
 name|tp

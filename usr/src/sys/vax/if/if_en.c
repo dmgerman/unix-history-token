@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.20	81/12/11	*/
+comment|/*	if_en.c	4.21	81/12/12	*/
 end_comment
 
 begin_include
@@ -1684,14 +1684,6 @@ condition|)
 goto|goto
 name|setup
 goto|;
-name|printf
-argument_list|(
-literal|"rubaget returns m %x\n"
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-asm|asm("halt");
 if|if
 condition|(
 name|off

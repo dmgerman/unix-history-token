@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.12	81/12/09	*/
+comment|/*	tcp_var.h	4.13	81/12/12	*/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ name|tcpiphdr
 modifier|*
 name|seg_prev
 decl_stmt|;
-name|int
+name|short
 name|t_state
 decl_stmt|;
 comment|/* state of this connection */
@@ -57,7 +57,7 @@ name|short
 name|t_maxseg
 decl_stmt|;
 comment|/* maximum segment size */
-name|short
+name|char
 name|t_force
 decl_stmt|;
 comment|/* 1 if forcing out a byte */
@@ -111,10 +111,6 @@ name|tcp_seq
 name|snd_nxt
 decl_stmt|;
 comment|/* send next */
-name|u_short
-name|snd_wnd
-decl_stmt|;
-comment|/* send window */
 name|tcp_seq
 name|snd_up
 decl_stmt|;
@@ -131,15 +127,19 @@ name|tcp_seq
 name|iss
 decl_stmt|;
 comment|/* initial send sequence number */
-comment|/* receive sequence variables */
-name|tcp_seq
-name|rcv_nxt
+name|u_short
+name|snd_wnd
 decl_stmt|;
-comment|/* receive next */
+comment|/* send window */
+comment|/* receive sequence variables */
 name|short
 name|rcv_wnd
 decl_stmt|;
 comment|/* receive window */
+name|tcp_seq
+name|rcv_nxt
+decl_stmt|;
+comment|/* receive next */
 name|tcp_seq
 name|rcv_up
 decl_stmt|;
