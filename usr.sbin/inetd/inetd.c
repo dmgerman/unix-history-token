@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.38 1998/07/24 08:28:33 ache Exp $"
+literal|"$Id: inetd.c,v 1.39 1998/08/17 06:16:59 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -9121,6 +9121,10 @@ name|se_class
 argument_list|,
 endif|#
 directive|endif
+operator|(
+name|void
+operator|*
+operator|)
 name|sep
 operator|->
 name|se_bi
