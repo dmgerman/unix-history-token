@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whois.c	5.10 (Berkeley) %G%"
+literal|"@(#)whois.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -282,7 +282,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|2
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -338,7 +338,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|3
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -390,7 +390,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|4
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -408,6 +408,11 @@ name|connect
 argument_list|(
 name|s
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|sin
 argument_list|,
@@ -427,7 +432,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|5
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
