@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.67 (Berkeley) %G%"
+literal|"@(#)headers.c	8.68 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1652,6 +1652,24 @@ control|)
 block|{
 if|if
 condition|(
+name|tTd
+argument_list|(
+literal|32
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"%s: "
+argument_list|,
+name|h
+operator|->
+name|h_field
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|h
 operator|->
 name|h_value
@@ -1670,11 +1688,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"%s:<NULL>\n"
-argument_list|,
-name|h
-operator|->
-name|h_field
+literal|"<NULL>\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1692,6 +1706,34 @@ name|h_flags
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|32
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"("
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
+name|h
+operator|->
+name|h_value
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|") "
+argument_list|)
+expr_stmt|;
+block|}
 name|expand
 argument_list|(
 name|h
@@ -1744,15 +1786,6 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: "
-argument_list|,
-name|h
-operator|->
-name|h_field
-argument_list|)
-expr_stmt|;
 name|xputs
 argument_list|(
 name|h
