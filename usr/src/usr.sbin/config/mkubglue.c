@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Make the uba interrupt file ubglue.s  *	mkubglue.c	1.5	82/06/16  */
+comment|/*	mkubglue.c	1.6	82/10/24	*/
+end_comment
+
+begin_comment
+comment|/*  * Make the uba interrupt file ubglue.s  */
 end_comment
 
 begin_include
