@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.10 1998/08/24 10:17:20 cracauer Exp $"
+literal|"$Id: main.c,v 1.11 1998/09/07 05:49:43 sef Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,6 +117,47 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|alpha_syscall_entry
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|alpha_syscall_exit
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_function_decl
 specifier|extern
 name|void
@@ -164,6 +205,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * These should really be parameterized -- I don't like having globals,  * but this is the easiest way, right now, to deal with them.  */
@@ -280,6 +326,22 @@ name|ex_types
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|__alpha__
+block|{
+literal|"FreeBSD ELF"
+block|,
+name|alpha_syscall_entry
+block|,
+name|alpha_syscall_exit
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"FreeBSD a.out"
 block|,
@@ -304,6 +366,8 @@ block|,
 name|i386_linux_syscall_exit
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|,
