@@ -2059,11 +2059,6 @@ operator|,
 literal|0
 operator|)
 expr_stmt|;
-name|tp
-operator|->
-name|t_gen
-operator|++
-expr_stmt|;
 name|ttyclose
 argument_list|(
 name|tp
@@ -2252,11 +2247,6 @@ name|tp
 operator|,
 literal|0
 operator|)
-expr_stmt|;
-name|tp
-operator|->
-name|t_gen
-operator|++
 expr_stmt|;
 name|ttyclose
 argument_list|(

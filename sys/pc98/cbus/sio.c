@@ -4138,13 +4138,6 @@ operator|,
 literal|0
 operator|)
 expr_stmt|;
-name|com
-operator|->
-name|tp
-operator|->
-name|t_gen
-operator|++
-expr_stmt|;
 name|ttyclose
 argument_list|(
 name|com
