@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -130,7 +136,7 @@ modifier|*
 name|pw
 decl_stmt|;
 block|{
-name|long
+name|uid_t
 name|id
 decl_stmt|;
 name|int
@@ -346,11 +352,42 @@ block|}
 block|}
 name|id
 operator|=
-name|atol
+name|strtoul
 argument_list|(
 name|p
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|NULL
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ERANGE
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s> max uid value (%u)"
+argument_list|,
+name|p
+argument_list|,
+name|ULONG_MAX
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|root
@@ -380,7 +417,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s> max uid value (%u)"
+literal|"%s> recommended max uid value (%u)"
 argument_list|,
 name|p
 argument_list|,
@@ -430,11 +467,42 @@ name|_PWF_GID
 expr_stmt|;
 name|id
 operator|=
-name|atol
+name|strtoul
 argument_list|(
 name|p
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|NULL
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ERANGE
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s> max gid value (%u)"
+argument_list|,
+name|p
+argument_list|,
+name|ULONG_MAX
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|pw_big_ids_warning
@@ -446,7 +514,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s> max gid value (%u)"
+literal|"%s> recommended max gid value (%u)"
 argument_list|,
 name|p
 argument_list|,

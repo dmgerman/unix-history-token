@@ -1567,7 +1567,9 @@ name|pw_uid
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|pwd
+operator|.
+name|pw_uid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1589,7 +1591,9 @@ name|pw_gid
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|pwd
+operator|.
+name|pw_gid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1732,7 +1736,9 @@ name|pw_uid
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|pwd
+operator|.
+name|pw_uid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1754,7 +1760,9 @@ name|pw_gid
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|pwd
+operator|.
+name|pw_gid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2422,7 +2430,7 @@ argument_list|(
 name|uidstr
 argument_list|)
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
 name|pwd
 operator|.
@@ -2438,7 +2446,7 @@ argument_list|(
 name|gidstr
 argument_list|)
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
 name|pwd
 operator|.
