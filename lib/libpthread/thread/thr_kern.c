@@ -8969,7 +8969,7 @@ operator|&
 name|thread_lock
 argument_list|)
 expr_stmt|;
-name|TAILQ_INSERT_HEAD
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|free_threadq
