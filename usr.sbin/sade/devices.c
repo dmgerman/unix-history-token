@@ -743,6 +743,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"vlan"
+block|,
+literal|"IEEE 802.1Q VLAN network interface"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"vx"
 block|,
 literal|"3COM 3c590 / 3c595 ethernet card"
