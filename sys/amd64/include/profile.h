@@ -284,7 +284,7 @@ define|#
 directive|define
 name|_MCOUNT_DECL
 define|\
-value|static void _mcount(uintfptr_t frompc, uintfptr_t selfpc) __unused; \ static void _mcount
+value|static void _mcount(uintfptr_t frompc, uintfptr_t selfpc) __used; \ static void _mcount
 end_define
 
 begin_ifdef
