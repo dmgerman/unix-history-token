@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<langinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nlist.h>
 end_include
 
@@ -1416,6 +1422,31 @@ name|tm
 modifier|*
 name|tp
 decl_stmt|;
+specifier|static
+name|int
+name|d_first
+init|=
+operator|-
+literal|1
+decl_stmt|;
+if|if
+condition|(
+name|d_first
+operator|<
+literal|0
+condition|)
+name|d_first
+operator|=
+operator|(
+operator|*
+name|nl_langinfo
+argument_list|(
+name|D_MD_ORDER
+argument_list|)
+operator|==
+literal|'d'
+operator|)
+expr_stmt|;
 name|time
 argument_list|(
 operator|&
@@ -1442,17 +1473,14 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%c"
+name|d_first
+condition|?
+literal|"%e %b %R"
+else|:
+literal|"%b %e %R"
 argument_list|,
 name|tp
 argument_list|)
-expr_stmt|;
-name|buf
-index|[
-literal|16
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|getinfo
 argument_list|(
