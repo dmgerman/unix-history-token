@@ -485,6 +485,13 @@ name|first
 operator|=
 literal|1
 expr_stmt|;
+name|strcpy
+argument_list|(
+name|instr
+argument_list|,
+name|result
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|key
