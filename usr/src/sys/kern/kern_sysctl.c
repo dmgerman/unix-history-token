@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	7.28 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -171,17 +171,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|STK_PARAMS
-value|32
-end_define
-
-begin_comment
-comment|/* largest old/new values on stack */
-end_comment
 
 begin_macro
 name|sysctl
@@ -556,6 +545,8 @@ argument_list|,
 name|uap
 operator|->
 name|newlen
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -682,6 +673,16 @@ name|hostid
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|securelevel
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * kernel related system variables.  */
+end_comment
+
 begin_macro
 name|kern_sysctl
 argument_list|(
@@ -696,6 +697,8 @@ argument_list|,
 argument|newp
 argument_list|,
 argument|newlen
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -739,10 +742,20 @@ name|newlen
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|int
 name|error
+decl_stmt|,
+name|level
 decl_stmt|;
 specifier|extern
 name|char
@@ -983,6 +996,68 @@ argument_list|)
 operator|)
 return|;
 case|case
+name|KERN_SECURELVL
+case|:
+name|level
+operator|=
+name|securelevel
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|sysctl_int
+argument_list|(
+name|oldp
+argument_list|,
+name|oldlenp
+argument_list|,
+name|newp
+argument_list|,
+name|newlen
+argument_list|,
+operator|&
+name|level
+argument_list|)
+operator|)
+operator|||
+name|newp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|level
+operator|<
+name|securelevel
+operator|&&
+name|p
+operator|->
+name|p_pid
+operator|!=
+literal|1
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+name|securelevel
+operator|=
+name|level
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
 name|KERN_CLOCKRATE
 case|:
 return|return
@@ -1053,6 +1128,10 @@ comment|/* NOTREACHED */
 block|}
 end_block
 
+begin_comment
+comment|/*  * hardware related system variables.  */
+end_comment
+
 begin_macro
 name|hw_sysctl
 argument_list|(
@@ -1067,6 +1146,8 @@ argument_list|,
 argument|newp
 argument_list|,
 argument|newlen
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1107,6 +1188,14 @@ end_decl_stmt
 begin_decl_stmt
 name|u_int
 name|newlen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -3230,6 +3319,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3261,6 +3352,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3312,6 +3405,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3343,6 +3438,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3374,6 +3471,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3405,6 +3504,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3436,13 +3537,15 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 return|return
 operator|(
-name|EINVAL
+name|EOPNOTSUPP
 operator|)
 return|;
 block|}
