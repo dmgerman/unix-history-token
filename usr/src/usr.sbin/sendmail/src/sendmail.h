@@ -21,7 +21,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.53	%G%"
+literal|"@(#)sendmail.h	3.54	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -357,7 +357,7 @@ comment|/* only on the list for verification */
 end_comment
 
 begin_comment
-comment|/* **  Mailer definition structure. **	Every mailer known to the system is declared in this **	structure.  It defines the pathname of the mailer, some **	flags associated with it, and the argument vector to **	pass to it.  The flags are defined in conf.c ** **	The host map is a list of lists of strings.  Within each **	list, any host is mapped to the last host in the list. **	This allows multiple names, as well as doing clever **	mail grouping in point-to-point networks.  Note: this **	is only used internally, so the apparent host is still **	kept around. ** **	The argument vector is expanded before actual use.  All **	words except the first are passed through the macro **	processor. */
+comment|/* **  Mailer definition structure. **	Every mailer known to the system is declared in this **	structure.  It defines the pathname of the mailer, some **	flags associated with it, and the argument vector to **	pass to it.  The flags are defined in conf.c ** **	The argument vector is expanded before actual use.  All **	words except the first are passed through the macro **	processor. */
 end_comment
 
 begin_struct
@@ -397,11 +397,6 @@ modifier|*
 name|m_argv
 decl_stmt|;
 comment|/* template argument vector */
-name|ADDRESS
-modifier|*
-name|m_sendq
-decl_stmt|;
-comment|/* list of addresses to send to */
 block|}
 struct|;
 end_struct
@@ -1768,6 +1763,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* the person it is from */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|ADDRESS
+modifier|*
+name|SendQueue
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* list of message recipients */
 end_comment
 
 begin_decl_stmt

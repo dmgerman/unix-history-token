@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	3.9	%G%"
+literal|"@(#)srvrsmtp.c	3.10	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,6 +161,17 @@ begin_comment
 comment|/* helo -- be polite */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CMDDBGSHOWQ
+value|12
+end_define
+
+begin_comment
+comment|/* showq -- show send queue (DEBUG) */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -218,6 +229,16 @@ literal|"helo"
 block|,
 name|CMDHELO
 block|,
+ifdef|#
+directive|ifdef
+name|DEBUG
+literal|"showq"
+block|,
+name|CMDDBGSHOWQ
+block|,
+endif|#
+directive|endif
+endif|DEBUG
 name|NULL
 block|,
 name|CMDERROR
@@ -891,6 +912,29 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|DEBUG
+case|case
+name|CMDDBGSHOWQ
+case|:
+comment|/* show queues */
+name|printf
+argument_list|(
+literal|"SendQueue="
+argument_list|)
+expr_stmt|;
+name|printaddr
+argument_list|(
+name|SendQueue
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+endif|DEBUG
 case|case
 name|CMDERROR
 case|:

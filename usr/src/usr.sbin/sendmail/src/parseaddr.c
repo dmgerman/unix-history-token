@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.34	%G%"
+literal|"@(#)parseaddr.c	3.35	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2866,6 +2866,11 @@ end_decl_stmt
 
 begin_block
 block|{
+name|bool
+name|first
+init|=
+name|TRUE
+decl_stmt|;
 specifier|static
 name|int
 name|indent
@@ -2881,6 +2886,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|first
+operator|=
+name|FALSE
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3021,8 +3030,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|follow
+name|first
 condition|)
 name|printf
 argument_list|(

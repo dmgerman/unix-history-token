@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.54.1.1	%G%"
+literal|"@(#)deliver.c	3.55	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -822,6 +822,14 @@ name|host
 argument_list|)
 operator|!=
 literal|0
+operator|||
+name|to
+operator|->
+name|q_mailer
+operator|!=
+name|firstto
+operator|->
+name|q_mailer
 condition|)
 continue|continue;
 comment|/* compute effective uid/gid when sending */
@@ -4041,8 +4049,9 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|int
-name|i
+name|ADDRESS
+modifier|*
+name|q
 decl_stmt|;
 typedef|typedef
 name|int
@@ -4054,35 +4063,9 @@ parameter_list|()
 function_decl|;
 for|for
 control|(
-name|i
-operator|=
-literal|0
-init|;
-name|Mailer
-index|[
-name|i
-index|]
-operator|!=
-name|NULL
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|ADDRESS
-modifier|*
-name|q
-decl_stmt|;
-for|for
-control|(
 name|q
 operator|=
-name|Mailer
-index|[
-name|i
-index|]
-operator|->
-name|m_sendq
+name|SendQueue
 init|;
 name|q
 operator|!=
@@ -4114,8 +4097,6 @@ argument_list|(
 name|QDONTSEND
 operator||
 name|QBADADDR
-operator||
-name|QPSEUDO
 argument_list|,
 name|q
 operator|->
@@ -4167,7 +4148,6 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_block

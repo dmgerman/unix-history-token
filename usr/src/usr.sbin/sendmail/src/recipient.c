@@ -23,12 +23,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.29	%G%"
+literal|"@(#)recipient.c	3.30	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  SENDTO -- Designate a send list. ** **	The parameter is a comma-separated list of people to send to. **	This routine arranges to send to all of them. ** **	The `ctladdr' is the address that expanded to be this one, **	e.g., in an alias expansion.  This is used for a number of **	purposed, most notably inheritance of uid/gid for protection **	purposes.  It is also used to detect self-reference in group **	expansions and the like. ** **	Parameters: **		list -- the send list. **		copyf -- the copy flag; passed to parse. **		ctladdr -- the address template for the person to **			send to -- effective uid/gid are important. **		qflags -- special flags to set in the q_flags field. ** **	Returns: **		pointer to chain of addresses. ** **	Side Effects: **		none. */
+comment|/* **  SENDTO -- Designate a send list. ** **	The parameter is a comma-separated list of people to send to. **	This routine arranges to send to all of them. ** **	The `ctladdr' is the address that expanded to be this one, **	e.g., in an alias expansion.  This is used for a number of **	purposed, most notably inheritance of uid/gid for protection **	purposes.  It is also used to detect self-reference in group **	expansions and the like. ** **	Parameters: **		list -- the send list. **		copyf -- the copy flag; passed to parse. **		ctladdr -- the address template for the person to **			send to -- effective uid/gid are important. **			This is typically the alias that caused this **			expansion. **		sendq -- a pointer to the head of a queue to put **			these people into. **		qflags -- special flags to set in the q_flags field. ** **	Returns: **		pointer to chain of addresses. ** **	Side Effects: **		none. */
 end_comment
 
 begin_define
@@ -596,7 +596,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  RECIPIENT -- Designate a message recipient ** **	Saves the named person for future mailing. ** **	Parameters: **		a -- the (preparsed) address header for the recipient. ** **	Returns: **		pointer to address actually inserted in send list. ** **	Side Effects: **		none. */
+comment|/* **  RECIPIENT -- Designate a message recipient ** **	Saves the named person for future mailing. ** **	Parameters: **		a -- the (preparsed) address header for the recipient. **		sendq -- a pointer to the head of a queue to put the **			recipient in.  Duplicate supression is done **			in this queue. ** **	Returns: **		pointer to address actually inserted in send list. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -605,11 +605,19 @@ modifier|*
 name|recipient
 parameter_list|(
 name|a
+parameter_list|,
+name|sendq
 parameter_list|)
 specifier|register
 name|ADDRESS
 modifier|*
 name|a
+decl_stmt|;
+specifier|register
+name|ADDRESS
+modifier|*
+modifier|*
+name|sendq
 decl_stmt|;
 block|{
 specifier|register
@@ -775,10 +783,7 @@ for|for
 control|(
 name|pq
 operator|=
-operator|&
-name|m
-operator|->
-name|m_sendq
+name|sendq
 init|;
 operator|(
 name|q
@@ -1017,6 +1022,8 @@ argument_list|,
 literal|" sending"
 argument_list|,
 name|a
+argument_list|,
+name|sendq
 argument_list|)
 expr_stmt|;
 block|}
@@ -1025,6 +1032,8 @@ else|else
 name|alias
 argument_list|(
 name|a
+argument_list|,
+name|sendq
 argument_list|)
 expr_stmt|;
 block|}
@@ -1436,6 +1445,8 @@ condition|)
 name|forward
 argument_list|(
 name|a
+argument_list|,
+name|sendq
 argument_list|)
 expr_stmt|;
 block|}
@@ -1785,7 +1796,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  INCLUDE -- handle :include: specification. ** **	Parameters: **		fname -- filename to include. **		msg -- message to print in verbose mode. **		ctladdr -- address template to use to fill in these **			addresses -- effective user/group id are **			the important things. ** **	Returns: **		none. ** **	Side Effects: **		reads the :include: file and sends to everyone **		listed in that file. */
+comment|/* **  INCLUDE -- handle :include: specification. ** **	Parameters: **		fname -- filename to include. **		msg -- message to print in verbose mode. **		ctladdr -- address template to use to fill in these **			addresses -- effective user/group id are **			the important things. **		sendq -- a pointer to the head of the send queue **			to put these addresses in. ** **	Returns: **		none. ** **	Side Effects: **		reads the :include: file and sends to everyone **		listed in that file. */
 end_comment
 
 begin_macro
@@ -1796,6 +1807,8 @@ argument_list|,
 argument|msg
 argument_list|,
 argument|ctladdr
+argument_list|,
+argument|sendq
 argument_list|)
 end_macro
 
@@ -1817,6 +1830,14 @@ begin_decl_stmt
 name|ADDRESS
 modifier|*
 name|ctladdr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ADDRESS
+modifier|*
+modifier|*
+name|sendq
 decl_stmt|;
 end_decl_stmt
 

@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	3.4.1.1	%G%"
+literal|"@(#)queue.c	3.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,11 @@ specifier|register
 name|char
 modifier|*
 name|p
+decl_stmt|;
+specifier|register
+name|ADDRESS
+modifier|*
+name|q
 decl_stmt|;
 comment|/* create control file name from data file name */
 name|strcpy
@@ -217,36 +222,9 @@ expr_stmt|;
 comment|/* output list of recipient addresses */
 for|for
 control|(
-name|i
-operator|=
-literal|0
-init|;
-name|Mailer
-index|[
-name|i
-index|]
-operator|!=
-name|NULL
-condition|;
-name|i
-operator|++
-control|)
-block|{
-specifier|register
-name|ADDRESS
-modifier|*
-name|q
-decl_stmt|;
-for|for
-control|(
 name|q
 operator|=
-name|Mailer
-index|[
-name|i
-index|]
-operator|->
-name|m_sendq
+name|SendQueue
 init|;
 name|q
 operator|!=
@@ -283,7 +261,6 @@ operator|->
 name|q_paddr
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* output headers for this message */
 for|for

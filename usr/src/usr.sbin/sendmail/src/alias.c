@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.26.1.1	%G%	(with DBM)"
+literal|"@(#)alias.c	3.27	%G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.26.1.1	%G%	(without DBM)"
+literal|"@(#)alias.c	3.27	%G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,7 +62,7 @@ endif|DBM
 end_endif
 
 begin_comment
-comment|/* **  ALIAS -- Compute aliases. ** **	Scans the file /usr/lib/aliases for a set of aliases. **	If found, it arranges to deliver to them.  Uses libdbm **	database if -DDBM. ** **	Parameters: **		a -- address to alias. ** **	Returns: **		none ** **	Side Effects: **		Aliases found are expanded. ** **	Files: **		/usr/lib/aliases -- the mail aliases.  The format is **			a series of lines of the form: **				alias:name1,name2,name3,... **			where 'alias' expands to all of **			'name[i]'.  Continuations begin with **			space or tab. **		/usr/lib/aliases.pag, /usr/lib/aliases.dir: libdbm version **			of alias file.  Keys are aliases, datums **			(data?) are name1,name2, ... ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. **		It is unsophisticated about line overflows. */
+comment|/* **  ALIAS -- Compute aliases. ** **	Scans the file /usr/lib/aliases for a set of aliases. **	If found, it arranges to deliver to them.  Uses libdbm **	database if -DDBM. ** **	Parameters: **		a -- address to alias. **		sendq -- a pointer to the head of the send queue **			to put the aliases in. ** **	Returns: **		none ** **	Side Effects: **		Aliases found are expanded. ** **	Files: **		/usr/lib/aliases -- the mail aliases.  The format is **			a series of lines of the form: **				alias:name1,name2,name3,... **			where 'alias' expands to all of **			'name[i]'.  Continuations begin with **			space or tab. **		/usr/lib/aliases.pag, /usr/lib/aliases.dir: libdbm version **			of alias file.  Keys are aliases, datums **			(data?) are name1,name2, ... ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. **		It is unsophisticated about line overflows. */
 end_comment
 
 begin_ifdef
@@ -113,6 +113,8 @@ begin_expr_stmt
 name|alias
 argument_list|(
 name|a
+argument_list|,
+name|sendq
 argument_list|)
 specifier|register
 name|ADDRESS
@@ -120,6 +122,14 @@ operator|*
 name|a
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|ADDRESS
+modifier|*
+modifier|*
+name|sendq
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1314,13 +1324,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Parameters: **		user -- the name of the user who's mail we would like **			to forward to.  It must have been verified -- **			i.e., the q_home field must have been filled **			in. ** **	Returns: **		none. ** **	Side Effects: **		New names are added to send queues. */
+comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Parameters: **		user -- the name of the user who's mail we would like **			to forward to.  It must have been verified -- **			i.e., the q_home field must have been filled **			in. **		sendq -- a pointer to the head of the send queue to **			put this user's aliases in. ** **	Returns: **		none. ** **	Side Effects: **		New names are added to send queues. */
 end_comment
 
 begin_macro
 name|forward
 argument_list|(
 argument|user
+argument_list|,
+argument|sendq
 argument_list|)
 end_macro
 
@@ -1328,6 +1340,14 @@ begin_decl_stmt
 name|ADDRESS
 modifier|*
 name|user
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ADDRESS
+modifier|*
+modifier|*
+name|sendq
 decl_stmt|;
 end_decl_stmt
 
@@ -1452,6 +1472,8 @@ argument_list|,
 literal|"forwarding"
 argument_list|,
 name|user
+argument_list|,
+name|sendq
 argument_list|)
 expr_stmt|;
 block|}

@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	3.16	%G%"
+literal|"@(#)readcf.c	3.17	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1069,12 +1069,6 @@ operator|->
 name|m_badstat
 operator|=
 name|EX_UNAVAILABLE
-expr_stmt|;
-name|m
-operator|->
-name|m_sendq
-operator|=
-name|NULL
 expr_stmt|;
 name|m
 operator|->
