@@ -395,7 +395,7 @@ begin_function_decl
 name|int
 name|get_ether_addr
 parameter_list|(
-name|u_long
+name|u_int32_t
 name|ipaddr
 parameter_list|,
 name|u_char
@@ -993,7 +993,7 @@ name|sscanf
 argument_list|(
 name|line
 argument_list|,
-literal|"%s %s %s %s %s"
+literal|"%49s %49s %49s %49s %49s"
 argument_list|,
 name|arg
 index|[
@@ -2546,18 +2546,24 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
+operator|(
+name|char
+operator|*
+operator|)
 name|sdl
 operator|=
 operator|(
-expr|struct
-name|sockaddr_dl
+name|char
 operator|*
 operator|)
-operator|(
 name|sin
 operator|+
-literal|1
-operator|)
+name|ROUNDUP
+argument_list|(
+name|sin
+operator|->
+name|sin_len
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3546,7 +3552,7 @@ begin_function
 name|int
 name|get_ether_addr
 parameter_list|(
-name|u_long
+name|u_int32_t
 name|ipaddr
 parameter_list|,
 name|u_char
@@ -3565,7 +3571,7 @@ decl_stmt|,
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|ina
 decl_stmt|,
 name|mask
