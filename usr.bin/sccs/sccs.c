@@ -474,6 +474,7 @@ name|SccsProg
 index|[]
 init|=
 block|{
+block|{
 literal|"admin"
 block|,
 name|PROG
@@ -481,7 +482,9 @@ block|,
 name|REALUSER
 block|,
 name|_PATH_SCCSADMIN
+block|}
 block|,
+block|{
 literal|"cdc"
 block|,
 name|PROG
@@ -489,7 +492,9 @@ block|,
 literal|0
 block|,
 name|_PATH_SCCSRMDEL
+block|}
 block|,
+block|{
 literal|"comb"
 block|,
 name|PROG
@@ -497,7 +502,9 @@ block|,
 literal|0
 block|,
 name|_PATH_SCCSCOMB
+block|}
 block|,
+block|{
 literal|"delta"
 block|,
 name|PROG
@@ -505,7 +512,9 @@ block|,
 literal|0
 block|,
 name|_PATH_SCCSDELTA
+block|}
 block|,
+block|{
 literal|"get"
 block|,
 name|PROG
@@ -513,7 +522,9 @@ block|,
 literal|0
 block|,
 name|_PATH_SCCSGET
+block|}
 block|,
+block|{
 literal|"help"
 block|,
 name|PROG
@@ -521,7 +532,9 @@ block|,
 name|NO_SDOT
 block|,
 name|_PATH_SCCSHELP
+block|}
 block|,
+block|{
 literal|"prs"
 block|,
 name|PROG
@@ -529,7 +542,9 @@ block|,
 literal|0
 block|,
 name|_PATH_SCCSPRS
+block|}
 block|,
+block|{
 literal|"prt"
 block|,
 name|PROG
@@ -537,7 +552,9 @@ block|,
 literal|0
 block|,
 name|_PATH_SCCSPRT
+block|}
 block|,
+block|{
 literal|"rmdel"
 block|,
 name|PROG
@@ -545,7 +562,9 @@ block|,
 name|REALUSER
 block|,
 name|_PATH_SCCSRMDEL
+block|}
 block|,
+block|{
 literal|"val"
 block|,
 name|PROG
@@ -553,7 +572,9 @@ block|,
 literal|0
 block|,
 name|_PATH_SCCSVAL
+block|}
 block|,
+block|{
 literal|"what"
 block|,
 name|PROG
@@ -561,7 +582,9 @@ block|,
 name|NO_SDOT
 block|,
 name|_PATH_SCCSWHAT
+block|}
 block|,
+block|{
 literal|"sccsdiff"
 block|,
 name|SHELL
@@ -569,7 +592,9 @@ block|,
 name|REALUSER
 block|,
 name|_PATH_SCCSDIFF
+block|}
 block|,
+block|{
 literal|"edit"
 block|,
 name|CMACRO
@@ -577,7 +602,9 @@ block|,
 name|NO_SDOT
 block|,
 literal|"get -e"
+block|}
 block|,
+block|{
 literal|"delget"
 block|,
 name|CMACRO
@@ -585,7 +612,9 @@ block|,
 name|NO_SDOT
 block|,
 literal|"delta:mysrp/get:ixbeskcl -t"
+block|}
 block|,
+block|{
 literal|"deledit"
 block|,
 name|CMACRO
@@ -593,7 +622,9 @@ block|,
 name|NO_SDOT
 block|,
 literal|"delta:mysrp -n/get:ixbskcl -e -t -g"
+block|}
 block|,
+block|{
 literal|"fix"
 block|,
 name|FIX
@@ -601,7 +632,9 @@ block|,
 name|NO_SDOT
 block|,
 name|NULL
+block|}
 block|,
+block|{
 literal|"clean"
 block|,
 name|CLEAN
@@ -615,7 +648,9 @@ name|char
 operator|*
 operator|)
 name|CLEANC
+block|}
 block|,
+block|{
 literal|"info"
 block|,
 name|CLEAN
@@ -629,7 +664,9 @@ name|char
 operator|*
 operator|)
 name|INFOC
+block|}
 block|,
+block|{
 literal|"check"
 block|,
 name|CLEAN
@@ -643,7 +680,9 @@ name|char
 operator|*
 operator|)
 name|CHECKC
+block|}
 block|,
+block|{
 literal|"tell"
 block|,
 name|CLEAN
@@ -657,7 +696,9 @@ name|char
 operator|*
 operator|)
 name|TELLC
+block|}
 block|,
+block|{
 literal|"unedit"
 block|,
 name|UNEDIT
@@ -665,7 +706,9 @@ block|,
 name|NO_SDOT
 block|,
 name|NULL
+block|}
 block|,
+block|{
 literal|"diffs"
 block|,
 name|DIFFS
@@ -675,7 +718,9 @@ operator||
 name|REALUSER
 block|,
 name|NULL
+block|}
 block|,
+block|{
 literal|"-diff"
 block|,
 name|DODIFF
@@ -685,7 +730,9 @@ operator||
 name|REALUSER
 block|,
 name|_PATH_SCCSBDIFF
+block|}
 block|,
+block|{
 literal|"print"
 block|,
 name|CMACRO
@@ -693,7 +740,9 @@ block|,
 literal|0
 block|,
 literal|"prs -e/get -p -m -s"
+block|}
 block|,
+block|{
 literal|"branch"
 block|,
 name|CMACRO
@@ -701,7 +750,9 @@ block|,
 name|NO_SDOT
 block|,
 literal|"get:ixrc -e -b/delta: -s -n -ybranch-place-holder/get:pl -e -t -g"
+block|}
 block|,
+block|{
 literal|"enter"
 block|,
 name|ENTER
@@ -709,7 +760,9 @@ block|,
 name|NO_SDOT
 block|,
 name|NULL
+block|}
 block|,
+block|{
 literal|"create"
 block|,
 name|CMACRO
@@ -717,7 +770,9 @@ block|,
 name|NO_SDOT
 block|,
 literal|"enter/get:ixbeskcl -t"
+block|}
 block|,
+block|{
 name|NULL
 block|,
 operator|-
@@ -726,6 +781,7 @@ block|,
 literal|0
 block|,
 name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
