@@ -414,7 +414,7 @@ name|type
 parameter_list|,
 name|op
 parameter_list|)
-value|do {	\         vm_offset_t va;					\ 	type data;					\ 	va = IRONGATE_CFGADDR(b, s, f, r);		\ 	irongate_clear_abort();				\ 	if (badaddr((caddr_t)va, width)) {		\ 		irongate_check_abort();			\ 		return ~0;				\ 	}						\ 	data = ##op##(va);				\ 	if (irongate_check_abort())			\ 		return ~0;				\ 	return data;					\ } while (0)
+value|do {	\         vm_offset_t va;					\ 	type data;					\ 	va = IRONGATE_CFGADDR(b, s, f, r);		\ 	irongate_clear_abort();				\ 	if (badaddr((caddr_t)va, width)) {		\ 		irongate_check_abort();			\ 		return ~0;				\ 	}						\ 	data = op(va);					\ 	if (irongate_check_abort())			\ 		return ~0;				\ 	return data;					\ } while (0)
 end_define
 
 begin_define
@@ -436,7 +436,7 @@ name|width
 parameter_list|,
 name|op
 parameter_list|)
-value|do {	\         vm_offset_t va;					\ 	va = IRONGATE_CFGADDR(b, s, f, r);		\ 	irongate_clear_abort();				\ 	if (badaddr((caddr_t)va, width))		\ 		return;					\ 	##op##(va, data);				\ 	irongate_check_abort();				\ } while (0)
+value|do {	\         vm_offset_t va;					\ 	va = IRONGATE_CFGADDR(b, s, f, r);		\ 	irongate_clear_abort();				\ 	if (badaddr((caddr_t)va, width))		\ 		return;					\ 	op(va, data);					\ 	irongate_check_abort();				\ } while (0)
 end_define
 
 begin_function
