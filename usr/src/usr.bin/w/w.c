@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)w.c	4.1 (Berkeley) %G%"
+literal|"@(#)w.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -787,7 +787,7 @@ index|[
 literal|1
 index|]
 index|[
-literal|1
+name|i
 index|]
 expr_stmt|;
 break|break;
