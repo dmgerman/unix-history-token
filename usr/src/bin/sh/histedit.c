@@ -841,9 +841,11 @@ operator|&&
 operator|(
 name|editor
 operator|=
-name|lookupvar
+name|bltinlookup
 argument_list|(
 literal|"FCEDIT"
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 operator|==
@@ -852,9 +854,11 @@ operator|&&
 operator|(
 name|editor
 operator|=
-name|lookupvar
+name|bltinlookup
 argument_list|(
 literal|"EDITOR"
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 operator|==
