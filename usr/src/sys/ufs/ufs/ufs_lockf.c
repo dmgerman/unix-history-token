@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Scooter Morris at Genentech Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lockf.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Scooter Morris at Genentech Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lockf.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -545,6 +545,8 @@ init|;
 condition|;
 control|)
 block|{
+if|if
+condition|(
 name|ovcase
 operator|=
 name|lf_findoverlap
@@ -561,7 +563,7 @@ argument_list|,
 operator|&
 name|overlap
 argument_list|)
-expr_stmt|;
+condition|)
 name|block
 operator|=
 name|overlap
@@ -902,8 +904,6 @@ break|break;
 block|}
 break|break;
 block|}
-name|out
-label|:
 ifdef|#
 directive|ifdef
 name|LOCKF_DEBUG
