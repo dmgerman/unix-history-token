@@ -403,7 +403,7 @@ struct|struct
 name|linux_nice_args
 block|{
 name|int
-name|dummy
+name|inc
 decl_stmt|;
 block|}
 struct|;

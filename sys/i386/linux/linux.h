@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: linux.h,v 1.10.2.4 1997/06/02 06:47:38 msmith Exp $  */
+comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: linux.h,v 1.10.2.5 1997/12/15 06:11:34 msmith Exp $  */
 end_comment
 
 begin_ifndef
@@ -2373,6 +2373,59 @@ value|0x4000
 end_define
 
 begin_comment
+comment|/* semctl Command Definitions. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_GETPID
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_GETVAL
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_GETALL
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_GETNCNT
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_GETZCNT
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SETVAL
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SETALL
+value|17
+end_define
+
+begin_comment
 comment|/* Socket defines */
 end_comment
 
@@ -2833,6 +2886,41 @@ define|#
 directive|define
 name|LINUX_SNDCTL_DSP_NONBLOCK
 value|0x500E
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SNDCTL_DSP_GETCAPS
+value|0x500F
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SNDCTL_DSP_GETTRIGGER
+value|0x5010
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SNDCTL_DSP_SETTRIGGER
+value|0x5010
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SNDCTL_DSP_GETIPTR
+value|0x5011
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SNDCTL_DSP_GETOPTR
+value|0x5012
 end_define
 
 begin_define
