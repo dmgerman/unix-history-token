@@ -1590,7 +1590,6 @@ modifier|*
 name|fsid
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|mount
 modifier|*
@@ -2051,7 +2050,6 @@ name|vattr_null
 parameter_list|(
 name|vap
 parameter_list|)
-specifier|register
 name|struct
 name|vattr
 modifier|*
@@ -7719,7 +7717,6 @@ name|flags
 parameter_list|,
 name|td
 parameter_list|)
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -8589,7 +8586,6 @@ name|vdropl
 parameter_list|(
 name|vp
 parameter_list|)
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -9831,7 +9827,6 @@ name|vgone
 parameter_list|(
 name|vp
 parameter_list|)
-specifier|register
 name|struct
 name|vnode
 modifier|*
