@@ -1642,11 +1642,12 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 			 * Note that printjob() also plays around with 			 * signal-handling routines, and may need to be 			 * changed when making changes to signal-handling. 			 */
 name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,
-name|SIG_IGN
+name|SIG_DFL
 argument_list|)
 expr_stmt|;
 name|signal
