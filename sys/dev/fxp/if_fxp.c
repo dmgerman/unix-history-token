@@ -4484,43 +4484,12 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-comment|/* disable interrupts */
-name|CSR_WRITE_1
-argument_list|(
-name|sc
-argument_list|,
-name|FXP_CSR_SCB_INTRCNTL
-argument_list|,
-name|FXP_SCB_INTR_DISABLE
-argument_list|)
-expr_stmt|;
 name|s
 operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|device_is_alive
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-block|{
-comment|/* 		 * Stop DMA and drop transmit queue. 		 */
-if|if
-condition|(
-name|bus_child_present
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-name|fxp_stop
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Close down routes etc. 		 */
+comment|/* 	 * Close down routes etc. 	 */
 name|ether_ifdetach
 argument_list|(
 operator|&
@@ -4531,6 +4500,31 @@ operator|.
 name|ac_if
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Stop DMA and drop transmit queue. 	 */
+if|if
+condition|(
+name|bus_child_present
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+comment|/* disable interrupts */
+name|CSR_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_SCB_INTRCNTL
+argument_list|,
+name|FXP_SCB_INTR_DISABLE
+argument_list|)
+expr_stmt|;
+name|fxp_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 name|device_delete_child
 argument_list|(
 name|dev
@@ -4545,7 +4539,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Free all media structures. 		 */
+comment|/* 	 * Free all media structures. 	 */
 name|ifmedia_removeall
 argument_list|(
 operator|&
@@ -4554,7 +4548,6 @@ operator|->
 name|sc_media
 argument_list|)
 expr_stmt|;
-block|}
 name|splx
 argument_list|(
 name|s
