@@ -133,7 +133,7 @@ name|err_cnt
 init|=
 literal|0
 decl_stmt|;
-comment|/*      * Try to find and open the INDEX. We only check IndexFile != NULL      * later, if we actually need the INDEX.      */
+comment|/*      * Try to find and open the INDEX. We only check IndexFile != NULL      * later, if we actually need the INDEX.      * XXX This should not be hard-coded to INDEX-5.      */
 if|if
 condition|(
 operator|*
@@ -147,7 +147,7 @@ name|tmp
 argument_list|,
 name|PATH_MAX
 argument_list|,
-literal|"%s/INDEX"
+literal|"%s/INDEX-5"
 argument_list|,
 name|PORTS_DIR
 argument_list|)
