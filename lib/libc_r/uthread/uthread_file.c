@@ -262,14 +262,16 @@ block|{
 comment|/* Point to the first dynamic lock: */
 name|p
 operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
 name|flh
 index|[
 name|idx
 index|]
 operator|.
 name|head
-operator|.
-name|lh_first
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Loop through the dynamic locks looking for the 		 * target file: 		 */
 while|while
@@ -295,11 +297,12 @@ condition|)
 comment|/* Not this file, try the next: */
 name|p
 operator|=
+name|LIST_NEXT
+argument_list|(
 name|p
-operator|->
+argument_list|,
 name|entry
-operator|.
-name|le_next
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -366,14 +369,16 @@ block|{
 comment|/* Point to the first dynamic lock: */
 name|p
 operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
 name|flh
 index|[
 name|idx
 index|]
 operator|.
 name|head
-operator|.
-name|lh_first
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Loop through the dynamic locks looking for a 		 * lock structure that is not being used: 		 */
 while|while
@@ -391,11 +396,12 @@ condition|)
 comment|/* This one is used, try the next: */
 name|p
 operator|=
+name|LIST_NEXT
+argument_list|(
 name|p
-operator|->
+argument_list|,
 name|entry
-operator|.
-name|le_next
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * If an existing lock structure has not been found, 	 * allocate memory for a new one: 	 */
