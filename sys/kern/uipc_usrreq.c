@@ -486,7 +486,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|unp_drop
 argument_list|(
@@ -506,7 +508,9 @@ name|so
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -545,7 +549,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 comment|/* 	 * Pass back name of connected socket, 	 * if it was bound and we are still connected 	 * (our peer may have closed already!). 	 */
 if|if
@@ -601,7 +607,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -642,13 +650,17 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EISCONN
+operator|)
 return|;
 return|return
+operator|(
 name|unp_attach
 argument_list|(
 name|so
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -691,9 +703,12 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 return|return
+operator|(
 name|unp_bind
 argument_list|(
 name|unp
@@ -702,6 +717,7 @@ name|nam
 argument_list|,
 name|td
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -744,9 +760,12 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 return|return
+operator|(
 name|unp_connect
 argument_list|(
 name|so
@@ -755,6 +774,7 @@ name|nam
 argument_list|,
 name|curthread
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -792,15 +812,19 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 return|return
+operator|(
 name|unp_connect2
 argument_list|(
 name|so1
 argument_list|,
 name|so2
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -837,7 +861,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|unp_detach
 argument_list|(
@@ -845,7 +871,9 @@ name|unp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -878,7 +906,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|unp_disconnect
 argument_list|(
@@ -886,7 +916,9 @@ name|unp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -930,15 +962,19 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 return|return
+operator|(
 name|unp_listen
 argument_list|(
 name|unp
 argument_list|,
 name|td
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -977,7 +1013,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -1031,7 +1069,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1075,7 +1115,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 switch|switch
 condition|(
@@ -1205,7 +1247,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1452,10 +1496,12 @@ literal|0
 expr_stmt|;
 block|}
 else|else
+block|{
 name|error
 operator|=
 name|ENOBUFS
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|nam
@@ -1579,6 +1625,7 @@ literal|0
 expr_stmt|;
 block|}
 else|else
+block|{
 name|sbappend
 argument_list|(
 operator|&
@@ -1589,6 +1636,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 name|so
 operator|->
 name|so_snd
@@ -1746,7 +1794,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1789,7 +1839,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|sb
 operator|->
@@ -1909,7 +1961,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|socantsendmore
 argument_list|(
@@ -1922,7 +1976,9 @@ name|unp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1961,7 +2017,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -2004,7 +2062,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2825,7 +2885,9 @@ operator|<=
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|buf
 operator|=
@@ -3321,7 +3383,9 @@ operator|<=
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|strlcpy
 argument_list|(
@@ -4019,7 +4083,9 @@ name|xunpcb
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -4031,7 +4097,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EPERM
+operator|)
 return|;
 comment|/* 	 * OK, now we're committed to doing something. 	 */
 name|xug
@@ -4109,7 +4177,9 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|unp_list
@@ -4422,7 +4492,9 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -6057,7 +6129,7 @@ name|unp_defer
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  	 * before going through all this, set all FDs to  	 * be NOT defered and NOT externally accessible 	 */
+comment|/* 	 * before going through all this, set all FDs to 	 * be NOT defered and NOT externally accessible 	 */
 name|sx_slock
 argument_list|(
 operator|&
@@ -6156,7 +6228,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/*  				 * If all references are from messages 				 * in transit, then skip it. it's not  				 * externally accessible. 				 */
+comment|/* 				 * If all references are from messages 				 * in transit, then skip it. it's not 				 * externally accessible. 				 */
 if|if
 condition|(
 name|fp
@@ -6175,7 +6247,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/*  				 * If it got this far then it must be 				 * externally accessible. 				 */
+comment|/* 				 * If it got this far then it must be 				 * externally accessible. 				 */
 name|fp
 operator|->
 name|f_gcflag
@@ -6183,7 +6255,7 @@ operator||=
 name|FMARK
 expr_stmt|;
 block|}
-comment|/* 			 * either it was defered, or it is externally  			 * accessible and not already marked so. 			 * Now check if it is possibly one of OUR sockets. 			 */
+comment|/* 			 * either it was defered, or it is externally 			 * accessible and not already marked so. 			 * Now check if it is possibly one of OUR sockets. 			 */
 if|if
 condition|(
 name|fp
@@ -6271,7 +6343,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* 			 * So, Ok, it's one of our sockets and it IS externally 			 * accessible (or was defered). Now we look 			 * to see if we hold any file descriptors in its 			 * message buffers. Follow those links and mark them  			 * as accessible too. 			 */
+comment|/* 			 * So, Ok, it's one of our sockets and it IS externally 			 * accessible (or was defered). Now we look 			 * to see if we hold any file descriptors in its 			 * message buffers. Follow those links and mark them 			 * as accessible too. 			 */
 name|unp_scan
 argument_list|(
 name|so
@@ -6362,7 +6434,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/*  		 * If it's not open, skip it 		 */
+comment|/* 		 * If it's not open, skip it 		 */
 if|if
 condition|(
 name|fp
@@ -6379,7 +6451,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/*  		 * If all refs are from msgs, and it's not marked accessible 		 * then it must be referenced from some unreachable cycle 		 * of (shut-down) FDs, so include it in our 		 * list of FDs to remove 		 */
+comment|/* 		 * If all refs are from msgs, and it's not marked accessible 		 * then it must be referenced from some unreachable cycle 		 * of (shut-down) FDs, so include it in our 		 * list of FDs to remove 		 */
 if|if
 condition|(
 name|fp
@@ -6427,7 +6499,7 @@ operator|&
 name|filelist_lock
 argument_list|)
 expr_stmt|;
-comment|/*  	 * for each FD on our hit list, do the following two things 	 */
+comment|/* 	 * for each FD on our hit list, do the following two things 	 */
 for|for
 control|(
 name|i
@@ -6489,11 +6561,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|FILE_UNLOCK
 argument_list|(
 name|tfp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 for|for
 control|(
