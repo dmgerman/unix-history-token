@@ -908,8 +908,16 @@ argument_list|(
 literal|"acd: out of memory\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|cdp
+argument_list|,
+name|M_ACD
+argument_list|)
+expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|bzero
@@ -1019,6 +1027,20 @@ argument_list|(
 literal|"acd: out of memory\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|chp
+argument_list|,
+name|M_ACD
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|cdp
+argument_list|,
+name|M_ACD
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -1069,10 +1091,7 @@ argument_list|(
 literal|"acd: out of memory\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+break|break;
 block|}
 block|}
 name|cdparr

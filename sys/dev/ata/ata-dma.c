@@ -506,7 +506,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up UDMA5 mode on ICH2 chip\n"
+literal|"%s setting UDMA5 on ICH2 chip\n"
 argument_list|,
 operator|(
 name|error
@@ -726,7 +726,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up UDMA4 mode on ICH%s chip\n"
+literal|"%s setting UDMA4 on ICH%s chip\n"
 argument_list|,
 operator|(
 name|error
@@ -941,7 +941,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up UDMA2 mode on %s chip\n"
+literal|"%s setting UDMA2 on %s chip\n"
 argument_list|,
 operator|(
 name|error
@@ -1311,7 +1311,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up WDMA2 mode on %s chip\n"
+literal|"%s setting WDMA2 on %s chip\n"
 argument_list|,
 operator|(
 name|error
@@ -1609,7 +1609,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up WDMA2 mode on PIIX chip\n"
+literal|"%s setting WDMA2 on PIIX chip\n"
 argument_list|,
 operator|(
 name|error
@@ -1725,7 +1725,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up UDMA2 mode on Aladdin chip\n"
+literal|"%s setting UDMA2 on Aladdin chip\n"
 argument_list|,
 operator|(
 name|error
@@ -1863,7 +1863,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up WDMA2 mode on Aladdin chip\n"
+literal|"%s setting WDMA2 on Aladdin chip\n"
 argument_list|,
 operator|(
 name|error
@@ -1992,7 +1992,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up UDMA4 mode on AMD chip\n"
+literal|"%s setting UDMA4 on AMD chip\n"
 argument_list|,
 operator|(
 name|error
@@ -2041,11 +2041,32 @@ goto|goto
 name|via_82c586
 goto|;
 case|case
-literal|0x06861106
+literal|0x05711106
 case|:
-comment|/* VIA 82C686 */
-name|via_82c686
-label|:
+comment|/* VIA 82C571, 82C586, 82C596, 82C686 */
+if|if
+condition|(
+name|ata_find_dev
+argument_list|(
+name|parent
+argument_list|,
+literal|0x06861106
+argument_list|,
+literal|0
+argument_list|)
+operator|||
+comment|/* 82C686a */
+name|ata_find_dev
+argument_list|(
+name|parent
+argument_list|,
+literal|0x05961106
+argument_list|,
+literal|0x12
+argument_list|)
+condition|)
+block|{
+comment|/* 82C596b */
 if|if
 condition|(
 name|udmamode
@@ -2086,7 +2107,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up UDMA4 mode on VIA chip\n"
+literal|"%s setting UDMA4 on VIA chip\n"
 argument_list|,
 operator|(
 name|error
@@ -2171,7 +2192,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up UDMA2 mode on VIA chip\n"
+literal|"%s setting UDMA2 on VIA chip\n"
 argument_list|,
 operator|(
 name|error
@@ -2216,14 +2237,8 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-goto|goto
-name|via_generic
-goto|;
-case|case
-literal|0x05961106
-case|:
-comment|/* VIA 82C596 */
-comment|/* 82c596 revision>= 0x12 is like the 82c686 */
+block|}
+elseif|else
 if|if
 condition|(
 name|ata_find_dev
@@ -2232,27 +2247,10 @@ name|parent
 argument_list|,
 literal|0x05961106
 argument_list|,
-literal|0x12
+literal|0
 argument_list|)
-condition|)
-goto|goto
-name|via_82c686
-goto|;
-comment|/* FALLTHROUGH */
-case|case
-literal|0x05861106
-case|:
-comment|/* VIA 82C586 */
-name|via_82c586
-label|:
-comment|/* UDMA2 mode only on 82C586> rev1, 82C596, AMD 756 */
-if|if
-condition|(
-operator|(
-name|udmamode
-operator|>=
-literal|2
-operator|&&
+operator|||
+comment|/* 82C596a */
 name|ata_find_dev
 argument_list|(
 name|parent
@@ -2261,31 +2259,16 @@ literal|0x05861106
 argument_list|,
 literal|0x02
 argument_list|)
-operator|)
-operator|||
-operator|(
+condition|)
+block|{
+comment|/* 82C586b */
+name|via_82c586
+label|:
+if|if
+condition|(
 name|udmamode
 operator|>=
 literal|2
-operator|&&
-name|scp
-operator|->
-name|chiptype
-operator|==
-literal|0x05961106
-operator|)
-operator|||
-operator|(
-name|udmamode
-operator|>=
-literal|2
-operator|&&
-name|scp
-operator|->
-name|chiptype
-operator|==
-literal|0x74091022
-operator|)
 condition|)
 block|{
 name|error
@@ -2321,7 +2304,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up UDMA2 mode on %s chip\n"
+literal|"%s setting UDMA2 on %s chip\n"
 argument_list|,
 operator|(
 name|error
@@ -2378,13 +2361,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* FALLTHROUGH */
-case|case
-literal|0x05711106
-case|:
-comment|/* VIA 82C571 */
-name|via_generic
-label|:
+block|}
 if|if
 condition|(
 name|wdmamode
@@ -2429,7 +2406,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up WDMA2 mode on %s chip\n"
+literal|"%s setting WDMA2 on %s chip\n"
 argument_list|,
 operator|(
 name|error
@@ -2545,7 +2522,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up UDMA2 mode on SiS chip\n"
+literal|"%s setting UDMA2 on SiS chip\n"
 argument_list|,
 operator|(
 name|error
@@ -2638,7 +2615,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up WDMA2 mode on SiS chip\n"
+literal|"%s setting WDMA2 on SiS chip\n"
 argument_list|,
 operator|(
 name|error
@@ -2737,7 +2714,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up WDMA2 mode on CMD646 chip\n"
+literal|"%s setting WDMA2 on CMD646 chip\n"
 argument_list|,
 name|error
 condition|?
@@ -2847,7 +2824,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up WDMA2 mode on Cypress chip\n"
+literal|"%s setting WDMA2 on Cypress chip\n"
 argument_list|,
 name|error
 condition|?
@@ -3010,7 +2987,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up UDMA5 mode on Promise chip\n"
+literal|"%s setting UDMA5 on Promise chip\n"
 argument_list|,
 operator|(
 name|error
@@ -3131,7 +3108,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up UDMA4 mode on Promise chip\n"
+literal|"%s setting UDMA4 on Promise chip\n"
 argument_list|,
 operator|(
 name|error
@@ -3212,7 +3189,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up UDMA2 mode on Promise chip\n"
+literal|"%s setting UDMA2 on Promise chip\n"
 argument_list|,
 operator|(
 name|error
@@ -3297,7 +3274,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up WDMA2 mode on Promise chip\n"
+literal|"%s setting WDMA2 on Promise chip\n"
 argument_list|,
 operator|(
 name|error
@@ -3374,7 +3351,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up PIO%d mode on Promise chip\n"
+literal|"%s setting PIO%d on Promise chip\n"
 argument_list|,
 operator|(
 name|error
@@ -3524,7 +3501,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up UDMA5 mode on HPT370 chip\n"
+literal|"%s setting UDMA5 on HPT370 chip\n"
 argument_list|,
 operator|(
 name|error
@@ -3627,7 +3604,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up UDMA4 mode on HPT366 chip\n"
+literal|"%s setting UDMA4 on HPT366 chip\n"
 argument_list|,
 operator|(
 name|error
@@ -3708,7 +3685,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up UDMA2 mode on HPT366 chip\n"
+literal|"%s setting UDMA2 on HPT366 chip\n"
 argument_list|,
 operator|(
 name|error
@@ -3793,7 +3770,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up WDMA2 mode on HPT366 chip\n"
+literal|"%s setting WDMA2 on HPT366 chip\n"
 argument_list|,
 operator|(
 name|error
@@ -3870,7 +3847,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up PIO%d mode on HPT366 chip\n"
+literal|"%s setting PIO%d on HPT366 chip\n"
 argument_list|,
 operator|(
 name|error
@@ -4052,7 +4029,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up WDMA2 mode on generic chip\n"
+literal|"%s setting WDMA2 on generic chip\n"
 argument_list|,
 operator|(
 name|error
@@ -4121,7 +4098,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up PIO%d mode on generic chip\n"
+literal|"%s setting PIO%d on generic chip\n"
 argument_list|,
 operator|(
 name|error
