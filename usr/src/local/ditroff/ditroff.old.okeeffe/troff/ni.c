@@ -253,7 +253,7 @@ index|[
 name|NS
 index|]
 init|=
-literal|"/usr/lib/ditmac/tmac.xxxxx"
+literal|"/usr/local/lib/ditmac/tmac.xxxxx"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,7 +261,7 @@ begin_decl_stmt
 name|int
 name|nfi
 init|=
-literal|21
+literal|27
 decl_stmt|;
 end_decl_stmt
 
