@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	5.8 (Berkeley) %G%"
+literal|"@(#)option.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -462,7 +462,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: less [-ceinus] [-t tag] [-x tabs] [-/ pattern] [-#] [file ...]\n"
+literal|"usage: more [-ceinus] [-t tag] [-x tabs] [-/ pattern] [-#] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
