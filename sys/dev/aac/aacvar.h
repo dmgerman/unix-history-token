@@ -216,10 +216,6 @@ name|struct
 name|devstat
 name|ad_stats
 decl_stmt|;
-name|struct
-name|disklabel
-name|ad_label
-decl_stmt|;
 name|int
 name|ad_flags
 decl_stmt|;

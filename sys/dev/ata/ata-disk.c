@@ -3131,7 +3131,7 @@ name|status
 operator|&
 name|ATA_S_CORR
 condition|)
-name|diskerr
+name|disk_err
 argument_list|(
 name|request
 operator|->
@@ -3151,12 +3151,7 @@ operator|/
 name|DEV_BSIZE
 operator|)
 argument_list|,
-operator|&
-name|adp
-operator|->
-name|disk
-operator|.
-name|d_label
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* did any real errors happen ? */
@@ -3208,7 +3203,7 @@ argument_list|,
 name|ATA_ERROR
 argument_list|)
 expr_stmt|;
-name|diskerr
+name|disk_err
 argument_list|(
 name|request
 operator|->
@@ -3242,12 +3237,7 @@ operator|/
 name|DEV_BSIZE
 operator|)
 argument_list|,
-operator|&
-name|adp
-operator|->
-name|disk
-operator|.
-name|d_label
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* if this is a UDMA CRC error, reinject request */

@@ -14758,7 +14758,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|diskerr
+name|disk_err
 argument_list|(
 name|bp
 argument_list|,
@@ -14772,12 +14772,7 @@ name|skip
 operator|/
 name|DEV_BSIZE
 argument_list|,
-operator|(
-expr|struct
-name|disklabel
-operator|*
-operator|)
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

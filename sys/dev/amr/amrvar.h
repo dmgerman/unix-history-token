@@ -739,10 +739,6 @@ name|struct
 name|devstat
 name|amrd_stats
 decl_stmt|;
-name|struct
-name|disklabel
-name|amrd_label
-decl_stmt|;
 name|int
 name|amrd_unit
 decl_stmt|;
