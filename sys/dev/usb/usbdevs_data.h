@@ -991,6 +991,18 @@ literal|"10/100 ethernet adapter"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_DAISY
+block|,
+name|USB_PRODUCT_DAISY_DMC
+block|,
+literal|0
+block|,
+literal|"Daisy Technology"
+block|,
+literal|"PhotoClip Camera"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_DALLAS
 block|,
 name|USB_PRODUCT_DALLAS_J6502
@@ -7598,6 +7610,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"D-Link Corp"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_DAISY
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Daisy Technology"
 block|,
 name|NULL
 block|, 	}
