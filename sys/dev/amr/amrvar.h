@@ -808,6 +808,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|amr_dump_blocks
+parameter_list|(
+name|struct
+name|amr_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|unit
+parameter_list|,
+name|u_int32_t
+name|lba
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|blks
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/********************************************************************************  * Enqueue/dequeue functions  */
 end_comment
