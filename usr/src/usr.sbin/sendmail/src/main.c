@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.18	%G%"
+literal|"@(#)main.c	3.19	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -943,6 +943,20 @@ case|case
 literal|'C'
 case|:
 comment|/* select configuration file */
+if|if
+condition|(
+name|p
+index|[
+literal|2
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|cfname
+operator|=
+literal|"sendmail.cf"
+expr_stmt|;
+else|else
 name|cfname
 operator|=
 operator|&
@@ -956,6 +970,20 @@ case|case
 literal|'A'
 case|:
 comment|/* select alias file */
+if|if
+condition|(
+name|p
+index|[
+literal|2
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|aliasname
+operator|=
+literal|"aliases"
+expr_stmt|;
+else|else
 name|aliasname
 operator|=
 operator|&
