@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: rarpd.c,v 1.22 96/06/14 20:40:14 leres Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.8 1996/11/18 22:07:41 wpaul Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3848,7 +3848,10 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|=
+name|htonl
+argument_list|(
 name|ipaddr
+argument_list|)
 expr_stmt|;
 name|ll
 operator|=
@@ -4403,7 +4406,10 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|=
+name|htonl
+argument_list|(
 name|ipaddr
+argument_list|)
 expr_stmt|;
 name|request
 operator|.
