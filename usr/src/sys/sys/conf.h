@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.h	4.7	81/04/03	*/
+comment|/*	conf.h	4.8	81/10/17	*/
 end_comment
 
 begin_comment
@@ -127,6 +127,13 @@ name|tty
 modifier|*
 name|d_ttys
 decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|d_select
+function_decl|)
+parameter_list|()
+function_decl|;
 block|}
 struct|;
 end_struct

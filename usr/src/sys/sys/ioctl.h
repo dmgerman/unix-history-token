@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.8	81/08/31	*/
+comment|/*	ioctl.h	4.9	81/10/17	*/
 end_comment
 
 begin_comment
@@ -211,13 +211,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LINTRUP
+name|L004000
 value|0004000
 end_define
-
-begin_comment
-comment|/* interrupt on every input char - SIGTINT */
-end_comment
 
 begin_define
 define|#
@@ -425,26 +421,12 @@ begin_comment
 comment|/* set params w/o flushing buffers */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TIOCEXCL
-value|(('t'<<8)|13)
-end_define
-
 begin_comment
-comment|/* set exclusive use of tty */
+comment|/* 13 was EXCL */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TIOCNXCL
-value|(('t'<<8)|14)
-end_define
-
 begin_comment
-comment|/* reset exclusive use of tty */
+comment|/* 14 was NEXCL */
 end_comment
 
 begin_define

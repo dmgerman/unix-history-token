@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.h	4.5	81/06/11	*/
+comment|/*	tty.h	4.6	81/10/17	*/
 end_comment
 
 begin_ifdef
@@ -38,7 +38,7 @@ file|<sgtty.h>
 end_include
 
 begin_comment
-comment|/*  * A clist structure is the head  * of a linked list queue of characters.  * The characters are stored in  * blocks containing a link and CBSIZE (param.h)  * characters.  The routines getc, putc, ... in prim.c  * manipulate these structures.  */
+comment|/*  * A clist structure is the head of a linked list queue of characters.  * The characters are stored in blocks containing a link and CBSIZE (param.h)  * characters.  The routines in prim.c manipulate these structures.  */
 end_comment
 
 begin_struct
@@ -64,86 +64,28 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * A tty structure is needed for  * each UNIX character device that  * is used for normal terminal IO.  * The routines in tty.c handle the  * common code associated with  * these structures.  The definition  * and device dependent code is in  * each driver. (cons.c, dh.c, dz.c, kl.c)  */
+comment|/*  * Per-tty structre.  *  * Should be split in two, into device and tty drivers.  * Glue could be masks of what to echo and circular buffer  * (low, high, timeout).  */
 end_comment
 
 begin_struct
 struct|struct
 name|tty
 block|{
-union|union
-block|{
-struct|struct
-block|{
 name|struct
 name|clist
-name|T_rawq
-decl_stmt|;
-name|struct
-name|clist
-name|T_canq
-decl_stmt|;
-block|}
-name|t_t
-struct|;
-define|#
-directive|define
 name|t_rawq
-value|t_nu.t_t.T_rawq
-comment|/* raw characters or partial line */
-define|#
-directive|define
-name|t_canq
-value|t_nu.t_t.T_canq
-comment|/* complete input lines */
-struct|struct
-block|{
+decl_stmt|;
+comment|/* device */
 name|struct
-name|buf
-modifier|*
-name|T_bufp
+name|clist
+name|t_canq
 decl_stmt|;
-name|char
-modifier|*
-name|T_cp
-decl_stmt|;
-name|int
-name|T_inbuf
-decl_stmt|;
-name|int
-name|T_rec
-decl_stmt|;
-block|}
-name|t_n
-struct|;
-define|#
-directive|define
-name|t_bufp
-value|t_nu.t_n.T_bufp
-comment|/* buffer allocated to protocol */
-define|#
-directive|define
-name|t_cp
-value|t_nu.t_n.T_cp
-comment|/* pointer into the ripped off buffer */
-define|#
-directive|define
-name|t_inbuf
-value|t_nu.t_n.T_inbuf
-comment|/* number chars in the buffer */
-define|#
-directive|define
-name|t_rec
-value|t_nu.t_n.T_rec
-comment|/* have a complete record */
-block|}
-name|t_nu
-union|;
+comment|/* tty */
 name|struct
 name|clist
 name|t_outq
 decl_stmt|;
-comment|/* output list to device */
+comment|/* device */
 name|int
 function_decl|(
 modifier|*
@@ -151,99 +93,91 @@ name|t_oproc
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* routine to start output */
-name|int
-function_decl|(
+comment|/* device */
+name|struct
+name|proc
 modifier|*
-name|t_iproc
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* routine to start input */
+name|t_rsel
+decl_stmt|;
+comment|/* tty */
 name|struct
 name|chan
 modifier|*
-name|t_chan
+name|T_CHAN
 decl_stmt|;
-comment|/* destination channel */
+comment|/* ### */
 name|caddr_t
-name|t_linep
+name|T_LINEP
 decl_stmt|;
-comment|/* aux line discipline pointer */
+comment|/* ### */
 name|caddr_t
 name|t_addr
 decl_stmt|;
-comment|/* device address */
+comment|/* ??? */
 name|dev_t
 name|t_dev
 decl_stmt|;
-comment|/* device number */
+comment|/* device */
 name|short
 name|t_flags
 decl_stmt|;
-comment|/* mode, settable by ioctl call */
+comment|/* some of both */
 name|short
 name|t_state
 decl_stmt|;
-comment|/* internal state, not visible externally */
+comment|/* some of both */
 name|short
 name|t_pgrp
 decl_stmt|;
-comment|/* process group name */
+comment|/* tty */
 name|char
 name|t_delct
 decl_stmt|;
-comment|/* number of delimiters in raw q */
+comment|/* tty */
 name|char
 name|t_line
 decl_stmt|;
-comment|/* line discipline */
+comment|/* glue */
 name|char
 name|t_col
 decl_stmt|;
-comment|/* printing column of device */
+comment|/* tty */
 name|char
 name|t_erase
-decl_stmt|;
-comment|/* erase character */
-name|char
+decl_stmt|,
 name|t_kill
 decl_stmt|;
-comment|/* kill character */
+comment|/* tty */
 name|char
 name|t_char
 decl_stmt|;
-comment|/* character temporary */
+comment|/* tty */
 name|char
 name|t_ispeed
-decl_stmt|;
-comment|/* input speed */
-name|char
+decl_stmt|,
 name|t_ospeed
 decl_stmt|;
-comment|/* output speed */
+comment|/* device */
 comment|/* begin local */
 name|char
 name|t_rocount
-decl_stmt|;
-comment|/* chars input since a ttwrite() */
-name|char
+decl_stmt|,
 name|t_rocol
 decl_stmt|;
-comment|/* t_col when first input this line */
+comment|/* tty */
 name|struct
 name|ltchars
 name|t_lchr
 decl_stmt|;
-comment|/* local special characters */
+comment|/* tty */
 name|short
 name|t_local
 decl_stmt|;
-comment|/* local mode word */
+comment|/* tty */
 name|short
 name|t_lstate
 decl_stmt|;
-comment|/* local state bits */
+comment|/* tty */
 comment|/* end local */
 union|union
 block|{
@@ -251,9 +185,10 @@ name|struct
 name|tchars
 name|t_chr
 decl_stmt|;
+comment|/* tty */
 name|struct
 name|clist
-name|t_ctlq
+name|T_CTLQ
 decl_stmt|;
 block|}
 name|t_un
@@ -464,7 +399,7 @@ begin_define
 define|#
 directive|define
 name|TIMEOUT
-value|01
+value|000001
 end_define
 
 begin_comment
@@ -475,7 +410,7 @@ begin_define
 define|#
 directive|define
 name|WOPEN
-value|02
+value|000002
 end_define
 
 begin_comment
@@ -486,7 +421,7 @@ begin_define
 define|#
 directive|define
 name|ISOPEN
-value|04
+value|000004
 end_define
 
 begin_comment
@@ -497,7 +432,7 @@ begin_define
 define|#
 directive|define
 name|FLUSH
-value|010
+value|000010
 end_define
 
 begin_comment
@@ -508,7 +443,7 @@ begin_define
 define|#
 directive|define
 name|CARR_ON
-value|020
+value|000020
 end_define
 
 begin_comment
@@ -519,7 +454,7 @@ begin_define
 define|#
 directive|define
 name|BUSY
-value|040
+value|000040
 end_define
 
 begin_comment
@@ -530,7 +465,7 @@ begin_define
 define|#
 directive|define
 name|ASLEEP
-value|0100
+value|000100
 end_define
 
 begin_comment
@@ -541,7 +476,7 @@ begin_define
 define|#
 directive|define
 name|XCLUDE
-value|0200
+value|000200
 end_define
 
 begin_comment
@@ -552,7 +487,7 @@ begin_define
 define|#
 directive|define
 name|TTSTOP
-value|0400
+value|000400
 end_define
 
 begin_comment
@@ -563,7 +498,7 @@ begin_define
 define|#
 directive|define
 name|HUPCLS
-value|01000
+value|001000
 end_define
 
 begin_comment
@@ -574,7 +509,7 @@ begin_define
 define|#
 directive|define
 name|TBLOCK
-value|02000
+value|002000
 end_define
 
 begin_comment
@@ -584,52 +519,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPEEDS
-value|04000
+name|RCOLL
+value|004000
 end_define
 
 begin_comment
-comment|/* t_ispeed and t_ospeed used by driver */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NDQB
-value|010000
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXTPROC
-value|020000
-end_define
-
-begin_comment
-comment|/* external processor (kmc) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FSLEEP
-value|040000
-end_define
-
-begin_comment
-comment|/* Wakeup on input framing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BEXT
-value|0100000
-end_define
-
-begin_comment
-comment|/* use (external) system buffers */
+comment|/* collision in read select */
 end_comment
 
 begin_comment

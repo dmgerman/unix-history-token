@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	types.h	4.2	81/04/28	*/
+comment|/*	types.h	4.3	81/10/17	*/
 end_comment
 
 begin_comment
@@ -179,6 +179,22 @@ begin_typedef
 typedef|typedef
 name|long
 name|portid_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|fd_set
+block|{
+name|int
+name|fds_bits
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|fd_set
 typedef|;
 end_typedef
 

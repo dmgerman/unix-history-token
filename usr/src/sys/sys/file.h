@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	4.7	81/05/12	*/
+comment|/*	file.h	4.8	81/10/17	*/
 end_comment
 
 begin_comment
@@ -30,12 +30,6 @@ name|off_t
 name|f_offset
 decl_stmt|;
 comment|/* read/write character pointer */
-name|struct
-name|chan
-modifier|*
-name|f_chan
-decl_stmt|;
-comment|/* mpx channel pointer */
 name|struct
 name|port
 modifier|*
@@ -144,27 +138,6 @@ define|#
 directive|define
 name|FPIPE
 value|04
-end_define
-
-begin_define
-define|#
-directive|define
-name|FMPX
-value|010
-end_define
-
-begin_define
-define|#
-directive|define
-name|FMPY
-value|020
-end_define
-
-begin_define
-define|#
-directive|define
-name|FMP
-value|030
 end_define
 
 begin_define

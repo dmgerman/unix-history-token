@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inode.h	4.6	81/06/15	*/
+comment|/*	inode.h	4.7	81/10/17	*/
 end_comment
 
 begin_comment
@@ -13,59 +13,6 @@ directive|define
 name|NADDR
 value|13
 end_define
-
-begin_define
-define|#
-directive|define
-name|NINDEX
-value|6
-end_define
-
-begin_struct
-struct|struct
-name|group
-block|{
-name|short
-name|g_state
-decl_stmt|;
-name|char
-name|g_index
-decl_stmt|;
-name|char
-name|g_rot
-decl_stmt|;
-name|struct
-name|group
-modifier|*
-name|g_group
-decl_stmt|;
-name|struct
-name|inode
-modifier|*
-name|g_inode
-decl_stmt|;
-name|struct
-name|file
-modifier|*
-name|g_file
-decl_stmt|;
-name|short
-name|g_rotmask
-decl_stmt|;
-name|short
-name|g_datq
-decl_stmt|;
-name|struct
-name|chan
-modifier|*
-name|g_chans
-index|[
-name|NINDEX
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -138,11 +85,6 @@ name|daddr_t
 name|I_rdev
 decl_stmt|;
 comment|/* i_addr[0] */
-name|struct
-name|group
-name|I_group
-decl_stmt|;
-comment|/* multiplexor group file */
 block|}
 name|i_d
 struct|;
@@ -150,10 +92,6 @@ define|#
 directive|define
 name|i_rdev
 value|i_d.I_rdev
-define|#
-directive|define
-name|i_group
-value|i_d.I_group
 struct|struct
 block|{
 name|daddr_t
@@ -456,28 +394,6 @@ end_define
 
 begin_comment
 comment|/* named port */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFMPC
-value|0030000
-end_define
-
-begin_comment
-comment|/* multiplexed char special */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFMPB
-value|0070000
-end_define
-
-begin_comment
-comment|/* multiplexed block special */
 end_comment
 
 begin_define

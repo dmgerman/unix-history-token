@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.8	81/04/23	*/
+comment|/*	proc.h	4.9	81/10/17	*/
 end_comment
 
 begin_comment
@@ -618,6 +618,17 @@ end_define
 
 begin_comment
 comment|/* owe process an addupc() call at next ast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSEL
+value|0x400000
+end_define
+
+begin_comment
+comment|/* selecting; wakeup/waiting danger */
 end_comment
 
 begin_comment
