@@ -60,6 +60,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -72,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stddef.h>
 end_include
 
 begin_if
@@ -218,7 +230,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* suppress assignment */
+comment|/* *: suppress assignment */
 end_comment
 
 begin_define
@@ -229,7 +241,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* weird %p pointer (`fake hex') */
+comment|/* p: void * (as hex) */
 end_comment
 
 begin_define
@@ -240,15 +252,74 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* do not skip blanks */
+comment|/* [ or c: do not skip blanks */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|QUAD
+name|LONGLONG
 value|0x400
 end_define
+
+begin_comment
+comment|/* ll: long long (+ deprecated q: quad) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTMAXT
+value|0x800
+end_define
+
+begin_comment
+comment|/* j: intmax_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTRDIFFT
+value|0x1000
+end_define
+
+begin_comment
+comment|/* t: ptrdiff_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZET
+value|0x2000
+end_define
+
+begin_comment
+comment|/* z: size_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHORTSHORT
+value|0x4000
+end_define
+
+begin_comment
+comment|/* hh: char */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNSIGNED
+value|0x8000
+end_define
+
+begin_comment
+comment|/* %[oupxX] conversions */
+end_comment
 
 begin_comment
 comment|/*  * The following are used in numeric conversions only:  * SIGNOK, NDIGITS, DPTOK, and EXPOK are for floating point;  * SIGNOK, NDIGITS, PFXOK, and NZDIGITS are for integral.  */
@@ -365,7 +436,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* integer, i.e., strtoq or strtouq */
+comment|/* %[dioupxX] conversion */
 end_comment
 
 begin_define
@@ -376,25 +447,12 @@ value|4
 end_define
 
 begin_comment
-comment|/* floating, i.e., strtod */
+comment|/* %[efgEFG] conversion */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|u_char
-value|unsigned char
-end_define
-
-begin_define
-define|#
-directive|define
-name|u_long
-value|unsigned long
-end_define
 
 begin_function_decl
 specifier|static
+specifier|const
 name|u_char
 modifier|*
 name|__sccl
@@ -402,6 +460,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|)
@@ -473,8 +532,8 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
-name|char
 specifier|const
+name|char
 modifier|*
 name|fmt0
 parameter_list|,
@@ -482,11 +541,13 @@ name|va_list
 name|ap
 parameter_list|)
 block|{
+specifier|const
 name|u_char
 modifier|*
 name|fmt
 init|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -533,15 +594,7 @@ comment|/* number of characters consumed from fp */
 name|int
 name|base
 decl_stmt|;
-comment|/* base argument to strtoq/strtouq */
-name|u_quad_t
-function_decl|(
-modifier|*
-name|ccfn
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* conversion function (strtoq/strtouq) */
+comment|/* base argument to conversion function */
 name|char
 name|ccltab
 index|[
@@ -628,16 +681,6 @@ name|nread
 operator|=
 literal|0
 expr_stmt|;
-name|base
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX just to keep gcc happy */
-name|ccfn
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* XXX just to keep gcc happy */
 for|for
 control|(
 init|;
@@ -798,8 +841,36 @@ goto|goto
 name|again
 goto|;
 case|case
+literal|'j'
+case|:
+name|flags
+operator||=
+name|INTMAXT
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+case|case
 literal|'l'
 case|:
+if|if
+condition|(
+name|flags
+operator|&
+name|LONG
+condition|)
+block|{
+name|flags
+operator|&=
+operator|~
+name|LONG
+expr_stmt|;
+name|flags
+operator||=
+name|LONGLONG
+expr_stmt|;
+block|}
+else|else
 name|flags
 operator||=
 name|LONG
@@ -812,7 +883,28 @@ literal|'q'
 case|:
 name|flags
 operator||=
-name|QUAD
+name|LONGLONG
+expr_stmt|;
+comment|/* not quite */
+goto|goto
+name|again
+goto|;
+case|case
+literal|'t'
+case|:
+name|flags
+operator||=
+name|PTRDIFFT
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+case|case
+literal|'z'
+case|:
+name|flags
+operator||=
+name|SIZET
 expr_stmt|;
 goto|goto
 name|again
@@ -830,6 +922,24 @@ goto|;
 case|case
 literal|'h'
 case|:
+if|if
+condition|(
+name|flags
+operator|&
+name|SHORT
+condition|)
+block|{
+name|flags
+operator|&=
+operator|~
+name|SHORT
+expr_stmt|;
+name|flags
+operator||=
+name|SHORTSHORT
+expr_stmt|;
+block|}
+else|else
 name|flags
 operator||=
 name|SHORT
@@ -880,33 +990,13 @@ expr_stmt|;
 goto|goto
 name|again
 goto|;
-comment|/* 		 * Conversions. 		 * Those marked `compat' are for 4.[123]BSD compatibility. 		 * 		 * (According to ANSI, E and X formats are supposed 		 * to the same as e and x.  Sorry about that.) 		 */
-case|case
-literal|'D'
-case|:
-comment|/* compat */
-name|flags
-operator||=
-name|LONG
-expr_stmt|;
-comment|/* FALLTHROUGH */
+comment|/* 		 * Conversions. 		 */
 case|case
 literal|'d'
 case|:
 name|c
 operator|=
 name|CT_INT
-expr_stmt|;
-name|ccfn
-operator|=
-operator|(
-name|u_quad_t
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-name|strtoq
 expr_stmt|;
 name|base
 operator|=
@@ -920,31 +1010,11 @@ name|c
 operator|=
 name|CT_INT
 expr_stmt|;
-name|ccfn
-operator|=
-operator|(
-name|u_quad_t
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-name|strtoq
-expr_stmt|;
 name|base
 operator|=
 literal|0
 expr_stmt|;
 break|break;
-case|case
-literal|'O'
-case|:
-comment|/* compat */
-name|flags
-operator||=
-name|LONG
-expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|'o'
 case|:
@@ -952,9 +1022,9 @@ name|c
 operator|=
 name|CT_INT
 expr_stmt|;
-name|ccfn
-operator|=
-name|strtouq
+name|flags
+operator||=
+name|UNSIGNED
 expr_stmt|;
 name|base
 operator|=
@@ -968,9 +1038,9 @@ name|c
 operator|=
 name|CT_INT
 expr_stmt|;
-name|ccfn
-operator|=
-name|strtouq
+name|flags
+operator||=
+name|UNSIGNED
 expr_stmt|;
 name|base
 operator|=
@@ -980,12 +1050,6 @@ break|break;
 case|case
 literal|'X'
 case|:
-comment|/* compat   XXX */
-name|flags
-operator||=
-name|LONG
-expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|'x'
 case|:
@@ -998,9 +1062,9 @@ name|c
 operator|=
 name|CT_INT
 expr_stmt|;
-name|ccfn
-operator|=
-name|strtouq
+name|flags
+operator||=
+name|UNSIGNED
 expr_stmt|;
 name|base
 operator|=
@@ -1013,16 +1077,12 @@ name|FLOATING_POINT
 case|case
 literal|'E'
 case|:
-comment|/* compat   XXX */
 case|case
 literal|'F'
 case|:
-comment|/* compat */
-name|flags
-operator||=
-name|LONG
-expr_stmt|;
-comment|/* FALLTHROUGH */
+case|case
+literal|'G'
+case|:
 case|case
 literal|'e'
 case|:
@@ -1039,6 +1099,14 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+literal|'S'
+case|:
+name|flags
+operator||=
+name|LONG
+expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|'s'
 case|:
@@ -1069,6 +1137,14 @@ name|CT_CCL
 expr_stmt|;
 break|break;
 case|case
+literal|'C'
+case|:
+name|flags
+operator||=
+name|LONG
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 literal|'c'
 case|:
 name|flags
@@ -1094,10 +1170,12 @@ name|c
 operator|=
 name|CT_INT
 expr_stmt|;
-name|ccfn
-operator|=
-name|strtouq
+comment|/* assumes sizeof(uintmax_t) */
+name|flags
+operator||=
+name|UNSIGNED
 expr_stmt|;
+comment|/*>= sizeof(uintptr_t) */
 name|base
 operator|=
 literal|16
@@ -1117,6 +1195,24 @@ name|SUPPRESS
 condition|)
 comment|/* ??? */
 continue|continue;
+if|if
+condition|(
+name|flags
+operator|&
+name|SHORTSHORT
+condition|)
+operator|*
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+operator|=
+name|nread
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|flags
@@ -1157,14 +1253,67 @@ if|if
 condition|(
 name|flags
 operator|&
-name|QUAD
+name|LONGLONG
+condition|)
+operator|*
+name|va_arg
+argument_list|(
+argument|ap
+argument_list|,
+argument|long long *
+argument_list|)
+operator|=
+name|nread
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|INTMAXT
 condition|)
 operator|*
 name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|quad_t
+name|intmax_t
+operator|*
+argument_list|)
+operator|=
+name|nread
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|SIZET
+condition|)
+operator|*
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|size_t
+operator|*
+argument_list|)
+operator|=
+name|nread
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|PTRDIFFT
+condition|)
+operator|*
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|ptrdiff_t
 operator|*
 argument_list|)
 operator|=
@@ -1183,7 +1332,11 @@ operator|=
 name|nread
 expr_stmt|;
 continue|continue;
-comment|/* 		 * Disgusting backwards compatibility hacks.	XXX 		 */
+default|default:
+goto|goto
+name|match_failure
+goto|;
+comment|/* 		 * Disgusting backwards compatibility hack.	XXX 		 */
 case|case
 literal|'\0'
 case|:
@@ -1193,39 +1346,6 @@ operator|(
 name|EOF
 operator|)
 return|;
-default|default:
-comment|/* compat */
-if|if
-condition|(
-name|isupper
-argument_list|(
-name|c
-argument_list|)
-condition|)
-name|flags
-operator||=
-name|LONG
-expr_stmt|;
-name|c
-operator|=
-name|CT_INT
-expr_stmt|;
-name|ccfn
-operator|=
-operator|(
-name|u_quad_t
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-name|strtoq
-expr_stmt|;
-name|base
-operator|=
-literal|10
-expr_stmt|;
-break|break;
 block|}
 comment|/* 		 * We have a conversion that requires input. 		 */
 if|if
@@ -1829,7 +1949,7 @@ continue|continue;
 case|case
 name|CT_INT
 case|:
-comment|/* scan an integer as if by strtoq/strtouq */
+comment|/* scan an integer as if by the conversion function */
 ifdef|#
 directive|ifdef
 name|hardway
@@ -2290,7 +2410,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|u_quad_t
+name|uintmax_t
 name|res
 decl_stmt|;
 operator|*
@@ -2298,12 +2418,36 @@ name|p
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|UNSIGNED
+operator|)
+operator|==
+literal|0
+condition|)
 name|res
 operator|=
-call|(
-modifier|*
-name|ccfn
-call|)
+name|strtoimax
+argument_list|(
+name|buf
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|NULL
+argument_list|,
+name|base
+argument_list|)
+expr_stmt|;
+else|else
+name|res
+operator|=
+name|strtoumax
 argument_list|(
 name|buf
 argument_list|,
@@ -2338,8 +2482,26 @@ name|void
 operator|*
 operator|)
 operator|(
-name|u_long
+name|uintptr_t
 operator|)
+name|res
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|SHORTSHORT
+condition|)
+operator|*
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+operator|=
 name|res
 expr_stmt|;
 elseif|else
@@ -2383,14 +2545,67 @@ if|if
 condition|(
 name|flags
 operator|&
-name|QUAD
+name|LONGLONG
+condition|)
+operator|*
+name|va_arg
+argument_list|(
+argument|ap
+argument_list|,
+argument|long long *
+argument_list|)
+operator|=
+name|res
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|INTMAXT
 condition|)
 operator|*
 name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|quad_t
+name|intmax_t
+operator|*
+argument_list|)
+operator|=
+name|res
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|PTRDIFFT
+condition|)
+operator|*
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|ptrdiff_t
+operator|*
+argument_list|)
+operator|=
+name|res
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|SIZET
+condition|)
+operator|*
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|size_t
 operator|*
 argument_list|)
 operator|=
@@ -2917,6 +3132,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|u_char
 modifier|*
 name|__sccl
@@ -2929,6 +3145,7 @@ name|char
 modifier|*
 name|tab
 decl_stmt|;
+specifier|const
 name|u_char
 modifier|*
 name|fmt
