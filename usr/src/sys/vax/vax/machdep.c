@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.13	%G%	*/
+comment|/*	machdep.c	3.14	%G%	*/
 end_comment
+
+begin_extern
+extern|extern cmap
+operator|,
+extern|ecmap;
+end_extern
 
 begin_include
 include|#
@@ -86,7 +92,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 3.13) %H% \n"
+literal|"VM/UNIX (Berkeley Version 3.14) %H% \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +168,16 @@ specifier|register
 name|int
 name|unixsize
 decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
+specifier|register
+name|struct
+name|pte
+modifier|*
+name|pte
+decl_stmt|;
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
 name|printf
 argument_list|(
@@ -178,7 +194,20 @@ name|maxmem
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allow for the u. area of process 0. 	 */
+comment|/* 	 * Allow for the u. area of process 0 and its (single) 	 * page of page tables. 	 */
+name|printf
+argument_list|(
+literal|"firstaddr %X unixsize %X, cmap %X, ecmap %X\n"
+argument_list|,
+name|firstaddr
+argument_list|,
+name|unixsize
+argument_list|,
+name|cmap
+argument_list|,
+name|ecmap
+argument_list|)
+expr_stmt|;
 name|unixsize
 operator|=
 operator|(
@@ -189,6 +218,51 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
+comment|/* 	 * Initialze buffers 	 */
+name|pte
+operator|=
+name|bufmap
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NBUF
+operator|*
+name|CLSIZE
+condition|;
+name|i
+operator|++
+control|)
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|pte
+operator|++
+operator|=
+name|PG_V
+operator||
+name|PG_KW
+operator||
+name|unixsize
+operator|++
+expr_stmt|;
+name|mtpr
+argument_list|(
+name|TBIA
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ERNIE
 if|if
 condition|(
 name|coresw
@@ -197,6 +271,8 @@ name|maxmem
 operator|=
 literal|4096
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Initialize maps. 	 */
 name|meminit
 argument_list|(
@@ -206,12 +282,8 @@ name|maxmem
 argument_list|)
 expr_stmt|;
 name|maxmem
-operator|-=
-operator|(
-name|unixsize
-operator|+
-literal|1
-operator|)
+operator|=
+name|freemem
 expr_stmt|;
 name|printf
 argument_list|(

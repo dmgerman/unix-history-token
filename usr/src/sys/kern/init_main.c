@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	3.10	%G%	*/
+comment|/*	init_main.c	3.11	%G%	*/
 end_comment
 
 begin_include
@@ -763,7 +763,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * This is the set of buffers proper, whose heads  * were declared in buf.h.  There can exist buffer  * headers not pointing here that are used purely  * as arguments to the I/O routines to describe  * I/O to be done-- e.g. swap headers swbuf[] for  * swapping.  */
+comment|/*  * This is the set of buffers proper, whose heads  * were declared in buf.h.  There can exist buffer  * headers not pointing here that are used purely  * as arguments to the I/O routines to describe  * I/O to be done-- e.g. swap headers swbuf[] for  * swapping.  *  * These are actually allocated kernel map slots and space is  * allocated in locore.s for them.  */
 end_comment
 
 begin_decl_stmt
@@ -779,7 +779,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Initialize the buffer I/O system by freeing  * all buffers and setting all device buffer lists to empty.  *  * SHOULD USE MEMALL HERE!!!  */
+comment|/*  * Initialize the buffer I/O system by freeing  * all buffers and setting all device buffer lists to empty.  */
 end_comment
 
 begin_macro
