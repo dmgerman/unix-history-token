@@ -9893,10 +9893,6 @@ argument_list|,
 name|pv
 operator|->
 name|pv_va
-argument_list|,
-name|pv
-operator|->
-name|pv_ptem
 argument_list|)
 expr_stmt|;
 name|free_pv_entry
