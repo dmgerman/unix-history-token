@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -514,17 +514,6 @@ name|SIG_ERR
 value|(void (*)(int))-1
 end_define
 
-begin_define
-define|#
-directive|define
-name|_SIGARG
-value|int
-end_define
-
-begin_comment
-comment|/* one int parameter */
-end_comment
-
 begin_else
 else|#
 directive|else
@@ -550,17 +539,6 @@ directive|define
 name|SIG_ERR
 value|(void (*)())-1
 end_define
-
-begin_define
-define|#
-directive|define
-name|_SIGARG
-value|void
-end_define
-
-begin_comment
-comment|/* unspecified parameters */
-end_comment
 
 begin_endif
 endif|#
@@ -595,7 +573,7 @@ modifier|*
 name|sa_handler
 function_decl|)
 parameter_list|(
-name|_SIGARG
+name|int
 parameter_list|)
 function_decl|;
 comment|/* signal handler */
@@ -838,7 +816,7 @@ modifier|*
 name|sv_handler
 function_decl|)
 parameter_list|(
-name|_SIGARG
+name|int
 parameter_list|)
 function_decl|;
 comment|/* signal handler */
