@@ -293,6 +293,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_GEOMBIO
+argument_list|,
+literal|"GEOM bio"
+argument_list|,
+literal|"Geom bio"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|struct
 name|bio
@@ -335,11 +347,13 @@ name|NULL
 condition|)
 name|bp
 operator|=
-name|g_malloc
+name|malloc
 argument_list|(
 sizeof|sizeof
 expr|*
 name|bp
+argument_list|,
+name|M_GEOMBIO
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -365,24 +379,22 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
 comment|/* g_trace(G_T_BIO, "g_destroy_bio(%p)", bp); */
-name|bzero
+block|bzero(bp, sizeof *bp); 	g_bioq_enqueue_tail(bp,&g_bio_idle);
+else|#
+directive|else
+name|free
 argument_list|(
 name|bp
 argument_list|,
-sizeof|sizeof
-expr|*
-name|bp
+name|M_GEOMBIO
 argument_list|)
 expr_stmt|;
-name|g_bioq_enqueue_tail
-argument_list|(
-name|bp
-argument_list|,
-operator|&
-name|g_bio_idle
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

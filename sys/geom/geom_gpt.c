@@ -374,6 +374,18 @@ block|}
 block|}
 end_function
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_GEOMGPT
+argument_list|,
+literal|"GEOMGPT"
+argument_list|,
+literal|"Geom data structures"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|struct
@@ -724,6 +736,7 @@ argument_list|)
 argument_list|)
 condition|)
 continue|continue;
+comment|/* 			 * XXX: memory leak, this is never freed. 			 */
 name|gs
 operator|->
 name|part
@@ -731,11 +744,13 @@ index|[
 name|i
 index|]
 operator|=
-name|g_malloc
+name|malloc
 argument_list|(
 name|hdr
 operator|->
 name|hdr_entsz
+argument_list|,
+name|M_GEOMGPT
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -897,7 +912,7 @@ name|provider
 argument_list|)
 condition|)
 block|{
-name|g_std_spoiled
+name|g_slice_spoiled
 argument_list|(
 name|cp
 argument_list|)

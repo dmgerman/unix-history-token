@@ -1097,6 +1097,11 @@ name|g_topology_unlock
 argument_list|()
 expr_stmt|;
 block|}
+name|g_free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 do|while
@@ -1130,7 +1135,7 @@ name|provider
 argument_list|)
 condition|)
 block|{
-name|g_std_spoiled
+name|g_slice_spoiled
 argument_list|(
 name|cp
 argument_list|)
