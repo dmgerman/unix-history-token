@@ -21,7 +21,7 @@ name|char
 name|uuxqt_rcsid
 index|[]
 init|=
-literal|"$Id: uuxqt.c,v 1.76 1994/01/30 20:59:40 ian Rel $"
+literal|"$Id: uuxqt.c,v 1.2 1994/05/07 18:14:43 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3173,7 +3173,11 @@ name|uuconf_cmdtabfn
 operator|)
 name|NULL
 argument_list|,
+operator|(
 name|UUCONF_CMDTABFLAG_CASE
+operator||
+name|UUCONF_CMDTABFLAG_NOCOMMENTS
+operator|)
 argument_list|,
 operator|(
 name|pointer

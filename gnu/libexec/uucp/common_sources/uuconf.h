@@ -3578,6 +3578,17 @@ name|UUCONF_CMDTABFLAG_BACKSLASH
 value|(0x2)
 end_define
 
+begin_comment
+comment|/* If set, the comment character (#) is treated as a normal character,    rather than as starting a comment.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UUCONF_CMDTABFLAG_NOCOMMENTS
+value|(0x4)
+end_define
+
 begin_escape
 end_escape
 

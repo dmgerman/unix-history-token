@@ -21,7 +21,7 @@ name|char
 name|_uuconf_cmdlin_rcsid
 index|[]
 init|=
-literal|"$Id: cmdlin.c,v 1.3 1994/01/30 21:14:29 ian Rel $"
+literal|"$Id: cmdlin.c,v 1.2 1994/05/07 18:12:04 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,6 +164,17 @@ decl_stmt|;
 name|int
 name|iret
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|iflags
+operator|&
+name|UUCONF_CMDTABFLAG_NOCOMMENTS
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* Any # not preceeded by a backslash starts a comment.  */
 name|z
 operator|=
@@ -228,6 +239,7 @@ condition|)
 operator|++
 name|z
 expr_stmt|;
+block|}
 block|}
 comment|/* Parse the first CSTACK arguments by hand to avoid malloc.  */
 name|z
