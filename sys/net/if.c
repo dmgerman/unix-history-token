@@ -1649,7 +1649,7 @@ block|{
 if|if
 condition|(
 name|unit
-operator|<
+operator|<=
 name|if_index
 operator|&&
 name|ifaddr_byindex
@@ -1810,7 +1810,7 @@ condition|(
 name|ifp
 operator|->
 name|if_index
-operator|>=
+operator|>
 name|if_index
 condition|)
 name|if_index
@@ -1818,8 +1818,6 @@ operator|=
 name|ifp
 operator|->
 name|if_index
-operator|+
-literal|1
 expr_stmt|;
 if|if
 condition|(
