@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.9	81/10/17	*/
+comment|/*	ioctl.h	4.10	81/12/21	*/
 end_comment
 
 begin_comment
@@ -701,6 +701,17 @@ end_define
 
 begin_comment
 comment|/* get # bytes to read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCDONE
+value|(('s'<<8)|0)
+end_define
+
+begin_comment
+comment|/* shutdown read/write on socket */
 end_comment
 
 begin_endif
