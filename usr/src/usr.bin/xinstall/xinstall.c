@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.16 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1079,6 +1079,17 @@ argument_list|,
 literal|"strip"
 argument_list|,
 name|to_name
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+name|_PATH_STRIP
 argument_list|)
 expr_stmt|;
 name|_exit
