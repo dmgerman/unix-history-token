@@ -202,7 +202,7 @@ argument|set
 argument_list|,
 argument|char
 argument_list|,
-literal|"orb %2,%0"
+literal|"orb %b2,%0"
 argument_list|,
 argument|v
 argument_list|)
@@ -215,7 +215,7 @@ argument|clear
 argument_list|,
 argument|char
 argument_list|,
-literal|"andb %2,%0"
+literal|"andb %b2,%0"
 argument_list|,
 argument|~v
 argument_list|)
@@ -228,7 +228,7 @@ argument|add
 argument_list|,
 argument|char
 argument_list|,
-literal|"addb %2,%0"
+literal|"addb %b2,%0"
 argument_list|,
 argument|v
 argument_list|)
@@ -241,7 +241,7 @@ argument|subtract
 argument_list|,
 argument|char
 argument_list|,
-literal|"subb %2,%0"
+literal|"subb %b2,%0"
 argument_list|,
 argument|v
 argument_list|)
@@ -254,7 +254,7 @@ argument|set
 argument_list|,
 argument|short
 argument_list|,
-literal|"orw %2,%0"
+literal|"orw %w2,%0"
 argument_list|,
 argument|v
 argument_list|)
@@ -267,7 +267,7 @@ argument|clear
 argument_list|,
 argument|short
 argument_list|,
-literal|"andw %2,%0"
+literal|"andw %w2,%0"
 argument_list|,
 argument|~v
 argument_list|)
@@ -280,7 +280,7 @@ argument|add
 argument_list|,
 argument|short
 argument_list|,
-literal|"addw %2,%0"
+literal|"addw %w2,%0"
 argument_list|,
 argument|v
 argument_list|)
@@ -293,7 +293,7 @@ argument|subtract
 argument_list|,
 argument|short
 argument_list|,
-literal|"subw %2,%0"
+literal|"subw %w2,%0"
 argument_list|,
 argument|v
 argument_list|)
