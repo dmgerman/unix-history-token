@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net80211/ieee80211_var.h>
 end_include
 
@@ -2422,6 +2428,13 @@ name|ni
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|old_status
+init|=
+name|imr
+operator|->
+name|ifm_status
+decl_stmt|;
 name|imr
 operator|->
 name|ifm_status
@@ -2442,11 +2455,26 @@ name|ic_state
 operator|==
 name|IEEE80211_S_RUN
 condition|)
+block|{
 name|imr
 operator|->
 name|ifm_status
 operator||=
 name|IFM_ACTIVE
+expr_stmt|;
+name|ifp
+operator|->
+name|if_link_state
+operator|=
+name|LINK_STATE_UP
+expr_stmt|;
+block|}
+else|else
+name|ifp
+operator|->
+name|if_link_state
+operator|=
+name|LINK_STATE_DOWN
 expr_stmt|;
 name|imr
 operator|->
@@ -2592,6 +2620,20 @@ name|IFM_IEEE80211_TURBO
 expr_stmt|;
 break|break;
 block|}
+comment|/* Notify that the link state has changed. */
+if|if
+condition|(
+name|imr
+operator|->
+name|ifm_status
+operator|!=
+name|old_status
+condition|)
+name|rt_ifmsg
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
