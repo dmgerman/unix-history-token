@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makemap.c	8.9 (Berkeley) %G%"
+literal|"@(#)makemap.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,12 +49,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
@@ -69,6 +63,23 @@ include|#
 directive|include
 file|<sys/errno.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISC_UNIX
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
