@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.15
+literal|3.16
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.15
+literal|3.16
 operator|%
 name|G
 operator|%
@@ -145,6 +145,9 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	**  Create control file. 	*/
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|cf
@@ -152,6 +155,9 @@ argument_list|,
 name|QueueDir
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|cf
@@ -224,6 +230,9 @@ name|FILE
 modifier|*
 name|dfp
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|buf
@@ -231,6 +240,9 @@ argument_list|,
 name|QueueDir
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf
@@ -277,6 +289,9 @@ operator|->
 name|e_df
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|cfp
@@ -301,6 +316,9 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|dfp
@@ -642,6 +660,9 @@ name|e_df
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|cf
@@ -723,9 +744,6 @@ name|void
 operator|)
 name|alarm
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|QueueIntvl
 argument_list|)
 expr_stmt|;
@@ -759,9 +777,6 @@ name|void
 operator|)
 name|alarm
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -977,9 +992,6 @@ name|void
 operator|)
 name|alarm
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|QueueIntvl
 argument_list|)
 expr_stmt|;
@@ -1189,6 +1201,9 @@ literal|'c'
 condition|)
 continue|continue;
 comment|/* yes -- find the control file location */
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|cbuf
@@ -1196,6 +1211,9 @@ argument_list|,
 name|QueueDir
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|cbuf
@@ -1214,6 +1232,9 @@ name|cbuf
 argument_list|)
 index|]
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|p

@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.80
+literal|3.81
 operator|%
 name|G
 operator|%
@@ -641,6 +641,8 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* send the initial SMTP protocol */
+name|i
+operator|=
 name|smtpinit
 argument_list|(
 name|m
@@ -1241,6 +1243,10 @@ name|define
 argument_list|(
 literal|'g'
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1431,6 +1437,10 @@ name|define
 argument_list|(
 literal|'g'
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1496,7 +1506,7 @@ parameter_list|(
 name|fORKfN
 parameter_list|)
 define|\
-value|{\ 	register int i;\ \ 	for (i = NFORKTRIES; i--> 0; )\ 	{\ 		pid = fORKfN();\ 		if (pid>= 0)\ 			break;\ 		sleep((unsigned) NFORKTRIES - i);\ 	}\ }
+value|{\ 	register int i;\ \ 	for (i = NFORKTRIES; i--> 0; )\ 	{\ 		pid = fORKfN();\ 		if (pid>= 0)\ 			break;\ 		sleep(NFORKTRIES - i);\ 	}\ }
 end_define
 
 begin_escape
@@ -3932,6 +3942,20 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* 	**  Output the body of the message 	*/
+ifdef|#
+directive|ifdef
+name|lint
+comment|/* m will be needed later for complete smtp emulation */
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return;
+endif|#
+directive|endif
+endif|lint
 if|if
 condition|(
 name|TempFile
@@ -4227,6 +4251,12 @@ modifier|*
 name|getxpart
 parameter_list|()
 function_decl|;
+specifier|extern
+name|ADDRESS
+modifier|*
+name|buildaddr
+parameter_list|()
+function_decl|;
 comment|/* 	**  See if this mailer wants the name to be rewritten.  There are 	**  many problems here, owing to the standards for doing replies. 	**  In general, these names should only be rewritten if we are 	**  sending to another host that runs sendmail. 	*/
 if|if
 condition|(
@@ -4243,7 +4273,11 @@ operator|&&
 operator|!
 name|force
 condition|)
-return|return;
+return|return
+operator|(
+name|name
+operator|)
+return|;
 comment|/* 	**  Do general rewriting of name. 	**	This will also take care of doing global name translation. 	*/
 name|define
 argument_list|(
@@ -4596,6 +4630,9 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|buf
@@ -4603,6 +4640,9 @@ argument_list|,
 name|ifrom
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf
@@ -4616,6 +4656,9 @@ operator|++
 operator|=
 literal|'@'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf

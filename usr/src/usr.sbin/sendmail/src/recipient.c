@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|3.35
+literal|3.36
 operator|%
 name|G
 operator|%
@@ -1203,6 +1203,9 @@ name|quoted
 init|=
 name|FALSE
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|buf
@@ -1465,6 +1468,9 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|buf

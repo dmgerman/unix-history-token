@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|3.15
+literal|3.16
 operator|%
 name|G
 operator|%
@@ -294,7 +294,6 @@ parameter_list|(
 name|sz
 parameter_list|)
 specifier|register
-name|unsigned
 name|int
 name|sz
 decl_stmt|;
@@ -366,10 +365,6 @@ name|p
 operator|=
 name|xalloc
 argument_list|(
-call|(
-name|unsigned
-call|)
-argument_list|(
 name|strlen
 argument_list|(
 name|s
@@ -377,8 +372,10 @@ argument_list|)
 operator|+
 literal|1
 argument_list|)
-argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|p
@@ -459,14 +456,11 @@ operator|*
 operator|)
 name|xalloc
 argument_list|(
-call|(
-name|unsigned
-call|)
-argument_list|(
+operator|(
 name|vp
 operator|-
 name|list
-argument_list|)
+operator|)
 operator|*
 sizeof|sizeof
 expr|*

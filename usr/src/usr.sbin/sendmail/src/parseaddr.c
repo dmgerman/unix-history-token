@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%
@@ -1115,6 +1115,9 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf
@@ -2182,6 +2185,9 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf
@@ -2189,6 +2195,9 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf
@@ -2326,6 +2335,9 @@ name|tv
 operator|!=
 name|CANONUSER
 condition|)
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf

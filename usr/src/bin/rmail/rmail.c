@@ -37,7 +37,7 @@ operator|)
 name|rmail
 operator|.
 name|c
-literal|3.10
+literal|3.11
 operator|(
 name|Berkeley
 operator|)
@@ -208,6 +208,9 @@ name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|from
@@ -215,6 +218,9 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|ufrom
@@ -336,6 +342,9 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|sys
@@ -405,6 +414,9 @@ argument_list|,
 name|sys
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|from
@@ -412,6 +424,9 @@ argument_list|,
 name|sys
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|from
@@ -440,6 +455,9 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|from
@@ -470,6 +488,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|cmd
@@ -485,6 +506,9 @@ name|argv
 operator|==
 literal|'('
 condition|)
+operator|(
+name|void
+operator|)
 name|strncat
 argument_list|(
 name|cmd
@@ -504,6 +528,9 @@ literal|2
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|cmd
@@ -512,6 +539,9 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|cmd

@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.12
+literal|3.13
 operator|%
 name|G
 operator|%
@@ -75,7 +75,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.12
+literal|3.13
 operator|%
 name|G
 operator|%
@@ -395,6 +395,11 @@ name|SOCK_STREAM
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
 literal|0
 argument_list|,
 literal|0

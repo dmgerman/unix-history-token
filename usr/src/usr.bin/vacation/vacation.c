@@ -45,7 +45,7 @@ operator|)
 name|vacation
 operator|.
 name|c
-literal|3.6
+literal|3.7
 operator|%
 name|G
 operator|%
@@ -310,6 +310,9 @@ operator|->
 name|pw_dir
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|buf
@@ -317,6 +320,9 @@ argument_list|,
 name|homedir
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf
@@ -354,6 +360,9 @@ name|buf
 argument_list|)
 expr_stmt|;
 comment|/* send the message back */
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf
@@ -844,6 +853,9 @@ argument_list|(
 literal|"No home!"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|buf
@@ -851,6 +863,9 @@ argument_list|,
 name|homedir
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf
@@ -879,6 +894,9 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|buf
@@ -886,6 +904,9 @@ argument_list|,
 name|homedir
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf

@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.25
+literal|3.26
 operator|%
 name|G
 operator|%
@@ -1192,10 +1192,6 @@ operator|*
 operator|)
 name|xalloc
 argument_list|(
-call|(
-name|unsigned
-call|)
-argument_list|(
 sizeof|sizeof
 name|margv
 index|[
@@ -1203,7 +1199,6 @@ literal|0
 index|]
 operator|*
 name|i
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|bmove

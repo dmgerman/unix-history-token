@@ -39,7 +39,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.32
+literal|3.33
 operator|%
 name|G
 operator|%
@@ -67,7 +67,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.32
+literal|3.33
 operator|%
 name|G
 operator|%
@@ -1566,6 +1566,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|buf
@@ -1573,6 +1576,9 @@ argument_list|,
 literal|"/"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf

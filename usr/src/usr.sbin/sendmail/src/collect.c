@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.39
+literal|3.40
 operator|%
 name|G
 operator|%
@@ -103,6 +103,9 @@ name|index
 parameter_list|()
 function_decl|;
 comment|/* 	**  Create the temp file name and create the file. 	*/
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|tempfname
@@ -110,6 +113,9 @@ argument_list|,
 name|QueueDir
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|tempfname
@@ -156,6 +162,9 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|chmod
 argument_list|(
 name|tempfname

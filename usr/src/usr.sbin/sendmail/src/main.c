@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.77
+literal|3.78
 operator|%
 name|G
 operator|%
@@ -2396,6 +2396,9 @@ name|ExitStat
 operator|==
 name|EX_OK
 condition|)
+operator|(
+name|void
+operator|)
 name|returntosender
 argument_list|(
 literal|"Return receipt"
@@ -3244,6 +3247,9 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|ybuf
@@ -3474,8 +3480,16 @@ decl_stmt|;
 block|{
 name|bmove
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|CurEnv
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|e
 argument_list|,
 sizeof|sizeof
