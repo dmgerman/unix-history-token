@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.75	83/02/10	*/
+comment|/*	machdep.c	4.75	83/02/11	*/
 end_comment
 
 begin_include
@@ -126,12 +126,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/mbuf.h"
 end_include
 
@@ -145,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|"../h/quota.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/frame.h"
 end_include
 
 begin_include
