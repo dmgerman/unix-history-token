@@ -2018,15 +2018,30 @@ case|case
 name|PS_COND_WAIT
 case|:
 case|case
-name|PS_JOIN
-case|:
-case|case
 name|PS_MUTEX_WAIT
 case|:
 comment|/* 		 * Remove the thread from the wait queue.  It will 		 * be added back to the wait queue once all signal 		 * handlers have been invoked. 		 */
 name|PTHREAD_WAITQ_REMOVE
 argument_list|(
 name|pthread
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PS_JOIN
+case|:
+comment|/* 		 * Remove the thread from the wait queue.  It will 		 * be added back to the wait queue once all signal 		 * handlers have been invoked. 		 */
+name|PTHREAD_WAITQ_REMOVE
+argument_list|(
+name|pthread
+argument_list|)
+expr_stmt|;
+comment|/* Make the thread runnable: */
+name|PTHREAD_SET_STATE
+argument_list|(
+name|pthread
+argument_list|,
+name|PS_RUNNING
 argument_list|)
 expr_stmt|;
 break|break;

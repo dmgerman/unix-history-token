@@ -246,12 +246,23 @@ expr_stmt|;
 comment|/* Keep track of which thread we're joining to: */
 name|_thread_run
 operator|->
-name|data
+name|join_status
 operator|.
 name|thread
 operator|=
 name|pthread
 expr_stmt|;
+while|while
+condition|(
+name|_thread_run
+operator|->
+name|join_status
+operator|.
+name|thread
+operator|==
+name|pthread
+condition|)
+block|{
 comment|/* Schedule the next thread: */
 name|_thread_kern_sched_state
 argument_list|(
@@ -262,11 +273,14 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * The thread return value and error are set by the thread we're 		 * joining to when it exits or detaches:  		 */
 name|ret
 operator|=
 name|_thread_run
 operator|->
+name|join_status
+operator|.
 name|error
 expr_stmt|;
 if|if
@@ -288,6 +302,8 @@ name|thread_return
 operator|=
 name|_thread_run
 operator|->
+name|join_status
+operator|.
 name|ret
 expr_stmt|;
 block|}

@@ -1675,6 +1675,25 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|join_status
+block|{
+name|struct
+name|pthread
+modifier|*
+name|thread
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Normally thread contexts are stored as jmp_bufs via _setjmp()/_longjmp(),  * but they may also be sigjmp_buf and ucontext_t.  When a thread is  * interrupted by a signal, it's context is saved as a ucontext_t.  An  * application is also free to use [_]longjmp()/[_]siglongjmp() to jump  * between contexts within the same thread.  Future support will also  * include setcontext()/getcontext().  *  * Define an enumerated type that can identify the 4 different context  * types.  */
 end_comment
@@ -1910,11 +1929,15 @@ comment|/* 	 * Error variable used instead of errno. The function __error() 	 * 
 name|int
 name|error
 decl_stmt|;
-comment|/* Pointer to a thread that is waiting to join (NULL if no joiner). */
+comment|/* 	 * THe joiner is the thread that is joining to this thread.  The 	 * join status keeps track of a join operation to another thread. 	 */
 name|struct
 name|pthread
 modifier|*
 name|joiner
+decl_stmt|;
+name|struct
+name|join_status
+name|join_status
 decl_stmt|;
 comment|/* 	 * The current thread can belong to only one scheduling queue at 	 * a time (ready or waiting queue).  It can also belong to: 	 * 	 *   o A queue of threads waiting for a mutex 	 *   o A queue of threads waiting for a condition variable 	 *   o A queue of threads waiting for a file descriptor lock 	 *   o A queue of threads needing work done by the kernel thread 	 *     (waiting for a spinlock or file I/O) 	 * 	 * A thread can also be joining a thread (the joiner field above). 	 * 	 * It must not be possible for a thread to belong to any of the 	 * above queues while it is handling a signal.  Signal handlers 	 * may longjmp back to previous stack frames circumventing normal 	 * control flow.  This could corrupt queue integrity if the thread 	 * retains membership in the queue.  Therefore, if a thread is a 	 * member of one of these queues when a signal handler is invoked, 	 * it must remove itself from the queue before calling the signal 	 * handler and reinsert itself after normal return of the handler. 	 * 	 * Use pqe for the scheduling queue link (both ready and waiting), 	 * sqe for synchronization (mutex and condition variable) queue 	 * links, and qe for all other links. 	 */
 name|TAILQ_ENTRY
