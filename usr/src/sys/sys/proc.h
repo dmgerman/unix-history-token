@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	3.5	%G%	*/
+comment|/*	proc.h	3.6	%G%	*/
 end_comment
 
 begin_comment
@@ -394,7 +394,7 @@ begin_define
 define|#
 directive|define
 name|SLOAD
-value|0x00001
+value|0x000001
 end_define
 
 begin_comment
@@ -405,7 +405,7 @@ begin_define
 define|#
 directive|define
 name|SSYS
-value|0x00002
+value|0x000002
 end_define
 
 begin_comment
@@ -416,7 +416,7 @@ begin_define
 define|#
 directive|define
 name|SLOCK
-value|0x00004
+value|0x000004
 end_define
 
 begin_comment
@@ -427,7 +427,7 @@ begin_define
 define|#
 directive|define
 name|SSWAP
-value|0x00008
+value|0x000008
 end_define
 
 begin_comment
@@ -438,7 +438,7 @@ begin_define
 define|#
 directive|define
 name|STRC
-value|0x00010
+value|0x000010
 end_define
 
 begin_comment
@@ -449,7 +449,7 @@ begin_define
 define|#
 directive|define
 name|SWTED
-value|0x00020
+value|0x000020
 end_define
 
 begin_comment
@@ -460,7 +460,7 @@ begin_define
 define|#
 directive|define
 name|SULOCK
-value|0x00040
+value|0x000040
 end_define
 
 begin_comment
@@ -471,7 +471,7 @@ begin_define
 define|#
 directive|define
 name|SPAGE
-value|0x00080
+value|0x000080
 end_define
 
 begin_comment
@@ -482,7 +482,7 @@ begin_define
 define|#
 directive|define
 name|SKEEP
-value|0x00100
+value|0x000100
 end_define
 
 begin_comment
@@ -493,7 +493,7 @@ begin_define
 define|#
 directive|define
 name|SDLYU
-value|0x00200
+value|0x000200
 end_define
 
 begin_comment
@@ -504,7 +504,7 @@ begin_define
 define|#
 directive|define
 name|SWEXIT
-value|0x00400
+value|0x000400
 end_define
 
 begin_comment
@@ -515,7 +515,7 @@ begin_define
 define|#
 directive|define
 name|SPHYSIO
-value|0x00800
+value|0x000800
 end_define
 
 begin_comment
@@ -526,7 +526,7 @@ begin_define
 define|#
 directive|define
 name|SVFORK
-value|0x01000
+value|0x001000
 end_define
 
 begin_comment
@@ -537,7 +537,7 @@ begin_define
 define|#
 directive|define
 name|SVFDONE
-value|0x02000
+value|0x002000
 end_define
 
 begin_comment
@@ -548,7 +548,7 @@ begin_define
 define|#
 directive|define
 name|SNOVM
-value|0x04000
+value|0x004000
 end_define
 
 begin_comment
@@ -559,7 +559,7 @@ begin_define
 define|#
 directive|define
 name|SPAGI
-value|0x08000
+value|0x008000
 end_define
 
 begin_comment
@@ -570,7 +570,7 @@ begin_define
 define|#
 directive|define
 name|SANOM
-value|0x10000
+value|0x010000
 end_define
 
 begin_comment
@@ -581,7 +581,7 @@ begin_define
 define|#
 directive|define
 name|SUANOM
-value|0x20000
+value|0x020000
 end_define
 
 begin_comment
@@ -592,11 +592,33 @@ begin_define
 define|#
 directive|define
 name|STIMO
-value|0x40000
+value|0x040000
 end_define
 
 begin_comment
 comment|/* timing out during sleep */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDETACH
+value|0x080000
+end_define
+
+begin_comment
+comment|/* detached inherited by init */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNUSIG
+value|0x100000
+end_define
+
+begin_comment
+comment|/* using new signal mechanism */
 end_comment
 
 begin_comment
