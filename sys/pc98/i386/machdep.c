@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.89 1998/07/02 12:39:32 kato Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.90 1998/07/11 17:00:33 kato Exp $  */
 end_comment
 
 begin_include
@@ -3705,9 +3705,6 @@ name|p_md
 operator|.
 name|md_regs
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USER_LDT
 name|struct
 name|pcb
 modifier|*
@@ -3720,6 +3717,9 @@ name|p_addr
 operator|->
 name|u_pcb
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USER_LDT
 comment|/* was i386_user_cleanup() in NetBSD */
 if|if
 condition|(
@@ -3734,16 +3734,17 @@ name|pcb
 operator|==
 name|curpcb
 condition|)
+block|{
 name|lldt
 argument_list|(
-name|GSEL
-argument_list|(
-name|GUSERLDT_SEL
-argument_list|,
-name|SEL_KPL
-argument_list|)
+name|_default_ldt
 argument_list|)
 expr_stmt|;
+name|currentldt
+operator|=
+name|_default_ldt
+expr_stmt|;
+block|}
 name|kmem_free
 argument_list|(
 name|kernel_map
@@ -3847,6 +3848,29 @@ name|tf_cs
 operator|=
 name|_ucodesel
 expr_stmt|;
+comment|/* reset %fs and %gs as well */
+name|pcb
+operator|->
+name|pcb_fs
+operator|=
+name|_udatasel
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_gs
+operator|=
+name|_udatasel
+expr_stmt|;
+if|if
+condition|(
+name|pcb
+operator|==
+name|curpcb
+condition|)
+block|{
+asm|__asm("mov %0,%%fs" : : "r" (_udatasel));
+asm|__asm("mov %0,%%gs" : : "r" (_udatasel));
+block|}
 comment|/* 	 * Initialize the math emulator (if any) for the current process. 	 * Actually, just clear the bit that says that the emulator has 	 * been initialized.  Initialization is delayed until the process 	 * traps to the emulator (if it is done at all) mainly because 	 * emulators don't provide an entry point for initialization. 	 */
 name|p
 operator|->
@@ -4007,9 +4031,6 @@ argument_list|)
 expr_stmt|;
 comment|/*  * Initialize 386 and configure to run kernel  */
 comment|/*  * Initialize segments& interrupt table  */
-name|int
-name|currentldt
-decl_stmt|;
 name|int
 name|_default_ldt
 decl_stmt|;
@@ -5870,10 +5891,15 @@ argument_list|(
 name|_default_ldt
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USER_LDT
 name|currentldt
 operator|=
 name|_default_ldt
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DDB
