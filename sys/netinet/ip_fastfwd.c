@@ -1266,7 +1266,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|(
-name|u_long
+name|intptr_t
 operator|)
 name|args
 operator|.
@@ -2071,7 +2071,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|(
-name|u_long
+name|intptr_t
 operator|)
 name|args
 operator|.
