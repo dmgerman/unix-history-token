@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/conf.c	7.15 (Berkeley) 12/27/92  *  *	@(#)conf.c	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/conf.c	7.16 (Berkeley) 4/28/93  *  *	@(#)conf.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -1161,6 +1167,299 @@ literal|0
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Routine that identifies /dev/mem and /dev/kmem.  *  * A minimal stub routine can always return 0.  */
+end_comment
+
+begin_macro
+name|iskmemdev
+argument_list|(
+argument|dev
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+if|if
+condition|(
+name|major
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|2
+operator|&&
+operator|(
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|1
+operator|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Routine to determine if a device is a disk.  *  * A minimal stub routine can always return 0.  */
+end_comment
+
+begin_macro
+name|isdisk
+argument_list|(
+argument|dev
+argument_list|,
+argument|type
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|type
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+switch|switch
+condition|(
+name|major
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+case|case
+literal|4
+case|:
+case|case
+literal|6
+case|:
+if|if
+condition|(
+name|type
+operator|==
+name|VBLK
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+literal|8
+case|:
+case|case
+literal|19
+case|:
+if|if
+condition|(
+name|type
+operator|==
+name|VCHR
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* fall through */
+default|default:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* NOTREACHED */
+block|}
+end_block
+
+begin_define
+define|#
+directive|define
+name|MAXDEV
+value|21
+end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|chrtoblktbl
+index|[
+name|MAXDEV
+index|]
+init|=
+block|{
+comment|/* VCHR */
+comment|/* VBLK */
+comment|/* 0 */
+name|NODEV
+block|,
+comment|/* 1 */
+name|NODEV
+block|,
+comment|/* 2 */
+name|NODEV
+block|,
+comment|/* 3 */
+name|NODEV
+block|,
+comment|/* 4 */
+name|NODEV
+block|,
+comment|/* 5 */
+name|NODEV
+block|,
+comment|/* 6 */
+name|NODEV
+block|,
+comment|/* 7 */
+name|NODEV
+block|,
+comment|/* 8 */
+literal|4
+block|,
+comment|/* 9 */
+name|NODEV
+block|,
+comment|/* 10 */
+name|NODEV
+block|,
+comment|/* 11 */
+name|NODEV
+block|,
+comment|/* 12 */
+name|NODEV
+block|,
+comment|/* 13 */
+name|NODEV
+block|,
+comment|/* 14 */
+name|NODEV
+block|,
+comment|/* 15 */
+name|NODEV
+block|,
+comment|/* 16 */
+name|NODEV
+block|,
+comment|/* 17 */
+name|NODEV
+block|,
+comment|/* 18 */
+name|NODEV
+block|,
+comment|/* 19 */
+literal|6
+block|,
+comment|/* 20 */
+literal|7
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Routine to convert from character to block device number.  *  * A minimal stub routine can always return NODEV.  */
+end_comment
+
+begin_macro
+name|chrtoblk
+argument_list|(
+argument|dev
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+name|blkmaj
+decl_stmt|;
+if|if
+condition|(
+name|major
+argument_list|(
+name|dev
+argument_list|)
+operator|>=
+name|MAXDEV
+operator|||
+operator|(
+name|blkmaj
+operator|=
+name|chrtoblktbl
+index|[
+name|major
+argument_list|(
+name|dev
+argument_list|)
+index|]
+operator|)
+operator|==
+name|NODEV
+condition|)
+return|return
+operator|(
+name|NODEV
+operator|)
+return|;
+return|return
+operator|(
+name|makedev
+argument_list|(
+name|blkmaj
+argument_list|,
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
 
 end_unit
 
