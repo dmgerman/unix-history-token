@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.11 1995/04/11 17:13:17 bde Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.12 1995/05/30 08:07:37 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -622,6 +622,26 @@ return|return
 literal|0
 return|;
 block|}
+comment|/* 	 * Do the MALLOC before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if MALLOC should block. 	 */
+name|MALLOC
+argument_list|(
+name|ldep
+argument_list|,
+expr|struct
+name|denode
+operator|*
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|denode
+argument_list|)
+argument_list|,
+name|M_MSDOSFSNODE
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Directory entry was not in cache, have to create a vnode and 	 * copy it from the passed disk buffer. 	 */
 comment|/* getnewvnode() does a VREF() on the vnode */
 name|error
@@ -646,31 +666,19 @@ block|{
 operator|*
 name|depp
 operator|=
-literal|0
+name|NULL
+expr_stmt|;
+name|FREE
+argument_list|(
+name|ldep
+argument_list|,
+name|M_MSDOSFSNODE
+argument_list|)
 expr_stmt|;
 return|return
 name|error
 return|;
 block|}
-name|MALLOC
-argument_list|(
-name|ldep
-argument_list|,
-expr|struct
-name|denode
-operator|*
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|denode
-argument_list|)
-argument_list|,
-name|M_MSDOSFSNODE
-argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
