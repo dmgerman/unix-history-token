@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)at.c	5.6 (Berkeley) %G%"
+literal|"@(#)at.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,30 +49,6 @@ end_endif
 begin_comment
 comment|/*  *	Synopsis:	at [-s] [-c] [-m] time [filename]  *						  *   *  *	Execute commands at a later date.  *  *  *	Modifications by:	Steve Wall  *				Computer Systems Research Group  *				University of California @ Berkeley  *  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
 
 begin_include
 include|#
@@ -90,6 +66,30 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_define
