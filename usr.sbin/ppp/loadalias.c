@@ -81,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_ALIAS
-value|"/usr/lib/libalias.so.2.2"
+value|"/usr/lib/libalias.so.2.3"
 end_define
 
 begin_define
