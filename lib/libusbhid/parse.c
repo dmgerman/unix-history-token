@@ -843,9 +843,6 @@ literal|1
 case|:
 name|dval
 operator|=
-operator|(
-name|int8_t
-operator|)
 operator|*
 name|data
 operator|++
@@ -867,13 +864,6 @@ name|data
 operator|++
 operator|<<
 literal|8
-expr_stmt|;
-name|dval
-operator|=
-operator|(
-name|int16_t
-operator|)
-name|dval
 expr_stmt|;
 break|break;
 case|case

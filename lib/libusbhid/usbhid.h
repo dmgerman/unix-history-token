@@ -62,6 +62,7 @@ struct|struct
 name|hid_item
 block|{
 comment|/* Global */
+name|unsigned
 name|int
 name|_usage_page
 decl_stmt|;
