@@ -7182,10 +7182,15 @@ name|rid
 parameter_list|,
 name|u_int32_t
 name|offset
+parameter_list|,
+name|u_int32_t
+modifier|*
+name|deltap
 parameter_list|)
 block|{
+comment|/* XXX BAD XXX */
 return|return
-literal|0
+name|EIO
 return|;
 block|}
 end_function

@@ -1296,6 +1296,10 @@ name|rid
 parameter_list|,
 name|u_int32_t
 name|offset
+parameter_list|,
+name|u_int32_t
+modifier|*
+name|deltap
 parameter_list|)
 block|{
 return|return
@@ -1311,6 +1315,8 @@ argument_list|,
 name|rid
 argument_list|,
 name|offset
+argument_list|,
+name|deltap
 argument_list|)
 return|;
 block|}
