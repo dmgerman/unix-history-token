@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.17 (Berkeley) %G%"
+literal|"@(#)conf.c	8.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4815,6 +4815,16 @@ return|return
 name|TRUE
 return|;
 block|}
+if|if
+condition|(
+name|msize
+operator|<
+literal|0
+condition|)
+name|msize
+operator|=
+literal|0
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -4977,15 +4987,21 @@ name|syslog
 argument_list|(
 name|LOG_ALERT
 argument_list|,
-literal|"%s: low on space (have %ld, need %ld)"
+literal|"%s: low on space (have %ld, %s needs %ld in %s)"
 argument_list|,
-name|QueueDir
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
 name|fs
 operator|.
 name|f_bavail
 argument_list|,
+name|CurHostName
+argument_list|,
 name|msize
+argument_list|,
+name|QueueDir
 argument_list|)
 expr_stmt|;
 endif|#
