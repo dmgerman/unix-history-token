@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c 1.6 %G%"
+literal|"@(#)process.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1348,6 +1348,25 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|p
+operator|->
+name|status
+operator|!=
+name|STOPPED
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"program unexpectedly exited with %d"
+argument_list|,
+name|p
+operator|->
+name|exitval
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2556,7 +2575,7 @@ name|out
 argument_list|)
 expr_stmt|;
 block|}
-name|execvp
+name|execv
 argument_list|(
 name|argv
 index|[
