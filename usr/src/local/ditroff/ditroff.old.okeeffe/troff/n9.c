@@ -1293,11 +1293,14 @@ decl_stmt|;
 comment|/* input is \D'f x y x y ... c' (or at least it had better be) */
 comment|/* this does drawing function f with character c and the */
 comment|/* specified x,y pairs interpreted as appropriate */
+comment|/* t x		set line thickness to x */
+comment|/* s x		set line style to bit-map x (x BETTER be in "u")*/
 comment|/* l x y:	line from here by x,y */
 comment|/* c x:		circle of diameter x, left side here */
 comment|/* e x y:	ellipse of diameters x,y, left side here */
 comment|/* a x y r:	arc to x,y with radius r (ccw) */
-comment|/* ~ x y ...:	wiggly line */
+comment|/* ~ x y ...:	wiggly line  -or-  */
+comment|/* g x y ...:	for gremlin-style curves */
 if|if
 condition|(
 name|ismot

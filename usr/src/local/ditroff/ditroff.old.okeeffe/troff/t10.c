@@ -1777,6 +1777,44 @@ name|dx
 expr_stmt|;
 break|break;
 case|case
+name|DRAWSTYLE
+case|:
+name|fprintf
+argument_list|(
+name|ptid
+argument_list|,
+literal|"D%c %d\n"
+argument_list|,
+name|DRAWSTYLE
+argument_list|,
+name|dx
+argument_list|)
+expr_stmt|;
+name|w
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|DRAWTHICK
+case|:
+name|fprintf
+argument_list|(
+name|ptid
+argument_list|,
+literal|"D%c %d\n"
+argument_list|,
+name|DRAWTHICK
+argument_list|,
+name|dx
+argument_list|)
+expr_stmt|;
+name|w
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
 name|DRAWELLIPSE
 case|:
 name|fprintf
@@ -1966,14 +2004,24 @@ break|break;
 case|case
 name|DRAWWIG
 case|:
-comment|/* wiggly line */
+comment|/* wiggly line  -or- */
+case|case
+name|DRAWCURVE
+case|:
+comment|/* gremlin-style curve */
 name|fprintf
 argument_list|(
 name|ptid
 argument_list|,
 literal|"D%c %d %d"
 argument_list|,
-name|DRAWWIG
+name|cbits
+argument_list|(
+name|pi
+index|[
+literal|1
+index|]
+argument_list|)
 argument_list|,
 name|dx
 argument_list|,
