@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)canfield.c	5.2 (Berkeley) %G%"
+literal|"@(#)canfield.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3885,6 +3885,30 @@ name|i
 decl_stmt|,
 name|fin
 decl_stmt|;
+if|if
+condition|(
+name|cinhand
+operator|<=
+literal|3
+operator|&&
+name|cinhand
+operator|>
+literal|0
+condition|)
+block|{
+name|move
+argument_list|(
+name|msgrow
+argument_list|,
+name|msgcol
+argument_list|)
+expr_stmt|;
+name|printw
+argument_list|(
+literal|"Hand is now empty        "
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|cinhand
