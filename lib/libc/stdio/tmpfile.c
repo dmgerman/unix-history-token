@@ -144,6 +144,13 @@ name|char
 modifier|*
 name|tmpdir
 decl_stmt|;
+if|if
+condition|(
+name|issetugid
+argument_list|()
+operator|==
+literal|0
+condition|)
 name|tmpdir
 operator|=
 name|getenv
