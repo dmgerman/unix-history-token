@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2175,44 +2175,15 @@ name|int
 name|s
 decl_stmt|;
 comment|/* not yet, if address still unknown */
-for|for
-control|(
-name|ifa
-operator|=
+if|if
+condition|(
 name|ifp
 operator|->
 name|if_addrlist
-init|;
-condition|;
-name|ifa
-operator|=
-name|ifa
-operator|->
-name|ifa_next
-control|)
-if|if
-condition|(
-name|ifa
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
-elseif|else
-if|if
-condition|(
-name|ifa
-operator|->
-name|ifa_addr
-operator|&&
-name|ifa
-operator|->
-name|ifa_addr
-operator|->
-name|sa_family
-operator|!=
-name|AF_LINK
-condition|)
-break|break;
 if|if
 condition|(
 operator|(
