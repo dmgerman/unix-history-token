@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: charset.c,v 1.6 2000/11/05 00:22:00 tom Exp $"
+literal|"$Id: charset.c,v 1.8 2001/06/18 18:44:26 tom Exp $"
 argument_list|)
 end_macro
 
@@ -1605,6 +1605,9 @@ block|}
 name|put_crlf
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|max_attributes
 if|if
 condition|(
 name|max_attributes
@@ -1627,6 +1630,8 @@ name|temp
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|generic_done_message
 argument_list|(
 name|t
@@ -2352,7 +2357,7 @@ if|if
 condition|(
 name|isgraph
 argument_list|(
-name|CharOf
+name|UChar
 argument_list|(
 name|acs_chars
 index|[
@@ -2383,7 +2388,7 @@ name|temp
 argument_list|,
 literal|" 0x%02x"
 argument_list|,
-name|CharOf
+name|UChar
 argument_list|(
 name|acs_chars
 index|[

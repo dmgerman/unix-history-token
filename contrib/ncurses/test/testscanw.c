@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gleaned from a web-search, shows a bug combining scanw and implicit scroll.  * Date:  1997/03/17  * From:  bayern@morpheus.cis.yale.edu  *  * $Id: testscanw.c,v 1.6 2000/11/04 23:32:56 tom Exp $  */
+comment|/* gleaned from a web-search, shows a bug combining scanw and implicit scroll.  * Date:  1997/03/17  * From:  bayern@morpheus.cis.yale.edu  *  * $Id: testscanw.c,v 1.8 2001/09/15 21:41:45 tom Exp $  */
 end_comment
 
 begin_include
@@ -77,7 +77,7 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
-name|CharOf
+name|UChar
 argument_list|(
 operator|*
 name|argv
@@ -155,9 +155,11 @@ block|}
 name|endwin
 argument_list|()
 expr_stmt|;
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_SUCCESS
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

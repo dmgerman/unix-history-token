@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Name: Towers of Hanoi.  *  *	Desc:  *		This is a playable copy of towers of hanoi.  *		Its sole purpose is to demonstrate my Amiga Curses package.  *		This program should compile on any system that has Curses.  *		'hanoi'		will give a manual game with 7 playing pieces.  *		'hanoi n'	will give a manual game with n playing pieces.  *		'hanoi n a' will give an auto solved game with n playing pieces.  *  *	Author: Simon J Raybould	(sie@fulcrum.bt.co.uk).  * 	(This version has been slightly modified by the ncurses maintainers.)  *  *	Date: 05.Nov.90  *  * $Id: hanoi.c,v 1.19 2000/09/02 18:51:16 tom Exp $  */
+comment|/*  *	Name: Towers of Hanoi.  *  *	Desc:  *		This is a playable copy of towers of hanoi.  *		Its sole purpose is to demonstrate my Amiga Curses package.  *		This program should compile on any system that has Curses.  *		'hanoi'		will give a manual game with 7 playing pieces.  *		'hanoi n'	will give a manual game with n playing pieces.  *		'hanoi n a' will give an auto solved game with n playing pieces.  *  *	Author: Simon J Raybould	(sie@fulcrum.bt.co.uk).  * 	(This version has been slightly modified by the ncurses maintainers.)  *  *	Date: 05.Nov.90  *  * $Id: hanoi.c,v 1.23 2002/03/24 00:40:01 tom Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<test.priv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_define
@@ -325,8 +319,7 @@ name|FromCol
 decl_stmt|,
 name|ToCol
 decl_stmt|;
-name|unsigned
-name|char
+name|bool
 name|AutoFlag
 init|=
 literal|0
@@ -379,9 +372,11 @@ argument_list|,
 name|MAXTILES
 argument_list|)
 expr_stmt|;
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_FAILURE
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 case|case
@@ -403,9 +398,11 @@ block|{
 name|Usage
 argument_list|()
 expr_stmt|;
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_FAILURE
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|NTiles
 operator|=
@@ -439,9 +436,11 @@ argument_list|,
 name|MAXTILES
 argument_list|)
 expr_stmt|;
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_FAILURE
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|AutoFlag
 operator|=
@@ -452,9 +451,11 @@ default|default:
 name|Usage
 argument_list|()
 expr_stmt|;
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_FAILURE
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -551,9 +552,11 @@ argument_list|,
 literal|"Min screen length 24 lines\n"
 argument_list|)
 expr_stmt|;
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_FAILURE
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -708,9 +711,11 @@ block|}
 name|endwin
 argument_list|()
 expr_stmt|;
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_SUCCESS
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1514,7 +1519,9 @@ begin_function
 specifier|static
 name|void
 name|Usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(

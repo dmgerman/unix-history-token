@@ -48,7 +48,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: dump_entry.c,v 1.55 2001/03/10 19:45:51 tom Exp $"
+literal|"$Id: dump_entry.c,v 1.56 2001/08/12 00:21:22 tom Exp $"
 argument_list|)
 end_macro
 
@@ -161,17 +161,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* last value of column before wrap */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tracelevel
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* level of debug output */
 end_comment
 
 begin_decl_stmt
@@ -839,10 +828,6 @@ expr_stmt|;
 name|pretty
 operator|=
 name|formatted
-expr_stmt|;
-name|tracelevel
-operator|=
-name|traceval
 expr_stmt|;
 comment|/* versions */
 if|if

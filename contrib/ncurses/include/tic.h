@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2000,2001 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $Id: tic.h,v 1.38 2001/03/11 15:12:08 tom Exp $  *	tic.h - Global variables and structures for the terminfo  *			compiler.  */
+comment|/*  * $Id: tic.h,v 1.40 2001/08/12 00:45:57 tom Exp $  *	tic.h - Global variables and structures for the terminfo  *			compiler.  */
 end_comment
 
 begin_ifndef
@@ -532,14 +532,18 @@ begin_define
 define|#
 directive|define
 name|ABSENT_BOOLEAN
-value|-1
+value|(-1)
 end_define
+
+begin_comment
+comment|/* 255 */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ABSENT_NUMERIC
-value|-1
+value|(-1)
 end_define
 
 begin_define
@@ -560,18 +564,22 @@ name|CANCELLED_BOOLEAN
 value|(char)(-2)
 end_define
 
+begin_comment
+comment|/* 254 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CANCELLED_NUMERIC
-value|-2
+value|(-2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CANCELLED_STRING
-value|(char *)-1
+value|(char *)(-1)
 end_define
 
 begin_define
@@ -581,8 +589,12 @@ name|VALID_BOOLEAN
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)>= 0)
+value|((unsigned char)(s)<= 1)
 end_define
+
+begin_comment
+comment|/* reject "-1" */
+end_comment
 
 begin_define
 define|#
@@ -655,6 +667,20 @@ end_extern
 begin_expr_stmt
 unit|)
 name|_nc_basename
+argument_list|(
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(char *
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_rootname
 argument_list|(
 name|char
 operator|*

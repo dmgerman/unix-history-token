@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: ansi.c,v 1.8 2001/03/24 22:00:27 tom Exp $"
+literal|"$Id: ansi.c,v 1.9 2001/06/18 18:44:17 tom Exp $"
 argument_list|)
 end_macro
 
@@ -1027,7 +1027,7 @@ literal|0
 expr_stmt|;
 name|ch
 operator|=
-name|CharOf
+name|UChar
 argument_list|(
 name|pack_buf
 index|[
@@ -1477,7 +1477,7 @@ break|break;
 block|}
 name|j
 operator|=
-name|CharOf
+name|UChar
 argument_list|(
 name|pack_buf
 index|[
@@ -1902,7 +1902,7 @@ init|;
 operator|(
 name|ch
 operator|=
-name|CharOf
+name|UChar
 argument_list|(
 name|ansi_buf
 index|[

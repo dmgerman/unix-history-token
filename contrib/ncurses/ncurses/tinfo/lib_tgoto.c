@@ -28,7 +28,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tgoto.c,v 1.7 2001/03/24 22:25:55 tom Exp $"
+literal|"$Id: lib_tgoto.c,v 1.8 2001/06/02 22:44:42 tom Exp $"
 argument_list|)
 end_macro
 
@@ -361,7 +361,7 @@ case|:
 operator|*
 name|value
 operator|+=
-name|CharOf
+name|UChar
 argument_list|(
 operator|*
 operator|++

@@ -1,30 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * bs.c - original author: Bruce Holloway  *		salvo option by: Chuck A DeGaul  * with improved user interface, autoconfiguration and code cleanup  *		by Eric S. Raymond<esr@snark.thyrsus.com>  * v1.2 with color support and minor portability fixes, November 1990  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.  * v2.1 with ncurses mouse support, September 1995  *  * $Id: bs.c,v 1.29 2001/04/14 22:36:05 Erik.Sigra Exp $  */
+comment|/*   * bs.c - original author: Bruce Holloway  *		salvo option by: Chuck A DeGaul  * with improved user interface, autoconfiguration and code cleanup  *		by Eric S. Raymond<esr@snark.thyrsus.com>  * v1.2 with color support and minor portability fixes, November 1990  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.  * v2.1 with ncurses mouse support, September 1995  *  * $Id: bs.c,v 1.35 2002/04/06 23:10:12 tom Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<test.priv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -37,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<test.priv.h>
 end_include
 
 begin_ifndef
@@ -56,68 +44,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|A_UNDERLINE
-end_ifndef
-
-begin_comment
-comment|/* BSD curses */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|beep
-parameter_list|()
-value|write(1,"\007",1);
-end_define
-
-begin_define
-define|#
-directive|define
-name|cbreak
-value|crmode
-end_define
-
-begin_define
-define|#
-directive|define
-name|saveterm
-value|savetty
-end_define
-
-begin_define
-define|#
-directive|define
-name|resetterm
-value|resetty
-end_define
-
-begin_define
-define|#
-directive|define
-name|nocbreak
-value|nocrmode
-end_define
-
-begin_define
-define|#
-directive|define
-name|strchr
-value|index
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !A_UNDERLINE */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -255,7 +181,7 @@ name|IS_SHIP
 parameter_list|(
 name|c
 parameter_list|)
-value|(isupper(CharOf(c)) ? TRUE : FALSE)
+value|(isupper(UChar(c)) ? TRUE : FALSE)
 end_define
 
 begin_comment
@@ -723,14 +649,13 @@ name|int
 name|length
 decl_stmt|;
 comment|/* length of ship */
-name|char
+name|int
 name|x
 decl_stmt|,
 name|y
 decl_stmt|;
 comment|/* coordinates of ship start point */
-name|unsigned
-name|char
+name|int
 name|dir
 decl_stmt|;
 comment|/* direction of `bow' */
@@ -1006,7 +931,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|resetterm
+name|reset_shell_mode
 argument_list|()
 expr_stmt|;
 operator|(
@@ -1021,9 +946,13 @@ operator|)
 name|endwin
 argument_list|()
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
+name|sig
+condition|?
 name|EXIT_FAILURE
+else|:
+name|EXIT_SUCCESS
 argument_list|)
 expr_stmt|;
 block|}
@@ -1265,9 +1194,6 @@ operator|)
 name|initscr
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KEY_MIN
 name|keypad
 argument_list|(
 name|stdscr
@@ -1275,13 +1201,10 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* KEY_MIN */
 operator|(
 name|void
 operator|)
-name|saveterm
+name|def_prog_mode
 argument_list|()
 expr_stmt|;
 operator|(
@@ -3286,15 +3209,9 @@ case|:
 case|case
 literal|'8'
 case|:
-ifdef|#
-directive|ifdef
-name|KEY_MIN
 case|case
 name|KEY_UP
 case|:
-endif|#
-directive|endif
-comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -3314,15 +3231,9 @@ case|:
 case|case
 literal|'2'
 case|:
-ifdef|#
-directive|ifdef
-name|KEY_MIN
 case|case
 name|KEY_DOWN
 case|:
-endif|#
-directive|endif
-comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -3340,15 +3251,9 @@ case|:
 case|case
 literal|'4'
 case|:
-ifdef|#
-directive|ifdef
-name|KEY_MIN
 case|case
 name|KEY_LEFT
 case|:
-endif|#
-directive|endif
-comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -3368,15 +3273,9 @@ case|:
 case|case
 literal|'6'
 case|:
-ifdef|#
-directive|ifdef
-name|KEY_MIN
 case|case
 name|KEY_RIGHT
 case|:
-endif|#
-directive|endif
-comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -3394,15 +3293,9 @@ case|:
 case|case
 literal|'7'
 case|:
-ifdef|#
-directive|ifdef
-name|KEY_MIN
 case|case
 name|KEY_A1
 case|:
-endif|#
-directive|endif
-comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -3426,15 +3319,9 @@ case|:
 case|case
 literal|'1'
 case|:
-ifdef|#
-directive|ifdef
-name|KEY_MIN
 case|case
 name|KEY_C1
 case|:
-endif|#
-directive|endif
-comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -3456,15 +3343,9 @@ case|:
 case|case
 literal|'9'
 case|:
-ifdef|#
-directive|ifdef
-name|KEY_MIN
 case|case
 name|KEY_A3
 case|:
-endif|#
-directive|endif
-comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -3486,15 +3367,9 @@ case|:
 case|case
 literal|'3'
 case|:
-ifdef|#
-directive|ifdef
-name|KEY_MIN
 case|case
 name|KEY_C3
 case|:
-endif|#
-directive|endif
-comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -5340,7 +5215,7 @@ argument_list|(
 literal|"No moves possible?? Help!"
 argument_list|)
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -6638,7 +6513,7 @@ argument_list|,
 literal|"\t-c : ships may be adjacent\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -6682,7 +6557,7 @@ argument_list|,
 literal|"Bad Arg: -b and -s are mutually exclusive\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -6713,7 +6588,7 @@ argument_list|,
 literal|"Bad Arg: -s and -b are mutually exclusive\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -6744,7 +6619,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_vidattr.c,v 1.36 2000/12/10 03:05:48 tom Exp $"
+literal|"$Id: lib_vidattr.c,v 1.39 2001/08/26 00:40:46 Philippe.Blain Exp $"
 argument_list|)
 end_macro
 
@@ -93,7 +93,7 @@ end_macro
 begin_macro
 name|vidputs
 argument_list|(
-argument|attr_t newmode
+argument|chtype newmode
 argument_list|,
 argument|int (*outc) (int)
 argument_list|)
@@ -117,11 +117,6 @@ name|pair
 decl_stmt|;
 name|bool
 name|reverse
-init|=
-name|FALSE
-decl_stmt|;
-name|bool
-name|used_ncv
 init|=
 name|FALSE
 decl_stmt|;
@@ -508,9 +503,6 @@ elseif|else
 if|if
 condition|(
 name|set_attributes
-operator|&&
-operator|!
-name|used_ncv
 condition|)
 block|{
 if|if
@@ -811,6 +803,9 @@ argument_list|,
 name|enter_underline_mode
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|enter_horizontal_hl_mode
 name|TurnOn
 argument_list|(
 name|A_HORIZONTAL
@@ -818,6 +813,11 @@ argument_list|,
 name|enter_horizontal_hl_mode
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|enter_left_hl_mode
 name|TurnOn
 argument_list|(
 name|A_LEFT
@@ -825,6 +825,11 @@ argument_list|,
 name|enter_left_hl_mode
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|enter_low_hl_mode
 name|TurnOn
 argument_list|(
 name|A_LOW
@@ -832,6 +837,11 @@ argument_list|,
 name|enter_low_hl_mode
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|enter_right_hl_mode
 name|TurnOn
 argument_list|(
 name|A_RIGHT
@@ -839,6 +849,11 @@ argument_list|,
 name|enter_right_hl_mode
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|enter_top_hl_mode
 name|TurnOn
 argument_list|(
 name|A_TOP
@@ -846,6 +861,11 @@ argument_list|,
 name|enter_top_hl_mode
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|enter_vertical_hl_mode
 name|TurnOn
 argument_list|(
 name|A_VERTICAL
@@ -853,6 +873,8 @@ argument_list|,
 name|enter_vertical_hl_mode
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* *INDENT-ON* */
 block|}
 if|if
@@ -896,7 +918,7 @@ end_macro
 begin_macro
 name|vidattr
 argument_list|(
-argument|attr_t newmode
+argument|chtype newmode
 argument_list|)
 end_macro
 

@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: sync.c,v 1.2 2000/03/04 20:28:16 tom Exp $"
+literal|"$Id: sync.c,v 1.3 2001/06/16 17:55:48 tom Exp $"
 argument_list|)
 end_macro
 
@@ -575,6 +575,9 @@ argument_list|,
 name|FLAG_TESTED
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|user9
 name|tty_ENQ
 operator|=
 name|user9
@@ -583,6 +586,14 @@ name|user9
 else|:
 literal|"\005"
 expr_stmt|;
+else|#
+directive|else
+name|tty_ENQ
+operator|=
+literal|"\005"
+expr_stmt|;
+endif|#
+directive|endif
 name|tc_putp
 argument_list|(
 name|tty_ENQ
@@ -671,6 +682,9 @@ name|tty_ACK
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|user8
 name|len
 operator|=
 name|user8
@@ -682,6 +696,14 @@ argument_list|)
 else|:
 literal|0
 expr_stmt|;
+else|#
+directive|else
+name|len
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|sprintf
 argument_list|(
 name|temp
@@ -704,6 +726,9 @@ argument_list|(
 name|temp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|user8
 if|if
 condition|(
 name|len
@@ -742,6 +767,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return;
 block|}
 name|tty_can_sync
@@ -785,6 +812,9 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|user8
 if|if
 condition|(
 name|user8
@@ -821,6 +851,8 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* fixed length acknowledge string */
 name|ACK_length
 operator|=

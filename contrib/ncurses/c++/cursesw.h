@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|// $Id: cursesw.h,v 1.25 2001/04/07 22:44:07 tom Exp $
+comment|// $Id: cursesw.h,v 1.28 2001/07/15 01:17:56 tom Exp $
 end_comment
 
 begin_include
@@ -47,7 +47,11 @@ if|#
 directive|if
 name|HAVE_STRSTREAM_H
 operator|&&
+operator|(
 name|USE_STRSTREAM_VSCAN
+operator|||
+name|USE_STRSTREAM_VSCAN_CAST
+operator|)
 end_if
 
 begin_include
@@ -5454,7 +5458,7 @@ argument|char absrel =
 literal|'a'
 argument_list|)
 empty_stmt|;
-comment|// if `a', by& bx are
+comment|// if `a', begin_y& begin_x are
 comment|// absolute screen pos, else if `r', they are relative to par origin
 name|NCursesWindow
 argument_list|(
@@ -5511,7 +5515,7 @@ comment|// is negative lines are removed from the bottom. This enhances the
 comment|// lowlevel ripoffline() function because it uses the internal
 comment|// implementation that allows to remove more than just a single line.
 comment|// This function must be called before any other ncurses function. The
-comment|// creation of the window is defered until ncurses gets initialized.
+comment|// creation of the window is deferred until ncurses gets initialized.
 comment|// The initialization function is then called.
 comment|// -------------------------------------------------------------------------
 comment|// terminal status
@@ -5994,8 +5998,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-comment|// Perform a scanw function from the window. This only works if you're
-comment|// using the GNU C++ compiler.
+comment|// Perform a scanw function from the window.
 if|#
 directive|if
 name|__GNUG__
@@ -6051,7 +6054,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 comment|// Move the cursor to the requested position and then perform a scanw
-comment|// from the window. This nly works if you're using the GNU C++ compiler.
+comment|// from the window.
 if|#
 directive|if
 name|__GNUG__
@@ -6296,9 +6299,17 @@ parameter_list|)
 comment|// Do a formatted print to the window.
 if|#
 directive|if
+operator|(
 name|__GNUG__
 operator|>=
 literal|2
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|printf
+argument_list|)
 function_decl|__attribute__
 parameter_list|(
 function_decl|(format
@@ -6349,9 +6360,17 @@ parameter_list|)
 comment|// Move the cursor and then do a formatted print to the window.
 if|#
 directive|if
+operator|(
 name|__GNUG__
 operator|>=
 literal|2
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|printf
+argument_list|)
 function_decl|__attribute__
 parameter_list|(
 function_decl|(format
@@ -7001,7 +7020,7 @@ comment|// Draw a box around the window with the given vertical and horizontal
 end_comment
 
 begin_comment
-comment|// drawing characters. If you specifiy a zero as character, curses will try
+comment|// drawing characters. If you specify a zero as character, curses will try
 end_comment
 
 begin_comment

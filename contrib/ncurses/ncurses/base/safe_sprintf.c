@@ -22,7 +22,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: safe_sprintf.c,v 1.13 2000/12/10 02:43:28 tom Exp $"
+literal|"$Id: safe_sprintf.c,v 1.14 2001/07/08 00:58:34 tom Exp $"
 argument_list|)
 end_macro
 
@@ -296,8 +296,11 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+name|UChar
+argument_list|(
 operator|*
 name|fmt
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -457,8 +460,11 @@ if|if
 condition|(
 name|isalpha
 argument_list|(
+name|UChar
+argument_list|(
 operator|*
 name|fmt
+argument_list|)
 argument_list|)
 condition|)
 block|{

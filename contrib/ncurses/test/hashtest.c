@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hashtest.c -- test hash mapping  *  * Generate timing statistics for vertical-motion optimization.  *  * $Id: hashtest.c,v 1.17 2001/03/10 19:47:22 tom Exp $  */
+comment|/*  * hashtest.c -- test hash mapping  *  * Generate timing statistics for vertical-motion optimization.  *  * $Id: hashtest.c,v 1.21 2002/03/23 22:17:24 tom Exp $  */
 end_comment
 
 begin_ifdef
@@ -59,25 +59,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<test.priv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<test.priv.h>
 end_include
 
 begin_define
@@ -190,7 +178,7 @@ block|{
 name|cleanup
 argument_list|()
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -743,7 +731,7 @@ name|n
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -1005,11 +993,11 @@ name|cleanup
 argument_list|()
 expr_stmt|;
 comment|/* we're done */
-return|return
-operator|(
+name|ExitProgram
+argument_list|(
 name|EXIT_SUCCESS
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

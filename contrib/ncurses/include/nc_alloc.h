@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* $Id: nc_alloc.h,v 1.8 2000/04/08 23:42:57 tom Exp $ */
+comment|/* $Id: nc_alloc.h,v 1.10 2001/12/08 23:49:44 tom Exp $ */
 end_comment
 
 begin_ifndef
@@ -220,7 +220,7 @@ name|ExitProgram
 parameter_list|(
 name|code
 parameter_list|)
-value|return code
+value|exit(code)
 end_define
 
 begin_endif
@@ -232,19 +232,21 @@ begin_comment
 comment|/* doalloc.c */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
+begin_extern
+extern|extern NCURSES_EXPORT(void *
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_doalloc
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_if
 if|#
@@ -260,18 +262,20 @@ name|strdup
 value|_nc_strdup
 end_define
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
+begin_extern
+extern|extern NCURSES_EXPORT(char *
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_strdup
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tput.c,v 1.26 2001/03/24 21:59:48 tom Exp $"
+literal|"$Id: tput.c,v 1.30 2001/07/22 00:16:33 tom Exp $"
 argument_list|)
 end_macro
 
@@ -436,14 +436,26 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
-name|check_aliases
-argument_list|(
+if|if
+condition|(
+operator|(
 name|name
 operator|=
 name|argv
 index|[
 literal|0
 index|]
+operator|)
+operator|==
+literal|0
+condition|)
+name|name
+operator|=
+literal|""
+expr_stmt|;
+name|check_aliases
+argument_list|(
+name|name
 argument_list|)
 expr_stmt|;
 if|if
@@ -530,6 +542,9 @@ expr_stmt|;
 block|}
 name|FLUSH
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|set_lr_margin
 if|if
 condition|(
 name|set_lr_margin
@@ -553,6 +568,11 @@ argument_list|)
 expr_stmt|;
 block|}
 elseif|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|set_left_margin_parm
 if|if
 condition|(
 name|set_left_margin_parm
@@ -588,6 +608,8 @@ argument_list|)
 expr_stmt|;
 block|}
 elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|clear_margins
@@ -1457,7 +1479,7 @@ name|check_aliases
 argument_list|(
 name|prg_name
 operator|=
-name|_nc_basename
+name|_nc_rootname
 argument_list|(
 name|argv
 index|[
@@ -1708,18 +1730,20 @@ if|if
 condition|(
 name|isspace
 argument_list|(
-name|CharOf
+name|UChar
 argument_list|(
 operator|*
 name|cp
 argument_list|)
 argument_list|)
 condition|)
+block|{
 operator|*
 name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1735,6 +1759,7 @@ index|]
 operator|==
 literal|0
 condition|)
+block|{
 name|argvec
 index|[
 name|argnum
@@ -1743,6 +1768,22 @@ index|]
 operator|=
 name|cp
 expr_stmt|;
+if|if
+condition|(
+name|argnum
+operator|>=
+operator|(
+name|int
+operator|)
+name|SIZEOF
+argument_list|(
+name|argvec
+argument_list|)
+operator|-
+literal|1
+condition|)
+break|break;
+block|}
 block|}
 name|argvec
 index|[
@@ -1753,6 +1794,10 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|argnum
+operator|!=
+literal|0
+operator|&&
 name|tput
 argument_list|(
 name|argnum

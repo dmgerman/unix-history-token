@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -169,7 +169,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tset.c,v 0.49 2001/02/24 23:29:33 tom Exp $"
+literal|"$Id: tset.c,v 0.52 2001/09/29 21:13:56 tom Exp $"
 argument_list|)
 end_macro
 
@@ -214,6 +214,17 @@ name|TTY
 name|mode
 decl_stmt|,
 name|oldmode
+decl_stmt|,
+name|original
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|can_restore
+init|=
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -292,7 +303,7 @@ name|LOWERCASE
 parameter_list|(
 name|c
 parameter_list|)
-value|((isalpha(CharOf(c))&& isupper(CharOf(c))) ? tolower(CharOf(c)) : (c))
+value|((isalpha(UChar(c))&& isupper(UChar(c))) ? tolower(UChar(c)) : (c))
 end_define
 
 begin_function
@@ -369,6 +380,50 @@ end_function
 begin_function
 specifier|static
 name|void
+name|exit_error
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|can_restore
+condition|)
+name|SET_TTY
+argument_list|(
+name|STDERR_FILENO
+argument_list|,
+operator|&
+name|original
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|err
 parameter_list|(
 specifier|const
@@ -416,20 +471,8 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
+name|exit_error
+argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
@@ -474,10 +517,8 @@ literal|10
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
+name|exit_error
+argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
@@ -493,10 +534,11 @@ modifier|*
 name|file
 parameter_list|)
 block|{
-specifier|register
-name|int
-name|fd
-decl_stmt|,
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|size_t
 name|nr
 decl_stmt|;
 name|char
@@ -508,18 +550,16 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|fd
+name|fp
 operator|=
-name|open
+name|fopen
 argument_list|(
 name|file
 argument_list|,
-name|O_RDONLY
-argument_list|,
-literal|0
+literal|"r"
 argument_list|)
 operator|)
-operator|<
+operator|==
 literal|0
 condition|)
 name|failed
@@ -532,60 +572,52 @@ condition|(
 operator|(
 name|nr
 operator|=
-name|read
+name|fread
 argument_list|(
-name|fd
-argument_list|,
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+argument_list|,
+name|fp
 argument_list|)
 operator|)
-operator|>
+operator|!=
 literal|0
 condition|)
 if|if
 condition|(
-name|write
+name|fwrite
 argument_list|(
-name|STDERR_FILENO
-argument_list|,
 name|buf
 argument_list|,
-operator|(
-name|size_t
-operator|)
-name|nr
+sizeof|sizeof
+argument_list|(
+name|char
 argument_list|)
-operator|==
-operator|-
-literal|1
+argument_list|,
+name|nr
+argument_list|,
+name|stderr
+argument_list|)
+operator|!=
+name|nr
 condition|)
 name|failed
 argument_list|(
 literal|"write to stderr"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|nr
-operator|!=
-literal|0
-condition|)
-name|failed
+name|fclose
 argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
+name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -663,11 +695,10 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
+name|exit_error
+argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 for|for
 control|(
@@ -734,21 +765,10 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
+name|exit_error
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 return|return
 operator|(
@@ -2179,7 +2199,7 @@ if|if
 condition|(
 name|isspace
 argument_list|(
-name|CharOf
+name|UChar
 argument_list|(
 operator|*
 name|s
@@ -3290,22 +3310,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|TERMIOS
-name|tcsetattr
-argument_list|(
-name|STDERR_FILENO
-argument_list|,
-name|TCSADRAIN
-argument_list|,
-operator|&
-name|mode
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|stty
+name|SET_TTY
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -3313,8 +3318,6 @@ operator|&
 name|mode
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -3838,11 +3841,9 @@ operator||
 name|ONLRET
 operator|)
 expr_stmt|;
-name|tcsetattr
+name|SET_TTY
 argument_list|(
 name|STDERR_FILENO
-argument_list|,
-name|TCSADRAIN
 argument_list|,
 operator|&
 name|oldmode
@@ -4469,16 +4470,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-IQVrs] [-] [-e ch] [-i ch] [-k ch] [-m mapping] [terminal]\n"
+literal|"usage: %s [-IQVrs] [-] [-e ch] [-i ch] [-k ch] [-m mapping] [terminal]"
 argument_list|,
 name|pname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
+name|exit_error
+argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -4608,6 +4608,12 @@ argument_list|(
 literal|"standard error"
 argument_list|)
 expr_stmt|;
+name|can_restore
+operator|=
+name|TRUE
+expr_stmt|;
+name|original
+operator|=
 name|oldmode
 operator|=
 name|mode
@@ -4635,7 +4641,7 @@ endif|#
 directive|endif
 name|p
 operator|=
-name|_nc_basename
+name|_nc_rootname
 argument_list|(
 operator|*
 name|argv
@@ -5013,22 +5019,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|TERMIOS
-name|tcsetattr
-argument_list|(
-name|STDERR_FILENO
-argument_list|,
-name|TCSADRAIN
-argument_list|,
-operator|&
-name|mode
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|stty
+name|SET_TTY
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -5036,8 +5027,6 @@ operator|&
 name|mode
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 comment|/* Get the terminal name from the entry. */

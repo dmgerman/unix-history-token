@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Grand digital clock for curses compatible terminals  * Usage: gdc [-s] [n]   -- run for n seconds (default infinity)  * Flags: -s: scroll  *  * modified 10-18-89 for curses (jrl)  * 10-18-89 added signal handling  *  * $Id: gdc.c,v 1.16 2001/02/24 23:27:22 tom Exp $  */
+comment|/*  * Grand digital clock for curses compatible terminals  * Usage: gdc [-s] [n]   -- run for n seconds (default infinity)  * Flags: -s: scroll  *  * modified 10-18-89 for curses (jrl)  * 10-18-89 added signal handling  *  * $Id: gdc.c,v 1.21 2002/03/23 22:17:24 tom Exp $  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<test.priv.h>
-end_include
 
 begin_include
 include|#
@@ -18,13 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
+file|<test.priv.h>
 end_include
 
 begin_define
@@ -166,7 +154,7 @@ block|{
 name|endwin
 argument_list|()
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -593,7 +581,7 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -800,7 +788,7 @@ argument_list|,
 literal|"cannot open terminal\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -1481,9 +1469,11 @@ argument_list|,
 name|sigtermed
 argument_list|)
 expr_stmt|;
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_FAILURE
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* FALLTHRU */
 default|default:
@@ -1502,9 +1492,11 @@ expr_stmt|;
 name|endwin
 argument_list|()
 expr_stmt|;
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_SUCCESS
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -368,19 +368,13 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $Id: xmas.c,v 1.15 2000/09/02 18:45:53 tom Exp $  */
+comment|/*  * $Id: xmas.c,v 1.18 2002/03/23 21:46:58 tom Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<test.priv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_define
@@ -7671,7 +7665,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_SUCCESS
 argument_list|)

@@ -7,36 +7,20 @@ begin_comment
 comment|/*  * Operating system dependent functions.  We assume the POSIX API.  * Note: on strict-POSIX systems (including BSD/OS) the select_delay_type  * global has no effect.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__BEOS__
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
-file|<OS.h>
+file|<signal.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* include before curses.h to work around glibc bug */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<tack.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -50,6 +34,38 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BEOS__
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|false
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|true
+end_undef
+
+begin_include
+include|#
+directive|include
+file|<OS.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -101,7 +117,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: sysdep.c,v 1.9 2000/09/02 19:17:39 tom Exp $"
+literal|"$Id: sysdep.c,v 1.11 2002/04/21 19:40:43 tom Exp $"
 argument_list|)
 end_macro
 

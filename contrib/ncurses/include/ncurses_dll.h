@@ -1,6 +1,39 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ncurses_dll.h,v 1.1 2000/12/10 00:05:35 tom Exp $ */
+comment|/* $Id: ncurses_dll.h,v 1.2 2001/12/09 01:36:34 tom Exp $ */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NCURSES_DLL_H_incl
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NCURSES_DLL_H_incl
+value|1
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|NCURSES_DLL
+end_undef
+
+begin_comment
+comment|/* cygwin dll not implemented */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCURSES_STATIC
+end_define
+
+begin_comment
+comment|/* cygwin dll not implemented */
 end_comment
 
 begin_if
@@ -275,6 +308,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NCURSES_DLL_H_incl */
+end_comment
 
 end_unit
 
