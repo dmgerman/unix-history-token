@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	6.3 (Berkeley) %G%"
+literal|"@(#)init.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2483,9 +2483,38 @@ name|status
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|WTERMSIG
+argument_list|(
+name|status
+argument_list|)
+operator|==
+name|SIGKILL
+condition|)
+block|{
+comment|/*  			 *  reboot(8) killed shell?  			 */
 name|warning
 argument_list|(
-literal|"single user shell terminated abnormally, restarting"
+literal|"single user shell terminated."
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+name|STALL_TIMEOUT
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|warning
+argument_list|(
+literal|"single user shell terminated, restarting"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2494,6 +2523,7 @@ name|state_func_t
 operator|)
 name|single_user
 return|;
+block|}
 block|}
 name|runcom_mode
 operator|=
