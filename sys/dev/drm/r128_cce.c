@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"dev/drm/r128_drm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dev/drm/r128_drv.h"
 end_include
 
@@ -1457,24 +1463,6 @@ argument_list|,
 literal|64
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__linux__
-if|if
-condition|(
-name|ret
-operator|<
-literal|0
-condition|)
-return|return
-name|ret
-return|;
-endif|#
-directive|endif
-comment|/* __linux__ */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 if|if
 condition|(
 name|ret
@@ -1482,9 +1470,6 @@ condition|)
 return|return
 name|ret
 return|;
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 for|for
 control|(
 name|i

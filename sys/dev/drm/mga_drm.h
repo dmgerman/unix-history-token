@@ -757,6 +757,73 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* MGA specific ioctls */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_MGA_INIT
+value|DRM_IOW( 0x40, drm_mga_init_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_MGA_FLUSH
+value|DRM_IOW( 0x41, drm_lock_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_MGA_RESET
+value|DRM_IO(  0x42)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_MGA_SWAP
+value|DRM_IO(  0x43)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_MGA_CLEAR
+value|DRM_IOW( 0x44, drm_mga_clear_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_MGA_VERTEX
+value|DRM_IOW( 0x45, drm_mga_vertex_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_MGA_INDICES
+value|DRM_IOW( 0x46, drm_mga_indices_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_MGA_ILOAD
+value|DRM_IOW( 0x47, drm_mga_iload_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_MGA_BLIT
+value|DRM_IOW( 0x48, drm_mga_blit_t)
+end_define
+
+begin_comment
 comment|/* WARNING: If you change any of these defines, make sure to change the  * defines in the Xserver file (xf86drmMga.h)  */
 end_comment
 

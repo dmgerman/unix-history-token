@@ -738,6 +738,108 @@ begin_comment
 comment|/* WARNING: If you change any of these defines, make sure to change the  * defines in the Xserver file (xf86drmRadeon.h)  */
 end_comment
 
+begin_comment
+comment|/* Radeon specific ioctls */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_CP_INIT
+value|DRM_IOW( 0x40, drm_radeon_init_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_CP_START
+value|DRM_IO(  0x41)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_CP_STOP
+value|DRM_IOW( 0x42, drm_radeon_cp_stop_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_CP_RESET
+value|DRM_IO(  0x43)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_CP_IDLE
+value|DRM_IO(  0x44)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_RESET
+value|DRM_IO(  0x45)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_FULLSCREEN
+value|DRM_IOW( 0x46, drm_radeon_fullscreen_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_SWAP
+value|DRM_IO(  0x47)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_CLEAR
+value|DRM_IOW( 0x48, drm_radeon_clear_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_VERTEX
+value|DRM_IOW( 0x49, drm_radeon_vertex_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_INDICES
+value|DRM_IOW( 0x4a, drm_radeon_indices_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_STIPPLE
+value|DRM_IOW( 0x4c, drm_radeon_stipple_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_INDIRECT
+value|DRM_IOWR(0x4d, drm_radeon_indirect_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_TEXTURE
+value|DRM_IOWR(0x4e, drm_radeon_texture_t)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct

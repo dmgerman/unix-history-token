@@ -494,7 +494,6 @@ comment|/* __linux__ */
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-comment|/* FIXME: linux mallocs and bzeros here */
 name|priv
 operator|=
 operator|(

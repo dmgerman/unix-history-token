@@ -15,6 +15,66 @@ directive|define
 name|_sis_drm_public_h_
 end_define
 
+begin_comment
+comment|/* SiS specific ioctls */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIS_IOCTL_FB_ALLOC
+value|DRM_IOWR(0x44, drm_sis_mem_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_IOCTL_FB_FREE
+value|DRM_IOW( 0x45, drm_sis_mem_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_IOCTL_AGP_INIT
+value|DRM_IOWR(0x53, drm_sis_agp_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_IOCTL_AGP_ALLOC
+value|DRM_IOWR(0x54, drm_sis_mem_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_IOCTL_AGP_FREE
+value|DRM_IOW( 0x55, drm_sis_mem_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_IOCTL_FLIP
+value|DRM_IOW( 0x48, drm_sis_flip_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_IOCTL_FLIP_INIT
+value|DRM_IO(  0x49)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_IOCTL_FLIP_FINAL
+value|DRM_IO(  0x50)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct

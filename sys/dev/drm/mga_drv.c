@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"dev/drm/mga_drm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dev/drm/mga_drv.h"
 end_include
 

@@ -6227,26 +6227,10 @@ name|drm_ioctl_desc_t
 modifier|*
 name|ioctl
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__linux__
 name|drm_ioctl_t
 modifier|*
 name|func
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* __linux__ */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|d_ioctl_t
-modifier|*
-name|func
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 name|int
 name|nr
 init|=
@@ -6490,46 +6474,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|__linux__
 name|retcode
 operator|=
 name|func
 argument_list|(
-name|inode
-argument_list|,
-name|filp
-argument_list|,
-name|cmd
-argument_list|,
-name|data
+name|IOCTL_ARGS_PASS
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* __linux__ */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|retcode
-operator|=
-name|func
-argument_list|(
-name|kdev
-argument_list|,
-name|cmd
-argument_list|,
-name|data
-argument_list|,
-name|flags
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 block|}
 block|}
 name|atomic_dec
@@ -6802,7 +6753,10 @@ block|{
 comment|/* Device has been unregistered */
 name|ret
 operator|=
+name|DRM_OS_ERR
+argument_list|(
 name|EINTR
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -6875,7 +6829,10 @@ condition|)
 block|{
 name|ret
 operator|=
+name|DRM_OS_ERR
+argument_list|(
 name|ERESTARTSYS
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -7175,10 +7132,7 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-name|DRM_OS_ERR
-argument_list|(
 name|ret
-argument_list|)
 return|;
 block|}
 name|int

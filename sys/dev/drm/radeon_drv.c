@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"dev/drm/radeon_drm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dev/drm/radeon_drv.h"
 end_include
 

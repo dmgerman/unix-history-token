@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"dev/drm/radeon_drm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dev/drm/radeon_drv.h"
 end_include
 
@@ -2065,24 +2071,6 @@ argument_list|,
 literal|64
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__linux__
-if|if
-condition|(
-name|ret
-operator|<
-literal|0
-condition|)
-return|return
-name|ret
-return|;
-endif|#
-directive|endif
-comment|/* __linux__ */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 if|if
 condition|(
 name|ret
@@ -2090,9 +2078,6 @@ condition|)
 return|return
 name|ret
 return|;
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 for|for
 control|(
 name|i
@@ -5044,24 +5029,6 @@ argument_list|(
 name|dev_priv
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__linux__
-if|if
-condition|(
-name|ret
-operator|<
-literal|0
-condition|)
-return|return
-name|ret
-return|;
-endif|#
-directive|endif
-comment|/* __linux__ */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 if|if
 condition|(
 name|ret
@@ -5069,9 +5036,6 @@ condition|)
 return|return
 name|ret
 return|;
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 block|}
 comment|/* Finally, we can turn off the CP.  If the engine isn't idle, 	 * we will get some dropped triangles as they won't be fully 	 * rendered before the CP is shut down. 	 */
 name|radeon_do_cp_stop

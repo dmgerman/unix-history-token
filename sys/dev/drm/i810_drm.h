@@ -768,6 +768,73 @@ name|drm_i810_sarea_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* i810 specific ioctls */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I810_INIT
+value|DRM_IOW( 0x40, drm_i810_init_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I810_VERTEX
+value|DRM_IOW( 0x41, drm_i810_vertex_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I810_CLEAR
+value|DRM_IOW( 0x42, drm_i810_clear_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I810_FLUSH
+value|DRM_IO(  0x43)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I810_GETAGE
+value|DRM_IO(  0x44)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I810_GETBUF
+value|DRM_IOWR(0x45, drm_i810_dma_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I810_SWAP
+value|DRM_IO(  0x46)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I810_COPY
+value|DRM_IOW( 0x47, drm_i810_copy_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I810_DOCOPY
+value|DRM_IO(  0x48)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
