@@ -1213,11 +1213,13 @@ case|:
 comment|/* _SC_JOB_CONTROL */
 ifdef|#
 directive|ifdef
-name|_POSIX_JOB_CONTORL
+name|_POSIX_JOB_CONTROL
 operator|*
 name|retval
 operator|=
-name|_POSIX_JOB_CONTORL
+operator|(
+literal|1
+operator|)
 expr_stmt|;
 else|#
 directive|else
@@ -1225,7 +1227,8 @@ operator|*
 name|retval
 operator|=
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 expr_stmt|;
 endif|#
@@ -1235,13 +1238,28 @@ case|case
 literal|6
 case|:
 comment|/* _SC_SAVED_IDS */
+ifdef|#
+directive|ifdef
+name|_POSIX_SAVED_IDS
 operator|*
 name|retval
 operator|=
 operator|(
-literal|0
+literal|1
 operator|)
 expr_stmt|;
+else|#
+directive|else
+operator|*
+name|retval
+operator|=
+operator|(
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 literal|7
