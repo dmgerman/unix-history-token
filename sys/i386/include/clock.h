@@ -62,7 +62,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_int
+name|uint64_t
 name|tsc_freq
 decl_stmt|;
 end_decl_stmt

@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -2285,17 +2291,23 @@ name|CPUCLASS_586
 case|:
 name|printf
 argument_list|(
-literal|"%d.%02d-MHz "
+literal|"%jd.%02d-MHz "
 argument_list|,
-operator|(
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|tsc_freq
 operator|+
 literal|4999
-operator|)
+argument_list|)
 operator|/
 literal|1000000
 argument_list|,
-operator|(
+call|(
+name|u_int
+call|)
+argument_list|(
 operator|(
 name|tsc_freq
 operator|+
@@ -2303,7 +2315,7 @@ literal|4999
 operator|)
 operator|/
 literal|10000
-operator|)
+argument_list|)
 operator|%
 literal|100
 argument_list|)
@@ -2327,17 +2339,23 @@ name|CPUCLASS_686
 case|:
 name|printf
 argument_list|(
-literal|"%d.%02d-MHz "
+literal|"%jd.%02d-MHz "
 argument_list|,
-operator|(
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|tsc_freq
 operator|+
 literal|4999
-operator|)
+argument_list|)
 operator|/
 literal|1000000
 argument_list|,
-operator|(
+call|(
+name|u_int
+call|)
+argument_list|(
 operator|(
 name|tsc_freq
 operator|+
@@ -2345,7 +2363,7 @@ literal|4999
 operator|)
 operator|/
 literal|10000
-operator|)
+argument_list|)
 operator|%
 literal|100
 argument_list|)
