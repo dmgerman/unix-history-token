@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c	5.1 (Berkeley) %G%"
+literal|"@(#)tree.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
