@@ -174,7 +174,7 @@ name|tid
 parameter_list|,
 name|type
 parameter_list|)
-value|do {				\ 	u_int _ipl = alpha_pal_swpipl(ALPHA_PSL_IPL_HIGH);		\ 	if (atomic_cmpset_64(&(mp)->mtx_lock, MTX_UNOWNED, (tid)) == 0) \ 		mtx_enter_hard(mp, (type)& MTX_HARDOPTS, _ipl);	\ 	else {								\ 		alpha_mb();						\ 		(mp)->mtx_saveipl = _ipl;				\ 	}								\ } while (0)
+value|do {				\ 	u_int _ipl = alpha_pal_swpipl(ALPHA_PSL_IPL_HIGH);		\ 	if (!_obtain_lock(mp, tid))					\ 		mtx_enter_hard(mp, (type)& MTX_HARDOPTS, _ipl);	\ 	else {								\ 		alpha_mb();						\ 		(mp)->mtx_saveintr = _ipl;				\ 	}								\ } while (0)
 end_define
 
 begin_endif
@@ -207,7 +207,7 @@ parameter_list|(
 name|lck
 parameter_list|)
 define|\
-value|ldiq	a0, ALPHA_PSL_IPL_HIGH;		\ 	call_pal PAL_OSF1_swpipl;		\ 1:	ldq_l	a0, lck+MTX_LOCK;		\ 	cmpeq	a0, MTX_UNOWNED, a1;		\ 	beq	a1, 1b;				\ 	ldq	a0, PC_CURPROC(globalp);	\ 	stq_c	a0, lck+MTX_LOCK;		\ 	beq	a0, 1b;				\ 	mb;					\ 	stl	v0, lck+MTX_SAVEIPL
+value|ldiq	a0, ALPHA_PSL_IPL_HIGH;		\ 	call_pal PAL_OSF1_swpipl;		\ 1:	ldq_l	a0, lck+MTX_LOCK;		\ 	cmpeq	a0, MTX_UNOWNED, a1;		\ 	beq	a1, 1b;				\ 	ldq	a0, PC_CURPROC(globalp);	\ 	stq_c	a0, lck+MTX_LOCK;		\ 	beq	a0, 1b;				\ 	mb;					\ 	stl	v0, lck+MTX_SAVEINTR
 end_define
 
 begin_define
@@ -218,7 +218,7 @@ parameter_list|(
 name|lck
 parameter_list|)
 define|\
-value|mb;					\ 	ldiq	a0, MTX_UNOWNED;		\ 	stq	a0, lck+MTX_LOCK;		\ 	ldl	a0, lck+MTX_SAVEIPL;		\ 	call_pal PAL_OSF1_swpipl
+value|mb;					\ 	ldiq	a0, MTX_UNOWNED;		\ 	stq	a0, lck+MTX_LOCK;		\ 	ldl	a0, lck+MTX_SAVEINTR;		\ 	call_pal PAL_OSF1_swpipl
 end_define
 
 begin_endif
