@@ -276,6 +276,14 @@ name|pt
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|pt
+operator|!=
+literal|'/'
+condition|)
+block|{
 name|bpt
 operator|=
 name|pt
@@ -316,6 +324,7 @@ operator|--
 operator|=
 name|c
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
