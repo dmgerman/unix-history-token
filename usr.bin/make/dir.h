@@ -33,33 +33,6 @@ name|Lst
 struct_decl|;
 end_struct_decl
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|Path
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* Name of directory */
-name|int
-name|refCount
-decl_stmt|;
-comment|/* Number of paths with this directory */
-name|int
-name|hits
-decl_stmt|;
-comment|/* Number of times a file in this dirextory has 				 * been found  */
-name|Hash_Table
-name|files
-decl_stmt|;
-comment|/* Hash table of files in directory */
-block|}
-name|Path
-typedef|;
-end_typedef
-
 begin_function_decl
 name|void
 name|Dir_Init
