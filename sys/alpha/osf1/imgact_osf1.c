@@ -328,7 +328,8 @@ name|execp
 argument_list|)
 condition|)
 return|return
-name|ENOEXEC
+operator|-
+literal|1
 return|;
 comment|/* verfify it an OSF/1 exectutable */
 if|if
@@ -365,16 +366,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|osf_auxargs
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Osf_Auxargs
-argument_list|)
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|imgp
@@ -1012,15 +1005,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|zeros
-argument_list|,
-name|dend
-operator|-
-name|raw_dend
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
