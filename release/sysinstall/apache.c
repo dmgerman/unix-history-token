@@ -1009,7 +1009,7 @@ name|tmp
 argument_list|)
 expr_stmt|;
 block|}
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|tconf
 operator|.
@@ -1018,7 +1018,7 @@ argument_list|,
 name|DEFAULT_USER
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|tconf
 operator|.
@@ -1027,7 +1027,7 @@ argument_list|,
 name|DEFAULT_GROUP
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|tconf
 operator|.
@@ -1036,7 +1036,7 @@ argument_list|,
 name|USER_HOMEDIR
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|tconf
 operator|.
@@ -1045,7 +1045,7 @@ argument_list|,
 name|WELCOME_FILE
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|tconf
 operator|.
@@ -1054,7 +1054,7 @@ argument_list|,
 name|LOGS_SUBDIR
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|tconf
 operator|.
@@ -1063,7 +1063,7 @@ argument_list|,
 name|ACCESS_LOGNAME
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|tconf
 operator|.
@@ -1653,7 +1653,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|tconf
 operator|.
@@ -1672,7 +1672,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|tconf
 operator|.
@@ -1691,7 +1691,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|tconf
 operator|.
@@ -1710,7 +1710,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|tconf
 operator|.
@@ -1729,7 +1729,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|tconf
 operator|.
@@ -1748,7 +1748,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|tconf
 operator|.
@@ -1767,7 +1767,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|tconf
 operator|.
@@ -1906,7 +1906,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|company
 argument_list|,
@@ -1914,7 +1914,7 @@ name|tptr
 argument_list|)
 expr_stmt|;
 else|else
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|company
 argument_list|,

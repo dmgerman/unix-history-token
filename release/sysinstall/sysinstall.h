@@ -639,6 +639,22 @@ value|button_active_attr
 end_define
 
 begin_comment
+comment|/* Handy strncpy() macro */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAFE_STRCPY
+parameter_list|(
+name|to
+parameter_list|,
+name|from
+parameter_list|)
+value|sstrncpy((to), (from), sizeof (to))
+end_define
+
+begin_comment
 comment|/*** Types ***/
 end_comment
 
@@ -4234,6 +4250,27 @@ parameter_list|(
 name|WINDOW
 modifier|*
 name|w
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|sstrncpy
+parameter_list|(
+name|char
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|src
+parameter_list|,
+name|int
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -960,7 +960,7 @@ name|devp
 operator|->
 name|private
 decl_stmt|;
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|ipaddr
 argument_list|,
@@ -969,7 +969,7 @@ operator|->
 name|ipaddr
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|netmask
 argument_list|,
@@ -978,7 +978,7 @@ operator|->
 name|netmask
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|extras
 argument_list|,
@@ -1017,7 +1017,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|ipaddr
 argument_list|,
@@ -1047,7 +1047,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|ipaddr
 argument_list|,
@@ -1077,7 +1077,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|netmask
 argument_list|,
@@ -1107,7 +1107,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|netmask
 argument_list|,
@@ -1137,7 +1137,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|extras
 argument_list|,
@@ -1167,7 +1167,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|extras
 argument_list|,
@@ -1188,7 +1188,7 @@ if|if
 condition|(
 name|tmp
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|hostname
 argument_list|,
@@ -1217,7 +1217,7 @@ if|if
 condition|(
 name|tmp
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|domainname
 argument_list|,
@@ -1246,7 +1246,7 @@ if|if
 condition|(
 name|tmp
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|gateway
 argument_list|,
@@ -1275,7 +1275,7 @@ if|if
 condition|(
 name|tmp
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|nameserver
 argument_list|,
@@ -1594,7 +1594,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|strncpy
+name|sstrncpy
 argument_list|(
 name|domainname
 argument_list|,
@@ -1609,18 +1609,6 @@ operator|+
 literal|1
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|domainname
-index|[
-name|strlen
-argument_list|(
-name|tmp
-operator|+
-literal|1
-argument_list|)
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|RefreshStringObj
 argument_list|(
@@ -1857,7 +1845,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|strncpy
+name|sstrncpy
 argument_list|(
 name|domainname
 argument_list|,
@@ -1872,18 +1860,6 @@ operator|+
 literal|1
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|domainname
-index|[
-name|strlen
-argument_list|(
-name|tmp
-operator|+
-literal|1
-argument_list|)
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|RefreshStringObj
 argument_list|(
@@ -2020,7 +1996,7 @@ name|devp
 operator|->
 name|private
 expr_stmt|;
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|di
 operator|->
@@ -2029,7 +2005,7 @@ argument_list|,
 name|ipaddr
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|di
 operator|->
@@ -2038,7 +2014,7 @@ argument_list|,
 name|netmask
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|di
 operator|->

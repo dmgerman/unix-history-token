@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: network.c,v 1.16.2.2 1996/12/09 06:41:41 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: network.c,v 1.20 1996/12/09 06:45:03 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -251,13 +251,11 @@ return|return
 name|FALSE
 return|;
 else|else
-name|strncpy
+name|SAFE_STRCPY
 argument_list|(
 name|attach
 argument_list|,
 name|val
-argument_list|,
-literal|256
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Doing this with vsystem() is actually bogus since we should be storing the pid of slattach 	 * for later killing.  It's just too convenient to call vsystem(), however, rather than 	 * constructing a proper argument for exec() so we punt on doing slip right for now. 	 */
@@ -708,7 +706,7 @@ literal|"computer and at another speed to the remote end.\n\n"
 literal|"If you're not sure what to put here, just select the default."
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|SAFE_STRCPY
 argument_list|(
 name|speed
 argument_list|,
@@ -722,27 +720,29 @@ condition|?
 name|val
 else|:
 literal|"115200"
-argument_list|,
-literal|16
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|val
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_GATEWAY
+argument_list|)
+expr_stmt|;
+name|SAFE_STRCPY
 argument_list|(
 name|provider
 argument_list|,
-name|variable_get
-argument_list|(
-name|VAR_GATEWAY
-argument_list|)
+operator|(
+name|val
+operator|&&
+operator|*
+name|val
+operator|)
 condition|?
-name|variable_get
-argument_list|(
-name|VAR_GATEWAY
-argument_list|)
+name|val
 else|:
 literal|"0"
-argument_list|,
-literal|16
 argument_list|)
 expr_stmt|;
 name|val
@@ -755,17 +755,20 @@ literal|"Enter the IP address of your service provider or 0 if you\n"
 literal|"don't know it and would prefer to negotiate it dynamically."
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|SAFE_STRCPY
 argument_list|(
 name|provider
 argument_list|,
+operator|(
 name|val
+operator|&&
+operator|*
+name|val
+operator|)
 condition|?
 name|val
 else|:
 literal|"0"
-argument_list|,
-literal|16
 argument_list|)
 expr_stmt|;
 if|if
@@ -789,7 +792,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strncpy
+name|SAFE_STRCPY
 argument_list|(
 name|myaddr
 argument_list|,
@@ -804,8 +807,6 @@ name|private
 operator|)
 operator|->
 name|ipaddr
-argument_list|,
-literal|16
 argument_list|)
 expr_stmt|;
 else|else

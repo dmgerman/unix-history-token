@@ -1096,7 +1096,7 @@ operator||
 name|what
 return|;
 block|}
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|ftpDevice
 operator|.
@@ -1662,15 +1662,13 @@ return|return
 name|DITEM_FAILURE
 return|;
 block|}
-name|strncpy
+name|SAFE_STRCPY
 argument_list|(
 name|nfsDevice
 operator|.
 name|name
 argument_list|,
 name|cp
-argument_list|,
-name|DEV_NAME_MAX
 argument_list|)
 expr_stmt|;
 comment|/* str == NULL means we were just called to change NFS paths, not network interfaces */
