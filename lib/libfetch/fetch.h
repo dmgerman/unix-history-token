@@ -341,17 +341,6 @@ comment|/* HTTP-specific functions */
 end_comment
 
 begin_function_decl
-name|char
-modifier|*
-name|fetchContentType
-parameter_list|(
-name|FILE
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|FILE
 modifier|*
 name|fetchGetHTTP
