@@ -260,15 +260,6 @@ name|un_udp
 struct|;
 struct|struct
 block|{
-name|union
-name|nethostaddr
-name|connless_haddr
-decl_stmt|;
-block|}
-name|un_connless
-struct|;
-struct|struct
-block|{
 name|int
 name|dummy
 decl_stmt|;
@@ -294,20 +285,6 @@ define|#
 directive|define
 name|lph_inetaddr
 value|lph_un.un_udp.udp_haddr.had_inetaddr
-end_define
-
-begin_define
-define|#
-directive|define
-name|lph_claddr
-value|lph_un.un_connless.connless_haddr
-end_define
-
-begin_define
-define|#
-directive|define
-name|lph_nam
-value|lph_un.un_connless.connless_haddr.had_nam
 end_define
 
 begin_struct
@@ -451,15 +428,8 @@ begin_comment
 comment|/* Host address for udp socket */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LC_CLTP
-value|0x0080
-end_define
-
 begin_comment
-comment|/* Host address for other connectionless */
+comment|/* 0x0080 free */
 end_comment
 
 begin_define

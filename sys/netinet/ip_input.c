@@ -1331,6 +1331,13 @@ name|ifq_maxlen
 operator|=
 name|ipqmaxlen
 expr_stmt|;
+name|register_netisr
+argument_list|(
+name|NETISR_IP
+argument_list|,
+name|ipintr
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3382,16 +3389,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_expr_stmt
-name|NETISR_SET
-argument_list|(
-name|NETISR_IP
-argument_list|,
-name|ipintr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * Take incoming datagram fragment and try to reassemble it into  * whole datagram.  If a chain for reassembly of this datagram already  * exists, then it is given as fp; otherwise have to make a chain.  *  * When IPDIVERT enabled, keep additional state with each packet that  * tells us if we need to divert or tee the packet we're building.  */

@@ -623,6 +623,13 @@ name|ifq_maxlen
 operator|=
 name|ip6qmaxlen
 expr_stmt|;
+name|register_netisr
+argument_list|(
+name|NETISR_IPV6
+argument_list|,
+name|ip6intr
+argument_list|)
+expr_stmt|;
 name|nd6_init
 argument_list|()
 expr_stmt|;
@@ -830,16 +837,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_expr_stmt
-name|NETISR_SET
-argument_list|(
-name|NETISR_IPV6
-argument_list|,
-name|ip6intr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 specifier|extern

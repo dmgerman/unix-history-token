@@ -349,6 +349,13 @@ name|x_host
 operator|=
 name|ns_broadhost
 expr_stmt|;
+name|register_netisr
+argument_list|(
+name|NETISR_NS
+argument_list|,
+name|nsintr
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -978,16 +985,6 @@ name|next
 goto|;
 block|}
 end_function
-
-begin_expr_stmt
-name|NETISR_SET
-argument_list|(
-name|NETISR_NS
-argument_list|,
-name|nsintr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 name|u_char

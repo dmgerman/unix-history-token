@@ -329,16 +329,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|NETISR_SET
-argument_list|(
-name|NETISR_IPX
-argument_list|,
-name|ipxintr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -484,6 +474,13 @@ operator|.
 name|x_host
 operator|=
 name|ipx_broadhost
+expr_stmt|;
+name|register_netisr
+argument_list|(
+name|NETISR_IPX
+argument_list|,
+name|ipxintr
+argument_list|)
 expr_stmt|;
 block|}
 end_function

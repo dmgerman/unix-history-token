@@ -1170,9 +1170,6 @@ name|int
 name|ns_count
 decl_stmt|;
 name|int
-name|iso_count
-decl_stmt|;
-name|int
 name|any_count
 decl_stmt|;
 block|}

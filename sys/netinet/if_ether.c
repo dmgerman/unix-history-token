@@ -807,6 +807,13 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
+name|register_netisr
+argument_list|(
+name|NETISR_ARP
+argument_list|,
+name|arpintr
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2485,16 +2492,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_expr_stmt
-name|NETISR_SET
-argument_list|(
-name|NETISR_ARP
-argument_list|,
-name|arpintr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_ifdef
 ifdef|#

@@ -361,6 +361,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|register_netisr
+argument_list|(
+name|NETISR_ATM
+argument_list|,
+name|atm_intr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Initialize subsystems 	 */
 name|atm_aal5_init
 argument_list|()
@@ -2572,27 +2584,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_expr_stmt
-name|NETISR_SET
-argument_list|(
-name|NETISR_ATM
-argument_list|,
-name|atm_intr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Print a pdu buffer chain  *   * Arguments:  *	m	pointer to pdu buffer chain  *	msg	pointer to message header string  *  * Returns:  *	none  *  */

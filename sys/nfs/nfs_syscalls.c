@@ -129,23 +129,6 @@ directive|include
 file|<netinet/tcp.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISO
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netiso/iso.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -1746,15 +1729,7 @@ directive|if
 literal|0
 block|tslp = (struct nfssvc_sock *)0;
 comment|/* 	 * Add it to the list, as required. 	 */
-block|if (so->so_proto->pr_protocol == IPPROTO_UDP) { 		tslp = nfs_udpsock; 		if (tslp->ns_flag& SLP_VALID) { 			if (mynam != NULL) 				FREE(mynam, M_SONAME); 			return (EPERM); 		}
-ifdef|#
-directive|ifdef
-name|ISO
-block|} else if (so->so_proto->pr_protocol == ISOPROTO_CLTP) { 		tslp = nfs_cltpsock; 		if (tslp->ns_flag& SLP_VALID) { 			if (mynam != NULL) 				FREE(mynam, M_SONAME); 			return (EPERM); 		}
-endif|#
-directive|endif
-comment|/* ISO */
-block|}
+block|if (so->so_proto->pr_protocol == IPPROTO_UDP) { 		tslp = nfs_udpsock; 		if (tslp->ns_flag& SLP_VALID) { 			if (mynam != NULL) 				FREE(mynam, M_SONAME); 			return (EPERM); 		} 	}
 endif|#
 directive|endif
 if|if
