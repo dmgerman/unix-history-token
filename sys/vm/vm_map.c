@@ -10941,11 +10941,6 @@ name|newvmspace
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|vmspace_free
-argument_list|(
-name|oldvmspace
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -10958,6 +10953,11 @@ comment|/* XXXKSE ? */
 name|pmap_activate
 argument_list|(
 name|curthread
+argument_list|)
+expr_stmt|;
+name|vmspace_free
+argument_list|(
+name|oldvmspace
 argument_list|)
 expr_stmt|;
 block|}
@@ -11023,11 +11023,6 @@ name|newvmspace
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|vmspace_free
-argument_list|(
-name|oldvmspace
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -11040,6 +11035,11 @@ comment|/* XXXKSE ? */
 name|pmap_activate
 argument_list|(
 name|curthread
+argument_list|)
+expr_stmt|;
+name|vmspace_free
+argument_list|(
+name|oldvmspace
 argument_list|)
 expr_stmt|;
 block|}
