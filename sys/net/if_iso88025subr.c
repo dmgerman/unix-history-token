@@ -1030,12 +1030,13 @@ comment|/* if not yet resolved */
 comment|/* Add LLC and SNAP headers */
 name|M_PREPEND
 argument_list|(
-argument|m
+name|m
 argument_list|,
 literal|8
 argument_list|,
-argument|M_DONTWAIT
+name|M_DONTWAIT
 argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
