@@ -1907,9 +1907,7 @@ operator|&
 name|boottimebin
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Deal with NTP second processing.  The for loop normally only 	 * iterates once, but in extreme situations it might keep NTP sane 	 * if timeouts are not run for several seconds.  At boot, the 	 * time step can be large when the TOD hardware has been read, so 	 * on really large steps, we call ntp_update_second only once. 	 */
-for|for
-control|(
+comment|/* 	 * Deal with NTP second processing.  The for loop normally only 	 * iterates once, but in extreme situations it might keep NTP sane 	 * if timeouts are not run for several seconds.  At boot, the 	 * time step can be large when the TOD hardware has been read, so 	 * on really large steps, we call ntp_update_second only twice. 	 * We need to call it twice in case we missed a leap second. 	 */
 name|i
 operator|=
 name|bt
@@ -1921,6 +1919,19 @@ operator|->
 name|th_microtime
 operator|.
 name|tv_sec
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+name|LARGE_STEP
+condition|)
+name|i
+operator|=
+literal|2
+expr_stmt|;
+for|for
+control|(
 init|;
 name|i
 operator|>
@@ -1967,13 +1978,6 @@ name|sec
 operator|-
 name|t
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|>
-name|LARGE_STEP
-condition|)
-break|break;
 block|}
 comment|/* Now is a good time to change timecounters. */
 if|if
