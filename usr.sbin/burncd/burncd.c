@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdio.h>
 end_include
 
@@ -67,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|BLOCKS
-value|32
+value|16
 end_define
 
 begin_decl_stmt
@@ -643,6 +649,34 @@ operator|!
 name|quiet
 condition|)
 block|{
+name|struct
+name|stat
+name|stat
+decl_stmt|;
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|file
+argument_list|,
+operator|&
+name|stat
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_IOERR
+argument_list|,
+literal|"fstat(%s)"
+argument_list|,
+name|argv
+index|[
+name|arg
+index|]
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -656,12 +690,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"writing from file %s\n"
+literal|"writing from file %s size %d KB\n"
 argument_list|,
 name|argv
 index|[
 name|arg
 index|]
+argument_list|,
+name|stat
+operator|.
+name|st_size
+operator|/
+literal|1024
 argument_list|)
 expr_stmt|;
 block|}
