@@ -67,6 +67,11 @@ name|strtod
 argument_list|(
 name|ascii
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|NULL
 argument_list|)
 operator|)
