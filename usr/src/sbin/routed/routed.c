@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)routed.c	4.16 82/06/10"
+literal|"@(#)routed.c	4.17 82/06/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -1697,6 +1697,17 @@ operator|=
 name|IFF_REMOTE
 expr_stmt|;
 comment|/* can't identify broadcast capability */
+name|ifp
+operator|->
+name|int_net
+operator|=
+name|IN_NETOF
+argument_list|(
+name|dst
+operator|.
+name|sin_addr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1724,17 +1735,6 @@ name|IFF_POINTOPOINT
 expr_stmt|;
 name|ifp
 operator|->
-name|int_net
-operator|=
-name|dst
-operator|.
-name|sin_addr
-operator|.
-name|s_net
-expr_stmt|;
-comment|/* XXX */
-name|ifp
-operator|->
 name|int_dstaddr
 operator|=
 operator|*
@@ -1749,18 +1749,6 @@ name|dst
 operator|)
 expr_stmt|;
 block|}
-else|else
-name|ifp
-operator|->
-name|int_net
-operator|=
-name|dst
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
-expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|strcmp
@@ -2356,6 +2344,12 @@ name|snoroute
 else|:
 name|s
 decl_stmt|;
+name|msg
+operator|->
+name|rip_cmd
+operator|=
+name|RIPCMD_RESPONSE
+expr_stmt|;
 name|again
 label|:
 for|for
@@ -2730,7 +2724,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* don't route */
 return|return;
 block|}
 name|rt

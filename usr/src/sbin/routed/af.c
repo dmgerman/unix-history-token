@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	4.5 %G%"
+literal|"@(#)af.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,11 +213,12 @@ name|hp
 operator|->
 name|afh_nethash
 operator|=
+name|IN_NETOF
+argument_list|(
 name|sin
 operator|->
 name|sin_addr
-operator|.
-name|s_net
+argument_list|)
 expr_stmt|;
 name|hp
 operator|->
@@ -280,17 +281,19 @@ begin_block
 block|{
 return|return
 operator|(
+name|IN_NETOF
+argument_list|(
 name|sin1
 operator|->
 name|sin_addr
-operator|.
-name|s_net
+argument_list|)
 operator|==
+name|IN_NETOF
+argument_list|(
 name|sin2
 operator|->
 name|sin_addr
-operator|.
-name|s_net
+argument_list|)
 operator|)
 return|;
 block|}
@@ -558,14 +561,12 @@ name|netaddr
 operator|=
 name|if_makeaddr
 argument_list|(
-operator|(
-name|int
-operator|)
+name|IN_NETOF
+argument_list|(
 name|sin
 operator|->
 name|sin_addr
-operator|.
-name|s_net
+argument_list|)
 argument_list|,
 name|INADDR_ANY
 argument_list|)
