@@ -2471,20 +2471,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX: Call radius_Account() */
-if|if
-condition|(
-operator|!
-name|Enabled
-argument_list|(
-name|fp
-operator|->
-name|bundle
-argument_list|,
-name|OPT_IPCP
-argument_list|)
-condition|)
-block|{
-comment|/*      * XXX this stuff should really live in the FSM.  Our config should      * associate executable sections in files with events.      */
+comment|/*    * XXX this stuff should really live in the FSM.  Our config should    * associate executable sections in files with events.    */
 if|if
 condition|(
 name|system_Select
@@ -2512,6 +2499,16 @@ argument_list|(
 name|fp
 operator|->
 name|bundle
+argument_list|)
+operator|&&
+operator|!
+name|Enabled
+argument_list|(
+name|fp
+operator|->
+name|bundle
+argument_list|,
+name|OPT_IPCP
 argument_list|)
 condition|)
 block|{
@@ -2571,7 +2568,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|fp
 operator|->
@@ -2683,20 +2679,7 @@ name|addr
 argument_list|)
 expr_stmt|;
 comment|/* XXX: Call radius_Account() */
-if|if
-condition|(
-operator|!
-name|Enabled
-argument_list|(
-name|fp
-operator|->
-name|bundle
-argument_list|,
-name|OPT_IPCP
-argument_list|)
-condition|)
-block|{
-comment|/*        * XXX this stuff should really live in the FSM.  Our config should        * associate executable sections in files with events.        */
+comment|/*      * XXX this stuff should really live in the FSM.  Our config should      * associate executable sections in files with events.      */
 if|if
 condition|(
 name|system_Select
@@ -2724,6 +2707,16 @@ argument_list|(
 name|fp
 operator|->
 name|bundle
+argument_list|)
+operator|&&
+operator|!
+name|Enabled
+argument_list|(
+name|fp
+operator|->
+name|bundle
+argument_list|,
+name|OPT_IPCP
 argument_list|)
 condition|)
 block|{
@@ -2783,7 +2776,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|ipv6cp_Setup
 argument_list|(
