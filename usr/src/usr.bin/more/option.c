@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	5.7 (Berkeley) %G%"
+literal|"@(#)option.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,12 +125,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|tagoption
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|terseprompt
 decl_stmt|;
 end_decl_stmt
 
@@ -261,7 +255,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0123456789/:ceinpst:ux:"
+literal|"0123456789/:ceinst:ux:"
 argument_list|)
 operator|)
 operator|!=
@@ -411,14 +405,6 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
-literal|'p'
-case|:
-name|terseprompt
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
 literal|'s'
 case|:
 name|squeeze
@@ -476,7 +462,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: less [-ceinpus] [-t tag] [-x tabs] [-/ pattern] [-#] [file ...]\n"
+literal|"usage: less [-ceinus] [-t tag] [-x tabs] [-/ pattern] [-#] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
