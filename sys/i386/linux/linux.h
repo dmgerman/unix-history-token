@@ -1390,10 +1390,10 @@ name|sf_sc
 decl_stmt|;
 name|struct
 name|linux_fpstate
-name|fpstate
+name|sf_fpstate
 decl_stmt|;
 name|u_int
-name|extramask
+name|sf_extramask
 index|[
 name|LINUX_NSIG_WORDS
 operator|-
@@ -1418,7 +1418,6 @@ name|linux_siginfo_t
 modifier|*
 name|sf_siginfo
 decl_stmt|;
-empty_stmt|;
 name|struct
 name|linux_ucontext
 modifier|*
