@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.13 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1996,7 +1996,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Quickch() attempts to detect a pattern in the change of the window  * inorder to optimize the change, e.g., scroll n lines as opposed to   * repainting the screen line by line.  */
+comment|/*  * Quickch() attempts to detect a pattern in the change of the window  * in order to optimize the change, e.g., scroll n lines as opposed to   * repainting the screen line by line.  */
 end_comment
 
 begin_function
@@ -2058,6 +2058,7 @@ decl_stmt|;
 name|u_int
 name|blank_hash
 decl_stmt|;
+comment|/* 	 * Search for the largest block of text not changed.          */
 for|for
 control|(
 name|bsize
@@ -2149,6 +2150,31 @@ name|curs
 index|]
 operator|->
 name|hash
+operator|||
+name|bcmp
+argument_list|(
+operator|&
+name|win
+operator|->
+name|lines
+index|[
+name|curw
+index|]
+argument_list|,
+operator|&
+name|win
+operator|->
+name|lines
+index|[
+name|curs
+index|]
+argument_list|,
+name|win
+operator|->
+name|maxx
+operator|!=
+literal|0
+argument_list|)
 condition|)
 break|break;
 if|if
@@ -2405,6 +2431,21 @@ operator|->
 name|hash
 operator|!=
 name|blank_hash
+operator|||
+name|bcmp
+argument_list|(
+name|clp
+operator|->
+name|line
+argument_list|,
+name|buf
+argument_list|,
+name|win
+operator|->
+name|maxx
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 operator|(
