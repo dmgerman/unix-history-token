@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: tcpip.c,v 1.77 1999/05/06 11:05:19 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  * Copyright (c) 1996  *      Jordan K. Hubbard. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * $Id: tcpip.c,v 1.78 1999/05/07 05:15:17 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  * Copyright (c) 1996  *      Jordan K. Hubbard. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -1270,15 +1270,12 @@ block|{
 comment|/* Prevent this from being irritating if user really means NO */
 if|if
 condition|(
-operator|!
 name|filled
+operator|<
+literal|3
 condition|)
 block|{
-name|filled
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Insert a default value for the netmask, 0xffffff00 is 	       the most appropriate one (entire class C, or subnetted 	       class A/B network). */
+comment|/* Insert a default value for the netmask, 0xffffff00 is 	     * the most appropriate one (entire class C, or subnetted 	     * class A/B network). 	     */
 if|if
 condition|(
 name|netmask
@@ -1305,6 +1302,9 @@ index|]
 operator|.
 name|obj
 argument_list|)
+expr_stmt|;
+operator|++
+name|filled
 expr_stmt|;
 block|}
 if|if
@@ -1346,6 +1346,9 @@ index|]
 operator|.
 name|obj
 argument_list|)
+expr_stmt|;
+operator|++
+name|filled
 expr_stmt|;
 block|}
 elseif|else
@@ -1391,6 +1394,9 @@ index|]
 operator|.
 name|obj
 argument_list|)
+expr_stmt|;
+operator|++
+name|filled
 expr_stmt|;
 block|}
 block|}
