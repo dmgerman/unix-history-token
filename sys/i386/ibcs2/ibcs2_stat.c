@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/file.h>
 end_include
 
@@ -60,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -79,24 +67,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysproto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/ibcs2/ibcs2_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/ibcs2/ibcs2_fcntl.h>
 end_include
 
 begin_include
@@ -121,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|<i386/ibcs2/ibcs2_proto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/ibcs2/ibcs2_ustat.h>
 end_include
 
 begin_include

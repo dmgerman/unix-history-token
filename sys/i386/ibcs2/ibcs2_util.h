@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/pmap.h>
 end_include
 
@@ -47,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|<sys/exec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
 end_include
 
 begin_include
