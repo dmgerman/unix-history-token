@@ -394,7 +394,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"XF86335"
+literal|"XF86336"
 block|,
 literal|"/usr"
 block|,
@@ -743,7 +743,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"XF86335"
+literal|"XF86336"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -756,7 +756,7 @@ name|XF86FontDistTable
 block|}
 block|,
 block|{
-literal|"XF86335"
+literal|"XF86336"
 block|,
 literal|"/usr/X11R6"
 block|,
