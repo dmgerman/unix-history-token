@@ -478,6 +478,13 @@ name|SX_XLOCKED
 value|LA_XLOCKED
 end_define
 
+begin_define
+define|#
+directive|define
+name|SX_UNLOCKED
+value|LA_UNLOCKED
+end_define
+
 begin_endif
 endif|#
 directive|endif
