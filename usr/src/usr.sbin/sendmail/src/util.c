@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.60 (Berkeley) %G%"
+literal|"@(#)util.c	8.61 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2596,6 +2596,24 @@ begin_comment
 comment|/* **  SAFEFOPEN -- do a file open with extra checking ** **	Parameters: **		fn -- the file name to open. **		omode -- the open-style mode flags. **		cmode -- the create-style mode flags. **		sff -- safefile flags. ** **	Returns: **		Same as fopen. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_ACCMODE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_ACCMODE
+value|(O_RDONLY|O_WRONLY|O_RDWR)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|FILE
 modifier|*
@@ -2986,24 +3004,6 @@ end_escape
 begin_comment
 comment|/* **  DFOPEN -- determined file open ** **	This routine has the semantics of fopen, except that it will **	keep trying a few times to make this happen.  The idea is that **	on very loaded systems, we may run out of resources (inodes, **	whatever), so this tries to get around it. */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|O_ACCMODE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|O_ACCMODE
-value|(O_RDONLY|O_WRONLY|O_RDWR)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
