@@ -63,6 +63,24 @@ directive|include
 file|"ficl.h"
 end_include
 
+begin_comment
+comment|/* Dictionary on-demand resizing control variables */
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|dictThreshold
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|dictIncrease
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|char
@@ -749,7 +767,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************                         d i c t A p p e n d U N S 3 2 ** Append the specified UNS32 to the dictionary **************************************************************************/
+comment|/**************************************************************************                         d i c t A p p e n d U N S ** Append the specified FICL_UNS to the dictionary **************************************************************************/
 end_comment
 
 begin_function
@@ -760,7 +778,7 @@ name|FICL_DICT
 modifier|*
 name|pDict
 parameter_list|,
-name|UNS32
+name|FICL_UNS
 name|u
 parameter_list|)
 block|{
@@ -847,13 +865,13 @@ modifier|*
 name|pVM
 parameter_list|,
 name|int
-name|nCells
+name|n
 parameter_list|)
 block|{
 if|if
 condition|(
 operator|(
-name|nCells
+name|n
 operator|>=
 literal|0
 operator|)
@@ -863,8 +881,13 @@ name|dictCellsAvail
 argument_list|(
 name|pDict
 argument_list|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|CELL
+argument_list|)
 operator|<
-name|nCells
+name|n
 operator|)
 condition|)
 block|{
@@ -879,7 +902,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|nCells
+name|n
 operator|<=
 literal|0
 operator|)
@@ -889,9 +912,14 @@ name|dictCellsUsed
 argument_list|(
 name|pDict
 argument_list|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|CELL
+argument_list|)
 operator|<
 operator|-
-name|nCells
+name|n
 operator|)
 condition|)
 block|{
@@ -1128,7 +1156,7 @@ name|nAlloc
 operator|=
 sizeof|sizeof
 argument_list|(
-name|FICL_DICT
+name|FICL_HASH
 argument_list|)
 operator|+
 name|nCells
@@ -1136,11 +1164,6 @@ operator|*
 sizeof|sizeof
 argument_list|(
 name|CELL
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-name|FICL_HASH
 argument_list|)
 operator|+
 operator|(
@@ -1159,7 +1182,10 @@ name|pDict
 operator|=
 name|ficlMalloc
 argument_list|(
-name|nAlloc
+sizeof|sizeof
+argument_list|(
+name|FICL_DICT
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|assert
@@ -1177,6 +1203,22 @@ sizeof|sizeof
 argument_list|(
 name|FICL_DICT
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|pDict
+operator|->
+name|dict
+operator|=
+name|ficlMalloc
+argument_list|(
+name|nAlloc
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|pDict
+operator|->
+name|dict
 argument_list|)
 expr_stmt|;
 name|pDict
@@ -1226,7 +1268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************                         d i c t E m p t y ** Empty the dictionary, reset its hash table, and reset its search order. ** Clears and (re-)creates the main hash table (pForthWords) with the ** size specified by nHash. **************************************************************************/
+comment|/**************************************************************************                         d i c t E m p t y ** Empty the dictionary, reset its hash table, and reset its search order. ** Clears and (re-)creates the hash table with the size specified by nHash. **************************************************************************/
 end_comment
 
 begin_function
@@ -2367,6 +2409,68 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return;
+block|}
+end_function
+
+begin_comment
+comment|/**************************************************************************                     d i c t C h e c k T h r e s h o l d ** Verify if an increase in the dictionary size is warranted, and do it if ** so. **************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|dictCheckThreshold
+parameter_list|(
+name|FICL_DICT
+modifier|*
+name|dp
+parameter_list|)
+block|{
+if|if
+condition|(
+name|dictCellsAvail
+argument_list|(
+name|dp
+argument_list|)
+operator|<
+name|dictThreshold
+condition|)
+block|{
+name|dp
+operator|->
+name|dict
+operator|=
+name|ficlMalloc
+argument_list|(
+name|dictIncrease
+operator|*
+sizeof|sizeof
+argument_list|(
+name|CELL
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|dp
+operator|->
+name|dict
+argument_list|)
+expr_stmt|;
+name|dp
+operator|->
+name|here
+operator|=
+name|dp
+operator|->
+name|dict
+expr_stmt|;
+name|dp
+operator|->
+name|size
+operator|=
+name|dictIncrease
+expr_stmt|;
+block|}
 block|}
 end_function
 

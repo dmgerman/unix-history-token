@@ -142,7 +142,7 @@ begin_define
 define|#
 directive|define
 name|INT32
-value|long
+value|int
 end_define
 
 begin_endif
@@ -162,7 +162,7 @@ begin_define
 define|#
 directive|define
 name|UNS32
-value|unsigned long
+value|unsigned int
 end_define
 
 begin_endif
@@ -246,7 +246,7 @@ begin_define
 define|#
 directive|define
 name|FICL_INT
-value|INT32
+value|long
 end_define
 
 begin_endif
@@ -266,7 +266,7 @@ begin_define
 define|#
 directive|define
 name|FICL_UNS
-value|UNS32
+value|unsigned long
 end_define
 
 begin_endif
@@ -290,7 +290,7 @@ begin_define
 define|#
 directive|define
 name|BITS_PER_CELL
-value|32
+value|64
 end_define
 
 begin_endif
@@ -708,7 +708,7 @@ begin_define
 define|#
 directive|define
 name|FICL_ALIGN
-value|4
+value|3
 end_define
 
 begin_define
