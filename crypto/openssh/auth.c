@@ -17,6 +17,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2086,11 +2094,9 @@ condition|(
 operator|(
 name|lc
 operator|=
-name|login_getclass
+name|login_getpwclass
 argument_list|(
 name|pw
-operator|->
-name|pw_class
 argument_list|)
 operator|)
 operator|==
