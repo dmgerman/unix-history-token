@@ -317,9 +317,7 @@ decl_stmt|;
 comment|/* Length. */
 name|u_char
 name|ar_args
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 comment|/* Arguments. */
 block|}
