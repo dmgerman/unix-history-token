@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id$  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.21 1997/02/22 09:32:30 peter Exp $  */
 end_comment
 
 begin_comment
@@ -3733,7 +3733,7 @@ name|REG
 parameter_list|(
 name|x
 parameter_list|)
-value|(curproc->p_md.md_regs[__regoffset[(x)]])
+value|((int *)(curproc->p_md.md_regs[__regoffset[(x)]]))
 end_define
 
 begin_function
