@@ -1,29 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mbuf.h	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mbuf.h	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * Constants related to memory allocator.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BBNNET
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MSIZE
-value|256
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -35,11 +17,6 @@ end_define
 begin_comment
 comment|/* size of an mbuf */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

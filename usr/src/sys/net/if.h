@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if.h	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if.h	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -580,19 +580,11 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INET
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|BBNNET
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|struct
