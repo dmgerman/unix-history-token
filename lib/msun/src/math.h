@@ -95,9 +95,21 @@ argument_list|(
 name|__GNUC__
 argument_list|)
 operator|&&
+operator|(
+operator|(
 name|__GNUC__
 operator|>=
 literal|3
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+literal|3
+operator|)
+operator|||
+name|__GNUC__
+operator|>=
+literal|4
+operator|)
 operator|)
 operator|||
 name|defined
@@ -129,6 +141,12 @@ operator|&&
 name|__GNUC__
 operator|>=
 literal|3
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 operator|)
 end_if
 
