@@ -97,6 +97,10 @@ modifier|*
 name|ndp
 decl_stmt|;
 block|{
+name|USES_VOP_READLINK
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 specifier|register
 name|struct
 name|filedesc
@@ -862,6 +866,12 @@ modifier|*
 name|ndp
 decl_stmt|;
 block|{
+name|USES_VOP_LOCK
+expr_stmt|;
+name|USES_VOP_LOOKUP
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 specifier|register
 name|char
 modifier|*

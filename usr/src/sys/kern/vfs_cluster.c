@@ -405,6 +405,8 @@ end_endif
 
 begin_block
 block|{
+name|USES_VOP_STRATEGY
+expr_stmt|;
 name|struct
 name|proc
 modifier|*
@@ -687,6 +689,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_STRATEGY
+expr_stmt|;
 name|struct
 name|proc
 modifier|*
@@ -1097,6 +1101,8 @@ end_expr_stmt
 
 begin_block
 block|{
+name|USES_VOP_STRATEGY
+expr_stmt|;
 name|struct
 name|proc
 modifier|*
@@ -1339,6 +1345,8 @@ end_expr_stmt
 
 begin_block
 block|{
+name|USES_VOP_IOCTL
+expr_stmt|;
 name|struct
 name|proc
 modifier|*

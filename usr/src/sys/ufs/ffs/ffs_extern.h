@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_extern.h	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_extern.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -139,23 +139,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-name|off_t
-operator|,
-name|char
-operator|*
-operator|*
-operator|,
-expr|struct
-name|buf
-operator|*
+name|vop_blkatoff_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -203,22 +196,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-name|daddr_t
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|*
-operator|,
-name|daddr_t
+name|vop_bmap_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|void
@@ -292,19 +279,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|proc
+name|vop_fsync_args
 operator|*
 operator|)
 argument_list|)
@@ -318,16 +293,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|proc
+name|vop_inactive_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -428,22 +403,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|uio
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
+name|vop_read_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -483,12 +452,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_reclaim_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -573,20 +546,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-name|off_t
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
+name|vop_truncate_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -615,18 +584,8 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_update_args
 operator|*
-operator|,
-expr|struct
-name|timeval
-operator|*
-operator|,
-expr|struct
-name|timeval
-operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -639,23 +598,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
-operator|*
-operator|,
-expr|struct
-name|vnode
-operator|*
+name|vop_valloc_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|void
@@ -664,16 +616,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_vfree_args
 operator|*
-operator|,
-name|ino_t
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -682,19 +634,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|mount
-operator|*
-operator|,
-name|ino_t
-operator|,
-expr|struct
-name|vnode
-operator|*
+name|vop_vget_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -721,22 +670,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|uio
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
+name|vop_write_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_function_decl
 name|int
@@ -799,21 +742,29 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|struct
-name|vnodeops
-name|ffs_vnodeops
-decl_stmt|;
-end_decl_stmt
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|ffs_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|struct
-name|vnodeops
-name|ffs_specops
-decl_stmt|;
-end_decl_stmt
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|ffs_specop_p
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -821,13 +772,17 @@ directive|ifdef
 name|FIFO
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|struct
-name|vnodeops
-name|ffs_fifoops
-decl_stmt|;
-end_decl_stmt
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|ffs_fifoop_p
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_define
 define|#

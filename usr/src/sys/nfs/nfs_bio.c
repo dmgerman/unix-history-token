@@ -165,6 +165,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_GETATTR
+expr_stmt|;
 specifier|register
 name|struct
 name|nfsnode
@@ -298,7 +300,7 @@ name|nmp
 operator|->
 name|nm_rsize
 expr_stmt|;
-comment|/* 	 * For nfs, cache consistency can only be maintained approximately. 	 * Although RFC1094 does not specify the criteria, the following is 	 * believed to be compatible with the reference port. 	 * For nqnfs, full cache consistency is maintained within the loop. 	 * For nfs: 	 * If the file's modify time on the server has changed since the 	 * last read rpc or you have written to the file, 	 * you may have lost data cache consistency with the 	 * server, so flush all of the file's data out of the cache. 	 * Then force a getattr rpc to ensure that you have up to date 	 * attributes. 	 * The mount flag NFSMNT_MYWRITE says "Assume that my writes are 	 * the ones changing the modify time. 	 * NB: This implies that cache data can be read when up to 	 * NFS_ATTRTIMEO seconds out of date. If you find that you need current 	 * attributes this could be forced by setting n_attrstamp to 0 before 	 * the nfs_getattr() call. 	 */
+comment|/* 	 * For nfs, cache consistency can only be maintained approximately. 	 * Although RFC1094 does not specify the criteria, the following is 	 * believed to be compatible with the reference port. 	 * For nqnfs, full cache consistency is maintained within the loop. 	 * For nfs: 	 * If the file's modify time on the server has changed since the 	 * last read rpc or you have written to the file, 	 * you may have lost data cache consistency with the 	 * server, so flush all of the file's data out of the cache. 	 * Then force a getattr rpc to ensure that you have up to date 	 * attributes. 	 * The mount flag NFSMNT_MYWRITE says "Assume that my writes are 	 * the ones changing the modify time. 	 * NB: This implies that cache data can be read when up to 	 * NFS_ATTRTIMEO seconds out of date. If you find that you need current 	 * attributes this could be forced by setting n_attrstamp to 0 before 	 * the VOP_GETATTR() call. 	 */
 if|if
 condition|(
 operator|(
@@ -375,7 +377,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|nfs_getattr
+name|VOP_GETATTR
 argument_list|(
 name|vp
 argument_list|,
@@ -411,7 +413,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|nfs_getattr
+name|VOP_GETATTR
 argument_list|(
 name|vp
 argument_list|,
@@ -1466,50 +1468,53 @@ begin_comment
 comment|/*  * Vnode op for write using bio  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|nfs_write
 argument_list|(
-name|vp
-argument_list|,
-name|uio
-argument_list|,
-name|ioflag
-argument_list|,
-name|cred
+argument|ap
 argument_list|)
-specifier|register
-expr|struct
-name|vnode
-operator|*
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vop_write_args
+modifier|*
+name|ap
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
 name|vp
-expr_stmt|;
-end_expr_stmt
+value|(ap->a_vp)
+end_define
 
-begin_decl_stmt
-specifier|register
-name|struct
+begin_define
+define|#
+directive|define
 name|uio
-modifier|*
-name|uio
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_uio)
+end_define
 
-begin_decl_stmt
-name|int
+begin_define
+define|#
+directive|define
 name|ioflag
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_ioflag)
+end_define
 
-begin_decl_stmt
-name|struct
-name|ucred
-modifier|*
+begin_define
+define|#
+directive|define
 name|cred
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_cred)
+end_define
 
 begin_block
 block|{
+name|USES_VOP_GETATTR
+expr_stmt|;
 specifier|register
 name|int
 name|biosize
@@ -1663,7 +1668,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|nfs_getattr
+name|VOP_GETATTR
 argument_list|(
 name|vp
 argument_list|,
@@ -2444,6 +2449,30 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_undef
+undef|#
+directive|undef
+name|vp
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|uio
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ioflag
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|cred
+end_undef
 
 end_unit
 

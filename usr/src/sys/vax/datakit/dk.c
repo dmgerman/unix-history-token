@@ -1847,6 +1847,10 @@ end_macro
 
 begin_block
 block|{
+name|USES_VOP_LOCK
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 specifier|register
 name|struct
 name|dkdev

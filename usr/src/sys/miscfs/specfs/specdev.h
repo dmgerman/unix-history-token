@@ -206,20 +206,8 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_lookup_args
 operator|*
-name|dvp
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|*
-name|vpp
-operator|,
-expr|struct
-name|componentname
-operator|*
-name|cnp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -229,14 +217,14 @@ begin_define
 define|#
 directive|define
 name|spec_create
-value|((int (*) __P(( \ 		struct vnode *dvp, \  		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap))) spec_badop)
+value|((int (*) __P((struct  vop_create_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_mknod
-value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap))) spec_badop)
+value|((int (*) __P((struct  vop_mknod_args *)))spec_badop)
 end_define
 
 begin_decl_stmt
@@ -246,22 +234,8 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_open_args
 operator|*
-name|vp
-operator|,
-name|int
-name|mode
-operator|,
-expr|struct
-name|ucred
-operator|*
-name|cred
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
 operator|)
 argument_list|)
 decl_stmt|;
@@ -274,22 +248,8 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_close_args
 operator|*
-name|vp
-operator|,
-name|int
-name|fflag
-operator|,
-expr|struct
-name|ucred
-operator|*
-name|cred
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
 operator|)
 argument_list|)
 decl_stmt|;
@@ -299,21 +259,21 @@ begin_define
 define|#
 directive|define
 name|spec_access
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		int mode, \ 		struct ucred *cred, \ 		struct proc *p))) spec_ebadf)
+value|((int (*) __P((struct  vop_access_args *)))spec_ebadf)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_getattr
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct vattr *vap, \ 		struct ucred *cred, \ 		struct proc *p))) spec_ebadf)
+value|((int (*) __P((struct  vop_getattr_args *)))spec_ebadf)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_setattr
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct vattr *vap, \ 		struct ucred *cred, \ 		struct proc *p))) spec_ebadf)
+value|((int (*) __P((struct  vop_setattr_args *)))spec_ebadf)
 end_define
 
 begin_decl_stmt
@@ -323,22 +283,8 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_read_args
 operator|*
-name|vp
-operator|,
-expr|struct
-name|uio
-operator|*
-name|uio
-operator|,
-name|int
-name|ioflag
-operator|,
-expr|struct
-name|ucred
-operator|*
-name|cred
 operator|)
 argument_list|)
 decl_stmt|;
@@ -351,22 +297,8 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_write_args
 operator|*
-name|vp
-operator|,
-expr|struct
-name|uio
-operator|*
-name|uio
-operator|,
-name|int
-name|ioflag
-operator|,
-expr|struct
-name|ucred
-operator|*
-name|cred
 operator|)
 argument_list|)
 decl_stmt|;
@@ -379,28 +311,8 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_ioctl_args
 operator|*
-name|vp
-operator|,
-name|int
-name|command
-operator|,
-name|caddr_t
-name|data
-operator|,
-name|int
-name|fflag
-operator|,
-expr|struct
-name|ucred
-operator|*
-name|cred
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
 operator|)
 argument_list|)
 decl_stmt|;
@@ -413,25 +325,8 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_select_args
 operator|*
-name|vp
-operator|,
-name|int
-name|which
-operator|,
-name|int
-name|fflags
-operator|,
-expr|struct
-name|ucred
-operator|*
-name|cred
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
 operator|)
 argument_list|)
 decl_stmt|;
@@ -441,98 +336,98 @@ begin_define
 define|#
 directive|define
 name|spec_mmap
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		int fflags, \ 		struct ucred *cred, \ 		struct proc *p))) spec_badop)
+value|((int (*) __P((struct  vop_mmap_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_fsync
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		int fflags, \ 		struct ucred *cred, \ 		int waitfor, \ 		struct proc *p))) nullop)
+value|((int (*) __P((struct  vop_fsync_args *)))nullop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_seek
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		off_t oldoff, \ 		off_t newoff, \ 		struct ucred *cred))) spec_badop)
+value|((int (*) __P((struct  vop_seek_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_remove
-value|((int (*) __P(( \ 		struct vnode *dvp, \ 	        struct vnode *vp, \ 		struct componentname *cnp))) spec_badop)
+value|((int (*) __P((struct  vop_remove_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_link
-value|((int (*) __P(( \ 		register struct vnode *vp, \ 		struct vnode *tdvp, \ 		struct componentname *cnp))) spec_badop)
+value|((int (*) __P((struct  vop_link_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_rename
-value|((int (*) __P(( \ 		struct vnode *fdvp, \ 	        struct vnode *fvp, \ 		struct componentname *fcnp, \ 		struct vnode *tdvp, \ 		struct vnode *tvp, \ 		struct componentname *tcnp))) spec_badop)
+value|((int (*) __P((struct  vop_rename_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_mkdir
-value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap))) spec_badop)
+value|((int (*) __P((struct  vop_mkdir_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_rmdir
-value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode *vp, \ 		struct componentname *cnp))) spec_badop)
+value|((int (*) __P((struct  vop_rmdir_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_symlink
-value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap, \ 		char *target))) spec_badop)
+value|((int (*) __P((struct  vop_symlink_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_readdir
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct uio *uio, \ 		struct ucred *cred, \ 		int *eofflagp))) spec_badop)
+value|((int (*) __P((struct  vop_readdir_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_readlink
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct uio *uio, \ 		struct ucred *cred))) spec_badop)
+value|((int (*) __P((struct  vop_readlink_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_abortop
-value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct componentname *cnp))) spec_badop)
+value|((int (*) __P((struct  vop_abortop_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_inactive
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct proc *p))) nullop)
+value|((int (*) __P((struct  vop_inactive_args *)))nullop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_reclaim
-value|((int (*) __P(( \ 		struct vnode *vp))) nullop)
+value|((int (*) __P((struct  vop_reclaim_args *)))nullop)
 end_define
 
 begin_decl_stmt
@@ -542,9 +437,8 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_lock_args
 operator|*
-name|vp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -557,9 +451,8 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_unlock_args
 operator|*
-name|vp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -572,22 +465,8 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_bmap_args
 operator|*
-name|vp
-operator|,
-name|daddr_t
-name|bn
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|*
-name|vpp
-operator|,
-name|daddr_t
-operator|*
-name|bnp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -600,9 +479,8 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|buf
+name|vop_strategy_args
 operator|*
-name|bp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -615,9 +493,8 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_print_args
 operator|*
-name|vp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -627,7 +504,7 @@ begin_define
 define|#
 directive|define
 name|spec_islocked
-value|((int (*) __P(( \ 		struct vnode *vp))) nullop)
+value|((int (*) __P((struct  vop_islocked_args *)))nullop)
 end_define
 
 begin_decl_stmt
@@ -637,23 +514,8 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_advlock_args
 operator|*
-name|vp
-operator|,
-name|caddr_t
-name|id
-operator|,
-name|int
-name|op
-operator|,
-expr|struct
-name|flock
-operator|*
-name|fl
-operator|,
-name|int
-name|flags
 operator|)
 argument_list|)
 decl_stmt|;
@@ -663,49 +525,49 @@ begin_define
 define|#
 directive|define
 name|spec_blkatoff
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		off_t offset, \ 		char **res, \ 		struct buf **bpp))) spec_badop)
+value|((int (*) __P((struct  vop_blkatoff_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_vget
-value|((int (*) __P(( \ 		struct mount *mp, \ 		ino_t ino, \ 		struct vnode **vpp))) spec_badop)
+value|((int (*) __P((struct  vop_vget_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_valloc
-value|((int (*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) spec_badop)
+value|((int (*) __P((struct  vop_valloc_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_vfree
-value|((void (*) __P(( \ 		struct vnode *pvp, \ 		ino_t ino, \ 		int mode))) spec_badop)
+value|((int (*) __P((struct  vop_vfree_args *)))spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_truncate
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		off_t length, \ 		int flags, \ 		struct ucred *cred))) nullop)
+value|((int (*) __P((struct  vop_truncate_args *)))nullop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_update
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct timeval *ta, \ 		struct timeval *tm, \ 		int waitfor))) nullop)
+value|((int (*) __P((struct  vop_update_args *)))nullop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_bwrite
-value|((int (*) __P(( \ 		struct buf *bp))) nullop)
+value|((int (*) __P((struct  vop_bwrite_args *)))nullop)
 end_define
 
 end_unit

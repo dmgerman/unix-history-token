@@ -87,14 +87,17 @@ begin_function
 name|int
 name|lfs_bwrite
 parameter_list|(
-name|bp
+name|ap
 parameter_list|)
-specifier|register
 name|struct
-name|buf
+name|vop_bwrite_args
 modifier|*
-name|bp
+name|ap
 decl_stmt|;
+define|#
+directive|define
+name|bp
+value|(ap->a_bp)
 block|{
 name|int
 name|s
@@ -213,6 +216,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|bp
+end_undef
 
 begin_comment
 comment|/*  * XXX  * This routine flushes buffers out of the B_LOCKED queue when LFS has too  * many locked down.  Eventually the pageout daemon will simply call LFS  * when pages need to be reclaimed.  Note, we have one static count of locked  * buffers, so we can't have more than a single file system.  To make this  * work for multiple file systems, put the count into the mount structure.  */

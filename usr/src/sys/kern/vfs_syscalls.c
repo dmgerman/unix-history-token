@@ -200,6 +200,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_UNLOCK
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -2194,6 +2196,12 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ACCESS
+expr_stmt|;
+name|USES_VOP_LOCK
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 specifier|register
 name|struct
 name|filedesc
@@ -2635,6 +2643,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ACCESS
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -2766,6 +2778,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ADVLOCK
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 specifier|register
 name|struct
 name|filedesc
@@ -3360,6 +3376,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ABORTOP
+expr_stmt|;
+name|USES_VOP_MKNOD
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -3696,6 +3716,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ABORTOP
+expr_stmt|;
+name|USES_VOP_MKNOD
+expr_stmt|;
 name|struct
 name|vattr
 name|vattr
@@ -3939,6 +3963,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ABORTOP
+expr_stmt|;
+name|USES_VOP_LINK
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -4283,6 +4311,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ABORTOP
+expr_stmt|;
+name|USES_VOP_SYMLINK
+expr_stmt|;
 name|struct
 name|vattr
 name|vattr
@@ -4558,6 +4590,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ABORTOP
+expr_stmt|;
+name|USES_VOP_REMOVE
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -4968,6 +5004,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_GETATTR
+expr_stmt|;
 name|struct
 name|ucred
 modifier|*
@@ -5197,6 +5235,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ACCESS
+expr_stmt|;
 specifier|register
 name|struct
 name|ucred
@@ -6342,6 +6382,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_READLINK
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -6583,6 +6625,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_SETATTR
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -6771,6 +6815,12 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_LOCK
+expr_stmt|;
+name|USES_VOP_SETATTR
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 name|struct
 name|vattr
 name|vattr
@@ -6958,6 +7008,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_SETATTR
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -7148,6 +7200,12 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_LOCK
+expr_stmt|;
+name|USES_VOP_SETATTR
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 name|struct
 name|vattr
 name|vattr
@@ -7340,6 +7398,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_SETATTR
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -7539,6 +7599,12 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_LOCK
+expr_stmt|;
+name|USES_VOP_SETATTR
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 name|struct
 name|vattr
 name|vattr
@@ -7736,6 +7802,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_SETATTR
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -8190,6 +8258,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ACCESS
+expr_stmt|;
+name|USES_VOP_SETATTR
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -8407,6 +8479,12 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_LOCK
+expr_stmt|;
+name|USES_VOP_SETATTR
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 name|struct
 name|vattr
 name|vattr
@@ -8616,6 +8694,12 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_FSYNC
+expr_stmt|;
+name|USES_VOP_LOCK
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -8756,6 +8840,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ABORTOP
+expr_stmt|;
+name|USES_VOP_RENAME
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -9341,6 +9429,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ABORTOP
+expr_stmt|;
+name|USES_VOP_MKDIR
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -9600,6 +9692,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ABORTOP
+expr_stmt|;
+name|USES_VOP_RMDIR
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -9872,6 +9968,12 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_LOCK
+expr_stmt|;
+name|USES_VOP_READDIR
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -10243,6 +10345,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_GETATTR
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode

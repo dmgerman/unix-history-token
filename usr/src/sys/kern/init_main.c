@@ -261,6 +261,8 @@ begin_function
 name|main
 parameter_list|()
 block|{
+name|USES_VOP_UNLOCK
+expr_stmt|;
 specifier|register
 name|int
 name|i

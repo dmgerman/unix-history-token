@@ -745,21 +745,29 @@ name|vfreet
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|struct
-name|vnodeops
-name|dead_vnodeops
-decl_stmt|;
-end_decl_stmt
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|dead_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|struct
-name|vnodeops
-name|spec_vnodeops
-decl_stmt|;
-end_decl_stmt
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|spec_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -1228,6 +1236,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ISLOCKED
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -1783,6 +1793,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_BWRITE
+expr_stmt|;
 specifier|register
 name|struct
 name|buf
@@ -2452,8 +2464,7 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-operator|&
-name|spec_vnodeops
+name|spec_vnodeop_p
 argument_list|,
 operator|&
 name|nvp
@@ -2558,6 +2569,8 @@ modifier|*
 name|mp
 decl_stmt|;
 block|{
+name|USES_VOP_UNLOCK
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -2829,6 +2842,8 @@ end_expr_stmt
 
 begin_block
 block|{
+name|USES_VOP_LOCK
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -3012,6 +3027,8 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
+name|USES_VOP_UNLOCK
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -3042,6 +3059,8 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
+name|USES_VOP_INACTIVE
+expr_stmt|;
 name|struct
 name|proc
 modifier|*
@@ -3462,8 +3481,7 @@ name|vp
 operator|->
 name|v_op
 operator|=
-operator|&
-name|spec_vnodeops
+name|spec_vnodeop_p
 expr_stmt|;
 name|insmntque
 argument_list|(
@@ -3534,6 +3552,10 @@ name|int
 name|flags
 decl_stmt|;
 block|{
+name|USES_VOP_INACTIVE
+expr_stmt|;
+name|USES_VOP_LOCK
+expr_stmt|;
 name|struct
 name|vnodeops
 modifier|*
@@ -3614,8 +3636,7 @@ name|vp
 operator|->
 name|v_op
 operator|=
-operator|&
-name|dead_vnodeops
+name|dead_vnodeop_p
 expr_stmt|;
 name|vp
 operator|->
@@ -3624,6 +3645,7 @@ operator|=
 name|VT_NON
 expr_stmt|;
 comment|/* 	 * If purging an active vnode, it must be unlocked, closed, 	 * and deactivated before being reclaimed. 	 */
+comment|/* NEEDSWORK: Following line has potential by-hand ops invocation */
 operator|(
 operator|*
 operator|(
@@ -3647,6 +3669,7 @@ name|flags
 operator|&
 name|DOCLOSE
 condition|)
+comment|/* NEEDSWORK: Following line has potential by-hand ops invocation */
 operator|(
 operator|*
 operator|(
@@ -3665,6 +3688,7 @@ operator|,
 name|p
 operator|)
 expr_stmt|;
+comment|/* NEEDSWORK: Following line has potential by-hand ops invocation */
 operator|(
 operator|*
 operator|(
@@ -3681,6 +3705,7 @@ operator|)
 expr_stmt|;
 block|}
 comment|/* 	 * Reclaim the vnode. 	 */
+comment|/* NEEDSWORK: Following line has potential by-hand ops invocation */
 if|if
 condition|(
 operator|(
@@ -4554,6 +4579,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_PRINT
+expr_stmt|;
 name|char
 name|buf
 index|[
@@ -4759,6 +4786,8 @@ end_macro
 
 begin_block
 block|{
+name|USES_VOP_ISLOCKED
+expr_stmt|;
 specifier|register
 name|struct
 name|mount

@@ -139,262 +139,762 @@ begin_comment
 comment|/* Global vfs data structures for lfs. */
 end_comment
 
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|lfs_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
-name|vnodeops
-name|lfs_vnodeops
+name|vnodeopv_entry_desc
+name|lfs_vnodeop_entries
+index|[]
 init|=
 block|{
+block|{
+operator|&
+name|vop_default_desc
+block|,
+name|vn_default_error
+block|}
+block|,
+block|{
+operator|&
+name|vop_lookup_desc
+block|,
 name|ufs_lookup
+block|}
 block|,
 comment|/* lookup */
+block|{
+operator|&
+name|vop_create_desc
+block|,
 name|ufs_create
+block|}
 block|,
 comment|/* create */
+block|{
+operator|&
+name|vop_mknod_desc
+block|,
 name|ufs_mknod
+block|}
 block|,
 comment|/* mknod */
+block|{
+operator|&
+name|vop_open_desc
+block|,
 name|ufs_open
+block|}
 block|,
 comment|/* open */
+block|{
+operator|&
+name|vop_close_desc
+block|,
 name|ufs_close
+block|}
 block|,
 comment|/* close */
+block|{
+operator|&
+name|vop_access_desc
+block|,
 name|ufs_access
+block|}
 block|,
 comment|/* access */
+block|{
+operator|&
+name|vop_getattr_desc
+block|,
 name|ufs_getattr
+block|}
 block|,
 comment|/* getattr */
+block|{
+operator|&
+name|vop_setattr_desc
+block|,
 name|ufs_setattr
+block|}
 block|,
 comment|/* setattr */
+block|{
+operator|&
+name|vop_read_desc
+block|,
 name|lfs_read
+block|}
 block|,
 comment|/* read */
+block|{
+operator|&
+name|vop_write_desc
+block|,
 name|lfs_write
+block|}
 block|,
 comment|/* write */
+block|{
+operator|&
+name|vop_ioctl_desc
+block|,
 name|ufs_ioctl
+block|}
 block|,
 comment|/* ioctl */
+block|{
+operator|&
+name|vop_select_desc
+block|,
 name|ufs_select
+block|}
 block|,
 comment|/* select */
+block|{
+operator|&
+name|vop_mmap_desc
+block|,
 name|ufs_mmap
+block|}
 block|,
 comment|/* mmap */
+block|{
+operator|&
+name|vop_fsync_desc
+block|,
 name|lfs_fsync
+block|}
 block|,
 comment|/* fsync */
+block|{
+operator|&
+name|vop_seek_desc
+block|,
 name|ufs_seek
+block|}
 block|,
 comment|/* seek */
+block|{
+operator|&
+name|vop_remove_desc
+block|,
 name|ufs_remove
+block|}
 block|,
 comment|/* remove */
+block|{
+operator|&
+name|vop_link_desc
+block|,
 name|ufs_link
+block|}
 block|,
 comment|/* link */
+block|{
+operator|&
+name|vop_rename_desc
+block|,
 name|ufs_rename
+block|}
 block|,
 comment|/* rename */
+block|{
+operator|&
+name|vop_mkdir_desc
+block|,
 name|ufs_mkdir
+block|}
 block|,
 comment|/* mkdir */
+block|{
+operator|&
+name|vop_rmdir_desc
+block|,
 name|ufs_rmdir
+block|}
 block|,
 comment|/* rmdir */
+block|{
+operator|&
+name|vop_symlink_desc
+block|,
 name|ufs_symlink
+block|}
 block|,
 comment|/* symlink */
+block|{
+operator|&
+name|vop_readdir_desc
+block|,
 name|ufs_readdir
+block|}
 block|,
 comment|/* readdir */
+block|{
+operator|&
+name|vop_readlink_desc
+block|,
 name|ufs_readlink
+block|}
 block|,
 comment|/* readlink */
+block|{
+operator|&
+name|vop_abortop_desc
+block|,
 name|ufs_abortop
+block|}
 block|,
 comment|/* abortop */
+block|{
+operator|&
+name|vop_inactive_desc
+block|,
 name|lfs_inactive
+block|}
 block|,
 comment|/* inactive */
+block|{
+operator|&
+name|vop_reclaim_desc
+block|,
 name|ufs_reclaim
+block|}
 block|,
 comment|/* reclaim */
+block|{
+operator|&
+name|vop_lock_desc
+block|,
 name|ufs_lock
+block|}
 block|,
 comment|/* lock */
+block|{
+operator|&
+name|vop_unlock_desc
+block|,
 name|ufs_unlock
+block|}
 block|,
 comment|/* unlock */
+block|{
+operator|&
+name|vop_bmap_desc
+block|,
 name|lfs_bmap
+block|}
 block|,
 comment|/* bmap */
+block|{
+operator|&
+name|vop_strategy_desc
+block|,
 name|ufs_strategy
+block|}
 block|,
 comment|/* strategy */
+block|{
+operator|&
+name|vop_print_desc
+block|,
 name|ufs_print
+block|}
 block|,
 comment|/* print */
+block|{
+operator|&
+name|vop_islocked_desc
+block|,
 name|ufs_islocked
+block|}
 block|,
 comment|/* islocked */
+block|{
+operator|&
+name|vop_advlock_desc
+block|,
 name|ufs_advlock
+block|}
 block|,
 comment|/* advlock */
+block|{
+operator|&
+name|vop_blkatoff_desc
+block|,
 name|lfs_blkatoff
+block|}
 block|,
 comment|/* blkatoff */
+block|{
+operator|&
+name|vop_vget_desc
+block|,
 name|lfs_vget
+block|}
 block|,
 comment|/* vget */
+block|{
+operator|&
+name|vop_valloc_desc
+block|,
 name|lfs_valloc
+block|}
 block|,
 comment|/* valloc */
+block|{
+operator|&
+name|vop_vfree_desc
+block|,
 name|lfs_vfree
+block|}
 block|,
 comment|/* vfree */
+block|{
+operator|&
+name|vop_truncate_desc
+block|,
 name|lfs_truncate
+block|}
 block|,
 comment|/* truncate */
+block|{
+operator|&
+name|vop_update_desc
+block|,
 name|lfs_update
+block|}
 block|,
 comment|/* update */
+block|{
+operator|&
+name|vop_bwrite_desc
+block|,
 name|lfs_bwrite
+block|}
 block|,
 comment|/* bwrite */
+block|{
+operator|(
+expr|struct
+name|vnodeop_desc
+operator|*
+operator|)
+name|NULL
+block|,
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|vnodeops
-name|lfs_specops
+name|vnodeopv_desc
+name|lfs_vnodeop_opv_desc
 init|=
 block|{
+operator|&
+name|lfs_vnodeop_p
+block|,
+name|lfs_vnodeop_entries
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|lfs_specop_p
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|struct
+name|vnodeopv_entry_desc
+name|lfs_specop_entries
+index|[]
+init|=
+block|{
+block|{
+operator|&
+name|vop_default_desc
+block|,
+name|vn_default_error
+block|}
+block|,
+block|{
+operator|&
+name|vop_lookup_desc
+block|,
 name|spec_lookup
+block|}
 block|,
 comment|/* lookup */
+block|{
+operator|&
+name|vop_create_desc
+block|,
 name|spec_create
+block|}
 block|,
 comment|/* create */
+block|{
+operator|&
+name|vop_mknod_desc
+block|,
 name|spec_mknod
+block|}
 block|,
 comment|/* mknod */
+block|{
+operator|&
+name|vop_open_desc
+block|,
 name|spec_open
+block|}
 block|,
 comment|/* open */
+block|{
+operator|&
+name|vop_close_desc
+block|,
 name|ufsspec_close
+block|}
 block|,
 comment|/* close */
+block|{
+operator|&
+name|vop_access_desc
+block|,
 name|ufs_access
+block|}
 block|,
 comment|/* access */
+block|{
+operator|&
+name|vop_getattr_desc
+block|,
 name|ufs_getattr
+block|}
 block|,
 comment|/* getattr */
+block|{
+operator|&
+name|vop_setattr_desc
+block|,
 name|ufs_setattr
+block|}
 block|,
 comment|/* setattr */
+block|{
+operator|&
+name|vop_read_desc
+block|,
 name|ufsspec_read
+block|}
 block|,
 comment|/* read */
+block|{
+operator|&
+name|vop_write_desc
+block|,
 name|ufsspec_write
+block|}
 block|,
 comment|/* write */
+block|{
+operator|&
+name|vop_ioctl_desc
+block|,
 name|spec_ioctl
+block|}
 block|,
 comment|/* ioctl */
+block|{
+operator|&
+name|vop_select_desc
+block|,
 name|spec_select
+block|}
 block|,
 comment|/* select */
+block|{
+operator|&
+name|vop_mmap_desc
+block|,
 name|spec_mmap
+block|}
 block|,
 comment|/* mmap */
+block|{
+operator|&
+name|vop_fsync_desc
+block|,
 name|spec_fsync
+block|}
 block|,
 comment|/* fsync */
+block|{
+operator|&
+name|vop_seek_desc
+block|,
 name|spec_seek
+block|}
 block|,
 comment|/* seek */
+block|{
+operator|&
+name|vop_remove_desc
+block|,
 name|spec_remove
+block|}
 block|,
 comment|/* remove */
+block|{
+operator|&
+name|vop_link_desc
+block|,
 name|spec_link
+block|}
 block|,
 comment|/* link */
+block|{
+operator|&
+name|vop_rename_desc
+block|,
 name|spec_rename
+block|}
 block|,
 comment|/* rename */
+block|{
+operator|&
+name|vop_mkdir_desc
+block|,
 name|spec_mkdir
+block|}
 block|,
 comment|/* mkdir */
+block|{
+operator|&
+name|vop_rmdir_desc
+block|,
 name|spec_rmdir
+block|}
 block|,
 comment|/* rmdir */
+block|{
+operator|&
+name|vop_symlink_desc
+block|,
 name|spec_symlink
+block|}
 block|,
 comment|/* symlink */
+block|{
+operator|&
+name|vop_readdir_desc
+block|,
 name|spec_readdir
+block|}
 block|,
 comment|/* readdir */
+block|{
+operator|&
+name|vop_readlink_desc
+block|,
 name|spec_readlink
+block|}
 block|,
 comment|/* readlink */
+block|{
+operator|&
+name|vop_abortop_desc
+block|,
 name|spec_abortop
+block|}
 block|,
 comment|/* abortop */
+block|{
+operator|&
+name|vop_inactive_desc
+block|,
 name|lfs_inactive
+block|}
 block|,
 comment|/* inactive */
+block|{
+operator|&
+name|vop_reclaim_desc
+block|,
 name|ufs_reclaim
+block|}
 block|,
 comment|/* reclaim */
+block|{
+operator|&
+name|vop_lock_desc
+block|,
 name|ufs_lock
+block|}
 block|,
 comment|/* lock */
+block|{
+operator|&
+name|vop_unlock_desc
+block|,
 name|ufs_unlock
+block|}
 block|,
 comment|/* unlock */
+block|{
+operator|&
+name|vop_bmap_desc
+block|,
 name|spec_bmap
+block|}
 block|,
 comment|/* bmap */
+block|{
+operator|&
+name|vop_strategy_desc
+block|,
 name|spec_strategy
+block|}
 block|,
 comment|/* strategy */
+block|{
+operator|&
+name|vop_print_desc
+block|,
 name|ufs_print
+block|}
 block|,
 comment|/* print */
+block|{
+operator|&
+name|vop_islocked_desc
+block|,
 name|ufs_islocked
+block|}
 block|,
 comment|/* islocked */
+block|{
+operator|&
+name|vop_advlock_desc
+block|,
 name|spec_advlock
+block|}
 block|,
 comment|/* advlock */
+block|{
+operator|&
+name|vop_blkatoff_desc
+block|,
 name|spec_blkatoff
+block|}
 block|,
 comment|/* blkatoff */
+block|{
+operator|&
+name|vop_vget_desc
+block|,
 name|spec_vget
+block|}
 block|,
 comment|/* vget */
+block|{
+operator|&
+name|vop_valloc_desc
+block|,
 name|spec_valloc
+block|}
 block|,
 comment|/* valloc */
+block|{
+operator|&
+name|vop_vfree_desc
+block|,
 name|spec_vfree
+block|}
 block|,
 comment|/* vfree */
+block|{
+operator|&
+name|vop_truncate_desc
+block|,
 name|spec_truncate
+block|}
 block|,
 comment|/* truncate */
+block|{
+operator|&
+name|vop_update_desc
+block|,
 name|lfs_update
+block|}
 block|,
 comment|/* update */
+block|{
+operator|&
+name|vop_bwrite_desc
+block|,
 name|lfs_bwrite
+block|}
 block|,
 comment|/* bwrite */
+block|{
+operator|(
+expr|struct
+name|vnodeop_desc
+operator|*
+operator|)
+name|NULL
+block|,
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vnodeopv_desc
+name|lfs_specop_opv_desc
+init|=
+block|{
+operator|&
+name|lfs_specop_p
+block|,
+name|lfs_specop_entries
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -405,132 +905,382 @@ directive|ifdef
 name|FIFO
 end_ifdef
 
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|lfs_fifoop_p
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
-name|vnodeops
-name|lfs_fifoops
+name|vnodeopv_entry_desc
+name|lfs_fifoop_entries
+index|[]
 init|=
 block|{
+block|{
+operator|&
+name|vop_default_desc
+block|,
+name|vn_default_error
+block|}
+block|,
+block|{
+operator|&
+name|vop_lookup_desc
+block|,
 name|fifo_lookup
+block|}
 block|,
 comment|/* lookup */
+block|{
+operator|&
+name|vop_create_desc
+block|,
 name|fifo_create
+block|}
 block|,
 comment|/* create */
+block|{
+operator|&
+name|vop_mknod_desc
+block|,
 name|fifo_mknod
+block|}
 block|,
 comment|/* mknod */
+block|{
+operator|&
+name|vop_open_desc
+block|,
 name|fifo_open
+block|}
 block|,
 comment|/* open */
+block|{
+operator|&
+name|vop_close_desc
+block|,
 name|ufsfifo_close
+block|}
 block|,
 comment|/* close */
+block|{
+operator|&
+name|vop_access_desc
+block|,
 name|ufs_access
+block|}
 block|,
 comment|/* access */
+block|{
+operator|&
+name|vop_getattr_desc
+block|,
 name|ufs_getattr
+block|}
 block|,
 comment|/* getattr */
+block|{
+operator|&
+name|vop_setattr_desc
+block|,
 name|ufs_setattr
+block|}
 block|,
 comment|/* setattr */
+block|{
+operator|&
+name|vop_read_desc
+block|,
 name|ufsfifo_read
+block|}
 block|,
 comment|/* read */
+block|{
+operator|&
+name|vop_write_desc
+block|,
 name|ufsfifo_write
+block|}
 block|,
 comment|/* write */
+block|{
+operator|&
+name|vop_ioctl_desc
+block|,
 name|fifo_ioctl
+block|}
 block|,
 comment|/* ioctl */
+block|{
+operator|&
+name|vop_select_desc
+block|,
 name|fifo_select
+block|}
 block|,
 comment|/* select */
+block|{
+operator|&
+name|vop_mmap_desc
+block|,
 name|fifo_mmap
+block|}
 block|,
 comment|/* mmap */
+block|{
+operator|&
+name|vop_fsync_desc
+block|,
 name|fifo_fsync
+block|}
 block|,
 comment|/* fsync */
+block|{
+operator|&
+name|vop_seek_desc
+block|,
 name|fifo_seek
+block|}
 block|,
 comment|/* seek */
+block|{
+operator|&
+name|vop_remove_desc
+block|,
 name|fifo_remove
+block|}
 block|,
 comment|/* remove */
+block|{
+operator|&
+name|vop_link_desc
+block|,
 name|fifo_link
+block|}
 block|,
 comment|/* link */
+block|{
+operator|&
+name|vop_rename_desc
+block|,
 name|fifo_rename
+block|}
 block|,
 comment|/* rename */
+block|{
+operator|&
+name|vop_mkdir_desc
+block|,
 name|fifo_mkdir
+block|}
 block|,
 comment|/* mkdir */
+block|{
+operator|&
+name|vop_rmdir_desc
+block|,
 name|fifo_rmdir
+block|}
 block|,
 comment|/* rmdir */
+block|{
+operator|&
+name|vop_symlink_desc
+block|,
 name|fifo_symlink
+block|}
 block|,
 comment|/* symlink */
+block|{
+operator|&
+name|vop_readdir_desc
+block|,
 name|fifo_readdir
+block|}
 block|,
 comment|/* readdir */
+block|{
+operator|&
+name|vop_readlink_desc
+block|,
 name|fifo_readlink
+block|}
 block|,
 comment|/* readlink */
+block|{
+operator|&
+name|vop_abortop_desc
+block|,
 name|fifo_abortop
+block|}
 block|,
 comment|/* abortop */
+block|{
+operator|&
+name|vop_inactive_desc
+block|,
 name|lfs_inactive
+block|}
 block|,
 comment|/* inactive */
+block|{
+operator|&
+name|vop_reclaim_desc
+block|,
 name|ufs_reclaim
+block|}
 block|,
 comment|/* reclaim */
+block|{
+operator|&
+name|vop_lock_desc
+block|,
 name|ufs_lock
+block|}
 block|,
 comment|/* lock */
+block|{
+operator|&
+name|vop_unlock_desc
+block|,
 name|ufs_unlock
+block|}
 block|,
 comment|/* unlock */
+block|{
+operator|&
+name|vop_bmap_desc
+block|,
 name|fifo_bmap
+block|}
 block|,
 comment|/* bmap */
+block|{
+operator|&
+name|vop_strategy_desc
+block|,
 name|fifo_strategy
+block|}
 block|,
 comment|/* strategy */
+block|{
+operator|&
+name|vop_print_desc
+block|,
 name|ufs_print
+block|}
 block|,
 comment|/* print */
+block|{
+operator|&
+name|vop_islocked_desc
+block|,
 name|ufs_islocked
+block|}
 block|,
 comment|/* islocked */
+block|{
+operator|&
+name|vop_advlock_desc
+block|,
 name|fifo_advlock
+block|}
 block|,
 comment|/* advlock */
+block|{
+operator|&
+name|vop_blkatoff_desc
+block|,
 name|fifo_blkatoff
+block|}
 block|,
 comment|/* blkatoff */
+block|{
+operator|&
+name|vop_vget_desc
+block|,
 name|fifo_vget
+block|}
 block|,
 comment|/* vget */
+block|{
+operator|&
+name|vop_valloc_desc
+block|,
 name|fifo_valloc
+block|}
 block|,
 comment|/* valloc */
+block|{
+operator|&
+name|vop_vfree_desc
+block|,
 name|fifo_vfree
+block|}
 block|,
 comment|/* vfree */
+block|{
+operator|&
+name|vop_truncate_desc
+block|,
 name|fifo_truncate
+block|}
 block|,
 comment|/* truncate */
+block|{
+operator|&
+name|vop_update_desc
+block|,
 name|lfs_update
+block|}
 block|,
 comment|/* update */
+block|{
+operator|&
+name|vop_bwrite_desc
+block|,
 name|lfs_bwrite
+block|}
 block|,
 comment|/* bwrite */
+block|{
+operator|(
+expr|struct
+name|vnodeop_desc
+operator|*
+operator|)
+name|NULL
+block|,
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vnodeopv_desc
+name|lfs_fifoop_opv_desc
+init|=
+block|{
+operator|&
+name|lfs_fifoop_p
+block|,
+name|lfs_fifoop_entries
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -555,46 +1305,45 @@ end_comment
 begin_macro
 name|lfs_read
 argument_list|(
-argument|vp
-argument_list|,
-argument|uio
-argument_list|,
-argument|ioflag
-argument_list|,
-argument|cred
+argument|ap
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|struct
-name|vnode
+name|vop_read_args
 modifier|*
+name|ap
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
 name|vp
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_vp)
+end_define
 
-begin_decl_stmt
-specifier|register
-name|struct
+begin_define
+define|#
+directive|define
 name|uio
-modifier|*
-name|uio
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_uio)
+end_define
 
-begin_decl_stmt
-name|int
+begin_define
+define|#
+directive|define
 name|ioflag
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_ioflag)
+end_define
 
-begin_decl_stmt
-name|struct
-name|ucred
-modifier|*
+begin_define
+define|#
+directive|define
 name|cred
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_cred)
+end_define
 
 begin_block
 block|{
@@ -1010,53 +1759,83 @@ return|;
 block|}
 end_block
 
+begin_undef
+undef|#
+directive|undef
+name|vp
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|uio
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ioflag
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|cred
+end_undef
+
 begin_comment
 comment|/*  * Vnode op for writing.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|lfs_write
 argument_list|(
-name|vp
-argument_list|,
-name|uio
-argument_list|,
-name|ioflag
-argument_list|,
-name|cred
+argument|ap
 argument_list|)
-specifier|register
-expr|struct
-name|vnode
-operator|*
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vop_write_args
+modifier|*
+name|ap
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
 name|vp
-expr_stmt|;
-end_expr_stmt
+value|(ap->a_vp)
+end_define
 
-begin_decl_stmt
-name|struct
+begin_define
+define|#
+directive|define
 name|uio
-modifier|*
-name|uio
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_uio)
+end_define
 
-begin_decl_stmt
-name|int
+begin_define
+define|#
+directive|define
 name|ioflag
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_ioflag)
+end_define
 
-begin_decl_stmt
-name|struct
-name|ucred
-modifier|*
+begin_define
+define|#
+directive|define
 name|cred
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_cred)
+end_define
 
 begin_block
 block|{
+name|USES_VOP_TRUNCATE
+expr_stmt|;
+name|USES_VOP_UPDATE
+expr_stmt|;
 name|struct
 name|proc
 modifier|*
@@ -1565,7 +2344,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|lfs_truncate
+name|VOP_TRUNCATE
 argument_list|(
 name|vp
 argument_list|,
@@ -1608,7 +2387,7 @@ operator|)
 condition|)
 name|error
 operator|=
-name|lfs_update
+name|VOP_UPDATE
 argument_list|(
 name|vp
 argument_list|,
@@ -1629,6 +2408,30 @@ return|;
 block|}
 end_block
 
+begin_undef
+undef|#
+directive|undef
+name|vp
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|uio
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ioflag
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|cred
+end_undef
+
 begin_comment
 comment|/*  * Synch an open file.  */
 end_comment
@@ -1640,56 +2443,57 @@ end_comment
 begin_macro
 name|lfs_fsync
 argument_list|(
-argument|vp
-argument_list|,
-argument|fflags
-argument_list|,
-argument|cred
-argument_list|,
-argument|waitfor
-argument_list|,
-argument|p
+argument|ap
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|struct
-name|vnode
+name|vop_fsync_args
 modifier|*
+name|ap
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
 name|vp
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_vp)
+end_define
 
-begin_decl_stmt
-name|int
+begin_define
+define|#
+directive|define
 name|fflags
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_fflags)
+end_define
 
-begin_decl_stmt
-name|struct
-name|ucred
-modifier|*
+begin_define
+define|#
+directive|define
 name|cred
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_cred)
+end_define
 
-begin_decl_stmt
-name|int
+begin_define
+define|#
+directive|define
 name|waitfor
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_waitfor)
+end_define
 
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
+begin_define
+define|#
+directive|define
 name|p
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_p)
+end_define
 
 begin_block
 block|{
+name|USES_VOP_UPDATE
+expr_stmt|;
 name|struct
 name|inode
 modifier|*
@@ -1726,7 +2530,7 @@ name|ICHG
 expr_stmt|;
 return|return
 operator|(
-name|lfs_update
+name|VOP_UPDATE
 argument_list|(
 name|vp
 argument_list|,
@@ -1745,6 +2549,36 @@ return|;
 block|}
 end_block
 
+begin_undef
+undef|#
+directive|undef
+name|vp
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|fflags
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|cred
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|waitfor
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|p
+end_undef
+
 begin_comment
 comment|/*  * Last reference to an inode, write the inode out and if necessary,  * truncate and deallocate the file.  */
 end_comment
@@ -1753,21 +2587,28 @@ begin_function
 name|int
 name|lfs_inactive
 parameter_list|(
-name|vp
-parameter_list|,
-name|p
+name|ap
 parameter_list|)
 name|struct
-name|vnode
+name|vop_inactive_args
 modifier|*
+name|ap
+decl_stmt|;
+define|#
+directive|define
 name|vp
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
+value|(ap->a_vp)
+define|#
+directive|define
 name|p
-decl_stmt|;
+value|(ap->a_p)
 block|{
+name|USES_VOP_TRUNCATE
+expr_stmt|;
+name|USES_VOP_UPDATE
+expr_stmt|;
+name|USES_VOP_VFREE
+expr_stmt|;
 specifier|extern
 name|int
 name|prtactive
@@ -1910,7 +2751,7 @@ endif|#
 directive|endif
 name|error
 operator|=
-name|lfs_truncate
+name|VOP_TRUNCATE
 argument_list|(
 name|vp
 argument_list|,
@@ -1950,7 +2791,7 @@ name|IUPD
 operator||
 name|ICHG
 expr_stmt|;
-name|lfs_vfree
+name|VOP_VFREE
 argument_list|(
 name|vp
 argument_list|,
@@ -1978,7 +2819,7 @@ operator||
 name|IMOD
 operator|)
 condition|)
-name|lfs_update
+name|VOP_UPDATE
 argument_list|(
 name|vp
 argument_list|,
@@ -2029,6 +2870,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|vp
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|p
+end_undef
 
 end_unit
 

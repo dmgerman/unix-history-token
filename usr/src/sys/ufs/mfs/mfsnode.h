@@ -77,224 +77,224 @@ begin_define
 define|#
 directive|define
 name|mfs_lookup
-value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp))) mfs_badop)
+value|((int (*) __P((struct  vop_lookup_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_create
-value|((int (*) __P(( \ 		struct vnode *dvp, \  		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap))) mfs_badop)
+value|((int (*) __P((struct  vop_create_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_mknod
-value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap))) mfs_badop)
+value|((int (*) __P((struct  vop_mknod_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_access
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		int mode, \ 		struct ucred *cred, \ 		struct proc *p))) mfs_badop)
+value|((int (*) __P((struct  vop_access_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_getattr
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct vattr *vap, \ 		struct ucred *cred, \ 		struct proc *p))) mfs_badop)
+value|((int (*) __P((struct  vop_getattr_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_setattr
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct vattr *vap, \ 		struct ucred *cred, \ 		struct proc *p))) mfs_badop)
+value|((int (*) __P((struct  vop_setattr_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_read
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct uio *uio, \ 		int ioflag, \ 		struct ucred *cred))) mfs_badop)
+value|((int (*) __P((struct  vop_read_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_write
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct uio *uio, \ 		int ioflag, \ 		struct ucred *cred))) mfs_badop)
+value|((int (*) __P((struct  vop_write_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_select
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		int which, \ 		int fflags, \ 		struct ucred *cred, \ 		struct proc *p))) mfs_badop)
+value|((int (*) __P((struct  vop_select_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_mmap
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		int fflags, \ 		struct ucred *cred, \ 		struct proc *p))) mfs_badop)
+value|((int (*) __P((struct  vop_mmap_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_fsync
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		int fflags, \ 		struct ucred *cred, \ 		int waitfor, \ 		struct proc *p))) mfs_badop)
+value|((int (*) __P((struct  vop_fsync_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_seek
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		off_t oldoff, \ 		off_t newoff, \ 		struct ucred *cred))) mfs_badop)
+value|((int (*) __P((struct  vop_seek_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_remove
-value|((int (*) __P(( \ 		struct vnode *dvp, \ 	        struct vnode *vp, \ 		struct componentname *cnp))) mfs_badop)
+value|((int (*) __P((struct  vop_remove_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_link
-value|((int (*) __P(( \ 		register struct vnode *vp, \ 		struct vnode *tdvp, \ 		struct componentname *cnp))) mfs_badop)
+value|((int (*) __P((struct  vop_link_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_rename
-value|((int (*) __P(( \ 		struct vnode *fdvp, \ 	        struct vnode *fvp, \ 		struct componentname *fcnp, \ 		struct vnode *tdvp, \ 		struct vnode *tvp, \ 		struct componentname *tcnp))) mfs_badop)
+value|((int (*) __P((struct  vop_rename_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_mkdir
-value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap))) mfs_badop)
+value|((int (*) __P((struct  vop_mkdir_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_rmdir
-value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode *vp, \ 		struct componentname *cnp))) mfs_badop)
+value|((int (*) __P((struct  vop_rmdir_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_symlink
-value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap, \ 		char *target))) mfs_badop)
+value|((int (*) __P((struct  vop_symlink_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_readdir
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct uio *uio, \ 		struct ucred *cred, \ 		int *eofflagp))) mfs_badop)
+value|((int (*) __P((struct  vop_readdir_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_readlink
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct uio *uio, \ 		struct ucred *cred))) mfs_badop)
+value|((int (*) __P((struct  vop_readlink_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_abortop
-value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct componentname *cnp))) mfs_badop)
+value|((int (*) __P((struct  vop_abortop_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_lock
-value|((int (*) __P(( \ 		struct vnode *vp))) nullop)
+value|((int (*) __P((struct  vop_lock_args *)))nullop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_unlock
-value|((int (*) __P(( \ 		struct vnode *vp))) nullop)
+value|((int (*) __P((struct  vop_unlock_args *)))nullop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_islocked
-value|((int (*) __P(( \ 		struct vnode *vp))) nullop)
+value|((int (*) __P((struct  vop_islocked_args *)))nullop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_advlock
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		caddr_t id, \ 		int op, \ 		struct flock *fl, \ 		int flags))) mfs_badop)
+value|((int (*) __P((struct  vop_advlock_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_blkatoff
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		off_t offset, \ 		char **res, \ 		struct buf **bpp))) mfs_badop)
+value|((int (*) __P((struct  vop_blkatoff_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_vget
-value|((int (*) __P(( \ 		struct mount *mp, \ 		ino_t ino, \ 		struct vnode **vpp))) mfs_badop)
+value|((int (*) __P((struct  vop_vget_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_valloc
-value|((int (*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) mfs_badop)
+value|((int (*) __P((struct  vop_valloc_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_vfree
-value|((void (*) __P(( \ 		struct vnode *pvp, \ 		ino_t ino, \ 		int mode))) mfs_badop)
+value|((int (*) __P((struct  vop_vfree_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_truncate
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		off_t length, \ 		int flags, \ 		struct ucred *cred))) mfs_badop)
+value|((int (*) __P((struct  vop_truncate_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_update
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct timeval *ta, \ 		struct timeval *tm, \ 		int waitfor))) nullop)
+value|((int (*) __P((struct  vop_update_args *)))nullop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_bwrite
-value|((int (*) __P(( \ 		struct buf *bp))) nullop)
+value|((int (*) __P((struct  vop_bwrite_args *)))nullop)
 end_define
 
 end_unit

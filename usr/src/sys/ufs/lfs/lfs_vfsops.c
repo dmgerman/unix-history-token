@@ -922,6 +922,14 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|USES_VOP_CLOSE
+expr_stmt|;
+name|USES_VOP_IOCTL
+expr_stmt|;
+name|USES_VOP_OPEN
+expr_stmt|;
+name|USES_VOP_VGET
+expr_stmt|;
 specifier|extern
 name|struct
 name|vnode
@@ -1430,7 +1438,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|lfs_vget
+name|LFS_VGET
 argument_list|(
 name|mp
 argument_list|,
@@ -1597,6 +1605,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_CLOSE
+expr_stmt|;
 specifier|extern
 name|int
 name|doforce
@@ -2176,6 +2186,8 @@ modifier|*
 name|vpp
 decl_stmt|;
 block|{
+name|USES_VOP_VGET
+expr_stmt|;
 specifier|register
 name|struct
 name|inode
@@ -2222,7 +2234,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|lfs_vget
+name|LFS_VGET
 argument_list|(
 name|mp
 argument_list|,

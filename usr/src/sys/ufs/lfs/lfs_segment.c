@@ -874,6 +874,8 @@ name|do_ckp
 decl_stmt|;
 comment|/* Do a checkpoint. */
 block|{
+name|USES_VOP_ISLOCKED
+expr_stmt|;
 name|struct
 name|inode
 modifier|*
@@ -2517,6 +2519,8 @@ name|int
 name|nblocks
 decl_stmt|;
 block|{
+name|USES_VOP_BWRITE
+expr_stmt|;
 name|SEGUSE
 modifier|*
 name|sup
@@ -2753,7 +2757,7 @@ index|]
 operator|=
 name|off
 expr_stmt|;
-name|lfs_bwrite
+name|VOP_BWRITE
 argument_list|(
 name|bp
 argument_list|)

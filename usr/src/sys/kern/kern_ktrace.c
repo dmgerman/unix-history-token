@@ -1132,6 +1132,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_UNLOCK
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -1973,6 +1975,12 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_LOCK
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
+name|USES_VOP_WRITE
+expr_stmt|;
 name|struct
 name|uio
 name|auio

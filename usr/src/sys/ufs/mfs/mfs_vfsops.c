@@ -142,13 +142,17 @@ begin_comment
 comment|/* used for building internal dev_t */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|struct
-name|vnodeops
-name|mfs_vnodeops
-decl_stmt|;
-end_decl_stmt
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|mfs_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * mfs vfs operations.  */
@@ -303,8 +307,7 @@ name|rootvp
 operator|->
 name|v_op
 operator|=
-operator|&
-name|mfs_vnodeops
+name|mfs_vnodeop_p
 expr_stmt|;
 name|rootvp
 operator|->
@@ -852,8 +855,7 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-operator|&
-name|mfs_vnodeops
+name|mfs_vnodeop_p
 argument_list|,
 operator|&
 name|devvp

@@ -222,14 +222,17 @@ begin_function
 name|int
 name|ufs_reclaim
 parameter_list|(
-name|vp
+name|ap
 parameter_list|)
-specifier|register
 name|struct
-name|vnode
+name|vop_reclaim_args
 modifier|*
-name|vp
+name|ap
 decl_stmt|;
+define|#
+directive|define
+name|vp
+value|(ap->a_vp)
 block|{
 specifier|register
 name|struct
@@ -417,6 +420,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|vp
+end_undef
 
 begin_comment
 comment|/*  * Lock an inode. If its already locked, set the WANT bit and sleep.  */

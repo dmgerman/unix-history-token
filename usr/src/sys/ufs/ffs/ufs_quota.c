@@ -1654,6 +1654,8 @@ name|caddr_t
 name|fname
 decl_stmt|;
 block|{
+name|USES_VOP_UNLOCK
+expr_stmt|;
 specifier|register
 name|struct
 name|ufsmount
@@ -3174,6 +3176,8 @@ modifier|*
 name|mp
 decl_stmt|;
 block|{
+name|USES_VOP_ISLOCKED
+expr_stmt|;
 name|struct
 name|ufsmount
 modifier|*
@@ -3646,6 +3650,12 @@ modifier|*
 name|dqp
 decl_stmt|;
 block|{
+name|USES_VOP_LOCK
+expr_stmt|;
+name|USES_VOP_READ
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 specifier|register
 name|struct
 name|dquot
@@ -4540,6 +4550,12 @@ modifier|*
 name|dq
 decl_stmt|;
 block|{
+name|USES_VOP_LOCK
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
+name|USES_VOP_WRITE
+expr_stmt|;
 name|struct
 name|vnode
 modifier|*

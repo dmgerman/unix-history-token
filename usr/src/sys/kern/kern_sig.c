@@ -4456,6 +4456,12 @@ end_expr_stmt
 
 begin_block
 block|{
+name|USES_VOP_GETATTR
+expr_stmt|;
+name|USES_VOP_SETATTR
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode

@@ -339,6 +339,8 @@ name|vm_prot_t
 name|prot
 decl_stmt|;
 block|{
+name|USES_VOP_GETATTR
+expr_stmt|;
 specifier|register
 name|vm_pager_t
 name|pager
@@ -723,6 +725,8 @@ name|vm_pager_t
 name|pager
 decl_stmt|;
 block|{
+name|USES_VOP_FSYNC
+expr_stmt|;
 specifier|register
 name|vn_pager_t
 name|vnp
@@ -1012,6 +1016,8 @@ name|vm_offset_t
 name|offset
 decl_stmt|;
 block|{
+name|USES_VOP_BMAP
+expr_stmt|;
 specifier|register
 name|vn_pager_t
 name|vnp
@@ -1480,6 +1486,12 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
+name|USES_VOP_ISLOCKED
+expr_stmt|;
+name|USES_VOP_LOCK
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 specifier|register
 name|vm_object_t
 name|object
@@ -1606,6 +1618,10 @@ name|uio_rw
 name|rw
 decl_stmt|;
 block|{
+name|USES_VOP_READ
+expr_stmt|;
+name|USES_VOP_WRITE
+expr_stmt|;
 name|struct
 name|uio
 name|auio

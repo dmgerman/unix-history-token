@@ -5994,6 +5994,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ACCESS
+expr_stmt|;
 name|int
 name|lgroups
 index|[
@@ -8298,6 +8300,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_SETATTR
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -8840,6 +8844,8 @@ modifier|*
 name|ub
 decl_stmt|;
 block|{
+name|USES_VOP_GETATTR
+expr_stmt|;
 name|struct
 name|ohpuxstat
 name|ds

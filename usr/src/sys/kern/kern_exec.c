@@ -274,6 +274,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ACCESS
+expr_stmt|;
+name|USES_VOP_GETATTR
+expr_stmt|;
 specifier|register
 name|struct
 name|ucred

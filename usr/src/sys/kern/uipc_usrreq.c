@@ -1551,6 +1551,12 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ABORTOP
+expr_stmt|;
+name|USES_VOP_CREATE
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 name|struct
 name|sockaddr_un
 modifier|*
@@ -1890,6 +1896,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ACCESS
+expr_stmt|;
 specifier|register
 name|struct
 name|sockaddr_un

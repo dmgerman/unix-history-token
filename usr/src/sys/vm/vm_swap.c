@@ -340,6 +340,8 @@ modifier|*
 name|bp
 decl_stmt|;
 block|{
+name|USES_VOP_STRATEGY
+expr_stmt|;
 name|int
 name|sz
 decl_stmt|,
@@ -852,6 +854,8 @@ name|int
 name|index
 decl_stmt|;
 block|{
+name|USES_VOP_OPEN
+expr_stmt|;
 specifier|register
 name|struct
 name|swdevt

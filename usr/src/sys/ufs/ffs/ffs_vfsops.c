@@ -1015,6 +1015,12 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|USES_VOP_CLOSE
+expr_stmt|;
+name|USES_VOP_IOCTL
+expr_stmt|;
+name|USES_VOP_OPEN
+expr_stmt|;
 specifier|register
 name|struct
 name|ufsmount
@@ -2046,6 +2052,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_CLOSE
+expr_stmt|;
 specifier|extern
 name|int
 name|doforce
@@ -2493,6 +2501,10 @@ name|int
 name|waitfor
 decl_stmt|;
 block|{
+name|USES_VOP_ISLOCKED
+expr_stmt|;
+name|USES_VOP_UPDATE
+expr_stmt|;
 specifier|extern
 name|int
 name|syncprt
@@ -2723,7 +2735,7 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|ffs_update
+name|VOP_UPDATE
 argument_list|(
 name|vp
 argument_list|,
@@ -2812,6 +2824,8 @@ modifier|*
 name|vpp
 decl_stmt|;
 block|{
+name|USES_VOP_VGET
+expr_stmt|;
 specifier|register
 name|struct
 name|inode
@@ -2884,7 +2898,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|ffs_vget
+name|FFS_VGET
 argument_list|(
 name|mp
 argument_list|,

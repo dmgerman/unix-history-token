@@ -214,16 +214,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|componentname
+name|vop_abortop_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -232,22 +232,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
-operator|*
-operator|,
-expr|struct
-name|proc
+name|vop_access_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -256,22 +250,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_advlock_args
 operator|*
-operator|,
-name|caddr_t
-operator|,
-name|int
-operator|,
-expr|struct
-name|flock
-operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|void
@@ -364,22 +352,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
-operator|*
-operator|,
-expr|struct
-name|proc
+name|vop_close_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -388,20 +370,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|*
-operator|,
-expr|struct
-name|componentname
-operator|*
-operator|,
-expr|struct
-name|vattr
+name|vop_create_args
 operator|*
 operator|)
 argument_list|)
@@ -532,19 +501,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|vattr
-operator|*
-operator|,
-expr|struct
-name|ucred
-operator|*
-operator|,
-expr|struct
-name|proc
+name|vop_getattr_args
 operator|*
 operator|)
 argument_list|)
@@ -626,21 +583,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-name|int
-operator|,
-name|caddr_t
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
-operator|*
-operator|,
-expr|struct
-name|proc
+name|vop_ioctl_args
 operator|*
 operator|)
 argument_list|)
@@ -668,12 +611,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_islocked_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|void
@@ -696,20 +643,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|componentname
+name|vop_link_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -718,12 +661,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_lock_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -732,21 +679,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|*
-operator|,
-expr|struct
-name|componentname
+name|vop_lookup_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -781,20 +723,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|*
-operator|,
-expr|struct
-name|componentname
-operator|*
-operator|,
-expr|struct
-name|vattr
+name|vop_mkdir_args
 operator|*
 operator|)
 argument_list|)
@@ -808,20 +737,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|*
-operator|,
-expr|struct
-name|componentname
-operator|*
-operator|,
-expr|struct
-name|vattr
+name|vop_mknod_args
 operator|*
 operator|)
 argument_list|)
@@ -835,22 +751,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
-operator|*
-operator|,
-expr|struct
-name|proc
+name|vop_mmap_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -873,22 +783,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
-operator|*
-operator|,
-expr|struct
-name|proc
+name|vop_open_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -897,12 +801,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_print_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -911,23 +819,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|uio
-operator|*
-operator|,
-expr|struct
-name|ucred
-operator|*
-operator|,
-name|int
+name|vop_readdir_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -936,20 +837,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|uio
-operator|*
-operator|,
-expr|struct
-name|ucred
+name|vop_readlink_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -958,12 +855,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_reclaim_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -972,20 +873,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|componentname
+name|vop_remove_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -994,27 +891,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|componentname
-operator|*
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|componentname
+name|vop_rename_args
 operator|*
 operator|)
 argument_list|)
@@ -1028,20 +905,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|componentname
+name|vop_rmdir_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1050,20 +923,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-name|off_t
-operator|,
-name|off_t
-operator|,
-expr|struct
-name|ucred
+name|vop_seek_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1072,19 +941,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
-operator|*
-operator|,
-expr|struct
-name|proc
+name|vop_select_args
 operator|*
 operator|)
 argument_list|)
@@ -1098,19 +955,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|vattr
-operator|*
-operator|,
-expr|struct
-name|ucred
-operator|*
-operator|,
-expr|struct
-name|proc
+name|vop_setattr_args
 operator|*
 operator|)
 argument_list|)
@@ -1144,12 +989,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|buf
+name|vop_strategy_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1158,23 +1007,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|*
-operator|,
-expr|struct
-name|componentname
-operator|*
-operator|,
-expr|struct
-name|vattr
-operator|*
-operator|,
-name|char
+name|vop_symlink_args
 operator|*
 operator|)
 argument_list|)
@@ -1188,12 +1021,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|vop_unlock_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1235,17 +1072,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
-operator|*
-operator|,
-expr|struct
-name|proc
+name|vop_close_args
 operator|*
 operator|)
 argument_list|)
@@ -1259,22 +1086,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|uio
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
+name|vop_read_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1283,22 +1104,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|uio
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
+name|vop_write_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -1313,22 +1128,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|uio
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
+name|vop_read_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1337,22 +1146,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|uio
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
+name|vop_write_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1361,22 +1164,16 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|ucred
-operator|*
-operator|,
-expr|struct
-name|proc
+name|vop_close_args
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_endif
 endif|#

@@ -362,6 +362,8 @@ end_expr_stmt
 
 begin_block
 block|{
+name|USES_VOP_BMAP
+expr_stmt|;
 name|int
 name|unit
 init|=
@@ -851,6 +853,8 @@ end_macro
 
 begin_block
 block|{
+name|USES_VOP_STRATEGY
+expr_stmt|;
 specifier|register
 name|struct
 name|vn_softc
@@ -1401,6 +1405,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_GETATTR
+expr_stmt|;
+name|USES_VOP_UNLOCK
+expr_stmt|;
 name|int
 name|unit
 init|=
@@ -1828,6 +1836,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_READ
+expr_stmt|;
 name|struct
 name|uio
 name|auio
@@ -1965,23 +1975,30 @@ end_decl_stmt
 begin_block
 block|{
 specifier|extern
-name|struct
-name|vnodeops
-name|ufs_vnodeops
-decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|ufs_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
 specifier|extern
-name|struct
-name|vnodeops
-name|nfsv2_vnodeops
-decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|nfsv2_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|vp
 operator|->
 name|v_op
 operator|==
-operator|&
-name|nfsv2_vnodeops
+name|nfsv2_vnodeop_p
 condition|)
 name|vn
 operator|->
@@ -2078,6 +2095,8 @@ end_expr_stmt
 
 begin_block
 block|{
+name|USES_VOP_FSYNC
+expr_stmt|;
 specifier|register
 name|struct
 name|vnode

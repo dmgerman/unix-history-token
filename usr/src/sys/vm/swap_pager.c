@@ -2131,6 +2131,8 @@ name|int
 name|flags
 decl_stmt|;
 block|{
+name|USES_VOP_STRATEGY
+expr_stmt|;
 specifier|register
 name|struct
 name|buf

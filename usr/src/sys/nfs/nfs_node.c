@@ -424,10 +424,14 @@ modifier|*
 name|vp
 decl_stmt|;
 specifier|extern
-name|struct
-name|vnodeops
-name|nfsv2_vnodeops
-decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|nfsv2_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
 name|struct
 name|vnode
 modifier|*
@@ -545,8 +549,7 @@ name|VT_NFS
 argument_list|,
 name|mntp
 argument_list|,
-operator|&
-name|nfsv2_vnodeops
+name|nfsv2_vnodeop_p
 argument_list|,
 operator|&
 name|nvp
@@ -728,27 +731,31 @@ end_block
 begin_macro
 name|nfs_inactive
 argument_list|(
-argument|vp
-argument_list|,
-argument|p
+argument|ap
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|struct
-name|vnode
+name|vop_inactive_args
 modifier|*
-name|vp
+name|ap
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
+begin_define
+define|#
+directive|define
+name|vp
+value|(ap->a_vp)
+end_define
+
+begin_define
+define|#
+directive|define
 name|p
-decl_stmt|;
-end_decl_stmt
+value|(ap->a_p)
+end_define
 
 begin_block
 block|{
@@ -866,22 +873,43 @@ return|;
 block|}
 end_block
 
+begin_undef
+undef|#
+directive|undef
+name|vp
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|p
+end_undef
+
 begin_comment
 comment|/*  * Reclaim an nfsnode so that it can be used for other purposes.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|nfs_reclaim
 argument_list|(
-name|vp
+argument|ap
 argument_list|)
-specifier|register
-expr|struct
-name|vnode
-operator|*
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vop_reclaim_args
+modifier|*
+name|ap
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
 name|vp
-expr_stmt|;
-end_expr_stmt
+value|(ap->a_vp)
+end_define
 
 begin_block
 block|{
@@ -1049,6 +1077,12 @@ return|;
 block|}
 end_block
 
+begin_undef
+undef|#
+directive|undef
+name|vp
+end_undef
+
 begin_comment
 comment|/*  * Lock an nfsnode  */
 end_comment
@@ -1056,17 +1090,24 @@ end_comment
 begin_macro
 name|nfs_lock
 argument_list|(
-argument|vp
+argument|ap
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|struct
-name|vnode
+name|vop_lock_args
 modifier|*
-name|vp
+name|ap
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|vp
+value|(ap->a_vp)
+end_define
 
 begin_block
 block|{
@@ -1077,6 +1118,12 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_undef
+undef|#
+directive|undef
+name|vp
+end_undef
 
 begin_comment
 comment|/*  * Unlock an nfsnode  */
@@ -1085,17 +1132,24 @@ end_comment
 begin_macro
 name|nfs_unlock
 argument_list|(
-argument|vp
+argument|ap
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|struct
-name|vnode
+name|vop_unlock_args
 modifier|*
-name|vp
+name|ap
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|vp
+value|(ap->a_vp)
+end_define
 
 begin_block
 block|{
@@ -1106,6 +1160,12 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_undef
+undef|#
+directive|undef
+name|vp
+end_undef
 
 begin_comment
 comment|/*  * Check for a locked nfsnode  */
@@ -1114,17 +1174,24 @@ end_comment
 begin_macro
 name|nfs_islocked
 argument_list|(
-argument|vp
+argument|ap
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|struct
-name|vnode
+name|vop_islocked_args
 modifier|*
-name|vp
+name|ap
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|vp
+value|(ap->a_vp)
+end_define
 
 begin_block
 block|{
@@ -1135,6 +1202,12 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_undef
+undef|#
+directive|undef
+name|vp
+end_undef
 
 begin_comment
 comment|/*  * Nfs abort op, called after namei() when a CREATE/DELETE isn't actually  * done. Currently nothing to do.  */
@@ -1148,20 +1221,21 @@ begin_function
 name|int
 name|nfs_abortop
 parameter_list|(
-name|dvp
-parameter_list|,
-name|cnp
+name|ap
 parameter_list|)
 name|struct
-name|vnode
+name|vop_abortop_args
 modifier|*
+name|ap
+decl_stmt|;
+define|#
+directive|define
 name|dvp
-decl_stmt|;
-name|struct
-name|componentname
-modifier|*
+value|(ap->a_dvp)
+define|#
+directive|define
 name|cnp
-decl_stmt|;
+value|(ap->a_cnp)
 block|{
 if|if
 condition|(
@@ -1195,6 +1269,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|dvp
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|cnp
+end_undef
 
 end_unit
 

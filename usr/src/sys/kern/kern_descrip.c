@@ -732,6 +732,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ADVLOCK
+expr_stmt|;
 specifier|register
 name|struct
 name|filedesc
@@ -3645,6 +3647,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ADVLOCK
+expr_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -3926,6 +3930,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_ADVLOCK
+expr_stmt|;
 specifier|register
 name|struct
 name|filedesc
@@ -4211,6 +4217,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_OPEN
+expr_stmt|;
 comment|/* 	 * XXX Kludge: set curproc->p_dupfd to contain the value of the 	 * the file descriptor being sought for duplication. The error  	 * return ensures that the vnode for this device will be released 	 * by vn_open. Open will detect this special error and take the 	 * actions in dupfdopen below. Other callers of vn_open or VOP_OPEN 	 * will simply report the error. 	 */
 name|p
 operator|->
