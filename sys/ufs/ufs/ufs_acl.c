@@ -927,6 +927,8 @@ name|a_aclp
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 break|break;
 case|case
@@ -1048,6 +1050,8 @@ name|EPERM
 operator|)
 return|;
 block|}
+break|break;
+default|default:
 break|break;
 block|}
 break|break;
