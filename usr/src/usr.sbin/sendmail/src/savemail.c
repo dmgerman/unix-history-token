@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.57 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.58 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3866,13 +3866,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bitset
+argument_list|(
+name|EF_HAS_DF
+argument_list|,
 name|e
 operator|->
 name|e_parent
 operator|->
-name|e_df
-operator|!=
-name|NULL
+name|e_flags
+argument_list|)
 condition|)
 block|{
 name|sendbody

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.104 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.105 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.104		%G%"
+literal|"@(#)sendmail.h	8.105		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2048,11 +2048,6 @@ modifier|*
 name|e_bodytype
 decl_stmt|;
 comment|/* type of message body */
-name|char
-modifier|*
-name|e_df
-decl_stmt|;
-comment|/* location of temp file */
 name|FILE
 modifier|*
 name|e_dfp
@@ -2367,6 +2362,17 @@ end_define
 
 begin_comment
 comment|/* RCPT command had RET argument */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_HAS_DF
+value|0x0200000
+end_define
+
+begin_comment
+comment|/* set when df file is instantiated */
 end_comment
 
 begin_decl_stmt

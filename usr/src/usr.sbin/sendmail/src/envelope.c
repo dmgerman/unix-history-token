@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.53 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.54 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -485,12 +485,6 @@ expr_stmt|;
 comment|/* see if a notification is needed */
 if|if
 condition|(
-name|e
-operator|->
-name|e_df
-operator|!=
-name|NULL
-operator|&&
 name|bitset
 argument_list|(
 name|QBADADDR
@@ -1412,19 +1406,14 @@ operator|->
 name|e_flags
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|e
-operator|->
-name|e_df
-operator|!=
-name|NULL
-condition|)
 name|xunlink
 argument_list|(
+name|queuename
+argument_list|(
 name|e
-operator|->
-name|e_df
+argument_list|,
+literal|'d'
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|xunlink
@@ -1534,11 +1523,11 @@ name|e
 operator|->
 name|e_dfp
 argument_list|,
-literal|"dropenvelope"
+literal|"dropenvelope df"
 argument_list|,
 name|e
 operator|->
-name|e_df
+name|e_id
 argument_list|)
 expr_stmt|;
 name|e
@@ -1551,11 +1540,14 @@ name|e
 operator|->
 name|e_id
 operator|=
+name|NULL
+expr_stmt|;
 name|e
 operator|->
-name|e_df
-operator|=
-name|NULL
+name|e_flags
+operator|&=
+operator|~
+name|EF_HAS_DF
 expr_stmt|;
 block|}
 end_block
@@ -1651,7 +1643,7 @@ literal|"clearenvelope dfp"
 argument_list|,
 name|e
 operator|->
-name|e_df
+name|e_id
 argument_list|)
 expr_stmt|;
 name|e

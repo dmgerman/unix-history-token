@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.30 (Berkeley) %G%"
+literal|"@(#)collect.c	8.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -263,6 +263,12 @@ literal|8
 index|]
 decl_stmt|;
 name|char
+name|dfname
+index|[
+literal|20
+index|]
+decl_stmt|;
+name|char
 name|bufbuf
 index|[
 name|MAXLINE
@@ -326,26 +332,16 @@ name|struct
 name|stat
 name|stbuf
 decl_stmt|;
-name|e
-operator|->
-name|e_df
-operator|=
+name|strcpy
+argument_list|(
+name|dfname
+argument_list|,
 name|queuename
 argument_list|(
 name|e
 argument_list|,
 literal|'d'
 argument_list|)
-expr_stmt|;
-name|e
-operator|->
-name|e_df
-operator|=
-name|newstr
-argument_list|(
-name|e
-operator|->
-name|e_df
 argument_list|)
 expr_stmt|;
 if|if
@@ -355,9 +351,7 @@ name|tf
 operator|=
 name|dfopen
 argument_list|(
-name|e
-operator|->
-name|e_df
+name|dfname
 argument_list|,
 name|O_WRONLY
 operator||
@@ -376,9 +370,7 @@ name|syserr
 argument_list|(
 literal|"Cannot create %s"
 argument_list|,
-name|e
-operator|->
-name|e_df
+name|dfname
 argument_list|)
 expr_stmt|;
 name|e
@@ -441,6 +433,12 @@ operator|->
 name|e_msgsize
 operator|=
 literal|0
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_HAS_DF
 expr_stmt|;
 block|}
 comment|/* 	**  Tell ARPANET to go ahead. 	*/
@@ -1556,9 +1554,7 @@ name|syserr
 argument_list|(
 name|CollectErrorMessage
 argument_list|,
-name|e
-operator|->
-name|e_df
+name|dfname
 argument_list|)
 expr_stmt|;
 name|finis
@@ -2034,9 +2030,7 @@ name|e_dfp
 operator|=
 name|fopen
 argument_list|(
-name|e
-operator|->
-name|e_df
+name|dfname
 argument_list|,
 literal|"r"
 argument_list|)
@@ -2050,9 +2044,7 @@ name|syserr
 argument_list|(
 literal|"Cannot reopen %s"
 argument_list|,
-name|e
-operator|->
-name|e_df
+name|dfname
 argument_list|)
 expr_stmt|;
 name|finis
@@ -2183,9 +2175,12 @@ name|void
 operator|)
 name|freopen
 argument_list|(
+name|queuename
+argument_list|(
 name|e
-operator|->
-name|e_df
+argument_list|,
+literal|'d'
+argument_list|)
 argument_list|,
 literal|"w"
 argument_list|,

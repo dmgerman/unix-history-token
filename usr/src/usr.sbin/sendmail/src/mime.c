@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.11 (Berkeley) %G%"
+literal|"@(#)mime.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -996,11 +996,11 @@ literal|1
 condition|)
 name|syserr
 argument_list|(
-literal|"mime8to7: cannot ftell on %s"
+literal|"mime8to7: cannot ftell on df%s"
 argument_list|,
 name|e
 operator|->
-name|e_df
+name|e_id
 argument_list|)
 expr_stmt|;
 comment|/* do a scan of this body type to count character types */
@@ -1117,11 +1117,11 @@ literal|0
 condition|)
 name|syserr
 argument_list|(
-literal|"mime8to7: cannot fseek on %s"
+literal|"mime8to7: cannot fseek on df%s"
 argument_list|,
 name|e
 operator|->
-name|e_df
+name|e_id
 argument_list|)
 expr_stmt|;
 block|}
