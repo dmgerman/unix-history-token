@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)socket.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)socket.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -766,7 +766,7 @@ name|caddr_t
 name|msg_name
 decl_stmt|;
 comment|/* optional address */
-name|int
+name|u_int
 name|msg_namelen
 decl_stmt|;
 comment|/* size of address */
@@ -776,7 +776,7 @@ modifier|*
 name|msg_iov
 decl_stmt|;
 comment|/* scatter/gather array */
-name|int
+name|u_int
 name|msg_iovlen
 decl_stmt|;
 comment|/* # elements in msg_iov */
@@ -784,7 +784,7 @@ name|caddr_t
 name|msg_control
 decl_stmt|;
 comment|/* ancillary data, see below */
-name|int
+name|u_int
 name|msg_controllen
 decl_stmt|;
 comment|/* ancillary data buffer len */
@@ -885,11 +885,11 @@ name|u_int
 name|cmsg_len
 decl_stmt|;
 comment|/* data byte count, including hdr */
-name|u_int
+name|int
 name|cmsg_level
 decl_stmt|;
 comment|/* originating protocol */
-name|u_int
+name|int
 name|cmsg_type
 decl_stmt|;
 comment|/* protocol-specific type */
