@@ -82,11 +82,6 @@ name|si_flags
 decl_stmt|;
 define|#
 directive|define
-name|SI_STASHED
-value|0x0001
-comment|/* created in stashed storage */
-define|#
-directive|define
 name|SI_ALIAS
 value|0x0002
 comment|/* carrier of alias name */
