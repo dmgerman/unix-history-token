@@ -30,6 +30,40 @@ begin_comment
 comment|/* Definitions common to all 32 bit architectures. */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+operator|&&
+name|__ELF_WORD_SIZE
+operator|==
+literal|64
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/elf64.h>
+end_include
+
+begin_comment
+comment|/* Definitions common to all 64 bit architectures. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ELF_WORD_SIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -40,6 +74,11 @@ end_define
 begin_comment
 comment|/* Used by<sys/elf_generic.h> */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -105,6 +144,35 @@ block|}
 name|Elf32_Auxinfo
 typedef|;
 end_typedef
+
+begin_if
+if|#
+directive|if
+name|__ELF_WORD_SIZE
+operator|==
+literal|64
+end_if
+
+begin_comment
+comment|/* Fake for amd64 loader support */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int
+name|fake
+decl_stmt|;
+block|}
+name|Elf64_Auxinfo
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|__ElfType
