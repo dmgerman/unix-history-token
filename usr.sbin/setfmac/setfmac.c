@@ -637,6 +637,10 @@ name|FTS_SL
 case|:
 comment|/* do symlink */
 case|case
+name|FTS_SLNONE
+case|:
+comment|/* do symlink */
+case|case
 name|FTS_W
 case|:
 comment|/* do whiteout */
