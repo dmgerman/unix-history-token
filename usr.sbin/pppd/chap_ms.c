@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chap_ms.c,v 1.4 1998/03/22 05:32:48 peter Exp $"
+literal|"$Id: chap_ms.c,v 1.5 1998/06/20 18:02:09 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1152,11 +1152,9 @@ argument_list|,
 name|secret_len
 operator|*
 literal|2
-operator|*
-literal|8
 argument_list|)
 expr_stmt|;
-comment|/* Unicode is 2 bytes/char, *8 for bit count */
+comment|/* Unicode is 2 bytes/char */
 name|MD4Final
 argument_list|(
 name|hash
