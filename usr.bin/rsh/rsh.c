@@ -1383,6 +1383,17 @@ literal|"fork"
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+operator|(
+name|void
+operator|)
+name|shutdown
+argument_list|(
+name|rem
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KERBEROS
