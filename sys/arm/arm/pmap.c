@@ -11835,7 +11835,7 @@ comment|/*  *	Routine:	pmap_extract  *	Function:  *		Extract the physical page a
 end_comment
 
 begin_function
-name|vm_offset_t
+name|vm_paddr_t
 name|pmap_extract
 parameter_list|(
 name|pmap_t

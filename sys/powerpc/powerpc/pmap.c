@@ -4763,7 +4763,7 @@ block|}
 end_function
 
 begin_function
-name|vm_offset_t
+name|vm_paddr_t
 name|pmap_extract
 parameter_list|(
 name|pmap_t
