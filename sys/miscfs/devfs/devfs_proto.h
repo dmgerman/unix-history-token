@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* THIS FILE PRODUCED AUTOMATICALLY */
+comment|/* THIS FILE HAS BEEN PRODUCED AUTOMATICALLY */
 end_comment
 
 begin_function_decl
@@ -11,7 +11,6 @@ name|void
 modifier|*
 name|junk
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -26,7 +25,6 @@ name|char
 modifier|*
 name|name
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -48,7 +46,6 @@ name|dn_p
 modifier|*
 name|dn_pp
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -73,7 +70,6 @@ name|devnm_p
 modifier|*
 name|devnm_pp
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -96,7 +92,6 @@ name|dn_p
 modifier|*
 name|dn_pp
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -108,7 +103,6 @@ name|devnm_p
 name|key
 parameter_list|)
 comment|/* update the node for this dev */
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -119,7 +113,6 @@ parameter_list|(
 name|dn_p
 name|dnp
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -133,7 +126,6 @@ parameter_list|,
 name|devnm_p
 name|child
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -146,7 +138,6 @@ name|devfsmount
 modifier|*
 name|devfs_mp_p
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -159,7 +150,6 @@ name|devfsmount
 modifier|*
 name|devfs_mp_p
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -182,7 +172,6 @@ name|devfsmount
 modifier|*
 name|dvm
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -193,7 +182,6 @@ parameter_list|(
 name|devnm_p
 name|devnmp
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -210,7 +198,6 @@ name|dn_p
 modifier|*
 name|dn_pp
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -227,7 +214,6 @@ modifier|*
 modifier|*
 name|vn_pp
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -254,7 +240,6 @@ name|devnm_p
 modifier|*
 name|nm_pp
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -284,7 +269,6 @@ name|proc
 modifier|*
 name|p
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 
@@ -295,7 +279,6 @@ parameter_list|(
 name|dn_p
 name|dnp
 parameter_list|)
-comment|/*proto*/
 function_decl|;
 end_function_decl
 

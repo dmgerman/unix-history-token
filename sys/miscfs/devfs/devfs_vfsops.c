@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.9 1996/01/02 09:14:49 peter Exp $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.10 1996/04/06 13:34:36 joerg Exp $  *  *  */
 end_comment
 
 begin_include
@@ -189,6 +189,10 @@ begin_comment
 comment|/*  *  mp	 - pointer to 'mount' structure  *  path - addr in user space of mount point (ie /usr or whatever)  *  data - addr in user space of mount params including the  *         name of the block special file to treat as a filesystem.  *  ndp  - namei data pointer  *  p    - proc pointer  * devfs is special in that it doesn't require any device to be mounted..  * It makes up it's data as it goes along.  * it must be mounted during single user.. until it is, only std{in/out/err}  * and the root filesystem are available.  */
 end_comment
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|int
 name|devfs_mount
@@ -215,7 +219,6 @@ name|proc
 modifier|*
 name|p
 parameter_list|)
-comment|/*proto*/
 block|{
 name|struct
 name|devfsmount

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.22 1996/04/03 03:03:27 scrappy Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.23 1996/04/06 13:34:35 joerg Exp $  */
 end_comment
 
 begin_include
@@ -135,6 +135,10 @@ begin_comment
 comment|/*  * Set up the root directory node in the backing plane  * This is happenning before the vfs system has been  * set up yet, so be careful about what we reference..  * Notice that the ops are by indirection.. as they haven't  * been set up yet!  */
 end_comment
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|void
 name|devfs_sinit
@@ -143,7 +147,6 @@ name|void
 modifier|*
 name|junk
 parameter_list|)
-comment|/*proto*/
 block|{
 name|int
 name|retval
@@ -280,6 +283,10 @@ begin_comment
 comment|/***************************************************************\ * Search down the linked list off a dir to find "name"		* * return the dn_p for that node. \***************************************************************/
 end_comment
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|devnm_p
 name|dev_findname
@@ -291,7 +298,6 @@ name|char
 modifier|*
 name|name
 parameter_list|)
-comment|/*proto*/
 block|{
 name|devnm_p
 name|newfp
@@ -439,6 +445,10 @@ begin_comment
 comment|/***********************************************************************\ * Given a starting node (0 for root) and a pathname, return the node	* * for the end item on the path. It MUST BE A DIRECTORY. If the 'CREATE'	* * option is true, then create any missing nodes in the path and create	* * and return the final node as well.					* * This is used to set up a directory, before making nodes in it..	* *									* * Warning: This function is RECURSIVE.					* *	char	*path,		 find this dir (err if not dir)		* *	dn_p	dirnode,	 starting point  (0 = root)	 	* *	int	create,		 create path if not found 		* *	dn_p	*dn_pp)		 where to return the node of the dir	* \***********************************************************************/
 end_comment
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|int
 name|dev_finddir
@@ -457,7 +467,6 @@ name|dn_p
 modifier|*
 name|dn_pp
 parameter_list|)
-comment|/*proto*/
 block|{
 name|devnm_p
 name|devnmp
@@ -771,6 +780,10 @@ begin_comment
 comment|/***********************************************************************\ * Add a new element to the devfs backing structure. 			* * If we're creating a root node, then dirname is NULL			* *									* * Creates a name node, and links it to the supplied node		* \***********************************************************************/
 end_comment
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|int
 name|dev_add_name
@@ -792,7 +805,6 @@ name|devnm_p
 modifier|*
 name|devnm_pp
 parameter_list|)
-comment|/*proto*/
 block|{
 name|devnm_p
 name|devnmp
@@ -1261,6 +1273,10 @@ begin_comment
 comment|/***********************************************************************\ * Add a new element to the devfs backing structure. 			* *									* * Creates a new dev_node to go with it					* * 'by' gives us info to make our node					* * note the 'links' count is 0 (except if a dir)				* * but it is only cleared on a transition				* * so this is ok till we link it to something				* \***********************************************************************/
 end_comment
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|int
 name|dev_add_node
@@ -1280,7 +1296,6 @@ name|dn_p
 modifier|*
 name|dn_pp
 parameter_list|)
-comment|/*proto*/
 block|{
 name|dn_p
 name|dnp
@@ -1635,6 +1650,10 @@ begin_comment
 comment|/***************************************************************\ * DEV_NODE reference count manipulations.. when a ref count	* * reaches 0, the node is to be deleted				* \***************************************************************/
 end_comment
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|int
 name|dev_touch
@@ -1643,7 +1662,6 @@ name|devnm_p
 name|key
 parameter_list|)
 comment|/* update the node for this dev */
-comment|/*proto*/
 block|{
 name|DBPRINT
 argument_list|(
@@ -1665,6 +1683,10 @@ comment|/*XXX*/
 block|}
 end_function
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|void
 name|devfs_dn_free
@@ -1672,7 +1694,6 @@ parameter_list|(
 name|dn_p
 name|dnp
 parameter_list|)
-comment|/*proto*/
 block|{
 if|if
 condition|(
@@ -1713,6 +1734,10 @@ begin_comment
 comment|/***********************************************************************\ * Given a directory backing node, and a child backing node, add the	* * appropriate front nodes to the front nodes of the directory to	* * represent the child node to the user					* *									* * on failure, front nodes will either be correct or not exist for each	* * front dir, however dirs completed will not be stripped of completed	* * frontnodes on failure of a later frontnode				* *									* * This allows a new node to be propogated through all mounted planes	* *									* \***********************************************************************/
 end_comment
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|int
 name|devfs_add_fronts
@@ -1723,7 +1748,6 @@ parameter_list|,
 name|devnm_p
 name|child
 parameter_list|)
-comment|/*proto*/
 block|{
 name|int
 name|error
@@ -1941,6 +1965,10 @@ begin_comment
 comment|/***************************************************************  * duplicate the backing tree into a tree of nodes hung off the  * mount point given as the argument. Do this by  * calling dev_dup_entry which recurses all the way  * up the tree..  * If we are the first plane, just return the base root   **************************************************************/
 end_comment
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|int
 name|dev_dup_plane
@@ -1950,7 +1978,6 @@ name|devfsmount
 modifier|*
 name|devfs_mp_p
 parameter_list|)
-comment|/*proto*/
 block|{
 name|devnm_p
 name|new
@@ -2018,6 +2045,10 @@ begin_comment
 comment|/***************************************************************\ * Free a whole plane \***************************************************************/
 end_comment
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|void
 name|devfs_free_plane
@@ -2027,7 +2058,6 @@ name|devfsmount
 modifier|*
 name|devfs_mp_p
 parameter_list|)
-comment|/*proto*/
 block|{
 name|devnm_p
 name|devnmp
@@ -2070,6 +2100,10 @@ begin_comment
 comment|/***************************************************************\ * Create and link in a new front element.. 			* * Parent can be 0 for a root node				* * Not presently usable to make a symlink XXX			* * recursively will create subnodes corresponding to equivalent	* * child nodes in the base level					* \***************************************************************/
 end_comment
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|int
 name|dev_dup_entry
@@ -2089,7 +2123,6 @@ name|devfsmount
 modifier|*
 name|dvm
 parameter_list|)
-comment|/*proto*/
 block|{
 name|devnm_p
 name|newnmp
@@ -2303,6 +2336,10 @@ begin_comment
 comment|/***************************************************************\ * Free a name node (and any below it of it's a directory node)	* * remember that if there are other names pointing to the	* * dev_node then it may not get freed yet			* * can handle if there is no dnp 				* \***************************************************************/
 end_comment
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|void
 name|dev_free_name
@@ -2310,7 +2347,6 @@ parameter_list|(
 name|devnm_p
 name|devnmp
 parameter_list|)
-comment|/*proto*/
 block|{
 name|dn_p
 name|parent
@@ -2543,6 +2579,10 @@ begin_comment
 comment|/*******************************************************\ * Theoretically this could be called for any kind of 	* * vnode, however in practice it must be a DEVFS vnode	* \*******************************************************/
 end_comment
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|int
 name|devfs_vntodn
@@ -2556,7 +2596,6 @@ name|dn_p
 modifier|*
 name|dn_pp
 parameter_list|)
-comment|/*proto*/
 block|{
 name|DBPRINT
 argument_list|(
@@ -2649,6 +2688,10 @@ begin_comment
 comment|/***************************************************************\ * given a dev_node, find the appropriate vnode if one is already* * associated, or get a new one an associate it with the dev_node* * need to check about vnode references.. should we increment it?* \***************************************************************/
 end_comment
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|int
 name|devfs_dntovn
@@ -2662,7 +2705,6 @@ modifier|*
 modifier|*
 name|vn_pp
 parameter_list|)
-comment|/*proto*/
 block|{
 name|struct
 name|vnode
@@ -3076,6 +3118,10 @@ begin_comment
 comment|/***********************************************************************\ * add a whole device, with no prototype.. make name element and node	* \***********************************************************************/
 end_comment
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|int
 name|dev_add_entry
@@ -3099,7 +3145,6 @@ name|devnm_p
 modifier|*
 name|nm_pp
 parameter_list|)
-comment|/*proto*/
 block|{
 name|dn_p
 name|dnp

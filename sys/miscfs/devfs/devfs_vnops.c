@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.18 1995/12/14 19:04:09 bde Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.19 1996/04/06 13:34:37 joerg Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -5313,6 +5313,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*proto*/
+end_comment
+
 begin_function
 name|void
 name|devfs_dropvnode
@@ -5320,7 +5324,6 @@ parameter_list|(
 name|dn_p
 name|dnp
 parameter_list|)
-comment|/*proto*/
 block|{
 name|struct
 name|vnode
