@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)fsdump.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)fsdump.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -130,6 +130,22 @@ literal|0x100000
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|scsi_device
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|cons_buf
+index|[
+literal|100
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|fsdump
@@ -192,8 +208,47 @@ name|pp
 decl_stmt|;
 name|scsi_id
 operator|=
-literal|6
+name|scsi_device
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Current SCSI device = ID %d\n"
+argument_list|,
+name|scsi_id
+argument_list|)
+expr_stmt|;
+name|getline
+argument_list|(
+literal|"Is it sure ? (y/n) "
+argument_list|,
+name|cons_buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cons_buf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'y'
+operator|)
+operator|&&
+operator|(
+name|cons_buf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'Y'
+operator|)
+condition|)
+return|return
+operator|(
+name|ST_ERROR
+operator|)
+return|;
 name|scsi_read_raw
 argument_list|(
 name|scsi_id
@@ -233,12 +288,31 @@ name|i
 index|]
 operator|)
 expr_stmt|;
-comment|/* 		if ((i != 0)&& 		    (i != 4)&& 		    (i != 5)) {  */
 if|if
 condition|(
+operator|(
 name|i
 operator|!=
 literal|0
+operator|)
+operator|&&
+operator|(
+name|i
+operator|!=
+literal|3
+operator|)
+operator|&&
+operator|(
+name|i
+operator|!=
+literal|4
+operator|)
+operator|&&
+operator|(
+name|i
+operator|!=
+literal|5
+operator|)
 condition|)
 block|{
 name|pp
@@ -690,22 +764,6 @@ block|}
 block|}
 block|}
 end_function
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|scsi_device
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|cons_buf
-index|[
-literal|100
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|int
