@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.52 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.53 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -4591,7 +4591,7 @@ operator||=
 name|WCOREFLAG
 expr_stmt|;
 block|}
-name|exit
+name|exit1
 argument_list|(
 name|p
 argument_list|,

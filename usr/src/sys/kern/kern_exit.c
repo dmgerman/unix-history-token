@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.51 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.52 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -201,7 +201,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|exit
+name|exit1
 argument_list|(
 name|p
 argument_list|,
@@ -224,7 +224,7 @@ comment|/*  * Exit: deallocate address space and other resources,  * change proc
 end_comment
 
 begin_expr_stmt
-name|exit
+name|exit1
 argument_list|(
 name|p
 argument_list|,
