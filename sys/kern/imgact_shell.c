@@ -183,11 +183,6 @@ operator|*
 name|ihp
 operator|!=
 literal|'\n'
-operator|&&
-operator|*
-name|ihp
-operator|!=
-literal|'#'
 condition|;
 operator|++
 name|ihp
