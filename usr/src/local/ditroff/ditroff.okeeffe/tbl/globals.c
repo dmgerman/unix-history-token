@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)globals.c	1.2 (CWI) 85/10/02"
+literal|"@(#)globals.c	1.3 (CWI) 86/11/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,19 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_decl_stmt
+name|char
+name|oldname
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for .lf kludge */
+end_comment
 
 begin_decl_stmt
 name|int

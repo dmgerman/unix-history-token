@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)maktab.c	1.2 (CWI) 85/10/02"
+literal|"@(#)maktab.c	1.3 (CWI) 86/11/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -1592,6 +1592,13 @@ name|iline
 operator|-
 literal|1
 argument_list|,
+name|strlen
+argument_list|(
+name|oldname
+argument_list|)
+condition|?
+name|oldname
+else|:
 name|ifile
 argument_list|)
 expr_stmt|;

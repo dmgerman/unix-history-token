@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)ext.h	1.2 (CWI) 85/10/02	*/
+comment|/*	@(#)ext.h	1.3 (CWI) 86/11/13	*/
 end_comment
 
 begin_comment
@@ -37,6 +37,14 @@ decl_stmt|,
 name|nslin
 decl_stmt|,
 name|qcol
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|oldname
+index|[]
 decl_stmt|;
 end_decl_stmt
 

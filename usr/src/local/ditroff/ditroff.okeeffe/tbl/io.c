@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	1.3 (CWI) 86/11/10"
+literal|"@(#)io.c	1.4 (CWI) 86/11/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,12 +180,6 @@ operator|==
 literal|'f'
 condition|)
 block|{
-name|char
-name|oldname
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
 name|sscanf
 argument_list|(
 name|p
