@@ -64,7 +64,7 @@ value|"\  %{p:%nconsider using `-pg' instead of `-p' with gprof(1) } \     %{Wl,
 end_define
 
 begin_comment
-comment|/* Provide a STARTFILE_SPEC appropriate for FreeBSD.  Here we add the magical    crtbegin.o file (see crtstuff.c) which provides part of the support for    getting C++ file-scope static object constructed before entering `main'.  */
+comment|/* Reset our STARTFILE_SPEC which was properly set in config/freebsd.h    but trashed by config/<cpu>/<file.h>. */
 end_comment
 
 begin_undef
@@ -77,11 +77,11 @@ begin_define
 define|#
 directive|define
 name|STARTFILE_SPEC
-value|"\     %{!shared: \       %{pg:gcrt1.o%s} \       %{!pg: \ 	%{p:gcrt1.o%s} \ 	%{!p:crt1.o%s}}} \     crti.o%s \     %{!shared:crtbegin.o%s} \     %{shared:crtbeginS.o%s}"
+value|FBSD_STARTFILE_SPEC
 end_define
 
 begin_comment
-comment|/* Provide an ENDFILE_SPEC appropriate for FreeBSD/i386.  Here we tack on our    own magical crtend.o file (see crtstuff.c) which provides part of the    support for getting C++ file-scope static object constructed before    entering `main', followed by the normal "finalizer" file, `crtn.o'.  */
+comment|/* Provide an ENDFILE_SPEC appropriate for FreeBSD/i386.  */
 end_comment
 
 begin_undef
@@ -94,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|ENDFILE_SPEC
-value|"\     %{!shared:crtend.o%s} \     %{shared:crtendS.o%s} crtn.o%s"
+value|FBSD_ENDFILE_SPEC
 end_define
 
 begin_comment

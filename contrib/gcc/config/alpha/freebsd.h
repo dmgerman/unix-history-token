@@ -47,7 +47,7 @@ value|"%{G*} %{relax:-relax}				\   %{p:%e`-p' not supported; use `-pg' and gpro
 end_define
 
 begin_comment
-comment|/* We now have to provide a STARTFILE_SPEC because of a moronic pigheaded    Linuxism(glibc'ism) that was added to alpha/elf.h.  */
+comment|/* Reset our STARTFILE_SPEC because of a moronic pigheaded    Linuxism(glibc'ism) that was added to alpha/elf.h.  */
 end_comment
 
 begin_undef
@@ -60,8 +60,7 @@ begin_define
 define|#
 directive|define
 name|STARTFILE_SPEC
-define|\
-value|"%{!shared: \       %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{shared:crtbeginS.o%s}%{!shared:crtbegin.o%s}"
+value|FBSD_STARTFILE_SPEC
 end_define
 
 begin_comment
