@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.46 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -681,6 +681,12 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+else|else
+name|syserr
+argument_list|(
+literal|"R line: null LHS"
+argument_list|)
+expr_stmt|;
 comment|/* expand and save the RHS */
 while|while
 condition|(
@@ -763,6 +769,12 @@ operator|->
 name|r_rhs
 argument_list|,
 name|TRUE
+argument_list|)
+expr_stmt|;
+else|else
+name|syserr
+argument_list|(
+literal|"R line: null RHS"
 argument_list|)
 expr_stmt|;
 break|break;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	5.13.1.2 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2242,6 +2242,26 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ruleset
+operator|<
+literal|0
+operator|||
+name|ruleset
+operator|>=
+name|MAXRWSETS
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"rewrite: illegal ruleset number %d"
+argument_list|,
+name|ruleset
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|pvp
 operator|==
 name|NULL
@@ -2550,6 +2570,16 @@ argument_list|(
 literal|"Infinite loop in ruleset %d"
 argument_list|,
 name|ruleset
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"workspace: "
+argument_list|)
+expr_stmt|;
+name|printav
+argument_list|(
+name|pvp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3550,6 +3580,10 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|m
+operator|<
+name|mlist
+operator|||
 name|m
 operator|>=
 name|mlp

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.64 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.65 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3138,6 +3138,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|int
+name|saveerrno
+decl_stmt|;
 specifier|extern
 name|int
 name|DtableSize
@@ -3489,6 +3492,10 @@ argument_list|,
 name|UserEnviron
 argument_list|)
 expr_stmt|;
+name|saveerrno
+operator|=
+name|errno
+expr_stmt|;
 name|syserr
 argument_list|(
 literal|"Cannot exec %s"
@@ -3511,7 +3518,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|errno
+name|saveerrno
 condition|)
 block|{
 case|case
