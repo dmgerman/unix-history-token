@@ -133,6 +133,13 @@ directive|include
 file|<msdosfs/fat.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|MSDOSFS_DFLTBSIZE
+value|4096
+end_define
+
 begin_if
 if|#
 directive|if
@@ -3274,7 +3281,7 @@ name|pmp
 operator|->
 name|pm_fatblocksize
 operator|=
-name|DFLTBSIZE
+name|MSDOSFS_DFLTBSIZE
 expr_stmt|;
 name|pmp
 operator|->
