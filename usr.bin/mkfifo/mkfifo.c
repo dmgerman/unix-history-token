@@ -155,10 +155,14 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|modestr
+init|=
+name|NULL
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|modep
