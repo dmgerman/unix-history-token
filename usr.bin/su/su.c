@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: su.c,v 1.29 1998/10/09 20:14:48 markm Exp $"
+literal|"$Id: su.c,v 1.30 1999/07/01 17:59:17 billf Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1237,6 +1237,7 @@ operator|!
 operator|*
 name|g
 condition|)
+block|{
 if|if
 condition|(
 name|gid
@@ -1245,7 +1246,6 @@ literal|0
 condition|)
 break|break;
 else|else
-block|{
 name|errx
 argument_list|(
 literal|1
