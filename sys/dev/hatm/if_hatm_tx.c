@@ -1566,7 +1566,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start output on the interface  *  * For raw aal we process only the first cell in the mbuf chain! XXX  */
+comment|/*  * Start output on the interface  */
 end_comment
 
 begin_function
@@ -1901,6 +1901,7 @@ operator|<
 literal|52
 condition|)
 block|{
+comment|/* too short */
 name|m_freem
 argument_list|(
 name|m
@@ -1908,35 +1909,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
-name|len
-operator|>
-literal|52
-condition|)
-block|{
-name|m_adj
-argument_list|(
-name|m
-argument_list|,
-operator|-
-operator|(
-call|(
-name|int
-call|)
-argument_list|(
-name|len
-operator|-
-literal|52
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|len
-operator|=
-literal|52
-expr_stmt|;
-block|}
+comment|/* 			 * Get the header and ignore except 			 * payload type and CLP. 			 */
 if|if
 condition|(
 name|m
@@ -1959,7 +1932,6 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* ignore header except payload type and CLP */
 name|arg
 operator|.
 name|pti
@@ -2016,6 +1988,39 @@ name|len
 operator|-=
 literal|4
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|%
+literal|48
+operator|!=
+literal|0
+condition|)
+block|{
+name|m_adj
+argument_list|(
+name|m
+argument_list|,
+operator|-
+operator|(
+call|(
+name|int
+call|)
+argument_list|(
+name|len
+operator|%
+literal|48
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|len
+operator|-=
+name|len
+operator|%
+literal|48
+expr_stmt|;
+block|}
 block|}
 ifdef|#
 directive|ifdef
