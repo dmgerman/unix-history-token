@@ -7,6 +7,10 @@ begin_comment
 comment|/* Written by David MacKenzie<djm@gnu.ai.mit.edu>.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -862,10 +866,10 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|s
-init|=
+comment|/* Don't use __strerror_r's return value because on some systems 	 (at least DEC UNIX 4.0[A-D]) strerror_r returns `int'.  */
+operator|(
+name|void
+operator|)
 name|__strerror_r
 argument_list|(
 name|errnum
@@ -875,6 +879,12 @@ argument_list|,
 sizeof|sizeof
 name|errbuf
 argument_list|)
+expr_stmt|;
+name|char
+modifier|*
+name|s
+init|=
+name|errbuf
 decl_stmt|;
 if|#
 directive|if
