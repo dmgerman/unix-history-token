@@ -175,65 +175,61 @@ name|pr_usrreqs
 name|ng_btsocket_hci_raw_usrreqs
 init|=
 block|{
+operator|.
+name|pru_abort
+operator|=
 name|ng_btsocket_hci_raw_abort
 block|,
-comment|/* abort */
-name|pru_accept_notsupp
-block|,
-comment|/* accept */
+operator|.
+name|pru_attach
+operator|=
 name|ng_btsocket_hci_raw_attach
 block|,
-comment|/* attach */
+operator|.
+name|pru_bind
+operator|=
 name|ng_btsocket_hci_raw_bind
 block|,
-comment|/* bind */
+operator|.
+name|pru_connect
+operator|=
 name|ng_btsocket_hci_raw_connect
 block|,
-comment|/* connect */
-name|pru_connect2_notsupp
-block|,
-comment|/* connect2 */
+operator|.
+name|pru_control
+operator|=
 name|ng_btsocket_hci_raw_control
 block|,
-comment|/* control */
+operator|.
+name|pru_detach
+operator|=
 name|ng_btsocket_hci_raw_detach
 block|,
-comment|/* detach */
+operator|.
+name|pru_disconnect
+operator|=
 name|ng_btsocket_hci_raw_disconnect
 block|,
-comment|/* disconnect */
-name|pru_listen_notsupp
-block|,
-comment|/* listen */
+operator|.
+name|pru_peeraddr
+operator|=
 name|ng_btsocket_hci_raw_peeraddr
 block|,
-comment|/* peeraddr */
-name|pru_rcvd_notsupp
-block|,
-comment|/* rcvd */
-name|pru_rcvoob_notsupp
-block|,
-comment|/* rcvoob */
+operator|.
+name|pru_send
+operator|=
 name|ng_btsocket_hci_raw_send
 block|,
-comment|/* send */
-name|pru_sense_null
-block|,
-comment|/* send */
+operator|.
+name|pru_shutdown
+operator|=
 name|NULL
 block|,
-comment|/* shutdown */
+operator|.
+name|pru_sockaddr
+operator|=
 name|ng_btsocket_hci_raw_sockaddr
-block|,
-comment|/* sockaddr */
-name|sosend
-block|,
-name|soreceive
-block|,
-name|sopoll
-block|,
-name|pru_sosetlabel_null
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -248,65 +244,61 @@ name|pr_usrreqs
 name|ng_btsocket_l2cap_raw_usrreqs
 init|=
 block|{
+operator|.
+name|pru_abort
+operator|=
 name|ng_btsocket_l2cap_raw_abort
 block|,
-comment|/* abort */
-name|pru_accept_notsupp
-block|,
-comment|/* accept */
+operator|.
+name|pru_attach
+operator|=
 name|ng_btsocket_l2cap_raw_attach
 block|,
-comment|/* attach */
+operator|.
+name|pru_bind
+operator|=
 name|ng_btsocket_l2cap_raw_bind
 block|,
-comment|/* bind */
+operator|.
+name|pru_connect
+operator|=
 name|ng_btsocket_l2cap_raw_connect
 block|,
-comment|/* connect */
-name|pru_connect2_notsupp
-block|,
-comment|/* connect2 */
+operator|.
+name|pru_control
+operator|=
 name|ng_btsocket_l2cap_raw_control
 block|,
-comment|/* control */
+operator|.
+name|pru_detach
+operator|=
 name|ng_btsocket_l2cap_raw_detach
 block|,
-comment|/* detach */
+operator|.
+name|pru_disconnect
+operator|=
 name|ng_btsocket_l2cap_raw_disconnect
 block|,
-comment|/* disconnect */
-name|pru_listen_notsupp
-block|,
-comment|/* listen */
+operator|.
+name|pru_peeraddr
+operator|=
 name|ng_btsocket_l2cap_raw_peeraddr
 block|,
-comment|/* peeraddr */
-name|pru_rcvd_notsupp
-block|,
-comment|/* rcvd */
-name|pru_rcvoob_notsupp
-block|,
-comment|/* rcvoob */
+operator|.
+name|pru_send
+operator|=
 name|ng_btsocket_l2cap_raw_send
 block|,
-comment|/* send */
-name|pru_sense_null
-block|,
-comment|/* send */
+operator|.
+name|pru_shutdown
+operator|=
 name|NULL
 block|,
-comment|/* shutdown */
+operator|.
+name|pru_sockaddr
+operator|=
 name|ng_btsocket_l2cap_raw_sockaddr
-block|,
-comment|/* sockaddr */
-name|sosend
-block|,
-name|soreceive
-block|,
-name|sopoll
-block|,
-name|pru_sosetlabel_null
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -321,65 +313,71 @@ name|pr_usrreqs
 name|ng_btsocket_l2cap_usrreqs
 init|=
 block|{
+operator|.
+name|pru_abort
+operator|=
 name|ng_btsocket_l2cap_abort
 block|,
-comment|/* abort */
+operator|.
+name|pru_accept
+operator|=
 name|ng_btsocket_l2cap_accept
 block|,
-comment|/* accept */
+operator|.
+name|pru_attach
+operator|=
 name|ng_btsocket_l2cap_attach
 block|,
-comment|/* attach */
+operator|.
+name|pru_bind
+operator|=
 name|ng_btsocket_l2cap_bind
 block|,
-comment|/* bind */
+operator|.
+name|pru_connect
+operator|=
 name|ng_btsocket_l2cap_connect
 block|,
-comment|/* connect */
-name|pru_connect2_notsupp
-block|,
-comment|/* connect2 */
+operator|.
+name|pru_control
+operator|=
 name|ng_btsocket_l2cap_control
 block|,
-comment|/* control */
+operator|.
+name|pru_detach
+operator|=
 name|ng_btsocket_l2cap_detach
 block|,
-comment|/* detach */
+operator|.
+name|pru_disconnect
+operator|=
 name|ng_btsocket_l2cap_disconnect
 block|,
-comment|/* disconnect */
+operator|.
+name|pru_listen
+operator|=
 name|ng_btsocket_l2cap_listen
 block|,
-comment|/* listen */
+operator|.
+name|pru_peeraddr
+operator|=
 name|ng_btsocket_l2cap_peeraddr
 block|,
-comment|/* peeraddr */
-name|pru_rcvd_notsupp
-block|,
-comment|/* rcvd */
-name|pru_rcvoob_notsupp
-block|,
-comment|/* rcvoob */
+operator|.
+name|pru_send
+operator|=
 name|ng_btsocket_l2cap_send
 block|,
-comment|/* send */
-name|pru_sense_null
-block|,
-comment|/* send */
+operator|.
+name|pru_shutdown
+operator|=
 name|NULL
 block|,
-comment|/* shutdown */
+operator|.
+name|pru_sockaddr
+operator|=
 name|ng_btsocket_l2cap_sockaddr
-block|,
-comment|/* sockaddr */
-name|sosend
-block|,
-name|soreceive
-block|,
-name|sopoll
-block|,
-name|pru_sosetlabel_null
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -394,65 +392,71 @@ name|pr_usrreqs
 name|ng_btsocket_rfcomm_usrreqs
 init|=
 block|{
+operator|.
+name|pru_abort
+operator|=
 name|ng_btsocket_rfcomm_abort
 block|,
-comment|/* abort */
+operator|.
+name|pru_accept
+operator|=
 name|ng_btsocket_rfcomm_accept
 block|,
-comment|/* accept */
+operator|.
+name|pru_attach
+operator|=
 name|ng_btsocket_rfcomm_attach
 block|,
-comment|/* attach */
+operator|.
+name|pru_bind
+operator|=
 name|ng_btsocket_rfcomm_bind
 block|,
-comment|/* bind */
+operator|.
+name|pru_connect
+operator|=
 name|ng_btsocket_rfcomm_connect
 block|,
-comment|/* connect */
-name|pru_connect2_notsupp
-block|,
-comment|/* connect2 */
+operator|.
+name|pru_control
+operator|=
 name|ng_btsocket_rfcomm_control
 block|,
-comment|/* control */
+operator|.
+name|pru_detach
+operator|=
 name|ng_btsocket_rfcomm_detach
 block|,
-comment|/* detach */
+operator|.
+name|pru_disconnect
+operator|=
 name|ng_btsocket_rfcomm_disconnect
 block|,
-comment|/* disconnect */
+operator|.
+name|pru_listen
+operator|=
 name|ng_btsocket_rfcomm_listen
 block|,
-comment|/* listen */
+operator|.
+name|pru_peeraddr
+operator|=
 name|ng_btsocket_rfcomm_peeraddr
 block|,
-comment|/* peeraddr */
-name|pru_rcvd_notsupp
-block|,
-comment|/* rcvd */
-name|pru_rcvoob_notsupp
-block|,
-comment|/* rcvoob */
+operator|.
+name|pru_send
+operator|=
 name|ng_btsocket_rfcomm_send
 block|,
-comment|/* send */
-name|pru_sense_null
-block|,
-comment|/* send */
+operator|.
+name|pru_shutdown
+operator|=
 name|NULL
 block|,
-comment|/* shutdown */
+operator|.
+name|pru_sockaddr
+operator|=
 name|ng_btsocket_rfcomm_sockaddr
-block|,
-comment|/* sockaddr */
-name|sosend
-block|,
-name|soreceive
-block|,
-name|sopoll
-block|,
-name|pru_sosetlabel_null
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

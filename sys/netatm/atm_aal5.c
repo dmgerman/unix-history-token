@@ -480,69 +480,76 @@ name|pr_usrreqs
 name|atm_aal5_usrreqs
 init|=
 block|{
+operator|.
+name|pru_abort
+operator|=
 name|atm_aal5_abort
 block|,
-comment|/* pru_abort */
+operator|.
+name|pru_accept
+operator|=
 name|atm_aal5_accept
 block|,
-comment|/* pru_accept */
+operator|.
+name|pru_attach
+operator|=
 name|atm_aal5_attach
 block|,
-comment|/* pru_attach */
+operator|.
+name|pru_bind
+operator|=
 name|atm_aal5_bind
 block|,
-comment|/* pru_bind */
+operator|.
+name|pru_connect
+operator|=
 name|atm_aal5_connect
 block|,
-comment|/* pru_connect */
-name|pru_connect2_notsupp
-block|,
-comment|/* pru_connect2 */
+operator|.
+name|pru_control
+operator|=
 name|atm_aal5_control
 block|,
-comment|/* pru_control */
+operator|.
+name|pru_detach
+operator|=
 name|atm_aal5_detach
 block|,
-comment|/* pru_detach */
+operator|.
+name|pru_disconnect
+operator|=
 name|atm_aal5_disconnect
 block|,
-comment|/* pru_disconnect */
+operator|.
+name|pru_listen
+operator|=
 name|atm_aal5_listen
 block|,
-comment|/* pru_listen */
+operator|.
+name|pru_peeraddr
+operator|=
 name|atm_aal5_peeraddr
 block|,
-comment|/* pru_peeraddr */
-name|pru_rcvd_notsupp
-block|,
-comment|/* pru_rcvd */
-name|pru_rcvoob_notsupp
-block|,
-comment|/* pru_rcvoob */
+operator|.
+name|pru_send
+operator|=
 name|atm_aal5_send
 block|,
-comment|/* pru_send */
+operator|.
+name|pru_sense
+operator|=
 name|atm_aal5_sense
 block|,
-comment|/* pru_sense */
+operator|.
+name|pru_shutdown
+operator|=
 name|atm_aal5_shutdown
 block|,
-comment|/* pru_shutdown */
+operator|.
+name|pru_sockaddr
+operator|=
 name|atm_aal5_sockaddr
-block|,
-comment|/* pru_sockaddr */
-name|sosend
-block|,
-comment|/* pru_sosend */
-name|soreceive
-block|,
-comment|/* pru_soreceive */
-name|sopoll
-block|,
-comment|/* pru_sopoll */
-name|pru_sosetlabel_null
-comment|/* pru_sosetlabel */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

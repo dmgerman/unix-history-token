@@ -831,13 +831,16 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * If the ordering here looks odd, that's because it's alphabetical.  * Having this structure separated out from the main protoswitch is allegedly  * a big (12 cycles per call) lose on high-end CPUs.  We will eventually  * migrate this stuff back into the main structure.  */
+comment|/*  * If the ordering here looks odd, that's because it's alphabetical.  * Having this structure separated out from the main protoswitch is allegedly  * a big (12 cycles per call) lose on high-end CPUs.  We will eventually  * migrate this stuff back into the main structure.  *  * Some fields initialized to defaults if they are NULL.  * See uipc_domain.c:net_init_domain()  */
 end_comment
 
 begin_struct
 struct|struct
 name|pr_usrreqs
 block|{
+name|double
+name|__Break_the_struct_layout_for_now
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*

@@ -195,69 +195,71 @@ name|pr_usrreqs
 name|atm_dgram_usrreqs
 init|=
 block|{
+operator|.
+name|pru_abort
+operator|=
 name|atm_proto_notsupp1
 block|,
-comment|/* pru_abort */
-name|pru_accept_notsupp
-block|,
-comment|/* pru_accept */
+operator|.
+name|pru_attach
+operator|=
 name|atm_dgram_attach
 block|,
-comment|/* pru_attach */
+operator|.
+name|pru_bind
+operator|=
 name|atm_proto_notsupp2
 block|,
-comment|/* pru_bind */
-name|pru_connect_notsupp
-block|,
-comment|/* pru_connect */
-name|pru_connect2_notsupp
-block|,
-comment|/* pru_connect2 */
+operator|.
+name|pru_control
+operator|=
 name|atm_dgram_control
 block|,
-comment|/* pru_control */
+operator|.
+name|pru_detach
+operator|=
 name|atm_proto_notsupp1
 block|,
-comment|/* pru_detach */
+operator|.
+name|pru_disconnect
+operator|=
 name|atm_proto_notsupp1
 block|,
-comment|/* pru_disconnect */
-name|pru_listen_notsupp
-block|,
-comment|/* pru_listen */
+operator|.
+name|pru_peeraddr
+operator|=
 name|atm_proto_notsupp3
 block|,
-comment|/* pru_peeraddr */
-name|pru_rcvd_notsupp
-block|,
-comment|/* pru_rcvd */
-name|pru_rcvoob_notsupp
-block|,
-comment|/* pru_rcvoob */
+operator|.
+name|pru_send
+operator|=
 name|atm_proto_notsupp4
 block|,
-comment|/* pru_send */
-name|pru_sense_null
-block|,
-comment|/* pru_sense */
+operator|.
+name|pru_shutdown
+operator|=
 name|atm_proto_notsupp1
 block|,
-comment|/* pru_shutdown */
+operator|.
+name|pru_sockaddr
+operator|=
 name|atm_proto_notsupp3
 block|,
-comment|/* pru_sockaddr */
+operator|.
+name|pru_sosend
+operator|=
 name|NULL
 block|,
-comment|/* pru_sosend */
+operator|.
+name|pru_soreceive
+operator|=
 name|NULL
 block|,
-comment|/* pru_soreceive */
+operator|.
+name|pru_sopoll
+operator|=
 name|NULL
-block|,
-comment|/* pru_sooll */
-name|pru_sosetlabel_null
-comment|/* pru_sosetlabel */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
