@@ -630,7 +630,7 @@ literal|1
 end_if
 
 begin_comment
-comment|/*  *	vm_pageq_find:  *  *	Find a page on the specified queue with color optimization.  *  *	The page coloring optimization attempts to locate a page  *	that does not overload other nearby pages in the object in  *	the cpu's L1 or L2 caches.  We need this optimization because   *	cpu caches tend to be physical caches, while object spaces tend   *	to be virtual.  *  *	This routine must be called at splvm().  *	This routine may not block.  *  *	This routine may only be called from the vm_page_list_find() macro  *	in vm_page.h  */
+comment|/*  *	vm_pageq_find:  *  *	Find a page on the specified queue with color optimization.  *  *	The page coloring optimization attempts to locate a page  *	that does not overload other nearby pages in the object in  *	the cpu's L1 or L2 caches.  We need this optimization because   *	cpu caches tend to be physical caches, while object spaces tend   *	to be virtual.  *  *	This routine must be called at splvm().  *	This routine may not block.  *  *	This routine may only be called from the vm_pageq_find()  *	function in this file.  */
 end_comment
 
 begin_function
