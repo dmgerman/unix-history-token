@@ -1021,7 +1021,7 @@ argument_list|,
 literal|"FAIL: sigwait doesn't wake up for SIGUSR1.\n"
 argument_list|)
 expr_stmt|;
-comment|/* Add SIGHUP to the waiters pending signals. */
+comment|/* Add SIGUSR1 to the waiters pending signals. */
 name|send_thread_signal
 argument_list|(
 name|tid
