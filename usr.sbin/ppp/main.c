@@ -1083,6 +1083,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|optc
+operator|--
+expr_stmt|;
+comment|/* this option isn't exclusive */
 if|if
 condition|(
 name|cp
@@ -1093,6 +1097,10 @@ operator|==
 literal|'\0'
 condition|)
 block|{
+name|optc
+operator|--
+expr_stmt|;
+comment|/* nor is the argument */
 if|if
 condition|(
 operator|++
@@ -1138,10 +1146,6 @@ operator|+
 literal|4
 argument_list|)
 expr_stmt|;
-name|optc
-operator|--
-expr_stmt|;
-comment|/* this option isn't exclusive */
 block|}
 elseif|else
 if|if
