@@ -1714,12 +1714,14 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|(
 name|err
 operator|=
 name|assign_io
 argument_list|(
 name|sp
 argument_list|)
+operator|)
 condition|)
 block|{
 name|char
