@@ -209,7 +209,7 @@ name|sdno
 operator|<
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 condition|;
 name|sdno
 operator|++
@@ -218,6 +218,18 @@ block|{
 comment|/* find this drive's subdisks */
 if|if
 condition|(
+operator|(
+name|SD
+index|[
+name|sdno
+index|]
+operator|.
+name|state
+operator|>=
+name|sd_referenced
+operator|)
+operator|&&
+operator|(
 name|SD
 index|[
 name|sdno
@@ -226,6 +238,7 @@ operator|.
 name|driveno
 operator|==
 name|driveno
+operator|)
 condition|)
 comment|/* belongs to this drive */
 name|update_sd_state
@@ -3388,15 +3401,15 @@ name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 operator|)
 operator|||
 operator|(
 name|sd
 operator|->
 name|state
-operator|==
-name|sd_unallocated
+operator|<=
+name|sd_referenced
 operator|)
 condition|)
 block|{
@@ -3489,14 +3502,14 @@ name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 operator|)
 operator|||
 operator|(
 name|plex
 operator|->
 name|state
-operator|==
+operator|<=
 name|plex_unallocated
 operator|)
 condition|)

@@ -624,7 +624,7 @@ name|i
 operator|<
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|;
 name|i
 operator|++
@@ -632,6 +632,17 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+name|VOL
+index|[
+name|i
+index|]
+operator|.
+name|state
+operator|>
+name|volume_down
+operator|)
+operator|&&
 operator|(
 name|VOL
 index|[
@@ -677,11 +688,11 @@ name|int
 name|i
 decl_stmt|;
 name|int
-name|drives_used
+name|drives_allocated
 init|=
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 decl_stmt|;
 if|if
 condition|(
@@ -704,7 +715,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|drives_used
+name|drives_allocated
 condition|;
 name|i
 operator|++
@@ -727,7 +738,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|drives_used
+name|drives_allocated
 condition|;
 name|i
 operator|++
@@ -839,7 +850,7 @@ name|i
 operator|<
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 condition|;
 name|i
 operator|++
@@ -1144,7 +1155,7 @@ name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 return|return
 name|ENXIO
@@ -1210,7 +1221,7 @@ argument_list|)
 operator|>=
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 return|return
 name|ENXIO
@@ -1229,7 +1240,7 @@ name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 condition|)
 return|return
 name|ENXIO
@@ -1250,6 +1261,9 @@ operator|->
 name|state
 condition|)
 block|{
+case|case
+name|plex_referenced
+case|:
 case|case
 name|plex_unallocated
 case|:
@@ -1281,10 +1295,10 @@ argument_list|)
 operator|>=
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 operator|)
-operator|||
 comment|/* no such volume */
+operator|||
 operator|(
 name|Plexno
 argument_list|(
@@ -1293,7 +1307,7 @@ argument_list|)
 operator|>=
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 operator|)
 condition|)
 comment|/* or no such plex */
@@ -1311,12 +1325,27 @@ expr_stmt|;
 comment|/* get the subdisk number */
 if|if
 condition|(
+operator|(
 name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
+operator|)
+comment|/* not a valid SD entry */
+operator|||
+operator|(
+name|SD
+index|[
+name|index
+index|]
+operator|.
+name|state
+operator|<
+name|sd_obsolete
+operator|)
 condition|)
+comment|/* or SD is not real */
 return|return
 name|ENXIO
 return|;
@@ -1504,7 +1533,7 @@ name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 return|return
 name|ENXIO
@@ -1571,7 +1600,7 @@ argument_list|)
 operator|>=
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 return|return
 name|ENXIO
@@ -1590,7 +1619,7 @@ name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 condition|)
 return|return
 name|ENXIO
@@ -1623,7 +1652,7 @@ argument_list|)
 operator|>=
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 operator|)
 operator|||
 comment|/* no such volume */
@@ -1635,7 +1664,7 @@ argument_list|)
 operator|>=
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 operator|)
 condition|)
 comment|/* or no such plex */
@@ -1657,7 +1686,7 @@ name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 condition|)
 return|return
 name|ENXIO
