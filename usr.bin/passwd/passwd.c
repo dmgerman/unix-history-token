@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: passwd.c,v 1.7 1995/12/16 09:45:15 markm Exp $"
+literal|"$Id: passwd.c,v 1.8 1996/02/23 16:08:26 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -586,8 +586,6 @@ condition|(
 name|res
 operator|==
 name|USER_YP_ONLY
-operator|||
-name|__use_yp
 condition|)
 block|{
 if|if
@@ -654,6 +652,12 @@ if|if
 condition|(
 operator|!
 name|use_local_passwd
+operator|&&
+operator|(
+name|yp_in_pw_file
+operator|||
+name|__use_yp
+operator|)
 condition|)
 name|exit
 argument_list|(
