@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ffs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -13270,6 +13276,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SOFTUPDATES
 if|if
 condition|(
 name|error
@@ -13297,6 +13306,8 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|VOP_UNLOCK
 argument_list|(
 name|vp

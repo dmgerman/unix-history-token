@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ffs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -4972,11 +4978,16 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Do soft update processing. 		 */
+ifdef|#
+directive|ifdef
+name|SOFTUPDATES
 name|softdep_process_worklist
 argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * The variable rushjob allows the kernel to speed up the 		 * processing of the filesystem syncer process. A rushjob 		 * value of N tells the filesystem syncer to process the next 		 * N seconds worth of work on its queue ASAP. Currently rushjob 		 * is used by the soft update code to speed up the filesystem 		 * syncer process when the incore state is getting so far 		 * ahead of the disk that the kernel memory pool is being 		 * threatened with exhaustion. 		 */
 if|if
 condition|(
