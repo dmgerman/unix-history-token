@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)collect.c	1.5 %G%"
+literal|"@(#)collect.c	1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,6 +202,10 @@ name|char
 name|tempMail
 index|[]
 decl_stmt|;
+name|int
+name|notify
+parameter_list|()
+function_decl|;
 name|noreset
 operator|++
 expr_stmt|;
@@ -1417,6 +1421,13 @@ argument_list|,
 name|savehup
 argument_list|)
 expr_stmt|;
+name|sigset
+argument_list|(
+name|SIGCONT
+argument_list|,
+name|savecont
+argument_list|)
+expr_stmt|;
 name|noreset
 operator|=
 literal|0
@@ -1803,12 +1814,21 @@ name|int
 name|t
 decl_stmt|;
 name|int
-function_decl|(
-modifier|*
+argument_list|(
+operator|*
 name|sig
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|)
+argument_list|()
+decl_stmt|,
+argument_list|(
+operator|*
+name|scont
+argument_list|)
+argument_list|()
+decl_stmt|,
+name|foonly
+argument_list|()
+decl_stmt|;
 name|struct
 name|stat
 name|sbuf
@@ -1833,6 +1853,15 @@ argument_list|(
 name|SIGINT
 argument_list|,
 name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|scont
+operator|=
+name|sigset
+argument_list|(
+name|SIGCONT
+argument_list|,
+name|foonly
 argument_list|)
 expr_stmt|;
 if|if
@@ -2196,6 +2225,13 @@ name|out
 label|:
 name|sigset
 argument_list|(
+name|SIGCONT
+argument_list|,
+name|scont
+argument_list|)
+expr_stmt|;
+name|sigset
+argument_list|(
 name|SIGINT
 argument_list|,
 name|sig
@@ -2211,6 +2247,19 @@ name|obuf
 operator|)
 return|;
 block|}
+end_block
+
+begin_comment
+comment|/*  * Currently, Berkeley virtual VAX/UNIX will not let you change the  * disposition of SIGCONT, except to trap it somewhere new.  * Hence, sigset(SIGCONT, foonly) is used to ignore continue signals.  */
+end_comment
+
+begin_macro
+name|foonly
+argument_list|()
+end_macro
+
+begin_block
+block|{}
 end_block
 
 begin_comment
@@ -3080,19 +3129,6 @@ condition|(
 name|s
 operator|==
 name|SIGINT
-condition|)
-name|sigset
-argument_list|(
-name|SIGCONT
-argument_list|,
-name|collrub
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|==
-name|SIGINT
 operator|&&
 name|hadintr
 operator|==
@@ -3112,11 +3148,9 @@ argument_list|(
 literal|"\n(Interrupt -- one more to kill letter)\n"
 argument_list|)
 expr_stmt|;
-name|sigset
+name|sigrelse
 argument_list|(
 name|s
-argument_list|,
-name|collrub
 argument_list|)
 expr_stmt|;
 name|longjmp
