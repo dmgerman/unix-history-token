@@ -437,17 +437,6 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mntflags
-operator|&
-name|MNT_FORCE
-condition|)
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
 comment|/* There is 1 extra root vnode reference from devfs_mount(). */
 name|error
 operator|=
