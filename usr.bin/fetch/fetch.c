@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -119,7 +125,7 @@ comment|/*    -a: auto retry */
 end_comment
 
 begin_decl_stmt
-name|size_t
+name|off_t
 name|B_size
 decl_stmt|;
 end_decl_stmt
@@ -326,7 +332,7 @@ begin_decl_stmt
 name|u_int
 name|T_secs
 init|=
-literal|0
+literal|120
 decl_stmt|;
 end_decl_stmt
 
@@ -469,7 +475,12 @@ begin_comment
 comment|/* transfer buffer */
 end_comment
 
+begin_comment
+comment|/*  * Signal handler  */
+end_comment
+
 begin_function
+specifier|static
 name|void
 name|sig_handler
 parameter_list|(
@@ -545,7 +556,12 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Update the stats display  */
+end_comment
+
 begin_function
+specifier|static
 name|void
 name|stat_display
 parameter_list|(
@@ -653,6 +669,10 @@ name|stderr
 argument_list|,
 literal|": %lld bytes"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|xs
 operator|->
 name|rcvd
@@ -665,6 +685,10 @@ name|stderr
 argument_list|,
 literal|" (%lld bytes): %d%%"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|xs
 operator|->
 name|size
@@ -690,7 +714,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Initialize the transfer statistics  */
+end_comment
+
 begin_function
+specifier|static
 name|void
 name|stat_start
 parameter_list|(
@@ -699,6 +728,7 @@ name|xferstat
 modifier|*
 name|xs
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -786,7 +816,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Update the transfer statistics  */
+end_comment
+
 begin_function
+specifier|static
 name|void
 name|stat_update
 parameter_list|(
@@ -797,9 +832,6 @@ name|xs
 parameter_list|,
 name|off_t
 name|rcvd
-parameter_list|,
-name|int
-name|force
 parameter_list|)
 block|{
 name|xs
@@ -818,7 +850,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Finalize the transfer statistics  */
+end_comment
+
 begin_function
+specifier|static
 name|void
 name|stat_end
 parameter_list|(
@@ -908,6 +945,11 @@ name|stderr
 argument_list|,
 literal|"%lld bytes transferred in %.1f seconds "
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|xs
 operator|->
 name|rcvd
@@ -915,6 +957,7 @@ operator|-
 name|xs
 operator|->
 name|offset
+argument_list|)
 argument_list|,
 name|delta
 argument_list|)
@@ -987,7 +1030,290 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Ask the user for authentication details  */
+end_comment
+
 begin_function
+specifier|static
+name|int
+name|query_auth
+parameter_list|(
+name|struct
+name|url
+modifier|*
+name|URL
+parameter_list|)
+block|{
+name|struct
+name|termios
+name|tios
+decl_stmt|;
+name|tcflag_t
+name|saved_flags
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|nopwd
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Authentication required for<%s://%s:%d/>!\n"
+argument_list|,
+name|URL
+operator|->
+name|scheme
+argument_list|,
+name|URL
+operator|->
+name|host
+argument_list|,
+name|URL
+operator|->
+name|port
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Login: "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fgets
+argument_list|(
+name|URL
+operator|->
+name|user
+argument_list|,
+sizeof|sizeof
+name|URL
+operator|->
+name|user
+argument_list|,
+name|stdin
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|URL
+operator|->
+name|user
+index|[
+name|i
+index|]
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|isspace
+argument_list|(
+name|URL
+operator|->
+name|user
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+name|URL
+operator|->
+name|user
+index|[
+name|i
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Password: "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tcgetattr
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+operator|&
+name|tios
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|saved_flags
+operator|=
+name|tios
+operator|.
+name|c_lflag
+expr_stmt|;
+name|tios
+operator|.
+name|c_lflag
+operator|&=
+operator|~
+name|ECHO
+expr_stmt|;
+name|tios
+operator|.
+name|c_lflag
+operator||=
+name|ECHONL
+operator||
+name|ICANON
+expr_stmt|;
+name|tcsetattr
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+name|TCSAFLUSH
+operator||
+name|TCSASOFT
+argument_list|,
+operator|&
+name|tios
+argument_list|)
+expr_stmt|;
+name|nopwd
+operator|=
+operator|(
+name|fgets
+argument_list|(
+name|URL
+operator|->
+name|pwd
+argument_list|,
+sizeof|sizeof
+name|URL
+operator|->
+name|pwd
+argument_list|,
+name|stdin
+argument_list|)
+operator|==
+name|NULL
+operator|)
+expr_stmt|;
+name|tios
+operator|.
+name|c_lflag
+operator|=
+name|saved_flags
+expr_stmt|;
+name|tcsetattr
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+name|TCSANOW
+operator||
+name|TCSASOFT
+argument_list|,
+operator|&
+name|tios
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|nopwd
+operator|=
+operator|(
+name|fgets
+argument_list|(
+name|URL
+operator|->
+name|pwd
+argument_list|,
+sizeof|sizeof
+name|URL
+operator|->
+name|pwd
+argument_list|,
+name|stdin
+argument_list|)
+operator|==
+name|NULL
+operator|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|nopwd
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|URL
+operator|->
+name|pwd
+index|[
+name|i
+index|]
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|isspace
+argument_list|(
+name|URL
+operator|->
+name|pwd
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+name|URL
+operator|->
+name|pwd
+index|[
+name|i
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Fetch a file  */
+end_comment
+
+begin_function
+specifier|static
 name|int
 name|fetch
 parameter_list|(
@@ -995,6 +1321,7 @@ name|char
 modifier|*
 name|URL
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
@@ -1012,6 +1339,8 @@ decl_stmt|;
 name|struct
 name|stat
 name|sb
+decl_stmt|,
+name|nsb
 decl_stmt|;
 name|struct
 name|xferstat
@@ -1038,6 +1367,15 @@ index|[
 literal|8
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|slash
+decl_stmt|;
+name|char
+modifier|*
+name|tmppath
+decl_stmt|;
 name|int
 name|r
 decl_stmt|;
@@ -1051,6 +1389,10 @@ decl_stmt|;
 name|f
 operator|=
 name|of
+operator|=
+name|NULL
+expr_stmt|;
+name|tmppath
 operator|=
 name|NULL
 expr_stmt|;
@@ -1184,6 +1526,16 @@ name|flags
 argument_list|,
 literal|"v"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|v_level
+operator|>
+literal|2
+condition|)
+name|fetchDebug
+operator|=
+literal|1
 expr_stmt|;
 switch|switch
 condition|(
@@ -1364,6 +1716,10 @@ name|printf
 argument_list|(
 literal|"%lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|us
 operator|.
 name|size
@@ -1373,15 +1729,16 @@ goto|goto
 name|success
 goto|;
 block|}
-comment|/*      * If the -r flag was specified, we have to compare the local and      * remote files, so we should really do a fetchStat() first, but I      * know of at least one HTTP server that only sends the content      * size in response to GET requests, and leaves it out of replies      * to HEAD requests. Also, in the (frequent) case that the local      * and remote files match but the local file is truncated, we have      * sufficient information *before* the compare to issue a correct      * request. Therefore, we always issue a GET request as if we were      * sure the local file was a truncated copy of the remote file; we      * can drop the connection later if we change our minds.      */
+comment|/* 	 * If the -r flag was specified, we have to compare the local 	 * and remote files, so we should really do a fetchStat() 	 * first, but I know of at least one HTTP server that only 	 * sends the content size in response to GET requests, and 	 * leaves it out of replies to HEAD requests.  Also, in the 	 * (frequent) case that the local and remote files match but 	 * the local file is truncated, we have sufficient information 	 * before the compare to issue a correct request.  Therefore, 	 * we always issue a GET request as if we were sure the local 	 * file was a truncated copy of the remote file; we can drop 	 * the connection later if we change our minds. 	 */
+name|sb
+operator|.
+name|st_size
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
-operator|(
-name|r_flag
-operator|||
-name|m_flag
-operator|)
-operator|&&
 operator|!
 name|o_stdout
 operator|&&
@@ -1392,14 +1749,39 @@ argument_list|,
 operator|&
 name|sb
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
 condition|)
 block|{
+name|warnx
+argument_list|(
+literal|"%s: stat()"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failure
+goto|;
+block|}
 if|if
 condition|(
+operator|!
+name|o_stdout
+operator|&&
 name|r_flag
+operator|&&
+name|S_ISREG
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
 condition|)
 name|url
 operator|->
@@ -1409,17 +1791,6 @@ name|sb
 operator|.
 name|st_size
 expr_stmt|;
-block|}
-else|else
-block|{
-name|sb
-operator|.
-name|st_size
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 comment|/* start the transfer */
 if|if
 condition|(
@@ -1503,8 +1874,16 @@ literal|"%s: size mismatch: expected %lld, actual %lld"
 argument_list|,
 name|path
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|S_size
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|us
 operator|.
 name|size
@@ -1573,6 +1952,9 @@ name|size
 operator|==
 operator|-
 literal|1
+operator|&&
+operator|!
+name|o_stdout
 condition|)
 name|warnx
 argument_list|(
@@ -1603,6 +1985,10 @@ name|stderr
 argument_list|,
 literal|"local size / mtime: %lld / %ld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sb
 operator|.
 name|st_size
@@ -1630,6 +2016,10 @@ name|stderr
 argument_list|,
 literal|"remote size / mtime: %lld / %ld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|us
 operator|.
 name|size
@@ -1658,6 +2048,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|r_flag
+operator|&&
 name|sb
 operator|.
 name|st_size
@@ -1699,7 +2091,8 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: local modification time does not match remote"
+literal|"%s: local modification time "
+literal|"does not match remote"
 argument_list|,
 name|path
 argument_list|)
@@ -1708,6 +2101,225 @@ goto|goto
 name|failure_keep
 goto|;
 block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|us
+operator|.
+name|size
+operator|==
+name|sb
+operator|.
+name|st_size
+condition|)
+comment|/* nothing to do */
+goto|goto
+name|success
+goto|;
+if|if
+condition|(
+name|sb
+operator|.
+name|st_size
+operator|>
+name|us
+operator|.
+name|size
+condition|)
+block|{
+comment|/* local file too long! */
+name|warnx
+argument_list|(
+literal|"%s: local file (%lld bytes) is longer "
+literal|"than remote file (%lld bytes)"
+argument_list|,
+name|path
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+name|sb
+operator|.
+name|st_size
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+name|us
+operator|.
+name|size
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failure
+goto|;
+block|}
+comment|/* we got it, open local file */
+if|if
+condition|(
+operator|(
+name|of
+operator|=
+name|fopen
+argument_list|(
+name|path
+argument_list|,
+literal|"a"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"%s: fopen()"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failure
+goto|;
+block|}
+comment|/* check that it didn't move under our feet */
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fileno
+argument_list|(
+name|of
+argument_list|)
+argument_list|,
+operator|&
+name|nsb
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* can't happen! */
+name|warn
+argument_list|(
+literal|"%s: fstat()"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failure
+goto|;
+block|}
+if|if
+condition|(
+name|nsb
+operator|.
+name|st_dev
+operator|!=
+name|sb
+operator|.
+name|st_dev
+operator|||
+name|nsb
+operator|.
+name|st_ino
+operator|!=
+name|nsb
+operator|.
+name|st_ino
+operator|||
+name|nsb
+operator|.
+name|st_size
+operator|!=
+name|sb
+operator|.
+name|st_size
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s: file has changed"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|of
+argument_list|)
+expr_stmt|;
+name|of
+operator|=
+name|NULL
+expr_stmt|;
+name|sb
+operator|=
+name|nsb
+expr_stmt|;
+block|}
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|m_flag
+operator|&&
+name|sb
+operator|.
+name|st_size
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* mirror mode, local file exists */
+if|if
+condition|(
+name|sb
+operator|.
+name|st_size
+operator|==
+name|us
+operator|.
+name|size
+operator|&&
+name|sb
+operator|.
+name|st_mtime
+operator|==
+name|us
+operator|.
+name|mtime
+condition|)
+goto|goto
+name|success
+goto|;
+block|}
+if|if
+condition|(
+name|of
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 		 * We don't yet have an output file; either this is a 		 * vanilla run with no special flags, or the local and 		 * remote files didn't match. 		 */
+if|if
+condition|(
+name|url
+operator|->
+name|offset
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * We tried to restart a transfer, but for 			 * some reason gave up - so we have to restart 			 * from scratch if we want the whole file 			 */
 name|url
 operator|->
 name|offset
@@ -1754,158 +2366,100 @@ goto|goto
 name|signal
 goto|;
 block|}
-else|else
-block|{
+comment|/* construct a temp file name */
 if|if
 condition|(
-name|us
-operator|.
-name|size
-operator|==
-name|sb
-operator|.
-name|st_size
-condition|)
-comment|/* nothing to do */
-goto|goto
-name|success
-goto|;
-if|if
-condition|(
-name|sb
-operator|.
-name|st_size
-operator|>
-name|us
-operator|.
-name|size
-condition|)
-block|{
-comment|/* local file too long! */
-name|warnx
-argument_list|(
-literal|"%s: local file (%lld bytes) is longer "
-literal|"than remote file (%lld bytes)"
-argument_list|,
-name|path
-argument_list|,
-name|sb
-operator|.
-name|st_size
-argument_list|,
-name|us
-operator|.
-name|size
-argument_list|)
-expr_stmt|;
-goto|goto
-name|failure
-goto|;
-block|}
-comment|/* we got through, open local file and seek to offset */
-comment|/* 	     * XXX there's a race condition here - the file we open is not 	     * necessarily the same as the one we stat()'ed earlier... 	     */
-if|if
-condition|(
-operator|(
-name|of
-operator|=
-name|fopen
-argument_list|(
-name|path
-argument_list|,
-literal|"a"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|warn
-argument_list|(
-literal|"%s: fopen()"
-argument_list|,
-name|path
-argument_list|)
-expr_stmt|;
-goto|goto
-name|failure
-goto|;
-block|}
-if|if
-condition|(
-name|fseek
-argument_list|(
-name|of
-argument_list|,
-name|url
-operator|->
-name|offset
-argument_list|,
-name|SEEK_SET
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|warn
-argument_list|(
-literal|"%s: fseek()"
-argument_list|,
-name|path
-argument_list|)
-expr_stmt|;
-goto|goto
-name|failure
-goto|;
-block|}
-block|}
-block|}
-if|if
-condition|(
-name|m_flag
-operator|&&
 name|sb
 operator|.
 name|st_size
 operator|!=
 operator|-
 literal|1
-condition|)
-block|{
-comment|/* mirror mode, local file exists */
-if|if
-condition|(
-name|sb
-operator|.
-name|st_size
-operator|==
-name|us
-operator|.
-name|size
 operator|&&
+name|S_ISREG
+argument_list|(
 name|sb
 operator|.
-name|st_mtime
-operator|==
-name|us
-operator|.
-name|mtime
-condition|)
-goto|goto
-name|success
-goto|;
-block|}
-if|if
-condition|(
-operator|!
-name|of
+name|st_mode
+argument_list|)
 condition|)
 block|{
-comment|/* 	 * We don't yet have an output file; either this is a vanilla 	 * run with no special flags, or the local and remote files 	 * didn't match. 	 */
 if|if
 condition|(
 operator|(
+name|slash
+operator|=
+name|strrchr
+argument_list|(
+name|path
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|slash
+operator|=
+name|path
+expr_stmt|;
+else|else
+operator|++
+name|slash
+expr_stmt|;
+name|asprintf
+argument_list|(
+operator|&
+name|tmppath
+argument_list|,
+literal|"%.*s.fetch.XXXXXX.%s"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|slash
+operator|-
+name|path
+argument_list|)
+argument_list|,
+name|path
+argument_list|,
+name|slash
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tmppath
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mkstemps
+argument_list|(
+name|tmppath
+argument_list|,
+name|strlen
+argument_list|(
+name|slash
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|of
+operator|=
+name|fopen
+argument_list|(
+name|tmppath
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|of
 operator|=
 name|fopen
@@ -1914,7 +2468,11 @@ name|path
 argument_list|,
 literal|"w"
 argument_list|)
-operator|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|of
 operator|==
 name|NULL
 condition|)
@@ -2094,8 +2652,6 @@ argument_list|,
 name|count
 operator|+=
 name|size
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -2407,8 +2963,16 @@ literal|"%s appears to be truncated: %lld/%lld bytes"
 argument_list|,
 name|path
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|count
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|us
 operator|.
 name|size
@@ -2418,7 +2982,7 @@ goto|goto
 name|failure_keep
 goto|;
 block|}
-comment|/*      * If the transfer timed out and we didn't know how much to      * expect, assume the worst (i.e. we didn't get all of it)      */
+comment|/* 	 * If the transfer timed out and we didn't know how much to 	 * expect, assume the worst (i.e. we didn't get all of it) 	 */
 if|if
 condition|(
 name|sigalrm
@@ -2448,6 +3012,34 @@ name|r
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|tmppath
+operator|!=
+name|NULL
+operator|&&
+name|rename
+argument_list|(
+name|tmppath
+argument_list|,
+name|path
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"%s: rename()"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failure_keep
+goto|;
+block|}
 goto|goto
 name|done
 goto|;
@@ -2490,9 +3082,36 @@ operator|)
 condition|)
 name|unlink
 argument_list|(
+name|tmppath
+condition|?
+name|tmppath
+else|:
 name|path
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|R_flag
+operator|&&
+name|tmppath
+operator|!=
+name|NULL
+operator|&&
+name|sb
+operator|.
+name|st_size
+operator|==
+operator|-
+literal|1
+condition|)
+name|rename
+argument_list|(
+name|tmppath
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+comment|/* ignore errors here */
 name|failure_keep
 label|:
 name|r
@@ -2536,6 +3155,17 @@ argument_list|(
 name|url
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tmppath
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|tmppath
+argument_list|)
+expr_stmt|;
 return|return
 name|r
 return|;
@@ -2543,6 +3173,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -2553,9 +3184,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: fetch [-146AFMPRUadlmnpqrsv] [-o outputfile] [-S bytes]\n"
-literal|"             [-B bytes] [-T seconds] [-w seconds]\n"
-literal|"             [-h host -f file [-c dir] | URL ...]\n"
+literal|"%s\n%s\n%s\n"
+argument_list|,
+literal|"Usage: fetch [-146AFMPRUadlmnpqrsv] [-o outputfile] [-S bytes]"
+argument_list|,
+literal|"             [-B bytes] [-T seconds] [-w seconds]"
+argument_list|,
+literal|"             [-h host -f file [-c dir] | URL ...]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2571,35 +3206,32 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|int					\ NAME(char *s, TYPE *v)			\ {					\     *v = 0;				\     for (*v = 0; *s; s++)		\ 	if (isdigit(*s))		\ 	    *v = *v * 10 + *s - '0';	\ 	else				\ 	    return -1;			\     return 0;				\ }
+value|static int						\ NAME(const char *s, TYPE *v)				\ {							\         *v = 0;						\ 	for (*v = 0; *s; s++)				\ 		if (isdigit(*s))			\ 			*v = *v * 10 + *s - '0';	\ 		else					\ 			return -1;			\ 	return 0;					\ }
 end_define
 
-begin_macro
+begin_expr_stmt
 name|PARSENUM
 argument_list|(
-argument|parseint
+name|parseint
 argument_list|,
-argument|u_int
+name|u_int
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|PARSENUM
 argument_list|(
-argument|parsesize
+name|parseoff
 argument_list|,
-argument|size_t
+name|off_t
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|PARSENUM
-argument_list|(
-argument|parseoff
-argument_list|,
-argument|off_t
-argument_list|)
-end_macro
+begin_comment
+comment|/*  * Entry point  */
+end_comment
 
 begin_function
 name|int
@@ -2622,15 +3254,17 @@ name|struct
 name|sigaction
 name|sa
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
 decl_stmt|,
 modifier|*
-name|q
-decl_stmt|,
-modifier|*
 name|s
+decl_stmt|;
+name|char
+modifier|*
+name|q
 decl_stmt|;
 name|int
 name|c
@@ -2706,7 +3340,7 @@ literal|'B'
 case|:
 if|if
 condition|(
-name|parsesize
+name|parseoff
 argument_list|(
 name|optarg
 argument_list|,
@@ -2721,7 +3355,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"invalid buffer size"
+literal|"invalid buffer size (%s)"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2775,7 +3411,8 @@ literal|'H'
 case|:
 name|warnx
 argument_list|(
-literal|"The -H option is now implicit, use -U to disable\n"
+literal|"The -H option is now implicit, "
+literal|"use -U to disable"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2821,7 +3458,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"the -m and -r flags are mutually exclusive"
+literal|"the -m and -r flags "
+literal|"are mutually exclusive"
 argument_list|)
 expr_stmt|;
 name|m_flag
@@ -2875,7 +3513,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"the -m and -r flags are mutually exclusive"
+literal|"the -m and -r flags "
+literal|"are mutually exclusive"
 argument_list|)
 expr_stmt|;
 name|r_flag
@@ -2903,7 +3542,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"invalid size"
+literal|"invalid size (%s)"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2935,7 +3576,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"invalid timeout"
+literal|"invalid timeout (%s)"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2991,7 +3634,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"invalid delay"
+literal|"invalid delay (%s)"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3184,7 +3829,9 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"FTP_TIMEOUT is not a positive integer"
+literal|"FTP_TIMEOUT (%s) is not a positive integer"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 name|ftp_timeout
@@ -3223,7 +3870,9 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"HTTP_TIMEOUT is not a positive integer"
+literal|"HTTP_TIMEOUT (%s) is not a positive integer"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 name|http_timeout
@@ -3393,6 +4042,15 @@ expr_stmt|;
 name|r
 operator|=
 literal|0
+expr_stmt|;
+comment|/* authentication */
+if|if
+condition|(
+name|v_tty
+condition|)
+name|fetchAuthMethod
+operator|=
+name|query_auth
 expr_stmt|;
 while|while
 condition|(
@@ -3584,27 +4242,28 @@ block|{
 if|if
 condition|(
 name|w_secs
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|v_level
 condition|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Waiting %d seconds before retrying\n"
+literal|"Waiting %d seconds "
+literal|"before retrying\n"
 argument_list|,
 name|w_secs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|w_secs
+condition|)
 name|sleep
 argument_list|(
 name|w_secs
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|a_flag
