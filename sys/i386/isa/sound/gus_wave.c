@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ultrasound.h"
+file|<machine/ultrasound.h>
 end_include
 
 begin_include

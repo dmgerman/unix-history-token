@@ -295,17 +295,13 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|void
 name|m6850intr
-argument_list|(
-name|INTR_HANDLER_PARMS
-argument_list|(
-name|irq
-argument_list|,
-name|dummy
-argument_list|)
-argument_list|)
+parameter_list|(
+name|int
+name|unit
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -316,7 +312,7 @@ name|uart6850_input_loop
 argument_list|()
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * It looks like there is no input interrupts in the UART mode. Let's try  * polling.  */
