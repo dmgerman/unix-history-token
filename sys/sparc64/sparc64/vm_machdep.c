@@ -385,7 +385,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Make sure the copied windows are spilled. */
-asm|__asm __volatile("flushw" : :);
+name|flushw
+argument_list|()
+expr_stmt|;
 comment|/* Copy the pcb (this will copy the windows saved in the pcb, too). */
 name|bcopy
 argument_list|(
