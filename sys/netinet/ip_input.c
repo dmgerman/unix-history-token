@@ -2451,6 +2451,12 @@ name|next_hop
 operator|==
 name|NULL
 operator|)
+operator|&&
+operator|(
+name|dchg
+operator|==
+literal|0
+operator|)
 expr_stmt|;
 comment|/* 	 * Check for exact addresses in the hash bucket. 	 */
 name|LIST_FOREACH
