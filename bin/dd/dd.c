@@ -768,7 +768,7 @@ condition|)
 name|pos_out
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Truncate the output file; ignore errors because it fails on some 	 * kinds of output files, tapes, for example. 	 */
+comment|/* 	 * Truncate the output file.  If it fails on a type of output file 	 * that it should _not_ fail on, error out. 	 */
 if|if
 condition|(
 operator|(
