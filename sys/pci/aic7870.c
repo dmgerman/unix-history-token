@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7880, aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7870.c,v 1.38 1996/10/06 16:38:45 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7880, aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7870.c,v 1.11.2.18 1996/10/06 16:42:35 gibbs Exp $  */
 end_comment
 
 begin_if
@@ -15,7 +15,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"pci.h"
+file|<pci.h>
 end_include
 
 begin_endif
@@ -166,6 +166,21 @@ name|PCI_BASEADR0
 value|PCI_MAP_REG_START
 end_define
 
+begin_comment
+comment|/* I/O Address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_BASEADR1
+value|PCI_MAP_REG_START + 4
+end_define
+
+begin_comment
+comment|/* Mem I/O Address */
+end_comment
+
 begin_elif
 elif|#
 directive|elif
@@ -218,6 +233,21 @@ directive|define
 name|PCI_BASEADR0
 value|PCI_MAPREG_START
 end_define
+
+begin_comment
+comment|/* I/O Address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_BASEADR1
+value|PCI_MAPREG_START + 4
+end_define
+
+begin_comment
+comment|/* Mem I/O Address */
+end_comment
 
 begin_endif
 endif|#
@@ -1111,8 +1141,13 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|u_long
+name|u_int16_t
 name|io_port
+decl_stmt|;
+name|struct
+name|ahc_data
+modifier|*
+name|ahc
 decl_stmt|;
 elif|#
 directive|elif
@@ -1166,10 +1201,10 @@ name|intrstr
 decl_stmt|;
 endif|#
 directive|endif
-name|u_long
+name|u_int32_t
 name|id
 decl_stmt|;
-name|unsigned
+name|int
 name|opri
 init|=
 literal|0
@@ -1184,25 +1219,18 @@ name|ahc_f
 init|=
 name|AHC_FNONE
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|struct
-name|ahc_data
-modifier|*
-name|ahc
+name|vm_offset_t
+name|vaddr
 decl_stmt|;
-endif|#
-directive|endif
-name|u_char
+name|vm_offset_t
+name|paddr
+decl_stmt|;
+name|u_int8_t
 name|ultra_enb
 init|=
 literal|0
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|our_id
 init|=
 literal|0
@@ -1215,24 +1243,37 @@ name|__FreeBSD__
 argument_list|)
 if|if
 condition|(
-operator|!
-operator|(
-name|io_port
-operator|=
-name|pci_conf_read
+name|pci_map_port
 argument_list|(
 name|config_id
 argument_list|,
 name|PCI_BASEADR0
+argument_list|,
+operator|&
+name|io_port
 argument_list|)
-operator|)
+operator|==
+literal|0
 condition|)
 return|return;
-comment|/* 	 * The first bit of PCI_BASEADR0 is always 	 * set hence we mask it off. 	 */
-name|io_port
-operator|&=
-literal|0xfffffffe
-expr_stmt|;
+if|if
+condition|(
+name|pci_map_mem
+argument_list|(
+name|config_id
+argument_list|,
+name|PCI_BASEADR1
+argument_list|,
+operator|&
+name|vaddr
+argument_list|,
+operator|&
+name|paddr
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return;
 elif|#
 directive|elif
 name|defined
@@ -1343,12 +1384,13 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|aic3940_count
 operator|&
 literal|0x01
 operator|)
+operator|==
+literal|0
 condition|)
 comment|/* Even count implies second channel */
 name|ahc_f
@@ -1556,7 +1598,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|u_long
+name|u_int32_t
 name|devconfig
 init|=
 name|pci_conf_read
@@ -1572,7 +1614,7 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
-name|u_long
+name|u_int32_t
 name|devconfig
 init|=
 name|pci_conf_read
@@ -1599,15 +1641,11 @@ name|RAMPSM
 operator|)
 condition|)
 block|{
-comment|/* 			 * External SRAM present.  Have the probe walk 			 * the SCBs to see how much SRAM we have and set 			 * the number of SCBs accordingly.  We have to 			 * turn off SCBRAMSEL to access the external 			 * SCB SRAM. 			 * 			 * It seems that early versions of the aic7870 			 * didn't use these bits, hence the hack for the 			 * 3940 above.  I would guess that recent 3940s 			 * using later aic7870 or aic7880 chips do 			 * actually set RAMPSM. 			 * 			 * The documentation isn't clear, but it sounds 			 * like the value written to devconfig must not 			 * have RAMPSM set.  The second sixteen bits of 			 * the register are R/O anyway, so it shouldn't 			 * affect RAMPSM either way. 			 */
+comment|/* 			 * XXX What about EXTSCBTIME and EXTSCBPEN??? 			 * They are probably card dependant. 			 */
 name|devconfig
 operator|&=
 operator|~
-operator|(
-name|RAMPSM
-operator||
 name|SCBRAMSEL
-operator|)
 expr_stmt|;
 if|#
 directive|if
@@ -1657,7 +1695,6 @@ name|__FreeBSD__
 argument_list|)
 if|if
 condition|(
-operator|!
 operator|(
 name|ahc
 operator|=
@@ -1667,11 +1704,15 @@ name|unit
 argument_list|,
 name|io_port
 argument_list|,
+name|vaddr
+argument_list|,
 name|ahc_t
 argument_list|,
 name|ahc_f
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return;
 comment|/* XXX PCI code should take return status */
@@ -1902,9 +1943,9 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Do aic7870/aic7880/aic7850 specific initialization 	 */
+comment|/* 	 * Do aic7880/aic7870/aic7860/aic7850 specific initialization 	 */
 block|{
-name|u_char
+name|u_int8_t
 name|sblkctl
 decl_stmt|;
 name|char
@@ -1927,7 +1968,6 @@ case|:
 case|case
 name|AHC_AIC7880
 case|:
-block|{
 name|id_string
 operator|=
 literal|"aic7880 "
@@ -1938,7 +1978,6 @@ name|ahc
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 case|case
 name|AHC_394
 case|:
@@ -1948,7 +1987,6 @@ case|:
 case|case
 name|AHC_AIC7870
 case|:
-block|{
 name|id_string
 operator|=
 literal|"aic7870 "
@@ -1959,14 +1997,12 @@ name|ahc
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 case|case
 name|AHC_294AU
 case|:
 case|case
 name|AHC_AIC7860
 case|:
-block|{
 name|id_string
 operator|=
 literal|"aic7860 "
@@ -1977,11 +2013,9 @@ name|ahc
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 case|case
 name|AHC_AIC7850
 case|:
-block|{
 name|id_string
 operator|=
 literal|"aic7850 "
@@ -1994,9 +2028,7 @@ operator||=
 name|AHC_USEDEFAULTS
 expr_stmt|;
 break|break;
-block|}
 default|default:
-block|{
 name|printf
 argument_list|(
 literal|"ahc: Unknown controller type.  Ignoring.\n"
@@ -2013,7 +2045,6 @@ name|opri
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
 block|}
 comment|/* 		 * Take the LED out of diagnostic mode 		 */
 name|sblkctl
@@ -2064,7 +2095,7 @@ condition|)
 block|{
 comment|/* 			 * PCI Adapter default setup 			 * Should only be used if the adapter does not have 			 * an SEEPROM. 			 */
 comment|/* See if someone else set us up already */
-name|u_long
+name|u_int32_t
 name|i
 decl_stmt|;
 for|for
@@ -2319,11 +2350,11 @@ name|__FreeBSD__
 argument_list|)
 name|sd
 operator|.
-name|sd_iobase
+name|sd_maddr
 operator|=
 name|ahc
 operator|->
-name|baseport
+name|maddr
 operator|+
 name|SEECTL
 expr_stmt|;
@@ -2463,6 +2494,20 @@ comment|/* Check checksum */
 name|int
 name|i
 decl_stmt|;
+name|int
+name|maxaddr
+init|=
+operator|(
+sizeof|sizeof
+argument_list|(
+name|sc
+argument_list|)
+operator|/
+literal|2
+operator|)
+operator|-
+literal|1
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -2471,22 +2516,10 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
-sizeof|sizeof
-argument_list|(
-name|sc
-argument_list|)
-operator|/
-literal|2
-operator|-
-literal|1
-operator|)
+name|maxaddr
 condition|;
 name|i
-operator|=
-name|i
-operator|+
-literal|1
+operator|++
 control|)
 name|checksum
 operator|=
