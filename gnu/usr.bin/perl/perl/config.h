@@ -1552,7 +1552,7 @@ begin_define
 define|#
 directive|define
 name|PRIVLIB
-value|"/usr/lib/perl"
+value|"/usr/share/perl"
 end_define
 
 begin_comment
