@@ -135,33 +135,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* dosetrlimit non-static:  Needed by SysVR4 emulator */
-end_comment
-
-begin_decl_stmt
-name|int
-name|dosetrlimit
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-name|p
-operator|,
-name|u_int
-name|which
-operator|,
-expr|struct
-name|rlimit
-operator|*
-name|limp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE

@@ -421,6 +421,26 @@ name|averunnable
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|dosetrlimit
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|,
+name|u_int
+operator|,
+expr|struct
+name|rlimit
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
