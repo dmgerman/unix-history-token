@@ -41,11 +41,11 @@ directive|if
 literal|0
 end_if
 
-begin_else
+begin_endif
 unit|static char sccsid[] = "@(#)mount.c	8.25 (Berkeley) 5/8/95";
-else|#
-directive|else
-end_else
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -54,14 +54,9 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount.c,v 1.26 1998/05/17 21:57:17 dt Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -353,7 +348,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Map from mount otions to printable formats. */
+comment|/* Map from mount options to printable formats. */
 end_comment
 
 begin_struct
@@ -683,7 +678,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"only one -t option may be specified."
+literal|"only one -t option may be specified"
 argument_list|)
 expr_stmt|;
 name|vfslist
@@ -1007,7 +1002,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unknown special file or file system %s."
+literal|"unknown special file or file system %s"
 argument_list|,
 operator|*
 name|argv
@@ -1094,7 +1089,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: unknown special file or file system."
+literal|"%s: unknown special file or file system"
 argument_list|,
 operator|*
 name|argv
@@ -1113,7 +1108,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s has unknown file system type."
+literal|"%s has unknown file system type"
 argument_list|,
 operator|*
 name|argv
@@ -1782,7 +1777,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: Not a directory"
+literal|"%s: not a directory"
 argument_list|,
 name|mntpath
 argument_list|)
@@ -1912,7 +1907,7 @@ argument_list|,
 literal|"ro"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX 	 * The mount_mfs (newfs) command uses -o to select the 	 * optimisation mode.  We don't pass the default "-o rw" 	 * for that reason. 	 */
+comment|/* 	 * XXX 	 * The mount_mfs (newfs) command uses -o to select the 	 * optimization mode.  We don't pass the default "-o rw" 	 * for that reason. 	 */
 if|if
 condition|(
 name|flags
@@ -2187,18 +2182,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|warn
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
-block|}
 name|cp
 index|[
 literal|0
@@ -2792,11 +2782,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3006,15 +2996,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount %s %s\n       mount %s\n       mount %s\n"
+literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"[-dfpruvw] [-o options] [-t ufs | external_type]"
+literal|"usage: mount [-dfpruvw] [-o options] [-t ufs | external_type] special node"
 argument_list|,
-literal|"special node"
+literal|"       mount [-adfpruvw] [-t ufs | external_type]"
 argument_list|,
-literal|"[-adfpruvw] [-t ufs | external_type]"
-argument_list|,
-literal|"[-dfpruvw] special | node"
+literal|"       mount [-dfpruvw] special | node"
 argument_list|)
 expr_stmt|;
 name|exit

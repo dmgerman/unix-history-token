@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: getmntopts.c,v 1.6 1997/08/24 21:02:47 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,25 +55,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fstab.h>
 end_include
 
 begin_include
@@ -86,12 +68,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"extern.h"
 end_include
 
 begin_include
@@ -325,7 +301,7 @@ literal|'='
 condition|)
 break|break;
 block|}
-comment|/* Save flag, or fail if option is not recognised. */
+comment|/* Save flag, or fail if option is not recognized. */
 if|if
 condition|(
 name|m

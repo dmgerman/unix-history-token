@@ -41,11 +41,11 @@ directive|if
 literal|0
 end_if
 
-begin_else
+begin_endif
 unit|static char sccsid[] = "@(#)mount_ufs.c	8.4 (Berkeley) 4/26/95";
-else|#
-directive|else
-end_else
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -54,14 +54,9 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_ufs.c,v 1.12 1998/03/08 19:03:05 steve Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -100,18 +95,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -451,7 +434,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * If we are mounting root, and we have a mount of something that 	 * might be the compatability slice, try mounting other slices 	 * first.  If the kernel has done the right thing and mounted 	 * the slice because the disk is really sliced, this will find 	 * the real root filesystem.  If not, we'll try what was supplied. 	 */
+comment|/* 	 * If we are mounting root, and we have a mount of something that 	 * might be the compatibility slice, try mounting other slices 	 * first.  If the kernel has done the right thing and mounted 	 * the slice because the disk is really sliced, this will find 	 * the real root filesystem.  If not, we'll try what was supplied. 	 */
 if|if
 condition|(
 operator|!
@@ -632,22 +615,6 @@ condition|)
 block|{
 endif|#
 directive|endif
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s on %s: "
-argument_list|,
-name|args
-operator|.
-name|fspec
-argument_list|,
-name|fs_name
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|errno
@@ -656,14 +623,15 @@ block|{
 case|case
 name|EMFILE
 case|:
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"%s on %s: mount table full"
 argument_list|,
-literal|"mount table full.\n"
+name|args
+operator|.
+name|fspec
+argument_list|,
+name|fs_name
 argument_list|)
 expr_stmt|;
 break|break;
@@ -676,42 +644,34 @@ name|mntflags
 operator|&
 name|MNT_UPDATE
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"%s on %s: specified device does not match mounted device"
 argument_list|,
-literal|"Specified device does not match mounted device.\n"
+name|args
+operator|.
+name|fspec
+argument_list|,
+name|fs_name
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"%s on %s: incorrect super block"
 argument_list|,
-literal|"Incorrect super block.\n"
+name|args
+operator|.
+name|fspec
+argument_list|,
+name|fs_name
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;

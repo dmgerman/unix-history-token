@@ -15,11 +15,11 @@ directive|if
 literal|0
 end_if
 
-begin_else
+begin_endif
 unit|static char sccsid[] = "@(#)vfslist.c	8.1 (Berkeley) 5/8/95";
-else|#
-directive|else
-end_else
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -31,11 +31,6 @@ init|=
 literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -62,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_include
@@ -269,9 +258,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
-name|NULL
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 return|return
