@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)find.c	4.20 (Berkeley) %G%"
+literal|"@(#)find.c	4.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,12 +19,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -42,6 +36,18 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -418,6 +424,16 @@ name|time
 argument_list|(
 operator|&
 name|Now
+argument_list|)
+expr_stmt|;
+name|setpassent
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|setgroupent
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -5393,7 +5409,7 @@ name|devtty
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|"r"
 argument_list|)
@@ -5486,13 +5502,6 @@ end_ifdef
 begin_comment
 comment|/*  * 'fastfind' scans a file list for the full pathname of a file  * given only a piece of the name.  The list has been processed with  * with "front-compression" and bigram coding.  Front compression reduces  * space by a factor of 4-5, bigram coding by a further 20-25%.  * The codes are:  *  *	0-28	likeliest differential counts + offset to make nonnegative   *	30	escape code for out-of-range count to follow in next word  *	128-255 bigram codes, (128 most common, as determined by 'updatedb')  *	32-127  single character (printable) ascii residue  *  * A novel two-tiered string search technique is employed:   *  * First, a metacharacter-free subpattern and partial pathname is  * matched BACKWARDS to avoid full expansion of the pathname list.  * The time savings is 40-50% over forward matching, which cannot efficiently  * handle overlapped search patterns and compressed path residue.  *  * Then, the actual shell glob-style regular expression (if in this form)  * is matched against the candidate pathnames using the slower routines  * provided in the standard 'find'.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|FCODES
-value|"/usr/lib/find/find.codes"
-end_define
 
 begin_define
 define|#
@@ -5615,7 +5624,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|FCODES
+name|_PATH_FCODES
 argument_list|,
 literal|"r"
 argument_list|)
@@ -5630,7 +5639,7 @@ name|stderr
 argument_list|,
 literal|"find: can't open %s\n"
 argument_list|,
-name|FCODES
+name|_PATH_FCODES
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6320,14 +6329,6 @@ specifier|register
 name|int
 name|cp
 decl_stmt|;
-specifier|extern
-name|int
-name|_pw_stayopen
-decl_stmt|;
-name|_pw_stayopen
-operator|=
-literal|1
-expr_stmt|;
 if|#
 directive|if
 operator|(
@@ -6749,19 +6750,6 @@ modifier|*
 name|getpwnam
 parameter_list|()
 function_decl|;
-ifndef|#
-directive|ifndef
-name|NO_PW_STAYOPEN
-specifier|extern
-name|int
-name|_pw_stayopen
-decl_stmt|;
-name|_pw_stayopen
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 name|pw
 operator|=
 name|getpwnam
