@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_snpac.c	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_snpac.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -370,7 +370,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *	Addresses taken from NBS agreements, December 1987.  *  *	These addresses assume on-the-wire transmission of least significant  *	bit first. This is the method used by 802.3. When these  *	addresses are passed to the token ring driver, (802.5), they  *	must be bit-swaped because 802.5 transmission order is MSb first.  *  *	Furthermore, according to IBM Austin, these addresses are not  *	true token ring multicast addresses. More work is necessary  *	to get multicast to work right on token ring.  *  *	Currently, the token ring driver does not handle multicast, so  *	these addresses are converted into the broadcast address in  *	lan_output() That means that if these multicast addresses change  *	the token ring driver must be altered.  */
+comment|/*  *	Addresses taken from NBS agreements, December 1987.  *  *	These addresses assume on-the-wire transmission of least significant  *	bit first. This is the method used by 802.3. When these  *	addresses are passed to the token ring driver, (802.5), they  *	must be bit-swapped because 802.5 transmission order is MSb first.  *  *	Furthermore, according to IBM Austin, these addresses are not  *	true token ring multicast addresses. More work is necessary  *	to get multicast to work right on token ring.  *  *	Currently, the token ring driver does not handle multicast, so  *	these addresses are converted into the broadcast address in  *	lan_output() That means that if these multicast addresses change  *	the token ring driver must be altered.  */
 end_comment
 
 begin_decl_stmt
