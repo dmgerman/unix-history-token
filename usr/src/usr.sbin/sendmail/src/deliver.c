@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.55 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.56 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6291,6 +6291,10 @@ expr_stmt|;
 comment|/* log the arguments */
 if|if
 condition|(
+name|pv
+operator|!=
+name|NULL
+operator|&&
 name|e
 operator|->
 name|e_xfp

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.15 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.16 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.15 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.16 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2403,9 +2403,7 @@ name|mci
 argument_list|,
 name|e
 argument_list|,
-name|m
-operator|->
-name|m_argv
+name|NULL
 argument_list|)
 expr_stmt|;
 name|SuprErrs
