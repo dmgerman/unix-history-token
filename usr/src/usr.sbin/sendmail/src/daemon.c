@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.99 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.100 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.99 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.100 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1892,6 +1892,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+specifier|auto
+name|int
+name|stat
+decl_stmt|;
 name|char
 modifier|*
 name|maptype
@@ -1958,6 +1962,9 @@ argument_list|,
 name|size
 argument_list|,
 name|TRUE
+argument_list|,
+operator|&
+name|stat
 argument_list|)
 operator|&&
 name|h_errno
