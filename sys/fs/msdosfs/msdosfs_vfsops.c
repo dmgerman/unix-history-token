@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Paul Popelka (paulp@uts.amdahl.com)  *   * You can do anything you want with this software, just don't say you wrote  * it, and don't remove this notice.  *   * This software is provided "as is".  *   * The author supplies this software to be publicly redistributed on the  * understanding that the author is not responsible for the correct  * functioning of this software in any circumstances and is not liable for  * any damages caused by this software.  *   * October 1992  *   *	from NetBSD:	msdosfs_vfsops.c,v 1.7 1994/01/20 09:46:40 pk Exp  *	$Id$  */
+comment|/*  * Written by Paul Popelka (paulp@uts.amdahl.com)  *   * You can do anything you want with this software, just don't say you wrote  * it, and don't remove this notice.  *   * This software is provided "as is".  *   * The author supplies this software to be publicly redistributed on the  * understanding that the author is not responsible for the correct  * functioning of this software in any circumstances and is not liable for  * any damages caused by this software.  *   * October 1992  *   *	from NetBSD:	msdosfs_vfsops.c,v 1.7 1994/01/20 09:46:40 pk Exp  *	$Id: msdosfs_vfsops.c,v 1.1 1994/01/24 06:04:56 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<miscfs/specfs/specdev.h>
+file|<fs/specfs/specdev.h>
 end_include
 
 begin_comment
@@ -80,37 +80,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<msdosfs/bpb.h>
+file|<fs/msdosfs/bpb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<msdosfs/bootsect.h>
+file|<fs/msdosfs/bootsect.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<msdosfs/direntry.h>
+file|<fs/msdosfs/direntry.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<msdosfs/denode.h>
+file|<fs/msdosfs/denode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<msdosfs/msdosfsmount.h>
+file|<fs/msdosfs/msdosfsmount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<msdosfs/fat.h>
+file|<fs/msdosfs/fat.h>
 end_include
 
 begin_decl_stmt
