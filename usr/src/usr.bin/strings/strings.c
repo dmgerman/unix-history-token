@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strings.c	5.9 (Berkeley) %G%"
+literal|"@(#)strings.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -500,7 +500,7 @@ literal|'\0'
 expr_stmt|;
 name|file
 operator|=
-name|NULL
+literal|"stdin"
 expr_stmt|;
 do|do
 block|{
