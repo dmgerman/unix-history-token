@@ -103,26 +103,26 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__i386__
+name|__alpha__
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__powerpc__
+name|__sparc64__
 argument_list|)
 define|#
 directive|define
 name|BFD_HOST_64BIT_LONG
-value|0
+value|1
 else|#
 directive|else
 define|#
 directive|define
 name|BFD_HOST_64BIT_LONG
-value|1
+value|0
 endif|#
 directive|endif
-comment|/* __i386__ */
+comment|/* 64-bit host */
 if|#
 directive|if
 literal|0
