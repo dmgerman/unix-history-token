@@ -253,6 +253,7 @@ operator|*
 name|_pfd
 operator|,
 name|unsigned
+name|int
 name|_nfds
 operator|,
 name|int
