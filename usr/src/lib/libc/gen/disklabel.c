@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.21 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -788,29 +788,39 @@ operator|->
 name|p_fsize
 condition|)
 block|{
+name|long
+name|bsize
+decl_stmt|;
+if|if
+condition|(
 name|cgetnum
 argument_list|(
 name|buf
 argument_list|,
 name|pbsize
 argument_list|,
-operator|(
-name|long
-operator|*
-operator|)
 operator|&
-name|pp
-operator|->
-name|p_frag
+name|bsize
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|pp
 operator|->
 name|p_frag
-operator|/=
+operator|=
+name|bsize
+operator|/
 name|pp
 operator|->
 name|p_fsize
+expr_stmt|;
+else|else
+name|pp
+operator|->
+name|p_frag
+operator|=
+literal|8
 expr_stmt|;
 block|}
 name|getnumdflt
