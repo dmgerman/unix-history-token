@@ -545,10 +545,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int16_t
-parameter_list|,
-name|usb_dma_t
-modifier|*
+name|usbd_xfer_handle
 parameter_list|,
 name|ohci_soft_td_t
 modifier|*
@@ -2510,26 +2507,22 @@ modifier|*
 name|sc
 parameter_list|,
 name|int
-name|len
+name|alen
 parameter_list|,
 name|int
 name|rd
 parameter_list|,
-name|u_int16_t
-name|flags
-parameter_list|,
-name|usb_dma_t
-modifier|*
-name|dma
+name|usbd_xfer_handle
+name|xfer
 parameter_list|,
 name|ohci_soft_td_t
 modifier|*
-name|std
+name|sp
 parameter_list|,
 name|ohci_soft_td_t
 modifier|*
 modifier|*
-name|rstd
+name|ep
 parameter_list|)
 block|{
 name|ohci_soft_td_t
@@ -2555,31 +2548,62 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|len
+decl_stmt|,
 name|curlen
+decl_stmt|;
+name|usb_dma_t
+modifier|*
+name|dma
+init|=
+operator|&
+name|xfer
+operator|->
+name|dmabuf
+decl_stmt|;
+name|u_int16_t
+name|flags
+init|=
+name|xfer
+operator|->
+name|flags
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
-name|len
+name|alen
 operator|<
 literal|4096
 argument_list|,
 operator|(
 literal|"ohci_alloc_std_chain: start len=%d\n"
 operator|,
-name|len
+name|alen
 operator|)
 argument_list|)
 expr_stmt|;
+name|len
+operator|=
+name|alen
+expr_stmt|;
 name|cur
 operator|=
-name|std
+name|sp
 expr_stmt|;
-name|dataphysend
+name|dataphys
 operator|=
 name|DMAADDR
 argument_list|(
 name|dma
 argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|dataphysend
+operator|=
+name|OHCI_PAGE
+argument_list|(
+name|dataphys
+operator|+
 name|len
 operator|-
 literal|1
@@ -2587,6 +2611,8 @@ argument_list|)
 expr_stmt|;
 name|tdflags
 operator|=
+name|htole32
+argument_list|(
 operator|(
 name|rd
 condition|?
@@ -2608,6 +2634,7 @@ operator||
 name|OHCI_TD_NOCC
 operator||
 name|OHCI_TD_TOGGLE_CARRY
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -2904,7 +2931,7 @@ operator|&
 name|USBD_FORCE_SHORT_XFER
 operator|)
 operator|&&
-name|len
+name|alen
 operator|%
 name|UGETW
 argument_list|(
@@ -3009,6 +3036,12 @@ operator|=
 literal|0
 expr_stmt|;
 name|cur
+operator|->
+name|xfer
+operator|=
+name|xfer
+expr_stmt|;
+name|cur
 operator|=
 name|next
 expr_stmt|;
@@ -3031,7 +3064,7 @@ operator||
 name|OHCI_ADD_LEN
 expr_stmt|;
 operator|*
-name|rstd
+name|ep
 operator|=
 name|next
 expr_stmt|;
@@ -5859,7 +5892,6 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
 name|intrs
 operator|=
 name|OREAD4
@@ -5869,7 +5901,6 @@ argument_list|,
 name|OHCI_INTERRUPT_STATUS
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|intrs
@@ -6737,7 +6768,7 @@ name|dnext
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
-literal|5
+literal|10
 argument_list|,
 operator|(
 literal|"ohci_process_done: std=%p xfer=%p hcpriv=%p\n"
@@ -6794,7 +6825,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ohci_process_done: cancel/timeout, xfer=%p\n"
+literal|"ohci_process_done: cancel/timeout %p\n"
 operator|,
 name|xfer
 operator|)
@@ -6873,6 +6904,21 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|10
+argument_list|,
+operator|(
+literal|"ohci_process_done: len=%d, flags=0x%x\n"
+operator|,
+name|len
+operator|,
+name|std
+operator|->
+name|flags
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|std
@@ -6940,10 +6986,12 @@ name|xfer
 operator|->
 name|pipe
 decl_stmt|;
-name|DPRINTF
+name|DPRINTFN
 argument_list|(
+literal|15
+argument_list|,
 operator|(
-literal|"ohci_process_done: err cc=%d (%s), xfer=%p\n"
+literal|"ohci_process_done: error cc=%d (%s)\n"
 operator|,
 name|OHCI_TD_GET_CC
 argument_list|(
@@ -6971,8 +7019,6 @@ name|td_flags
 argument_list|)
 argument_list|)
 index|]
-operator|,
-name|xfer
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8244,12 +8290,13 @@ name|address
 decl_stmt|;
 name|ohci_soft_td_t
 modifier|*
-name|setup
-decl_stmt|,
-modifier|*
 name|data
 init|=
 literal|0
+decl_stmt|;
+name|ohci_soft_td_t
+modifier|*
+name|setup
 decl_stmt|,
 modifier|*
 name|stat
@@ -8948,17 +8995,12 @@ if|if
 condition|(
 name|ohcidebug
 operator|>
-literal|25
+literal|20
 condition|)
 block|{
-name|usb_delay_ms
+name|delay
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
-argument_list|,
-literal|5
+literal|10000
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -11287,6 +11329,17 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"ohci_abort_xfer: stop ed=%p\n"
+operator|,
+name|sed
+operator|)
+argument_list|)
+expr_stmt|;
 name|sed
 operator|->
 name|ed
@@ -11299,27 +11352,6 @@ name|OHCI_ED_SKIP
 argument_list|)
 expr_stmt|;
 comment|/* force hardware skip */
-ifdef|#
-directive|ifdef
-name|OHCI_DEBUG
-name|DPRINTFN
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"ohci_abort_xfer: stop ed=%p\n"
-operator|,
-name|sed
-operator|)
-argument_list|)
-expr_stmt|;
-name|ohci_dump_ed
-argument_list|(
-name|sed
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Step 2: Wait until we know hardware has finished any possible 	 * use of the xfer.  Also make sure the soft interrupt routine 	 * has run. 	 */
 name|usb_delay_ms
 argument_list|(
@@ -14379,13 +14411,6 @@ argument_list|,
 name|isread
 argument_list|,
 name|xfer
-operator|->
-name|flags
-argument_list|,
-operator|&
-name|xfer
-operator|->
-name|dmabuf
 argument_list|,
 name|data
 argument_list|,
@@ -14604,7 +14629,7 @@ if|#
 directive|if
 literal|0
 comment|/* This goes wrong if we are too slow. */
-block|if (ohcidebug> 5) { 		usb_delay_ms(&sc->sc_bus, 5); 		DPRINTF(("ohci_device_intr_transfer: status=%x\n", 			 OREAD4(sc, OHCI_COMMAND_STATUS))); 		ohci_dump_ed(sed); 		ohci_dump_tds(data); 	}
+block|if (ohcidebug> 10) { 		delay(10000); 		DPRINTF(("ohci_device_intr_transfer: status=%x\n", 			 OREAD4(sc, OHCI_COMMAND_STATUS))); 		ohci_dump_ed(sed); 		ohci_dump_tds(data); 	}
 endif|#
 directive|endif
 name|splx
