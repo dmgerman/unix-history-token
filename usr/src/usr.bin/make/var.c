@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c	5.7 (Berkeley) %G%"
+literal|"@(#)var.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1135,6 +1135,8 @@ argument_list|(
 name|name
 argument_list|,
 name|val
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
