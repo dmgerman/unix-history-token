@@ -277,7 +277,7 @@ name|pcic_init_routing
 argument_list|,
 literal|0
 argument_list|,
-literal|"Force the interrupt routing to be initialized on those bridges where\n\ doing so will cause probelms.  This is very rare and generally is not\n\ needed.  The default of 0 is almost always appropriate.  Only set to 1 if\n\ instructed to do so for debugging.  This option is obsolete and will be\n\ deleted before FreeBSD 4.8."
+literal|"Force the interrupt routing to be initialized on those bridges where\n\ doing so will cause probelms.  This is very rare and generally is not\n\ needed.  The default of 0 is almost always appropriate.  Only set to 1 if\n\ instructed to do so for debugging.  Only TI bridges are affected by this\n\ option, and what the code does is of dubious value.  This option is obsolete\n\ and will be deleted before FreeBSD 4.8."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -362,7 +362,7 @@ name|pcic_pd6729_intr_path
 argument_list|,
 literal|0
 argument_list|,
-literal|"For Cirrus Logic PD6729 and similar I/O space based pcmcia bridges, this\n\ tells the code if it is wired onto a PCI expansion card (2), or if it is\n\ installed in a laptop (1).  This is similar to hw.pcic.intr_path, but\n\ separate so that it can default to ISA when intr_path defaults to PCI."
+literal|"Determine the interrupt path or method for Cirrus Logic PD6729 and\n\ similar I/O space based pcmcia bridge.  Chips on a PCI expansion card need\n\ a value of 2, while chips installed in a laptop need a value of 1 (which is\n\ also the default).  This is similar to hw.pcic.intr_path, but separate so\n\ that it can default to ISA when intr_path defaults to PCI."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4574,7 +4574,6 @@ operator|)
 literal|1
 expr_stmt|;
 block|}
-comment|/* 		 * While one could specify PCI interrupts, that's not 		 * yet supported other places in the code. 		 */
 name|sc
 operator|->
 name|csc_route
