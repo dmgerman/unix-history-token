@@ -1459,17 +1459,6 @@ parameter_list|)
 value|lockmgr((a), (b), (c), NULL)
 end_define
 
-begin_comment
-comment|/* PDIRUNLOCK is used by NetBSD to mark if vfs_lookup() unlocked parent dir;  * on FreeBSD, it's not defined and nothing similar exists */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PDIRUNLOCK
-value|0
-end_define
-
 begin_endif
 endif|#
 directive|endif
