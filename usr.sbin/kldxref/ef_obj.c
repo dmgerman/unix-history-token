@@ -1685,6 +1685,10 @@ name|char
 modifier|*
 name|mapbase
 decl_stmt|;
+name|void
+modifier|*
+name|vtmp
+decl_stmt|;
 name|size_t
 name|mapsize
 decl_stmt|;
@@ -1977,13 +1981,8 @@ name|e_shoff
 argument_list|,
 name|nbytes
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
-name|shdr
+name|vtmp
 argument_list|)
 operator|!=
 literal|0
@@ -2003,6 +2002,8 @@ operator|->
 name|e_shdr
 operator|=
 name|shdr
+operator|=
+name|vtmp
 expr_stmt|;
 comment|/* Scan the section header for information and table sizing. */
 name|nsym
