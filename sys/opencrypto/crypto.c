@@ -3240,6 +3240,9 @@ name|cryptodesc
 modifier|*
 name|crd
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 if|if
 condition|(
 name|crp
@@ -3247,6 +3250,12 @@ operator|==
 name|NULL
 condition|)
 return|return;
+comment|/* NB: see below for an explanation */
+name|s
+operator|=
+name|splcrypto
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3283,6 +3292,11 @@ argument_list|,
 name|crp
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3310,6 +3324,15 @@ name|cryptop
 modifier|*
 name|crp
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+comment|/* 	 * Must interlock access to the zone. Calls may come in 	 * at raised ipl from network protocols, but in general 	 * we cannot be certain where we'll be called from.  We 	 * could use zalloci/zfreei which is safe to be called 	 * from anywhere or use splhigh, but for now splcrypto 	 * is safe as it blocks crypto drivers and network threads. 	 */
+name|s
+operator|=
+name|splcrypto
+argument_list|()
+expr_stmt|;
 name|crp
 operator|=
 name|zalloc
@@ -3360,6 +3383,11 @@ argument_list|(
 name|crp
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -3391,6 +3419,11 @@ name|crd
 expr_stmt|;
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|crp
 return|;
