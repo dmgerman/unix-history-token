@@ -731,6 +731,8 @@ comment|/* start of unit */
 if|if
 condition|(
 name|ret_namelen
+operator|&&
+name|ret_name
 condition|)
 operator|*
 name|ret_namelen
@@ -788,6 +790,8 @@ comment|/* start of value */
 if|if
 condition|(
 name|ret_resnamelen
+operator|&&
+name|ret_resname
 condition|)
 operator|*
 name|ret_resnamelen
