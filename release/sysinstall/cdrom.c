@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: cdrom.c,v 1.7.2.18 1996/05/24 06:08:13 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: cdrom.c,v 1.7.2.19 1996/06/08 07:15:43 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -117,6 +117,14 @@ name|struct
 name|iso_args
 name|args
 decl_stmt|;
+name|Attribs
+modifier|*
+name|cd_attr
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 if|if
 condition|(
 name|cdromMounted
@@ -163,13 +171,29 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
+name|cd_attr
+operator|=
+name|safe_malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|Attribs
+argument_list|)
+operator|*
+name|MAX_ATTRIBS
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* If this cdrom's not already mounted or can't be mounted, yell */
 if|if
 condition|(
 operator|!
-name|directory_exists
+name|file_readable
 argument_list|(
-literal|"/cdrom/dists"
+literal|"/cdrom/cdrom.inf"
 argument_list|)
 condition|)
 block|{
@@ -214,20 +238,134 @@ return|return
 name|FALSE
 return|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|file_readable
+argument_list|(
+literal|"/cdrom/cdrom.inf"
+argument_list|)
+condition|)
 name|cdromMounted
 operator|=
 name|CD_WE_MOUNTED_IT
 expr_stmt|;
+else|else
+block|{
+name|unmount
+argument_list|(
+literal|"/cdrom"
+argument_list|,
+name|MNT_FORCE
+argument_list|)
+expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"The CD currently in the drive is not a recent FreeBSD CDROM -\n"
+literal|"ignoring it.\n\n"
+literal|"If this is in error, please correct this problem now before\n"
+literal|"attempting to use the CDROM as installation media."
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 block|}
 else|else
 name|cdromMounted
 operator|=
 name|CD_ALREADY_MOUNTED
 expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|attr_parse_file
+argument_list|(
+name|cd_attr
+argument_list|,
+literal|"/cdrom/cdrom.inf"
+argument_list|)
+argument_list|)
+operator|==
+name|DITEM_FAILURE
+operator|||
+operator|!
+operator|(
+name|cp
+operator|=
+name|attr_match
+argument_list|(
+name|cd_attr
+argument_list|,
+literal|"CD_VERSION"
+argument_list|)
+operator|)
+operator|||
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+name|variable_get
+argument_list|(
+name|VAR_RELNAME
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|unmount
+argument_list|(
+literal|"/cdrom"
+argument_list|,
+name|MNT_FORCE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"I/O error trying to read the contents of /cdrom/cdrom.inf.\n"
+literal|"Either this is not a FreeBSD CDROM, there is a problem with\n"
+literal|"the CDROM driver or something is wrong with your hardware.\n"
+literal|"Please fix this problem (check the console logs on VTY2) and\n"
+literal|"try again."
+argument_list|)
+expr_stmt|;
+else|else
+name|msgConfirm
+argument_list|(
+literal|"The version of the FreeBSD CD currently in the drive (%s)\n"
+literal|"does not match the version of this boot floppy (%s).\n"
+literal|"If this is intentional, then please visit the Options editor\n"
+literal|"to set the boot floppy version string to match that of the CD\n"
+literal|"before selecting it as an installation media."
+argument_list|)
+expr_stmt|;
+name|cdromMounted
+operator|=
+name|CD_UNMOUNTED
+expr_stmt|;
+name|safe_free
+argument_list|(
+name|cd_attr
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+name|safe_free
+argument_list|(
+name|cd_attr
+argument_list|)
+expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"Mounted CDROM device %s on /cdrom\n"
+literal|"Mounted FreeBSD CDROM on device %s as /cdrom\n"
 argument_list|,
 name|dev
 operator|->
