@@ -909,8 +909,6 @@ operator|=
 name|cnt
 operator|.
 name|v_page_count
-operator|*
-literal|2
 expr_stmt|;
 name|swap_zone
 operator|=
