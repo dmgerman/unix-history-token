@@ -991,7 +991,7 @@ name|printf
 argument_list|(
 literal|"%s"
 argument_list|,
-literal|"USER     CMD          PID   FD  DEV    INUM       MODE SZ|DV"
+literal|"USER     CMD          PID   FD  DEV    INUM       MODE SZ|DV R/W"
 argument_list|)
 expr_stmt|;
 else|else
@@ -999,7 +999,7 @@ name|printf
 argument_list|(
 literal|"%s"
 argument_list|,
-literal|"USER     CMD          PID   FD MOUNT      INUM MODE         SZ|DV"
+literal|"USER     CMD          PID   FD MOUNT      INUM MODE         SZ|DV R/W"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1231,6 +1231,8 @@ operator|.
 name|fd_rdir
 argument_list|,
 name|RDIR
+argument_list|,
+name|FREAD
 argument_list|)
 expr_stmt|;
 comment|/* 	 * current working directory vnode 	 */
@@ -1241,6 +1243,8 @@ operator|.
 name|fd_cdir
 argument_list|,
 name|CDIR
+argument_list|,
+name|FREAD
 argument_list|)
 expr_stmt|;
 comment|/* 	 * ktrace vnode, if one 	 */
@@ -1257,6 +1261,10 @@ operator|->
 name|p_tracep
 argument_list|,
 name|TRACE
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * open files 	 */
@@ -1426,6 +1434,10 @@ operator|.
 name|f_data
 argument_list|,
 name|i
+argument_list|,
+name|file
+operator|.
+name|f_flag
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1488,6 +1500,8 @@ parameter_list|(
 name|vp
 parameter_list|,
 name|i
+parameter_list|,
+name|flag
 parameter_list|)
 name|struct
 name|vnode
@@ -1496,6 +1510,9 @@ name|vp
 decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|int
+name|flag
 decl_stmt|;
 block|{
 specifier|extern
@@ -1513,6 +1530,11 @@ name|filestat
 name|fst
 decl_stmt|;
 name|char
+name|rw
+index|[
+literal|3
+index|]
+decl_stmt|,
 name|mode
 index|[
 literal|15
@@ -1975,6 +1997,46 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
+name|rw
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|&
+name|FREAD
+condition|)
+name|strcat
+argument_list|(
+name|rw
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|&
+name|FWRITE
+condition|)
+name|strcat
+argument_list|(
+name|rw
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %2s"
+argument_list|,
+name|rw
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|filename
@@ -1984,7 +2046,7 @@ name|fsflg
 condition|)
 name|printf
 argument_list|(
-literal|" %s"
+literal|"  %s"
 argument_list|,
 name|filename
 argument_list|)
