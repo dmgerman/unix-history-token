@@ -427,6 +427,7 @@ index|]
 init|=
 block|{
 block|{
+block|{
 literal|4
 block|,
 literal|0
@@ -461,6 +462,7 @@ block|{
 literal|0
 block|,
 name|RT_ESEG
+block|}
 block|}
 block|}
 block|}
