@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cron.c	4.4 (Berkeley) %G%"
+literal|"@(#)cron.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -325,13 +325,13 @@ if|if
 condition|(
 name|loct
 operator|->
-name|tm_day
+name|tm_wday
 operator|==
 literal|0
 condition|)
 name|loct
 operator|->
-name|tm_day
+name|tm_wday
 operator|==
 literal|7
 expr_stmt|;
