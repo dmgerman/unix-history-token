@@ -305,6 +305,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|__stdcall
+specifier|static
+name|void
+name|ndis_sendrsrcavail_func
+parameter_list|(
+name|ndis_handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
@@ -449,6 +460,22 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+name|__stdcall
+specifier|static
+name|void
+name|ndis_sendrsrcavail_func
+parameter_list|(
+name|adapter
+parameter_list|)
+name|ndis_handle
+name|adapter
+decl_stmt|;
+block|{
+return|return;
+block|}
+end_function
 
 begin_function
 name|__stdcall
@@ -4760,6 +4787,12 @@ operator|->
 name|nmb_resetdone_func
 operator|=
 name|ndis_resetdone_func
+expr_stmt|;
+name|block
+operator|->
+name|nmb_sendrsrc_func
+operator|=
+name|ndis_sendrsrcavail_func
 expr_stmt|;
 name|block
 operator|->

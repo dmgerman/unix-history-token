@@ -1000,6 +1000,8 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|unit
@@ -2675,10 +2677,23 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* We're done talking to the NIC for now; halt it. */
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_UP
+expr_stmt|;
 name|ndis_halt_nic
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_UP
 expr_stmt|;
 return|return
 operator|(
