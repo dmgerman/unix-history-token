@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)getpwent.c	4.4 (Berkeley) 84/06/19 */
+comment|/* @(#)getpwent.c	4.5 (Berkeley) 84/08/28 */
 end_comment
 
 begin_include
@@ -72,7 +72,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|DBM
 modifier|*
 name|_pw_db
@@ -80,7 +79,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|_pw_stayopen
 decl_stmt|;
@@ -152,7 +150,7 @@ operator|)
 literal|0
 condition|)
 block|{
-name|ndbmclose
+name|dbm_close
 argument_list|(
 name|_pw_db
 argument_list|)
