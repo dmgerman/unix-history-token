@@ -5076,45 +5076,14 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * XXX should a process be able to affect another process 	 * acting as the same uid (i.e., a userland nfsd or the like?) 	 */
-if|if
-condition|(
-name|p1
-operator|->
-name|p_cred
-operator|->
-name|p_ruid
-operator|==
-name|p2
-operator|->
-name|p_ucred
-operator|->
-name|cr_uid
-condition|)
-return|return
-operator|(
+if|#
+directive|if
 literal|0
-operator|)
-return|;
-if|if
-condition|(
-name|p1
-operator|->
-name|p_ucred
-operator|->
-name|cr_uid
-operator|==
-name|p2
-operator|->
-name|p_ucred
-operator|->
-name|cr_uid
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+comment|/* 	 * XXX should a process be able to affect another process 	 * acting as the same uid (i.e., sendmail delivery, lpd, 	 * et al?) 	 */
+block|if (p1->p_cred->p_ruid == p2->p_ucred->cr_uid) 		return (0); 	if (p1->p_ucred->cr_uid == p2->p_ucred->cr_uid) 		return (0);
+endif|#
+directive|endif
+comment|/* 0 */
 if|if
 condition|(
 operator|!
