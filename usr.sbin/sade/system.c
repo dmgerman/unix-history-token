@@ -465,9 +465,10 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|boothowto
 decl_stmt|;
 name|sigset_t

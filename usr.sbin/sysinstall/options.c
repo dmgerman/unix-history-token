@@ -15,6 +15,18 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<curses.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<term.h>
+end_include
+
 begin_function_decl
 name|int
 name|fixitTtyWhich
@@ -680,10 +692,10 @@ name|sprintf
 argument_list|(
 name|ival
 argument_list|,
-literal|"%d"
+literal|"%lu"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|opt
 operator|.
