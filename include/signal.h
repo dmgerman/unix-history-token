@@ -39,6 +39,10 @@ directive|if
 name|__BSD_VISIBLE
 end_if
 
+begin_comment
+comment|/*  * XXX should enlarge these, if only to give empty names instead of bounds  * errors for large signal numbers.  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|__const
@@ -117,17 +121,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
-name|__BEGIN_DECLS
-end_macro
-
-begin_struct_decl
-struct_decl|struct
-name|timespec
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
+name|__BEGIN_DECLS
 name|int
 name|raise
 parameter_list|(
@@ -304,58 +299,21 @@ operator|>=
 literal|600
 end_if
 
-begin_function_decl
-name|int
-name|sigqueue
-parameter_list|(
-name|__pid_t
-parameter_list|,
-name|int
-parameter_list|,
-specifier|const
-name|union
-name|sigval
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_function_decl
-name|int
-name|sigtimedwait
-parameter_list|(
-specifier|const
-name|sigset_t
-modifier|*
-name|__restrict
-parameter_list|,
-name|siginfo_t
-modifier|*
-name|__restrict
-parameter_list|,
-specifier|const
-name|struct
-name|timespec
-modifier|*
-name|__restrict
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/*  * PR: 35924  * XXX we don't actually have these.  We set _POSIX_REALTIME_SIGNALS to  * -1 to show that we don't have them, but this symbol is not necessarily  * in scope (in the current implementation), so we can't use it here.  */
+end_comment
 
-begin_function_decl
-name|int
-name|sigwaitinfo
-parameter_list|(
-specifier|const
-name|sigset_t
-modifier|*
-name|__restrict
-parameter_list|,
-name|siginfo_t
-modifier|*
-name|__restrict
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_endif
+unit|int	sigqueue(__pid_t, int, const union sigval); struct timespec; int	sigtimedwait(const sigset_t * __restrict, siginfo_t * __restrict, 	    const struct timespec * __restrict); int	sigwaitinfo(const sigset_t * __restrict, siginfo_t * __restrict);
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -447,6 +405,16 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|__ucontext
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* XXX spec requires a complete declaration. */
+end_comment
 
 begin_function_decl
 name|int
