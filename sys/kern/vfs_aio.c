@@ -790,6 +790,116 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_struct
+struct|struct
+name|aiocblist
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|aiocblist
+argument_list|)
+name|list
+expr_stmt|;
+comment|/* List of jobs */
+name|TAILQ_ENTRY
+argument_list|(
+argument|aiocblist
+argument_list|)
+name|plist
+expr_stmt|;
+comment|/* List of jobs for proc */
+name|int
+name|jobflags
+decl_stmt|;
+name|int
+name|jobstate
+decl_stmt|;
+name|int
+name|inputcharge
+decl_stmt|;
+name|int
+name|outputcharge
+decl_stmt|;
+name|struct
+name|callout_handle
+name|timeouthandle
+decl_stmt|;
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
+comment|/* Buffer pointer */
+name|struct
+name|proc
+modifier|*
+name|userproc
+decl_stmt|;
+comment|/* User process */
+comment|/* Not td! */
+name|struct
+name|file
+modifier|*
+name|fd_file
+decl_stmt|;
+comment|/* Pointer to file structure */
+name|struct
+name|aiothreadlist
+modifier|*
+name|jobaiothread
+decl_stmt|;
+comment|/* AIO process descriptor */
+name|struct
+name|aio_liojob
+modifier|*
+name|lio
+decl_stmt|;
+comment|/* Optional lio job */
+name|struct
+name|aiocb
+modifier|*
+name|uuaiocb
+decl_stmt|;
+comment|/* Pointer in userspace of aiocb */
+name|struct
+name|klist
+name|klist
+decl_stmt|;
+comment|/* list of knotes */
+name|struct
+name|aiocb
+name|uaiocb
+decl_stmt|;
+comment|/* Kernel I/O control block */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* jobflags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIOCBLIST_RUNDOWN
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIOCBLIST_ASYNCFREE
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIOCBLIST_DONE
+value|0x10
+end_define
+
 begin_comment
 comment|/*  * AIO process info  */
 end_comment
@@ -1231,6 +1341,22 @@ parameter_list|(
 name|void
 modifier|*
 name|uproc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|aio_swake_cb
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+name|struct
+name|sockbuf
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2305,6 +2431,11 @@ operator|==
 name|JOBST_JOBQGLOBAL
 condition|)
 block|{
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2325,6 +2456,11 @@ argument_list|,
 name|aiocbe
 argument_list|,
 name|plist
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -5628,6 +5764,7 @@ comment|/*  * Wake up aio requests that may be serviceable now.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|aio_swake_cb
 parameter_list|(
