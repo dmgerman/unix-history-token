@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_machdep.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_machdep.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"syscontext.h"
 end_include
 
 begin_include
@@ -165,11 +159,11 @@ name|value
 operator|>=
 name|TR_NFLAGS
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 operator|*
 name|retval
 operator|=
@@ -210,11 +204,11 @@ name|value
 operator|>=
 name|TR_NFLAGS
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 operator|*
 name|retval
 operator|=
@@ -250,11 +244,11 @@ name|nvualarm
 operator|>
 literal|5
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|nvualarm
 operator|++
 expr_stmt|;
@@ -293,11 +287,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

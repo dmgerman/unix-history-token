@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_syscalls.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_syscalls.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscontext.h"
+file|"user.h"
 end_include
 
 begin_include
@@ -318,11 +318,11 @@ operator|.
 name|u_acflag
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|ndp
 operator|->
 name|ni_nameiop
@@ -356,11 +356,11 @@ argument_list|(
 name|ndp
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|vp
 operator|=
 name|ndp
@@ -414,11 +414,11 @@ if|if
 condition|(
 name|error
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|error
 operator|=
 name|copyout
@@ -442,11 +442,11 @@ name|fh
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1355,11 +1355,11 @@ empty_stmt|;
 block|}
 name|bad
 label|:
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1439,11 +1439,11 @@ operator|.
 name|u_acflag
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 comment|/* 	 * Assign my position or return error if too many already running 	 */
 if|if
 condition|(
@@ -1451,11 +1451,11 @@ name|nfs_asyncdaemons
 operator|>
 name|NFS_MAXASYNCDAEMON
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EBUSY
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|myiod
 operator|=
 name|nfs_asyncdaemons
@@ -1513,11 +1513,11 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* Take one off the end of the list */
 name|bp
