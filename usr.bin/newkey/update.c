@@ -996,22 +996,34 @@ operator|*
 argument_list|)
 decl_stmt|;
 comment|/*  * Determine if requester is allowed to update the given map,  * and update it if so. Returns the status, which is zero  * if there is no access violation. This function updates  * the local file and then shuts up.  */
+name|int
 name|localupdate
-argument_list|(
-argument|char *name
-argument_list|,
-argument|char *filename
-argument_list|,
-argument|u_int op
-argument_list|,
-argument|u_int keylen
-argument_list|,
-argument|char *key
-argument_list|,
-argument|u_int datalen
-argument_list|,
-argument|char *data
-argument_list|)
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|u_int
+name|op
+parameter_list|,
+name|u_int
+name|keylen
+parameter_list|,
+name|char
+modifier|*
+name|key
+parameter_list|,
+name|u_int
+name|datalen
+parameter_list|,
+name|char
+modifier|*
+name|data
+parameter_list|)
 block|{
 name|char
 name|line
@@ -1351,23 +1363,28 @@ operator|)
 return|;
 block|}
 specifier|static
+name|int
 name|match
-argument_list|(
-argument|char *line
-argument_list|,
-argument|char *name
-argument_list|)
+parameter_list|(
+name|char
+modifier|*
+name|line
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|)
 block|{
 name|int
 name|len
-block|;
+decl_stmt|;
 name|len
 operator|=
 name|strlen
 argument_list|(
 name|name
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 operator|(
 name|strncmp
