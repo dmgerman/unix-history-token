@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|14
+value|15
 end_define
 
 begin_comment
@@ -378,53 +378,6 @@ parameter_list|)
 value|(IS_FC(isp)? MAX_FC_TARG : MAX_TARGETS)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP2100_SCCLUN
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_ISP_FC_LUN
-parameter_list|(
-name|isp
-parameter_list|)
-value|65536
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_ISP_FC_LUN
-parameter_list|(
-name|isp
-parameter_list|)
-value|16
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|_ISP_SCSI_LUN
-parameter_list|(
-name|isp
-parameter_list|)
-define|\
-value|((ISP_FW_REVX(isp->isp_fwrev)>= ISP_FW_REV(7, 55, 0))? 32 : 8)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -432,8 +385,7 @@ name|ISP_MAX_LUNS
 parameter_list|(
 name|isp
 parameter_list|)
-define|\
-value|(IS_FC(isp)? _ISP_FC_LUN(isp) : _ISP_SCSI_LUN(isp))
+value|(isp)->isp_maxluns
 end_define
 
 begin_comment
@@ -1311,6 +1263,10 @@ name|u_int8_t
 name|isp_revision
 decl_stmt|;
 comment|/* HBA Chip H/W Revision */
+name|u_int32_t
+name|isp_maxluns
+decl_stmt|;
+comment|/* maximum luns supported */
 name|u_int32_t
 label|:
 literal|4
