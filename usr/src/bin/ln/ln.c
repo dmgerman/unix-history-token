@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ln.c 4.2 %G%"
+literal|"@(#)ln.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,7 +197,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|lstat
+name|stat
 argument_list|(
 name|argv
 index|[
@@ -348,7 +348,7 @@ name|fflag
 operator|==
 literal|0
 operator|&&
-name|lstat
+name|stat
 argument_list|(
 name|from
 argument_list|,
@@ -384,7 +384,7 @@ return|;
 block|}
 if|if
 condition|(
-name|lstat
+name|stat
 argument_list|(
 name|to
 argument_list|,
