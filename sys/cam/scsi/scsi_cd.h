@@ -401,6 +401,41 @@ end_struct
 
 begin_struct
 struct|struct
+name|scsi_set_speed
+block|{
+name|u_int8_t
+name|opcode
+decl_stmt|;
+name|u_int8_t
+name|byte2
+decl_stmt|;
+name|u_int8_t
+name|readspeed
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|writespeed
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|reserved
+index|[
+literal|5
+index|]
+decl_stmt|;
+name|u_int8_t
+name|control
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|scsi_report_key
 block|{
 name|u_int8_t
@@ -784,6 +819,17 @@ end_define
 
 begin_comment
 comment|/* read dvd structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_CD_SPEED
+value|0xbb
+end_define
+
+begin_comment
+comment|/* set c/dvd speed */
 end_comment
 
 begin_struct
