@@ -42,6 +42,8 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
+parameter_list|,
+name|socklen_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -108,6 +110,8 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
+parameter_list|,
+name|socklen_t
 parameter_list|)
 function_decl|;
 end_function_decl
