@@ -2624,7 +2624,7 @@ name|pnp_read
 argument_list|(
 name|PNP_IO_BASE_HIGH
 argument_list|(
-name|i
+name|j
 argument_list|)
 argument_list|)
 argument_list|,
@@ -2632,7 +2632,7 @@ name|pnp_read
 argument_list|(
 name|PNP_IO_BASE_LOW
 argument_list|(
-name|i
+name|j
 argument_list|)
 argument_list|)
 argument_list|)
