@@ -1,10 +1,40 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.11	81/02/19	*/
+comment|/*	systm.h	4.12	81/02/27	*/
 end_comment
 
 begin_comment
 comment|/*  * Random set of variables  * used by more than one  * routine.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|hz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* frequency of the clock */
+end_comment
+
+begin_decl_stmt
+name|int
+name|timezone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* minutes west from greenwich */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dstflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* daylight savings time in effect? */
 end_comment
 
 begin_decl_stmt
