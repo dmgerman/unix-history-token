@@ -213,6 +213,10 @@ name|s_dirt
 decl_stmt|;
 comment|/* fs modified flag */
 name|char
+name|s_wasvalid
+decl_stmt|;
+comment|/* valid at mount time */
+name|char
 name|fs_fsmnt
 index|[
 name|MAXMNTLEN
