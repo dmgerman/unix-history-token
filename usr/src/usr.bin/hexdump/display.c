@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)display.c	5.7 (Berkeley) %G%"
+literal|"@(#)display.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -373,8 +373,6 @@ return|return;
 name|eaddress
 operator|=
 name|address
-operator|+
-name|blocksize
 expr_stmt|;
 block|}
 for|for
