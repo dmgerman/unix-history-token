@@ -7,16 +7,11 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
-begin_comment
-comment|/* Please send any comments to micke@dynas.se */
-end_comment
-
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|SCD_DEBUG
-value|0
-end_define
+end_undef
 
 begin_include
 include|#
@@ -953,7 +948,9 @@ operator|)
 name|sc
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1022,7 +1019,9 @@ name|SCDINIT
 operator|)
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 comment|/* invalidated in the meantime? mark all open part's invalid */
 if|if
@@ -1032,7 +1031,9 @@ operator|->
 name|openflag
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 name|XDEBUG
 argument_list|(
@@ -1072,7 +1073,9 @@ name|rc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 if|if
@@ -1139,7 +1142,9 @@ argument_list|)
 expr_stmt|;
 block|\
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 continue|continue;
@@ -1156,7 +1161,9 @@ name|rc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 block|}
@@ -1181,7 +1188,9 @@ operator||=
 name|SCDVALID
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1251,7 +1260,9 @@ operator|->
 name|openflag
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 if|if
 condition|(
@@ -1290,7 +1301,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1781,7 +1794,9 @@ name|SCDVALID
 operator|)
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 switch|switch
 condition|(
@@ -1855,7 +1870,9 @@ case|case
 name|CDIOCPLAYBLOCKS
 case|:
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 case|case
 name|CDIOCPLAYMSF
@@ -1962,7 +1979,9 @@ case|case
 name|CDIOCSETRIGHT
 case|:
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 case|case
 name|CDIOCRESUME
@@ -1986,7 +2005,9 @@ case|case
 name|CDIOCSTART
 case|:
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 case|case
 name|CDIOCSTOP
@@ -2010,7 +2031,9 @@ case|case
 name|CDIOCALLOW
 case|:
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 case|case
 name|CDIOCSETDEBUG
@@ -2024,7 +2047,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 case|case
 name|CDIOCCLRDEBUG
@@ -2039,7 +2064,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 default|default:
 name|device_printf
@@ -2054,7 +2081,9 @@ name|cmd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOTTY
+operator|)
 return|;
 block|}
 block|}
@@ -2152,7 +2181,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 name|rc
 operator|=
@@ -2177,7 +2208,9 @@ name|rc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 block|}
@@ -2227,7 +2260,9 @@ operator|->
 name|last_track
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|bcopy
 argument_list|(
@@ -2530,7 +2565,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 elseif|else
@@ -2549,7 +2586,9 @@ name|rc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 else|else
@@ -2588,7 +2627,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2633,7 +2674,9 @@ operator|=
 name|CD_AS_PLAY_COMPLETED
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2672,7 +2715,9 @@ operator|!=
 name|CD_AS_PLAY_IN_PROGRESS
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -2687,7 +2732,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 if|if
 condition|(
@@ -2703,7 +2750,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 name|cd
 operator|->
@@ -2778,7 +2827,9 @@ name|start_f
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2805,7 +2856,9 @@ operator|!=
 name|CD_AS_PLAY_PAUSED
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 return|return
 name|scd_play
@@ -2898,11 +2951,15 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2967,7 +3024,9 @@ operator|!=
 name|CD_MSF_FORMAT
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -2978,7 +3037,9 @@ operator|!=
 name|CD_CURRENT_POSITION
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -2993,7 +3054,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 name|data
 operator|.
@@ -3218,10 +3281,14 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EFAULT
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3600,7 +3667,9 @@ name|scp
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 if|if
 condition|(
@@ -3620,10 +3689,14 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4847,8 +4920,8 @@ expr_stmt|;
 comment|/* XXX */
 return|return;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|SCD_DEBUG
 if|if
 condition|(
@@ -5311,8 +5384,8 @@ argument_list|,
 name|IREG_RESULT
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|SCD_DEBUG
 if|if
 condition|(
@@ -5438,8 +5511,8 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|SCD_DEBUG
 if|if
 condition|(
@@ -5534,7 +5607,9 @@ name|rc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 if|if
@@ -5580,7 +5655,9 @@ goto|goto
 name|again
 goto|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 if|if
@@ -5590,7 +5667,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 name|sc
@@ -5602,7 +5681,9 @@ operator||=
 name|SCDSPINNING
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5645,7 +5726,9 @@ operator|!=
 literal|0xb0
 condition|)
 return|return
+operator|(
 name|tl
+operator|)
 return|;
 operator|(
 name|char
@@ -5664,7 +5747,9 @@ operator|!=
 literal|0xb1
 condition|)
 return|return
+operator|(
 name|tl
+operator|)
 return|;
 operator|(
 name|char
@@ -5683,7 +5768,9 @@ operator|!=
 literal|0xb2
 condition|)
 return|return
+operator|(
 name|tl
+operator|)
 return|;
 operator|(
 name|char
@@ -5702,7 +5789,9 @@ operator|!=
 literal|0xb3
 condition|)
 return|return
+operator|(
 name|tl
+operator|)
 return|;
 operator|(
 name|char
@@ -5721,7 +5810,9 @@ operator|!=
 literal|0xb4
 condition|)
 return|return
+operator|(
 name|tl
+operator|)
 return|;
 operator|(
 name|char
@@ -5740,7 +5831,9 @@ operator|!=
 literal|0xc0
 condition|)
 return|return
+operator|(
 name|tl
+operator|)
 return|;
 operator|(
 name|char
@@ -5751,7 +5844,9 @@ operator|+=
 literal|9
 expr_stmt|;
 return|return
+operator|(
 name|tl
+operator|)
 return|;
 block|}
 end_function
@@ -5822,7 +5917,9 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 if|if
 condition|(
@@ -5846,7 +5943,9 @@ name|rc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 if|if
@@ -5868,7 +5967,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 name|XDEBUG
 argument_list|(
@@ -6258,7 +6359,9 @@ operator||=
 name|SCDTOC
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -6397,7 +6500,9 @@ literal|0
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 name|SCD_WRITE
 argument_list|(
@@ -6437,7 +6542,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -6499,8 +6606,10 @@ literal|"drive busy\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|0x100
+operator|)
 return|;
 block|}
 name|XDEBUG
@@ -6578,8 +6687,10 @@ literal|"\nwparam timeout\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 name|EIO
+operator|)
 return|;
 block|}
 name|va_start
@@ -6675,8 +6786,10 @@ condition|(
 name|rc
 condition|)
 return|return
+operator|(
 operator|-
 literal|0x100
+operator|)
 return|;
 name|SCD_WRITE
 argument_list|(
@@ -6731,8 +6844,10 @@ name|rc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 name|rc
+operator|)
 return|;
 case|case
 literal|0x00
@@ -6759,7 +6874,9 @@ name|rc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 block|}
@@ -6924,7 +7041,9 @@ operator|==
 literal|0xff
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 if|if
 condition|(
@@ -7063,7 +7182,9 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 ifdef|#
@@ -7103,7 +7224,9 @@ literal|"timeout.\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 end_function
@@ -7172,7 +7295,9 @@ name|rc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 name|th
@@ -7199,7 +7324,9 @@ literal|0
 expr_stmt|;
 comment|/* not used */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -7276,7 +7403,9 @@ name|rc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 comment|/* find the toc to copy*/
@@ -7318,7 +7447,9 @@ operator|+
 literal|1
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 comment|/* valid length ? */
 if|if
@@ -7344,7 +7475,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 comment|/* copy the toc data */
 name|toc_entry
@@ -7485,10 +7618,14 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EFAULT
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -7559,7 +7696,9 @@ name|rc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 comment|/* find the toc to copy*/
@@ -7601,7 +7740,9 @@ operator|+
 literal|1
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 comment|/* copy the toc data */
 name|toc_entry
@@ -7739,7 +7880,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
