@@ -918,6 +918,44 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Embedded Controller Description Table */
+end_comment
+
+begin_struct
+struct|struct
+name|ECDTbody
+block|{
+name|struct
+name|ACPIgas
+name|ec_control
+decl_stmt|;
+comment|/* Control register */
+name|struct
+name|ACPIgas
+name|ec_data
+decl_stmt|;
+comment|/* Data register */
+name|uint32_t
+name|uid
+decl_stmt|;
+comment|/* Same value as _UID in namespace */
+name|uint8_t
+name|gpe_bit
+decl_stmt|;
+comment|/* GPE bit for the EC */
+name|u_char
+name|ec_id
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* Variable length name string */
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
 comment|/* Find and map the RSD PTR structure and return it for parsing */
 end_comment
 
