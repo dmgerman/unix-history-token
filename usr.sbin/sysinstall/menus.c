@@ -2906,7 +2906,7 @@ block|,
 block|{
 literal|"Portugal"
 block|,
-literal|"ftp.ua.pt"
+literal|"ftp.pt.freebsd.org"
 block|,
 name|NULL
 block|,
@@ -2915,7 +2915,22 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.ua.pt/pub/misc/FreeBSD/"
+literal|"=ftp://ftp.pt.freebsd.org/pub/misc/FreeBSD/"
+block|}
+block|,
+block|{
+literal|"Portugal #2"
+block|,
+literal|"ftp2.pt.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp2.pt.freebsd.org/pub/FreeBSD/"
 block|}
 block|,
 block|{
