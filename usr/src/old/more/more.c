@@ -5,36 +5,13 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)more.c	4.4 (Berkeley) 81/04/23"
+literal|"@(#)more.c	4.5 (Berkeley) 82/03/15"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* ** more.c - General purpose tty output filter and file perusal program ** **	by Eric Shienbrood, UC Berkeley ** **	modified by Geoff Peck, UCB to add underlining, single spacing **	modified by John Foderaro, UCB to add -c and MORE environment variable */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<whoami.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|V6
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<retrofit.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -100,43 +77,6 @@ begin_comment
 comment|/* Help file will eventually go in libpath(more.help) on all systems */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INGRES
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|VI
-value|"/usr/bin/vi"
-end_define
-
-begin_define
-define|#
-directive|define
-name|HELPFILE
-value|"/mntp/doucette/more/more.help"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INGRES
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HELPFILE
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -144,22 +84,12 @@ name|HELPFILE
 value|libpath(more.help)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|VI
 value|binpath(vi)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -217,31 +147,6 @@ parameter_list|)
 value|(--file_pos, ungetc(c,f))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|V6
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MBIT
-value|RAW
-end_define
-
-begin_define
-define|#
-directive|define
-name|CBREAK
-value|~RAW
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -260,11 +165,6 @@ name|argp
 parameter_list|)
 value|ioctl(fd,TIOCSETN,argp)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -352,23 +252,12 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIGTSTP
-end_ifdef
-
 begin_function_decl
 name|int
 name|onsusp
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
@@ -1189,9 +1078,6 @@ argument_list|,
 name|end_it
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIGTSTP
 if|if
 condition|(
 name|signal
@@ -1215,8 +1101,6 @@ name|catch_susp
 operator|++
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|stty
 argument_list|(
 literal|2
@@ -5830,9 +5714,6 @@ operator|!
 name|no_intty
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|V6
 name|file
 operator|->
 name|_flag
@@ -5841,8 +5722,6 @@ operator|~
 name|_IOEOF
 expr_stmt|;
 comment|/* why doesn't fseek do this ??!!??! */
-endif|#
-directive|endif
 name|Currline
 operator|=
 name|saveln
@@ -5976,9 +5855,6 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIGTSTP
 if|if
 condition|(
 name|catch_susp
@@ -5990,8 +5866,6 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|wait
 argument_list|(
 literal|0
@@ -6011,9 +5885,6 @@ argument_list|,
 name|onquit
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIGTSTP
 if|if
 condition|(
 name|catch_susp
@@ -6025,8 +5896,6 @@ argument_list|,
 name|onsusp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|set_tty
 argument_list|()
 expr_stmt|;
@@ -7757,12 +7626,6 @@ begin_comment
 comment|/* Come here when we get a suspend signal from the terminal */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIGTSTP
-end_ifdef
-
 begin_macro
 name|onsusp
 argument_list|()
@@ -7809,11 +7672,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
