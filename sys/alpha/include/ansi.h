@@ -38,7 +38,7 @@ value|int
 end_define
 
 begin_comment
-comment|/* clockid_t */
+comment|/* clock_gettime()... */
 end_comment
 
 begin_define
@@ -110,6 +110,10 @@ name|_BSD_SOCKLEN_T_
 value|__uint32_t
 end_define
 
+begin_comment
+comment|/* socklen_t (duh) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -140,7 +144,7 @@ value|int
 end_define
 
 begin_comment
-comment|/* timer_t */
+comment|/* timer_gettime()... */
 end_comment
 
 begin_define
@@ -425,7 +429,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MACHINE_ANSI_H_ */
+comment|/* !_MACHINE_ANSI_H_ */
 end_comment
 
 end_unit
