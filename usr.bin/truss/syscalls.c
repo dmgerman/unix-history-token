@@ -99,12 +99,6 @@ directive|include
 file|<poll.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|COMPAT_SUNOS
-end_define
-
 begin_include
 include|#
 directive|include
@@ -4205,7 +4199,7 @@ define|#
 directive|define
 name|SA_KNOWN_FLAGS
 define|\
-value|(SA_ONSTACK | SA_RESTART | SA_RESETHAND | SA_NOCLDSTOP | SA_NODEFER | \ 	 SA_NOCLDWAIT | SA_SIGINFO | SA_USERTRAMP)
+value|(SA_ONSTACK | SA_RESTART | SA_RESETHAND | SA_NOCLDSTOP | SA_NODEFER | \ 	 SA_NOCLDWAIT | SA_SIGINFO)
 if|if
 condition|(
 name|get_struct
@@ -4283,7 +4277,7 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"{ %s 0x%x%s%s%s%s%s%s%s%s ss_t }"
+literal|"{ %s 0x%x%s%s%s%s%s%s%s ss_t }"
 argument_list|,
 name|h
 argument_list|,
@@ -4363,16 +4357,6 @@ condition|?
 literal|""
 else|:
 literal|"|SIGINFO"
-argument_list|,
-name|sa
-operator|.
-name|sa_flags
-operator|&
-name|SA_USERTRAMP
-condition|?
-literal|""
-else|:
-literal|"|USERTRAMP"
 argument_list|)
 expr_stmt|;
 name|free
