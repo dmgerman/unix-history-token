@@ -514,6 +514,12 @@ name|bp
 operator|->
 name|bio_attribute
 expr_stmt|;
+name|bp
+operator|->
+name|bio_children
+operator|++
+expr_stmt|;
+comment|/* XXX: atomic ? */
 block|}
 name|g_trace
 argument_list|(
