@@ -131,6 +131,10 @@ name|num_tags
 decl_stmt|;
 comment|/* number of tags supported */
 name|int
+name|max_iosize
+decl_stmt|;
+comment|/* max size of transfer */
+name|int
 name|flags
 decl_stmt|;
 comment|/* drive flags */
