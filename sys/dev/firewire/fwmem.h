@@ -22,6 +22,9 @@ parameter_list|,
 name|u_int32_t
 parameter_list|,
 name|void
+modifier|*
+parameter_list|,
+name|void
 function_decl|(
 modifier|*
 function_decl|)
@@ -52,7 +55,8 @@ name|u_int16_t
 parameter_list|,
 name|u_int32_t
 parameter_list|,
-name|u_int32_t
+name|void
+modifier|*
 parameter_list|,
 name|void
 function_decl|(
@@ -88,6 +92,9 @@ parameter_list|,
 name|int
 parameter_list|,
 name|void
+modifier|*
+parameter_list|,
+name|void
 function_decl|(
 modifier|*
 function_decl|)
@@ -120,7 +127,7 @@ name|u_int32_t
 parameter_list|,
 name|int
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|void
@@ -175,6 +182,12 @@ end_decl_stmt
 begin_decl_stmt
 name|d_mmap_t
 name|fwmem_mmap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_strategy_t
+name|fwmem_strategy
 decl_stmt|;
 end_decl_stmt
 

@@ -762,6 +762,12 @@ operator|->
 name|dst
 operator|==
 name|dst
+operator|&&
+name|fwdev
+operator|->
+name|status
+operator|!=
+name|FWDEVINVAL
 condition|)
 break|break;
 name|splx
@@ -769,26 +775,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fwdev
-operator|==
-name|NULL
-condition|)
-return|return
-name|NULL
-return|;
-if|if
-condition|(
-name|fwdev
-operator|->
-name|status
-operator|==
-name|FWDEVINVAL
-condition|)
-return|return
-name|NULL
-return|;
 return|return
 name|fwdev
 return|;
@@ -946,31 +932,6 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|send
-operator|.
-name|len
-operator|>
-name|MAXREC
-argument_list|(
-name|fc
-operator|->
-name|maxrec
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"send.len> maxrec\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
-if|if
-condition|(
-name|xfer
-operator|->
 name|act
 operator|.
 name|hand
@@ -989,16 +950,12 @@ return|;
 block|}
 name|fp
 operator|=
-operator|(
-expr|struct
-name|fw_pkt
-operator|*
-operator|)
+operator|&
 name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|hdr
 expr_stmt|;
 name|tcode
 operator|=
@@ -1071,6 +1028,31 @@ name|hdr_len
 expr_stmt|;
 if|if
 condition|(
+name|xfer
+operator|->
+name|send
+operator|.
+name|pay_len
+operator|>
+name|MAXREC
+argument_list|(
+name|fc
+operator|->
+name|maxrec
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"send.pay_len> maxrec\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
+if|if
+condition|(
 name|info
 operator|->
 name|flag
@@ -1078,7 +1060,7 @@ operator|&
 name|FWTI_BLOCK_STR
 condition|)
 name|len
-operator|+=
+operator|=
 name|fp
 operator|->
 name|mode
@@ -1097,7 +1079,7 @@ operator|&
 name|FWTI_BLOCK_ASY
 condition|)
 name|len
-operator|+=
+operator|=
 name|fp
 operator|->
 name|mode
@@ -1106,20 +1088,25 @@ name|rresb
 operator|.
 name|len
 expr_stmt|;
+else|else
+name|len
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|len
-operator|>
+operator|!=
 name|xfer
 operator|->
 name|send
 operator|.
-name|len
+name|pay_len
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"len(%d)> send.len(%d) (tcode=%d)\n"
+literal|"len(%d) != send.pay_len(%d) (tcode=%d)\n"
 argument_list|,
 name|len
 argument_list|,
@@ -1127,7 +1114,7 @@ name|xfer
 operator|->
 name|send
 operator|.
-name|len
+name|pay_len
 argument_list|,
 name|tcode
 argument_list|)
@@ -1136,14 +1123,6 @@ return|return
 name|EINVAL
 return|;
 block|}
-name|xfer
-operator|->
-name|send
-operator|.
-name|len
-operator|=
-name|len
-expr_stmt|;
 if|if
 condition|(
 name|xferq
@@ -1193,6 +1172,14 @@ return|return
 name|EINVAL
 return|;
 block|}
+name|microtime
+argument_list|(
+operator|&
+name|xfer
+operator|->
+name|tv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|info
@@ -1530,14 +1517,17 @@ name|split_timeout
 operator|.
 name|tv_sec
 operator|=
-literal|6
+literal|0
 expr_stmt|;
 name|split_timeout
 operator|.
 name|tv_usec
 operator|=
-literal|0
+literal|200
+operator|*
+literal|1000
 expr_stmt|;
+comment|/* 200 msec */
 name|microtime
 argument_list|(
 operator|&
@@ -1625,6 +1615,14 @@ literal|"split transaction timeout dst=0x%x tl=0x%x state=%d\n"
 argument_list|,
 name|xfer
 operator|->
+name|send
+operator|.
+name|hdr
+operator|.
+name|mode
+operator|.
+name|hdr
+operator|.
 name|dst
 argument_list|,
 name|i
@@ -1712,6 +1710,8 @@ operator|->
 name|timeout_callout
 argument_list|,
 name|hz
+operator|/
+literal|10
 argument_list|,
 operator|(
 name|void
@@ -4161,6 +4161,18 @@ directive|endif
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|BIND_CMP
+parameter_list|(
+name|addr
+parameter_list|,
+name|fwb
+parameter_list|)
+value|(((addr)< (fwb)->start)?-1:\     ((fwb)->end< (addr))?1:0)
+end_define
+
 begin_comment
 comment|/*  * To lookup binded process from IEEE1394 address.  */
 end_comment
@@ -4176,44 +4188,42 @@ name|firewire_comm
 modifier|*
 name|fc
 parameter_list|,
-name|u_int32_t
+name|u_int16_t
 name|dest_hi
 parameter_list|,
 name|u_int32_t
 name|dest_lo
 parameter_list|)
 block|{
+name|u_int64_t
+name|addr
+decl_stmt|;
 name|struct
 name|fw_bind
 modifier|*
 name|tfw
 decl_stmt|;
-for|for
-control|(
-name|tfw
+name|addr
 operator|=
-name|STAILQ_FIRST
+operator|(
+operator|(
+name|u_int64_t
+operator|)
+name|dest_hi
+operator|<<
+literal|32
+operator|)
+operator||
+name|dest_lo
+expr_stmt|;
+name|STAILQ_FOREACH
 argument_list|(
-operator|&
-name|fc
-operator|->
-name|binds
-argument_list|)
-init|;
-name|tfw
-operator|!=
-name|NULL
-condition|;
-name|tfw
-operator|=
-name|STAILQ_NEXT
-argument_list|(
-name|tfw
+argument|tfw
 argument_list|,
-name|fclist
+argument|&fc->binds
+argument_list|,
+argument|fclist
 argument_list|)
-control|)
-block|{
 if|if
 condition|(
 name|tfw
@@ -4222,38 +4232,20 @@ name|act_type
 operator|!=
 name|FWACT_NULL
 operator|&&
+name|BIND_CMP
+argument_list|(
+name|addr
+argument_list|,
 name|tfw
-operator|->
-name|start_hi
+argument_list|)
 operator|==
-name|dest_hi
-operator|&&
-name|tfw
-operator|->
-name|start_lo
-operator|<=
-name|dest_lo
-operator|&&
-operator|(
-name|tfw
-operator|->
-name|start_lo
-operator|+
-name|tfw
-operator|->
-name|addrlen
-operator|)
-operator|>
-name|dest_lo
+literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|tfw
 operator|)
 return|;
-block|}
-block|}
 return|return
 operator|(
 name|NULL
@@ -4287,28 +4279,60 @@ modifier|*
 name|tfw
 decl_stmt|,
 modifier|*
-name|tfw2
+name|prev
 init|=
 name|NULL
 decl_stmt|;
-name|int
-name|err
-init|=
-literal|0
-decl_stmt|;
-name|tfw
-operator|=
-name|STAILQ_FIRST
-argument_list|(
-operator|&
-name|fc
-operator|->
-name|binds
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+name|fwb
+operator|->
+name|start
+operator|>
+name|fwb
+operator|->
+name|end
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: invalid range\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
+name|STAILQ_FOREACH
+argument_list|(
+argument|tfw
+argument_list|,
+argument|&fc->binds
+argument_list|,
+argument|fclist
+argument_list|)
+block|{
+if|if
+condition|(
+name|fwb
+operator|->
+name|end
+operator|<
 name|tfw
+operator|->
+name|start
+condition|)
+break|break;
+name|prev
+operator|=
+name|tfw
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|prev
 operator|==
 name|NULL
 condition|)
@@ -4331,185 +4355,13 @@ goto|;
 block|}
 if|if
 condition|(
-operator|(
-name|tfw
+name|prev
 operator|->
-name|start_hi
-operator|>
-name|fwb
-operator|->
-name|start_hi
-operator|)
-operator|||
-operator|(
-name|tfw
-operator|->
-name|start_hi
-operator|==
-name|fwb
-operator|->
-name|start_hi
-operator|&&
-operator|(
-name|tfw
-operator|->
-name|start_lo
-operator|>
-operator|(
-name|fwb
-operator|->
-name|start_lo
-operator|+
-name|fwb
-operator|->
-name|addrlen
-operator|)
-operator|)
-operator|)
-condition|)
-block|{
-name|STAILQ_INSERT_HEAD
-argument_list|(
-operator|&
-name|fc
-operator|->
-name|binds
-argument_list|,
-name|fwb
-argument_list|,
-name|fclist
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-for|for
-control|(
-init|;
-name|tfw
-operator|!=
-name|NULL
-condition|;
-name|tfw
-operator|=
-name|STAILQ_NEXT
-argument_list|(
-name|tfw
-argument_list|,
-name|fclist
-argument_list|)
-control|)
-block|{
-if|if
-condition|(
-operator|(
-name|tfw
-operator|->
-name|start_hi
+name|end
 operator|<
 name|fwb
 operator|->
-name|start_hi
-operator|)
-operator|||
-operator|(
-name|tfw
-operator|->
-name|start_hi
-operator|==
-name|fwb
-operator|->
-name|start_hi
-operator|&&
-operator|(
-name|tfw
-operator|->
-name|start_lo
-operator|+
-name|tfw
-operator|->
-name|addrlen
-operator|)
-operator|<
-name|fwb
-operator|->
-name|start_lo
-operator|)
-condition|)
-block|{
-name|tfw2
-operator|=
-name|STAILQ_NEXT
-argument_list|(
-name|tfw
-argument_list|,
-name|fclist
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tfw2
-operator|==
-name|NULL
-condition|)
-break|break;
-if|if
-condition|(
-operator|(
-name|tfw2
-operator|->
-name|start_hi
-operator|>
-name|fwb
-operator|->
-name|start_hi
-operator|)
-operator|||
-operator|(
-name|tfw2
-operator|->
-name|start_hi
-operator|==
-name|fwb
-operator|->
-name|start_hi
-operator|&&
-name|tfw2
-operator|->
-name|start_lo
-operator|>
-operator|(
-name|fwb
-operator|->
-name|start_lo
-operator|+
-name|fwb
-operator|->
-name|addrlen
-operator|)
-operator|)
-condition|)
-block|{
-break|break;
-block|}
-else|else
-block|{
-name|err
-operator|=
-name|EBUSY
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-block|}
-block|}
-if|if
-condition|(
-name|tfw
-operator|!=
-name|NULL
+name|start
 condition|)
 block|{
 name|STAILQ_INSERT_AFTER
@@ -4519,36 +4371,33 @@ name|fc
 operator|->
 name|binds
 argument_list|,
-name|tfw
+name|prev
 argument_list|,
 name|fwb
 argument_list|,
 name|fclist
 argument_list|)
 expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
-else|else
-block|{
-name|STAILQ_INSERT_TAIL
+name|printf
 argument_list|(
-operator|&
-name|fc
-operator|->
-name|binds
+literal|"%s: bind failed\n"
 argument_list|,
-name|fwb
-argument_list|,
-name|fclist
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
-block|}
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
 name|out
 label|:
 if|if
 condition|(
-operator|!
-name|err
-operator|&&
 name|fwb
 operator|->
 name|act_type
@@ -4575,7 +4424,9 @@ name|chlist
 argument_list|)
 expr_stmt|;
 return|return
-name|err
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4599,23 +4450,40 @@ modifier|*
 name|fwb
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|struct fw_xfer *xfer, *next;
+endif|#
+directive|endif
+name|struct
+name|fw_bind
+modifier|*
+name|tfw
+decl_stmt|;
 name|int
 name|s
-decl_stmt|;
-name|struct
-name|fw_xfer
-modifier|*
-name|xfer
-decl_stmt|,
-modifier|*
-name|next
 decl_stmt|;
 name|s
 operator|=
 name|splfw
 argument_list|()
 expr_stmt|;
-comment|/* shall we check the existance? */
+name|STAILQ_FOREACH
+argument_list|(
+argument|tfw
+argument_list|,
+argument|&fc->binds
+argument_list|,
+argument|fclist
+argument_list|)
+if|if
+condition|(
+name|tfw
+operator|==
+name|fwb
+condition|)
+block|{
 name|STAILQ_REMOVE
 argument_list|(
 operator|&
@@ -4630,51 +4498,36 @@ argument_list|,
 name|fclist
 argument_list|)
 expr_stmt|;
-comment|/* shall we do this? */
-for|for
-control|(
-name|xfer
-operator|=
-name|STAILQ_FIRST
-argument_list|(
-operator|&
-name|fwb
-operator|->
-name|xferlist
-argument_list|)
-init|;
-name|xfer
-operator|!=
-name|NULL
-condition|;
-name|xfer
-operator|=
-name|next
-control|)
-block|{
-name|next
-operator|=
-name|STAILQ_NEXT
-argument_list|(
-name|xfer
-argument_list|,
-name|link
-argument_list|)
-expr_stmt|;
-name|fw_xfer_free
-argument_list|(
-name|xfer
-argument_list|)
-expr_stmt|;
+goto|goto
+name|found
+goto|;
 block|}
-name|STAILQ_INIT
+name|printf
 argument_list|(
-operator|&
-name|fwb
-operator|->
-name|xferlist
+literal|"%s: no such bind\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+name|found
+label|:
+if|#
+directive|if
+literal|0
+comment|/* shall we do this? */
+block|for (xfer = STAILQ_FIRST(&fwb->xferlist); xfer != NULL; xfer = next) { 		next = STAILQ_NEXT(xfer, link); 		fw_xfer_free(xfer); 	} 	STAILQ_INIT(&fwb->xferlist);
+endif|#
+directive|endif
 name|splx
 argument_list|(
 name|s
@@ -4874,6 +4727,14 @@ name|tl
 operator|->
 name|xfer
 operator|->
+name|send
+operator|.
+name|hdr
+operator|.
+name|mode
+operator|.
+name|hdr
+operator|.
 name|dst
 operator|==
 name|node
@@ -4983,14 +4844,6 @@ condition|)
 return|return
 name|xfer
 return|;
-name|microtime
-argument_list|(
-operator|&
-name|xfer
-operator|->
-name|tv
-argument_list|)
-expr_stmt|;
 name|xfer
 operator|->
 name|malloc
@@ -5037,7 +4890,7 @@ name|xfer
 operator|->
 name|send
 operator|.
-name|len
+name|pay_len
 operator|=
 name|send_len
 expr_stmt|;
@@ -5045,7 +4898,7 @@ name|xfer
 operator|->
 name|recv
 operator|.
-name|len
+name|pay_len
 operator|=
 name|recv_len
 expr_stmt|;
@@ -5063,13 +4916,15 @@ return|;
 if|if
 condition|(
 name|send_len
+operator|>
+literal|0
 condition|)
 block|{
 name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|payload
 operator|=
 name|malloc
 argument_list|(
@@ -5088,7 +4943,7 @@ name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|payload
 operator|==
 name|NULL
 condition|)
@@ -5108,13 +4963,15 @@ block|}
 if|if
 condition|(
 name|recv_len
+operator|>
+literal|0
 condition|)
 block|{
 name|xfer
 operator|->
 name|recv
 operator|.
-name|buf
+name|payload
 operator|=
 name|malloc
 argument_list|(
@@ -5131,7 +4988,7 @@ name|xfer
 operator|->
 name|recv
 operator|.
-name|buf
+name|payload
 operator|==
 name|NULL
 condition|)
@@ -5142,7 +4999,7 @@ name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|payload
 operator|!=
 name|NULL
 condition|)
@@ -5152,7 +5009,7 @@ name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|payload
 argument_list|,
 name|type
 argument_list|)
@@ -5400,7 +5257,7 @@ end_comment
 
 begin_function
 name|void
-name|fw_xfer_free
+name|fw_xfer_free_buf
 parameter_list|(
 name|struct
 name|fw_xfer
@@ -5414,7 +5271,16 @@ name|xfer
 operator|==
 name|NULL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: xfer == NULL\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|fw_xfer_unload
 argument_list|(
 name|xfer
@@ -5426,7 +5292,7 @@ name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|payload
 operator|!=
 name|NULL
 condition|)
@@ -5437,7 +5303,7 @@ name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|payload
 argument_list|,
 name|xfer
 operator|->
@@ -5451,7 +5317,7 @@ name|xfer
 operator|->
 name|recv
 operator|.
-name|buf
+name|payload
 operator|!=
 name|NULL
 condition|)
@@ -5462,7 +5328,7 @@ name|xfer
 operator|->
 name|recv
 operator|.
-name|buf
+name|payload
 argument_list|,
 name|xfer
 operator|->
@@ -5483,7 +5349,49 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|void
+name|fw_xfer_free
+parameter_list|(
+name|struct
+name|fw_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+if|if
+condition|(
+name|xfer
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: xfer == NULL\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|fw_xfer_unload
+argument_list|(
+name|xfer
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|xfer
+argument_list|,
+name|xfer
+operator|->
+name|malloc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|fw_asy_callback_free
 parameter_list|(
@@ -5546,13 +5454,9 @@ name|FWBUSPHYCONF
 expr_stmt|;
 name|xfer
 operator|=
-name|fw_xfer_alloc_buf
+name|fw_xfer_alloc
 argument_list|(
 name|M_FWXFER
-argument_list|,
-literal|12
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5584,16 +5488,12 @@ name|fw_asy_callback_free
 expr_stmt|;
 name|fp
 operator|=
-operator|(
-expr|struct
-name|fw_pkt
-operator|*
-operator|)
+operator|&
 name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|hdr
 expr_stmt|;
 name|fp
 operator|->
@@ -7359,13 +7259,9 @@ else|#
 directive|else
 name|xfer
 operator|=
-name|fw_xfer_alloc_buf
+name|fw_xfer_alloc
 argument_list|(
 name|M_FWXFER
-argument_list|,
-literal|16
-argument_list|,
-literal|16
 argument_list|)
 expr_stmt|;
 if|if
@@ -7381,22 +7277,20 @@ goto|;
 block|}
 name|xfer
 operator|->
+name|send
+operator|.
 name|spd
 operator|=
 literal|0
 expr_stmt|;
 name|fp
 operator|=
-operator|(
-expr|struct
-name|fw_pkt
-operator|*
-operator|)
+operator|&
 name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|hdr
 expr_stmt|;
 name|fp
 operator|->
@@ -7448,16 +7342,6 @@ name|src
 operator|=
 literal|0
 expr_stmt|;
-name|xfer
-operator|->
-name|dst
-operator|=
-name|FWLOCALBUS
-operator||
-name|fc
-operator|->
-name|ongonode
-expr_stmt|;
 name|fp
 operator|->
 name|mode
@@ -7466,9 +7350,11 @@ name|rreqq
 operator|.
 name|dst
 operator|=
-name|xfer
+name|FWLOCALBUS
+operator||
+name|fc
 operator|->
-name|dst
+name|ongonode
 expr_stmt|;
 name|fp
 operator|->
@@ -7618,13 +7504,9 @@ name|err
 decl_stmt|;
 name|xfer
 operator|=
-name|fw_xfer_alloc_buf
+name|fw_xfer_alloc
 argument_list|(
 name|M_FWXFER
-argument_list|,
-literal|16
-argument_list|,
-literal|16
 argument_list|)
 expr_stmt|;
 if|if
@@ -7638,6 +7520,8 @@ name|NULL
 return|;
 name|xfer
 operator|->
+name|send
+operator|.
 name|spd
 operator|=
 name|spd
@@ -7645,16 +7529,12 @@ expr_stmt|;
 comment|/* XXX:min(spd, fc->spd) */
 name|fp
 operator|=
-operator|(
-expr|struct
-name|fw_pkt
-operator|*
-operator|)
+operator|&
 name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|hdr
 expr_stmt|;
 name|fp
 operator|->
@@ -7747,14 +7627,6 @@ name|src
 operator|=
 literal|0
 expr_stmt|;
-name|xfer
-operator|->
-name|dst
-operator|=
-name|addr_hi
-operator|>>
-literal|16
-expr_stmt|;
 name|fp
 operator|->
 name|mode
@@ -7763,9 +7635,9 @@ name|rreqq
 operator|.
 name|dst
 operator|=
-name|xfer
-operator|->
-name|dst
+name|addr_hi
+operator|>>
+literal|16
 expr_stmt|;
 name|fp
 operator|->
@@ -7930,87 +7802,23 @@ goto|goto
 name|errnode
 goto|;
 block|}
-if|if
-condition|(
-name|xfer
-operator|->
-name|send
-operator|.
-name|buf
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"node%d: send.buf=NULL addr=0x%x\n"
-argument_list|,
-name|fc
-operator|->
-name|ongonode
-argument_list|,
-name|fc
-operator|->
-name|ongoaddr
-argument_list|)
-expr_stmt|;
-goto|goto
-name|errnode
-goto|;
-block|}
 name|sfp
 operator|=
-operator|(
-expr|struct
-name|fw_pkt
-operator|*
-operator|)
+operator|&
 name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|hdr
 expr_stmt|;
-if|if
-condition|(
-name|xfer
-operator|->
-name|recv
-operator|.
-name|buf
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"node%d: recv.buf=NULL addr=0x%x\n"
-argument_list|,
-name|fc
-operator|->
-name|ongonode
-argument_list|,
-name|fc
-operator|->
-name|ongoaddr
-argument_list|)
-expr_stmt|;
-goto|goto
-name|errnode
-goto|;
-block|}
 name|rfp
 operator|=
-operator|(
-expr|struct
-name|fw_pkt
-operator|*
-operator|)
+operator|&
 name|xfer
 operator|->
 name|recv
 operator|.
-name|buf
+name|hdr
 expr_stmt|;
 if|#
 directive|if
@@ -9306,10 +9114,26 @@ name|tmptl
 operator|->
 name|xfer
 operator|->
+name|send
+operator|.
+name|hdr
+operator|.
+name|mode
+operator|.
+name|hdr
+operator|.
 name|dst
 operator|==
 name|xfer
 operator|->
+name|send
+operator|.
+name|hdr
+operator|.
+name|mode
+operator|.
+name|hdr
+operator|.
 name|dst
 condition|)
 break|break;
@@ -9393,6 +9217,14 @@ literal|"fw_get_tlabel: dst=%d tl=%d\n"
 argument_list|,
 name|xfer
 operator|->
+name|send
+operator|.
+name|hdr
+operator|.
+name|mode
+operator|.
+name|hdr
+operator|.
 name|dst
 argument_list|,
 name|label
@@ -9430,43 +9262,232 @@ name|void
 name|fw_rcv_copy
 parameter_list|(
 name|struct
-name|fw_xfer
+name|fw_rcv_buf
 modifier|*
-name|xfer
-parameter_list|,
-name|struct
-name|iovec
-modifier|*
-name|vec
-parameter_list|,
-name|int
-name|nvec
+name|rb
 parameter_list|)
 block|{
-name|char
+name|struct
+name|fw_pkt
+modifier|*
+name|pkt
+decl_stmt|;
+name|u_char
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|struct
+name|tcode_info
+modifier|*
+name|tinfo
+decl_stmt|;
+name|u_int
 name|res
 decl_stmt|,
 name|i
 decl_stmt|,
 name|len
+decl_stmt|,
+name|plen
 decl_stmt|;
-name|p
-operator|=
+name|rb
+operator|->
 name|xfer
 operator|->
 name|recv
 operator|.
-name|buf
+name|spd
+operator|-=
+name|rb
+operator|->
+name|spd
 expr_stmt|;
-name|res
+name|pkt
 operator|=
+operator|(
+expr|struct
+name|fw_pkt
+operator|*
+operator|)
+name|rb
+operator|->
+name|vec
+operator|->
+name|iov_base
+expr_stmt|;
+name|tinfo
+operator|=
+operator|&
+name|rb
+operator|->
+name|fc
+operator|->
+name|tcode
+index|[
+name|pkt
+operator|->
+name|mode
+operator|.
+name|hdr
+operator|.
+name|tcode
+index|]
+expr_stmt|;
+comment|/* Copy header */
+name|p
+operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
+operator|&
+name|rb
+operator|->
 name|xfer
 operator|->
 name|recv
+operator|.
+name|hdr
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|rb
+operator|->
+name|vec
+operator|->
+name|iov_base
+argument_list|,
+name|p
+argument_list|,
+name|tinfo
+operator|->
+name|hdr_len
+argument_list|)
+expr_stmt|;
+operator|(
+name|u_char
+operator|*
+operator|)
+name|rb
+operator|->
+name|vec
+operator|->
+name|iov_base
+operator|+=
+name|tinfo
+operator|->
+name|hdr_len
+expr_stmt|;
+name|rb
+operator|->
+name|vec
+operator|->
+name|iov_len
+operator|-=
+name|tinfo
+operator|->
+name|hdr_len
+expr_stmt|;
+comment|/* Copy payload */
+name|p
+operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
+name|rb
+operator|->
+name|xfer
+operator|->
+name|recv
+operator|.
+name|payload
+expr_stmt|;
+name|res
+operator|=
+name|rb
+operator|->
+name|xfer
+operator|->
+name|recv
+operator|.
+name|pay_len
+expr_stmt|;
+comment|/* special handling for RRESQ */
+if|if
+condition|(
+name|pkt
+operator|->
+name|mode
+operator|.
+name|hdr
+operator|.
+name|tcode
+operator|==
+name|FWTCODE_RRESQ
+operator|&&
+name|p
+operator|!=
+name|NULL
+operator|&&
+name|res
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+condition|)
+block|{
+operator|*
+operator|(
+name|u_int32_t
+operator|*
+operator|)
+name|p
+operator|=
+name|pkt
+operator|->
+name|mode
+operator|.
+name|rresq
+operator|.
+name|data
+expr_stmt|;
+name|rb
+operator|->
+name|xfer
+operator|->
+name|recv
+operator|.
+name|pay_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+operator|(
+name|tinfo
+operator|->
+name|flag
+operator|&
+name|FWTI_BLOCK_ASY
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
+name|plen
+operator|=
+name|pkt
+operator|->
+name|mode
+operator|.
+name|rresb
 operator|.
 name|len
 expr_stmt|;
@@ -9478,20 +9499,31 @@ literal|0
 init|;
 name|i
 operator|<
+name|rb
+operator|->
 name|nvec
 condition|;
 name|i
 operator|++
 operator|,
+name|rb
+operator|->
 name|vec
 operator|++
 control|)
 block|{
 name|len
 operator|=
+name|MIN
+argument_list|(
+name|rb
+operator|->
 name|vec
 operator|->
 name|iov_len
+argument_list|,
+name|plen
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -9504,11 +9536,13 @@ name|printf
 argument_list|(
 literal|"rcv buffer(%d) is %d bytes short.\n"
 argument_list|,
+name|rb
+operator|->
 name|xfer
 operator|->
 name|recv
 operator|.
-name|len
+name|pay_len
 argument_list|,
 name|len
 operator|-
@@ -9522,6 +9556,8 @@ expr_stmt|;
 block|}
 name|bcopy
 argument_list|(
+name|rb
+operator|->
 name|vec
 operator|->
 name|iov_base
@@ -9539,19 +9575,29 @@ name|res
 operator|-=
 name|len
 expr_stmt|;
+name|plen
+operator|-=
+name|len
+expr_stmt|;
 if|if
 condition|(
 name|res
-operator|<=
+operator|==
+literal|0
+operator|||
+name|plen
+operator|==
 literal|0
 condition|)
 break|break;
 block|}
+name|rb
+operator|->
 name|xfer
 operator|->
 name|recv
 operator|.
-name|len
+name|pay_len
 operator|-=
 name|res
 expr_stmt|;
@@ -9567,23 +9613,9 @@ name|void
 name|fw_rcv
 parameter_list|(
 name|struct
-name|firewire_comm
+name|fw_rcv_buf
 modifier|*
-name|fc
-parameter_list|,
-name|struct
-name|iovec
-modifier|*
-name|vec
-parameter_list|,
-name|int
-name|nvec
-parameter_list|,
-name|u_int
-name|sub
-parameter_list|,
-name|u_int
-name|spd
+name|rb
 parameter_list|)
 block|{
 name|struct
@@ -9595,19 +9627,9 @@ modifier|*
 name|resfp
 decl_stmt|;
 name|struct
-name|fw_xfer
-modifier|*
-name|xfer
-decl_stmt|;
-name|struct
 name|fw_bind
 modifier|*
 name|bind
-decl_stmt|;
-name|struct
-name|firewire_softc
-modifier|*
-name|sc
 decl_stmt|;
 name|int
 name|tcode
@@ -9634,6 +9656,8 @@ expr|struct
 name|fw_pkt
 operator|*
 operator|)
+name|rb
+operator|->
 name|vec
 index|[
 literal|0
@@ -9651,25 +9675,6 @@ name|common
 operator|.
 name|tcode
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX this check is not valid for RRESQ and WREQQ */
-block|if (vec[0].iov_len< fc->tcode[tcode].hdr_len) {
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-block|printf("fw_rcv: iov_len(%zu) is less than"
-else|#
-directive|else
-block|printf("fw_rcv: iov_len(%u) is less than"
-endif|#
-directive|endif
-block|" hdr_len(%d:tcode=%d)\n", vec[0].iov_len, 			fc->tcode[tcode].hdr_len, tcode); 	}
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|tcode
@@ -9687,10 +9692,14 @@ case|:
 case|case
 name|FWTCODE_LRES
 case|:
+name|rb
+operator|->
 name|xfer
 operator|=
 name|fw_tl2xfer
 argument_list|(
+name|rb
+operator|->
 name|fc
 argument_list|,
 name|fp
@@ -9714,6 +9723,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|rb
+operator|->
 name|xfer
 operator|==
 name|NULL
@@ -9771,10 +9782,14 @@ argument_list|(
 literal|"try ad-hoc work around!!\n"
 argument_list|)
 expr_stmt|;
+name|rb
+operator|->
 name|xfer
 operator|=
 name|fw_tl2xfer
 argument_list|(
+name|rb
+operator|->
 name|fc
 argument_list|,
 name|fp
@@ -9802,6 +9817,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|rb
+operator|->
 name|xfer
 operator|==
 name|NULL
@@ -9826,13 +9843,38 @@ directive|endif
 block|}
 name|fw_rcv_copy
 argument_list|(
-name|xfer
-argument_list|,
-name|vec
-argument_list|,
-name|nvec
+name|rb
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rb
+operator|->
+name|xfer
+operator|->
+name|recv
+operator|.
+name|hdr
+operator|.
+name|mode
+operator|.
+name|wres
+operator|.
+name|rtcode
+operator|!=
+name|RESP_CMP
+condition|)
+name|rb
+operator|->
+name|xfer
+operator|->
+name|resp
+operator|=
+name|EIO
+expr_stmt|;
+else|else
+name|rb
+operator|->
 name|xfer
 operator|->
 name|resp
@@ -9842,10 +9884,14 @@ expr_stmt|;
 comment|/* make sure the packet is drained in AT queue */
 name|oldstate
 operator|=
+name|rb
+operator|->
 name|xfer
 operator|->
 name|state
 expr_stmt|;
+name|rb
+operator|->
 name|xfer
 operator|->
 name|state
@@ -9862,6 +9908,8 @@ name|FWXF_SENT
 case|:
 name|fw_xfer_done
 argument_list|(
+name|rb
+operator|->
 name|xfer
 argument_list|)
 expr_stmt|;
@@ -9872,7 +9920,7 @@ case|:
 if|#
 directive|if
 literal|0
-block|if (firewire_debug) 				printf("not sent yet tl=%x\n", xfer->tl);
+block|if (firewire_debug) 				printf("not sent yet tl=%x\n", rb->xfer->tl);
 endif|#
 directive|endif
 break|break;
@@ -9881,6 +9929,8 @@ name|printf
 argument_list|(
 literal|"unexpected state %d\n"
 argument_list|,
+name|rb
+operator|->
 name|xfer
 operator|->
 name|state
@@ -9907,6 +9957,8 @@ name|bind
 operator|=
 name|fw_bindlookup
 argument_list|(
+name|rb
+operator|->
 name|fc
 argument_list|,
 name|fp
@@ -9940,69 +9992,56 @@ operator|>=
 literal|500000
 name|printf
 argument_list|(
-literal|"Unknown service addr 0x%08x:0x%08x tcode=%x src=0x%x data=%x\n"
+literal|"Unknown service addr 0x%04x:0x%08x tcode=%x src=0x%x data=%x\n"
 argument_list|,
 else|#
 directive|else
 argument|printf(
-literal|"Unknown service addr 0x%08x:0x%08x tcode=%x src=0x%x data=%lx\n"
+literal|"Unknown service addr 0x%04x:0x%08x tcode=%x src=0x%x data=%lx\n"
 argument|,
 endif|#
 directive|endif
-argument|fp->mode.wreqq.dest_hi, 				fp->mode.wreqq.dest_lo, 				tcode, 				fp->mode.hdr.src, 				ntohl(fp->mode.wreqq.data)); 			if (fc->status == FWBUSRESET) { 				printf(
+argument|fp->mode.wreqq.dest_hi, 				fp->mode.wreqq.dest_lo, 				tcode, 				fp->mode.hdr.src, 				ntohl(fp->mode.wreqq.data)); 			if (rb->fc->status == FWBUSRESET) { 				printf(
 literal|"fw_rcv: cannot respond(bus reset)!\n"
-argument|); 				goto err; 			} 			xfer = fw_xfer_alloc_buf(M_FWXFER,
-literal|16
-argument|,
+argument|); 				goto err; 			} 			rb->xfer = fw_xfer_alloc(M_FWXFER); 			if(rb->xfer == NULL){ 				return; 			} 			rb->xfer->send.spd = rb->spd; 			rb->xfer->send.pay_len =
 literal|0
-argument|); 			if(xfer == NULL){ 				return; 			} 			xfer->spd = spd; 			resfp = (struct fw_pkt *)xfer->send.buf; 			switch (tcode) { 			case FWTCODE_WREQQ: 			case FWTCODE_WREQB: 				resfp->mode.hdr.tcode = FWTCODE_WRES; 				xfer->send.len =
-literal|12
-argument|; 				break; 			case FWTCODE_RREQQ: 				resfp->mode.hdr.tcode = FWTCODE_RRESQ; 				xfer->send.len =
-literal|16
-argument|; 				break; 			case FWTCODE_RREQB: 				resfp->mode.hdr.tcode = FWTCODE_RRESB; 				xfer->send.len =
-literal|16
-argument|; 				break; 			case FWTCODE_LREQ: 				resfp->mode.hdr.tcode = FWTCODE_LRES; 				xfer->send.len =
-literal|16
-argument|; 				break; 			} 			resfp->mode.hdr.dst = fp->mode.hdr.src; 			resfp->mode.hdr.tlrt = fp->mode.hdr.tlrt; 			resfp->mode.hdr.pri = fp->mode.hdr.pri; 			resfp->mode.rresb.rtcode =
-literal|7
-argument|; 			resfp->mode.rresb.extcode =
+argument|; 			resfp =&rb->xfer->send.hdr; 			switch (tcode) { 			case FWTCODE_WREQQ: 			case FWTCODE_WREQB: 				resfp->mode.hdr.tcode = FWTCODE_WRES; 				break; 			case FWTCODE_RREQQ: 				resfp->mode.hdr.tcode = FWTCODE_RRESQ; 				break; 			case FWTCODE_RREQB: 				resfp->mode.hdr.tcode = FWTCODE_RRESB; 				break; 			case FWTCODE_LREQ: 				resfp->mode.hdr.tcode = FWTCODE_LRES; 				break; 			} 			resfp->mode.hdr.dst = fp->mode.hdr.src; 			resfp->mode.hdr.tlrt = fp->mode.hdr.tlrt; 			resfp->mode.hdr.pri = fp->mode.hdr.pri; 			resfp->mode.rresb.rtcode = RESP_ADDRESS_ERROR; 			resfp->mode.rresb.extcode =
 literal|0
 argument|; 			resfp->mode.rresb.len =
 literal|0
 argument|;
-comment|/* 			xfer->act.hand = fw_asy_callback; */
-argument|xfer->act.hand = fw_xfer_free; 			if(fw_asyreq(fc, -
+comment|/* 			rb->xfer->act.hand = fw_asy_callback; */
+argument|rb->xfer->act.hand = fw_xfer_free; 			if(fw_asyreq(rb->fc, -
 literal|1
-argument|, xfer)){ 				fw_xfer_free( xfer); 				return; 			} 			goto err; 		} 		len =
+argument|, rb->xfer)){ 				fw_xfer_free(rb->xfer); 				return; 			} 			goto err; 		} 		len =
 literal|0
 argument|; 		for (i =
 literal|0
-argument|; i< nvec; i ++) 			len += vec[i].iov_len; 		switch(bind->act_type){ 		case FWACT_XFER:
+argument|; i< rb->nvec; i ++) 			len += rb->vec[i].iov_len; 		switch(bind->act_type){ 		case FWACT_XFER:
 comment|/* splfw()?? */
-argument|xfer = STAILQ_FIRST(&bind->xferlist); 			if (xfer == NULL) { 				printf(
+argument|rb->xfer = STAILQ_FIRST(&bind->xferlist); 			if (rb->xfer == NULL) { 				printf(
 literal|"Discard a packet for this bind.\n"
-argument|); 				goto err; 			} 			STAILQ_REMOVE_HEAD(&bind->xferlist, link); 			fw_rcv_copy(xfer, vec, nvec); 			xfer->spd = spd; 			if (fc->status != FWBUSRESET) 				xfer->act.hand(xfer); 			else 				STAILQ_INSERT_TAIL(&fc->pending, xfer, link); 			return; 			break; 		case FWACT_CH: 			if(fc->ir[bind->sub]->queued>= 				fc->ir[bind->sub]->maxq){ 				device_printf(fc->bdev,
+argument|); 				goto err; 			} 			STAILQ_REMOVE_HEAD(&bind->xferlist, link); 			fw_rcv_copy(rb); 			if (rb->fc->status != FWBUSRESET) 				rb->xfer->act.hand(rb->xfer); 			else 				STAILQ_INSERT_TAIL(&rb->fc->pending, 				    rb->xfer, link); 			return; 			break; 		case FWACT_CH: 			if(rb->fc->ir[bind->sub]->queued>= 				rb->fc->ir[bind->sub]->maxq){ 				device_printf(rb->fc->bdev,
 literal|"Discard a packet %x %d\n"
-argument|, 					bind->sub, 					fc->ir[bind->sub]->queued); 				goto err; 			} 			xfer = STAILQ_FIRST(&bind->xferlist); 			if (xfer == NULL) { 				printf(
+argument|, 					bind->sub, 					rb->fc->ir[bind->sub]->queued); 				goto err; 			} 			rb->xfer = STAILQ_FIRST(&bind->xferlist); 			if (rb->xfer == NULL) { 				printf(
 literal|"Discard packet for this bind\n"
-argument|); 				goto err; 			} 			STAILQ_REMOVE_HEAD(&bind->xferlist, link); 			fw_rcv_copy(xfer, vec, nvec); 			xfer->spd = spd; 			s = splfw(); 			fc->ir[bind->sub]->queued++; 			STAILQ_INSERT_TAIL(&fc->ir[bind->sub]->q, xfer, link); 			splx(s);  			wakeup((caddr_t)fc->ir[bind->sub]);  			return; 			break; 		default: 			goto err; 			break; 		} 		break; 	case FWTCODE_STREAM: 	{ 		struct fw_xferq *xferq;  		xferq = fc->ir[sub];
+argument|); 				goto err; 			} 			STAILQ_REMOVE_HEAD(&bind->xferlist, link); 			fw_rcv_copy(rb); 			s = splfw(); 			rb->fc->ir[bind->sub]->queued++; 			STAILQ_INSERT_TAIL(&rb->fc->ir[bind->sub]->q, 			    rb->xfer, link); 			splx(s);  			wakeup((caddr_t)rb->fc->ir[bind->sub]);  			return; 			break; 		default: 			goto err; 			break; 		} 		break;
+if|#
+directive|if
+literal|0
+comment|/* shouldn't happen ?? or for GASP */
+argument|case FWTCODE_STREAM: 	{ 		struct fw_xferq *xferq;  		xferq = rb->fc->ir[sub];
 if|#
 directive|if
 literal|0
 argument|printf("stream rcv dma %d len %d off %d spd %d\n", 			sub, len, off, spd);
 endif|#
 directive|endif
-argument|if(xferq->queued>= xferq->maxq) { 			printf(
-literal|"receive queue is full\n"
-argument|); 			goto err; 		}
+argument|if(xferq->queued>= xferq->maxq) { 			printf("receive queue is full\n"); 			goto err; 		}
 comment|/* XXX get xfer from xfer queue, we don't need copy for  			per packet mode */
-argument|xfer = fw_xfer_alloc_buf(M_FWXFER,
-literal|0
-argument|,
+argument|rb->xfer = fw_xfer_alloc_buf(M_FWXFER, 0,
 comment|/* XXX */
-argument|vec[
-literal|0
-argument|].iov_len); 		if(xfer == NULL) goto err; 		fw_rcv_copy(xfer, vec, nvec); 		xfer->spd = spd; 		s = splfw(); 		xferq->queued++; 		STAILQ_INSERT_TAIL(&xferq->q, xfer, link); 		splx(s); 		sc = device_get_softc(fc->bdev);
+argument|vec[0].iov_len); 		if (rb->xfer == NULL) goto err; 		fw_rcv_copy(rb) 		s = splfw(); 		xferq->queued++; 		STAILQ_INSERT_TAIL(&xferq->q, rb->xfer, link); 		splx(s); 		sc = device_get_softc(rb->fc->bdev);
 if|#
 directive|if
 name|__FreeBSD_version
@@ -10011,36 +10050,37 @@ literal|500000
 argument|if (SEL_WAITING(&xferq->rsel))
 else|#
 directive|else
-argument|if (&xferq->rsel.si_pid !=
-literal|0
-argument|)
+argument|if (&xferq->rsel.si_pid != 0)
 endif|#
 directive|endif
-argument|selwakeup(&xferq->rsel); 		if (xferq->flag& FWXFERQ_WAKEUP) { 			xferq->flag&= ~FWXFERQ_WAKEUP; 			wakeup((caddr_t)xferq); 		} 		if (xferq->flag& FWXFERQ_HANDLER) { 			xferq->hand(xferq); 		} 		return; 		break; 	} 	default: 		printf(
+argument|selwakeup(&xferq->rsel); 		if (xferq->flag& FWXFERQ_WAKEUP) { 			xferq->flag&= ~FWXFERQ_WAKEUP; 			wakeup((caddr_t)xferq); 		} 		if (xferq->flag& FWXFERQ_HANDLER) { 			xferq->hand(xferq); 		} 		return; 		break; 	}
+endif|#
+directive|endif
+argument|default: 		printf(
 literal|"fw_rcv: unknow tcode %d\n"
 argument|, tcode); 		break; 	} err: 	return; }
 comment|/*  * Post process for Bus Manager election process.  */
-argument|static void fw_try_bmr_callback(struct fw_xfer *xfer) { 	struct fw_pkt *rfp; 	struct firewire_comm *fc; 	int bmr;  	if (xfer == NULL) 		return; 	fc = xfer->fc; 	if (xfer->resp !=
+argument|static void fw_try_bmr_callback(struct fw_xfer *xfer) { 	struct firewire_comm *fc; 	int bmr;  	if (xfer == NULL) 		return; 	fc = xfer->fc; 	if (xfer->resp !=
 literal|0
-argument|) 		goto error; 	if (xfer->send.buf == NULL) 		goto error; 	if (xfer->recv.buf == NULL) 		goto error; 	rfp = (struct fw_pkt *)xfer->recv.buf; 	if (rfp->mode.lres.rtcode != FWRCODE_COMPLETE) 		goto error;  	bmr = ntohl(rfp->mode.lres.payload[
+argument|) 		goto error; 	if (xfer->recv.payload == NULL) 		goto error; 	if (xfer->recv.hdr.mode.lres.rtcode != FWRCODE_COMPLETE) 		goto error;  	bmr = ntohl(xfer->recv.payload[
 literal|0
 argument|]); 	if (bmr ==
 literal|0x3f
 argument|) 		bmr = fc->nodeid;  	CSRARC(fc, BUS_MGR_ID) = fc->set_bmr(fc, bmr&
 literal|0x3f
-argument|); 	fw_xfer_free(xfer); 	fw_bmr(fc); 	return;  error: 	device_printf(fc->bdev,
+argument|); 	fw_xfer_free_buf(xfer); 	fw_bmr(fc); 	return;  error: 	device_printf(fc->bdev,
 literal|"bus manager election failed\n"
-argument|); 	fw_xfer_free(xfer); }
+argument|); 	fw_xfer_free_buf(xfer); }
 comment|/*  * To candidate Bus Manager election process.  */
 argument|static void fw_try_bmr(void *arg) { 	struct fw_xfer *xfer; 	struct firewire_comm *fc = (struct firewire_comm *)arg; 	struct fw_pkt *fp; 	int err =
 literal|0
 argument|;  	xfer = fw_xfer_alloc_buf(M_FWXFER,
-literal|24
+literal|8
 argument|,
-literal|20
-argument|); 	if(xfer == NULL){ 		return; 	} 	xfer->spd =
+literal|4
+argument|); 	if(xfer == NULL){ 		return; 	} 	xfer->send.spd =
 literal|0
-argument|; 	fc->status = FWBUSMGRELECT;  	fp = (struct fw_pkt *)xfer->send.buf; 	fp->mode.lreq.dest_hi =
+argument|; 	fc->status = FWBUSMGRELECT;  	fp =&xfer->send.hdr; 	fp->mode.lreq.dest_hi =
 literal|0xffff
 argument|; 	fp->mode.lreq.tlrt =
 literal|0
@@ -10050,17 +10090,17 @@ argument|; 	fp->mode.lreq.src =
 literal|0
 argument|; 	fp->mode.lreq.len =
 literal|8
-argument|; 	fp->mode.lreq.extcode = FW_LREQ_CMPSWAP; 	xfer->dst = FWLOCALBUS | fc->irm; 	fp->mode.lreq.dst = xfer->dst; 	fp->mode.lreq.dest_lo =
+argument|; 	fp->mode.lreq.extcode = EXTCODE_CMP_SWAP; 	fp->mode.lreq.dst = FWLOCALBUS | fc->irm; 	fp->mode.lreq.dest_lo =
 literal|0xf0000000
-argument|| BUS_MGR_ID; 	fp->mode.lreq.payload[
+argument|| BUS_MGR_ID; 	xfer->send.payload[
 literal|0
 argument|] = htonl(
 literal|0x3f
-argument|); 	fp->mode.lreq.payload[
+argument|); 	xfer->send.payload[
 literal|1
 argument|] = htonl(fc->nodeid); 	xfer->act.hand = fw_try_bmr_callback;  	err = fw_asyreq(fc, -
 literal|1
-argument|, xfer); 	if(err){ 		fw_xfer_free( xfer); 		return; 	} 	return; }
+argument|, xfer); 	if(err){ 		fw_xfer_free_buf(xfer); 		return; 	} 	return; }
 ifdef|#
 directive|ifdef
 name|FW_VMACCESS
@@ -10161,7 +10201,7 @@ argument|) ^ ( sum<<
 literal|5
 argument|) ^ sum; 		} 		crc&=
 literal|0xffff
-argument|; 	} 	return((u_int16_t) crc); }  static int fw_bmr(struct firewire_comm *fc) { 	struct fw_device fwdev; 	union fw_self_id *self_id; 	int cmstr;
+argument|; 	} 	return((u_int16_t) crc); }  static int fw_bmr(struct firewire_comm *fc) { 	struct fw_device fwdev; 	union fw_self_id *self_id; 	int cmstr; 	u_int32_t quad;
 comment|/* Check to see if the current root node is cycle master capable */
 argument|self_id =&fc->topology_map->self_id[fc->max_node]; 	if (fc->max_node>
 literal|0
@@ -10203,18 +10243,18 @@ argument|;
 comment|/* 512 */
 argument|fwdev.status = FWDEVINIT;
 comment|/* Set cmstr bit on the cycle master */
-argument|fwmem_write_quad(&fwdev, NULL,
+argument|quad = htonl(
+literal|1
+argument|<<
+literal|8
+argument|); 	fwmem_write_quad(&fwdev, NULL,
 literal|0
 comment|/*spd*/
 argument|,
 literal|0xffff
 argument|,
 literal|0xf0000000
-argument|| STATE_SET, htonl(
-literal|1
-argument|<<
-literal|8
-argument|), 		fw_asy_callback_free);  	return
+argument|| STATE_SET,&quad, fw_asy_callback_free);  	return
 literal|0
 argument|; }  static int fw_modevent(module_t mode, int type, void *data) { 	int err =
 literal|0
