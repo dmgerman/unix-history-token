@@ -152,7 +152,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|u_long
 name|lastrec
 decl_stmt|,
 name|record
@@ -927,7 +927,7 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"file %d: eof after %ld records: %ld bytes\n"
+literal|"file %d: eof after %lu records: %lu bytes\n"
 argument_list|,
 name|filen
 argument_list|,
@@ -969,7 +969,7 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"total length: %ld bytes\n"
+literal|"total length: %lu bytes\n"
 argument_list|,
 name|tsize
 argument_list|)
