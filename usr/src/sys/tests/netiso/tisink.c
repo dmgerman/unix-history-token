@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tisink.c	7.1 (Berkeley) %G%"
+literal|"@(#)tisink.c	7.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,6 +211,8 @@ end_decl_stmt
 begin_decl_stmt
 name|long
 name|records
+decl_stmt|,
+name|intercept
 decl_stmt|;
 end_decl_stmt
 
@@ -776,6 +778,35 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|intercept
+condition|)
+block|{
+name|try
+argument_list|(
+name|setsockopt
+argument_list|,
+operator|(
+name|s
+operator|,
+name|SOL_TRANSPORT
+operator|,
+name|TPOPT_INTERCEPT
+operator|,
+operator|&
+name|on
+operator|,
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
+operator|)
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 init|;

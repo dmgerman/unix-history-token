@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_pcb.c,v 5.4 88/11/18 17:28:24 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_pcb.c,v $  *	@(#)tp_pcb.c	7.5 (Berkeley) %G% *  *  *  * This is the initialization and cleanup stuff -   * for the tp machine in general as well as  for the individual pcbs.  * tp_init() is called at system startup.  tp_attach() and tp_getref() are  * called when a socket is created.  tp_detach() and tp_freeref()  * are called during the closing stage and/or when the reference timer   * goes off.   * tp_soisdisconnecting() and tp_soisdisconnected() are tp-specific   * versions of soisconnect*  * and are called (obviously) during the closing phase.  *  */
+comment|/*   * ARGO TP  *  * $Header: tp_pcb.c,v 5.4 88/11/18 17:28:24 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_pcb.c,v $  *	@(#)tp_pcb.c	7.6 (Berkeley) %G% *  *  *  * This is the initialization and cleanup stuff -   * for the tp machine in general as well as  for the individual pcbs.  * tp_init() is called at system startup.  tp_attach() and tp_getref() are  * called when a socket is created.  tp_detach() and tp_freeref()  * are called during the closing stage and/or when the reference timer   * goes off.   * tp_soisdisconnecting() and tp_soisdisconnected() are tp-specific   * versions of soisconnect*  * and are called (obviously) during the closing phase.  *  */
 end_comment
 
 begin_ifndef
@@ -602,6 +602,13 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|in_cmpnetaddr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|in_putsufx
 parameter_list|()
 function_decl|;
@@ -706,6 +713,13 @@ end_function_decl
 begin_function_decl
 name|int
 name|iso_getnetaddr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|iso_cmpnetaddr
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -831,6 +845,13 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|iso_cmpnetaddr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|iso_putsufx
 parameter_list|()
 function_decl|;
@@ -937,6 +958,8 @@ name|iso_putnetaddr
 block|,
 name|iso_getnetaddr
 block|,
+name|iso_cmpnetaddr
+block|,
 name|iso_putsufx
 block|,
 name|iso_getsufx
@@ -987,6 +1010,8 @@ block|,
 name|in_putnetaddr
 block|,
 name|in_getnetaddr
+block|,
+name|in_cmpnetaddr
 block|,
 name|in_putsufx
 block|,
@@ -1048,6 +1073,8 @@ block|,
 name|iso_putnetaddr
 block|,
 name|iso_getnetaddr
+block|,
+name|iso_cmpnetaddr
 block|,
 name|iso_putsufx
 block|,

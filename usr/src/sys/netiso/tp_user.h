@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_user.h,v 5.2 88/11/04 15:44:44 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_user.h,v $  *	@(#)tp_user.h	7.7 (Berkeley) %G%  *  * These are the values a real-live user ;-) needs.   */
+comment|/*   * ARGO TP  *  * $Header: tp_user.h,v 5.2 88/11/04 15:44:44 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_user.h,v $  *	@(#)tp_user.h	7.8 (Berkeley) %G%  *  * These are the values a real-live user ;-) needs.   */
 end_comment
 
 begin_ifndef
@@ -238,6 +238,13 @@ end_define
 begin_comment
 comment|/* don't use slow start */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TPOPT_INTERCEPT
+value|0x200
+end_define
 
 begin_define
 define|#

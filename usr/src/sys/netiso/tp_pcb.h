@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_pcb.h,v 5.2 88/11/18 17:09:32 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_pcb.h,v $  *	@(#)tp_pcb.h	7.6 (Berkeley) %G% *  *  *   * This file defines the transport protocol control block (tpcb).  * and a bunch of #define values that are used in the tpcb.  */
+comment|/*   * ARGO TP  *  * $Header: tp_pcb.h,v 5.2 88/11/18 17:09:32 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_pcb.h,v $  *	@(#)tp_pcb.h	7.7 (Berkeley) %G% *  *  *   * This file defines the transport protocol control block (tpcb).  * and a bunch of #define values that are used in the tpcb.  */
 end_comment
 
 begin_ifndef
@@ -204,7 +204,6 @@ struct|;
 end_struct
 
 begin_struct
-specifier|extern
 struct|struct
 name|nl_protosw
 block|{
@@ -228,6 +227,14 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* gets addresses from nl pcb */
+name|int
+function_decl|(
+modifier|*
+name|nlp_cmpnetaddr
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* compares address in pcb with sockaddr */
 name|int
 function_decl|(
 modifier|*
@@ -329,8 +336,6 @@ name|nlp_pcblist
 decl_stmt|;
 comment|/* list of xx_pcb's for connections */
 block|}
-name|nl_protosw
-index|[]
 struct|;
 end_struct
 
@@ -338,6 +343,22 @@ begin_struct
 struct|struct
 name|tp_pcb
 block|{
+name|struct
+name|tp_pcb
+modifier|*
+name|tp_next
+decl_stmt|;
+name|struct
+name|tp_pcb
+modifier|*
+name|tp_prev
+decl_stmt|;
+name|struct
+name|tp_pcb
+modifier|*
+name|tp_nextlisten
+decl_stmt|;
+comment|/* chain all listeners */
 name|u_short
 name|tp_state
 decl_stmt|;
@@ -861,6 +882,12 @@ define|\
 value|{ int   newacks = SEQ_SUB(pcb, seq, pcb->tp_snduna); \ 	if (newacks> 0) { \ 		pcb->tp_ackrcvd += newacks; \ 		if (pcb->tp_ackrcvd>= MIN(pcb->tp_fcredit, pcb->tp_cong_win)) { \ 			++pcb->tp_cong_win; \ 			pcb->tp_ackrcvd = 0; \ 		} \ 	} \ }
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -885,6 +912,38 @@ name|tp_param
 name|tp_param
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|nl_protosw
+name|nl_protosw
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tp_pcb
+modifier|*
+name|tp_listeners
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tp_pcb
+modifier|*
+name|tp_intercepts
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
