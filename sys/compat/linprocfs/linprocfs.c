@@ -2565,14 +2565,6 @@ break|break;
 block|}
 break|break;
 case|case
-name|PRS_WAIT
-case|:
-name|state
-operator|=
-literal|"W (waiting)"
-expr_stmt|;
-break|break;
-case|case
 name|PRS_ZOMBIE
 case|:
 name|state

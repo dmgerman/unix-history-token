@@ -267,14 +267,6 @@ literal|"new "
 expr_stmt|;
 break|break;
 case|case
-name|PRS_WAIT
-case|:
-name|state
-operator|=
-literal|"wait"
-expr_stmt|;
-break|break;
-case|case
 name|PRS_ZOMBIE
 case|:
 name|state

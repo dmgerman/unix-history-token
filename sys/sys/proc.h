@@ -1675,9 +1675,6 @@ comment|/* In creation */
 name|PRS_NORMAL
 block|,
 comment|/* KSEs can be run */
-name|PRS_WAIT
-block|,
-comment|/* Waiting on interrupt ? */
 name|PRS_ZOMBIE
 block|}
 name|p_state
