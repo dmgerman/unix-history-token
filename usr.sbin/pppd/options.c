@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: options.c,v 1.24 1995/08/16 01:39:35 paulus Exp $"
+literal|"$Id: options.c,v 1.6 1995/10/31 21:21:31 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,7 +159,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/ppp-comp.h>
+file|<net/ppp_comp.h>
 end_include
 
 begin_define
