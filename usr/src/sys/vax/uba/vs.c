@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)vs.c	7.1 (MIT) %G% */
+comment|/* @(#)vs.c	7.2 (MIT) %G% */
 end_comment
 
 begin_comment
@@ -1153,13 +1153,12 @@ name|offset
 operator|.
 name|fparm_all
 operator|+
-operator|(
+name|UBAI_ADDR
+argument_list|(
 name|vsp
 operator|->
 name|vsBuff_ubinfo
-operator|&
-literal|0x3ffff
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
