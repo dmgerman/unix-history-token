@@ -2640,6 +2640,15 @@ case|case
 name|IA64_VEC_TAKEN_BRANCH_TRAP
 case|:
 block|{
+name|framep
+operator|->
+name|tf_special
+operator|.
+name|psr
+operator|&=
+operator|~
+name|IA64_PSR_SS
+expr_stmt|;
 comment|/* 		 * These are always fatal in kernel, and should never happen. 		 */
 if|if
 condition|(
