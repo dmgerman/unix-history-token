@@ -2738,6 +2738,13 @@ expr_stmt|;
 name|save_config
 argument_list|()
 expr_stmt|;
+name|reply
+operator|->
+name|error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* all went well */
 block|}
 block|}
 block|}
