@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.16 %G%"
+literal|"@(#)c21.c 4.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2194,10 +2194,10 @@ expr_stmt|;
 name|nchange
 operator|++
 expr_stmt|;
-block|}
 goto|goto
 name|std
 goto|;
+block|}
 name|ashadd
 label|:
 comment|/* at this point, RT2 and RT3 are guaranteed to be simple regs*/
