@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vmain.c	4.2 %G%"
+literal|"@(#)ex_vmain.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2125,7 +2125,7 @@ name|vfixcurs
 argument_list|()
 expr_stmt|;
 continue|continue;
-comment|/* 		 * ^^		Return to previous context.  Like a 't 		 *		if that mark is set since tag sets that 		 *		mark if it stays in same file.  Else 		 *		like a :e #, and thus can be used after a 		 *		"No Write" diagnostic. 		 * 		 *		Note: this doesn't correspond with documentation 		 *		Is this comment misleading? 		 */
+comment|/* 		 * ^^		Return to previous file. 		 *		Like a :e #, and thus can be used after a 		 *		"No Write" diagnostic. 		 */
 case|case
 name|CTRL
 argument_list|(
@@ -2141,36 +2141,6 @@ argument_list|(
 name|cnt
 argument_list|)
 expr_stmt|;
-name|addr
-operator|=
-name|getmark
-argument_list|(
-literal|'t'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|addr
-operator|!=
-literal|0
-condition|)
-block|{
-name|markit
-argument_list|(
-name|addr
-argument_list|)
-expr_stmt|;
-name|vupdown
-argument_list|(
-name|addr
-operator|-
-name|dot
-argument_list|,
-name|NOSTR
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 name|vsave
 argument_list|()
 expr_stmt|;
