@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: bpf.c,v 1.48 2001/04/08 21:12:49 mellon Exp $ Copyright (c) 1995-2000 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: bpf.c,v 1.48.2.1 2002/04/30 05:12:53 murray Exp $ Copyright (c) 1995-2000 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1914,6 +1914,9 @@ name|interface
 operator|->
 name|rbuf
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|interface
 operator|->
 name|rbuf_max

@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|DHCP_VERSION
-value|"V3.0.1rc8"
+value|"V3.0.1rc9"
 end_define
 
 end_unit
