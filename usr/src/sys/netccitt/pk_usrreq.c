@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_usrreq.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_usrreq.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1989,6 +1989,16 @@ name|AF_CCITT
 expr_stmt|;
 name|newp
 operator|->
+name|x25_len
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|newp
+argument_list|)
+expr_stmt|;
+name|newp
+operator|->
 name|x25_opts
 operator|.
 name|op_flags
@@ -2055,6 +2065,27 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bcmp
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|oldp
+operator|->
+name|xaddr_proto
+argument_list|,
+name|newp
+operator|->
+name|x25_udata
+argument_list|,
+literal|4
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|bcopy
 argument_list|(
 operator|(
@@ -2077,6 +2108,7 @@ name|x25_udlen
 operator|=
 literal|4
 expr_stmt|;
+block|}
 name|ocp
 operator|=
 operator|(
@@ -2111,6 +2143,20 @@ operator|+
 literal|12
 condition|)
 block|{
+if|if
+condition|(
+name|newp
+operator|->
+name|x25_udlen
+operator|==
+literal|0
+condition|)
+name|newp
+operator|->
+name|x25_udlen
+operator|=
+literal|4
+expr_stmt|;
 operator|*
 name|ncp
 operator|++
@@ -2315,6 +2361,14 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|newp
+operator|->
+name|x25_udlen
+operator|>
+literal|4
+condition|)
 name|bcopy
 argument_list|(
 name|newp
