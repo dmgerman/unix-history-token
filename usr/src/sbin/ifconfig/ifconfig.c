@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	4.7 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -854,6 +854,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"%s: permission denied\n"
+argument_list|,
+name|cmd
 argument_list|)
 expr_stmt|;
 break|break;
