@@ -304,22 +304,6 @@ name|authctxt
 operator|->
 name|pw
 decl_stmt|;
-name|void
-function_decl|(
-modifier|*
-name|authlog
-function_decl|)
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-init|=
-name|verbose
-function_decl|;
 ifdef|#
 directive|ifdef
 name|HAVE_LOGIN_CAP
@@ -341,12 +325,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* USE_PAM */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_LOGIN_CAP
-argument_list|)
 specifier|const
 name|char
 modifier|*
@@ -369,9 +347,6 @@ operator|=
 name|get_remote_ipaddr
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* HAVE_LOGIN_CAP */
 name|debug
 argument_list|(
 literal|"Attempting authentication for %s%.100s."
@@ -1580,12 +1555,7 @@ name|pw
 operator|->
 name|pw_name
 argument_list|,
-name|get_canonical_hostname
-argument_list|(
-name|options
-operator|.
-name|verify_reverse_mapping
-argument_list|)
+name|from_host
 argument_list|)
 expr_stmt|;
 comment|/* Log before sending the reply */
