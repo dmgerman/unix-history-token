@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -90,7 +90,8 @@ parameter_list|(
 name|bp
 parameter_list|)
 specifier|register
-name|BUF
+name|struct
+name|buf
 modifier|*
 name|bp
 decl_stmt|;

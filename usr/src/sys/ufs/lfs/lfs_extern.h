@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -119,12 +119,14 @@ name|lfs_bmap
 name|__P
 argument_list|(
 operator|(
-name|VNODE
+expr|struct
+name|vnode
 operator|*
 operator|,
 name|daddr_t
 operator|,
-name|VNODE
+expr|struct
+name|vnode
 operator|*
 operator|*
 operator|,
@@ -141,7 +143,8 @@ name|lfs_bmaparray
 name|__P
 argument_list|(
 operator|(
-name|VNODE
+expr|struct
+name|vnode
 operator|*
 operator|,
 name|daddr_t
@@ -165,7 +168,8 @@ name|lfs_bwrite
 name|__P
 argument_list|(
 operator|(
-name|BUF
+expr|struct
+name|buf
 operator|*
 operator|)
 argument_list|)
@@ -229,7 +233,8 @@ name|lfs_inactive
 name|__P
 argument_list|(
 operator|(
-name|VNODE
+expr|struct
+name|vnode
 operator|*
 operator|,
 expr|struct
@@ -279,7 +284,8 @@ name|lfs_mount
 name|__P
 argument_list|(
 operator|(
-name|MOUNT
+expr|struct
+name|mount
 operator|*
 operator|,
 name|char
@@ -360,7 +366,8 @@ name|lfs_segwrite
 name|__P
 argument_list|(
 operator|(
-name|MOUNT
+expr|struct
+name|mount
 operator|*
 operator|,
 name|int
@@ -375,7 +382,8 @@ name|lfs_statfs
 name|__P
 argument_list|(
 operator|(
-name|MOUNT
+expr|struct
+name|mount
 operator|*
 operator|,
 expr|struct
@@ -396,7 +404,8 @@ name|lfs_sync
 name|__P
 argument_list|(
 operator|(
-name|MOUNT
+expr|struct
+name|mount
 operator|*
 operator|,
 name|int
@@ -411,7 +420,8 @@ name|lfs_truncate
 name|__P
 argument_list|(
 operator|(
-name|VNODE
+expr|struct
+name|vnode
 operator|*
 operator|,
 name|u_long
@@ -428,7 +438,8 @@ name|lfs_unmount
 name|__P
 argument_list|(
 operator|(
-name|MOUNT
+expr|struct
+name|mount
 operator|*
 operator|,
 name|int
@@ -471,15 +482,18 @@ name|lfs_valloc
 name|__P
 argument_list|(
 operator|(
-name|VNODE
+expr|struct
+name|vnode
 operator|*
 operator|,
 name|int
 operator|,
-name|UCRED
+expr|struct
+name|ucred
 operator|*
 operator|,
-name|VNODE
+expr|struct
+name|vnode
 operator|*
 operator|*
 operator|)
@@ -493,12 +507,14 @@ name|lfs_vcreate
 name|__P
 argument_list|(
 operator|(
-name|MOUNT
+expr|struct
+name|mount
 operator|*
 operator|,
 name|ino_t
 operator|,
-name|VNODE
+expr|struct
+name|vnode
 operator|*
 operator|*
 operator|)
@@ -512,7 +528,8 @@ name|lfs_vfree
 name|__P
 argument_list|(
 operator|(
-name|VNODE
+expr|struct
+name|vnode
 operator|*
 operator|,
 name|ino_t
@@ -549,7 +566,8 @@ operator|*
 operator|,
 name|ino_t
 operator|,
-name|VNODE
+expr|struct
+name|vnode
 operator|*
 operator|*
 operator|)
@@ -611,7 +629,8 @@ name|lfs_dump_dinode
 name|__P
 argument_list|(
 operator|(
-name|DINODE
+expr|struct
+name|dinode
 operator|*
 operator|)
 argument_list|)
