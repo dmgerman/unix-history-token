@@ -1865,14 +1865,7 @@ condition|)
 goto|goto
 name|dropanyway
 goto|;
-block|}
-end_function
-
-begin_comment
 comment|/* 	 * Set mbuf flags for bcast/mcast. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|th
@@ -1925,9 +1918,6 @@ name|if_imcasts
 operator|++
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|l
 operator|=
 name|mtod
@@ -1939,9 +1929,6 @@ name|llc
 operator|*
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_switch
 switch|switch
 condition|(
 name|l
@@ -2574,9 +2561,6 @@ name|dropanyway
 goto|;
 break|break;
 block|}
-end_switch
-
-begin_expr_stmt
 name|netisr_dispatch
 argument_list|(
 name|isr
@@ -2584,26 +2568,14 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return;
-end_return
-
-begin_label
 name|dropanyway
 label|:
-end_label
-
-begin_expr_stmt
 name|ifp
 operator|->
 name|if_iqdrops
 operator|++
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|m
@@ -2613,14 +2585,12 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_return
 return|return;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|int
 name|iso88025_resolvemulti
 parameter_list|(
