@@ -3,6 +3,38 @@ begin_comment
 comment|/*  * LP (Laptop Package)  *  * Copyright (C) 1994 by HOSOKAWA Tatasumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, distributed, and sold,  * in both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep., 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -19,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -100,10 +138,6 @@ name|int
 name|i
 decl_stmt|,
 name|option
-decl_stmt|;
-name|char
-modifier|*
-name|optarg
 decl_stmt|;
 enum|enum
 block|{
@@ -214,26 +248,16 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: Unknown option '%s.'\n"
-argument_list|,
-name|main_argv
-index|[
-literal|0
-index|]
+literal|"unknown option '%s'"
 argument_list|,
 name|main_argv
 index|[
 name|i
 index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -251,17 +275,11 @@ name|main_argc
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: Option '%s' needs arguments.\n"
-argument_list|,
-name|main_argv
-index|[
-literal|0
-index|]
+literal|"option '%s' needs arguments"
 argument_list|,
 name|main_argv
 index|[
@@ -269,12 +287,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|optarg
 operator|=
 name|main_argv
@@ -321,6 +333,10 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+name|OPT_NONE
+case|:
+break|break;
 block|}
 block|}
 block|}
@@ -349,25 +365,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't ioctl APMIO_ENABLE.\n"
-argument_list|,
-name|main_argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't ioctl APMIO_ENABLE"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -394,25 +398,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't ioctl APMIO_DISABLE.\n"
-argument_list|,
-name|main_argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't ioctl APMIO_DISABLE"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -439,25 +431,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't ioctl APMIO_HALTCPU.\n"
-argument_list|,
-name|main_argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't ioctl APMIO_HALTCPU"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -484,25 +464,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't ioctl APMIO_NOTHALTCPU.\n"
-argument_list|,
-name|main_argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't ioctl APMIO_NOTHALTCPU"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -520,13 +488,7 @@ index|[]
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|,
 name|dh
-decl_stmt|;
-name|FILE
-modifier|*
-name|fp
 decl_stmt|;
 name|main_argc
 operator|=
@@ -552,27 +514,15 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: Can't open '%s'\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"can't open '%s'"
 argument_list|,
 name|APMDEV
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|parse_option
 argument_list|()
 expr_stmt|;
