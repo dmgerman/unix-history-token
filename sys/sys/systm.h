@@ -255,6 +255,17 @@ begin_comment
 comment|/* nonzero to print verbose messages */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|maxusers
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* system tune hint */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -553,6 +564,18 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|cpu_rootconf
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|init_param
 name|__P
 argument_list|(
 operator|(

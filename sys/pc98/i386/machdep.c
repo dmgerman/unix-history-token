@@ -8150,6 +8150,10 @@ name|bi_envp
 operator|+
 name|KERNBASE
 expr_stmt|;
+comment|/* Init basic tunables, hz etc */
+name|init_param
+argument_list|()
+expr_stmt|;
 comment|/* 	 * make gdt memory segments, the code segment goes up to end of the 	 * page with etext in it, the data segment goes to the end of 	 * the address space 	 */
 comment|/* 	 * XXX text protection is temporarily (?) disabled.  The limit was 	 * i386_btop(round_page(etext)) - 1. 	 */
 name|gdt_segs

@@ -98,6 +98,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NSFBUFS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NSFBUFS
+value|(512 + maxusers * 16)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|hz
@@ -182,6 +200,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|mbuf_wait
+init|=
+literal|32
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mbuf sleep time in ticks */
+end_comment
+
+begin_decl_stmt
+name|int
 name|nbuf
 decl_stmt|;
 end_decl_stmt
@@ -189,6 +219,16 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|nswbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum # of sf_bufs (sendfile(2) zero-copy virtual buffers) */
+end_comment
+
+begin_decl_stmt
+name|int
+name|nsfbufs
 decl_stmt|;
 end_decl_stmt
 
@@ -201,36 +241,6 @@ name|struct
 name|buf
 modifier|*
 name|swbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Total number of shared mutexes to protect all lockmgr locks.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCKMUTEX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LOCKMUTEX
-value|10
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-name|int
-name|lock_nmtx
-init|=
-name|LOCKMUTEX
 decl_stmt|;
 end_decl_stmt
 
@@ -324,6 +334,18 @@ operator|=
 name|maxfiles
 expr_stmt|;
 comment|/* Cannot be changed after boot */
+name|nsfbufs
+operator|=
+name|NSFBUFS
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.ipc.nsfbufs"
+argument_list|,
+operator|&
+name|nsfbufs
+argument_list|)
+expr_stmt|;
 name|nbuf
 operator|=
 name|NBUF
