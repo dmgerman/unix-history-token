@@ -296,6 +296,22 @@ name|rnatloc
 decl_stmt|,
 name|rnat
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|td1
+operator|==
+name|curthread
+operator|||
+name|td1
+operator|==
+operator|&
+name|thread0
+argument_list|,
+operator|(
+literal|"cpu_fork: p1 not curproc and not proc0"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -392,14 +408,9 @@ name|DIAGNOSTIC
 if|if
 condition|(
 name|td1
-operator|!=
+operator|==
 name|curthread
 condition|)
-name|panic
-argument_list|(
-literal|"cpu_fork: curproc"
-argument_list|)
-expr_stmt|;
 name|ia64_fpstate_check
 argument_list|(
 name|td1
@@ -407,7 +418,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * create the child's kernel stack, from scratch. 	 * 	 * Pick a stack pointer, leaving room for a trapframe; 	 * copy trapframe from parent so return to user mode 	 * will be to right address, with correct registers. 	 */
+comment|/* 	 * create the child's kernel stack, from scratch. 	 * 	 * Pick a stack pointer, leaving room for a trapframe; 	 * copy trapframe from parent so return to user mode 	 * will be to right address, with correct registers. Clear the 	 * high-fp enable for the new process so that it is forced to 	 * load its state from the pcb. 	 */
 name|td2
 operator|->
 name|td_frame
@@ -439,6 +450,14 @@ expr|struct
 name|trapframe
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|td2
+operator|->
+name|td_frame
+operator|->
+name|tf_cr_ipsr
+operator||=
+name|IA64_PSR_DFH
 expr_stmt|;
 comment|/* 	 * Set up return-value registers as fork() libc stub expects. 	 */
 name|p2tf
@@ -477,10 +496,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* no error 		*/
-comment|/* 	 * Turn off RSE for a moment and work out our current 	 * ar.bspstore. This assumes that td1==curthread. Also 	 * flush dirty regs to ensure that the user's stacked 	 * regs are written out to backing store. 	 * 	 * We could cope with td1!=curthread by digging values 	 * out of its PCB but I don't see the point since 	 * current usage never allows it. 	 */
-asm|__asm __volatile("mov ar.rsc=0;;");
-asm|__asm __volatile("flushrs;;" ::: "memory");
-asm|__asm __volatile("mov %0=ar.bspstore" : "=r"(bspstore));
+comment|/* 	 * Turn off RSE for a moment and work out our current 	 * ar.bspstore. This assumes that td1==curthread. Also 	 * flush dirty regs to ensure that the user's stacked 	 * regs are written out to backing store. 	 * 	 * We could cope with td1!=curthread by digging values 	 * out of its PCB but I don't see the point since 	 * current usage only allows&thread0 when creating kernel 	 * threads and&thread0 doesn't have any dirty regs. 	 */
 name|p1bs
 operator|=
 operator|(
@@ -501,6 +517,27 @@ name|td2
 operator|->
 name|td_kstack
 expr_stmt|;
+if|if
+condition|(
+name|td1
+operator|==
+name|curthread
+condition|)
+block|{
+asm|__asm __volatile("mov ar.rsc=0;;");
+asm|__asm __volatile("flushrs;;" ::: "memory");
+asm|__asm __volatile("mov %0=ar.bspstore" : "=r"(bspstore));
+block|}
+else|else
+block|{
+name|bspstore
+operator|=
+operator|(
+name|u_int64_t
+operator|)
+name|p1bs
+expr_stmt|;
+block|}
 comment|/* 	 * Copy enough of td1's backing store to include all 	 * the user's stacked regs. 	 */
 name|bcopy
 argument_list|(
@@ -515,7 +552,14 @@ operator|->
 name|tf_ndirty
 argument_list|)
 expr_stmt|;
-comment|/* 	 * To calculate the ar.rnat for td2, we need to decide 	 * if td1's ar.bspstore has advanced past the place 	 * where the last ar.rnat which covers the user's 	 * saved registers would be placed. If so, we read 	 * that one from memory, otherwise we take td1's 	 * current ar.rnat. 	 */
+comment|/* 	 * To calculate the ar.rnat for td2, we need to decide 	 * if td1's ar.bspstore has advanced past the place 	 * where the last ar.rnat which covers the user's 	 * saved registers would be placed. If so, we read 	 * that one from memory, otherwise we take td1's 	 * current ar.rnat. If we are simply spawning a new kthread 	 * from&thread0 we don't care about ar.rnat. 	 */
+if|if
+condition|(
+name|td1
+operator|==
+name|curthread
+condition|)
+block|{
 name|rnatloc
 operator|=
 operator|(
@@ -550,9 +594,17 @@ name|rnatloc
 expr_stmt|;
 else|else
 asm|__asm __volatile("mov %0=ar.rnat;;" : "=r"(rnat));
-comment|/* 	 * Switch the RSE back on. 	 */
+comment|/* 		 * Switch the RSE back on. 		 */
 asm|__asm __volatile("mov ar.rsc=3;;");
-comment|/* 	 * Setup the child's pcb so that its ar.bspstore 	 * starts just above the region which we copied. This 	 * should work since the child will normally return 	 * straight into exception_restore. 	 */
+block|}
+else|else
+block|{
+name|rnat
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* 	 * Setup the child's pcb so that its ar.bspstore 	 * starts just above the region which we copied. This 	 * should work since the child will normally return 	 * straight into exception_restore. Also initialise its 	 * pmap to the containing proc's vmspace. 	 */
 name|td2
 operator|->
 name|td_pcb
@@ -585,6 +637,24 @@ operator|->
 name|pcb_pfs
 operator|=
 literal|0
+expr_stmt|;
+name|td2
+operator|->
+name|td_pcb
+operator|->
+name|pcb_pmap
+operator|=
+operator|(
+name|u_int64_t
+operator|)
+name|vmspace_pmap
+argument_list|(
+name|td2
+operator|->
+name|td_proc
+operator|->
+name|p_vmspace
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Arrange for continuation at fork_return(), which 	 * will return to exception_restore().  Note that the 	 * child process doesn't stay in the kernel for long! 	 * 	 * The extra 16 bytes subtracted from sp is part of the ia64 	 * ABI - a function can assume that the 16 bytes above sp are 	 * available as scratch space. 	 */
 name|td2
