@@ -422,6 +422,21 @@ argument_list|(
 name|dirp
 argument_list|)
 expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"Sleeping to allow device discovery...\n"
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"Finished sleeping to allow device discovery\n"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
