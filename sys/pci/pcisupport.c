@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.37 1996/09/06 09:21:48 rgrimes Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.38 1996/09/06 23:09:01 phk Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -293,12 +293,6 @@ condition|(
 name|type
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I486_CPU
-argument_list|)
 case|case
 literal|0x04868086
 case|:
@@ -364,15 +358,6 @@ operator|(
 literal|"SiS 85c496"
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* defined (I486_CPU) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
 case|case
 literal|0x04a38086
 case|:
@@ -466,20 +451,6 @@ operator|(
 literal|"SiS 85c601"
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* defined (I586_CPU) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
 case|case
 literal|0x70008086
 case|:
@@ -496,15 +467,6 @@ operator|(
 literal|"Intel 82371SB IDE interface"
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* defined (I586_CPU) || defined (I686_CPU) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
 case|case
 literal|0x12378086
 case|:
@@ -529,9 +491,6 @@ operator|(
 literal|"Intel 82454GX (Orion) host to PCI bridge"
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* defined (I686_CPU) */
 case|case
 literal|0x00221014
 case|:
@@ -639,15 +598,6 @@ end_define
 begin_comment
 comment|/* opposite sense of M_EN */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I486_CPU
-argument_list|)
-end_if
 
 begin_decl_stmt
 specifier|static
@@ -1966,24 +1916,6 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined (I486_CPU) */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-end_if
 
 begin_decl_stmt
 specifier|static
@@ -4025,15 +3957,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined (I586_CPU) */
-end_comment
-
 begin_function
 specifier|static
 name|char
@@ -4456,9 +4379,6 @@ name|PCI_ID_REG
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|I486_CPU
 case|case
 literal|0x04868086
 case|:
@@ -4481,12 +4401,6 @@ name|conf82424zx
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* I486_CPU */
-ifdef|#
-directive|ifdef
-name|I586_CPU
 case|case
 literal|0x04a38086
 case|:
@@ -4537,23 +4451,6 @@ literal|0
 block|case 0x12308086: 		writeconfig (config_id, conf82371fb2); 		break;
 endif|#
 directive|endif
-endif|#
-directive|endif
-comment|/* 586_CPU */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-endif|#
-directive|endif
-comment|/* defined (I586_CPU) || defined (I686_CPU) */
 if|#
 directive|if
 literal|0
