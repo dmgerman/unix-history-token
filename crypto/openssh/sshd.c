@@ -604,9 +604,9 @@ operator|-
 operator|(
 name|carry
 condition|?
-literal|0
-else|:
 literal|1
+else|:
+literal|0
 operator|)
 block|;
 name|diff
