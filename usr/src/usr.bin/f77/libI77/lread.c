@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_lread[] = "@(#)lread.c	1.7";  *  * list directed read  */
+comment|/* char id_lread[] = "@(#)lread.c	1.8";  *  * list directed read  */
 end_comment
 
 begin_include
@@ -656,7 +656,7 @@ name|uend
 condition|)
 return|return
 operator|(
-name|OK
+name|EOF
 operator|)
 return|;
 while|while
@@ -675,6 +675,12 @@ condition|)
 empty_stmt|;
 return|return
 operator|(
+name|ch
+operator|==
+name|EOF
+condition|?
+name|EOF
+else|:
 name|OK
 operator|)
 return|;
