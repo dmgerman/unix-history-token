@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_media.h,v 1.3 1997/03/26 01:19:27 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: if_media.h,v 1.2 1997/05/03 20:58:10 peter Exp $ */
 end_comment
 
 begin_comment
@@ -462,6 +462,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFM_TOK_STP100
+value|7
+end_define
+
+begin_comment
+comment|/* Shielded twisted pair 100m - DB9 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_TOK_UTP100
+value|8
+end_define
+
+begin_comment
+comment|/* Unshielded twisted pair 100m - RJ45 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFM_TOK_ETR
 value|0x00000200
 end_define
@@ -490,6 +512,39 @@ end_define
 
 begin_comment
 comment|/* All routes / Single route bcast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_TOK_DTR
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Dedicated token ring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_TOK_CLASSIC
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* Classic token ring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_TOK_AUTO
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Automatic Dedicate/Classic token ring */
 end_comment
 
 begin_comment
@@ -777,6 +832,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|IFM_TYPE_OPTIONS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& IFM_OMASK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IFM_INST
 parameter_list|(
 name|x
@@ -838,21 +903,21 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_TOKENRING_DESCRIPTIONS
-value|{				\ 	{ IFM_TOK_STP4,	"DB9/4Mbit" },					\ 	{ IFM_TOK_STP16, "DB9/16Mbit" },				\ 	{ IFM_TOK_UTP4,	"UTP/4Mbit" },					\ 	{ IFM_TOK_UTP16, "UTP/16Mbit" },				\ 	{ 0, NULL },							\ }
+value|{				\ 	{ IFM_TOK_STP4,	"DB9/4Mbit" },					\ 	{ IFM_TOK_STP16, "DB9/16Mbit" },				\ 	{ IFM_TOK_UTP4,	"UTP/4Mbit" },					\ 	{ IFM_TOK_UTP16, "UTP/16Mbit" },				\ 	{ IFM_TOK_STP100, "STP/100Mbit" },				\ 	{ IFM_TOK_UTP100, "UTP/100Mbit" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_TOKENRING_ALIASES
-value|{					\ 	{ IFM_TOK_STP4,	"4STP" },					\ 	{ IFM_TOK_STP16, "16STP" },					\ 	{ IFM_TOK_UTP4,	"4UTP" },					\ 	{ IFM_TOK_UTP16, "16UTP" },					\ 	{ 0, NULL },							\ }
+value|{					\ 	{ IFM_TOK_STP4,	"4STP" },					\ 	{ IFM_TOK_STP16, "16STP" },					\ 	{ IFM_TOK_UTP4,	"4UTP" },					\ 	{ IFM_TOK_UTP16, "16UTP" },					\ 	{ IFM_TOK_STP100, "100STP" },					\ 	{ IFM_TOK_UTP100, "100UTP" },					\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_TOKENRING_OPTION_DESCRIPTIONS
-value|{			\ 	{ IFM_TOK_ETR,	"EarlyTokenRelease" },				\ 	{ IFM_TOK_SRCRT, "SourceRouting" },				\ 	{ IFM_TOK_ALLR,	"AllRoutes" },					\ 	{ 0, NULL },							\ }
+value|{			\ 	{ IFM_TOK_ETR,	"EarlyTokenRelease" },				\ 	{ IFM_TOK_SRCRT, "SourceRouting" },				\ 	{ IFM_TOK_ALLR,	"AllRoutes" },					\ 	{ IFM_TOK_DTR,	"Dedicated" },					\ 	{ IFM_TOK_CLASSIC,"Classic" },					\ 	{ IFM_TOK_AUTO,	" " },						\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
