@@ -5218,7 +5218,7 @@ name|sc
 operator|->
 name|xl_flags
 operator||=
-name|XL_FLAG_EEPROM_OFFSET
+name|XL_FLAG_EEPROM_OFFSET_30
 operator||
 name|XL_FLAG_PHYOK
 expr_stmt|;
