@@ -17,7 +17,7 @@ name|char
 name|elsieid
 index|[]
 init|=
-literal|"@(#)zdump.c	7.20"
+literal|"@(#)zdump.c	7.24"
 decl_stmt|;
 end_decl_stmt
 
@@ -382,6 +382,39 @@ begin_comment
 comment|/* !defined isleap */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|HAVE_GETTEXT
+operator|-
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|"locale.h"
+end_include
+
+begin_comment
+comment|/* for setlocale */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"libintl.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_GETTEXT - 0 */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -516,6 +549,93 @@ end_endif
 
 begin_comment
 comment|/* !defined INITIALIZE */
+end_comment
+
+begin_comment
+comment|/* ** For the benefit of GNU folk... ** `_(MSGID)' uses the current locale's message library string for MSGID. ** The default is to use gettext if available, and use MSGID otherwise. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|HAVE_GETTEXT
+operator|-
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|_
+parameter_list|(
+name|msgid
+parameter_list|)
+value|gettext(msgid)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !(HAVE_GETTEXT - 0) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_
+parameter_list|(
+name|msgid
+parameter_list|)
+value|msgid
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !(HAVE_GETTEXT - 0) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined _ */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TZ_DOMAIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TZ_DOMAIN
+value|"tz"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined TZ_DOMAIN */
 end_comment
 
 begin_decl_stmt
@@ -689,6 +809,48 @@ argument_list|(
 name|cuttime
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|HAVE_GETTEXT
+operator|-
+literal|0
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_MESSAGES
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TZ_DOMAINDIR
+operator|(
+name|void
+operator|)
+name|bindtextdomain
+argument_list|(
+name|TZ_DOMAIN
+argument_list|,
+name|TZ_DOMAINDIR
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(TEXTDOMAINDIR) */
+operator|(
+name|void
+operator|)
+name|textdomain
+argument_list|(
+name|TZ_DOMAIN
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_GETTEXT - 0 */
 name|progname
 operator|=
 name|argv
@@ -774,7 +936,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
+argument_list|)
 argument_list|,
 name|argv
 index|[
@@ -1127,6 +1292,12 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|vflag
+condition|)
+block|{
 name|show
 argument_list|(
 name|argv
@@ -1139,12 +1310,8 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|vflag
-condition|)
 continue|continue;
+block|}
 comment|/* 		** Get lowest value of t. 		*/
 name|t
 operator|=
@@ -1446,7 +1613,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: Error writing standard output "
+argument_list|)
 argument_list|,
 name|argv
 index|[
@@ -1459,7 +1629,10 @@ name|void
 operator|)
 name|perror
 argument_list|(
+name|_
+argument_list|(
 literal|"standard output"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
