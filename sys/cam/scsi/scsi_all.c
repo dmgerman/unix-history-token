@@ -2596,30 +2596,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * If we're in the kernel, 'quantum' is already defined in cam_xpt.c.  * Otherwise, we need to define it.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-name|quantum
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -2630,11 +2606,6 @@ init|=
 literal|"QUANTUM"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * WARNING:  You must update the num_ascs field below for this quirk table   * entry if you add more entries.  */
