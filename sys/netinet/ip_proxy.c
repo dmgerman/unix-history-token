@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -11,20 +11,16 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ip_proxy.c,v 2.0.2.3 1997/05/24 07:36:22 darrenr Exp $"
+literal|"@(#)$Id: ip_proxy.c,v 2.0.2.11.2.2 1997/11/12 10:54:11 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,11 +147,22 @@ directive|include
 file|<sys/uio.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|linux
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -163,17 +170,46 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<sys/systm.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<linux/string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -196,11 +232,22 @@ name|__svr4__
 argument_list|)
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|linux
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -302,11 +349,22 @@ directive|include
 file|<netinet/ip.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|linux
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<netinet/ip_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -323,12 +381,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcpip.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip_icmp.h>
 end_include
 
@@ -336,6 +388,12 @@ begin_include
 include|#
 directive|include
 file|"netinet/ip_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcpip.h>
 end_include
 
 begin_include
@@ -437,11 +495,20 @@ name|AP_SESS_SIZE
 value|53
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -631,16 +698,8 @@ block|{
 name|struct
 name|in_addr
 name|src
-init|=
-name|ip
-operator|->
-name|ip_src
 decl_stmt|,
 name|dst
-init|=
-name|ip
-operator|->
-name|ip_dst
 decl_stmt|;
 specifier|register
 name|u_long
@@ -665,6 +724,25 @@ name|ip
 operator|->
 name|ip_p
 decl_stmt|;
+name|src
+operator|=
+name|ip
+operator|->
+name|ip_src
+operator|,
+name|dst
+operator|=
+name|ip
+operator|->
+name|ip_dst
+expr_stmt|;
+name|sp
+operator|=
+name|dp
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX gcc -Wunitialized */
 name|hv
 operator|=
 name|ip
@@ -792,6 +870,10 @@ name|aps
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Allocate a new application proxy structure and fill it in with the  * relevant details.  call the init function once complete, prior to  * returning.  */
+end_comment
 
 begin_function
 specifier|static
@@ -979,14 +1061,10 @@ name|aps
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|aps
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|apr
-operator|->
-name|apr_ref
-operator|++
 expr_stmt|;
 name|aps
 operator|->
@@ -1030,46 +1108,6 @@ condition|(
 name|tcp
 condition|)
 block|{
-if|if
-condition|(
-name|ip
-operator|->
-name|ip_p
-operator|==
-name|IPPROTO_TCP
-condition|)
-block|{
-name|aps
-operator|->
-name|aps_seqoff
-operator|=
-literal|0
-expr_stmt|;
-name|aps
-operator|->
-name|aps_ackoff
-operator|=
-literal|0
-expr_stmt|;
-name|aps
-operator|->
-name|aps_state
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|aps
-operator|->
-name|aps_state
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|aps
 operator|->
 name|aps_sport
@@ -1141,6 +1179,10 @@ name|aps
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * check to see if a packet should be passed through an active proxy routine  * if one has been setup for it.  */
+end_comment
 
 begin_function
 name|int
@@ -1242,6 +1284,47 @@ name|ip_p
 operator|==
 name|IPPROTO_TCP
 condition|)
+block|{
+comment|/* 			 * verify that the checksum is correct.  If not, then 			 * don't do anything with this packet. 			 */
+if|if
+condition|(
+name|tcp
+operator|->
+name|th_sum
+operator|!=
+name|fr_tcpsum
+argument_list|(
+operator|*
+operator|(
+name|mb_t
+operator|*
+operator|*
+operator|)
+name|fin
+operator|->
+name|fin_mp
+argument_list|,
+name|ip
+argument_list|,
+name|tcp
+argument_list|)
+condition|)
+block|{
+name|frstats
+index|[
+name|fin
+operator|->
+name|fin_out
+index|]
+operator|.
+name|fr_tcpbad
+operator|++
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|fr_tcp_age
 argument_list|(
 operator|&
@@ -1266,6 +1349,7 @@ operator|->
 name|aps_sport
 argument_list|)
 expr_stmt|;
+block|}
 name|apr
 operator|=
 name|aps
@@ -1352,6 +1436,12 @@ name|th_sum
 operator|=
 name|fr_tcpsum
 argument_list|(
+operator|*
+operator|(
+name|mb_t
+operator|*
+operator|*
+operator|)
 name|fin
 operator|->
 name|fin_mp
@@ -1386,7 +1476,7 @@ name|pr
 parameter_list|,
 name|name
 parameter_list|)
-name|char
+name|u_char
 name|pr
 decl_stmt|;
 name|char
@@ -1438,9 +1528,16 @@ name|apr_label
 argument_list|)
 argument_list|)
 condition|)
+block|{
+name|ap
+operator|->
+name|apr_ref
+operator|++
+expr_stmt|;
 return|return
 name|ap
 return|;
+block|}
 return|return
 name|NULL
 return|;
@@ -1458,10 +1555,10 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|KFREE
-argument_list|(
 name|ap
-argument_list|)
+operator|->
+name|apr_ref
+operator|--
 expr_stmt|;
 block|}
 end_function
@@ -1533,12 +1630,14 @@ operator|++
 control|)
 while|while
 condition|(
+operator|(
 name|aps
 operator|=
 name|ap_sess_tab
 index|[
 name|i
 index|]
+operator|)
 condition|)
 block|{
 name|ap_sess_tab

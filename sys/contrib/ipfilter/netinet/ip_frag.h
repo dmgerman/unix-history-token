@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.0.2.7 1997/05/08 10:10:18 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.0.2.12 1997/10/23 14:56:01 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -120,6 +120,13 @@ end_define
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|fr_ipfrttl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|ipfrstat_t
 modifier|*
 name|ipfr_fragstats
@@ -212,6 +219,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|ipfr_forget
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|ipfr_unload
 name|__P
 argument_list|(
@@ -232,6 +253,11 @@ literal|199306
 operator|)
 operator|||
 name|SOLARIS
+operator|||
+name|defined
+argument_list|(
+name|__sgi
+argument_list|)
 end_if
 
 begin_decl_stmt
