@@ -476,7 +476,7 @@ name|lwpid_t
 name|td_tid
 decl_stmt|;
 comment|/* (b) Thread ID. */
-comment|/* Cleared during fork1() or thread_sched_upcall(). */
+comment|/* Cleared during fork1() or thread_schedule_upcall(). */
 define|#
 directive|define
 name|td_startzero
@@ -504,7 +504,7 @@ name|kse
 modifier|*
 name|td_kse
 decl_stmt|;
-comment|/* (j) Current KSE if running. */
+comment|/* (j) Current KSE if any. */
 name|int
 name|td_dupfd
 decl_stmt|;
@@ -754,7 +754,7 @@ comment|/* (a) Kernel VA of alternate kstack. */
 name|int
 name|td_altkstack_pages
 decl_stmt|;
-comment|/* (a) Size of the alternate kstack */
+comment|/* (a) Size of the alt kstack */
 name|u_int
 name|td_critnest
 decl_stmt|;
@@ -775,14 +775,25 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Flags kept in td_flags: */
+comment|/*  * Flags kept in td_flags:  * To change these you MUST have the scheduler lock.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_UNUSED0
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* --available -- */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TDF_INPANIC
-value|0x000002
+value|0x00000002
 end_define
 
 begin_comment
@@ -793,7 +804,7 @@ begin_define
 define|#
 directive|define
 name|TDF_CAN_UNBIND
-value|0x000004
+value|0x00000004
 end_define
 
 begin_comment
@@ -804,7 +815,7 @@ begin_define
 define|#
 directive|define
 name|TDF_SINTR
-value|0x000008
+value|0x00000008
 end_define
 
 begin_comment
@@ -815,7 +826,7 @@ begin_define
 define|#
 directive|define
 name|TDF_TIMEOUT
-value|0x000010
+value|0x00000010
 end_define
 
 begin_comment
@@ -826,18 +837,18 @@ begin_define
 define|#
 directive|define
 name|TDF_IDLETD
-value|0x000020
+value|0x00000020
 end_define
 
 begin_comment
-comment|/* This is one of the per-CPU idle threads. */
+comment|/* This is a per-CPU idle thread. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TDF_SELECT
-value|0x000040
+value|0x00000040
 end_define
 
 begin_comment
@@ -847,8 +858,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_UNUSED7
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* --available -- */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_TSNOBLOCK
-value|0x000100
+value|0x00000100
 end_define
 
 begin_comment
@@ -858,8 +880,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_UNUSED9
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* --available -- */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_UNUSED10
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* --available -- */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_ASTPENDING
-value|0x000800
+value|0x00000800
 end_define
 
 begin_comment
@@ -870,7 +914,7 @@ begin_define
 define|#
 directive|define
 name|TDF_TIMOFAIL
-value|0x001000
+value|0x00001000
 end_define
 
 begin_comment
@@ -881,7 +925,7 @@ begin_define
 define|#
 directive|define
 name|TDF_INTERRUPT
-value|0x002000
+value|0x00002000
 end_define
 
 begin_comment
@@ -891,8 +935,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_UNUSED14
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* --available -- */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_UNUSED15
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* --available -- */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_NEEDRESCHED
-value|0x010000
+value|0x00010000
 end_define
 
 begin_comment
@@ -903,7 +969,7 @@ begin_define
 define|#
 directive|define
 name|TDF_NEEDSIGCHK
-value|0x020000
+value|0x00020000
 end_define
 
 begin_comment
@@ -914,18 +980,18 @@ begin_define
 define|#
 directive|define
 name|TDF_XSIG
-value|0x040000
+value|0x00040000
 end_define
 
 begin_comment
-comment|/* Thread is exchanging signal under traced */
+comment|/* Thread is exchanging signal under trace */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TDF_UMTXWAKEUP
-value|0x080000
+value|0x00080000
 end_define
 
 begin_comment
@@ -936,7 +1002,7 @@ begin_define
 define|#
 directive|define
 name|TDF_THRWAKEUP
-value|0x100000
+value|0x00100000
 end_define
 
 begin_comment
@@ -947,22 +1013,88 @@ begin_define
 define|#
 directive|define
 name|TDF_DBSUSPEND
-value|0x200000
+value|0x00200000
 end_define
 
 begin_comment
 comment|/* Thread is suspended by debugger */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDF_UNUSED22
+value|0x00400000
+end_define
+
 begin_comment
-comment|/* "Private" flags kept in td_pflags: */
+comment|/* --available -- */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_UNUSED23
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* --available -- */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_SCHED1
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Reserved for scheduler private use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_SCHED2
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Reserved for scheduler private use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_SCHED3
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Reserved for scheduler private use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_SCHED4
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Reserved for scheduler private use */
+end_comment
+
+begin_comment
+comment|/*  * "Private" flags kept in td_pflags:  * These are only accessed by curthread and thus need no locking.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TDP_OLDMASK
-value|0x0001
+value|0x00000001
 end_define
 
 begin_comment
@@ -973,7 +1105,7 @@ begin_define
 define|#
 directive|define
 name|TDP_INKTR
-value|0x0002
+value|0x00000002
 end_define
 
 begin_comment
@@ -984,7 +1116,7 @@ begin_define
 define|#
 directive|define
 name|TDP_INKTRACE
-value|0x0004
+value|0x00000004
 end_define
 
 begin_comment
@@ -995,7 +1127,7 @@ begin_define
 define|#
 directive|define
 name|TDP_UPCALLING
-value|0x0008
+value|0x00000008
 end_define
 
 begin_comment
@@ -1006,7 +1138,7 @@ begin_define
 define|#
 directive|define
 name|TDP_COWINPROGRESS
-value|0x0010
+value|0x00000010
 end_define
 
 begin_comment
@@ -1017,7 +1149,7 @@ begin_define
 define|#
 directive|define
 name|TDP_ALTSTACK
-value|0x0020
+value|0x00000020
 end_define
 
 begin_comment
@@ -1028,7 +1160,7 @@ begin_define
 define|#
 directive|define
 name|TDP_DEADLKTREAT
-value|0x0040
+value|0x00000040
 end_define
 
 begin_comment
@@ -1039,7 +1171,7 @@ begin_define
 define|#
 directive|define
 name|TDP_SA
-value|0x0080
+value|0x00000080
 end_define
 
 begin_comment
@@ -1050,7 +1182,7 @@ begin_define
 define|#
 directive|define
 name|TDP_OWEPREEMPT
-value|0x0100
+value|0x00000100
 end_define
 
 begin_comment
@@ -1061,22 +1193,81 @@ begin_define
 define|#
 directive|define
 name|TDP_OWEUPC
-value|0x0200
+value|0x00000200
 end_define
 
 begin_comment
-comment|/* Owe thread an addupc() call at next AST. */
+comment|/* Call addupc() at next AST. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TDP_USTATCLOCK
-value|0x0400
+value|0x00000400
 end_define
 
 begin_comment
 comment|/* Finish user statclock hit at next AST. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_UNUSED11
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* -- available-- */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_SCHED1
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Reserved for scheduler private use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_SCHED2
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Reserved for scheduler private use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_SCHED3
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* Reserved for scheduler private use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_SCHED4
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Reserved for scheduler private use */
+end_comment
+
+begin_comment
+comment|/*  * Reasons that the current thread can not be run yet.  * More than one may apply.  */
 end_comment
 
 begin_define
@@ -1132,6 +1323,10 @@ end_define
 
 begin_comment
 comment|/* Awaiting interrupt. */
+end_comment
+
+begin_comment
+comment|/*  * flags (in kflags) related to M:N threading.  */
 end_comment
 
 begin_define
@@ -1531,10 +1726,7 @@ comment|/* (j) KSE status. */
 define|#
 directive|define
 name|ke_endzero
-value|ke_dummy
-name|u_char
-name|ke_dummy
-decl_stmt|;
+value|ke_sched
 name|struct
 name|ke_sched
 modifier|*
@@ -1841,6 +2033,10 @@ name|int
 name|kg_kses
 decl_stmt|;
 comment|/* (j) Num KSEs in group. */
+name|int
+name|kg_concurrency
+decl_stmt|;
+comment|/* (j) Num KSEs requested in group. */
 name|struct
 name|kg_sched
 modifier|*
@@ -2391,6 +2587,17 @@ end_define
 
 begin_comment
 comment|/* Has thread in requesting to stop prof */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_HADTHREADS
+value|0x00080
+end_define
+
+begin_comment
+comment|/* Has had threads (no cleanup shortcuts) */
 end_comment
 
 begin_define
