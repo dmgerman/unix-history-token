@@ -4758,7 +4758,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|O_IPOPTS
+name|O_IPOPT
 case|:
 name|print_flags
 argument_list|(
@@ -7734,11 +7734,15 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
 name|cmd
 operator|->
 name|o
 operator|.
 name|arg1
+operator|+
+literal|31
+operator|)
 operator|/
 literal|32
 condition|;
@@ -11083,10 +11087,11 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* set if we have a MAC address */
-name|int
+name|ipfw_insn
+modifier|*
 name|have_state
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 comment|/* check-state or keep-state */
 name|int
@@ -11356,7 +11361,7 @@ name|TOK_CHECKSTATE
 case|:
 name|have_state
 operator|=
-literal|1
+name|action
 expr_stmt|;
 name|action
 operator|->
@@ -11976,15 +11981,10 @@ if|if
 condition|(
 name|have_state
 condition|)
-block|{
-name|have_state
-operator|=
-literal|0
-expr_stmt|;
+comment|/* must be a check-state, we are done */
 goto|goto
 name|done
 goto|;
-block|}
 define|#
 directive|define
 name|OR_START
@@ -13095,7 +13095,7 @@ name|fill_flags
 argument_list|(
 name|cmd
 argument_list|,
-name|O_IPOPTS
+name|O_IPOPT
 argument_list|,
 name|f_ipopts
 argument_list|,
@@ -13122,7 +13122,7 @@ name|fill_flags
 argument_list|(
 name|cmd
 argument_list|,
-name|O_IPOPTS
+name|O_IPTOS
 argument_list|,
 name|f_iptos
 argument_list|,
@@ -13552,13 +13552,13 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"only one of check-state "
+literal|"only one of keep-state "
 literal|"and limit is allowed"
 argument_list|)
 expr_stmt|;
 name|have_state
 operator|=
-literal|1
+name|cmd
 expr_stmt|;
 name|fill_cmd
 argument_list|(
@@ -13588,9 +13588,13 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"only one of check-state "
+literal|"only one of keep-state "
 literal|"and limit is allowed"
 argument_list|)
+expr_stmt|;
+name|have_state
+operator|=
+name|cmd
 expr_stmt|;
 block|{
 name|ipfw_insn_limit
@@ -13718,10 +13722,6 @@ expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
-name|have_state
-operator|=
-literal|1
-expr_stmt|;
 block|}
 break|break;
 default|default:
@@ -13778,6 +13778,12 @@ comment|/* 	 * generate O_PROBE_STATE if necessary 	 */
 if|if
 condition|(
 name|have_state
+operator|&&
+name|have_state
+operator|->
+name|opcode
+operator|!=
+name|O_CHECK_STATE
 condition|)
 block|{
 name|fill_cmd
@@ -13799,7 +13805,7 @@ name|dst
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * copy all commands but O_LOG 	 */
+comment|/* 	 * copy all commands but O_LOG, O_KEEP_STATE, O_LIMIT 	 */
 for|for
 control|(
 name|src
@@ -13826,15 +13832,24 @@ argument_list|(
 name|src
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|src
 operator|->
 name|opcode
-operator|!=
-name|O_LOG
 condition|)
 block|{
+case|case
+name|O_LOG
+case|:
+case|case
+name|O_KEEP_STATE
+case|:
+case|case
+name|O_LIMIT
+case|:
+break|break;
+default|default:
 name|bcopy
 argument_list|(
 name|src
@@ -13854,6 +13869,38 @@ operator|+=
 name|i
 expr_stmt|;
 block|}
+block|}
+comment|/* 	 * put back the have_state command as last opcode 	 */
+if|if
+condition|(
+name|have_state
+condition|)
+block|{
+name|i
+operator|=
+name|F_LEN
+argument_list|(
+name|have_state
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|have_state
+argument_list|,
+name|dst
+argument_list|,
+name|i
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dst
+operator|+=
+name|i
+expr_stmt|;
 block|}
 comment|/* 	 * start action section 	 */
 name|rule
