@@ -3051,11 +3051,6 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Invalid pages can be easily freed 			 */
-name|vm_page_busy
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|pmap_remove_all
 argument_list|(
 name|m
@@ -3924,11 +3919,6 @@ argument_list|(
 name|object
 argument_list|,
 name|MA_OWNED
-argument_list|)
-expr_stmt|;
-name|vm_page_busy
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 name|vm_page_free
