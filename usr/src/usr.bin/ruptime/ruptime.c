@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruptime.c	4.6 82/11/14"
+literal|"@(#)ruptime.c	4.7 82/12/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -354,7 +354,7 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-literal|"/etc"
+name|RWHODIR
 argument_list|)
 operator|<
 literal|0
@@ -362,7 +362,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"/etc"
+name|RWHODIR
 argument_list|)
 expr_stmt|;
 name|exit

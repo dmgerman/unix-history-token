@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwho.c	4.2 82/05/09"
+literal|"@(#)rwho.c	4.3 82/12/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -246,7 +246,7 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-literal|"/etc"
+name|RWHODIR
 argument_list|)
 operator|<
 literal|0
@@ -254,7 +254,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"/etc"
+name|RWHODIR
 argument_list|)
 expr_stmt|;
 name|exit

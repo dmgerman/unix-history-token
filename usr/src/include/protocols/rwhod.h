@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rwhod.h	4.2	82/11/14	*/
+comment|/*	rwhod.h	4.3	82/12/24	*/
 end_comment
 
 begin_struct
@@ -53,6 +53,17 @@ struct|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|RWHODIR
+value|"/usr/spool/rwho"
+end_define
+
+begin_comment
+comment|/* where data is stored */
+end_comment
 
 end_unit
 

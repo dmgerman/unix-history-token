@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.6 82/11/15"
+literal|"@(#)rwhod.c	4.7 82/12/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -263,17 +263,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|sp
-operator|->
-name|s_port
-operator|=
-name|htons
-argument_list|(
-name|sp
-operator|->
-name|s_port
-argument_list|)
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|DEBUG
@@ -798,7 +787,9 @@ name|sprintf
 argument_list|(
 name|path
 argument_list|,
-literal|"/etc/whod.%s"
+literal|"%s/whod.%s"
+argument_list|,
+name|RWHODIR
 argument_list|,
 name|wd
 operator|.
