@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $FreeBSD$  */
+comment|/*  *  Routines in this file based on work of Volker Lendecke  */
 end_comment
+
+begin_comment
+comment|/*$*********************************************************    $*    $* This code has been taken from DDJ 11/93, from an     $* article by Pawel Szczerbina.    $*    $* Password encryption routines follow.    $* Converted to C from Barry Nance's Pascal    $* prog published in the March -93 issue of Byte.    $*    $* Adapted to be useable for ncpfs by     $* Volker Lendecke<lendecke@namu01.gwdg.de> in     $* October 1995.     $*    $********************************************************* */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -26,14 +44,6 @@ include|#
 directive|include
 file|<netncp/ncp_subr.h>
 end_include
-
-begin_comment
-comment|/*  *  Routines in this file based on work of Volker Lendecke  */
-end_comment
-
-begin_comment
-comment|/*$*********************************************************    $*    $* This code has been taken from DDJ 11/93, from an     $* article by Pawel Szczerbina.    $*    $* Password encryption routines follow.    $* Converted to C from Barry Nance's Pascal    $* prog published in the March -93 issue of Byte.    $*    $* Adapted to be useable for ncpfs by     $* Volker Lendecke<lendecke@namu01.gwdg.de> in     $* October 1995.     $*    $********************************************************* */
-end_comment
 
 begin_typedef
 typedef|typedef
