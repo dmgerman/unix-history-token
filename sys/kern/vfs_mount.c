@@ -7997,7 +7997,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"vfs_getopt: caller passed 'opts' as NULL\n"
+literal|"vfs_getopt: caller passed 'opts' as NULL"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8111,7 +8111,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"vfs_copyopt: caller passed 'opts' as NULL\n"
+literal|"vfs_copyopt: caller passed 'opts' as NULL"
 operator|)
 argument_list|)
 expr_stmt|;
