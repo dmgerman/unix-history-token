@@ -2176,6 +2176,10 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|c
+condition|)
 name|ring_supplied
 argument_list|(
 operator|&
@@ -2282,7 +2286,6 @@ operator|-
 literal|1
 return|;
 block|}
-block|}
 name|ring_supplied
 argument_list|(
 operator|&
@@ -2291,6 +2294,7 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
+block|}
 name|returnValue
 operator|=
 literal|1

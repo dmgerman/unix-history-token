@@ -313,6 +313,14 @@ name|int
 name|count
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|count
+operator|==
+literal|0
+condition|)
+comment|/* don't update anything */
+return|return;
 name|ring
 operator|->
 name|consume

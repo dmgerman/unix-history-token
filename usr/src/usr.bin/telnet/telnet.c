@@ -2305,6 +2305,10 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|count
+condition|)
 name|ring_consumed
 argument_list|(
 operator|&
@@ -2661,6 +2665,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|count
+condition|)
 name|ring_consumed
 argument_list|(
 operator|&
@@ -2913,7 +2921,6 @@ name|returnValue
 operator|=
 literal|1
 expr_stmt|;
-block|}
 name|ring_consumed
 argument_list|(
 operator|&
@@ -2922,6 +2929,7 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
