@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* "@(#)dumprestore.h 2.1 %G%" */
+comment|/* "@(#)dumprestore.h 2.2 %G%" */
 end_comment
 
 begin_comment
@@ -87,8 +87,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAGIC
+name|OFS_MAGIC
 value|(int)60011
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFS_MAGIC
+value|(int)60012
 end_define
 
 begin_define
