@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sa.c	4.5 (Berkeley) 83/10/07"
+literal|"@(#)sa.c	4.5 (Berkeley) 83/10/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -2715,7 +2715,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%3d%6.1fcp %6dmem %6dio %.14s\n"
+literal|"%3d %6d cpu %8u mem %6d io %.14s\n"
 argument_list|,
 name|fbuf
 operator|.
