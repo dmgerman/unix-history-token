@@ -159,7 +159,7 @@ begin_struct
 struct|struct
 name|ccdcinfo
 block|{
-name|size_t
+name|daddr_t
 name|ci_size
 decl_stmt|;
 comment|/* size */
@@ -201,7 +201,7 @@ name|int
 name|sc_flags
 decl_stmt|;
 comment|/* flags */
-name|size_t
+name|daddr_t
 name|sc_size
 decl_stmt|;
 comment|/* size of ccd */
@@ -564,13 +564,13 @@ name|ccdcinfo
 modifier|*
 name|ci
 decl_stmt|;
-name|size_t
+name|daddr_t
 name|size
 decl_stmt|;
 name|int
 name|ix
 decl_stmt|;
-name|size_t
+name|daddr_t
 name|minsize
 decl_stmt|;
 name|int
@@ -939,7 +939,7 @@ decl_stmt|;
 name|int
 name|ix
 decl_stmt|;
-name|u_long
+name|daddr_t
 name|size
 decl_stmt|;
 comment|/* 	 * Allocate an interleave table.  The worst case occurs when each 	 * of N disks is of a different size, resulting in N interleave 	 * tables. 	 * 	 * Chances are this is too big, but we don't care. 	 */
