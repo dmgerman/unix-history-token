@@ -2566,9 +2566,28 @@ argument_list|)
 expr_stmt|;
 name|pwarn
 argument_list|(
-literal|"%s %s %s\n"
+literal|"%s%s%s %s %s\n"
 argument_list|,
 name|pathbuf
+argument_list|,
+operator|(
+name|strcmp
+argument_list|(
+name|pathbuf
+argument_list|,
+literal|"/"
+argument_list|)
+operator|==
+literal|0
+condition|?
+literal|""
+else|:
+literal|"/"
+operator|)
+argument_list|,
+name|dirp
+operator|->
+name|d_name
 argument_list|,
 literal|"IS AN EXTRANEOUS HARD LINK TO DIRECTORY"
 argument_list|,
