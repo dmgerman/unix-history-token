@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cyreg.h	7.5	87/04/09	*/
+comment|/*	cyreg.h	7.6	88/09/09	*/
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ name|htoms
 parameter_list|(
 name|x
 parameter_list|)
-value|(short)((((x)>>8)&0xff) | (((x)<<8)&0xff00))
+value|(u_short)((((x)>>8)&0xff) | (((x)<<8)&0xff00))
 end_define
 
 begin_define
@@ -1056,6 +1056,16 @@ name|CYMASK
 parameter_list|(
 name|e
 parameter_list|)
+value|(1<< (e))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CYBIT
+parameter_list|(
+name|e
+parameter_list|)
 value|(1<<(CYER_
 comment|/**/
 value|e))
@@ -1065,14 +1075,21 @@ begin_define
 define|#
 directive|define
 name|CYER_HARD
-value|(CYMASK(TIMOUT)|CYMASK(TIMOUT1)|CYMASK(TIMOUT2)|\     CYMASK(TIMOUT3)|CYMASK(TIMOUT4)|CYMASK(NXM)|CYMASK(DIAG)|CYMASK(JUMPER)|\     CYMASK(STROBE)|CYMASK(PROT)|CYMASK(CKSUM)|CYMASK(HERR)|CYMASK(BLANK))
+value|(CYBIT(TIMOUT)|CYBIT(TIMOUT1)|CYBIT(TIMOUT2)|\     CYBIT(TIMOUT3)|CYBIT(TIMOUT4)|CYBIT(NXM)|CYBIT(DIAG)|CYBIT(JUMPER)|\     CYBIT(STROBE)|CYBIT(PROT)|CYBIT(CKSUM)|CYBIT(HERR)|CYBIT(BLANK))
 end_define
 
 begin_define
 define|#
 directive|define
-name|CYER_SOFT
-value|(CYMASK(FIFO)|CYMASK(NOTRDY)|CYMASK(PARITY))
+name|CYER_RSOFT
+value|(CYBIT(FIFO)|CYBIT(NOTRDY)|CYBIT(PARITY))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CYER_WSOFT
+value|(CYBIT(HERR)|CYBIT(FIFO)|CYBIT(NOTRDY)|CYBIT(PARITY))
 end_define
 
 end_unit
