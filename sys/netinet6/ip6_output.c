@@ -417,7 +417,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * IP6 output. The packet in mbuf chain m contains a skeletal IP6  * header (with pri, len, nxt, hlim, src, dst).  * This function may modify ver and hlim only.  * The mbuf chain containing the packet will be freed.  * The mbuf opt, if present, will not be freed.  *  * type of "mtu": rt_rmx.rmx_mtu is u_long, ifnet.ifr_mtu is int, and  * nd_ifinfo.linkmtu is u_int32_t.  so we use u_long to hold largest one,  * which is rt_rmx.rmx_mtu.  *  * If MIP6 is active it will have to add a Home Address option to DH1 if  * the mobile node is roaming or a Routing Header type 0 if there exist  * a Binding Cache entry for the destination node or a BU option to DH2  * if the mobile node initiates communication and no BUL entry exist.  * The only way to do this is to allocate new memory, copy the user data  * to the new buffer and then add the Home Address option, BU option and  * routing header type 0 respectively. MIP6 will set two flags in "struct  * pktopts" to restore the original contents once ip6_output is completed.  * To make this work, make sure that function exit is made through label  * alldone.  *  */
+comment|/*  * IP6 output. The packet in mbuf chain m contains a skeletal IP6  * header (with pri, len, nxt, hlim, src, dst).  * This function may modify ver and hlim only.  * The mbuf chain containing the packet will be freed.  * The mbuf opt, if present, will not be freed.  *  * type of "mtu": rt_rmx.rmx_mtu is u_long, ifnet.ifr_mtu is int, and  * nd_ifinfo.linkmtu is u_int32_t.  so we use u_long to hold largest one,  * which is rt_rmx.rmx_mtu.  */
 end_comment
 
 begin_function
@@ -5227,6 +5227,29 @@ break|break;
 case|case
 name|IPV6_V6ONLY
 case|:
+comment|/* 					 * make setsockopt(IPV6_V6ONLY) 					 * available only prior to bind(2). 					 * see ipng mailing list, Jun 22 2001. 					 */
+if|if
+condition|(
+name|in6p
+operator|->
+name|in6p_lport
+operator|||
+operator|!
+name|IN6_IS_ADDR_UNSPECIFIED
+argument_list|(
+operator|&
+name|in6p
+operator|->
+name|in6p_laddr
+argument_list|)
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
 comment|/* 					 * XXX: BINDV6ONLY should be integrated 					 * into V6ONLY. 					 */
 name|OPTSET
 argument_list|(
@@ -5731,8 +5754,10 @@ condition|)
 return|return
 name|EINVAL
 return|;
+comment|/* XXX */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|soopt_getm
@@ -5742,11 +5767,15 @@ argument_list|,
 operator|&
 name|m
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
-comment|/* XXX */
 break|break;
+comment|/* XXX */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|soopt_mcopyin
@@ -5755,8 +5784,10 @@ name|sopt
 argument_list|,
 name|m
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
-comment|/* XXX */
 break|break;
 name|error
 operator|=
