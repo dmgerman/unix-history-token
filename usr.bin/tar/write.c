@@ -3399,9 +3399,36 @@ name|bsdtar
 operator|->
 name|option_absolute_paths
 condition|)
+block|{
+comment|/* Generate a warning the first time this happens. */
+if|if
+condition|(
+operator|!
+name|bsdtar
+operator|->
+name|warned_lead_slash
+condition|)
+block|{
+name|bsdtar_warnc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|,
+literal|"Removing leading '/' from member names"
+argument_list|)
+expr_stmt|;
+name|bsdtar
+operator|->
+name|warned_lead_slash
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|pathname
 operator|++
 expr_stmt|;
+block|}
 name|archive_entry_set_pathname
 argument_list|(
 name|entry
