@@ -3282,15 +3282,13 @@ name|pte
 operator|=
 name|npte
 expr_stmt|;
-if|if
-condition|(
-name|opte
-condition|)
+comment|/*if (opte)*/
 name|invltlb_1pg
 argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
+comment|/* XXX what about SMP? */
 block|}
 end_function
 
@@ -3335,6 +3333,7 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
+comment|/* XXX what about SMP? */
 block|}
 end_function
 
@@ -8429,10 +8428,7 @@ name|newpte
 operator||
 name|PG_A
 expr_stmt|;
-if|if
-condition|(
-name|origpte
-condition|)
+comment|/*if (origpte)*/
 block|{
 ifdef|#
 directive|ifdef
