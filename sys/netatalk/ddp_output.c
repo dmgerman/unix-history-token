@@ -831,7 +831,7 @@ operator|->
 name|el_dnode
 operator|=
 name|gate
-operator|->
+operator|.
 name|sat_addr
 operator|.
 name|s_node
