@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -341,11 +341,6 @@ name|struct
 name|nameidata
 modifier|*
 name|ndp
-init|=
-operator|&
-name|u
-operator|.
-name|u_nd
 decl_stmt|;
 specifier|register
 name|struct
@@ -358,6 +353,10 @@ name|fh
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|struct
+name|nameidata
+name|nd
 decl_stmt|;
 comment|/* 	 * Must be super user 	 */
 if|if
@@ -381,6 +380,11 @@ operator|(
 name|error
 operator|)
 return|;
+name|ndp
+operator|=
+operator|&
+name|nd
+expr_stmt|;
 name|ndp
 operator|->
 name|ni_nameiop
