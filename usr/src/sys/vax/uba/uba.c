@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1944,11 +1944,19 @@ block|}
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|VAX780
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX8600
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|int
@@ -1991,7 +1999,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This routine is called by the locore code to  * process a UBA error on an 11/780.  The arguments are passed  * on the stack, and value-result (through some trickery).  * In particular, the uvec argument is used for further  * uba processing so the result aspect of it is very important.  * It must not be declared register.  */
+comment|/*  * This routine is called by the locore code to process a UBA  * error on an 11/780 or 8600.  The arguments are passed  * on the stack, and value-result (through some trickery).  * In particular, the uvec argument is used for further  * uba processing so the result aspect of it is very important.  * It must not be declared register.  */
 end_comment
 
 begin_comment
