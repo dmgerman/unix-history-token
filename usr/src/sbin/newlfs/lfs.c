@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.17 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1958,7 +1958,7 @@ operator|(
 name|u_long
 operator|*
 operator|)
-name|dip
+name|dpagep
 operator|)
 index|[
 literal|0
