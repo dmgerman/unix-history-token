@@ -27,7 +27,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.39
+literal|3.40
 operator|%
 name|G
 operator|%
@@ -55,7 +55,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.39
+literal|3.40
 operator|%
 name|G
 operator|%
@@ -574,6 +574,10 @@ name|QuickAbort
 operator|=
 name|FALSE
 expr_stmt|;
+name|HoldErrs
+operator|=
+name|FALSE
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1046,11 +1050,6 @@ literal|0
 operator|||
 name|HoldErrs
 condition|)
-block|{
-name|HoldErrs
-operator|=
-name|FALSE
-expr_stmt|;
 name|message
 argument_list|(
 literal|"250"
@@ -1058,7 +1057,6 @@ argument_list|,
 literal|"Ok"
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|CurEnv
 operator|->

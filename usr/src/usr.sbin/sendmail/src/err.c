@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.36
+literal|3.37
 operator|%
 name|G
 operator|%
@@ -155,11 +155,9 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|putmsg
+name|puterrmsg
 argument_list|(
 name|MsgBuf
-argument_list|,
-name|HoldErrs
 argument_list|)
 expr_stmt|;
 comment|/* determine exit status if not already set */
@@ -318,11 +316,9 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|putmsg
+name|puterrmsg
 argument_list|(
 name|MsgBuf
-argument_list|,
-name|HoldErrs
 argument_list|)
 expr_stmt|;
 if|if
@@ -630,33 +626,59 @@ name|OutChannel
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* determine error status */
-switch|switch
+block|}
+end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  PUTERRMSG -- like putmsg, but does special processing for error messages ** **	Parameters: **		msg -- the message to output. ** **	Returns: **		none. ** **	Side Effects: **		Sets the fatal error bit in the envelope as appropriate. */
+end_comment
+
+begin_macro
+name|puterrmsg
+argument_list|(
+argument|msg
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|msg
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* output the message as usual */
+name|putmsg
+argument_list|(
+name|msg
+argument_list|,
+name|HoldErrs
+argument_list|)
+expr_stmt|;
+comment|/* signal the error */
+name|Errors
+operator|++
+expr_stmt|;
+if|if
 condition|(
 name|msg
 index|[
 literal|0
 index|]
-condition|)
-block|{
-case|case
+operator|==
 literal|'5'
-case|:
+condition|)
 name|CurEnv
 operator|->
 name|e_flags
 operator||=
 name|EF_FATALERRS
 expr_stmt|;
-comment|/* fall through.... */
-case|case
-literal|'4'
-case|:
-name|Errors
-operator|++
-expr_stmt|;
-break|break;
-block|}
 block|}
 end_block
 

@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.55
+literal|3.56
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.55
+literal|3.56
 operator|%
 name|G
 operator|%
@@ -278,6 +278,9 @@ name|FILE
 modifier|*
 name|dfp
 decl_stmt|;
+extern|extern putbody(
+block|)
+empty_stmt|;
 name|e
 operator|->
 name|e_df
@@ -363,9 +366,24 @@ argument_list|(
 name|dfp
 argument_list|)
 expr_stmt|;
+name|e
+operator|->
+name|e_putbody
+operator|=
+name|putbody
+expr_stmt|;
 block|}
+end_block
+
+begin_comment
 comment|/* 	**  Output future work requests. 	**	Priority should be first, since it is read by orderq. 	*/
+end_comment
+
+begin_comment
 comment|/* output message priority */
+end_comment
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|tfp
@@ -377,7 +395,13 @@ operator|->
 name|e_msgpriority
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* output name of data file */
+end_comment
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|tfp
@@ -389,7 +413,13 @@ operator|->
 name|e_df
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* output name of sender */
+end_comment
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|tfp
@@ -403,7 +433,13 @@ operator|.
 name|q_paddr
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* output creation time */
+end_comment
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|tfp
@@ -415,7 +451,13 @@ operator|->
 name|e_ctime
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* output list of recipient addresses */
+end_comment
+
+begin_for
 for|for
 control|(
 name|q
@@ -539,7 +581,13 @@ directive|endif
 endif|DEBUG
 block|}
 block|}
+end_for
+
+begin_comment
 comment|/* 	**  Output headers for this message. 	**	Expand macros completely here.  Queue run will deal with 	**	everything as absolute headers. 	**		All headers that must be relative to the recipient 	**		can be cracked later. 	*/
+end_comment
+
+begin_expr_stmt
 name|define
 argument_list|(
 literal|'g'
@@ -549,6 +597,9 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|h
@@ -727,7 +778,13 @@ name|h_value
 argument_list|)
 expr_stmt|;
 block|}
+end_for
+
+begin_comment
 comment|/* 	**  Clean up. 	*/
+end_comment
+
+begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -736,6 +793,9 @@ argument_list|(
 name|tfp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|qf
 operator|=
 name|queuename
@@ -745,9 +805,15 @@ argument_list|,
 literal|'q'
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|holdsigs
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -756,6 +822,9 @@ argument_list|(
 name|qf
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|link
@@ -789,13 +858,25 @@ argument_list|(
 name|tf
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|rlsesigs
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|LOG
+end_ifdef
+
+begin_comment
 comment|/* save log info */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|LogLevel
@@ -819,31 +900,31 @@ operator|->
 name|e_df
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_endif
 endif|#
 directive|endif
 endif|LOG
-block|}
-end_block
+end_endif
 
 begin_escape
+unit|}
 end_escape
 
 begin_comment
 comment|/* **  RUNQUEUE -- run the jobs in the queue. ** **	Gets the stuff out of the queue in some presumably logical **	order and processes them. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		runs things in the mail queue. */
 end_comment
 
-begin_macro
-name|runqueue
-argument_list|(
-argument|forkflag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_expr_stmt
+unit|runqueue
+operator|(
+name|forkflag
+operator|)
 name|bool
 name|forkflag
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{

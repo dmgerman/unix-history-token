@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.28
+literal|3.29
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.28
+literal|3.29
 operator|%
 name|G
 operator|%
@@ -70,7 +70,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* **  SMTPINIT -- initialize SMTP. ** **	Opens the connection and sends the initial protocol. ** **	Parameters: **		m -- mailer to create connection to. **		pvp -- pointer to parameter vector to pass to **			the mailer. **		ctladdr -- controlling address for this mailer. ** **	Returns: **		appropriate exit status -- EX_OK on success. ** **	Side Effects: **		creates connection and sends initial protocol. */
+comment|/* **  USERSMTP -- run SMTP protocol from the user end. ** **	This protocol is described in RFC821. */
 end_comment
 
 begin_define
@@ -83,6 +83,10 @@ parameter_list|)
 value|((r) / 100)
 end_define
 
+begin_comment
+comment|/* first digit of reply code */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -92,6 +96,35 @@ name|r
 parameter_list|)
 value|(((r) / 10) % 10)
 end_define
+
+begin_comment
+comment|/* second digit of reply code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMTPCLOSING
+value|421
+end_define
+
+begin_comment
+comment|/* "Service Shutting Down" */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|SmtpReplyBuffer
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* buffer for replies */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -130,13 +163,20 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
-name|SmtpErrstat
+name|bool
+name|SmtpClosing
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* error status if open fails */
+comment|/* set on a forced close */
+end_comment
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  SMTPINIT -- initialize SMTP. ** **	Opens the connection and sends the initial protocol. ** **	Parameters: **		m -- mailer to create connection to. **		pvp -- pointer to parameter vector to pass to **			the mailer. **		ctladdr -- controlling address for this mailer. ** **	Returns: **		appropriate exit status -- EX_OK on success. ** **	Side Effects: **		creates connection and sends initial protocol. */
 end_comment
 
 begin_macro
@@ -224,10 +264,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|SmtpErrstat
-operator|=
-name|ExitStat
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -242,9 +278,14 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"smtpinit: cannot open: Errstat %d errno %d\n"
+literal|"smtpinit: cannot open %s: stat %d errno %d\n"
 argument_list|,
-name|SmtpErrstat
+name|pvp
+index|[
+literal|0
+index|]
+argument_list|,
+name|ExitStat
 argument_list|,
 name|errno
 argument_list|)
@@ -564,17 +605,6 @@ modifier|*
 name|canonname
 parameter_list|()
 function_decl|;
-if|if
-condition|(
-name|SmtpPid
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|SmtpErrstat
-operator|)
-return|;
 name|smtpmessage
 argument_list|(
 literal|"RCPT To:<%s>"
@@ -709,17 +739,6 @@ specifier|register
 name|int
 name|r
 decl_stmt|;
-if|if
-condition|(
-name|SmtpPid
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|SmtpErrstat
-operator|)
-return|;
 comment|/* 	**  Send the data. 	**	Dot hiding is done here. 	*/
 name|smtpmessage
 argument_list|(
@@ -876,15 +895,13 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SMTPQUIT -- close the SMTP connection. ** **	Parameters: **		name -- name of mailer we are quitting. **		showresp -- if set, give a response message. ** **	Returns: **		none. ** **	Side Effects: **		sends the final protocol and closes the connection. */
+comment|/* **  SMTPQUIT -- close the SMTP connection. ** **	Parameters: **		name -- name of mailer we are quitting. ** **	Returns: **		none. ** **	Side Effects: **		sends the final protocol and closes the connection. */
 end_comment
 
 begin_macro
 name|smtpquit
 argument_list|(
 argument|name
-argument_list|,
-argument|showresp
 argument_list|)
 end_macro
 
@@ -895,35 +912,46 @@ name|name
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|bool
-name|showresp
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
 if|if
 condition|(
-name|SmtpPid
-operator|<
-literal|0
+name|SmtpClosing
 condition|)
+block|{
+name|SmtpClosing
+operator|=
+name|FALSE
+expr_stmt|;
 return|return;
+block|}
 name|smtpmessage
 argument_list|(
 literal|"QUIT"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|i
+operator|=
 name|reply
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+literal|221
+condition|)
+name|syserr
+argument_list|(
+literal|"smtpquit %s: reply %d"
+argument_list|,
+name|name
+argument_list|,
+name|i
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -952,13 +980,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|showresp
-condition|)
-name|giveresponse
-argument_list|(
 name|i
+operator|!=
+name|EX_OK
+condition|)
+name|syserr
+argument_list|(
+literal|"smtpquit %s: stat %d"
 argument_list|,
-name|LocalMailer
+name|name
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 block|}
@@ -1007,12 +1039,6 @@ init|;
 condition|;
 control|)
 block|{
-name|char
-name|buf
-index|[
-name|MAXLINE
-index|]
-decl_stmt|;
 specifier|register
 name|int
 name|r
@@ -1038,14 +1064,20 @@ name|Xscript
 argument_list|)
 expr_stmt|;
 comment|/* for debugging */
+if|if
+condition|(
+operator|!
+name|SmtpClosing
+condition|)
+block|{
 name|p
 operator|=
 name|sfgets
 argument_list|(
-name|buf
+name|SmtpReplyBuffer
 argument_list|,
 sizeof|sizeof
-name|buf
+name|SmtpReplyBuffer
 argument_list|,
 name|SmtpIn
 argument_list|)
@@ -1064,11 +1096,12 @@ operator|)
 return|;
 name|fixcrlf
 argument_list|(
-name|buf
+name|SmtpReplyBuffer
 argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* log the input in the transcript for future error returns */
 if|if
 condition|(
@@ -1083,7 +1116,7 @@ name|Arpa_Info
 argument_list|,
 literal|"%s"
 argument_list|,
-name|buf
+name|SmtpReplyBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -1098,13 +1131,13 @@ name|Xscript
 argument_list|,
 literal|"%s\n"
 argument_list|,
-name|buf
+name|SmtpReplyBuffer
 argument_list|)
 expr_stmt|;
 comment|/* if continuation is required, we can go on */
 if|if
 condition|(
-name|buf
+name|SmtpReplyBuffer
 index|[
 literal|3
 index|]
@@ -1114,7 +1147,7 @@ operator|||
 operator|!
 name|isdigit
 argument_list|(
-name|buf
+name|SmtpReplyBuffer
 index|[
 literal|0
 index|]
@@ -1126,7 +1159,7 @@ name|r
 operator|=
 name|atoi
 argument_list|(
-name|buf
+name|SmtpReplyBuffer
 argument_list|)
 expr_stmt|;
 comment|/* extra semantics: 0xx codes are "informational" */
@@ -1137,6 +1170,27 @@ operator|<
 literal|100
 condition|)
 continue|continue;
+comment|/* reply code 421 is "Service Shutting Down" */
+if|if
+condition|(
+name|r
+operator|==
+name|SMTPCLOSING
+operator|&&
+operator|!
+name|SmtpClosing
+condition|)
+block|{
+name|smtpquit
+argument_list|(
+literal|"SMTP Shutdown"
+argument_list|)
+expr_stmt|;
+name|SmtpClosing
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|r
@@ -1241,6 +1295,11 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|SmtpClosing
+condition|)
 name|fprintf
 argument_list|(
 name|SmtpOut
