@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	4.21 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	4.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,6 +144,11 @@ name|sockaddr_in
 name|sin
 init|=
 block|{
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+block|,
 name|AF_INET
 block|}
 decl_stmt|;
@@ -162,6 +167,11 @@ name|sockaddr_in
 name|netmask
 init|=
 block|{
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+block|,
 name|AF_INET
 block|}
 decl_stmt|;
@@ -173,6 +183,11 @@ name|sockaddr_in
 name|ipdst
 init|=
 block|{
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+block|,
 name|AF_INET
 block|}
 decl_stmt|;
@@ -2539,6 +2554,16 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
+name|sin
+operator|->
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sin
+argument_list|)
+expr_stmt|;
 name|val
 operator|=
 name|inet_addr
@@ -2880,6 +2905,16 @@ operator|->
 name|sns_family
 operator|=
 name|AF_NS
+expr_stmt|;
+name|sns
+operator|->
+name|sns_len
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sns
+argument_list|)
 expr_stmt|;
 name|sns
 operator|->
