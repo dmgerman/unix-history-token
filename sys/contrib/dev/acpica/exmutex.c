@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmutex - ASL Mutex Acquire/Release functions  *              $Revision: 20 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmutex - ASL Mutex Acquire/Release functions  *              $Revision: 21 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -326,14 +326,16 @@ block|}
 comment|/*      * Support for multiple acquires by the owning thread      */
 if|if
 condition|(
-operator|(
 name|ObjDesc
 operator|->
 name|Mutex
 operator|.
 name|OwnerThread
-operator|)
-operator|&&
+condition|)
+block|{
+comment|/* Special case for Global Lock, allow all threads */
+if|if
+condition|(
 operator|(
 name|ObjDesc
 operator|->
@@ -349,9 +351,19 @@ name|Thread
 operator|->
 name|ThreadId
 operator|)
+operator|||
+operator|(
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|Semaphore
+operator|==
+name|AcpiGbl_GlobalLockSemaphore
+operator|)
 condition|)
 block|{
-comment|/*          * The mutex is already owned by this thread,          * just increment the acquisition depth          */
+comment|/*              * The mutex is already owned by this thread,              * just increment the acquisition depth              */
 name|ObjDesc
 operator|->
 name|Mutex
@@ -364,6 +376,7 @@ argument_list|(
 name|AE_OK
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Acquire the mutex, wait if necessary */
 name|Status
@@ -540,9 +553,10 @@ name|AE_AML_INTERNAL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* The Mutex is owned, but this thread must be the owner */
+comment|/*       * The Mutex is owned, but this thread must be the owner.      * Special case for Global Lock, any thread can release      */
 if|if
 condition|(
+operator|(
 name|ObjDesc
 operator|->
 name|Mutex
@@ -556,6 +570,17 @@ operator|->
 name|Thread
 operator|->
 name|ThreadId
+operator|)
+operator|&&
+operator|(
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|Semaphore
+operator|!=
+name|AcpiGbl_GlobalLockSemaphore
+operator|)
 condition|)
 block|{
 name|ACPI_REPORT_ERROR

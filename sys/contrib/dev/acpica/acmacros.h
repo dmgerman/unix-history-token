@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 148 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 149 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -3188,13 +3188,6 @@ end_endif
 begin_comment
 comment|/* ACPI_DBG_TRACK_ALLOCATIONS */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_GET_STACK_POINTER
-value|_asm {mov eax, ebx}
-end_define
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actbl2.h - ACPI Specification Revision 2.0 Tables  *       $Revision: 35 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actbl2.h - ACPI Specification Revision 2.0 Tables  *       $Revision: 36 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -186,7 +186,7 @@ name|UINT32
 name|GlobalLock
 decl_stmt|;
 comment|/* Global Lock used to synchronize access to shared hardware resources */
-name|UINT32
+name|UINT32_BIT
 name|S4Bios_f
 range|:
 literal|1

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 147 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 148 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -100,6 +100,24 @@ begin_decl_stmt
 specifier|extern
 name|UINT32
 name|AcpiGbl_NestingLevel
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*****************************************************************************  *  * Runtime configuration  *  ****************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|UINT8
+name|AcpiGbl_CreateOsiMethod
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|UINT8
+name|AcpiGbl_AllMethodsSerialized
 decl_stmt|;
 end_decl_stmt
 
@@ -466,6 +484,18 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_ValidOsiStrings
+index|[
+name|ACPI_NUM_OSI_STRINGS
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*****************************************************************************  *  * Namespace globals  *  ****************************************************************************/
 end_comment
@@ -480,6 +510,7 @@ end_define
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
 name|ACPI_NO_METHOD_EXECUTION
