@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_put.c	7.5	%G%"
+literal|"@(#)ex_put.c	7.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1919,6 +1919,8 @@ condition|(
 name|j
 operator|>
 name|costDP
+operator|&&
+name|DOWN_PARM
 condition|)
 block|{
 comment|/* Win big on Tek 4025 */
@@ -2072,6 +2074,8 @@ condition|(
 name|j
 operator|>
 name|costLP
+operator|&&
+name|LEFT_PARM
 condition|)
 block|{
 name|tputs
@@ -2351,6 +2355,8 @@ condition|(
 name|j
 operator|>
 name|costRP
+operator|&&
+name|RIGHT_PARM
 condition|)
 block|{
 comment|/* 			 * This probably happens rarely, if at all. 			 * It seems mainly useful for ANSI terminals 			 * with no hardware tabs, and I don't know 			 * of any such terminal at the moment. 			 */
