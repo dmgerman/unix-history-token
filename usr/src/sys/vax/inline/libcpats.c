@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)libcpats.c	7.2 (Berkeley) %G%"
+literal|"@(#)libcpats.c	7.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,9 +45,17 @@ name|libc_ptab
 index|[]
 init|=
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NOTDEF
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|vax
+argument_list|)
 block|{
 literal|1
 block|,
@@ -66,7 +74,6 @@ block|}
 block|,
 endif|#
 directive|endif
-endif|vax
 ifdef|#
 directive|ifdef
 name|mc68000
