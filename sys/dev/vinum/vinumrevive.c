@@ -636,18 +636,17 @@ expr_stmt|;
 comment|/* create the device number */
 name|bp
 operator|->
-name|b_flags
-operator|=
-literal|0
-expr_stmt|;
-comment|/* either way, read it */
-name|bp
-operator|->
 name|b_iocmd
 operator|=
 name|BIO_READ
 expr_stmt|;
 comment|/* either way, read it */
+name|bp
+operator|->
+name|b_flags
+operator|=
+literal|0
+expr_stmt|;
 name|vinumstart
 argument_list|(
 name|bp
@@ -701,7 +700,6 @@ name|b_iocmd
 operator|=
 name|BIO_WRITE
 expr_stmt|;
-comment|/* and make this an ordered write */
 name|BUF_LOCKINIT
 argument_list|(
 name|bp
@@ -1792,9 +1790,9 @@ index|[
 name|sdno
 index|]
 operator|->
-name|b_flags
+name|b_iocmd
 operator|=
-literal|0
+name|BIO_READ
 expr_stmt|;
 comment|/* either way, read it */
 name|bpp
@@ -1802,11 +1800,10 @@ index|[
 name|sdno
 index|]
 operator|->
-name|b_iocmd
+name|b_flags
 operator|=
-name|BIO_READ
+literal|0
 expr_stmt|;
-comment|/* either way, read it */
 name|bpp
 index|[
 name|sdno
@@ -2430,6 +2427,12 @@ name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 comment|/* and lock it */
+name|bp
+operator|->
+name|b_iocmd
+operator|=
+name|BIO_WRITE
+expr_stmt|;
 name|sdio
 argument_list|(
 name|bp
