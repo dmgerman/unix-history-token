@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.20 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -255,6 +255,14 @@ block|}
 name|DBTYPE
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|__USE_OPEN_FLAGS
+define|\
+value|(O_CREAT|O_EXCL|O_EXLOCK|O_RDONLY|O_RDWR|O_SHLOCK|O_TRUNC)
+end_define
 
 begin_comment
 comment|/* Access method description structure. */
