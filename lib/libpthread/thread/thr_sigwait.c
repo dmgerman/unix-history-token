@@ -436,6 +436,12 @@ name|timeout
 operator|=
 literal|0
 expr_stmt|;
+name|curthread
+operator|->
+name|interrupted
+operator|=
+literal|0
+expr_stmt|;
 name|_thr_set_timeout
 argument_list|(
 name|timeout
@@ -493,7 +499,7 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Return the signal number to the caller: 		 * XXX Here is race, how about a signal come in before 		 * we reach here? so we might got an incorrect timeout 		 * status. 		 */
+comment|/* 		 * Return the signal number to the caller: 		 */
 if|if
 condition|(
 name|siginfo
@@ -516,6 +522,17 @@ if|if
 condition|(
 name|curthread
 operator|->
+name|interrupted
+condition|)
+name|errno
+operator|=
+name|EINTR
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|curthread
+operator|->
 name|timeout
 condition|)
 name|errno
@@ -528,6 +545,18 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+name|curthread
+operator|->
+name|timeout
+operator|=
+literal|0
+expr_stmt|;
+name|curthread
+operator|->
+name|interrupted
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 		 * Probably unnecessary, but since it's in a union struct 		 * we don't know how it could be used in the future. 		 */
 name|crit
 operator|=
