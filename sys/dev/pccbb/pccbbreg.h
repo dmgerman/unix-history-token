@@ -14,7 +14,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBR_SOCKBASE
+name|CBBR_SOCKBASE
 value|0x10
 end_define
 
@@ -25,7 +25,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBR_MEMBASE0
+name|CBBR_MEMBASE0
 value|0x1c
 end_define
 
@@ -36,7 +36,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBR_MEMLIMIT0
+name|CBBR_MEMLIMIT0
 value|0x20
 end_define
 
@@ -47,7 +47,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBR_MEMBASE1
+name|CBBR_MEMBASE1
 value|0x24
 end_define
 
@@ -58,7 +58,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBR_MEMLIMIT1
+name|CBBR_MEMLIMIT1
 value|0x28
 end_define
 
@@ -69,7 +69,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBR_IOBASE0
+name|CBBR_IOBASE0
 value|0x2c
 end_define
 
@@ -80,7 +80,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBR_IOLIMIT0
+name|CBBR_IOLIMIT0
 value|0x30
 end_define
 
@@ -91,7 +91,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBR_IOBASE1
+name|CBBR_IOBASE1
 value|0x34
 end_define
 
@@ -102,7 +102,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBR_IOLIMIT1
+name|CBBR_IOLIMIT1
 value|0x38
 end_define
 
@@ -113,21 +113,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_MEMALIGN
+name|CBB_MEMALIGN
 value|4096
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_IOALIGN
+name|CBB_IOALIGN
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBR_INTRLINE
+name|CBBR_INTRLINE
 value|0x3c
 end_define
 
@@ -138,7 +138,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBR_INTRPIN
+name|CBBR_INTRPIN
 value|0x3d
 end_define
 
@@ -149,7 +149,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBR_BRIDGECTRL
+name|CBBR_BRIDGECTRL
 value|0x3e
 end_define
 
@@ -160,42 +160,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBM_BRIDGECTRL_MASTER_ABORT
+name|CBBM_BRIDGECTRL_MASTER_ABORT
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_BRIDGECTRL_RESET
+name|CBBM_BRIDGECTRL_RESET
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_BRIDGECTRL_INTR_IREQ_EN
+name|CBBM_BRIDGECTRL_INTR_IREQ_EN
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_BRIDGECTRL_PREFETCH_0
+name|CBBM_BRIDGECTRL_PREFETCH_0
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_BRIDGECTRL_PREFETCH_1
+name|CBBM_BRIDGECTRL_PREFETCH_1
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_BRIDGECTRL_WRITE_POST_EN
+name|CBBM_BRIDGECTRL_WRITE_POST_EN
 value|0x0400
 end_define
 
@@ -206,21 +206,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBM_BRIDGECTRL_RL_3E0_EN
+name|CBBM_BRIDGECTRL_RL_3E0_EN
 value|0x0800
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_BRIDGECTRL_RL_3E2_EN
+name|CBBM_BRIDGECTRL_RL_3E2_EN
 value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBR_LEGACY
+name|CBBR_LEGACY
 value|0x44
 end_define
 
@@ -231,7 +231,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBR_CBCTRL
+name|CBBR_CBCTRL
 value|0x91
 end_define
 
@@ -246,56 +246,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBM_CBCTRL_113X_RI_EN
+name|CBBM_CBCTRL_113X_RI_EN
 value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_CBCTRL_113X_ZV_EN
+name|CBBM_CBCTRL_113X_ZV_EN
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_CBCTRL_113X_PCI_IRQ_EN
+name|CBBM_CBCTRL_113X_PCI_IRQ_EN
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_CBCTRL_113X_PCI_INTR
+name|CBBM_CBCTRL_113X_PCI_INTR
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_CBCTRL_113X_PCI_CSC
+name|CBBM_CBCTRL_113X_PCI_CSC
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_CBCTRL_113X_PCI_CSC_D
+name|CBBM_CBCTRL_113X_PCI_CSC_D
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_CBCTRL_113X_SPEAKER_EN
+name|CBBM_CBCTRL_113X_SPEAKER_EN
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_CBCTRL_113X_INTR_DET
+name|CBBM_CBCTRL_113X_INTR_DET
 value|0x01
 end_define
 
@@ -306,42 +306,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBM_CBCTRL_12XX_RI_EN
+name|CBBM_CBCTRL_12XX_RI_EN
 value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_CBCTRL_12XX_ZV_EN
+name|CBBM_CBCTRL_12XX_ZV_EN
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_CBCTRL_12XX_AUD2MUX
+name|CBBM_CBCTRL_12XX_AUD2MUX
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_CBCTRL_12XX_SPEAKER_EN
+name|CBBM_CBCTRL_12XX_SPEAKER_EN
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_CBCTRL_12XX_INTR_DET
+name|CBBM_CBCTRL_12XX_INTR_DET
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBR_DEVCTRL
+name|CBBR_DEVCTRL
 value|0x92
 end_define
 
@@ -352,28 +352,32 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBM_DEVCTRL_INT_SERIAL
+name|CBBM_DEVCTRL_INT_SERIAL
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_DEVCTRL_INT_PCI
+name|CBBM_DEVCTRL_INT_PCI
 value|0x02
 end_define
+
+begin_comment
+comment|/* ToPIC 95 ONLY */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PCCBBR_TOPIC_SOCKETCTRL
+name|CBBR_TOPIC_SOCKETCTRL
 value|0x90
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SOCKETCTRL_SCR_IRQSEL
+name|CBBM_TOPIC_SOCKETCTRL_SCR_IRQSEL
 value|0x00000001
 end_define
 
@@ -381,102 +385,151 @@ begin_comment
 comment|/* PCI intr */
 end_comment
 
+begin_comment
+comment|/* ToPIC 97, 100 */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PCCBBR_TOPIC_SLOTCTRL
+name|CBBR_TOPIC_ZV_CONTROL
+value|0x9c
+end_define
+
+begin_comment
+comment|/* 1 byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CBBM_TOPIC_ZVC_ENABLE
+value|0x1
+end_define
+
+begin_comment
+comment|/* TOPIC 95+ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CBBR_TOPIC_SLOTCTRL
 value|0xa0
 end_define
 
+begin_comment
+comment|/* 1 byte */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_SLOTON
-value|0x00000080
+name|CBBM_TOPIC_SLOTCTRL_SLOTON
+value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_SLOTEN
-value|0x00000040
+name|CBBM_TOPIC_SLOTCTRL_SLOTEN
+value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_ID_LOCK
-value|0x00000020
+name|CBBM_TOPIC_SLOTCTRL_ID_LOCK
+value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_ID_WP
-value|0x00000010
+name|CBBM_TOPIC_SLOTCTRL_ID_WP
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_PORT_MASK
-value|0x0000000c
+name|CBBM_TOPIC_SLOTCTRL_PORT_MASK
+value|0x0c
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_PORT_SHIFT
+name|CBBM_TOPIC_SLOTCTRL_PORT_SHIFT
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_OSF_MASK
-value|0x00000003
+name|CBBM_TOPIC_SLOTCTRL_OSF_MASK
+value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_OSF_SHIFT
+name|CBBM_TOPIC_SLOTCTRL_OSF_SHIFT
 value|0
 end_define
 
+begin_comment
+comment|/* TOPIC 95+ */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_INTB
-value|0x00002000
+name|CBBR_TOPIC_INTCTRL
+value|0xa1
+end_define
+
+begin_comment
+comment|/* 1 byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CBBM_TOPIC_INTCTRL_INTB
+value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_INTA
-value|0x00001000
+name|CBBM_TOPIC_INTCTRL_INTA
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_INT_MASK
-value|0x00003000
+name|CBBM_TOPIC_INTCTRL_INT_MASK
+value|0x30
+end_define
+
+begin_comment
+comment|/* The following bits may be for ToPIC 95 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CBBM_TOPIC_INTCTRL_CLOCK_MASK
+value|0x0c
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_CLOCK_MASK
-value|0x00000c00
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_CLOCK_2
-value|0x00000800
+name|CBBM_TOPIC_INTCTRL_CLOCK_2
+value|0x08
 end_define
 
 begin_comment
@@ -486,8 +539,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_CLOCK_1
-value|0x00000400
+name|CBBM_TOPIC_INTCTRL_CLOCK_1
+value|0x04
 end_define
 
 begin_comment
@@ -497,40 +550,80 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_CLOCK_0
-value|0x00000000
+name|CBBM_TOPIC_INTCTRL_CLOCK_0
+value|0x00
 end_define
 
 begin_comment
 comment|/* no clock */
 end_comment
 
+begin_comment
+comment|/* ToPIC97, 100 defines the following bits */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_CARDBUS
-value|0x80000000
+name|CBBM_TOPIC_INTCTRL_STSIRQNP
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_VS1
-value|0x04000000
+name|CBBM_TOPIC_INTCTRL_IRQNP
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_VS2
-value|0x02000000
+name|CBBM_TOPIC_INTCTRL_INTIRQSEL
+value|0x01
+end_define
+
+begin_comment
+comment|/* TOPIC 95+ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CBBR_TOPIC_CDC
+value|0xa3
+end_define
+
+begin_comment
+comment|/* 1 byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CBBM_TOPIC_CDC_CARDBUS
+value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBBM_TOPIC_SLOTCTRL_SWDETECT
-value|0x01000000
+name|CBBM_TOPIC_CDC_VS1
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBBM_TOPIC_CDC_VS2
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBBM_TOPIC_CDC_SWDETECT
+value|0x01
 end_define
 
 begin_comment
@@ -540,7 +633,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_EVENT_CSTS
+name|CBB_SOCKET_EVENT_CSTS
 value|0x01
 end_define
 
@@ -551,7 +644,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_EVENT_CD1
+name|CBB_SOCKET_EVENT_CD1
 value|0x02
 end_define
 
@@ -562,7 +655,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_EVENT_CD2
+name|CBB_SOCKET_EVENT_CD2
 value|0x04
 end_define
 
@@ -573,7 +666,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_EVENT_CD
+name|CBB_SOCKET_EVENT_CD
 value|0x06
 end_define
 
@@ -584,7 +677,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_EVENT_POWER
+name|CBB_SOCKET_EVENT_POWER
 value|0x08
 end_define
 
@@ -595,7 +688,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_MASK_CSTS
+name|CBB_SOCKET_MASK_CSTS
 value|0x01
 end_define
 
@@ -606,7 +699,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_MASK_CD
+name|CBB_SOCKET_MASK_CD
 value|0x06
 end_define
 
@@ -617,7 +710,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_MASK_POWER
+name|CBB_SOCKET_MASK_POWER
 value|0x08
 end_define
 
@@ -628,7 +721,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_CARDSTS
+name|CBB_SOCKET_STAT_CARDSTS
 value|0x00000001
 end_define
 
@@ -639,7 +732,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_CD1
+name|CBB_SOCKET_STAT_CD1
 value|0x00000002
 end_define
 
@@ -650,7 +743,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_CD2
+name|CBB_SOCKET_STAT_CD2
 value|0x00000004
 end_define
 
@@ -661,7 +754,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_CD
+name|CBB_SOCKET_STAT_CD
 value|0x00000006
 end_define
 
@@ -672,7 +765,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_PWRCYCLE
+name|CBB_SOCKET_STAT_PWRCYCLE
 value|0x00000008
 end_define
 
@@ -683,7 +776,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_16BIT
+name|CBB_SOCKET_STAT_16BIT
 value|0x00000010
 end_define
 
@@ -694,7 +787,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_CB
+name|CBB_SOCKET_STAT_CB
 value|0x00000020
 end_define
 
@@ -705,7 +798,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_IREQ
+name|CBB_SOCKET_STAT_IREQ
 value|0x00000040
 end_define
 
@@ -716,7 +809,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_NOTCARD
+name|CBB_SOCKET_STAT_NOTCARD
 value|0x00000080
 end_define
 
@@ -727,7 +820,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_DATALOST
+name|CBB_SOCKET_STAT_DATALOST
 value|0x00000100
 end_define
 
@@ -738,7 +831,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_BADVCC
+name|CBB_SOCKET_STAT_BADVCC
 value|0x00000200
 end_define
 
@@ -749,7 +842,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_5VCARD
+name|CBB_SOCKET_STAT_5VCARD
 value|0x00000400
 end_define
 
@@ -760,7 +853,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_3VCARD
+name|CBB_SOCKET_STAT_3VCARD
 value|0x00000800
 end_define
 
@@ -771,7 +864,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_XVCARD
+name|CBB_SOCKET_STAT_XVCARD
 value|0x00001000
 end_define
 
@@ -782,7 +875,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_YVCARD
+name|CBB_SOCKET_STAT_YVCARD
 value|0x00002000
 end_define
 
@@ -793,7 +886,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_5VSOCK
+name|CBB_SOCKET_STAT_5VSOCK
 value|0x10000000
 end_define
 
@@ -804,7 +897,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_3VSOCK
+name|CBB_SOCKET_STAT_3VSOCK
 value|0x20000000
 end_define
 
@@ -815,7 +908,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_XVSOCK
+name|CBB_SOCKET_STAT_XVSOCK
 value|0x40000000
 end_define
 
@@ -826,7 +919,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STAT_YVSOCK
+name|CBB_SOCKET_STAT_YVSOCK
 value|0x80000000
 end_define
 
@@ -837,7 +930,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_FORCE_BADVCC
+name|CBB_SOCKET_FORCE_BADVCC
 value|0x0200
 end_define
 
@@ -848,98 +941,98 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_CTRL_VPPMASK
+name|CBB_SOCKET_CTRL_VPPMASK
 value|0x07
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_CTRL_VPP_OFF
+name|CBB_SOCKET_CTRL_VPP_OFF
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_CTRL_VPP_12V
+name|CBB_SOCKET_CTRL_VPP_12V
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_CTRL_VPP_5V
+name|CBB_SOCKET_CTRL_VPP_5V
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_CTRL_VPP_3V
+name|CBB_SOCKET_CTRL_VPP_3V
 value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_CTRL_VPP_XV
+name|CBB_SOCKET_CTRL_VPP_XV
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_CTRL_VPP_YV
+name|CBB_SOCKET_CTRL_VPP_YV
 value|0x05
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_CTRL_VCCMASK
+name|CBB_SOCKET_CTRL_VCCMASK
 value|0x70
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_CTRL_VCC_OFF
+name|CBB_SOCKET_CTRL_VCC_OFF
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_CTRL_VCC_5V
+name|CBB_SOCKET_CTRL_VCC_5V
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_CTRL_VCC_3V
+name|CBB_SOCKET_CTRL_VCC_3V
 value|0x30
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_CTRL_VCC_XV
+name|CBB_SOCKET_CTRL_VCC_XV
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_CTRL_VCC_YV
+name|CBB_SOCKET_CTRL_VCC_YV
 value|0x50
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_CTRL_STOPCLK
+name|CBB_SOCKET_CTRL_STOPCLK
 value|0x80
 end_define
 
@@ -952,42 +1045,42 @@ end_include
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_EVENT
+name|CBB_SOCKET_EVENT
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_MASK
+name|CBB_SOCKET_MASK
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_STATE
+name|CBB_SOCKET_STATE
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_FORCE
+name|CBB_SOCKET_FORCE
 value|0x0c
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_CONTROL
+name|CBB_SOCKET_CONTROL
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_SOCKET_POWER
+name|CBB_SOCKET_POWER
 value|0x14
 end_define
 

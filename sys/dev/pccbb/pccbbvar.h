@@ -78,7 +78,7 @@ struct|struct
 name|pccbb_softc
 block|{
 name|device_t
-name|sc_dev
+name|dev
 decl_stmt|;
 name|struct
 name|exca_softc
@@ -87,35 +87,35 @@ decl_stmt|;
 name|struct
 name|resource
 modifier|*
-name|sc_base_res
+name|base_res
 decl_stmt|;
 name|struct
 name|resource
 modifier|*
-name|sc_irq_res
+name|irq_res
 decl_stmt|;
 name|void
 modifier|*
-name|sc_intrhand
+name|intrhand
 decl_stmt|;
 name|bus_space_tag_t
-name|sc_bst
+name|bst
 decl_stmt|;
 name|bus_space_handle_t
-name|sc_bsh
+name|bsh
 decl_stmt|;
 name|u_int8_t
-name|sc_secbus
+name|secbus
 decl_stmt|;
 name|u_int8_t
-name|sc_subbus
+name|subbus
 decl_stmt|;
 name|struct
 name|mtx
-name|sc_mtx
+name|mtx
 decl_stmt|;
 name|u_int32_t
-name|sc_flags
+name|flags
 decl_stmt|;
 define|#
 directive|define
@@ -130,7 +130,7 @@ directive|define
 name|PCCBB_KTHREAD_DONE
 value|0x08000000
 name|int
-name|sc_chipset
+name|chipset
 decl_stmt|;
 comment|/* chipset id */
 define|#
@@ -160,24 +160,19 @@ value|4
 comment|/* RICOH RF5C465/466/467 */
 define|#
 directive|define
-name|CB_TOPIC95
+name|CB_CIRRUS
 value|5
-comment|/* Toshiba ToPIC95 */
+comment|/* Cirrus Logic CLPD683x */
 define|#
 directive|define
-name|CB_TOPIC95B
+name|CB_TOPIC95
 value|6
-comment|/* Toshiba ToPIC95B */
+comment|/* Toshiba ToPIC95 */
 define|#
 directive|define
 name|CB_TOPIC97
 value|7
 comment|/* Toshiba ToPIC97/100 */
-define|#
-directive|define
-name|CB_CIRRUS
-value|8
-comment|/* Cirrus Logic CLPD683x */
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
@@ -186,12 +181,11 @@ argument_list|)
 name|rl
 expr_stmt|;
 name|device_t
-name|sc_cbdev
+name|cbdev
 decl_stmt|;
 name|device_t
-name|sc_pccarddev
+name|pccarddev
 decl_stmt|;
-comment|/* kthread staff */
 name|struct
 name|proc
 modifier|*
