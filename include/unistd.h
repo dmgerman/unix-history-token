@@ -936,14 +936,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
+name|int
 name|brk
 name|__P
 argument_list|(
 operator|(
 specifier|const
-name|char
+name|void
 operator|*
 operator|)
 argument_list|)
@@ -1932,13 +1931,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|void
 modifier|*
 name|sbrk
 name|__P
 argument_list|(
 operator|(
-name|int
+name|intptr_t
 operator|)
 argument_list|)
 decl_stmt|;
