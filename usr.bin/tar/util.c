@@ -96,6 +96,16 @@ name|char
 modifier|*
 name|buff
 decl_stmt|;
+name|char
+modifier|*
+name|buffheap
+decl_stmt|;
+name|char
+name|buffstack
+index|[
+literal|256
+index|]
+decl_stmt|;
 name|int
 name|bufflength
 decl_stmt|;
@@ -109,16 +119,18 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+comment|/* Use a stack-allocated buffer if we can. */
+name|buffheap
+operator|=
+name|NULL
+expr_stmt|;
 name|bufflength
 operator|=
-literal|512
+literal|256
 expr_stmt|;
 name|buff
 operator|=
-name|malloc
-argument_list|(
-name|bufflength
-argument_list|)
+name|buffstack
 expr_stmt|;
 name|va_start
 argument_list|(
@@ -140,6 +152,7 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
+comment|/* If the result is too large, allocate a buffer on the heap. */
 if|if
 condition|(
 name|length
@@ -155,10 +168,10 @@ literal|1
 expr_stmt|;
 name|buff
 operator|=
-name|realloc
+name|buffheap
+operator|=
+name|malloc
 argument_list|(
-name|buff
-argument_list|,
 name|bufflength
 argument_list|)
 expr_stmt|;
@@ -391,9 +404,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* If we allocated a heap-based buffer, free it now. */
+if|if
+condition|(
+name|buffheap
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
-name|buff
+name|buffheap
 argument_list|)
 expr_stmt|;
 block|}
