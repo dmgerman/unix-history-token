@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)catman.c	5.3 (Berkeley) %G%"
+literal|"@(#)catman.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -989,7 +989,7 @@ operator|&
 name|S_IFMT
 operator|)
 operator|==
-name|S_IFCHR
+name|S_IFREG
 operator|)
 condition|)
 name|unlink
