@@ -1052,11 +1052,21 @@ name|DIR
 modifier|*
 name|dirp
 decl_stmt|;
+comment|/* Note: "" is not equivalent to "." for opendir(2) now! */
 name|dirp
 operator|=
 name|opendir
 argument_list|(
+operator|(
+name|strlen
+argument_list|(
 name|gpath
+argument_list|)
+operator|)
+condition|?
+name|gpath
+else|:
+literal|"."
 argument_list|)
 expr_stmt|;
 if|if
