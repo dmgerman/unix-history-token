@@ -3108,7 +3108,7 @@ modifier|*
 name|v
 parameter_list|)
 block|{
-name|VarREPattern
+name|VarPattern
 name|patt
 decl_stmt|;
 name|char
@@ -3193,7 +3193,7 @@ expr_stmt|;
 comment|/* consume 2st delim */
 name|patt
 operator|.
-name|replace
+name|rhs
 operator|=
 name|VarGetPattern
 argument_list|(
@@ -3212,7 +3212,7 @@ if|if
 condition|(
 name|patt
 operator|.
-name|replace
+name|rhs
 operator|==
 name|NULL
 condition|)
@@ -3313,7 +3313,7 @@ name|free
 argument_list|(
 name|patt
 operator|.
-name|replace
+name|rhs
 argument_list|)
 expr_stmt|;
 name|free
@@ -3414,7 +3414,7 @@ name|free
 argument_list|(
 name|patt
 operator|.
-name|replace
+name|rhs
 argument_list|)
 expr_stmt|;
 name|free

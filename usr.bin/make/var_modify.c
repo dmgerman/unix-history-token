@@ -1379,7 +1379,7 @@ modifier|*
 name|patternp
 parameter_list|)
 block|{
-name|VarREPattern
+name|VarPattern
 modifier|*
 name|pat
 decl_stmt|;
@@ -1531,7 +1531,7 @@ name|rp
 operator|=
 name|pat
 operator|->
-name|replace
+name|rhs
 init|;
 operator|*
 name|rp

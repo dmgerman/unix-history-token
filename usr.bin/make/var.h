@@ -160,18 +160,6 @@ name|size_t
 name|rightLen
 decl_stmt|;
 comment|/* Length of replacement */
-name|int
-name|flags
-decl_stmt|;
-block|}
-name|VarPattern
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
 name|regex_t
 name|re
 decl_stmt|;
@@ -182,15 +170,11 @@ name|regmatch_t
 modifier|*
 name|matches
 decl_stmt|;
-name|char
-modifier|*
-name|replace
-decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
 block|}
-name|VarREPattern
+name|VarPattern
 typedef|;
 end_typedef
 
