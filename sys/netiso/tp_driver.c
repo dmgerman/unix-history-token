@@ -1,33 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /a/cvs/386BSD/src/sys/netiso/tp_driver.c,v 1.1.1.1 1993/06/12 14:57:19 rgrimes Exp $ */
+comment|/*  *	from: unknown  *	$Id$  */
 end_comment
-
-begin_comment
-comment|/* $Source: /a/cvs/386BSD/src/sys/netiso/tp_driver.c,v $ */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Header/**/$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|lint
-end_endif
 
 begin_define
 define|#
