@@ -2860,14 +2860,6 @@ operator|->
 name|mnt_optnew
 expr_stmt|;
 block|}
-else|else
-name|vfs_freeopts
-argument_list|(
-name|mp
-operator|->
-name|mnt_optnew
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Prevent external consumers of mount 	 * options to read mnt_optnew. 	 */
 name|mp
 operator|->
