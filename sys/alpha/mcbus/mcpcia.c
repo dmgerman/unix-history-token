@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/prom.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -3256,7 +3262,7 @@ name|DEVMETHOD
 argument_list|(
 name|bus_alloc_resource
 argument_list|,
-name|pci_alloc_resource
+name|alpha_pci_alloc_resource
 argument_list|)
 block|,
 name|DEVMETHOD
