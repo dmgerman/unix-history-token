@@ -174,6 +174,10 @@ name|bdaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|local
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Process command line arguments */
 while|while
 condition|(
