@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_auth_unix.c,v 1.2 1995/05/30 05:41:33 rgrimes Exp $"
+literal|"$Id: svc_auth_unix.c,v 1.3 1995/10/22 14:51:35 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,7 +104,7 @@ modifier|*
 name|aup
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 modifier|*
 name|buf
 decl_stmt|;
@@ -258,16 +258,16 @@ goto|goto
 name|done
 goto|;
 block|}
-name|bcopy
+name|memcpy
 argument_list|(
+name|aup
+operator|->
+name|aup_machname
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
 name|buf
-argument_list|,
-name|aup
-operator|->
-name|aup_machname
 argument_list|,
 operator|(
 name|u_int
@@ -297,7 +297,7 @@ name|str_len
 operator|/
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 expr_stmt|;
 name|aup
