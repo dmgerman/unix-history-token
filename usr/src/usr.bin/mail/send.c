@@ -42,12 +42,12 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)send.c	2.2 %G%"
+literal|"@(#)send.c	2.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Send message described by the passed pointer to the  * passed output buffer.  Return -1 on error, but normally  * the number of lines written.  Adjust the status: field  * if need be.  */
+comment|/*  * Send message described by the passed pointer to the  * passed output buffer.  Return -1 on error, but normally  * the number of lines written.  Adjust the status: field  * if need be.  If doign is set, suppress ignored header fields.  */
 end_comment
 
 begin_macro
@@ -56,6 +56,8 @@ argument_list|(
 argument|mailp
 argument_list|,
 argument|obuf
+argument_list|,
+argument|doign
 argument_list|)
 end_macro
 
@@ -99,6 +101,11 @@ name|line
 index|[
 name|LINESIZE
 index|]
+decl_stmt|,
+name|field
+index|[
+name|BUFSIZ
+index|]
 decl_stmt|;
 name|int
 name|lc
@@ -108,6 +115,15 @@ decl_stmt|,
 name|infld
 decl_stmt|,
 name|fline
+decl_stmt|,
+name|dostat
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|,
+modifier|*
+name|cp2
 decl_stmt|;
 name|mp
 operator|=
@@ -129,15 +145,11 @@ argument_list|)
 expr_stmt|;
 name|ishead
 operator|=
-operator|(
-name|mailp
-operator|->
-name|m_flag
-operator|&
-name|MSTATUS
-operator|)
-operator|!=
-literal|0
+literal|1
+expr_stmt|;
+name|dostat
+operator|=
+literal|1
 expr_stmt|;
 name|infld
 operator|=
@@ -182,6 +194,7 @@ condition|(
 name|ishead
 condition|)
 block|{
+comment|/*  			 * First line is the From line, so no headers 			 * there to worry about 			 */
 if|if
 condition|(
 name|fline
@@ -195,6 +208,7 @@ goto|goto
 name|writeit
 goto|;
 block|}
+comment|/* 			 * If line is blank, we've reached end of 			 * headers, so force out status: field 			 * and note that we are no longer in header 			 * fields 			 */
 if|if
 condition|(
 name|line
@@ -205,13 +219,25 @@ operator|==
 literal|'\n'
 condition|)
 block|{
+if|if
+condition|(
+name|dostat
+condition|)
+block|{
 name|statusput
 argument_list|(
 name|mailp
 argument_list|,
 name|obuf
+argument_list|,
+name|doign
 argument_list|)
 expr_stmt|;
+name|dostat
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|ishead
 operator|=
 literal|0
@@ -220,6 +246,7 @@ goto|goto
 name|writeit
 goto|;
 block|}
+comment|/* 			 * If this line is a continuation 			 * of a previous header field, just echo it. 			 */
 if|if
 condition|(
 name|isspace
@@ -239,6 +266,7 @@ name|infld
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 			 * If we are no longer looking at real 			 * header lines, force out status: 			 * This happens in uucp style mail where 			 * there are no headers at all. 			 */
 if|if
 condition|(
 operator|!
@@ -248,13 +276,25 @@ name|line
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|dostat
+condition|)
+block|{
 name|statusput
 argument_list|(
 name|mailp
 argument_list|,
 name|obuf
+argument_list|,
+name|doign
 argument_list|)
 expr_stmt|;
+name|dostat
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|putc
 argument_list|(
 literal|'\n'
@@ -273,6 +313,7 @@ block|}
 name|infld
 operator|++
 expr_stmt|;
+comment|/* 			 * We are looking at a header line. 			 * See if it is the status: field, 			 * and if it is, print the real status: field 			 */
 if|if
 condition|(
 name|icisname
@@ -285,19 +326,76 @@ literal|6
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|dostat
+condition|)
+block|{
 name|statusput
 argument_list|(
 name|mailp
 argument_list|,
 name|obuf
+argument_list|,
+name|doign
 argument_list|)
 expr_stmt|;
-name|ishead
+name|dostat
 operator|=
 literal|0
 expr_stmt|;
+block|}
 continue|continue;
 block|}
+comment|/* 			 * Pick up the header field. 			 * If it is an ignored field and 			 * we care about such things, skip it. 			 */
+name|cp
+operator|=
+name|line
+expr_stmt|;
+name|cp2
+operator|=
+name|field
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|cp
+operator|&&
+operator|*
+name|cp
+operator|!=
+literal|':'
+operator|&&
+operator|!
+name|isspace
+argument_list|(
+operator|*
+name|cp
+argument_list|)
+condition|)
+operator|*
+name|cp2
+operator|++
+operator|=
+operator|*
+name|cp
+operator|++
+expr_stmt|;
+operator|*
+name|cp2
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|doign
+operator|&&
+name|isign
+argument_list|(
+name|field
+argument_list|)
+condition|)
+continue|continue;
 block|}
 name|writeit
 label|:
@@ -431,7 +529,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Output a reasonable looking status field.  */
+comment|/*  * Output a reasonable looking status field.  * But if "status" is ignored and doign, forget it.  */
 end_comment
 
 begin_expr_stmt
@@ -440,6 +538,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|obuf
+argument_list|,
+name|doign
 argument_list|)
 specifier|register
 expr|struct
@@ -465,6 +565,16 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|doign
+operator|&&
+name|isign
+argument_list|(
+literal|"status"
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 operator|(
