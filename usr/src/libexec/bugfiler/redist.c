@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)redist.c	5.6 (Berkeley) %G%"
+literal|"@(#)redist.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -292,7 +292,10 @@ name|TO_TAG
 index|]
 operator|.
 name|line
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|mailhead
 index|[
 name|APPAR_TO_TAG
@@ -319,6 +322,17 @@ literal|':'
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|pf
+argument_list|,
+literal|"To: %s\n"
+argument_list|,
+name|BUGS_ID
+argument_list|)
+expr_stmt|;
+block|}
 name|fputs
 argument_list|(
 literal|"Resent-To: "
