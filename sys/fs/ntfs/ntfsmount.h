@@ -21,6 +21,13 @@ name|NTFS_MFLAG_ALLNAMES
 value|0x00000002
 end_define
 
+begin_define
+define|#
+directive|define
+name|NTFSMNT_U2WTABLE
+value|0x00000004
+end_define
+
 begin_struct
 struct|struct
 name|ntfs_args
@@ -51,6 +58,13 @@ name|u_long
 name|flag
 decl_stmt|;
 comment|/* additional flags */
+name|u_int16_t
+name|u2w
+index|[
+literal|256
+index|]
+decl_stmt|;
+comment|/* Unix to Wchar */
 block|}
 struct|;
 end_struct

@@ -976,6 +976,17 @@ decl_stmt|;
 comment|/* export information */
 endif|#
 directive|endif
+name|wchar
+modifier|*
+name|ntm_82u
+decl_stmt|;
+comment|/* 8bit to Unicode */
+name|char
+modifier|*
+modifier|*
+name|ntm_u28
+decl_stmt|;
+comment|/* Unicode to 8 bit */
 block|}
 struct|;
 end_struct
