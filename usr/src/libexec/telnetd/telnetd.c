@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.7 82/10/06"
+literal|"@(#)telnetd.c	4.8 82/10/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -829,7 +829,6 @@ operator|&=
 operator|~
 name|ECHO
 expr_stmt|;
-comment|/* not until remote says to */
 name|ioctl
 argument_list|(
 name|p
@@ -1000,6 +999,19 @@ name|SIGCHLD
 argument_list|,
 name|cleanup
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Request to do remote echo. 	 */
+name|dooption
+argument_list|(
+name|TELOPT_ECHO
+argument_list|)
+expr_stmt|;
+name|myopts
+index|[
+name|TELOPT_ECHO
+index|]
+operator|=
+literal|1
 expr_stmt|;
 for|for
 control|(
@@ -2471,7 +2483,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|strncpy(a, b, sizeof(a))
+value|strncpy(a, b, sizeof (a))
 end_define
 
 begin_define
@@ -2483,7 +2495,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|strncmp(a, b, sizeof(a))
+value|strncmp(a, b, sizeof (a))
 end_define
 
 begin_macro
