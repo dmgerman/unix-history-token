@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -79,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lockf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/limits.h>
 end_include
 
 begin_include
