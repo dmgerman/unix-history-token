@@ -2751,11 +2751,12 @@ name|ticks
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"mb_alloc for mbuf type %d failed.\n"
+literal|"All mbufs exhausted, please see tuning(7).\n"
 argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+comment|/* XXX: Actually could be clusters, but it gets the point across. */
 block|}
 block|}
 block|}
