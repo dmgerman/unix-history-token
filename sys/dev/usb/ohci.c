@@ -5653,12 +5653,13 @@ name|done
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Reverse the done list. */
-for|for
-control|(
+comment|/* Reverse the done list and store the reversed list in sdone */
 name|sdone
 operator|=
-literal|0
+name|NULL
+expr_stmt|;
+for|for
+control|(
 init|;
 name|done
 condition|;
@@ -5681,8 +5682,51 @@ argument_list|(
 name|sc
 argument_list|,
 name|done
+operator|&
+name|LE
+argument_list|(
+name|OHCI_TAILMASK
+argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|std
+operator|==
+name|NULL
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|OHCI_DEBUG
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"%s: Invalid done queue 0x%08x"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|)
+operator|,
+name|done
+operator|)
+argument_list|)
+expr_stmt|;
+name|ohci_dumpregs
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* XXX Should we compare the list of active TDs with 			 * the list of TDs queued at EDs to handle the ones that 			 * are not listed on any of the ED queues and therefore 			 * must be finished? 			 */
+return|return;
+block|}
 name|std
 operator|->
 name|dnext
@@ -8067,16 +8111,30 @@ operator|(
 name|std
 operator|)
 return|;
-name|panic
+name|DPRINTF
 argument_list|(
-literal|"ohci_hash_find_td: addr 0x%08lx not found\n"
-argument_list|,
+operator|(
+literal|"%s: ohci_hash_find_td: addr 0x%08lx not found\n"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|)
+operator|,
 operator|(
 name|u_long
 operator|)
 name|a
+operator|)
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 end_function
 
