@@ -377,7 +377,7 @@ name|ifrnit
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 operator|&
 name|ifrnit
