@@ -955,7 +955,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Read a single argument string from a command string.  This understands  * $variables, "double quotes", 'single quotes', and backslash escapes  * for \\, \$, \n, \e, \t, and \" (the latter only inside double quotes).  A  * string may be delimited by double quotes or spaces, not both (duh).  It  * may be worthwhile to add another quotation style in which arithmetic  * expressions are expanded.  Currently an arithmetic expression is expanded  * iff it is the only component of the string.  *  * Returns a pointer to the beginning of the string or NULL if it was unable to  * read a string.  The line is modified to point somewhere between the end of  * the command argument just read-in and the beginning of the next command  * argument (if any).  The returned pointer will be free()'d by calling  * getstr_free().  */
+comment|/*  * Read a single argument string from a command string.  This understands  * $variables, "double quotes", 'single quotes', and backslash escapes  * for \\, \$, \n, \e, \t, and \".  A string may be delimited by double  * quotes or spaces, not both (duh).  It may be worthwhile to add  * another quotation style in which arithmetic expressions are expanded.  * Currently an arithmetic expression is expanded iff it is the only  * component of the string.  *  * Returns a pointer to the beginning of the string or NULL if it was unable to  * read a string.  The line is modified to point somewhere between the end of  * the command argument just read-in and the beginning of the next command  * argument (if any).  The returned pointer will be free()'d by calling  * getstr_free().  */
 end_comment
 
 begin_function
@@ -1328,9 +1328,6 @@ case|case
 literal|'\''
 case|:
 case|case
-literal|'t'
-case|:
-case|case
 literal|' '
 case|:
 case|case
@@ -1359,6 +1356,21 @@ expr_stmt|;
 name|c
 operator|=
 name|hack
+expr_stmt|;
+operator|(
+operator|*
+name|line
+operator|)
+operator|+=
+literal|2
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|c
+operator|=
+literal|"\t"
 expr_stmt|;
 operator|(
 operator|*
