@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* logwtmp.c: Put an entry in the wtmp file.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.31. Move wtmp log functions here, to 	     improve portability. Added DISABLE_WTMP. 	Modified by cmetz for OPIE 2.22. Call gettimeofday() properly. 	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al.              Ifdef around some headers. Added file close hook. 	Modified at NRL for OPIE 2.1. Set process type for HPUX. 	Modified at NRL for OPIE 2.0. 	Originally from BSD. */
+comment|/* logwtmp.c: Put an entry in the wtmp file.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.32. Don't leave line=NULL, skip 		past /dev/ in line. Fill in ut_host on systems with UTMPX and 		ut_host. 	Modified by cmetz for OPIE 2.31. Move wtmp log functions here, to 		improve portability. Added DISABLE_WTMP. 	Modified by cmetz for OPIE 2.22. Call gettimeofday() properly. 	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al.         	Ifdef around some headers. Added file close hook. 	Modified at NRL for OPIE 2.1. Set process type for HPUX. 	Modified at NRL for OPIE 2.0. 	Originally from BSD. */
 end_comment
 
 begin_comment
@@ -381,7 +381,28 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DOUTMPX&& defined(_PATH_WTMPX) */
+name|line
+operator|=
+literal|""
+expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|line
+argument_list|,
+literal|"/dev/"
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+name|line
+operator|+=
+literal|5
+expr_stmt|;
 if|if
 condition|(
 name|fd
@@ -483,8 +504,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-operator|!
-name|DOUTMPX
+name|HAVE_UT_HOST
 name|strncpy
 argument_list|(
 name|ut
@@ -503,7 +523,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !DOUTMPX */
+comment|/* HAVE_UT_HOST */
 name|time
 argument_list|(
 operator|&

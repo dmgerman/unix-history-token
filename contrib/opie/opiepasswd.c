@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opiepasswd.c: Add/change an OTP password in the key database.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.3. Got of some variables and made some 		local to where they're used. Split out the finishing code. Use 		opielookup() instead of opiechallenge() to find user. Three 		strikes on prompts. Use opiepasswd()'s new calling 		convention. Changed OPIE_PASS_{MAX,MIN} to 		OPIE_SECRET_{MAX,MIN}. Handle automatic reinits happenning 		below us. Got rid of unneeded headers. Use new opieatob8() 		return value convention. Added -f flag. Added SHA support. 	Modified by cmetz for OPIE 2.22. Finally got rid of the lock 	        filename kluge by implementing refcounts for locks. 		Use opiepasswd() to update key file. Error if we can't 		write to the key file. Check for minimum seed length.         Modified at NRL for OPIE 2.2. Changed opiestrip_crlf to                 opiestripcrlf. Check opiereadpass() return value.                 Minor optimization. Change calls to opiereadpass() to                 use echo arg. Use opiereadpass() where we can.                 Make everything static. Ifdef around some headers.                 Changed use of gethostname() to uname(). Got rid of                 the need for buf[]. Properly check return value of                 opieatob8. Check seed length. Always generate proper-                 length seeds. 	Modified at NRL for OPIE 2.1. Minor autoconf changes.         Modified heavily at NRL for OPIE 2.0. 	Written at Bellcore for the S/Key Version 1 software distribution 		(skeyinit.c). */
+comment|/* opiepasswd.c: Add/change an OTP password in the key database.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.32. Use OPIE_SEED_MAX instead of 		hard coding the length. Unlock user on failed lookup. 	Modified by cmetz for OPIE 2.3. Got of some variables and made some 		local to where they're used. Split out the finishing code. Use 		opielookup() instead of opiechallenge() to find user. Three 		strikes on prompts. Use opiepasswd()'s new calling 		convention. Changed OPIE_PASS_{MAX,MIN} to 		OPIE_SECRET_{MAX,MIN}. Handle automatic reinits happenning 		below us. Got rid of unneeded headers. Use new opieatob8() 		return value convention. Added -f flag. Added SHA support. 	Modified by cmetz for OPIE 2.22. Finally got rid of the lock 	        filename kluge by implementing refcounts for locks. 		Use opiepasswd() to update key file. Error if we can't 		write to the key file. Check for minimum seed length.         Modified at NRL for OPIE 2.2. Changed opiestrip_crlf to                 opiestripcrlf. Check opiereadpass() return value.                 Minor optimization. Change calls to opiereadpass() to                 use echo arg. Use opiereadpass() where we can.                 Make everything static. Ifdef around some headers.                 Changed use of gethostname() to uname(). Got rid of                 the need for buf[]. Properly check return value of                 opieatob8. Check seed length. Always generate proper-                 length seeds. 	Modified at NRL for OPIE 2.1. Minor autoconf changes.         Modified heavily at NRL for OPIE 2.0. 	Written at Bellcore for the S/Key Version 1 software distribution 		(skeyinit.c). */
 end_comment
 
 begin_include
@@ -448,7 +448,9 @@ decl_stmt|;
 name|char
 name|seed
 index|[
-literal|18
+name|OPIE_SEED_MAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -530,7 +532,7 @@ directive|if
 name|INSECURE_OVERRIDE
 name|force
 operator|=
-literal|1
+name|OPIEPASSWD_FORCE
 expr_stmt|;
 else|#
 directive|else
@@ -814,9 +816,9 @@ argument_list|,
 literal|"Error: Can't update key database.\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|finish
 argument_list|(
-literal|1
+name|NULL
 argument_list|)
 expr_stmt|;
 default|default:
@@ -827,9 +829,9 @@ argument_list|,
 literal|"Error reading key database\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|finish
 argument_list|(
-literal|1
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1465,7 +1467,7 @@ argument_list|(
 operator|&
 name|opie
 argument_list|,
-literal|0
+name|force
 argument_list|,
 name|pp
 operator|->
@@ -1559,6 +1561,9 @@ if|if
 condition|(
 name|opieinsecure
 argument_list|()
+operator|&&
+operator|!
+name|force
 condition|)
 block|{
 name|fprintf
@@ -1996,6 +2001,8 @@ operator|&
 name|opie
 argument_list|,
 literal|1
+operator||
+name|force
 argument_list|,
 name|pp
 operator|->
