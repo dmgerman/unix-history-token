@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: log-client.c,v 1.11 2000/09/07 20:27:51 deraadt Exp $"
+literal|"$OpenBSD: log-client.c,v 1.12 2000/09/12 20:53:10 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -81,7 +81,13 @@ case|case
 name|SYSLOG_LEVEL_VERBOSE
 case|:
 case|case
-name|SYSLOG_LEVEL_DEBUG
+name|SYSLOG_LEVEL_DEBUG1
+case|:
+case|case
+name|SYSLOG_LEVEL_DEBUG2
+case|:
+case|case
+name|SYSLOG_LEVEL_DEBUG3
 case|:
 name|log_level
 operator|=
@@ -134,8 +140,8 @@ return|return;
 if|if
 condition|(
 name|level
-operator|==
-name|SYSLOG_LEVEL_DEBUG
+operator|>=
+name|SYSLOG_LEVEL_DEBUG1
 condition|)
 name|fprintf
 argument_list|(

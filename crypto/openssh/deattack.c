@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: deattack.c,v 1.9 2000/09/07 20:27:51 deraadt Exp $	*/
+comment|/*	$OpenBSD: deattack.c,v 1.10 2000/10/31 13:18:53 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -360,7 +360,7 @@ operator|)
 name|NULL
 decl_stmt|;
 specifier|static
-name|u_int16_t
+name|u_int32_t
 name|n
 init|=
 name|HASH_MINSIZE

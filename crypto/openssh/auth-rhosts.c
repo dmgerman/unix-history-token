@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-rhosts.c,v 1.15 2000/09/07 20:27:49 deraadt Exp $"
+literal|"$OpenBSD: auth-rhosts.c,v 1.16 2000/10/03 18:03:03 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -579,6 +579,16 @@ name|unsigned
 name|int
 name|rhosts_file_index
 decl_stmt|;
+comment|/* no user given */
+if|if
+condition|(
+name|pw
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* Switch to the user's uid. */
 name|temporarily_use_uid
 argument_list|(

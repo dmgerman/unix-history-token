@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: clientloop.c,v 1.34 2000/09/07 20:40:30 markus Exp $"
+literal|"$OpenBSD: clientloop.c,v 1.39 2000/10/27 07:48:22 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -82,6 +82,10 @@ include|#
 directive|include
 file|"bufaux.h"
 end_include
+
+begin_comment
+comment|/* import options */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -1067,7 +1071,7 @@ operator|<
 literal|0
 condition|)
 return|return;
-name|debug
+name|debug2
 argument_list|(
 literal|"client_check_window_change: changed"
 argument_list|)
@@ -1177,7 +1181,6 @@ modifier|*
 name|writeset
 parameter_list|)
 block|{
-comment|/*debug("client_wait_until_can_do_something"); */
 comment|/* Initialize select masks. */
 name|FD_ZERO
 argument_list|(
@@ -1665,7 +1668,6 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*debug("read connection_in len %d", len); XXX */
 if|if
 condition|(
 name|len
@@ -2642,6 +2644,8 @@ name|DISPATCH_NONBLOCK
 argument_list|,
 operator|&
 name|quit_pending
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2923,7 +2927,7 @@ name|channel_still_open
 argument_list|()
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"!channel_still_open."
 argument_list|)
@@ -3315,6 +3319,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|unsigned
@@ -3382,6 +3390,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|unsigned
@@ -3449,6 +3461,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|packet_integrity_check
@@ -3499,6 +3515,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|Channel
@@ -3603,7 +3623,7 @@ operator|&
 name|SSH_BUG_X11FWD
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"buggy server: x11 request w/o originator_port"
 argument_list|)
@@ -3668,6 +3688,8 @@ name|xstrdup
 argument_list|(
 literal|"x11"
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|c
@@ -3974,7 +3996,8 @@ condition|?
 operator|&
 name|auth_input_open_request
 else|:
-name|NULL
+operator|&
+name|deny_input_open
 argument_list|)
 expr_stmt|;
 name|dispatch_set
@@ -3988,7 +4011,8 @@ condition|?
 operator|&
 name|x11_input_open
 else|:
-name|NULL
+operator|&
+name|deny_input_open
 argument_list|)
 expr_stmt|;
 block|}
@@ -4119,7 +4143,7 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"session_input_channel_req: channel %d: bad channel"
+literal|"client_input_channel_req: channel %d: bad channel"
 argument_list|,
 name|id
 argument_list|)
@@ -4225,7 +4249,7 @@ name|int
 name|id
 parameter_list|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"client_set_session_ident: id %d"
 argument_list|,

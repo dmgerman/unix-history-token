@@ -4,7 +4,7 @@ comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylon
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: authfd.h,v 1.11 2000/09/07 20:27:49 deraadt Exp $"); */
+comment|/* RCSID("$OpenBSD: authfd.h,v 1.13 2000/10/09 21:51:00 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -92,6 +92,10 @@ name|SSH_AGENTC_REMOVE_ALL_RSA_IDENTITIES
 value|9
 end_define
 
+begin_comment
+comment|/* private OpenSSH extensions for SSH2 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -139,6 +143,24 @@ define|#
 directive|define
 name|SSH2_AGENTC_REMOVE_ALL_IDENTITIES
 value|19
+end_define
+
+begin_comment
+comment|/* additional error code for ssh.com's ssh-agent2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_COM_AGENT2_FAILURE
+value|102
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_AGENT_OLD_SIGNATURE
+value|0x01
 end_define
 
 begin_typedef

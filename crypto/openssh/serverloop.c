@@ -9,6 +9,14 @@ directive|include
 file|"includes.h"
 end_include
 
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$OpenBSD: serverloop.c,v 1.34 2000/10/27 07:32:18 markus Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_include
 include|#
 directive|include
@@ -80,6 +88,13 @@ include|#
 directive|include
 file|"auth-options.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|ServerOptions
+name|options
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1495,6 +1510,8 @@ argument_list|(
 name|DISPATCH_NONBLOCK
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2481,6 +2498,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|char
@@ -2558,6 +2579,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 comment|/* 	 * Eof from the client.  The stdin descriptor to the 	 * program will be closed when all buffered data has 	 * drained. 	 */
@@ -2591,6 +2616,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|int
@@ -2722,6 +2751,11 @@ comment|/* XXX check permission */
 if|if
 condition|(
 name|no_port_forwarding_flag
+operator|||
+operator|!
+name|options
+operator|.
+name|allow_tcp_forwarding
 condition|)
 block|{
 name|xfree
@@ -2792,6 +2826,8 @@ name|xstrdup
 argument_list|(
 literal|"direct-tcpip"
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 return|;
 block|}
@@ -2806,6 +2842,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|Channel
@@ -2859,7 +2899,7 @@ argument_list|()
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"channel_input_open: ctype %s rchan %d win %d max %d"
+literal|"server_input_channel_open: ctype %s rchan %d win %d max %d"
 argument_list|,
 name|ctype
 argument_list|,
@@ -2918,6 +2958,8 @@ name|xstrdup
 argument_list|(
 literal|"server-session"
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
