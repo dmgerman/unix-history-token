@@ -184,7 +184,7 @@ block|,
 literal|0x0a2
 block|,
 block|{
-name|UQ_NO_XU
+name|UQ_AU_NO_XU
 block|}
 block|}
 block|,

@@ -61,13 +61,23 @@ value|0x0080
 comment|/* spurious mouse button up events */
 define|#
 directive|define
-name|UQ_NO_XU
+name|UQ_AU_NO_XU
 value|0x0100
 comment|/* audio device has broken extension unit */
 define|#
 directive|define
+name|UQ_AU_NO_FRAC
+value|0x0400
+comment|/* audio don't adjust for fractional samples */
+define|#
+directive|define
+name|UQ_AU_INP_ASYNC
+value|0x0800
+comment|/* input is async despite claim of adaptive */
+define|#
+directive|define
 name|UQ_ASSUME_CM_OVER_DATA
-value|0x0200
+value|0x1000
 comment|/* modem device breaks on cm over data */
 define|#
 directive|define
