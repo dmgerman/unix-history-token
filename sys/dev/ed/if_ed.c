@@ -9301,6 +9301,10 @@ decl_stmt|;
 if|if
 condition|(
 name|sc
+operator|==
+name|NULL
+operator|||
+name|sc
 operator|->
 name|gone
 condition|)
