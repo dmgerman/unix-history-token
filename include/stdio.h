@@ -27,6 +27,13 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_typedef
+typedef|typedef
+name|__off_t
+name|fpos_t
+typedef|;
+end_typedef
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -51,6 +58,47 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+operator|||
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+operator|||
+name|__XSI_VISIBLE
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_VA_LIST_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__va_list
+name|va_list
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_VA_LIST_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -68,13 +116,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_typedef
-typedef|typedef
-name|__off_t
-name|fpos_t
-typedef|;
-end_typedef
 
 begin_define
 define|#
@@ -524,7 +565,7 @@ value|__stderrp
 endif|#
 directive|endif
 name|__BEGIN_DECLS
-comment|/*  * Functions defined in ANSI C standard.  */
+comment|/*  * Functions defined in ANSI C standard.  *  * XXX fgetpos(), fgets(), fopen(), fputs(), fread(), freopen(), fscanf(),  * fwrite(), scanf(), sscanf(), vscanf(), and vsscanf() are missing the  * restrict type-qualifier.  */
 name|void
 name|clearerr
 parameter_list|(
@@ -1108,6 +1149,28 @@ end_empty_stmt
 
 begin_function_decl
 name|int
+name|vscanf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|__va_list
+parameter_list|)
+function_decl|__scanflike
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|0
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|int
 name|vsnprintf
 parameter_list|(
 name|char
@@ -1135,6 +1198,43 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_function_decl
+name|int
+name|vsscanf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|__va_list
+parameter_list|)
+function_decl|__scanflike
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|0
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/*  * This is a #define because the function is used internally and  * (unlike vfscanf) the name __vfscanf is guaranteed not to collide  * with a user function when _ANSI_SOURCE or _POSIX_SOURCE is defined.  *  * XXX missing a backing function (weak alias?) for this.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|vfscanf
+value|__vfscanf
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1147,7 +1247,11 @@ end_comment
 begin_if
 if|#
 directive|if
+name|__BSD_VISIBLE
+operator|||
 name|__POSIX_VISIBLE
+operator|<=
+literal|199506
 end_if
 
 begin_comment
@@ -1160,6 +1264,21 @@ directive|define
 name|L_cuserid
 value|17
 end_define
+
+begin_comment
+comment|/* legacy */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -1630,54 +1749,6 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
-begin_function_decl
-name|int
-name|vscanf
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|__va_list
-parameter_list|)
-function_decl|__scanflike
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|0
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-name|int
-name|vsscanf
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|__va_list
-parameter_list|)
-function_decl|__scanflike
-parameter_list|(
-function_decl|2
-operator|,
-function_decl|0
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|/*  * The system error table contains messages for the first sys_nerr  * positive errno values.  Use strerror() or strerror_r() from<string.h>  * instead.  */
 end_comment
@@ -1700,17 +1771,6 @@ name|sys_errlist
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * This is a #define because the function is used internally and  * (unlike vfscanf) the name __vfscanf is guaranteed not to collide  * with a user function when _ANSI_SOURCE or _POSIX_SOURCE is defined.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|vfscanf
-value|__vfscanf
-end_define
 
 begin_comment
 comment|/*  * Stdio function-access interface.  */
@@ -2160,6 +2220,12 @@ parameter_list|)
 value|((p)->_file)
 end_define
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_comment
 comment|/*  * See ISO/IEC 9945-1 ANSI/IEEE Std 1003.1 Second Edition 1996-07-12  * B.8.2.7 for the rationale behind the *_unlocked() macros.  */
 end_comment
@@ -2204,6 +2270,19 @@ parameter_list|)
 value|__sfileno(p)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|199506
+end_if
+
 begin_define
 define|#
 directive|define
@@ -2243,6 +2322,11 @@ name|x
 parameter_list|)
 value|putc_unlocked(x, stdout)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|__END_DECLS
