@@ -98,15 +98,21 @@ name|banner
 index|[]
 init|=
 block|{
+literal|"#include<stdlib.h>"
+block|,
 literal|"#ifndef lint"
+block|,
+literal|"#ifdef __unused"
+block|,
+literal|"__unused"
+block|,
+literal|"#endif"
 block|,
 literal|"static char const "
 block|,
 literal|"yyrcsid[] = \"$FreeBSD$\";"
 block|,
 literal|"#endif"
-block|,
-literal|"#include<stdlib.h>"
 block|,
 literal|"#define YYBYACC 1"
 block|,
