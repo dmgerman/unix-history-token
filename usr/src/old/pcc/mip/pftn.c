@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.2 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3598,7 +3598,9 @@ argument|); 		if( n==
 literal|0
 argument|) werror(
 literal|"empty array declaration"
-argument|); 		dimtab[d] = n; 		}  	else if( t == STRTY || t == UNIONTY ){
+argument|); 		dimtab[d] = n; 		if( d1==
+literal|0
+argument|) FIXDEF(&stab[pstk->in_id]); 		}  	else if( t == STRTY || t == UNIONTY ){
 comment|/* clearly not fields either */
 argument|inforce( tsize( t, d, s ) ); 		} 	else if( n>
 literal|1
