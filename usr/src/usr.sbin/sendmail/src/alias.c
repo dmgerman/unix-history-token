@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.49 (Berkeley) %G%"
+literal|"@(#)alias.c	6.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -687,7 +687,7 @@ condition|(
 operator|*
 name|p
 operator|==
-name|NULL
+literal|'\0'
 condition|)
 break|break;
 name|spec

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.57 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.58 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3349,7 +3349,7 @@ condition|(
 operator|*
 name|ap
 operator|!=
-name|NULL
+literal|'\0'
 condition|)
 block|{
 if|if

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	6.17 (Berkeley) %G%"
+literal|"@(#)collect.c	6.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1603,7 +1603,7 @@ condition|(
 operator|*
 name|p
 operator|!=
-name|NULL
+literal|'\0'
 condition|)
 block|{
 name|char
