@@ -9316,7 +9316,7 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|name
+name|hostname
 decl_stmt|;
 specifier|const
 name|struct
@@ -9337,7 +9337,7 @@ name|q
 decl_stmt|,
 name|q2
 decl_stmt|;
-name|name
+name|hostname
 operator|=
 name|va_arg
 argument_list|(
@@ -9473,7 +9473,7 @@ name|q
 operator|.
 name|name
 operator|=
-name|name
+name|hostname
 expr_stmt|;
 name|q
 operator|.
@@ -9517,7 +9517,7 @@ name|q2
 operator|.
 name|name
 operator|=
-name|name
+name|hostname
 expr_stmt|;
 name|q2
 operator|.
@@ -9558,7 +9558,7 @@ name|q
 operator|.
 name|name
 operator|=
-name|name
+name|hostname
 expr_stmt|;
 name|q
 operator|.
@@ -9599,7 +9599,7 @@ name|q
 operator|.
 name|name
 operator|=
-name|name
+name|hostname
 expr_stmt|;
 name|q
 operator|.
@@ -9652,7 +9652,7 @@ if|if
 condition|(
 name|res_searchN
 argument_list|(
-name|name
+name|hostname
 argument_list|,
 operator|&
 name|q
