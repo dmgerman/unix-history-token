@@ -4318,6 +4318,13 @@ argument_list|,
 name|edit_abort
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|edit_abort
+argument_list|)
+expr_stmt|;
 name|d_char
 operator|=
 name|malloc
