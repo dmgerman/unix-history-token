@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.68.1.1		%G%"
+literal|"@(#)sendmail.h	3.69		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -598,6 +598,17 @@ end_define
 
 begin_comment
 comment|/* it costs to use this mailer.... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FULLSMTP
+value|000400000L
+end_define
+
+begin_comment
+comment|/* must run full SMTP, inc. limits */
 end_comment
 
 begin_define
