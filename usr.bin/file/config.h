@@ -227,6 +227,17 @@ value|8
 end_define
 
 begin_comment
+comment|/* Define if you have the getopt_long function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETOPT_LONG
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the mkstemp function.  */
 end_comment
 
@@ -285,9 +296,21 @@ begin_comment
 comment|/* Define if you have the<getopt.h> header file.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAVE_GETOPT_H
+end_define
+
 begin_comment
-comment|/* #undef HAVE_GETOPT_H */
+comment|/* Define if you have the<inttypes.h> header file.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INTTYPES_H
+end_define
 
 begin_comment
 comment|/* Define if you have the<locale.h> header file.  */
@@ -398,7 +421,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"3.39"
+value|"3.40"
 end_define
 
 begin_comment
