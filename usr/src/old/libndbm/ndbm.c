@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ndbm.c	5.1 (Berkeley) %G%"
+literal|"@(#)ndbm.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,12 @@ directive|define
 name|BYTESIZ
 value|8
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|setbit
+end_undef
 
 begin_function_decl
 specifier|static
