@@ -112,7 +112,7 @@ begin_define
 define|#
 directive|define
 name|PKTIME
-value|25
+value|5
 end_define
 
 begin_define
@@ -126,7 +126,7 @@ begin_define
 define|#
 directive|define
 name|NTIMEOUT
-value|10
+value|30
 end_define
 
 begin_decl_stmt
@@ -538,7 +538,7 @@ begin_define
 define|#
 directive|define
 name|GETRIES
-value|5
+value|10
 end_define
 
 begin_comment
@@ -1834,7 +1834,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	pkcget(fn, b, n)	get n characters from input  *	char *b;		- buffer for characters  *	int fn;			- file descriptor  *	int n;			- requested number of characters  *  *	return codes:  *		n - number of characters returned  *		0 - end of file  */
+comment|/*  *	get n characters from input  *  *	return codes:  *		n - number of characters returned  *		0 - end of file  */
 end_comment
 
 begin_decl_stmt
@@ -1879,16 +1879,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|register
-name|int
-name|n
+name|char
+modifier|*
+name|b
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|register
-name|char
-modifier|*
-name|b
+name|int
+name|n
 decl_stmt|;
 end_decl_stmt
 
