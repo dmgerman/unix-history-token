@@ -285,6 +285,16 @@ comment|/* byte count split */
 if|if
 condition|(
 name|numlines
+operator|||
+operator|(
+operator|(
+name|argc
+operator|-
+literal|1
+operator|)
+operator|<=
+name|cnt
+operator|)
 condition|)
 name|usage
 argument_list|()
