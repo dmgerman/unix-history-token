@@ -2288,7 +2288,7 @@ operator|>
 literal|0
 condition|)
 break|break;
-comment|/* 			 * Unlock the pipe buffer for our remaining processing.  We 			 * will either break out with an error or we will sleep and 			 * relock to loop. 			 */
+comment|/* 			 * Unlock the pipe buffer for our remaining processing.  			 * We will either break out with an error or we will 			 * sleep and relock to loop. 			 */
 name|pipeunlock
 argument_list|(
 name|rpipe
@@ -4325,7 +4325,8 @@ name|size
 condition|)
 name|panic
 argument_list|(
-literal|"Expected pipe buffer wraparound disappeared"
+literal|"Expected pipe buffer "
+literal|"wraparound disappeared"
 argument_list|)
 expr_stmt|;
 name|PIPE_UNLOCK
@@ -4410,7 +4411,8 @@ name|size
 condition|)
 name|panic
 argument_list|(
-literal|"Expected wraparound bad"
+literal|"Expected "
+literal|"wraparound bad"
 argument_list|)
 expr_stmt|;
 name|wpipe
