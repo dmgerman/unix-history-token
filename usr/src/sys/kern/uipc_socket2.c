@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	6.7	84/11/19	*/
+comment|/*	uipc_socket2.c	6.7	84/11/21	*/
 end_comment
 
 begin_include
@@ -1333,7 +1333,7 @@ name|sb
 operator|->
 name|sb_mbmax
 operator|=
-name|MAX
+name|MIN
 argument_list|(
 name|cc
 operator|*
@@ -2552,6 +2552,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|sbfree
+argument_list|(
+name|sb
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 name|MFREE
 argument_list|(
 name|m
