@@ -11289,7 +11289,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Call back function from struct bio back up to struct buf.   * The corresponding initialization lives in sys/conf.h:DEV_STRATEGY().   */
+comment|/*   * Call back function from struct bio back up to struct buf.   */
 end_comment
 
 begin_function
