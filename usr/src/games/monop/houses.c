@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)houses.c	5.1 (Berkeley) %G%"
+literal|"@(#)houses.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -493,6 +493,9 @@ literal|5
 expr_stmt|;
 continue|continue;
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|cur_prop
@@ -1149,6 +1152,9 @@ name|houses
 operator|<
 literal|5
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|cur_prop
@@ -1170,6 +1176,9 @@ name|houses
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|cur_prop
