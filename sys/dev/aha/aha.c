@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic register and struct definitions for the Adaptech 154x/164x  * SCSI host adapters. Product specific probe and attach routines can  * be found in:  *<fill in list here> XXX  *  * Derived from bt.c written by:  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aha.c,v 1.2 1998/09/16 03:27:12 gibbs Exp $  */
+comment|/*  * Generic register and struct definitions for the Adaptech 154x/164x  * SCSI host adapters. Product specific probe and attach routines can  * be found in:  *      aha 1540/1542B/1542C/1542CF/1542CP	aha_isa.c  *  * Copyright (c) 1998 M. Warner Losh.  * All Rights Reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Derived from bt.c written by:  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aha.c,v 1.3 1998/09/17 00:08:29 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -132,6 +132,30 @@ parameter_list|,
 name|b
 parameter_list|)
 value|((a)< (b) ? (a) : (b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRVERBOSE
+parameter_list|(
+name|x
+parameter_list|)
+value|if (bootverbose) printf x
+end_define
+
+begin_comment
+comment|/* Macro to determine that a rev is potentially a new valid one  * so that the driver doesn't keep breaking on new revs as it  * did for the CF and CP.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROBABLY_NEW_BOARD
+parameter_list|(
+name|REV
+parameter_list|)
+value|(REV> 0x43&& REV< 0x56)
 end_define
 
 begin_comment
@@ -1280,9 +1304,21 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: Almost: ESETUP failed\n"
+argument_list|,
+name|aha_name
+argument_list|(
+name|aha
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
+block|}
 return|return
 operator|(
 literal|0
@@ -1320,6 +1356,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|struct
+name|aha_extbios
+name|extbios
+decl_stmt|;
 comment|/* First record the firmware version */
 name|error
 operator|=
@@ -1356,19 +1396,25 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"%s: aha_fetch_adapter_info - Failed Get Board Info\n"
+literal|"%s: INQUIRE failed %x\n"
 argument_list|,
 name|aha_name
 argument_list|(
 name|aha
 argument_list|)
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -1543,11 +1589,114 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 	 * If we are a new type of 1542 board (anything newer than a 1542C) 	 * then disable the extended bios so that the 	 * mailbox interface is unlocked. 	 * This is also true for the 1542B Version 3.20. First Adaptec 	 * board that supports>1Gb drives. 	 * No need to check the extended bios flags as some of the 	 * extensions that cause us problems are not flagged in that byte. 	 */
+if|if
+condition|(
+name|PROBABLY_NEW_BOARD
+argument_list|(
+name|aha
+operator|->
+name|boardid
+argument_list|)
+operator|||
+operator|(
+name|aha
+operator|->
+name|boardid
+operator|==
+literal|0x41
+operator|&&
+name|board_id
+operator|.
+name|firmware_rev_major
+operator|==
+literal|0x31
+operator|&&
+name|board_id
+operator|.
+name|firmware_rev_minor
+operator|>=
+literal|0x34
+operator|)
+condition|)
+block|{
+name|error
+operator|=
+name|aha_cmd
+argument_list|(
+name|aha
+argument_list|,
+name|BOP_RETURN_EXT_BIOS_INFO
+argument_list|,
+name|NULL
+argument_list|,
+comment|/*paramlen*/
+literal|0
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+operator|&
+name|extbios
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|extbios
+argument_list|)
+argument_list|,
+name|DEFAULT_CMD_TIMEOUT
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|aha_cmd
+argument_list|(
+name|aha
+argument_list|,
+name|BOP_MBOX_IF_ENABLE
+argument_list|,
+operator|(
+name|u_int8_t
+operator|*
+operator|)
+operator|&
+name|extbios
+argument_list|,
+comment|/*paramlen*/
+literal|2
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|DEFAULT_CMD_TIMEOUT
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|aha
+operator|->
+name|boardid
+operator|<
+literal|0x41
+condition|)
+name|printf
+argument_list|(
+literal|"%s: Likely aha 1542A, which might not work properly\n"
+argument_list|,
+name|aha_name
+argument_list|(
+name|aha
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|aha
 operator|->
 name|max_sg
 operator|=
-literal|16
+literal|17
 expr_stmt|;
 name|aha
 operator|->
@@ -1567,14 +1716,13 @@ name|extended_trans
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX ???? XXX */
 name|aha
 operator|->
 name|max_ccbs
 operator|=
-literal|16
+literal|17
 expr_stmt|;
-comment|/* XXX ???? XXX */
+comment|/* Need 17 to do 64k I/O */
 comment|/* Determine Sync/Wide/Disc settings */
 name|length_param
 operator|=
