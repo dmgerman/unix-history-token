@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.7 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -842,8 +842,6 @@ sizeof|sizeof
 argument_list|(
 name|sin
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|>=
 literal|0
