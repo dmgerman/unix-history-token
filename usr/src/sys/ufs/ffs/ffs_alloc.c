@@ -9,7 +9,7 @@ name|char
 name|vers
 index|[]
 init|=
-literal|"@(#)ffs_alloc.c 1.5 %G%"
+literal|"@(#)ffs_alloc.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,7 @@ file|"../h/user.h"
 end_include
 
 begin_function_decl
+specifier|extern
 name|long
 name|hashalloc
 parameter_list|()
@@ -79,6 +80,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|long
 name|alloccg
 parameter_list|()
@@ -86,11 +88,32 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|long
 name|ialloccg
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inside
+index|[]
+decl_stmt|,
+name|around
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|fragtbl
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|struct
