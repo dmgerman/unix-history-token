@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strcasecmp.c	5.2 (Berkeley) %G%"
+literal|"@(#)strcasecmp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -634,7 +634,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|strcasencmp
+name|strncasecmp
 argument_list|(
 name|s1
 argument_list|,
