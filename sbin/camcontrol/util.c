@@ -368,6 +368,26 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"can't malloc memory for p\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|bzero
 argument_list|(
 name|p
