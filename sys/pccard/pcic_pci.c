@@ -201,6 +201,14 @@ literal|"TI PCI-1221 PCI-CardBus Bridge"
 operator|)
 return|;
 case|case
+name|PCI_DEVICE_ID_PCIC_TI1225
+case|:
+return|return
+operator|(
+literal|"TI PCI-1225 PCI-CardBus Bridge"
+operator|)
+return|;
+case|case
 name|PCI_DEVICE_ID_PCIC_TI1250
 case|:
 return|return
@@ -238,6 +246,14 @@ case|:
 return|return
 operator|(
 literal|"TI PCI-1420 PCI-CardBus Bridge"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_PCIC_TI1450
+case|:
+return|return
+operator|(
+literal|"TI PCI-1450 PCI-CardBus Bridge"
 operator|)
 return|;
 case|case

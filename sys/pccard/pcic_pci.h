@@ -87,6 +87,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_PCIC_TI1225
+value|0xac1c104cul
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_PCIC_TI1410
 value|0xac50104cul
 end_define
@@ -96,6 +103,13 @@ define|#
 directive|define
 name|PCI_DEVICE_ID_PCIC_TI1420
 value|0xac51104cul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_PCIC_TI1450
+value|0xac1b104cul
 end_define
 
 begin_define

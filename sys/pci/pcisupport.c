@@ -6634,6 +6634,14 @@ operator|)
 return|;
 comment|/* Texas Instruments -- vendor 0x104c */
 case|case
+literal|0xac1c104c
+case|:
+return|return
+operator|(
+literal|"Texas Instruments PCI1225 CardBus controller"
+operator|)
+return|;
+case|case
 literal|0xac50104c
 case|:
 return|return
@@ -6647,6 +6655,14 @@ case|:
 return|return
 operator|(
 literal|"Texas Instruments PCI1420 CardBus controller"
+operator|)
+return|;
+case|case
+literal|0xac1b104c
+case|:
+return|return
+operator|(
+literal|"Texas Instruments PCI1450 CardBus controller"
 operator|)
 return|;
 case|case
