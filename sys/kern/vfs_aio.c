@@ -9451,7 +9451,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* syscall - XXX undocumented */
+comment|/* syscall - list directed I/O (REALTIME) */
 end_comment
 
 begin_function
