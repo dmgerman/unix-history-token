@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_machdep.c	5.3	82/12/17	*/
+comment|/*	vm_machdep.c	5.4	83/05/10	*/
 end_comment
 
 begin_include
@@ -586,9 +586,6 @@ index|]
 operator|.
 name|m_dev
 argument_list|,
-operator|(
-name|daddr_t
-operator|)
 name|c
 operator|->
 name|c_blkno
