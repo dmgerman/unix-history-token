@@ -566,6 +566,9 @@ name|utmp
 name|utmp
 decl_stmt|;
 name|int
+name|rootok
+decl_stmt|;
+name|int
 name|ask
 decl_stmt|,
 name|ch
@@ -1099,6 +1102,13 @@ name|rootlogin
 operator|=
 literal|0
 expr_stmt|;
+name|rootok
+operator|=
+name|rootterm
+argument_list|(
+name|tty
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KERBEROS
@@ -1281,6 +1291,14 @@ operator|==
 literal|'\0'
 condition|)
 block|{
+if|if
+condition|(
+name|rootlogin
+operator|&&
+operator|!
+name|rootok
+condition|)
+block|{
 comment|/* pretend password okay */
 name|rval
 operator|=
@@ -1289,6 +1307,7 @@ expr_stmt|;
 goto|goto
 name|ttycheck
 goto|;
+block|}
 block|}
 block|}
 name|fflag
@@ -1501,6 +1520,14 @@ expr_stmt|;
 name|ttycheck
 label|:
 comment|/* 		 * If trying to log in as root without Kerberos, 		 * but with insecure terminal, refuse the login attempt. 		 */
+if|if
+condition|(
+name|pwd
+operator|&&
+operator|!
+name|rval
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|KERBEROS
@@ -1509,32 +1536,26 @@ condition|(
 name|authok
 operator|==
 literal|0
-condition|)
-endif|#
-directive|endif
-if|if
-condition|(
-name|pwd
-operator|&&
-operator|!
-name|rval
 operator|&&
 name|rootlogin
 operator|&&
 operator|!
-name|rootterm
-argument_list|(
-name|tty
-argument_list|)
+name|rootok
 condition|)
 block|{
-comment|/* 			 * Fall through to standard failure message 			 * and standard backoff behaviour 			 */
-if|#
-directive|if
-literal|0
-block|(void)fprintf(stderr, 			    "%s login refused on this terminal.\n", 			    pwd->pw_name);
+else|#
+directive|else
+if|if
+condition|(
+name|rootlogin
+operator|&&
+operator|!
+name|rootok
+condition|)
+block|{
 endif|#
 directive|endif
+comment|/* 				 * Fall through to standard failure message 				 * and standard backoff behaviour 				 */
 if|if
 condition|(
 name|hostname
@@ -1568,22 +1589,11 @@ argument_list|,
 name|tty
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|continue;
-endif|#
-directive|endif
 block|}
-elseif|else
-if|if
-condition|(
-name|pwd
-operator|&&
-operator|!
-name|rval
-condition|)
+else|else
+comment|/* valid password& authenticated */
 break|break;
+block|}
 operator|(
 name|void
 operator|)
@@ -1595,7 +1605,7 @@ expr_stmt|;
 name|failures
 operator|++
 expr_stmt|;
-comment|/* we allow 10 tries, but after 3 we start backing off */
+comment|/* 		 * we allow 10 tries, but after 3 we start backing off 		 */
 if|if
 condition|(
 operator|++
@@ -2067,11 +2077,24 @@ name|pw_shell
 operator|=
 name|_PATH_BSHELL
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|term
 operator|=
 name|getenv
 argument_list|(
 literal|"TERM"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|term
+operator|=
+name|strdup
+argument_list|(
+name|term
 argument_list|)
 expr_stmt|;
 comment|/* Destroy environment unless user has requested its preservation. */
@@ -2652,43 +2675,22 @@ name|pw_shell
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|KERBEROS
-end_ifdef
-
-begin_define
 define|#
 directive|define
 name|NBUFSIZ
 value|(UT_NAMESIZE + 1 + 5)
-end_define
-
-begin_comment
 comment|/* .root suffix */
-end_comment
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_define
 define|#
 directive|define
 name|NBUFSIZ
 value|(UT_NAMESIZE + 1)
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function
 name|void
 name|getloginname
 parameter_list|()
@@ -2815,9 +2817,6 @@ break|break;
 block|}
 block|}
 block|}
-end_function
-
-begin_function
 name|int
 name|rootterm
 parameter_list|(
@@ -2852,15 +2851,9 @@ name|TTY_SECURE
 operator|)
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 name|jmp_buf
 name|motdinterrupt
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 name|void
 name|motd
 parameter_list|()
@@ -2969,13 +2962,7 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* ARGSUSED */
-end_comment
-
-begin_function
 name|void
 name|sigint
 parameter_list|(
@@ -2993,13 +2980,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* ARGSUSED */
-end_comment
-
-begin_function
 name|void
 name|timedout
 parameter_list|(
@@ -3027,9 +3008,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|checknologin
 parameter_list|()
@@ -3105,9 +3083,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|void
 name|dolastlog
 parameter_list|(
@@ -3403,9 +3378,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|void
 name|badlogin
 parameter_list|(
@@ -3517,22 +3489,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_undef
 undef|#
 directive|undef
 name|UNKNOWN
-end_undef
-
-begin_define
 define|#
 directive|define
 name|UNKNOWN
 value|"su"
-end_define
-
-begin_function
 name|char
 modifier|*
 name|stypeof
@@ -3570,9 +3533,6 @@ name|UNKNOWN
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sleepexit
 parameter_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: index.c,v 1.38.2.4 1997/01/29 21:46:10 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: index.c,v 1.38.2.6 1997/03/25 02:45:42 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -122,12 +122,11 @@ init|=
 block|{
 literal|"Package Selection"
 block|,
-literal|"To mark a package or select a category, move to it and press SPACE.\n"
-literal|"To unmark a package, press SPACE again.  To go to a previous menu,\n"
-literal|"select the Cancel button.  To search for a package by name, press ESC.\n"
-literal|"To finally extract packages, you should Cancel all the way out of any\n"
-literal|"submenus and then this top menu.  NOTE:  The All category selection\n"
-literal|"creates a very large submenu. If you select it, please be patient."
+literal|"To mark a package, move to it and press SPACE.  If the package is\n"
+literal|"already marked, it will be unmarked or deleted (if installed).\n"
+literal|"To search for a package by name, press ESC.  To select a category,\n"
+literal|"press RETURN.  NOTE:  The All category selection creates a very large\n"
+literal|"submenu.  If you select it, please be patient while it comes up."
 block|,
 literal|"Package Targets"
 block|,
@@ -214,6 +213,10 @@ block|,
 literal|"japanese"
 block|,
 literal|"Ported software for the Japanese market."
+block|,
+literal|"korean"
+block|,
+literal|"Ported software for the Korean market."
 block|,
 literal|"lang"
 block|,
@@ -2378,12 +2381,85 @@ name|max
 operator|=
 literal|0
 expr_stmt|;
+name|use_helpline
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|use_helpfile
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|kp
 operator|=
 name|top
 operator|->
 name|kids
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hasPackages
+operator|&&
+name|plist
+condition|)
+block|{
+name|nitems
+operator|=
+name|item_add
+argument_list|(
+name|nitems
+argument_list|,
+literal|"OK"
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|curr
+argument_list|,
+operator|&
+name|max
+argument_list|)
+expr_stmt|;
+name|nitems
+operator|=
+name|item_add
+argument_list|(
+name|nitems
+argument_list|,
+literal|"Install"
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|curr
+argument_list|,
+operator|&
+name|max
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|kp
@@ -2399,7 +2475,43 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|IndexEntryPtr
+name|ie
+init|=
+name|kp
+operator|->
+name|data
+decl_stmt|;
 comment|/* Brutally adjust description to fit in menu */
+if|if
+condition|(
+name|kp
+operator|->
+name|type
+operator|==
+name|PACKAGE
+condition|)
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"[%s]"
+argument_list|,
+name|ie
+operator|->
+name|path
+condition|?
+name|ie
+operator|->
+name|path
+else|:
+literal|"External vendor"
+argument_list|)
+expr_stmt|;
+else|else
 name|SAFE_STRCPY
 argument_list|(
 name|buf
@@ -2545,7 +2657,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* It's a categories menu */
 name|rval
 operator|=
 name|dialog_menu
@@ -2576,8 +2687,20 @@ operator|-
 name|n
 argument_list|,
 name|nitems
+operator|+
+operator|(
+name|plist
+condition|?
+literal|2
+else|:
+literal|0
+operator|)
 argument_list|,
-name|NULL
+operator|(
+name|char
+operator|*
+operator|)
+name|plist
 argument_list|,
 name|pos
 argument_list|,
