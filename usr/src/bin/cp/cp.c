@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.30 (Berkeley) %G%"
+literal|"@(#)cp.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -831,22 +831,25 @@ condition|)
 block|{
 name|err
 argument_list|(
-literal|"%s:%s"
+literal|"%s: %s"
 argument_list|,
 name|curr
 operator|->
 name|fts_path
 argument_list|,
+name|strerror
+argument_list|(
 name|curr
 operator|->
 name|fts_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit_val
 operator|=
 literal|1
 expr_stmt|;
-return|return;
+continue|continue;
 block|}
 if|if
 condition|(
