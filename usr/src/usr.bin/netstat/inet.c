@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	4.17 (Berkeley) 84/07/04"
+literal|"@(#)inet.c	4.18 (Berkeley) 84/10/31"
 decl_stmt|;
 end_decl_stmt
 
@@ -381,6 +381,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+name|Aflag
+condition|?
+literal|"%-5.5s %-6.6s %-6.6s  %-18.18s %-18.18s %s\n"
+else|:
 literal|"%-5.5s %-6.6s %-6.6s  %-22.22s %-22.22s %s\n"
 argument_list|,
 literal|"Proto"
@@ -1528,11 +1532,20 @@ modifier|*
 name|index
 argument_list|()
 decl_stmt|;
+name|int
+name|width
+decl_stmt|;
 name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"%.16s."
+literal|"%.*s."
+argument_list|,
+name|Aflag
+condition|?
+literal|10
+else|:
+literal|16
 argument_list|,
 name|inetname
 argument_list|(
@@ -1605,9 +1618,21 @@ name|port
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|width
+operator|=
+name|Aflag
+condition|?
+literal|18
+else|:
+literal|22
+expr_stmt|;
 name|printf
 argument_list|(
-literal|" %-22.22s"
+literal|" %-*.*s"
+argument_list|,
+name|width
+argument_list|,
+name|width
 argument_list|,
 name|line
 argument_list|)
