@@ -1517,7 +1517,7 @@ name|LOG_INFO
 argument_list|,
 literal|0
 argument_list|,
-literal|"accepting listener done message: src %s, dst% s, grp %s"
+literal|"accepting listener done message: src %s, dst %s, grp %s"
 argument_list|,
 name|inet6_fmt
 argument_list|(

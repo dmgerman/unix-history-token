@@ -2951,7 +2951,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|0
 argument_list|,
-literal|"% restart"
+literal|"%s restart"
 argument_list|,
 name|versionstring
 argument_list|)
