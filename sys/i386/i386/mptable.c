@@ -266,6 +266,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cputypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/globaldata.h>
 end_include
 
@@ -8936,6 +8942,12 @@ operator||
 name|CR0_NE
 operator||
 name|CR0_TS
+argument_list|)
+expr_stmt|;
+comment|/* set up FPU state on the AP */
+name|npxinit
+argument_list|(
+name|__INITIAL_NPXCW__
 argument_list|)
 expr_stmt|;
 comment|/* A quick check from sanity claus */
