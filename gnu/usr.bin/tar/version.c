@@ -4,7 +4,7 @@ name|char
 name|version_string
 index|[]
 init|=
-literal|"GNU tar version 1.11.2"
+literal|"GNU tar version 1.11.3"
 decl_stmt|;
 end_decl_stmt
 

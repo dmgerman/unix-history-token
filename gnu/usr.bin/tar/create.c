@@ -563,7 +563,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* if(!f_dironly) { */
+if|if
+condition|(
+operator|!
+name|f_dironly
+condition|)
+block|{
 name|blank_name_list
 argument_list|()
 expr_stmt|;
@@ -665,7 +670,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* } */
+block|}
 name|free
 argument_list|(
 name|buf
@@ -2967,13 +2972,12 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Now output all the files in the directory */
-if|#
-directive|if
-literal|0
-block|if (f_dironly) 	return;
+if|if
+condition|(
+name|f_dironly
+condition|)
+return|return;
 comment|/* Unless the cmdline said not to */
-endif|#
-directive|endif
 comment|/* 		 * See if we are crossing from one file system to another, 		 * and avoid doing so if the user only wants to dump one file system. 		 */
 if|if
 condition|(
