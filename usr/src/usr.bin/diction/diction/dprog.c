@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dprog.c	4.3	(Berkeley)	89/05/11"
+literal|"@(#)dprog.c	4.4	(Berkeley)	91/03/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -2103,6 +2103,8 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"diction can't open %s\n"
 argument_list|,
 name|filename
