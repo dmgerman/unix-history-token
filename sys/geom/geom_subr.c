@@ -809,7 +809,24 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Once the system is not cold, MOD_LOAD calls will be 		 * from the userland and the g_event thread will be able 		 * to acknowledge their completion. 		 */
+if|if
+condition|(
+name|cold
+condition|)
 name|g_post_event
+argument_list|(
+name|g_load_class
+argument_list|,
+name|hh
+argument_list|,
+name|M_WAITOK
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
+name|g_waitfor_event
 argument_list|(
 name|g_load_class
 argument_list|,
