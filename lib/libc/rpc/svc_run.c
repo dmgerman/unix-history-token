@@ -187,7 +187,7 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|warn
+name|_warn
 argument_list|(
 literal|"svc_run: - select failed"
 argument_list|)

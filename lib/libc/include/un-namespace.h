@@ -665,6 +665,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_undef
+undef|#
+directive|undef
+name|warn
+end_undef
+
 begin_endif
 endif|#
 directive|endif

@@ -41,7 +41,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -519,9 +531,19 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_warn
+argument_list|,
+name|warn
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
-name|warn
+name|_warn
 parameter_list|(
 specifier|const
 name|char

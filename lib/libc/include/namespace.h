@@ -16,6 +16,21 @@ name|_NAMESPACE_H_
 end_define
 
 begin_comment
+comment|/*  * Adjust names so that headers declare "hidden" names.  */
+end_comment
+
+begin_comment
+comment|/*  * ISO C (C90) section.  Most names in libc aren't in ISO C, so they  * should be here.  Most aren't here...  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|warn
+value|_warn
+end_define
+
+begin_comment
 comment|/*  * Prototypes for syscalls/functions that need to be overridden  * in libc_r/libpthread.  */
 end_comment
 
