@@ -511,6 +511,12 @@ operator|*
 literal|1024
 expr_stmt|;
 block|}
+operator|*
+name|ext
+operator|-=
+literal|1024
+expr_stmt|;
+comment|/* subtract base memory space */
 block|}
 end_function
 
