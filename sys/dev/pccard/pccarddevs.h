@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.60 2003/07/19 05:49:17 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.61 2003/07/26 17:45:45 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.182 2003/04/09 02:09:55 christos Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.184 2003/07/26 10:39:32 martin Exp $ */
 end_comment
 
 begin_comment
@@ -98,6 +98,17 @@ end_define
 
 begin_comment
 comment|/* IBM Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_SHARP
+value|0x00b0
+end_define
+
+begin_comment
+comment|/* Sharp Corporation */
 end_comment
 
 begin_define
@@ -3915,6 +3926,31 @@ value|"Sandisk CompactFlash Card"
 end_define
 
 begin_comment
+comment|/* Sharp Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_SHARP_PALDIO611S
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_SHARP_PALDIO611S
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_SHARP_PALDIO611S
+value|"PALDIO 611S PC CARD"
+end_define
+
+begin_comment
 comment|/* Siemens */
 end_comment
 
@@ -4163,6 +4199,27 @@ define|#
 directive|define
 name|PCMCIA_STR_SOCKET_LP_ETHER_CF
 value|"Socket Communications LP-E CF"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_SOCKET_LP_ETH_10_100_CF
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_SOCKET_LP_ETH_10_100_CF
+value|0x0145
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_SOCKET_LP_ETH_10_100_CF
+value|"Socket Communications 10/100 Ethernet"
 end_define
 
 begin_comment
