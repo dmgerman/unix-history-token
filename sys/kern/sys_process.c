@@ -915,6 +915,13 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|psignal
+argument_list|(
+name|p
+argument_list|,
+name|SIGCONT
+argument_list|)
+expr_stmt|;
 name|mtx_exit
 argument_list|(
 operator|&
