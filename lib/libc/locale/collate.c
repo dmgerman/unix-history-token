@@ -162,7 +162,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|do { \ 		if (fread(a, b, c, d) != c) { \ 			fclose(d); \ 			return -1; \ 		} \ 	} while(0)
+value|do { \ 		if (fread(a, b, c, d) != c) { \ 			(void)fclose(d); \ 			return -1; \ 		} \ 	} while(0)
 end_define
 
 begin_decl_stmt
@@ -358,6 +358,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -410,6 +413,9 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -521,10 +527,12 @@ operator|==
 literal|'\0'
 condition|)
 return|return
+operator|(
 name|__collate_strdup
 argument_list|(
 literal|""
 argument_list|)
+operator|)
 return|;
 name|delta
 operator|+=
@@ -611,6 +619,9 @@ name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|dest_str
@@ -631,7 +642,9 @@ name|nlen
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|dest_str
+operator|)
 return|;
 block|}
 end_function
@@ -810,7 +823,9 @@ name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|t
+operator|)
 return|;
 block|}
 end_function
