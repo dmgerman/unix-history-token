@@ -40,19 +40,6 @@ file|<err.h>
 end_include
 
 begin_function_decl
-specifier|extern
-name|int
-name|sysarch
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|void
 name|usage
@@ -95,10 +82,6 @@ name|sysarch
 argument_list|(
 name|ALPHA_SET_UAC
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|p
 argument_list|)
@@ -129,10 +112,6 @@ name|sysarch
 argument_list|(
 name|ALPHA_GET_UAC
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|p
 argument_list|)
