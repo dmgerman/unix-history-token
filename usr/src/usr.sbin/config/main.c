@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.14 (Berkeley) %G%"
+literal|"@(#)main.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -648,8 +648,14 @@ name|malloc
 argument_list|(
 call|(
 name|unsigned
+name|int
 call|)
 argument_list|(
+sizeof|sizeof
+argument_list|(
+name|CDIR
+argument_list|)
+operator|+
 name|strlen
 argument_list|(
 name|PREFIX
@@ -660,10 +666,7 @@ argument_list|(
 name|file
 argument_list|)
 operator|+
-sizeof|sizeof
-argument_list|(
-name|CDIR
-argument_list|)
+literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
