@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quiz.c	8.1 (Berkeley) %G%"
+literal|"@(#)quiz.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -483,7 +483,7 @@ condition|(
 operator|(
 name|lp
 operator|=
-name|fgetline
+name|fgetln
 argument_list|(
 name|fp
 argument_list|,
@@ -1320,7 +1320,7 @@ condition|(
 operator|(
 name|answer
 operator|=
-name|fgetline
+name|fgetln
 argument_list|(
 name|stdin
 argument_list|,

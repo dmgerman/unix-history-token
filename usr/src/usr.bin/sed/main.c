@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) %G%"
+literal|"@(#)main.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1115,10 +1115,10 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Use fgetline so that we can handle essentially infinite input 	 * data.  Can't use the pointer into the stdio buffer as the process 	 * space because the ungetc() can cause it to move. 	 */
+comment|/* 	 * Use fgetln so that we can handle essentially infinite input data. 	 * Can't use the pointer into the stdio buffer as the process space 	 * because the ungetc() can cause it to move. 	 */
 name|p
 operator|=
-name|fgetline
+name|fgetln
 argument_list|(
 name|f
 argument_list|,

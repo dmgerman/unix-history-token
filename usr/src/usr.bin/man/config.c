@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)config.c	8.6 (Berkeley) %G%"
+literal|"@(#)config.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,7 +184,7 @@ init|;
 operator|(
 name|p
 operator|=
-name|fgetline
+name|fgetln
 argument_list|(
 name|cfp
 argument_list|,
