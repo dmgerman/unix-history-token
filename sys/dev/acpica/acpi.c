@@ -2611,12 +2611,12 @@ argument_list|,
 literal|"ACPI subsystem disable on poweroff"
 argument_list|)
 expr_stmt|;
-comment|/*      * Default to 5 seconds before sleeping to give some machines time to      * stabilize.      */
+comment|/*      * Default to 1 second before sleeping to give some machines time to      * stabilize.      */
 name|sc
 operator|->
 name|acpi_sleep_delay
 operator|=
-literal|5
+literal|1
 expr_stmt|;
 name|sc
 operator|->
