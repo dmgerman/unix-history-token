@@ -117,13 +117,13 @@ name|f_type
 decl_stmt|;
 comment|/* descriptor type */
 name|short
-name|f_count
+name|f_FILLER1
 decl_stmt|;
-comment|/* reference count */
+comment|/* (OLD) reference count */
 name|short
-name|f_msgcount
+name|f_FILLER2
 decl_stmt|;
-comment|/* references from message queue */
+comment|/* (OLD) references from message queue */
 name|struct
 name|ucred
 modifier|*
@@ -315,6 +315,14 @@ name|caddr_t
 name|f_data
 decl_stmt|;
 comment|/* vnode or socket */
+name|int
+name|f_count
+decl_stmt|;
+comment|/* reference count */
+name|int
+name|f_msgcount
+decl_stmt|;
+comment|/* reference count from message queue */
 block|}
 struct|;
 end_struct
