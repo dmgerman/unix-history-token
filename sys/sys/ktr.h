@@ -288,6 +288,13 @@ begin_comment
 comment|/* Run queue */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KTR_ALL
+value|0x007fffff
+end_define
+
 begin_comment
 comment|/*  * Trace classes which can be assigned to particular use at compile time  * These must remain in high 22 as some assembly code counts on it  */
 end_comment
