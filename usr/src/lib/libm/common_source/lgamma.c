@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lgamma.c	1.1 (ELEFUNT) %G%"
+literal|"@(#)lgamma.c	4.4 (Berkeley) 9/11/85; 1.2 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/* 	C program for floating point log Gamma function  	lgama(x) computes the log of the absolute 	value of the Gamma function. 	The sign of the Gamma function is returned in the 	external quantity signgam.  	The coefficients for expansion around zero 	are #5243 from Hart& Cheney; for expansion 	around infinity they are #5404.  	Calls log, floor and sin. */
+comment|/* 	C program for floating point log Gamma function  	lgamma(x) computes the log of the absolute 	value of the Gamma function. 	The sign of the Gamma function is returned in the 	external quantity signgam.  	The coefficients for expansion around zero 	are #5243 from Hart& Cheney; for expansion 	around infinity they are #5404.  	Calls log, floor and sin. */
 end_comment
 
 begin_include
@@ -183,7 +183,7 @@ end_decl_stmt
 
 begin_function
 name|double
-name|lgama
+name|lgamma
 parameter_list|(
 name|arg
 parameter_list|)

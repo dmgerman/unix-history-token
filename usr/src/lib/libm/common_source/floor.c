@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)floor.c	1.1 (ELEFUNT) %G% */
+comment|/*	@(#)floor.c	4.2	9/11/85; 1.2 (ucb.elefunt) %G% */
 end_comment
 
 begin_comment
