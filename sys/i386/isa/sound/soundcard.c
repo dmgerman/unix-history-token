@@ -1915,11 +1915,7 @@ name|int
 name|unit
 parameter_list|)
 block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
