@@ -249,6 +249,8 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_CREAT
+operator||
+name|O_EXLOCK
 argument_list|,
 literal|0644
 argument_list|)
@@ -301,8 +303,6 @@ operator||
 name|O_CREAT
 operator||
 name|O_TRUNC
-operator||
-name|O_EXLOCK
 argument_list|,
 literal|0644
 argument_list|)
@@ -1042,7 +1042,7 @@ argument_list|,
 name|infp
 argument_list|)
 expr_stmt|;
-comment|/* 							 * This is a gross hack, but we may have corrupted the 							 * original file. Unfortunately, it will lose preservation 							 * of the inode. 							 */
+comment|/* 							 * This is a gross hack, but we may have corrupted the 							 * original file. 							 */
 if|if
 condition|(
 name|fflush

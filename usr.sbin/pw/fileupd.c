@@ -283,6 +283,8 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_CREAT
+operator||
+name|O_EXLOCK
 argument_list|,
 name|fmode
 argument_list|)
@@ -365,8 +367,6 @@ operator||
 name|O_CREAT
 operator||
 name|O_TRUNC
-operator||
-name|O_EXLOCK
 argument_list|,
 name|fmode
 argument_list|)
@@ -716,7 +716,7 @@ argument_list|,
 name|infp
 argument_list|)
 expr_stmt|;
-comment|/* 								 * If there was a problem with copying 								 * we will just rename 'file.new'  								 * to 'file'. 								 * This is a gross hack, but we may have 								 * corrupted the original file 								 * Unfortunately, it will lose the inode 								 * and hence the lock. 								 */
+comment|/* 								 * If there was a problem with copying 								 * we will just rename 'file.new'  								 * to 'file'. 								 * This is a gross hack, but we may have 								 * corrupted the original file 								 */
 if|if
 condition|(
 name|fflush
