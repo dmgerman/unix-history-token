@@ -20,7 +20,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_LOCKDIRNAME
-value|"/var/spool/uucp/LCK..%s"
+value|"/var/spool/lock/LCK..%s"
 end_define
 
 begin_ifdef
