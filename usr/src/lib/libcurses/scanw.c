@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scanw.c	5.5 (Berkeley) %G%"
+literal|"@(#)scanw.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|"curses.ext"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"stdarg.h"
 end_include
 
 begin_comment
@@ -247,8 +253,6 @@ argument_list|(
 argument|win
 argument_list|,
 argument|fmt
-argument_list|,
-argument|args
 argument_list|)
 end_macro
 
@@ -266,15 +270,11 @@ name|fmt
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-modifier|*
-name|args
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
+name|va_list
+name|ap
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -354,6 +354,13 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|__svfscanf
@@ -362,7 +369,12 @@ name|f
 argument_list|,
 name|fmt
 argument_list|,
-name|args
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 operator|(
