@@ -3696,7 +3696,7 @@ name|uele
 operator|->
 name|uele_attrname
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|p
 argument_list|)
