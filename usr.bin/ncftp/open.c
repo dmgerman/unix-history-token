@@ -136,6 +136,18 @@ comment|/* If TRUE, set binary each connection. */
 end_comment
 
 begin_decl_stmt
+name|int
+name|www
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TRUE	if use URL */
+end_comment
+
+begin_decl_stmt
 name|Hostname
 name|hostname
 decl_stmt|;
@@ -395,8 +407,6 @@ parameter_list|)
 block|{
 name|int
 name|opt
-decl_stmt|,
-name|www
 decl_stmt|;
 name|char
 modifier|*
@@ -1537,6 +1547,11 @@ name|login_verbosity
 decl_stmt|,
 name|oldv
 decl_stmt|;
+name|int
+name|result
+init|=
+name|CMDERR
+decl_stmt|;
 name|macnum
 operator|=
 literal|0
@@ -1964,6 +1979,10 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+name|result
+operator|=
+name|NOERR
+expr_stmt|;
 break|break;
 comment|/* we are connected, so break the redial loop. */
 comment|/* end if we are connected */
@@ -1988,7 +2007,7 @@ comment|/* Try re-dialing. */
 block|}
 return|return
 operator|(
-name|NOERR
+name|result
 operator|)
 return|;
 block|}
@@ -2017,6 +2036,11 @@ parameter_list|)
 block|{
 name|OpenOptions
 name|openopt
+decl_stmt|;
+name|int
+name|result
+init|=
+name|NOERR
 decl_stmt|;
 comment|/* If there is already a site open, close that one so we can 	 * open a new one. 	 */
 if|if
@@ -2082,11 +2106,15 @@ name|USAGE
 operator|)
 operator|||
 operator|(
+operator|(
+name|result
+operator|=
 name|Open
 argument_list|(
 operator|&
 name|openopt
 argument_list|)
+operator|)
 operator|==
 name|USAGE
 operator|)
@@ -2095,7 +2123,13 @@ return|return
 name|USAGE
 return|;
 return|return
+operator|(
+name|www
+condition|?
+name|result
+else|:
 name|NOERR
+operator|)
 return|;
 block|}
 end_function
