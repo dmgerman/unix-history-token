@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)rz.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)rz.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4643,17 +4643,6 @@ if|if
 condition|(
 operator|!
 name|cold
-ifdef|#
-directive|ifdef
-name|DEBUG
-operator|||
-operator|(
-name|rzdebug
-operator|&
-name|RZB_ERROR
-operator|)
-endif|#
-directive|endif
 condition|)
 block|{
 name|printf
@@ -4706,9 +4695,14 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
+operator|!
+name|cold
+operator|&&
+operator|(
 name|rzdebug
 operator|&
 name|RZB_ERROR
+operator|)
 condition|)
 name|printf
 argument_list|(
