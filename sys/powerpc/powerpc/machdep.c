@@ -392,10 +392,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|pcpu0
+name|struct
+name|pcpu
+name|__pcpu
 index|[
-name|PAGE_SIZE
+name|MAXCPU
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1116,18 +1117,11 @@ expr_stmt|;
 comment|/* 	 * Set up per-cpu data. 	 */
 name|pc
 operator|=
-operator|(
-expr|struct
-name|pcpu
-operator|*
-operator|)
-operator|(
-name|pcpu0
-operator|+
-name|PAGE_SIZE
-operator|)
-operator|-
-literal|1
+operator|&
+name|__pcpu
+index|[
+literal|0
+index|]
 expr_stmt|;
 name|pcpu_init
 argument_list|(
@@ -1163,7 +1157,6 @@ name|pc_cpuid
 operator|=
 literal|0
 expr_stmt|;
-comment|/* pc->pc_mid = mid; */
 asm|__asm __volatile("mtsprg 0, %0" :: "r"(pc));
 name|mutex_init
 argument_list|()
