@@ -55,7 +55,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftpd.c,v 1.25.2.14 1998/05/15 15:08:05 ache Exp $"
+literal|"$Id: ftpd.c,v 1.25.2.15 1998/05/15 16:09:35 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1491,6 +1491,10 @@ name|FILE
 modifier|*
 name|fd
 decl_stmt|;
+name|tzset
+argument_list|()
+expr_stmt|;
+comment|/* in case no timezone database in ~ftp */
 ifdef|#
 directive|ifdef
 name|OLD_SETPROCTITLE
