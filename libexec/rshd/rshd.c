@@ -1559,11 +1559,9 @@ operator|*
 operator|)
 name|fromp
 argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
 name|fromp
-argument_list|)
+operator|->
+name|su_len
 argument_list|)
 operator|<
 literal|0
