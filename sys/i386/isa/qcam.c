@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * FreeBSD Connectix QuickCam parallel-port camera video capture driver.  * Copyright (c) 1996, Paul Traina.  *  * This driver is based in part on the Linux QuickCam driver which is  * Copyright (c) 1996, Thomas Davis.  *  * QuickCam(TM) is a registered trademark of Connectix Inc.  * Use this driver at your own risk, it is not warranted by  * Connectix or the authors.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * FreeBSD Connectix QuickCam parallel-port camera video capture driver.  * Copyright (c) 1996, Paul Traina.  *  * This driver is based in part on the Linux QuickCam driver which is  * Copyright (c) 1996, Thomas Davis.  *  * Additional ideas from code written by Michael Chinn.  *  * QuickCam(TM) is a registered trademark of Connectix Inc.  * Use this driver at your own risk, it is not warranted by  * Connectix or the authors.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -289,7 +289,7 @@ comment|/* kdc_parentdata */
 name|DC_UNCONFIGURED
 block|,
 comment|/* kdc_state */
-literal|""
+literal|"QuickCam video input"
 block|,
 comment|/* kdc_description */
 name|DC_CLS_MISC
@@ -467,10 +467,6 @@ directive|define
 name|CDEV_MAJOR
 value|73
 end_define
-
-begin_comment
-comment|/* XXX change this! */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -881,7 +877,7 @@ name|write_control
 argument_list|(
 name|port
 argument_list|,
-literal|0x28
+literal|0x26
 argument_list|)
 expr_stmt|;
 name|READ_STATUS_BYTE_HIGH
@@ -2083,11 +2079,6 @@ name|struct
 name|isa_device
 modifier|*
 name|id
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|descr
 parameter_list|)
 block|{
 name|struct
@@ -2124,12 +2115,6 @@ operator|->
 name|kdc_parentdata
 operator|=
 name|id
-expr_stmt|;
-name|kdc
-operator|->
-name|kdc_description
-operator|=
-name|descr
 expr_stmt|;
 name|dev_attach
 argument_list|(
@@ -2198,7 +2183,19 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* write 0's to control and data ports */
+comment|/* 	 * XXX The probe code is reported to be flakey on parallel port 	 *     cards set up for bidirectional transfers. 	 *     We need to work on this some more, so temporarily, 	 *     allow bit one of the "flags" parameter to bypass this 	 *     check. 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|devp
+operator|->
+name|id_flags
+operator|&
+literal|1
+operator|)
+condition|)
+block|{
 name|write_control
 argument_list|(
 name|devp
@@ -2226,7 +2223,7 @@ argument_list|,
 literal|0x0e
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Attempt a non-destructive probe for the QuickCam. 	 * Current models appear to toggle the upper 4 bits of 	 * the status register at approximately 5-10 Hz. 	 * 	 * Be aware that this isn't the way that Connectix detects the 	 * camera (they send a reset and try to handshake),  but this 	 * way is safe. 	 */
+comment|/* 	     * Attempt a non-destructive probe for the QuickCam. 	     * Current models appear to toggle the upper 4 bits of 	     * the status register at approximately 5-10 Hz. 	     * 	     * Be aware that this isn't the way that Connectix detects the 	     * camera (they send a reset and try to handshake),  but this 	     * way is safe. 	     */
 name|last
 operator|=
 name|reg
@@ -2316,11 +2313,10 @@ return|return
 literal|0
 return|;
 block|}
+block|}
 name|qcam_registerdev
 argument_list|(
 name|devp
-argument_list|,
-literal|"QuickCam video input"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2452,6 +2448,11 @@ name|flags
 operator||=
 name|QC_ALIVE
 expr_stmt|;
+name|qcam_reset
+argument_list|(
+name|qs
+argument_list|)
+expr_stmt|;
 name|qcam_default
 argument_list|(
 name|qs
@@ -2460,6 +2461,25 @@ expr_stmt|;
 name|qcam_xferparms
 argument_list|(
 name|qs
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"qcam%d: %sdirectional parallel port\n"
+argument_list|,
+name|qs
+operator|->
+name|unit
+argument_list|,
+name|qs
+operator|->
+name|flags
+operator|&
+name|QC_BIDIR_HW
+condition|?
+literal|"bi"
+else|:
+literal|"uni"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3196,7 +3216,7 @@ name|ACTUALLY_LKM_NOT_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Loadable QuickCam driver stubs  * XXX This isn't quite working yet, but the template work is done.  * XXX do not attempt to use this driver as a LKM (yet)  */
+comment|/*  * Loadable QuickCam driver stubs  * This isn't quite working yet, but the template work is done.  *  * XXX Do not attempt to use this driver as a LKM (yet).  */
 end_comment
 
 begin_include
