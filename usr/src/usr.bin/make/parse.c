@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.7 (Berkeley) %G%"
+literal|"@(#)parse.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,12 @@ begin_include
 include|#
 directive|include
 file|"buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -6008,19 +6014,18 @@ block|{
 name|char
 modifier|*
 name|cp
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|start
 decl_stmt|;
+comment|/* avoid faults on read-only strings */
 specifier|static
 name|char
 name|syspath
 index|[]
 init|=
-name|DEFSYSPATH
+name|_PATH_DEFSYSPATH
 decl_stmt|;
-comment|/* Avoid faults on read-only string 					 * constant... */
 name|mainNode
 operator|=
 name|NILGNODE

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)job.c	5.8 (Berkeley) %G%"
+literal|"@(#)job.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,19 +35,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
+file|"make.h"
 end_include
 
 begin_include
@@ -60,12 +48,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_include
@@ -89,7 +71,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -98,17 +80,10 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
 begin_include
 include|#
 directive|include
-file|"make.h"
+file|<stdio.h>
 end_include
 
 begin_include
@@ -116,6 +91,19 @@ include|#
 directive|include
 file|"job.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * error handling variables   */
@@ -6751,7 +6739,7 @@ operator|)
 name|NULL
 condition|)
 block|{
-comment|/* 	 * The user didn't specify a shell to use, so we are using the 	 * default one... Both the absolute path and the last component 	 * must be set. The last component is taken from the 'name' field 	 * of the default shell description pointed-to by commandShell. 	 * All default shells are located in DEFSHELLDIR. 	 */
+comment|/* 	 * The user didn't specify a shell to use, so we are using the 	 * default one... Both the absolute path and the last component 	 * must be set. The last component is taken from the 'name' field 	 * of the default shell description pointed-to by commandShell. 	 * All default shells are located in _PATH_DEFSHELLDIR. 	 */
 name|shellName
 operator|=
 name|commandShell
@@ -6762,7 +6750,7 @@ name|shellPath
 operator|=
 name|Str_Concat
 argument_list|(
-name|DEFSHELLDIR
+name|_PATH_DEFSHELLDIR
 argument_list|,
 name|shellName
 argument_list|,
