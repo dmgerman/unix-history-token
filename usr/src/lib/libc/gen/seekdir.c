@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)seekdir.c 4.8 %G%"
+literal|"@(#)seekdir.c 4.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,11 @@ name|direct
 modifier|*
 name|dp
 decl_stmt|;
+specifier|extern
+name|long
+name|lseek
+parameter_list|()
+function_decl|;
 name|curloc
 operator|=
 name|telldir
@@ -93,6 +98,9 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|dirp
