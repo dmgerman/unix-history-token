@@ -234,11 +234,13 @@ modifier|*
 name|amr_intr
 decl_stmt|;
 comment|/* mailbox */
+specifier|volatile
 name|struct
 name|amr_mailbox
 modifier|*
 name|amr_mailbox
 decl_stmt|;
+specifier|volatile
 name|struct
 name|amr_mailbox64
 modifier|*
