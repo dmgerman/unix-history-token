@@ -367,6 +367,9 @@ literal|"size mismatch: %d != %d\n"
 operator|,
 name|size
 operator|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -471,6 +474,9 @@ literal|"size mismatch: %d != %d\n"
 operator|,
 name|size
 operator|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -589,6 +595,9 @@ literal|"size mismatch: %d != %d\n"
 operator|,
 name|size
 operator|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -666,6 +675,9 @@ literal|"size mismatch: %d != %d\n"
 operator|,
 name|size
 operator|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
