@@ -844,6 +844,24 @@ name|_POSIX_SOURCE
 end_ifndef
 
 begin_comment
+comment|/* Linux/Solaris/AIX/SVR4.0MP API */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_SC_NPROCESSORS_CONF
+value|57
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SC_NPROCESSORS_ONLN
+value|58
+end_define
+
+begin_comment
 comment|/*  * rfork() options.  *  * XXX currently, some operations without RFPROC set are not supported.  */
 end_comment
 
