@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.19 (Berkeley) %G%"
+literal|"@(#)err.c	6.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -732,6 +732,15 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msg
+index|[
+literal|3
+index|]
+operator|==
+literal|' '
+condition|)
 operator|(
 name|void
 operator|)
