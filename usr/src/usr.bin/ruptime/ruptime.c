@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruptime.c	4.2 82/04/03"
+literal|"@(#)ruptime.c	4.3 82/04/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,6 +203,11 @@ name|struct
 name|whoent
 modifier|*
 name|we
+decl_stmt|;
+name|int
+name|maxloadav
+init|=
+literal|0
 decl_stmt|;
 name|time
 argument_list|(
@@ -418,6 +423,39 @@ name|hs_nusers
 operator|=
 literal|0
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|2
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|wd
+operator|->
+name|wd_loadav
+index|[
+name|i
+index|]
+operator|>
+name|maxloadav
+condition|)
+name|maxloadav
+operator|=
+name|wd
+operator|->
+name|wd_loadav
+index|[
+name|i
+index|]
+expr_stmt|;
 name|we
 operator|=
 operator|(
@@ -585,7 +623,7 @@ continue|continue;
 block|}
 name|printf
 argument_list|(
-literal|"%-8.8s%s,  %4d user%s  load %5.2f, %5.2f, %5.2f\n"
+literal|"%-8.8s%s,  %4d user%s  load %*.2f, %*.2f, %*.2f\n"
 argument_list|,
 name|hsp
 operator|->
@@ -624,6 +662,14 @@ literal|", "
 else|:
 literal|"s,"
 argument_list|,
+name|maxloadav
+operator|>=
+literal|1000
+condition|?
+literal|5
+else|:
+literal|4
+argument_list|,
 name|hsp
 operator|->
 name|hs_wd
@@ -635,6 +681,14 @@ index|]
 operator|/
 literal|100.0
 argument_list|,
+name|maxloadav
+operator|>=
+literal|1000
+condition|?
+literal|5
+else|:
+literal|4
+argument_list|,
 name|hsp
 operator|->
 name|hs_wd
@@ -645,6 +699,14 @@ literal|1
 index|]
 operator|/
 literal|100.0
+argument_list|,
+name|maxloadav
+operator|>=
+literal|1000
+condition|?
+literal|5
+else|:
+literal|4
 argument_list|,
 name|hsp
 operator|->
