@@ -869,6 +869,26 @@ name|PHYS_AVAIL_ARRAY_END
 value|((sizeof(phys_avail) / sizeof(vm_offset_t)) - 2)
 end_define
 
+begin_function_decl
+name|void
+name|osendsig
+parameter_list|(
+name|sig_t
+name|catcher
+parameter_list|,
+name|int
+name|sig
+parameter_list|,
+name|sigset_t
+modifier|*
+name|mask
+parameter_list|,
+name|u_long
+name|code
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -4755,7 +4775,6 @@ comment|/*  * Send an interrupt to process.  *  * Stack is set up to allow sigco
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|osendsig
 parameter_list|(
