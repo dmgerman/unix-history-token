@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.8	83/11/29	*/
+comment|/*	defs.h	4.9	83/11/29	*/
 end_comment
 
 begin_include
@@ -68,6 +68,17 @@ include|#
 directive|include
 file|<netinet/in.h>
 end_include
+
+begin_comment
+comment|/*  * The version number should be changed whenever the protocols change.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VERSION
+value|2
+end_define
 
 begin_define
 define|#
