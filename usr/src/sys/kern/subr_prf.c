@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	3.4	%G%	*/
+comment|/*	subr_prf.c	3.5	%G%	*/
 end_comment
 
 begin_include
@@ -616,9 +616,6 @@ name|panicstr
 operator|=
 name|s
 expr_stmt|;
-name|update
-argument_list|()
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"panic: %s\n"
@@ -641,7 +638,6 @@ argument_list|,
 name|RB_AUTOBOOT
 argument_list|)
 expr_stmt|;
-comment|/* 0 = automatic */
 block|}
 end_block
 
