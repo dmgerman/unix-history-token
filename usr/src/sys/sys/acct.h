@@ -73,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|AFORK
-value|01
+value|0001
 end_define
 
 begin_comment
@@ -84,11 +84,66 @@ begin_define
 define|#
 directive|define
 name|ASU
-value|02
+value|0002
 end_define
 
 begin_comment
 comment|/* used super-user privileges */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACOMPAT
+value|0004
+end_define
+
+begin_comment
+comment|/* used compatibility mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACORE
+value|0010
+end_define
+
+begin_comment
+comment|/* dumped core */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AXSIG
+value|0020
+end_define
+
+begin_comment
+comment|/* killed by a signal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACCTLO
+value|30
+end_define
+
+begin_comment
+comment|/* acctg off when space< this */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACCTHI
+value|100
+end_define
+
+begin_comment
+comment|/* acctg resumes at this level */
 end_comment
 
 end_unit
