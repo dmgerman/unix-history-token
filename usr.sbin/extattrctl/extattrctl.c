@@ -102,7 +102,7 @@ argument_list|,
 literal|"usage:\n"
 literal|"  extattrctl start [path]\n"
 literal|"  extattrctl stop [path]\n"
-literal|"  extattrctl initattr [-p path] [attrsize] [attrfile]\n"
+literal|"  extattrctl initattr [-o] [-p path] [attrsize] [attrfile]\n"
 literal|"  extattrctl enable [path] [attrname] [attrfile]\n"
 literal|"  extattrctl disable [path] [attrname]\n"
 argument_list|)
@@ -211,6 +211,12 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|chunksize
+decl_stmt|,
+name|overwrite
+init|=
+literal|0
+decl_stmt|,
+name|flags
 decl_stmt|;
 name|optind
 operator|=
@@ -227,7 +233,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"p:r:w:"
+literal|"op:r:w:"
 argument_list|)
 operator|)
 operator|!=
@@ -239,6 +245,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'o'
+case|:
+name|overwrite
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'p'
 case|:
@@ -275,6 +289,25 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|overwrite
+condition|)
+name|flags
+operator|=
+name|O_CREAT
+operator||
+name|O_WRONLY
+expr_stmt|;
+else|else
+name|flags
+operator|=
+name|O_CREAT
+operator||
+name|O_EXCL
+operator||
+name|O_WRONLY
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -291,11 +324,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|O_CREAT
-operator||
-name|O_EXCL
-operator||
-name|O_WRONLY
+name|flags
 argument_list|,
 literal|0600
 argument_list|)
