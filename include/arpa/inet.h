@@ -41,12 +41,6 @@ directive|include
 file|<machine/endian.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INET_ADDRSTRLEN
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -54,28 +48,12 @@ name|INET_ADDRSTRLEN
 value|16
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INET6_ADDRSTRLEN
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|INET6_ADDRSTRLEN
 value|46
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -272,11 +250,11 @@ begin_comment
 comment|/* XXX all new diversions!! argh!! */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -382,7 +360,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_POSIX_SOURCE */
+comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_function_decl
@@ -491,15 +469,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Nonstandard functions. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_function_decl
 name|int
@@ -689,7 +663,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_POSIX_SOURCE */
+comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_macro
