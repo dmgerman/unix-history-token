@@ -1585,6 +1585,9 @@ modifier|*
 name|lk
 decl_stmt|;
 block|{
+name|pid_t
+name|holder
+decl_stmt|;
 if|if
 condition|(
 name|lk
@@ -1595,11 +1598,20 @@ operator|-
 literal|1
 condition|)
 block|{
-if|if
-condition|(
+name|holder
+operator|=
 name|lk
 operator|->
 name|lkt_held
+expr_stmt|;
+name|FREE_LOCK
+argument_list|(
+name|lk
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|holder
 operator|==
 name|CURPROC
 operator|->
@@ -1615,9 +1627,7 @@ name|panic
 argument_list|(
 literal|"softdep_lock: lock held by %d"
 argument_list|,
-name|lk
-operator|->
-name|lkt_held
+name|holder
 argument_list|)
 expr_stmt|;
 block|}
@@ -1699,6 +1709,9 @@ modifier|*
 name|lk
 decl_stmt|;
 block|{
+name|pid_t
+name|holder
+decl_stmt|;
 if|if
 condition|(
 name|lk
@@ -1709,11 +1722,20 @@ operator|-
 literal|1
 condition|)
 block|{
-if|if
-condition|(
+name|holder
+operator|=
 name|lk
 operator|->
 name|lkt_held
+expr_stmt|;
+name|FREE_LOCK
+argument_list|(
+name|lk
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|holder
 operator|==
 name|CURPROC
 operator|->
@@ -1729,9 +1751,7 @@ name|panic
 argument_list|(
 literal|"softdep_lock_interlocked: lock held by %d"
 argument_list|,
-name|lk
-operator|->
-name|lkt_held
+name|holder
 argument_list|)
 expr_stmt|;
 block|}
@@ -2082,11 +2102,28 @@ name|CURPROC
 operator|->
 name|p_pid
 condition|)
+block|{
+if|if
+condition|(
+name|lk
+operator|.
+name|lkt_held
+operator|!=
+operator|-
+literal|1
+condition|)
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"sema_release: not held"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|--
@@ -2300,11 +2337,19 @@ name|wk_state
 operator|&
 name|ONWORKLIST
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"worklist_insert: already on list"
 argument_list|)
 expr_stmt|;
+block|}
 name|item
 operator|->
 name|wk_state
@@ -2362,11 +2407,19 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"worklist_remove: not on list"
 argument_list|)
 expr_stmt|;
+block|}
 name|item
 operator|->
 name|wk_state
@@ -2410,11 +2463,28 @@ name|wk_state
 operator|&
 name|ONWORKLIST
 condition|)
+block|{
+if|if
+condition|(
+name|lk
+operator|.
+name|lkt_held
+operator|!=
+operator|-
+literal|1
+condition|)
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"workitem_free: still on list"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|item
@@ -2423,11 +2493,28 @@ name|wk_type
 operator|!=
 name|type
 condition|)
+block|{
+if|if
+condition|(
+name|lk
+operator|.
+name|lkt_held
+operator|!=
+operator|-
+literal|1
+condition|)
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"workitem_free: type mismatch"
 argument_list|)
 expr_stmt|;
+block|}
 name|FREE
 argument_list|(
 name|item
@@ -3027,11 +3114,28 @@ name|wk_state
 operator|&
 name|ONWORKLIST
 condition|)
+block|{
+if|if
+condition|(
+name|lk
+operator|.
+name|lkt_held
+operator|!=
+operator|-
+literal|1
+condition|)
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"add_to_worklist: already on list"
 argument_list|)
 expr_stmt|;
+block|}
 name|wk
 operator|->
 name|wk_state
@@ -5642,11 +5746,19 @@ name|inodedep
 argument_list|)
 operator|)
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_setup_inomapdep: found inode"
 argument_list|)
 expr_stmt|;
+block|}
 name|inodedep
 operator|->
 name|id_buf
@@ -6298,11 +6410,19 @@ name|oldblkno
 operator|!=
 literal|0
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_setup_allocdirect: non-zero indir"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -6441,11 +6561,19 @@ name|oldadp
 operator|==
 name|NULL
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_setup_allocdirect: lost entry"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* insert in middle of list */
 name|TAILQ_INSERT_BEFORE
 argument_list|(
@@ -6564,6 +6692,13 @@ name|ad_lbn
 operator|>=
 name|NDADDR
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"allocdirect_check: old %d != new %d || lbn %ld>= %d"
@@ -6583,6 +6718,7 @@ argument_list|,
 name|NDADDR
 argument_list|)
 expr_stmt|;
+block|}
 name|newadp
 operator|->
 name|ad_oldblkno
@@ -7630,11 +7766,19 @@ name|aip
 operator|->
 name|ai_oldblkno
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"setup_allocindir_phase2: blkno"
 argument_list|)
 expr_stmt|;
+block|}
 name|aip
 operator|->
 name|ai_oldblkno
@@ -8253,11 +8397,19 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_setup_freeblocks: inode busy"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Add the freeblks structure to the list of operations that 	 * must await the zero'ed inode being written to disk. If we 	 * still have a bitmap dependency (delay == 0), then the inode 	 * has never been written to disk, so we can process the 	 * freeblks below once we have deleted the dependencies. 	 */
 name|delay
 operator|=
@@ -8575,11 +8727,19 @@ name|ir_state
 operator|&
 name|GOINGAWAY
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"deallocate_dependencies: already gone"
 argument_list|)
 expr_stmt|;
+block|}
 name|indirdep
 operator|->
 name|ir_state
@@ -8627,11 +8787,19 @@ name|ir_savebp
 operator|->
 name|b_lblkno
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"deallocate_dependencies: not indir"
 argument_list|)
 expr_stmt|;
+block|}
 name|bcopy
 argument_list|(
 name|bp
@@ -8841,6 +9009,12 @@ case|:
 case|case
 name|D_INODEDEP
 case|:
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"deallocate_dependencies: Unexpected type %s"
@@ -8855,6 +9029,12 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 default|default:
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"deallocate_dependencies: Unknown type %s"
@@ -9359,11 +9539,19 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"check_inode_unwritten: busy inode"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1
@@ -10056,11 +10244,19 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"indir_trunc: lost indirdep"
 argument_list|)
 expr_stmt|;
+block|}
 name|WORKLIST_REMOVE
 argument_list|(
 name|wk
@@ -10085,11 +10281,19 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"indir_trunc: dangling dep"
 argument_list|)
 expr_stmt|;
+block|}
 name|FREE_LOCK
 argument_list|(
 operator|&
@@ -11450,11 +11654,19 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"free_diradd: unfound ref"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|WORKITEM_FREE
 argument_list|(
@@ -11931,11 +12143,19 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"newdirrem: not ATTACHED"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|dap
@@ -11946,6 +12166,13 @@ name|ip
 operator|->
 name|i_number
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"newdirrem: inum %d should be %d"
@@ -11959,6 +12186,7 @@ operator|->
 name|da_newinum
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * If we are deleting a changed name that never made it to disk, 	 * then return the dirrem describing the previous inode (which 	 * represents the inode currently referenced from this entry on disk). 	 */
 if|if
 condition|(
@@ -12493,11 +12721,19 @@ name|ip
 operator|->
 name|i_effnlink
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_change_linkcnt: bad delta"
 argument_list|)
 expr_stmt|;
+block|}
 name|inodedep
 operator|->
 name|id_nlinkdelta
@@ -12632,11 +12868,19 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_workitem_remove: lost inodedep"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Normal file deletion. 	 */
 if|if
 condition|(
@@ -12672,11 +12916,19 @@ name|ip
 operator|->
 name|i_effnlink
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_workitem_remove: bad file delta"
 argument_list|)
 expr_stmt|;
+block|}
 name|inodedep
 operator|->
 name|id_nlinkdelta
@@ -12736,11 +12988,19 @@ name|ip
 operator|->
 name|i_effnlink
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_workitem_remove: bad dir delta"
 argument_list|)
 expr_stmt|;
+block|}
 name|inodedep
 operator|->
 name|id_nlinkdelta
@@ -12974,8 +13234,8 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|inodedep_lookup
 argument_list|(
 name|fs
@@ -12989,16 +13249,20 @@ argument_list|,
 operator|&
 name|idp
 argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"handle_workitem_freefile: inodedep survived"
-argument_list|)
 expr_stmt|;
 name|FREE_LOCK
 argument_list|(
 operator|&
 name|lk
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|panic
+argument_list|(
+literal|"handle_workitem_freefile: inodedep survived"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -13495,6 +13759,13 @@ name|dap
 operator|->
 name|da_newinum
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"%s: dir inum %d != new %d"
@@ -13510,6 +13781,7 @@ operator|->
 name|da_newinum
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|dap
@@ -13801,11 +14073,19 @@ name|adp
 operator|->
 name|ad_lbn
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_write_inodeblock: lbn order"
 argument_list|)
 expr_stmt|;
+block|}
 name|prevlbn
 operator|=
 name|adp
@@ -13833,6 +14113,13 @@ name|adp
 operator|->
 name|ad_newblkno
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"%s: direct pointer #%ld mismatch %d != %d"
@@ -13857,6 +14144,7 @@ operator|->
 name|ad_newblkno
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|adp
@@ -13880,6 +14168,13 @@ name|adp
 operator|->
 name|ad_newblkno
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"%s: indirect pointer #%ld mismatch %d != %d"
@@ -13908,6 +14203,7 @@ operator|->
 name|ad_newblkno
 argument_list|)
 expr_stmt|;
+block|}
 name|deplist
 operator||=
 literal|1
@@ -13928,6 +14224,13 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_write_inodeblock: Unknown state 0x%x"
@@ -13937,6 +14240,7 @@ operator|->
 name|ad_state
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* DIAGNOSTIC */
@@ -14087,11 +14391,19 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_write_inodeblock: lost dep1"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* DIAGNOSTIC */
@@ -14149,11 +14461,19 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_write_inodeblock: lost dep2"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* DIAGNOSTIC */
@@ -14690,11 +15010,20 @@ name|ir_state
 operator|&
 name|GOINGAWAY
 condition|)
+block|{
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"disk_write_complete: indirdep gone"
 argument_list|)
 expr_stmt|;
+block|}
 name|bcopy
 argument_list|(
 name|indirdep
@@ -14772,11 +15101,20 @@ operator|->
 name|ir_donehd
 argument_list|)
 condition|)
+block|{
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"disk_write_complete: not gone"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|WORKLIST_INSERT
 argument_list|(
@@ -14808,6 +15146,13 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 default|default:
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_disk_write_complete: Unknown type %s"
@@ -14938,11 +15283,20 @@ name|ad_buf
 operator|!=
 name|NULL
 condition|)
+block|{
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_allocdirect_partdone: dangling dep"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * The on-disk inode cannot claim to be any larger than the last 	 * fragment that has been written. Otherwise, the on-disk inode 	 * might have fragments that were not the last block in the file 	 * which would corrupt the filesystem. Thus, we cannot free any 	 * allocdirects after one whose ad_oldblkno claims a fragment as 	 * these blocks must be rolled back to zero before writing the inode. 	 * We check the currently active set of allocdirects in id_inoupdt. 	 */
 name|inodedep
 operator|=
@@ -15027,11 +15381,20 @@ name|listadp
 operator|==
 name|NULL
 condition|)
+block|{
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_allocdirect_partdone: lost dep"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* DEBUG */
@@ -15140,11 +15503,20 @@ name|ai_buf
 operator|!=
 name|NULL
 condition|)
+block|{
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_allocindir_partdone: dangling dependency"
 argument_list|)
 expr_stmt|;
+block|}
 name|indirdep
 operator|=
 name|aip
@@ -15298,11 +15670,20 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_written_inodeblock: not started"
 argument_list|)
 expr_stmt|;
+block|}
 name|inodedep
 operator|->
 name|id_state
@@ -15438,11 +15819,20 @@ name|ad_state
 operator|&
 name|ATTACHED
 condition|)
+block|{
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_written_inodeblock: new entry"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|adp
@@ -15467,6 +15857,14 @@ name|adp
 operator|->
 name|ad_oldblkno
 condition|)
+block|{
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"%s: %s #%ld mismatch %d != %d"
@@ -15493,6 +15891,7 @@ operator|->
 name|ad_oldblkno
 argument_list|)
 expr_stmt|;
+block|}
 name|dp
 operator|->
 name|di_db
@@ -15524,6 +15923,14 @@ index|]
 operator|!=
 literal|0
 condition|)
+block|{
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"%s: %s #%ld allocated as %d"
@@ -15550,6 +15957,7 @@ name|NDADDR
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|dp
 operator|->
 name|di_ib
@@ -15611,11 +16019,20 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_written_inodeblock: bad size"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|dp
@@ -15723,11 +16140,20 @@ name|filefree
 operator|!=
 name|NULL
 condition|)
+block|{
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_written_inodeblock: filefree"
 argument_list|)
 expr_stmt|;
+block|}
 name|filefree
 operator|=
 name|wk
@@ -15777,6 +16203,13 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 default|default:
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_written_inodeblock: Unknown type %s"
@@ -15808,11 +16241,20 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_written_inodeblock: live inodedep"
 argument_list|)
 expr_stmt|;
+block|}
 name|add_to_worklist
 argument_list|(
 name|filefree
@@ -16002,11 +16444,20 @@ name|md_state
 operator|!=
 name|type
 condition|)
+block|{
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_written_mkdir: bad type"
 argument_list|)
 expr_stmt|;
+block|}
 name|dap
 operator|=
 name|mkdir
@@ -16175,11 +16626,20 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_written_filepage: not started"
 argument_list|)
 expr_stmt|;
+block|}
 name|pagedep
 operator|->
 name|pd_state
@@ -16309,11 +16769,20 @@ name|da_state
 operator|&
 name|ATTACHED
 condition|)
+block|{
+name|lk
+operator|.
+name|lkt_held
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"handle_written_filepage: attached"
 argument_list|)
 expr_stmt|;
+block|}
 name|ep
 operator|=
 operator|(
@@ -16663,6 +17132,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ip
@@ -16676,12 +17151,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"softdep_update_inodeblock: bad link count"
-argument_list|)
-expr_stmt|;
-name|FREE_LOCK
-argument_list|(
-operator|&
-name|lk
 argument_list|)
 expr_stmt|;
 return|return;
@@ -16700,11 +17169,19 @@ name|ip
 operator|->
 name|i_effnlink
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_update_inodeblock: bad delta"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Changes have been initiated. Anything depending on these 	 * changes cannot occur until this inode has been written. 	 */
 name|inodedep
 operator|->
@@ -17242,11 +17719,19 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_fsync: pending ops"
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|error
@@ -17285,6 +17770,13 @@ name|wk_type
 operator|!=
 name|D_DIRADD
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_fsync: Unexpected type %s"
@@ -17297,6 +17789,7 @@ name|wk_type
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|dap
 operator|=
 name|WK_DIRADD
@@ -17362,11 +17855,19 @@ operator|)
 operator|!=
 name|COMPLETE
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_fsync: dirty"
 argument_list|)
 expr_stmt|;
+block|}
 name|flushparent
 operator|=
 name|dap
@@ -17669,11 +18170,19 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_fsync_mountdev: not dirty"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * We are only interested in bitmaps with outstanding 		 * dependencies. 		 */
 if|if
 condition|(
@@ -18547,6 +19056,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_sync_metadata: Unknown type %s"
@@ -19246,11 +19761,19 @@ name|da_state
 operator|&
 name|MKDIR_PARENT
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"flush_pagedep_deps: MKDIR_PARENT"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 		 * A newly allocated directory must have its "." and 		 * ".." entries written out before its name can be 		 * committed in its parent. We do not want or need 		 * the full semantics of a synchronous VOP_FSYNC as 		 * that may end up here again, once for each directory 		 * level in the filesystem. Instead, we push the blocks 		 * and wait for them to clear. We have to fsync twice 		 * because the first call may choose to defer blocks 		 * that still have dependencies, but deferral will 		 * happen at most once. 		 */
 name|inum
@@ -19374,11 +19897,19 @@ name|da_state
 operator|&
 name|MKDIR_BODY
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"flush_pagedep_deps: MKDIR_BODY"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 		 * Flush the inode on which the directory entry depends. 		 * Having accounted for MKDIR_PARENT and MKDIR_BODY above, 		 * the only remaining dependency is that the updated inode 		 * count must get pushed to disk. The inode has already 		 * been pushed into its inode buffer (via VOP_UPDATE) at 		 * the time of the reference count change. So we need only 		 * locate that buffer, ensure that there will be no rollback 		 * caused by a bitmap dependency, then write the inode buffer. 		 */
 if|if
@@ -19399,11 +19930,19 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"flush_pagedep_deps: lost inode"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * If the inode still has bitmap dependencies, 		 * push them to disk. 		 */
 if|if
 condition|(
@@ -19554,11 +20093,19 @@ argument_list|(
 name|diraddhdp
 argument_list|)
 condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"flush_pagedep_deps: flush failed"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -19779,6 +20326,16 @@ name|stat_blk_limit_hit
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|islocked
+condition|)
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"request_cleanup: unknown type"
@@ -20810,6 +21367,12 @@ case|:
 comment|/* never a dependency on these blocks */
 continue|continue;
 default|default:
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"softdep_check_for_rollback: Unexpected type %s"
