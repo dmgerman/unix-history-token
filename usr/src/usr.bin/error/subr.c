@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)subr.c	1.4 (Berkeley) %G%"
+literal|"@(#)subr.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1509,6 +1509,12 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|char
+modifier|*
+name|sep
+init|=
+literal|""
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -1522,12 +1528,21 @@ condition|;
 name|i
 operator|++
 control|)
+if|if
+condition|(
+name|wordv
+index|[
+name|i
+index|]
+condition|)
 block|{
 name|fprintf
 argument_list|(
 name|fyle
 argument_list|,
-literal|"%s"
+literal|"%s%s"
+argument_list|,
+name|sep
 argument_list|,
 name|wordv
 index|[
@@ -1535,20 +1550,9 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|!=
-name|wordc
-operator|-
-literal|1
-condition|)
-name|fprintf
-argument_list|(
-name|fyle
-argument_list|,
+name|sep
+operator|=
 literal|" "
-argument_list|)
 expr_stmt|;
 block|}
 block|}
