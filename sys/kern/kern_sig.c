@@ -9306,7 +9306,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a signal to a SIGIO or SIGURG to a process or process group using  * stored credentials rather than those of the current process.  */
+comment|/*  * Send a SIGIO or SIGURG signal to a process or process group using  * stored credentials rather than those of the current process.  */
 end_comment
 
 begin_function
