@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ln.c	4.12 (Berkeley) %G%"
+literal|"@(#)ln.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ end_include
 begin_decl_stmt
 specifier|static
 name|int
-name|fflag
+name|dirflag
 decl_stmt|,
 comment|/* undocumented force flag */
 name|sflag
@@ -147,7 +147,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fs"
+literal|"Fs"
 argument_list|)
 operator|)
 operator|!=
@@ -162,9 +162,9 @@ name|ch
 condition|)
 block|{
 case|case
-literal|'f'
+literal|'F'
 case|:
-name|fflag
+name|dirflag
 operator|=
 literal|1
 expr_stmt|;
@@ -418,11 +418,11 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* only symbolic links to directories, unless -f option used */
+comment|/* only symbolic links to directories, unless -F option used */
 if|if
 condition|(
 operator|!
-name|fflag
+name|dirflag
 operator|&&
 operator|(
 name|buf
