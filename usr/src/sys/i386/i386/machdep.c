@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and the University of Utah.  *  * %sccs.include.386.c%  *  *	@(#)machdep.c	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and the University of Utah.  *  * %sccs.include.386.c%  *  *	@(#)machdep.c	5.2 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1982,1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	1.16.1.1 (Berkeley) 11/24/87  */
 end_comment
 
 begin_include
@@ -320,7 +324,7 @@ decl_stmt|;
 comment|/* 	 * Initialize the console before we print anything out. 	 */
 comment|/*cninit();*/
 comment|/* 	 * Initialize error message buffer (at end of core). 	 */
-comment|/* Problem to resolve. AT's have memory that is not contigous, as I/O address space for video adapters and network cards fall into a range of 0xa0000 - 0x100000 . Note that the cmap really expects contigous memory. For the moment, use the bottom of memory for kernel and run-time configured storage (e.g. valloc), using memory above 0x100000 for the cmap, and wasting the stuff left over after valloc-end up to 0xa0000 (640K). Will have to fix this before beta, and will have to somehow move this out into per bus adapter directory (e.g. configurable). For now, punt */
+comment|/* Problem to resolve. AT's have memory that is not contigous, as I/O address space for video adapters and network cards fall into a range of 0xa0000 - 0x100000 . Note that the cmap really expects contigous memory. For the moment, use the bottom of memory for kernel and run-time configured storage (e.g. valloc), using memory above 0x100000 for the cmap, and wasting the stuff left over after valloc-end up to 0xa0000 (640K). Will have to fix this before beta, and will have to somehow move this out into per bus adapter directory (e.g. configurable). For now, punt  How about starting cmap normally following valloc space, and then write a routine than allocs only phys pages in the 0xa0000-0x100000 hole?  */
 name|kernmem
 operator|=
 literal|640
@@ -338,7 +342,6 @@ name|msgbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*pg("kern %x, msgbufmap", kernmem);*/
 name|pte
 operator|=
 name|msgbufmap
@@ -389,7 +392,7 @@ name|freemem
 operator|=
 name|physmem
 operator|=
-literal|1024
+literal|2048
 operator|/
 literal|4
 operator|+
@@ -397,10 +400,12 @@ name|kernmem
 expr_stmt|;
 name|cmaxmem
 operator|=
-literal|1024
+literal|2048
 operator|/
 literal|4
 expr_stmt|;
+comment|/* unmap particular region being written into, so we can find offending ptr */
+comment|/*{ extern char b_uregion[], e_uregion[]; #define	ptidx(s)	((s - sbase)/NBPG) 	pte = Sysmap + ptidx(b_uregion) + 1 ; 	for (i = ptidx(b_uregion) + 1 ; i< ptidx (e_uregion) ; i++) 		*(int *)pte++ = 0 ; }*/
 name|load_cr3
 argument_list|(
 name|_cr3
@@ -449,7 +454,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/*v = sbase + (firstaddr * NBPG);*/
-comment|/*pg("vallocs %x", v);*/
 define|#
 directive|define
 name|valloc
@@ -1174,7 +1178,6 @@ operator|/
 name|NBPG
 expr_stmt|;
 block|}
-comment|/*unixsize = btoc((int)(v - sbase));*/
 name|unixsize
 operator|=
 name|btoc
@@ -1259,7 +1262,7 @@ literal|0x100
 expr_stmt|;
 name|maxmem
 operator|=
-literal|0x200
+literal|0x300
 expr_stmt|;
 comment|/*XXX*/
 name|meminit
@@ -1314,10 +1317,13 @@ name|nproc
 argument_list|)
 expr_stmt|;
 comment|/*  * PTEs for mapping user space into kernel for phyio operations.  * One page is enough to handle 4Mb of simultaneous raw IO operations.  */
+undef|#
+directive|undef
+name|USRIOSIZE
 define|#
 directive|define
 name|USRIOSIZE
-value|(30)
+value|30
 name|rminit
 argument_list|(
 name|useriomap
@@ -1692,6 +1698,13 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Process has trashed its stack; give it an illegal 		 * instruction to halt it in its tracks. 		 */
+name|printf
+argument_list|(
+literal|"sendsig: failed to grow stack %x\n"
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
 name|u
 operator|.
 name|u_signal
@@ -3595,6 +3608,8 @@ argument_list|,
 argument|func
 argument_list|,
 argument|typ
+argument_list|,
+argument|dpl
 argument_list|)
 end_macro
 
@@ -3653,7 +3668,7 @@ name|ip
 operator|->
 name|gd_dpl
 operator|=
-literal|0
+name|dpl
 expr_stmt|;
 name|ip
 operator|->
@@ -4158,6 +4173,8 @@ name|div
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4174,6 +4191,8 @@ name|dbg
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4190,6 +4209,8 @@ name|nmi
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4206,6 +4227,8 @@ name|bpt
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_UPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4222,6 +4245,8 @@ name|ofl
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4238,6 +4263,8 @@ name|bnd
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4254,6 +4281,8 @@ name|ill
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4270,6 +4299,8 @@ name|dna
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4286,6 +4317,8 @@ name|dble
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4302,6 +4335,8 @@ name|fpusegm
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4318,6 +4353,8 @@ name|tss
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4334,6 +4371,8 @@ name|missing
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4350,6 +4389,8 @@ name|stk
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4366,6 +4407,8 @@ name|prot
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4382,6 +4425,8 @@ name|page
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4398,6 +4443,8 @@ name|rsvd
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4414,6 +4461,8 @@ name|fpu
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4430,6 +4479,8 @@ name|rsvd0
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4446,6 +4497,8 @@ name|rsvd1
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4462,6 +4515,8 @@ name|rsvd2
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4478,6 +4533,8 @@ name|rsvd3
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4494,6 +4551,8 @@ name|rsvd4
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4510,6 +4569,8 @@ name|rsvd5
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4526,6 +4587,8 @@ name|rsvd6
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4542,6 +4605,8 @@ name|rsvd7
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4558,6 +4623,8 @@ name|rsvd8
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4574,6 +4641,8 @@ name|rsvd9
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4590,6 +4659,8 @@ name|rsvd10
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4606,6 +4677,8 @@ name|rsvd11
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4622,6 +4695,8 @@ name|rsvd12
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4638,6 +4713,8 @@ name|rsvd13
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4654,6 +4731,8 @@ name|rsvd14
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4674,6 +4753,8 @@ name|intr0
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4690,6 +4771,8 @@ name|intr1
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4706,6 +4789,8 @@ name|intr9
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4726,6 +4811,8 @@ name|intr3
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4742,6 +4829,8 @@ name|intr4
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4758,6 +4847,8 @@ name|intr5
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4774,6 +4865,8 @@ name|intr6
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4790,6 +4883,8 @@ name|intr7
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4810,6 +4905,8 @@ name|intr8
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4826,6 +4923,8 @@ name|intr9
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4842,6 +4941,8 @@ name|intr10
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4858,6 +4959,8 @@ name|intr11
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4874,6 +4977,8 @@ name|intr12
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4890,6 +4995,8 @@ name|intr13
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4906,6 +5013,8 @@ name|intr14
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4922,6 +5031,8 @@ name|intr15
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5581,16 +5692,10 @@ begin_block
 block|{
 name|int
 name|c
+decl_stmt|,
+name|tally
 decl_stmt|;
-name|char
-modifier|*
-name|t
-init|=
-name|toaddr
-decl_stmt|;
-comment|/*printf("\ncpyinstr(%x,%x) %x|", fromaddr, toaddr, *(((int *)&fromaddr) - 1) );*/
-operator|*
-name|lencopied
+name|tally
 operator|=
 literal|0
 expr_stmt|;
@@ -5615,19 +5720,23 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|lencopied
+condition|)
+operator|*
+name|lencopied
+operator|=
+name|tally
+expr_stmt|;
 return|return
 operator|(
 name|EFAULT
 operator|)
 return|;
-name|c
-operator|&=
-literal|0xff
-expr_stmt|;
-operator|(
-operator|*
-name|lencopied
-operator|)
+block|}
+name|tally
 operator|++
 expr_stmt|;
 operator|*
@@ -5646,7 +5755,15 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* if(*lencopied< 50&& *t> 0) printf("%s|\n", t);*/
+if|if
+condition|(
+name|lencopied
+condition|)
+operator|*
+name|lencopied
+operator|=
+name|tally
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5654,6 +5771,15 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|lencopied
+condition|)
+operator|*
+name|lencopied
+operator|=
+name|tally
+expr_stmt|;
 return|return
 operator|(
 name|ENOENT
@@ -5694,15 +5820,10 @@ block|{
 name|int
 name|c
 decl_stmt|;
-name|u_char
-modifier|*
-name|f
-init|=
-name|fromaddr
+name|int
+name|tally
 decl_stmt|;
-comment|/*printf("\ncpyoutstr(%x,%x)%x|", fromaddr, toaddr, maxlength,  	*(((int *)&fromaddr) - 1) );*/
-operator|*
-name|lencopied
+name|tally
 operator|=
 literal|0
 expr_stmt|;
@@ -5735,10 +5856,7 @@ operator|(
 name|EFAULT
 operator|)
 return|;
-operator|(
-operator|*
-name|lencopied
-operator|)
+name|tally
 operator|++
 expr_stmt|;
 if|if
@@ -5750,7 +5868,15 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/*if(*lencopied< 50&& *f< 127) printf("%s|\n", f);*/
+if|if
+condition|(
+name|lencopied
+condition|)
+operator|*
+name|lencopied
+operator|=
+name|tally
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5758,6 +5884,15 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|lencopied
+condition|)
+operator|*
+name|lencopied
+operator|=
+name|tally
+expr_stmt|;
 return|return
 operator|(
 name|ENOENT
@@ -5799,10 +5934,9 @@ end_decl_stmt
 begin_block
 block|{
 name|int
-name|c
+name|tally
 decl_stmt|;
-operator|*
-name|lencopied
+name|tally
 operator|=
 literal|0
 expr_stmt|;
@@ -5819,10 +5953,7 @@ operator|*
 name|fromaddr
 operator|++
 expr_stmt|;
-operator|(
-operator|*
-name|lencopied
-operator|)
+name|tally
 operator|++
 expr_stmt|;
 if|if
@@ -5833,17 +5964,154 @@ operator|++
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|lencopied
+condition|)
+operator|*
+name|lencopied
+operator|=
+name|tally
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
+block|}
+if|if
+condition|(
+name|lencopied
+condition|)
+operator|*
+name|lencopied
+operator|=
+name|tally
+expr_stmt|;
 return|return
 operator|(
 name|ENOENT
 operator|)
 return|;
+block|}
+end_block
+
+begin_comment
+comment|/*   * ovbcopy - like bcopy, but recognizes overlapping ranges and handles   *           them correctly.  */
+end_comment
+
+begin_macro
+name|ovbcopy
+argument_list|(
+argument|from
+argument_list|,
+argument|to
+argument_list|,
+argument|bytes
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|from
+decl_stmt|,
+modifier|*
+name|to
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|bytes
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* num bytes to copy */
+end_comment
+
+begin_block
+block|{
+comment|/* Assume that bcopy copies left-to-right (low addr first). */
+if|if
+condition|(
+name|from
+operator|+
+name|bytes
+operator|<=
+name|to
+operator|||
+name|to
+operator|+
+name|bytes
+operator|<=
+name|from
+operator|||
+name|to
+operator|==
+name|from
+condition|)
+name|bcopy
+argument_list|(
+name|from
+argument_list|,
+name|to
+argument_list|,
+name|bytes
+argument_list|)
+expr_stmt|;
+comment|/* non-overlapping or no-op*/
+elseif|else
+if|if
+condition|(
+name|from
+operator|>
+name|to
+condition|)
+name|bcopy
+argument_list|(
+name|from
+argument_list|,
+name|to
+argument_list|,
+name|bytes
+argument_list|)
+expr_stmt|;
+comment|/* overlapping but OK */
+else|else
+block|{
+comment|/* to> from: overlapping, and must copy right-to-left. */
+name|from
+operator|+=
+name|bytes
+operator|-
+literal|1
+expr_stmt|;
+name|to
+operator|+=
+name|bytes
+operator|-
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|bytes
+operator|--
+operator|>
+literal|0
+condition|)
+operator|*
+name|to
+operator|--
+operator|=
+operator|*
+name|from
+operator|--
+expr_stmt|;
+block|}
 block|}
 end_block
 

@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)vm_machdep.c	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)vm_machdep.c	5.2 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1988 University of Utah.  * All rights reserved.  The Utah Software License Agreement  * specifies the terms and conditions for redistribution.  *  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vm_machdep.c	7.1 (Berkeley) 6/5/86  */
 end_comment
 
 begin_include
@@ -1099,33 +1107,7 @@ operator|->
 name|p_ssize
 argument_list|)
 condition|)
-block|{
-name|dprintf
-argument_list|(
-name|DPHYS
-argument_list|,
-literal|"vtopte %x %x\n"
-argument_list|,
-name|vtopte
-argument_list|(
-name|p
-argument_list|,
-name|page
-argument_list|)
-argument_list|,
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|vtopte
-argument_list|(
-name|p
-argument_list|,
-name|page
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* { dprintf(DPHYS,"vtopte %x %x\n", vtopte(p, page), *(int *)vtopte(p, page) );*/
 return|return
 operator|(
 operator|(
@@ -1147,7 +1129,7 @@ operator|==
 name|PG_UW
 operator|)
 return|;
-block|}
+comment|/*}*/
 return|return
 operator|(
 literal|0
@@ -1207,19 +1189,7 @@ specifier|extern
 name|long
 name|Syssize
 decl_stmt|;
-name|dprintf
-argument_list|(
-name|DPHYS
-argument_list|,
-literal|"kernacc %x count %d rw %d"
-argument_list|,
-name|addr
-argument_list|,
-name|count
-argument_list|,
-name|rw
-argument_list|)
-expr_stmt|;
+comment|/*dprintf(DPHYS,"kernacc %x count %d rw %d", addr, count, rw);*/
 if|if
 condition|(
 name|count
@@ -1315,24 +1285,13 @@ name|pd_v
 operator|==
 literal|0
 condition|)
-block|{
-name|dprintf
-argument_list|(
-name|DPHYS
-argument_list|,
-literal|"nope pde %x, idx %x\n"
-argument_list|,
-name|pde
-argument_list|,
-name|ix
-argument_list|)
-expr_stmt|;
+comment|/*{ dprintf(DPHYS,"nope pde %x, idx %x\n", pde, ix);*/
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
+comment|/*}*/
 name|ix
 operator|=
 name|btop
@@ -1367,22 +1326,13 @@ operator|)
 operator|&
 name|Syssize
 condition|)
-block|{
-name|dprintf
-argument_list|(
-name|DPHYS
-argument_list|,
-literal|"nope cnt %x\n"
-argument_list|,
-name|cnt
-argument_list|)
-expr_stmt|;
+comment|/*{ dprintf(DPHYS,"nope cnt %x\n", cnt);*/
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
+comment|/*}*/
 name|cnt
 operator|-=
 name|ix
@@ -1414,38 +1364,13 @@ operator|==
 literal|0
 comment|/*|| (rw == B_WRITE&& pte->pg_prot == 1)*/
 condition|)
-block|{
-name|dprintf
-argument_list|(
-name|DPHYS
-argument_list|,
-literal|"nope pte %x %x, idx %x\n"
-argument_list|,
-name|pte
-argument_list|,
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|pte
-argument_list|,
-name|ix
-argument_list|)
-expr_stmt|;
+comment|/*{ dprintf(DPHYS,"nope pte %x %x, idx %x\n", pte, *(int *)pte, ix);*/
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-name|dprintf
-argument_list|(
-name|DPHYS
-argument_list|,
-literal|"yup\n"
-argument_list|)
-expr_stmt|;
+comment|/*} dprintf(DPHYS,"yup\n");*/
 return|return
 operator|(
 literal|1
@@ -1499,19 +1424,7 @@ decl_stmt|,
 name|probew
 argument_list|()
 decl_stmt|;
-name|dprintf
-argument_list|(
-name|DPHYS
-argument_list|,
-literal|"useracc %x count %d rw %d"
-argument_list|,
-name|addr
-argument_list|,
-name|count
-argument_list|,
-name|rw
-argument_list|)
-expr_stmt|;
+comment|/*dprintf(DPHYS,"useracc %x count %d rw %d", addr, count, rw);*/
 if|if
 condition|(
 name|count
@@ -1557,22 +1470,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|dprintf
-argument_list|(
-name|DPHYS
-argument_list|,
-literal|"nope %x\n"
-argument_list|,
-name|addr
-argument_list|)
-expr_stmt|;
+comment|/*{ dprintf(DPHYS,"nope %x\n", addr);*/
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
+comment|/*}*/
 name|addr2
 operator|=
 operator|(
@@ -1592,15 +1496,7 @@ operator|<
 name|addr
 condition|)
 do|;
-name|dprintf
-argument_list|(
-name|DPHYS
-argument_list|,
-literal|"yup\n"
-argument_list|,
-name|addr
-argument_list|)
-expr_stmt|;
+comment|/*dprintf(DPHYS,"yup\n", addr);*/
 return|return
 operator|(
 literal|1
@@ -1790,8 +1686,6 @@ begin_expr_stmt
 name|initpdt
 argument_list|(
 name|p
-argument_list|,
-name|usr
 argument_list|)
 specifier|register
 expr|struct
@@ -1829,12 +1723,6 @@ parameter_list|()
 function_decl|;
 extern|extern Sysbase;
 comment|/*pg("initpdt");*/
-if|if
-condition|(
-operator|!
-name|usr
-condition|)
-block|{
 comment|/* clear entire map */
 name|pde
 operator|=
@@ -1948,8 +1836,6 @@ operator|.
 name|pg_pfnum
 expr_stmt|;
 comment|/*printf("%d.u. pde %x pfnum %x virt %x\n", p->p_pid, pde, pde->pd_pfnum, p->p_addr);*/
-return|return;
-block|}
 comment|/* otherwise, fill in user map */
 name|k
 operator|=
@@ -1993,17 +1879,7 @@ operator|->
 name|p_dsize
 argument_list|)
 expr_stmt|;
-name|dprintf
-argument_list|(
-name|DEXPAND
-argument_list|,
-literal|"textdata 0 to %d\n"
-argument_list|,
-name|sz
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/*dprintf(DEXPAND,"textdata 0 to %d\n",sz-1);*/
 for|for
 control|(
 name|i
@@ -2094,19 +1970,7 @@ name|Sysbase
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dprintf
-argument_list|(
-name|DEXPAND
-argument_list|,
-literal|"zero %d upto %d\n"
-argument_list|,
-name|i
-argument_list|,
-name|sz
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/*dprintf(DEXPAND,"zero %d upto %d\n", i, sz-1);*/
 for|for
 control|(
 init|;
@@ -2149,19 +2013,7 @@ name|Sysbase
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dprintf
-argument_list|(
-name|DEXPAND
-argument_list|,
-literal|"stack %d upto %d\n"
-argument_list|,
-name|i
-argument_list|,
-name|sz
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/*dprintf(DEXPAND,"stack %d upto %d\n", i, sz-1);*/
 for|for
 control|(
 init|;
@@ -2713,6 +2565,15 @@ operator|++
 expr_stmt|;
 block|}
 end_while
+
+begin_expr_stmt
+name|load_cr3
+argument_list|(
+name|_cr3
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|}
