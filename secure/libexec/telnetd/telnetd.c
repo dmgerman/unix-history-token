@@ -548,6 +548,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+modifier|*
+name|altlogin
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|usage
@@ -579,6 +586,10 @@ block|,
 literal|'k'
 block|,
 literal|'n'
+block|,
+literal|'p'
+block|,
+literal|':'
 block|,
 literal|'S'
 block|,
@@ -1189,6 +1200,14 @@ case|:
 name|keepalive
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|altlogin
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 ifdef|#
