@@ -588,8 +588,9 @@ name|CTR3
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"bus_dma_tag_create returned tag %p tag "
-literal|"flags 0x%x error %d"
+literal|"%s returned tag %p tag flags 0x%x error %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|newtag
 argument_list|,
@@ -897,8 +898,9 @@ name|CTR3
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"bus_dma_tag_create returned tag %p tag flags 0x%x "
-literal|"error %d"
+literal|"%s returned tag %p tag flags 0x%x error %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|newtag
 argument_list|,
@@ -1022,7 +1024,9 @@ name|CTR1
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"bus_dma_tag_destroy tag %p"
+literal|"%s tag %p"
+argument_list|,
+name|__func__
 argument_list|,
 name|dmat_copy
 argument_list|)
@@ -1095,7 +1099,9 @@ name|CTR2
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"bus_dmamap_create: tag %p error %d"
+literal|"%s: tag %p error %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|dmat
 argument_list|,
@@ -1134,7 +1140,9 @@ name|CTR3
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"bus_dmamap_create: tag %p tag flags 0x%x error %d"
+literal|"%s: tag %p tag flags 0x%x error %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|dmat
 argument_list|,
@@ -1184,7 +1192,9 @@ name|CTR1
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"bus_dmamap_destroy: tag %p error 0"
+literal|"%s: tag %p error 0"
+argument_list|,
+name|__func__
 argument_list|,
 name|dmat
 argument_list|)
@@ -1289,8 +1299,7 @@ name|CTR3
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"bus_dmamem_alloc: tag %p tag "
-literal|"flags 0x%x error %d"
+literal|"%s: tag %p tag flags 0x%x error %d"
 argument_list|,
 name|dmat
 argument_list|,
@@ -1503,7 +1512,9 @@ name|CTR2
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"bus_dmamem_free: tag %p flags 0x%x"
+literal|"%s: tag %p flags 0x%x"
+argument_list|,
+name|__func__
 argument_list|,
 name|dmat
 argument_list|,
@@ -2262,8 +2273,9 @@ name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"bus_dmamap_load: tag %p tag flags 0x%x error %d "
-literal|"nsegs %d"
+literal|"%s: tag %p tag flags 0x%x error %d nsegs %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|dmat
 argument_list|,
@@ -2517,8 +2529,9 @@ name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"bus_dmamap_load_mbuf: tag %p tag flags 0x%x "
-literal|"error %d nsegs %d"
+literal|"%s: tag %p tag flags 0x%x error %d nsegs %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|dmat
 argument_list|,
@@ -2710,8 +2723,9 @@ name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"bus_dmamap_load_mbuf: tag %p tag flags 0x%x "
-literal|"error %d nsegs %d"
+literal|"%s: tag %p tag flags 0x%x error %d nsegs %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|dmat
 argument_list|,
@@ -3037,8 +3051,9 @@ name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"bus_dmamap_load_uio: tag %p tag flags 0x%x "
-literal|"error %d nsegs %d"
+literal|"%s: tag %p tag flags 0x%x error %d nsegs %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|dmat
 argument_list|,
@@ -3247,7 +3262,9 @@ name|CTR2
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"bus_dmamap_sync: op %x flags %x"
+literal|"%s: op %x flags %x"
+argument_list|,
+name|__func__
 argument_list|,
 name|op
 argument_list|,
