@@ -478,7 +478,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parsetime.c,v 1.1 1993/12/05 11:37:05 cgd Exp $"
+literal|"$Id: parsetime.c,v 1.1 1994/01/05 01:09:08 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1659,8 +1659,6 @@ name|atol
 argument_list|(
 name|sc_token
 argument_list|)
-operator|-
-literal|1
 expr_stmt|;
 if|if
 condition|(
