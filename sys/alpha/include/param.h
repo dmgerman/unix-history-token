@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: param.h,v 1.9 1999/03/01 06:10:16 imp Exp $ */
+comment|/* $Id: param.h,v 1.10 1999/04/11 12:19:02 simokawa Exp $ */
 end_comment
 
 begin_comment
@@ -122,6 +122,13 @@ define|#
 directive|define
 name|OBJFORMAT_DEFAULT
 value|"elf"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCPUS
+value|1
 end_define
 
 begin_comment
