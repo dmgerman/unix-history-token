@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uncompr.c -- decompress a memory buffer  * Copyright (C) 1995-1996 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* uncompr.c -- decompress a memory buffer  * Copyright (C) 1995-1998 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_comment
@@ -19,6 +19,7 @@ end_comment
 
 begin_function
 name|int
+name|ZEXPORT
 name|uncompress
 parameter_list|(
 name|dest
@@ -176,6 +177,12 @@ name|stream
 argument_list|)
 expr_stmt|;
 return|return
+name|err
+operator|==
+name|Z_OK
+condition|?
+name|Z_BUF_ERROR
+else|:
 name|err
 return|;
 block|}

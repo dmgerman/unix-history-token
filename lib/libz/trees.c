@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* trees.c -- output deflated data using Huffman coding  * Copyright (C) 1995-1996 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* trees.c -- output deflated data using Huffman coding  * Copyright (C) 1995-1998 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_comment
@@ -9,6 +9,10 @@ end_comment
 
 begin_comment
 comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
+comment|/* #define GEN_TREES_H */
 end_comment
 
 begin_include
@@ -95,6 +99,7 @@ end_comment
 
 begin_decl_stmt
 name|local
+specifier|const
 name|int
 name|extra_lbits
 index|[
@@ -166,6 +171,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|local
+specifier|const
 name|int
 name|extra_dbits
 index|[
@@ -239,6 +245,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|local
+specifier|const
 name|int
 name|extra_blbits
 index|[
@@ -290,6 +297,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|local
+specifier|const
 name|uch
 name|bl_order
 index|[
@@ -357,6 +365,36 @@ begin_comment
 comment|/* ===========================================================================  * Local data. These are initialized only once.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DIST_CODE_LEN
+value|512
+end_define
+
+begin_comment
+comment|/* see definition of array dist_code below */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|GEN_TREES_H
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|STDC
+argument_list|)
+end_if
+
+begin_comment
+comment|/* non ANSI compilers may not accept trees.h */
+end_comment
+
 begin_decl_stmt
 name|local
 name|ct_data
@@ -388,23 +426,21 @@ comment|/* The static distance tree. (Actually a trivial tree since all codes us
 end_comment
 
 begin_decl_stmt
-name|local
 name|uch
-name|dist_code
+name|_dist_code
 index|[
-literal|512
+name|DIST_CODE_LEN
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* distance codes. The first 256 values correspond to the distances  * 3 .. 258, the last 256 values correspond to the top 8 bits of  * the 15 bit distances.  */
+comment|/* Distance codes. The first 256 values correspond to the distances  * 3 .. 258, the last 256 values correspond to the top 8 bits of  * the 15 bit distances.  */
 end_comment
 
 begin_decl_stmt
-name|local
 name|uch
-name|length_code
+name|_length_code
 index|[
 name|MAX_MATCH
 operator|-
@@ -447,15 +483,37 @@ begin_comment
 comment|/* First normalized distance for each code (0 = distance of 1) */
 end_comment
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"trees.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GEN_TREES_H */
+end_comment
+
 begin_struct
 struct|struct
 name|static_tree_desc_s
 block|{
+specifier|const
 name|ct_data
 modifier|*
 name|static_tree
 decl_stmt|;
 comment|/* static tree or NULL */
+specifier|const
 name|intf
 modifier|*
 name|extra_bits
@@ -524,6 +582,7 @@ name|static_bl_desc
 init|=
 block|{
 operator|(
+specifier|const
 name|ct_data
 operator|*
 operator|)
@@ -847,6 +906,30 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GEN_TREES_H
+end_ifdef
+
+begin_decl_stmt
+name|local
+name|void
+name|gen_trees_header
+name|OF
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -892,28 +975,13 @@ parameter_list|,
 name|tree
 parameter_list|)
 define|\
-value|{ if (verbose>2) fprintf(stderr,"\ncd %3d ",(c)); \        send_bits(s, tree[c].Code, tree[c].Len); }
+value|{ if (z_verbose>2) fprintf(stderr,"\ncd %3d ",(c)); \        send_bits(s, tree[c].Code, tree[c].Len); }
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|d_code
-parameter_list|(
-name|dist
-parameter_list|)
-define|\
-value|((dist)< 256 ? dist_code[dist] : dist_code[256+((dist)>>7)])
-end_define
-
-begin_comment
-comment|/* Mapping from a distance to a distance code. dist is the distance - 1 and  * must not have side effects. dist_code[256] and dist_code[257] are never  * used.  */
-end_comment
 
 begin_comment
 comment|/* ===========================================================================  * Output a short LSB first on the stream.  * IN assertion: there is enough room in pendingBuf.  */
@@ -1155,7 +1223,7 @@ comment|/* the arguments must not have side effects */
 end_comment
 
 begin_comment
-comment|/* ===========================================================================  * Initialize the various 'constant' tables. In a multi-threaded environment,  * this function may be called by two threads concurrently, but this is  * harmless since both invocations do exactly the same thing.  */
+comment|/* ===========================================================================  * Initialize the various 'constant' tables.  */
 end_comment
 
 begin_function
@@ -1164,6 +1232,18 @@ name|void
 name|tr_static_init
 parameter_list|()
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|GEN_TREES_H
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|STDC
+argument_list|)
 specifier|static
 name|int
 name|static_init_done
@@ -1253,7 +1333,7 @@ name|n
 operator|++
 control|)
 block|{
-name|length_code
+name|_length_code
 index|[
 name|length
 operator|++
@@ -1276,7 +1356,7 @@ literal|"tr_static_init: length != 256"
 argument_list|)
 expr_stmt|;
 comment|/* Note that the length 255 (match length 258) can be represented      * in two different ways: code 284 + 5 bits or code 285, so we      * overwrite length_code[255] to use the best encoding:      */
-name|length_code
+name|_length_code
 index|[
 name|length
 operator|-
@@ -1335,7 +1415,7 @@ name|n
 operator|++
 control|)
 block|{
-name|dist_code
+name|_dist_code
 index|[
 name|dist
 operator|++
@@ -1407,7 +1487,7 @@ name|n
 operator|++
 control|)
 block|{
-name|dist_code
+name|_dist_code
 index|[
 literal|256
 operator|+
@@ -1606,8 +1686,407 @@ name|static_init_done
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GEN_TREES_H
+name|gen_trees_header
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
+comment|/* defined(GEN_TREES_H) || !defined(STDC) */
 block|}
 end_function
+
+begin_comment
+comment|/* ===========================================================================  * Genererate the file trees.h describing the static trees.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GEN_TREES_H
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEBUG
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|SEPARATOR
+parameter_list|(
+name|i
+parameter_list|,
+name|last
+parameter_list|,
+name|width
+parameter_list|)
+define|\
+value|((i) == (last)? "\n};\n\n" :    \        ((i) % (width) == (width)-1 ? ",\n" : ", "))
+end_define
+
+begin_function
+name|void
+name|gen_trees_header
+parameter_list|()
+block|{
+name|FILE
+modifier|*
+name|header
+init|=
+name|fopen
+argument_list|(
+literal|"trees.h"
+argument_list|,
+literal|"w"
+argument_list|)
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|Assert
+argument_list|(
+name|header
+operator|!=
+name|NULL
+argument_list|,
+literal|"Can't open trees.h"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|header
+argument_list|,
+literal|"/* header created automatically with -DGEN_TREES_H */\n\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|header
+argument_list|,
+literal|"local const ct_data static_ltree[L_CODES+2] = {\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|L_CODES
+operator|+
+literal|2
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|header
+argument_list|,
+literal|"{{%3u},{%3u}}%s"
+argument_list|,
+name|static_ltree
+index|[
+name|i
+index|]
+operator|.
+name|Code
+argument_list|,
+name|static_ltree
+index|[
+name|i
+index|]
+operator|.
+name|Len
+argument_list|,
+name|SEPARATOR
+argument_list|(
+name|i
+argument_list|,
+name|L_CODES
+operator|+
+literal|1
+argument_list|,
+literal|5
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|header
+argument_list|,
+literal|"local const ct_data static_dtree[D_CODES] = {\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|D_CODES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|header
+argument_list|,
+literal|"{{%2u},{%2u}}%s"
+argument_list|,
+name|static_dtree
+index|[
+name|i
+index|]
+operator|.
+name|Code
+argument_list|,
+name|static_dtree
+index|[
+name|i
+index|]
+operator|.
+name|Len
+argument_list|,
+name|SEPARATOR
+argument_list|(
+name|i
+argument_list|,
+name|D_CODES
+operator|-
+literal|1
+argument_list|,
+literal|5
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|header
+argument_list|,
+literal|"const uch _dist_code[DIST_CODE_LEN] = {\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|DIST_CODE_LEN
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|header
+argument_list|,
+literal|"%2u%s"
+argument_list|,
+name|_dist_code
+index|[
+name|i
+index|]
+argument_list|,
+name|SEPARATOR
+argument_list|(
+name|i
+argument_list|,
+name|DIST_CODE_LEN
+operator|-
+literal|1
+argument_list|,
+literal|20
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|header
+argument_list|,
+literal|"const uch _length_code[MAX_MATCH-MIN_MATCH+1]= {\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAX_MATCH
+operator|-
+name|MIN_MATCH
+operator|+
+literal|1
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|header
+argument_list|,
+literal|"%2u%s"
+argument_list|,
+name|_length_code
+index|[
+name|i
+index|]
+argument_list|,
+name|SEPARATOR
+argument_list|(
+name|i
+argument_list|,
+name|MAX_MATCH
+operator|-
+name|MIN_MATCH
+argument_list|,
+literal|20
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|header
+argument_list|,
+literal|"local const int base_length[LENGTH_CODES] = {\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|LENGTH_CODES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|header
+argument_list|,
+literal|"%1u%s"
+argument_list|,
+name|base_length
+index|[
+name|i
+index|]
+argument_list|,
+name|SEPARATOR
+argument_list|(
+name|i
+argument_list|,
+name|LENGTH_CODES
+operator|-
+literal|1
+argument_list|,
+literal|20
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|header
+argument_list|,
+literal|"local const int base_dist[D_CODES] = {\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|D_CODES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|header
+argument_list|,
+literal|"%5u%s"
+argument_list|,
+name|base_dist
+index|[
+name|i
+index|]
+argument_list|,
+name|SEPARATOR
+argument_list|(
+name|i
+argument_list|,
+name|D_CODES
+operator|-
+literal|1
+argument_list|,
+literal|10
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|fclose
+argument_list|(
+name|header
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GEN_TREES_H */
+end_comment
 
 begin_comment
 comment|/* ===========================================================================  * Initialize the tree data structures for a new zlib stream.  */
@@ -2099,6 +2578,7 @@ name|desc
 operator|->
 name|max_code
 decl_stmt|;
+specifier|const
 name|ct_data
 modifier|*
 name|stree
@@ -2109,6 +2589,7 @@ name|stat_desc
 operator|->
 name|static_tree
 decl_stmt|;
+specifier|const
 name|intf
 modifier|*
 name|extra
@@ -2825,6 +3306,7 @@ name|desc
 operator|->
 name|dyn_tree
 decl_stmt|;
+specifier|const
 name|ct_data
 modifier|*
 name|stree
@@ -5256,7 +5738,7 @@ name|s
 operator|->
 name|dyn_ltree
 index|[
-name|length_code
+name|_length_code
 index|[
 name|lc
 index|]
@@ -5283,24 +5765,27 @@ name|Freq
 operator|++
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|TRUNCATE_BLOCK
 comment|/* Try to guess if it is profitable to stop the current block here */
 if|if
 condition|(
-name|s
-operator|->
-name|level
-operator|>
-literal|2
-operator|&&
 operator|(
 name|s
 operator|->
 name|last_lit
 operator|&
-literal|0xfff
+literal|0x1fff
 operator|)
 operator|==
 literal|0
+operator|&&
+name|s
+operator|->
+name|level
+operator|>
+literal|2
 condition|)
 block|{
 comment|/* Compute an upper bound for the compressed length */
@@ -5427,6 +5912,8 @@ return|return
 literal|1
 return|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|s
@@ -5558,7 +6045,7 @@ block|{
 comment|/* Here, lc is the match length - MIN_MATCH */
 name|code
 operator|=
-name|length_code
+name|_length_code
 index|[
 name|lc
 index|]

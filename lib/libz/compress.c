@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* compress.c -- compress a memory buffer  * Copyright (C) 1995-1996 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* compress.c -- compress a memory buffer  * Copyright (C) 1995-1998 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_comment
@@ -14,12 +14,13 @@ file|"zlib.h"
 end_include
 
 begin_comment
-comment|/* ===========================================================================      Compresses the source buffer into the destination buffer.  sourceLen is    the byte length of the source buffer. Upon entry, destLen is the total    size of the destination buffer, which must be at least 0.1% larger than    sourceLen plus 8 bytes. Upon exit, destLen is the actual size of the    compressed buffer.      This function can be used to compress a whole file at once if the    input file is mmap'ed.      compress returns Z_OK if success, Z_MEM_ERROR if there was not    enough memory, Z_BUF_ERROR if there was not enough room in the output    buffer. */
+comment|/* ===========================================================================      Compresses the source buffer into the destination buffer. The level    parameter has the same meaning as in deflateInit.  sourceLen is the byte    length of the source buffer. Upon entry, destLen is the total size of the    destination buffer, which must be at least 0.1% larger than sourceLen plus    12 bytes. Upon exit, destLen is the actual size of the compressed buffer.       compress2 returns Z_OK if success, Z_MEM_ERROR if there was not enough    memory, Z_BUF_ERROR if there was not enough room in the output buffer,    Z_STREAM_ERROR if the level parameter is invalid. */
 end_comment
 
 begin_function
 name|int
-name|compress
+name|ZEXPORT
+name|compress2
 parameter_list|(
 name|dest
 parameter_list|,
@@ -28,6 +29,8 @@ parameter_list|,
 name|source
 parameter_list|,
 name|sourceLen
+parameter_list|,
+name|level
 parameter_list|)
 name|Bytef
 modifier|*
@@ -44,6 +47,9 @@ name|source
 decl_stmt|;
 name|uLong
 name|sourceLen
+decl_stmt|;
+name|int
+name|level
 decl_stmt|;
 block|{
 name|z_stream
@@ -156,7 +162,7 @@ argument_list|(
 operator|&
 name|stream
 argument_list|,
-name|Z_DEFAULT_COMPRESSION
+name|level
 argument_list|)
 expr_stmt|;
 if|if
@@ -218,6 +224,57 @@ argument_list|)
 expr_stmt|;
 return|return
 name|err
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* ===========================================================================  */
+end_comment
+
+begin_function
+name|int
+name|ZEXPORT
+name|compress
+parameter_list|(
+name|dest
+parameter_list|,
+name|destLen
+parameter_list|,
+name|source
+parameter_list|,
+name|sourceLen
+parameter_list|)
+name|Bytef
+modifier|*
+name|dest
+decl_stmt|;
+name|uLongf
+modifier|*
+name|destLen
+decl_stmt|;
+specifier|const
+name|Bytef
+modifier|*
+name|source
+decl_stmt|;
+name|uLong
+name|sourceLen
+decl_stmt|;
+block|{
+return|return
+name|compress2
+argument_list|(
+name|dest
+argument_list|,
+name|destLen
+argument_list|,
+name|source
+argument_list|,
+name|sourceLen
+argument_list|,
+name|Z_DEFAULT_COMPRESSION
+argument_list|)
 return|;
 block|}
 end_function

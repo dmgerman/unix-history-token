@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* adler32.c -- compute the Adler-32 checksum of a data stream  * Copyright (C) 1995-1996 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* adler32.c -- compute the Adler-32 checksum of a data stream  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_comment
@@ -99,6 +99,7 @@ end_comment
 
 begin_function
 name|uLong
+name|ZEXPORT
 name|adler32
 parameter_list|(
 name|adler
