@@ -141,6 +141,26 @@ parameter_list|)
 value|if (pccard_debug) device_printf arg
 end_define
 
+begin_define
+define|#
+directive|define
+name|PRVERBOSE
+parameter_list|(
+name|arg
+parameter_list|)
+value|printf arg
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVPRVERBOSE
+parameter_list|(
+name|arg
+parameter_list|)
+value|device_printf arg
+end_define
+
 begin_else
 else|#
 directive|else
@@ -162,6 +182,26 @@ name|DEVPRINTF
 parameter_list|(
 name|arg
 parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRVERBOSE
+parameter_list|(
+name|arg
+parameter_list|)
+value|if (bootverbose) printf arg
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVPRVERBOSE
+parameter_list|(
+name|arg
+parameter_list|)
+value|if (bootverbose) device_printf arg
 end_define
 
 begin_endif
@@ -592,13 +632,15 @@ argument_list|(
 name|pf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|pccard_function_enable
 argument_list|(
 name|pf
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|==
+literal|0
+operator|&&
 name|device_probe_and_attach
 argument_list|(
 name|child
@@ -1552,6 +1594,7 @@ break|break;
 name|not_this_one
 label|:
 empty_stmt|;
+comment|/* 		 * Release resources that we partially allocated 		 * from this config entry. 		 */
 for|for
 control|(
 name|i
@@ -1704,11 +1747,20 @@ name|cfe
 operator|==
 name|NULL
 condition|)
-name|panic
+block|{
+name|DEVPRVERBOSE
 argument_list|(
-literal|"pccard_function_enable: function not initialized"
+operator|(
+name|dev
+operator|,
+literal|"No config entry could be allocated.\n"
+operator|)
 argument_list|)
 expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 comment|/* 	 * Increase the reference count on the socket, enabling power, if 	 * necessary. 	 */
 if|if
 condition|(
@@ -2744,7 +2796,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"PC Card bus -- newconfig version"
+literal|"16-bit PCCard bus"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4038,6 +4090,47 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|pccard_child_detached
+parameter_list|(
+name|device_t
+name|parent
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|pccard_ivar
+modifier|*
+name|ivar
+init|=
+name|PCCARD_IVAR
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|parent
+operator|==
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+name|free
+argument_list|(
+name|ivar
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -4101,6 +4194,13 @@ argument_list|(
 name|bus_driver_added
 argument_list|,
 name|pccard_driver_added
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_child_detached
+argument_list|,
+name|pccard_child_detached
 argument_list|)
 block|,
 name|DEVMETHOD
