@@ -5295,10 +5295,9 @@ operator|.
 name|le_next
 control|)
 block|{
-name|quad_t
+name|vm_pindex_t
 name|limit
-decl_stmt|;
-name|vm_offset_t
+decl_stmt|,
 name|size
 decl_stmt|;
 comment|/* 			 * if this is a system process or if we have already 			 * looked at this process, skip it. 			 */
@@ -5338,6 +5337,8 @@ block|}
 comment|/* 			 * get a limit 			 */
 name|limit
 operator|=
+name|OFF_TO_IDX
+argument_list|(
 name|qmin
 argument_list|(
 name|p
@@ -5357,6 +5358,7 @@ name|RLIMIT_RSS
 index|]
 operator|.
 name|rlim_max
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 			 * let processes that are swapped out really be 			 * swapped out set the limit to nothing (will force a 			 * swap-out.) 			 */
@@ -5385,8 +5387,6 @@ name|p
 operator|->
 name|p_vmspace
 argument_list|)
-operator|*
-name|PAGE_SIZE
 expr_stmt|;
 if|if
 condition|(
@@ -5408,14 +5408,7 @@ name|p_vmspace
 operator|->
 name|vm_map
 argument_list|,
-call|(
-name|vm_pindex_t
-call|)
-argument_list|(
 name|limit
-operator|>>
-name|PAGE_SHIFT
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
