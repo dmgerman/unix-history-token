@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.c	7.5 (Berkeley) %G%  *  * from: $Header: cpu.c,v 1.11 93/04/27 14:34:42 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.c	7.6 (Berkeley) %G%  *  * from: $Header: cpu.c,v 1.12 93/05/03 09:47:57 torek Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -71,16 +71,6 @@ literal|80
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|cpuspeed
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -276,13 +266,6 @@ argument_list|,
 name|cpu_model
 argument_list|)
 expr_stmt|;
-name|cpuspeed
-operator|=
-name|clk
-operator|/
-literal|1000000
-expr_stmt|;
-comment|/* XXX */
 comment|/* 	 * Fill in the cache info.  Note, vac-hwflush is spelled 	 * with an underscore on 4/75s. 	 */
 name|cacheinfo
 operator|.
