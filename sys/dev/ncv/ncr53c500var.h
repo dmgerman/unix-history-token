@@ -88,6 +88,9 @@ name|int
 name|port_rid
 decl_stmt|;
 name|int
+name|port_rid_dmy
+decl_stmt|;
+name|int
 name|irq_rid
 decl_stmt|;
 name|int
@@ -97,6 +100,11 @@ name|struct
 name|resource
 modifier|*
 name|port_res
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|port_res_dmy
 decl_stmt|;
 name|struct
 name|resource
