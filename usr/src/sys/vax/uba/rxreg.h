@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rxreg.h	4.1	83/02/08	*/
+comment|/*	rxreg.h	4.2	83/02/21	*/
 end_comment
 
 begin_comment
@@ -304,6 +304,12 @@ define|\
 value|"\20\14RXES_NXM\13RXES_WCOF\11RXES_DRV1\10RXES_RDY\7RXES_DDMK\6RXES_DDEN\5\ RXES_DNER\4RXES_ACLO\3RXES_ID\1RXES_CRC"
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RXDEFERR
+end_ifdef
+
 begin_comment
 comment|/*  * Table of values for definitive error code (rxxt[0]& 0xff)  */
 end_comment
@@ -428,6 +434,11 @@ block|}
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
