@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utils.c	5.2 (Berkeley) %G%"
+literal|"@(#)utils.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -348,6 +348,9 @@ name|mmap
 argument_list|(
 name|NULL
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|fs
 operator|->
 name|st_size
