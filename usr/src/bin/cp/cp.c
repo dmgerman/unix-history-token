@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.28 (Berkeley) %G%"
+literal|"@(#)cp.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1245,6 +1245,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|copy_file
+argument_list|(
+name|curr
+argument_list|,
+name|dne
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|S_IFIFO
@@ -1266,6 +1273,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|copy_file
+argument_list|(
+name|curr
+argument_list|,
+name|dne
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|copy_file
