@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex.c	7.7 (Berkeley) %G%"
+literal|"@(#)ex.c	7.7.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
