@@ -1276,8 +1276,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
+name|int
 name|getlogin_r
 name|__P
 argument_list|(
