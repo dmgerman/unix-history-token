@@ -1,17 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* nodes.h -- How we represent nodes internally.    $Id: nodes.h,v 1.5 1997/07/18 14:33:44 karl Exp $     This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* nodes.h -- How we represent nodes internally.    $Id: nodes.h,v 1.8 1998/07/10 20:28:43 karl Exp $     Copyright (C) 1993, 97, 98 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|NODES_H
-argument_list|)
-end_if
+end_ifndef
 
 begin_define
 define|#
@@ -26,23 +22,7 @@ file|"info.h"
 end_include
 
 begin_comment
-comment|/* **************************************************************** */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/*                    User Code Interface                           */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/* **************************************************************** */
+comment|/* User code interface.  */
 end_comment
 
 begin_comment
@@ -77,6 +57,11 @@ name|long
 name|nodelen
 decl_stmt|;
 comment|/* The length of the CONTENTS member. */
+name|unsigned
+name|long
+name|display_pos
+decl_stmt|;
+comment|/* Where to display at, if nonzero.  */
 name|int
 name|flags
 decl_stmt|;
@@ -164,38 +149,29 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* This node is a Un*x manpage. */
+comment|/* This node is a manpage. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_FromAnchor
+value|0x80
+end_define
+
+begin_comment
+comment|/* Synthesized for an anchor reference. */
 end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* **************************************************************** */
+comment|/* Internal data structures.  */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/*                     Internal Data Structures                     */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/* **************************************************************** */
-end_comment
-
-begin_comment
-comment|/* Some defines describing details about Info file contents. */
-end_comment
-
-begin_comment
-comment|/* String Constants. */
+comment|/* String constants. */
 end_comment
 
 begin_define
@@ -203,6 +179,13 @@ define|#
 directive|define
 name|INFO_FILE_LABEL
 value|"File:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|INFO_REF_LABEL
+value|"Ref:"
 end_define
 
 begin_define
@@ -290,7 +273,7 @@ value|"(Indirect)"
 end_define
 
 begin_comment
-comment|/* Character Constants. */
+comment|/* Character constants. */
 end_comment
 
 begin_define
@@ -402,24 +385,11 @@ name|FILE_BUFFER
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* **************************************************************** */
-end_comment
+begin_escape
+end_escape
 
 begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/*                  Externally Visible Functions                    */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/* **************************************************************** */
+comment|/* Externally visible functions.  */
 end_comment
 
 begin_comment
@@ -541,7 +511,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !NODES_H */
+comment|/* not NODES_H */
 end_comment
 
 end_unit

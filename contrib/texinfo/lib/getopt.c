@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Getopt for GNU.    NOTE: getopt is now part of the C library, so if you don't know what    "Keep this file name-space clean" means, talk to roland@gnu.ai.mit.edu    before changing it!     Copyright (C) 1987, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97    	Free Software Foundation, Inc.     NOTE: The canonical source of this file is maintained with the GNU C Library.    Bugs can be reported to bug-glibc@prep.ai.mit.edu.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,    USA.  */
+comment|/* Getopt for GNU.    NOTE: getopt is now part of the C library, so if you don't know what    "Keep this file name-space clean" means, talk to drepper@gnu.org    before changing it!     Copyright (C) 1987, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98    	Free Software Foundation, Inc.     NOTE: The canonical source of this file is maintained with the GNU C Library.    Bugs can be reported to bug-glibc@gnu.org.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,    USA.  */
 end_comment
 
 begin_escape
@@ -49,9 +49,7 @@ if|#
 directive|if
 operator|!
 name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|||
 operator|!
 name|__STDC__
@@ -105,14 +103,10 @@ if|#
 directive|if
 operator|!
 name|defined
-argument_list|(
 name|_LIBC
-argument_list|)
 operator|&&
 name|defined
-argument_list|(
 name|__GLIBC__
-argument_list|)
 operator|&&
 name|__GLIBC__
 operator|>=
@@ -431,17 +425,57 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|HAVE_STRING_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Avoid depending on library functions or files    whose names are inconsistent.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|getenv
+end_ifndef
+
 begin_function_decl
+specifier|extern
 name|char
 modifier|*
 name|getenv
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -509,14 +543,18 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 operator|!
 name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|||
 operator|!
 name|__STDC__
+operator|)
+operator|&&
+operator|!
+name|defined
+name|strlen
 end_if
 
 begin_comment
@@ -752,9 +790,7 @@ begin_if
 if|#
 directive|if
 name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|&&
 name|__STDC__
 end_if
@@ -1105,9 +1141,7 @@ begin_if
 if|#
 directive|if
 name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|&&
 name|__STDC__
 end_if
@@ -1470,7 +1504,7 @@ name|_LIBC
 define|#
 directive|define
 name|NONOPTION_P
-value|(argv[optind][0] != '-' || argv[optind][1] == '\0'	      \ 		     || (optind< nonoption_flags_len			      \&& __getopt_nonoption_flags[optind] == '1'))
+value|(argv[optind][0] != '-' || argv[optind][1] == '\0'	      \ 		      || (optind< nonoption_flags_len			      \&& __getopt_nonoption_flags[optind] == '1'))
 else|#
 directive|else
 define|#
