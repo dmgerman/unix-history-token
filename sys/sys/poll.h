@@ -15,9 +15,23 @@ directive|define
 name|_SYS_POLL_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_comment
 comment|/*  * This file is intended to be compatible with the traditional poll.h.  */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|nfds_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * This structure is passed as an array to poll(2).  */
@@ -128,6 +142,12 @@ begin_comment
 comment|/* General FreeBSD extension (currently only supported for sockets): */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -138,6 +158,11 @@ end_define
 begin_comment
 comment|/* like POLLIN, except ignore EOF */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * These events are set if they occur regardless of whether they were  * requested.  */
@@ -176,6 +201,12 @@ begin_comment
 comment|/* requested events "invalid" */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -194,31 +225,28 @@ name|INFTIM
 value|(-1)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|_KERNEL
 end_ifndef
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
 begin_function_decl
 name|__BEGIN_DECLS
-comment|/*  * XXX logically, poll() should be declared in<poll.h>, but SVR4 at  * least has it here in<sys/poll.h>.  * XXX poll() has "unsigned long" nfds on SVR4, not unsigned as on the  * other BSDs.  */
 name|int
 name|poll
 parameter_list|(
 name|struct
 name|pollfd
-modifier|*
 name|_pfd
+index|[]
 parameter_list|,
-name|unsigned
-name|int
+name|nfds_t
 name|_nfds
 parameter_list|,
 name|int
