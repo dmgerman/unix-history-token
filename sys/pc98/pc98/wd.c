@@ -83,6 +83,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<geom/geom_disk.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bio.h>
 end_include
 
