@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * this is mixture of i386/bitops.h and asm/string.h  * taken from the Linux source tree   *  * XXX replace with Mach routines or reprogram in C  */
 end_comment
 
@@ -178,6 +182,17 @@ block|{
 name|int
 name|res
 decl_stmt|;
+name|int
+name|_count
+init|=
+operator|(
+name|size
+operator|+
+literal|31
+operator|)
+operator|>>
+literal|5
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -186,7 +201,7 @@ condition|)
 return|return
 literal|0
 return|;
-asm|__asm__("			\n\ 		cld			\n\ 		movl $-1,%%eax		\n\ 		xorl %%edx,%%edx	\n\ 		repe; scasl		\n\ 		je 1f			\n\ 		xorl -4(%%edi),%%eax	\n\ 		subl $4,%%edi		\n\ 		bsfl %%eax,%%edx	\n\ 1:		subl %%ebx,%%edi	\n\ 		shll $3,%%edi		\n\ 		addl %%edi,%%edx" 		:"=d" (res) 		:"c" ((size + 31)>> 5), "D" (addr), "b" (addr) 		:"ax", "cx", "di");
+asm|__asm__("			\n\ 		cld			\n\ 		movl $-1,%%eax		\n\ 		xorl %%edx,%%edx	\n\ 		repe; scasl		\n\ 		je 1f			\n\ 		xorl -4(%%edi),%%eax	\n\ 		subl $4,%%edi		\n\ 		bsfl %%eax,%%edx	\n\ 1:		subl %%ebx,%%edi	\n\ 		shll $3,%%edi		\n\ 		addl %%edi,%%edx" 		: "=c" (_count), "=D" (addr), "=d" (res) 		: "0" (_count), "1" (addr), "b" (addr) 		: "ax");
 return|return
 name|res
 return|;
