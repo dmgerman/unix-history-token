@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vm.h"
 end_include
 
@@ -930,8 +936,10 @@ name|map
 operator|==
 name|mb_map
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"kmem_malloc: mb_map too small (can't wait)\n"
 argument_list|)
 expr_stmt|;
