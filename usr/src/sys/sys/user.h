@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	6.1	83/07/29	*/
+comment|/*	user.h	6.2	83/11/21	*/
 end_comment
 
 begin_ifdef
@@ -522,6 +522,29 @@ decl_stmt|;
 comment|/* pc scaling */
 block|}
 name|u_prof
+struct|;
+struct|struct
+name|nameicache
+block|{
+comment|/* last successful directory search */
+name|int
+name|nc_prevoffset
+decl_stmt|;
+comment|/* offset at which last entry found */
+name|ino_t
+name|nc_inumber
+decl_stmt|;
+comment|/* inum of cached directory */
+name|dev_t
+name|nc_dev
+decl_stmt|;
+comment|/* dev of cached directory */
+name|time_t
+name|nc_time
+decl_stmt|;
+comment|/* time stamp for cache entry */
+block|}
+name|u_ncache
 struct|;
 name|int
 name|u_stack
