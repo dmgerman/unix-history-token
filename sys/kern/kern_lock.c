@@ -40,7 +40,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|SIMPLELOCK_DEBUG
 end_ifdef
 
 begin_define
@@ -409,13 +409,11 @@ name|flags
 operator|&
 name|LK_INTERLOCK
 condition|)
-block|{
 name|simple_unlock
 argument_list|(
 name|interlkp
 argument_list|)
 expr_stmt|;
-block|}
 name|extflags
 operator|=
 operator|(
