@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: if_tx.c,v 1.3 1998/10/10 04:30:09 jason Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_tx.c,v 1.17 1998/11/09 09:34:00 peter Exp $ */
+comment|/*	$Id: if_tx.c,v 1.1.2.6 1998/11/13 01:47:43 jdp Exp $ */
 end_comment
 
 begin_comment
@@ -8637,7 +8637,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|0x1000
+literal|0x100000
 condition|;
 name|i
 operator|++
@@ -8724,7 +8724,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|0x1000
+literal|0x100000
 condition|;
 name|i
 operator|++
