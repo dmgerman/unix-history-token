@@ -10464,7 +10464,7 @@ literal|'\0'
 expr_stmt|;
 name|failed
 operator|=
-name|lstat
+name|stat
 argument_list|(
 name|tempfile
 argument_list|,
@@ -10484,7 +10484,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Error on lstat(%s)"
+literal|"Error on stat(%s)"
 argument_list|,
 name|tempfile
 argument_list|)
