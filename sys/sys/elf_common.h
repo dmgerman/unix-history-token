@@ -1146,6 +1146,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHF_TLS
+value|0x400
+end_define
+
+begin_comment
+comment|/* Section contains TLS data. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SHF_MASKPROC
 value|0xf0000000
 end_define
@@ -1983,6 +1994,17 @@ end_define
 
 begin_comment
 comment|/* Source file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STT_TLS
+value|6
+end_define
+
+begin_comment
+comment|/* TLS object. */
 end_comment
 
 begin_define
