@@ -1,6 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yp_main.c,v 1.14 1997/02/22 16:15:12 peter Exp $  */
+comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_comment
@@ -16,7 +42,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -32,16 +82,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<rpc/pmap_clnt.h>
-end_include
-
-begin_comment
-comment|/* for pmap_unset */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
@@ -52,8 +92,24 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<syslog.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/pmap_clnt.h>
+end_include
+
+begin_comment
+comment|/* for pmap_unset */
+end_comment
 
 begin_include
 include|#
@@ -93,12 +149,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<memory.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -106,12 +156,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
 end_include
 
 begin_include
@@ -129,25 +173,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<rpc/rpc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_ifndef
@@ -174,32 +200,6 @@ directive|define
 name|_RPCSVC_CLOSEDOWN
 value|120
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: yp_main.c,v 1.14 1997/02/22 16:15:12 peter Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -376,14 +376,9 @@ name|msg
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|msg
 argument_list|)
@@ -516,7 +511,7 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|perror
+name|warn
 argument_list|(
 literal|"svc_run: - select failed"
 argument_list|)
@@ -690,9 +685,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-h] [-d] [-n] [-p path]\n"
-argument_list|,
-name|progname
+literal|"usage: ypserv [-h] [-d] [-n] [-p path]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -849,6 +842,7 @@ block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -1052,7 +1046,7 @@ literal|0
 expr_stmt|;
 name|openlog
 argument_list|(
-name|progname
+literal|"ypserv"
 argument_list|,
 name|LOG_PID
 argument_list|,
@@ -1088,7 +1082,7 @@ expr_stmt|;
 block|}
 name|openlog
 argument_list|(
-name|progname
+literal|"ypserv"
 argument_list|,
 name|LOG_PID
 argument_list|,
@@ -1152,7 +1146,7 @@ condition|)
 block|{
 name|_msgout
 argument_list|(
-literal|"cannot create udp service."
+literal|"cannot create udp service"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1189,7 +1183,7 @@ condition|)
 block|{
 name|_msgout
 argument_list|(
-literal|"unable to register (YPPROG, YPOLDVERS, udp)."
+literal|"unable to register (YPPROG, YPOLDVERS, udp)"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1217,7 +1211,7 @@ condition|)
 block|{
 name|_msgout
 argument_list|(
-literal|"unable to register (YPPROG, YPVERS, udp)."
+literal|"unable to register (YPPROG, YPVERS, udp)"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1262,7 +1256,7 @@ condition|)
 block|{
 name|_msgout
 argument_list|(
-literal|"cannot create tcp service."
+literal|"cannot create tcp service"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1299,7 +1293,7 @@ condition|)
 block|{
 name|_msgout
 argument_list|(
-literal|"unable to register (YPPROG, YPOLDVERS, tcp)."
+literal|"unable to register (YPPROG, YPOLDVERS, tcp)"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1327,7 +1321,7 @@ condition|)
 block|{
 name|_msgout
 argument_list|(
-literal|"unable to register (YPPROG, YPVERS, tcp)."
+literal|"unable to register (YPPROG, YPVERS, tcp)"
 argument_list|)
 expr_stmt|;
 name|exit
