@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime message lookup     Copyright (C) 1993, 1995, 1996, 1997, 1998,    2001 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime message lookup     Copyright (C) 1993, 1995, 1996, 1997, 1998,    2001, 2002 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -302,8 +302,6 @@ parameter_list|(
 name|id
 parameter_list|,
 name|SEL
-parameter_list|,
-modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -321,6 +319,7 @@ name|SEL
 name|sel
 parameter_list|)
 block|{
+comment|/* If a custom forwarding hook was registered, try getting a forwarding    * function from it.  */
 if|if
 condition|(
 name|__objc_msg_forward
@@ -339,12 +338,14 @@ argument_list|(
 name|sel
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 return|return
 name|result
 return|;
 block|}
-else|else
+comment|/* In all other cases, use the default forwarding functions built using    * __builtin_apply and friends.  */
 block|{
 specifier|const
 name|char
@@ -703,6 +704,9 @@ return|;
 block|}
 else|else
 return|return
+operator|(
+name|IMP
+operator|)
 name|nil_method
 return|;
 block|}
@@ -737,6 +741,9 @@ argument_list|)
 return|;
 else|else
 return|return
+operator|(
+name|IMP
+operator|)
 name|nil_method
 return|;
 block|}
@@ -862,17 +869,23 @@ begin_comment
 comment|/* This function is called by objc_msg_lookup when the    dispatch table needs to be installed; thus it is called once    for each class, namely when the very first message is sent to it. */
 end_comment
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|void
 name|__objc_init_install_dtable
-parameter_list|(
+argument_list|(
 name|id
 name|receiver
-parameter_list|,
+argument_list|,
 name|SEL
 name|op
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 comment|/* This may happen, if the programmer has taken the address of a       method before the dtable was initialized... too bad for him! */
 if|if
@@ -976,7 +989,7 @@ name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* Install dummy table for class which causes the first message to    that class (or instances hereof) to be initialized properly */

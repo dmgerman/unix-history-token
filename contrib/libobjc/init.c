@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime initialization     Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup    +load support contributed by Ovidiu Predescu<ovidiu@net-community.com>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime initialization     Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup    +load support contributed by Ovidiu Predescu<ovidiu@net-community.com>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -14,7 +14,7 @@ file|"runtime.h"
 end_include
 
 begin_comment
-comment|/* The version number of this runtime.  This must match the number     defined in gcc (objc-act.c) */
+comment|/* The version number of this runtime.  This must match the number     defined in gcc (objc-act.c).  */
 end_comment
 
 begin_define
@@ -32,7 +32,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* This list contains all modules currently loaded into the runtime */
+comment|/* This list contains all modules currently loaded into the runtime.  */
 end_comment
 
 begin_decl_stmt
@@ -51,7 +51,7 @@ comment|/* !T:MUTEX */
 end_comment
 
 begin_comment
-comment|/* This list contains all proto_list's not yet assigned class links */
+comment|/* This list contains all proto_list's not yet assigned class links.  */
 end_comment
 
 begin_decl_stmt
@@ -89,7 +89,7 @@ comment|/* !T:MUTEX */
 end_comment
 
 begin_comment
-comment|/* Global runtime "write" mutex. */
+comment|/* Global runtime "write" mutex.  */
 end_comment
 
 begin_decl_stmt
@@ -101,7 +101,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of threads that are alive. */
+comment|/* Number of threads that are alive.  */
 end_comment
 
 begin_decl_stmt
@@ -117,7 +117,7 @@ comment|/* !T:MUTEX */
 end_comment
 
 begin_comment
-comment|/* Check compiler vs runtime version */
+comment|/* Check compiler vs runtime version.  */
 end_comment
 
 begin_function_decl
@@ -131,7 +131,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Assign isa links to protos */
+comment|/* Assign isa links to protos.  */
 end_comment
 
 begin_function_decl
@@ -148,7 +148,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Add protocol to class */
+comment|/* Add protocol to class.  */
 end_comment
 
 begin_function_decl
@@ -166,7 +166,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* This is a hook which is called by __objc_exec_class every time a class    or a category is loaded into the runtime.  This may e.g. help a    dynamic loader determine the classes that have been loaded when    an object file is dynamically linked in */
+comment|/* This is a hook which is called by __objc_exec_class every time a    class or a category is loaded into the runtime.  This may e.g. help    a dynamic loader determine the classes that have been loaded when    an object file is dynamically linked in.  */
 end_comment
 
 begin_function_decl
@@ -191,7 +191,7 @@ comment|/* !T:SAFE */
 end_comment
 
 begin_comment
-comment|/* Is all categories/classes resolved? */
+comment|/* Is all categories/classes resolved?  */
 end_comment
 
 begin_decl_stmt
@@ -233,7 +233,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Sends +load to all classes and categories in certain situations. */
+comment|/* Sends +load to all classes and categories in certain situations.  */
 end_comment
 
 begin_function_decl
@@ -247,7 +247,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Inserts all the classes defined in module in a tree of classes that    resembles the class hierarchy. This tree is traversed in preorder and the    classes in its nodes receive the +load message if these methods were not    executed before. The algorithm ensures that when the +load method of a class    is executed all the superclasses have been already received the +load    message. */
+comment|/* Inserts all the classes defined in module in a tree of classes that    resembles the class hierarchy. This tree is traversed in preorder    and the classes in its nodes receive the +load message if these    methods were not executed before. The algorithm ensures that when    the +load method of a class is executed all the superclasses have    been already received the +load message.  */
 end_comment
 
 begin_function_decl
@@ -273,7 +273,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* A special version that works only before the classes are completely    installed in the runtime. */
+comment|/* A special version that works only before the classes are completely    installed in the runtime.  */
 end_comment
 
 begin_function_decl
@@ -310,7 +310,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* This is a linked list of objc_class_tree trees. The head of these trees    are root classes (their super class is Nil). These different trees    represent different class hierarchies. */
+comment|/* This is a linked list of objc_class_tree trees. The head of these    trees are root classes (their super class is Nil). These different    trees represent different class hierarchies.  */
 end_comment
 
 begin_decl_stmt
@@ -325,7 +325,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Keeps the +load methods who have been already executed. This hash should    not be destroyed during the execution of the program. */
+comment|/* Keeps the +load methods who have been already executed. This hash    should not be destroyed during the execution of the program.  */
 end_comment
 
 begin_decl_stmt
@@ -338,7 +338,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Creates a tree of classes whose topmost class is directly inherited from    `upper' and the bottom class in this tree is `bottom_class'. The classes    in this tree are super classes of `bottom_class'. `subclasses' member    of each tree node point to the next subclass tree node. */
+comment|/* Creates a tree of classes whose topmost class is directly inherited    from `upper' and the bottom class in this tree is    `bottom_class'. The classes in this tree are super classes of    `bottom_class'. `subclasses' member of each tree node point to the    next subclass tree node.  */
 end_comment
 
 begin_function
@@ -502,7 +502,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Insert the `class' into the proper place in the `tree' class hierarchy. This    function returns a new tree if the class has been successfully inserted into    the tree or NULL if the class is not part of the classes hierarchy described    by `tree'. This function is private to objc_tree_insert_class(), you should    not call it directly. */
+comment|/* Insert the `class' into the proper place in the `tree' class    hierarchy. This function returns a new tree if the class has been    successfully inserted into the tree or NULL if the class is not    part of the classes hierarchy described by `tree'. This function is    private to objc_tree_insert_class (), you should not call it    directly.  */
 end_comment
 
 begin_function
@@ -595,7 +595,7 @@ operator|->
 name|class
 condition|)
 block|{
-comment|/* If class is a direct subclass of tree->class then add class to the 	 list of subclasses. First check to see if it wasn't already 	 inserted. */
+comment|/* If class is a direct subclass of tree->class then add class to the 	 list of subclasses. First check to see if it wasn't already 	 inserted.  */
 name|struct
 name|objc_list
 modifier|*
@@ -614,7 +614,7 @@ condition|(
 name|list
 condition|)
 block|{
-comment|/* Class has been already inserted; do nothing just return 	     the tree. */
+comment|/* Class has been already inserted; do nothing just return 	     the tree.  */
 if|if
 condition|(
 operator|(
@@ -699,7 +699,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* The class is not a direct subclass of tree->class. Search for class's          superclasses in the list of subclasses. */
+comment|/* The class is not a direct subclass of tree->class. Search for          class's superclasses in the list of subclasses.  */
 name|struct
 name|objc_list
 modifier|*
@@ -709,7 +709,7 @@ name|tree
 operator|->
 name|subclasses
 decl_stmt|;
-comment|/* Precondition: the class must be a subclass of tree->class; otherwise          return NULL to indicate our caller that it must take the next tree. */
+comment|/* Precondition: the class must be a subclass of tree->class;          otherwise return NULL to indicate our caller that it must          take the next tree.  */
 if|if
 condition|(
 operator|!
@@ -766,7 +766,7 @@ name|aClass
 argument_list|)
 condition|)
 block|{
-comment|/* If we found one of class's superclasses we insert the class 	         into its subtree and return the original tree since nothing 		 has been changed. */
+comment|/* If we found one of class's superclasses we insert the 	         class into its subtree and return the original tree 	         since nothing has been changed.  */
 name|subclasses
 operator|->
 name|head
@@ -794,7 +794,7 @@ name|tree
 return|;
 block|}
 block|}
-comment|/* We haven't found a subclass of `class' in the `subclasses' list.          Create a new tree of classes whose topmost class is a direct subclass 	 of tree->class. */
+comment|/* We haven't found a subclass of `class' in the `subclasses'          list.  Create a new tree of classes whose topmost class is a          direct subclass of tree->class.  */
 block|{
 name|objc_class_tree
 modifier|*
@@ -840,7 +840,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function inserts `class' in the right tree hierarchy classes. */
+comment|/* This function inserts `class' in the right tree hierarchy classes.  */
 end_comment
 
 begin_function
@@ -902,7 +902,7 @@ operator|->
 name|tail
 expr_stmt|;
 block|}
-comment|/* If the list was finished but the class hasn't been inserted, insert it      here. */
+comment|/* If the list was finished but the class hasn't been inserted,      insert it here.  */
 if|if
 condition|(
 operator|!
@@ -934,7 +934,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Traverse tree in preorder. Used to send +load. */
+comment|/* Traverse tree in preorder. Used to send +load.  */
 end_comment
 
 begin_function
@@ -1010,7 +1010,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Traverse tree in postorder. Used to destroy a tree. */
+comment|/* Traverse tree in postorder. Used to destroy a tree.  */
 end_comment
 
 begin_function
@@ -1086,7 +1086,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Used to print a tree class hierarchy. */
+comment|/* Used to print a tree class hierarchy.  */
 end_comment
 
 begin_ifdef
@@ -1149,7 +1149,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Walks on a linked list of methods in the reverse order and executes all    the methods corresponding to `op' selector. Walking in the reverse order    assures the +load of class is executed first and then +load of categories    because of the way in which categories are added to the class methods. */
+comment|/* Walks on a linked list of methods in the reverse order and executes    all the methods corresponding to `op' selector. Walking in the    reverse order assures the +load of class is executed first and then    +load of categories because of the way in which categories are    added to the class methods.  */
 end_comment
 
 begin_function
@@ -1188,7 +1188,7 @@ argument_list|,
 name|op
 argument_list|)
 expr_stmt|;
-comment|/* Search the method list. */
+comment|/* Search the method list.  */
 for|for
 control|(
 name|i
@@ -1266,7 +1266,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* The method was found and wasn't previously executed. */
+comment|/* The method was found and wasn't previously executed.  */
 call|(
 modifier|*
 name|mth
@@ -1290,18 +1290,24 @@ block|}
 block|}
 end_function
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|void
 name|__objc_send_load
-parameter_list|(
+argument_list|(
 name|objc_class_tree
-modifier|*
+operator|*
 name|tree
-parameter_list|,
+argument_list|,
 name|int
 name|level
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 specifier|static
 name|SEL
@@ -1347,20 +1353,26 @@ name|load_sel
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|void
 name|__objc_destroy_class_tree_node
-parameter_list|(
+argument_list|(
 name|objc_class_tree
-modifier|*
+operator|*
 name|tree
-parameter_list|,
+argument_list|,
 name|int
 name|level
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|objc_free
 argument_list|(
@@ -1368,10 +1380,10 @@ name|tree
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
-comment|/* This is used to check if the relationship between two classes before the    runtime completely installs the classes. */
+comment|/* This is used to check if the relationship between two classes    before the runtime completely installs the classes.  */
 end_comment
 
 begin_function
@@ -1433,7 +1445,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This list contains all the classes in the runtime system for whom their    superclasses are not yet know to the runtime. */
+comment|/* This list contains all the classes in the runtime system for whom    their superclasses are not yet known to the runtime.  */
 end_comment
 
 begin_decl_stmt
@@ -1448,7 +1460,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Extern function used to reference the Object and NXConstantString classes.  */
+comment|/* Extern function used to reference the Object and NXConstantString    classes.  */
 end_comment
 
 begin_function_decl
@@ -1482,7 +1494,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Run through the statics list, removing modules as soon as all its statics    have been initialized.  */
+comment|/* Run through the statics list, removing modules as soon as all its    statics have been initialized.  */
 end_comment
 
 begin_function
@@ -1674,7 +1686,7 @@ comment|/* objc_init_statics */
 end_comment
 
 begin_comment
-comment|/* This function is called by constructor functions generated for each    module compiled.  (_GLOBAL_$I$...) The purpose of this function is to    gather the module pointers so that they may be processed by the    initialization routines as soon as possible */
+comment|/* This function is called by constructor functions generated for each    module compiled.  (_GLOBAL_$I$...) The purpose of this function is    to gather the module pointers so that they may be processed by the    initialization routines as soon as possible.  */
 end_comment
 
 begin_function
@@ -1996,7 +2008,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* Initialize the subclass list to be NULL. 	 In some cases it isn't and this crashes the program. */
+comment|/* Initialize the subclass list to be NULL. 	 In some cases it isn't and this crashes the program.  */
 name|class
 operator|->
 name|subclass_list
@@ -2038,7 +2050,7 @@ operator|->
 name|class_pointer
 argument_list|)
 expr_stmt|;
-comment|/* Register the instance methods as class methods, this is 	 only done for root classes. */
+comment|/* Register the instance methods as class methods, this is 	 only done for root classes.  */
 name|__objc_register_instance_methods_to_class
 argument_list|(
 name|class
@@ -2057,7 +2069,7 @@ operator|->
 name|protocols
 argument_list|)
 expr_stmt|;
-comment|/* Check to see if the superclass is known in this point. If it's not 	 add the class to the unresolved_classes list. */
+comment|/* Check to see if the superclass is known in this point. If it's not 	 add the class to the unresolved_classes list.  */
 if|if
 condition|(
 name|superclass
@@ -2199,7 +2211,7 @@ name|protocols
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Register the instance methods as class methods, this is              only done for root classes. */
+comment|/* Register the instance methods as class methods, this is              only done for root classes.  */
 name|__objc_register_instance_methods_to_class
 argument_list|(
 name|class
@@ -2351,7 +2363,7 @@ name|protocols
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Register the instance methods as class methods, this is              only done for root classes. */
+comment|/* Register the instance methods as class methods, this is              only done for root classes.  */
 name|__objc_register_instance_methods_to_class
 argument_list|(
 name|class
@@ -2432,7 +2444,7 @@ operator|!
 name|__objc_module_list
 condition|)
 return|return;
-comment|/* Try to find out if all the classes loaded so far also have their      superclasses known to the runtime. We suppose that the objects that are      allocated in the +load method are in general of a class declared in the      same module. */
+comment|/* Try to find out if all the classes loaded so far also have their      superclasses known to the runtime. We suppose that the objects      that are allocated in the +load method are in general of a class      declared in the same module.  */
 if|if
 condition|(
 name|unresolved_classes
@@ -2478,14 +2490,14 @@ expr_stmt|;
 else|else
 break|break;
 block|}
-comment|/*        * If we still have classes for whom we don't have yet their super        * classes known to the runtime we don't send the +load messages.        */
+comment|/* If we still have classes for whom we don't have yet their          super classes known to the runtime we don't send the +load          messages.  */
 if|if
 condition|(
 name|unresolved_classes
 condition|)
 return|return;
 block|}
-comment|/* Special check to allow creating and sending messages to constant strings      in +load methods. If these classes are not yet known, even if all the      other classes are known, delay sending of +load. */
+comment|/* Special check to allow creating and sending messages to constant      strings in +load methods. If these classes are not yet known,      even if all the other classes are known, delay sending of +load.  */
 if|if
 condition|(
 operator|!
@@ -2501,7 +2513,7 @@ literal|"Object"
 argument_list|)
 condition|)
 return|return;
-comment|/* Iterate over all modules in the __objc_module_list and call on them the      __objc_create_classes_tree function. This function creates a tree of      classes that resembles the class hierarchy. */
+comment|/* Iterate over all modules in the __objc_module_list and call on      them the __objc_create_classes_tree function. This function      creates a tree of classes that resembles the class hierarchy.  */
 name|list_mapcar
 argument_list|(
 name|__objc_module_list
@@ -2618,7 +2630,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Iterate thru classes defined in this module and insert them in the classes      tree hierarchy. */
+comment|/* Iterate thru classes defined in this module and insert them in      the classes tree hierarchy.  */
 for|for
 control|(
 name|i
@@ -2666,7 +2678,7 @@ name|Module_t
 name|module
 parameter_list|)
 block|{
-comment|/* The runtime mutex is locked in this point */
+comment|/* The runtime mutex is locked in this point.  */
 name|Symtab_t
 name|symtab
 init|=
@@ -2677,7 +2689,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Iterate thru classes defined in this module and call the callback for      each one. */
+comment|/* Iterate thru classes defined in this module and call the callback      for each one.  */
 for|for
 control|(
 name|i
@@ -2707,7 +2719,7 @@ index|[
 name|i
 index|]
 decl_stmt|;
-comment|/* Call the _objc_load_callback for this class. */
+comment|/* Call the _objc_load_callback for this class.  */
 if|if
 condition|(
 name|_objc_load_callback
@@ -2720,7 +2732,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Call the _objc_load_callback for categories. Don't register the instance      methods as class methods for categories to root classes since they were      already added in the class. */
+comment|/* Call the _objc_load_callback for categories. Don't register the      instance methods as class methods for categories to root classes      since they were already added in the class.  */
 for|for
 control|(
 name|i
@@ -2777,7 +2789,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Sanity check the version of gcc used to compile `module'*/
+comment|/* Sanity check the version of gcc used to compile `module'.  */
 end_comment
 
 begin_function
@@ -2881,7 +2893,7 @@ modifier|*
 name|protos
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 specifier|static
@@ -3074,14 +3086,14 @@ modifier|*
 name|protos
 parameter_list|)
 block|{
-comment|/* Well... */
+comment|/* Well...  */
 if|if
 condition|(
 operator|!
 name|protos
 condition|)
 return|return;
-comment|/* Add it... */
+comment|/* Add it...  */
 name|protos
 operator|->
 name|next

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime archiving    Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime archiving    Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -31,22 +31,11 @@ directive|include
 file|"encoding.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_STDLIB_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
@@ -69,7 +58,7 @@ parameter_list|,
 name|A
 parameter_list|)
 define|\
-value|({ typeof(V) __v=(V); typeof(A) __a=(A);  \      __a*((__v+__a-1)/__a); })
+value|({ typeof (V) __v = (V); typeof (A) __a = (A);  \      __a * ((__v + __a - 1)/__a); })
 end_define
 
 begin_define
@@ -79,7 +68,7 @@ name|PTR2LONG
 parameter_list|(
 name|P
 parameter_list|)
-value|(((char*)(P))-(char*)0)
+value|(((char *) (P))-(char *) 0)
 end_define
 
 begin_define
@@ -89,7 +78,7 @@ name|LONG2PTR
 parameter_list|(
 name|L
 parameter_list|)
-value|(((char*)0)+(L))
+value|(((char *) 0) + (L))
 end_define
 
 begin_comment
@@ -3041,6 +3030,9 @@ if|if
 condition|(
 name|nbytes
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|short
@@ -3243,6 +3235,9 @@ if|if
 condition|(
 name|nbytes
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|short
@@ -3419,6 +3414,9 @@ if|if
 condition|(
 name|nbytes
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|int
@@ -3615,6 +3613,9 @@ if|if
 condition|(
 name|nbytes
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|long
@@ -3732,7 +3733,9 @@ parameter_list|)
 block|{
 name|int
 name|len
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|pos
 init|=
 literal|0
@@ -3954,7 +3957,9 @@ parameter_list|)
 block|{
 name|int
 name|len
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|pos
 init|=
 literal|0
@@ -5264,10 +5269,8 @@ operator|&
 name|key
 argument_list|)
 expr_stmt|;
-operator|(
 operator|*
 name|class
-operator|)
 operator|=
 name|hash_value_for_key
 argument_list|(
@@ -5916,6 +5919,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|type
@@ -6298,6 +6305,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|type
@@ -6805,6 +6816,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|t
@@ -7207,6 +7222,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|t
@@ -7507,22 +7526,41 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|int
 name|__objc_no_write
-parameter_list|(
+argument_list|(
 name|FILE
-modifier|*
+operator|*
 name|file
-parameter_list|,
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|,
+specifier|const
 name|char
-modifier|*
+operator|*
 name|data
-parameter_list|,
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|,
 name|int
 name|len
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|objc_error
 argument_list|(
@@ -7537,24 +7575,43 @@ return|return
 literal|0
 return|;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|int
 name|__objc_no_read
-parameter_list|(
+argument_list|(
 name|FILE
-modifier|*
+operator|*
 name|file
-parameter_list|,
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|,
+specifier|const
 name|char
-modifier|*
+operator|*
 name|data
-parameter_list|,
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|,
 name|int
 name|len
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|objc_error
 argument_list|(
@@ -7569,7 +7626,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 specifier|static

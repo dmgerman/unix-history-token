@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime class related functions    Copyright (C) 1993, 1995, 1996, 1997, 2001 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup and Dennis Glatting.     Lock-free class table code designed and written from scratch by    Nicola Pero, 2001.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime class related functions    Copyright (C) 1993, 1995, 1996, 1997, 2001, 2002      Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup and Dennis Glatting.     Lock-free class table code designed and written from scratch by    Nicola Pero, 2001.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -160,7 +160,9 @@ begin_function
 specifier|static
 name|void
 name|class_table_setup
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Start - nothing in the table.  */
 name|memset
@@ -725,12 +727,12 @@ comment|/* Debugging function - print the class table.  */
 end_comment
 
 begin_comment
-unit|void class_table_print () {   int i;      for (i = 0; i< CLASS_TABLE_SIZE; i++)     {       class_node_ptr node;              printf ("%d:\n", i);       node = class_table_array[i];              while (node != NULL)         {           printf ("\t%s\n", node->name);           node = node->next;         }     } }
+unit|void class_table_print (void) {   int i;      for (i = 0; i< CLASS_TABLE_SIZE; i++)     {       class_node_ptr node;              printf ("%d:\n", i);       node = class_table_array[i];              while (node != NULL)         {           printf ("\t%s\n", node->name);           node = node->next;         }     } }
 comment|/* Debugging function - print an histogram of number of classes in    function of hash key values.  Useful to evaluate the hash function    in real cases.  */
 end_comment
 
 begin_endif
-unit|void class_table_print_histogram () {   int i, j;   int counter = 0;      for (i = 0; i< CLASS_TABLE_SIZE; i++)     {       class_node_ptr node;              node = class_table_array[i];              while (node != NULL)         {           counter++;           node = node->next;         }       if (((i + 1) % 50) == 0)         {           printf ("%4d:", i + 1);           for (j = 0; j< counter; j++)             {               printf ("X");             }           printf ("\n");           counter = 0;         }     }   printf ("%4d:", i + 1);   for (j = 0; j< counter; j++)     {       printf ("X");     }   printf ("\n"); }
+unit|void class_table_print_histogram (void) {   int i, j;   int counter = 0;      for (i = 0; i< CLASS_TABLE_SIZE; i++)     {       class_node_ptr node;              node = class_table_array[i];              while (node != NULL)         {           counter++;           node = node->next;         }       if (((i + 1) % 50) == 0)         {           printf ("%4d:", i + 1);           for (j = 0; j< counter; j++)             {               printf ("X");             }           printf ("\n");           counter = 0;         }     }   printf ("%4d:", i + 1);   for (j = 0; j< counter; j++)     {       printf ("X");     }   printf ("\n"); }
 endif|#
 directive|endif
 end_endif
@@ -791,7 +793,9 @@ end_comment
 begin_function
 name|void
 name|__objc_init_class_tables
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Allocate the class hash table.  */
 if|if
@@ -1053,7 +1057,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function provides a way to enumerate all the classes in the    executable.  Pass *ENUM_STATE == NULL to start the enumeration.  The    function will return 0 when there are no more classes.      For example:         id class;         void *es = NULL;        while ((class = objc_next_class(&es)))          ... do something with class;  */
+comment|/* This function provides a way to enumerate all the classes in the    executable.  Pass *ENUM_STATE == NULL to start the enumeration.  The    function will return 0 when there are no more classes.      For example:         id class;         void *es = NULL;        while ((class = objc_next_class (&es)))          ... do something with class;  */
 end_comment
 
 begin_function
@@ -1111,7 +1115,9 @@ end_comment
 begin_function
 name|void
 name|__objc_resolve_class_links
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|class_table_enumerator
@@ -1188,12 +1194,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-operator|(
 name|CLS_ISRESOLV
 argument_list|(
 name|class1
 argument_list|)
-operator|)
 condition|)
 block|{
 name|CLS_SETRESOLV
