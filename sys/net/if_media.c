@@ -1360,6 +1360,16 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|ifmedia_description
+name|ifm_subtype_ieee80211_mode_descriptions
+index|[]
+init|=
+name|IFM_SUBTYPE_IEEE80211_MODE_DESCRIPTIONS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ifmedia_description
 name|ifm_subtype_shared_descriptions
 index|[]
 init|=
@@ -1391,6 +1401,11 @@ name|ifmedia_description
 modifier|*
 name|options
 decl_stmt|;
+name|struct
+name|ifmedia_description
+modifier|*
+name|modes
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1418,7 +1433,9 @@ name|ifm_subtype_ethernet_option_descriptions
 index|[
 literal|0
 index|]
-block|}
+block|,
+name|NULL
+block|, 	}
 block|,
 block|{
 operator|&
@@ -1432,7 +1449,9 @@ name|ifm_subtype_tokenring_option_descriptions
 index|[
 literal|0
 index|]
-block|}
+block|,
+name|NULL
+block|, 	}
 block|,
 block|{
 operator|&
@@ -1446,7 +1465,9 @@ name|ifm_subtype_fddi_option_descriptions
 index|[
 literal|0
 index|]
-block|}
+block|,
+name|NULL
+block|, 	}
 block|,
 block|{
 operator|&
@@ -1457,6 +1478,12 @@ index|]
 block|,
 operator|&
 name|ifm_subtype_ieee80211_option_descriptions
+index|[
+literal|0
+index|]
+block|,
+operator|&
+name|ifm_subtype_ieee80211_mode_descriptions
 index|[
 literal|0
 index|]
@@ -1553,6 +1580,57 @@ operator|->
 name|ifmt_string
 argument_list|)
 expr_stmt|;
+comment|/* Any mode. */
+for|for
+control|(
+name|desc
+operator|=
+name|ttos
+operator|->
+name|modes
+init|;
+name|desc
+operator|&&
+name|desc
+operator|->
+name|ifmt_string
+operator|!=
+name|NULL
+condition|;
+name|desc
+operator|++
+control|)
+if|if
+condition|(
+name|IFM_MODE
+argument_list|(
+name|ifmw
+argument_list|)
+operator|==
+name|desc
+operator|->
+name|ifmt_word
+condition|)
+block|{
+if|if
+condition|(
+name|desc
+operator|->
+name|ifmt_string
+operator|!=
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|" mode %s"
+argument_list|,
+name|desc
+operator|->
+name|ifmt_string
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 comment|/* 	 * Check for the shared subtype descriptions first, then the 	 * type-specific ones. 	 */
 for|for
 control|(

@@ -14829,7 +14829,7 @@ literal|12
 case|:
 name|mword
 operator|=
-name|IFM_IEEE80211_ODFM6
+name|IFM_IEEE80211_OFDM6
 expr_stmt|;
 break|break;
 case|case
@@ -14837,7 +14837,7 @@ literal|18
 case|:
 name|mword
 operator|=
-name|IFM_IEEE80211_ODFM9
+name|IFM_IEEE80211_OFDM9
 expr_stmt|;
 break|break;
 case|case
@@ -14845,7 +14845,7 @@ literal|24
 case|:
 name|mword
 operator|=
-name|IFM_IEEE80211_ODFM12
+name|IFM_IEEE80211_OFDM12
 expr_stmt|;
 break|break;
 case|case
@@ -14853,7 +14853,7 @@ literal|36
 case|:
 name|mword
 operator|=
-name|IFM_IEEE80211_ODFM18
+name|IFM_IEEE80211_OFDM18
 expr_stmt|;
 break|break;
 case|case
@@ -14861,7 +14861,7 @@ literal|48
 case|:
 name|mword
 operator|=
-name|IFM_IEEE80211_ODFM24
+name|IFM_IEEE80211_OFDM24
 expr_stmt|;
 break|break;
 case|case
@@ -14869,7 +14869,7 @@ literal|72
 case|:
 name|mword
 operator|=
-name|IFM_IEEE80211_ODFM36
+name|IFM_IEEE80211_OFDM36
 expr_stmt|;
 break|break;
 case|case
@@ -14877,7 +14877,7 @@ literal|108
 case|:
 name|mword
 operator|=
-name|IFM_IEEE80211_ODFM54
+name|IFM_IEEE80211_OFDM54
 expr_stmt|;
 break|break;
 case|case
@@ -14885,7 +14885,7 @@ literal|144
 case|:
 name|mword
 operator|=
-name|IFM_IEEE80211_ODFM72
+name|IFM_IEEE80211_OFDM72
 expr_stmt|;
 break|break;
 default|default:
