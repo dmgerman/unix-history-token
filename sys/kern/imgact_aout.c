@@ -978,6 +978,11 @@ operator|(
 name|EFAULT
 operator|)
 return|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|fill_kinfo_proc
 argument_list|(
 name|p
@@ -988,6 +993,11 @@ operator|->
 name|p_uarea
 operator|->
 name|u_kproc
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|error

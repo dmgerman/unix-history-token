@@ -1970,6 +1970,11 @@ name|struct
 name|kinfo_proc
 name|kp
 decl_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|fill_kinfo_proc
 argument_list|(
 name|p
@@ -2021,11 +2026,6 @@ literal|'0'
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|PS_ADD
 argument_list|(
 literal|"ppid"
@@ -2539,6 +2539,11 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|fill_kinfo_proc
 argument_list|(
 name|p
@@ -2578,11 +2583,6 @@ argument_list|,
 name|p
 operator|->
 name|p_pid
-argument_list|)
-expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 name|sbuf_printf

@@ -2588,7 +2588,7 @@ comment|/* DDB */
 end_comment
 
 begin_comment
-comment|/*  * Fill in an kinfo_proc structure for the specified process.  */
+comment|/*  * Fill in an kinfo_proc structure for the specified process.  * Must be called with the target process locked.  */
 end_comment
 
 begin_function
@@ -2656,9 +2656,11 @@ name|ki_paddr
 operator|=
 name|p
 expr_stmt|;
-name|PROC_LOCK
+name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|kp
@@ -3652,11 +3654,6 @@ name|p_pptr
 operator|->
 name|p_pid
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3723,6 +3720,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Must be called with the process locked and will return with it unlocked.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -3761,12 +3762,24 @@ name|p
 operator|->
 name|p_pid
 decl_stmt|;
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|fill_kinfo_proc
 argument_list|(
 name|p
 argument_list|,
 operator|&
 name|kinfo_proc
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -3966,11 +3979,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|sysctl_out_proc
@@ -4115,6 +4123,11 @@ name|p_list
 argument_list|)
 control|)
 block|{
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Show a user only appropriate processes. 			 */
 if|if
 condition|(
@@ -4125,7 +4138,14 @@ argument_list|,
 name|p
 argument_list|)
 condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* 			 * Skip embryonic processes. 			 */
 if|if
 condition|(
@@ -4135,7 +4155,14 @@ name|p_stat
 operator|==
 name|SIDL
 condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* 			 * TODO - make more efficient (see notes below). 			 * do by session. 			 */
 switch|switch
 condition|(
@@ -4148,11 +4175,6 @@ case|case
 name|KERN_PROC_PGRP
 case|:
 comment|/* could do this by traversing pgrp */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -4183,20 +4205,10 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|KERN_PROC_TTY
 case|:
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4281,11 +4293,6 @@ operator|->
 name|p_session
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|KERN_PROC_UID
@@ -4312,7 +4319,14 @@ index|[
 literal|0
 index|]
 condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 break|break;
 case|case
 name|KERN_PROC_RUID
@@ -4339,19 +4353,16 @@ index|[
 literal|0
 index|]
 condition|)
-continue|continue;
-break|break;
-block|}
-if|if
-condition|(
-name|p_cansee
+block|{
+name|PROC_UNLOCK
 argument_list|(
-name|curproc
-argument_list|,
 name|p
 argument_list|)
-condition|)
+expr_stmt|;
 continue|continue;
+block|}
+break|break;
+block|}
 name|error
 operator|=
 name|sysctl_out_proc
