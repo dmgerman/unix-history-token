@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cache.h	7.3 (Berkeley) %G%  *  * from: $Header: cache.h,v 1.6 92/11/26 03:04:46 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cache.h	7.4 (Berkeley) %G%  *  * from: $Header: cache.h,v 1.7 93/04/27 14:31:16 torek Exp $  */
 end_comment
 
 begin_comment
@@ -29,7 +29,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Cache tags can be written in control space, and must be set to 0  * (or invalid anyway) before turning on the cache.  The tags are  * addressed as an array of 32-bit structures of the form:  *  *	struct cache_tag {  *		u_int	:7,		(unused; must be zero)  *			ct_cid:3,	(context ID)  *			ct_w:1,		(write flag from PTE)  *			ct_s:1,		(supervisor flag from PTE)  *			ct_v:1,		(set => cache entry is valid)  *			:3,		(unused; must be zero)  *			ct_tid:14,	(cache tag ID)  *			:2;		(unused; must be zero)  *	};  *  * The cache sees virtual addresses as:  *  *	struct cache_va {  *		u_int	:2,		(unused; probably copies of va_tid<13>)  *			cva_tid:14,	(tag ID)  *			cva_line:12,	(cache line number)  *			cva_byte:4;	(byte in cache line)  *	};  *  * Note that, because the 12-bit line ID is `wider' than the page offset,  * it is possible to have one page map to two different cache lines.  * This can happen whenever two different physical pages have the same bits  * in the part of the virtual address that overlaps the cache line ID, i.e.,  * bits<15:12>.  In order to prevent cache duplication, we have to  * make sure that no one page has more than one virtual address where  * (va1& 0xf000) != (va2& 0xf000).  (The cache hardware turns off ct_v  * when a cache miss occurs on a write, i.e., if va1 is in the cache and  * va2 is not, and you write to va2, va1 goes out of the cache.  If va1  * is in the cache and va2 is not, reading va2 also causes va1 to become  * uncached, and the [same] data is then read from main memory into the  * cache.)  *  * The other alternative, of course, is to disable caching of aliased  * pages.  (In a few cases this might be faster anyway, but we do it  * only when forced.)  *  * THE CURRENT VM CODE DOES NOT ALLOW US TO SPECIFY PREFERRED VIRTUAL  * ADDRESSES ... THIS MUST BE FIXED!  */
+comment|/* XXX  move into cacheinfo struct */
+end_comment
+
+begin_comment
+comment|/*  * Cache tags can be written in control space, and must be set to 0  * (or invalid anyway) before turning on the cache.  The tags are  * addressed as an array of 32-bit structures of the form:  *  *	struct cache_tag {  *		u_int	:7,		(unused; must be zero)  *			ct_cid:3,	(context ID)  *			ct_w:1,		(write flag from PTE)  *			ct_s:1,		(supervisor flag from PTE)  *			ct_v:1,		(set => cache entry is valid)  *			:3,		(unused; must be zero)  *			ct_tid:14,	(cache tag ID)  *			:2;		(unused; must be zero)  *	};  *  * The SPARCstation 1 cache sees virtual addresses as:  *  *	struct cache_va {  *		u_int	:2,		(unused; probably copies of va_tid<13>)  *			cva_tid:14,	(tag ID)  *			cva_line:12,	(cache line number)  *			cva_byte:4;	(byte in cache line)  *	};  *  * (The SS2 cache is similar but has half as many lines, each twice as long.)  *  * Note that, because the 12-bit line ID is `wider' than the page offset,  * it is possible to have one page map to two different cache lines.  * This can happen whenever two different physical pages have the same bits  * in the part of the virtual address that overlaps the cache line ID, i.e.,  * bits<15:12>.  In order to prevent cache duplication, we have to  * make sure that no one page has more than one virtual address where  * (va1& 0xf000) != (va2& 0xf000).  (The cache hardware turns off ct_v  * when a cache miss occurs on a write, i.e., if va1 is in the cache and  * va2 is not, and you write to va2, va1 goes out of the cache.  If va1  * is in the cache and va2 is not, reading va2 also causes va1 to become  * uncached, and the [same] data is then read from main memory into the  * cache.)  *  * The other alternative, of course, is to disable caching of aliased  * pages.  (In a few cases this might be faster anyway, but we do it  * only when forced.)  *  * THE CURRENT VM CODE DOES NOT ALLOW US TO SPECIFY PREFERRED VIRTUAL  * ADDRESSES ... THIS MUST BE FIXED!  */
 end_comment
 
 begin_define
@@ -148,6 +152,86 @@ end_decl_stmt
 begin_comment
 comment|/* flush region */
 end_comment
+
+begin_comment
+comment|/*  * Cache control information.  */
+end_comment
+
+begin_struct
+struct|struct
+name|cacheinfo
+block|{
+name|int
+name|c_totalsize
+decl_stmt|;
+comment|/* total size, in bytes */
+name|int
+name|c_enabled
+decl_stmt|;
+comment|/* true => cache is enabled */
+name|int
+name|c_hwflush
+decl_stmt|;
+comment|/* true => have hardware flush */
+name|int
+name|c_linesize
+decl_stmt|;
+comment|/* line size, in bytes */
+name|int
+name|c_l2linesize
+decl_stmt|;
+comment|/* log2(linesize) */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|cacheinfo
+name|cacheinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Cache control statistics.  */
+end_comment
+
+begin_struct
+struct|struct
+name|cachestats
+block|{
+name|int
+name|cs_npgflush
+decl_stmt|;
+comment|/* # page flushes */
+name|int
+name|cs_nsgflush
+decl_stmt|;
+comment|/* # seg flushes */
+name|int
+name|cs_ncxflush
+decl_stmt|;
+comment|/* # context flushes */
+name|int
+name|cs_nraflush
+decl_stmt|;
+comment|/* # range flushes */
+ifdef|#
+directive|ifdef
+name|notyet
+name|int
+name|cs_ra
+index|[
+literal|65
+index|]
+decl_stmt|;
+comment|/* pages/range */
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
 
 end_unit
 
