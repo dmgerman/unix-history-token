@@ -218,6 +218,34 @@ name|PTE_PROT_MASK
 value|0x0700000000000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|ITIR__RV1_
+value|0x0000000000000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITIR_PS_MASK
+value|0x00000000000000FC
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITIR_KEY_MASK
+value|0x00000000FFFFFF00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITIR__RV2_
+value|0xFFFFFFFF00000000
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -286,42 +314,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Layout of cr.itir.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ia64_itir
-block|{
-name|uint64_t
-name|__rv1__
-range|:
-literal|2
-decl_stmt|;
-comment|/* bits 0..1 */
-name|uint64_t
-name|ps
-range|:
-literal|6
-decl_stmt|;
-comment|/* bits 2..7 */
-name|uint64_t
-name|key
-range|:
-literal|24
-decl_stmt|;
-comment|/* bits 8..31 */
-name|uint64_t
-name|__rv2__
-range|:
-literal|32
-decl_stmt|;
-comment|/* bits 32..63 */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * A long-format VHPT entry.  */
 end_comment
 
@@ -332,8 +324,7 @@ block|{
 name|pt_entry_t
 name|pte
 decl_stmt|;
-name|struct
-name|ia64_itir
+name|uint64_t
 name|itir
 decl_stmt|;
 name|uint64_t
