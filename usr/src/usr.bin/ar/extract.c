@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)extract.c	5.1 (Berkeley) %G%"
+literal|"@(#)extract.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,13 +49,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -186,6 +186,7 @@ argument_list|(
 name|O_RDONLY
 argument_list|)
 expr_stmt|;
+comment|/* Read from an archive, write to disk; pad on read. */
 name|SETCF
 argument_list|(
 name|afd
@@ -240,15 +241,9 @@ name|argv
 argument_list|)
 condition|)
 block|{
-name|SKIP
+name|skipobj
 argument_list|(
 name|afd
-argument_list|,
-name|chdr
-operator|.
-name|size
-argument_list|,
-name|archive
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -317,15 +312,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SKIP
+name|skipobj
 argument_list|(
 name|afd
-argument_list|,
-name|chdr
-operator|.
-name|size
-argument_list|,
-name|archive
 argument_list|)
 expr_stmt|;
 name|eval
