@@ -1749,12 +1749,6 @@ operator|=
 name|mdunits
 operator|++
 expr_stmt|;
-name|sc
-operator|->
-name|type
-operator|=
-name|MD_PRELOAD
-expr_stmt|;
 name|bufq_init
 argument_list|(
 operator|&
@@ -1856,6 +1850,12 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|type
+operator|=
+name|MD_PRELOAD
+expr_stmt|;
+name|sc
+operator|->
 name|nsect
 operator|=
 name|length
@@ -1909,6 +1909,12 @@ argument_list|(
 operator|&
 name|md_cdevsw
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|type
+operator|=
+name|MD_MALLOC
 expr_stmt|;
 name|sc
 operator|->
@@ -2136,6 +2142,13 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"md%d: Malloc disk\n"
+argument_list|,
+name|mdunits
+argument_list|)
+expr_stmt|;
 name|mdcreate_malloc
 argument_list|()
 expr_stmt|;
