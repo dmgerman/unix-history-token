@@ -542,26 +542,6 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* for now, still 2 char names */
-if|if
-condition|(
-name|smnt
-operator|==
-literal|0
-operator|&&
-name|fontbase
-index|[
-name|i
-index|]
-operator|->
-name|specfont
-operator|==
-literal|1
-condition|)
-name|smnt
-operator|=
-name|i
-expr_stmt|;
-comment|/* first special font */
 name|p
 operator|+=
 sizeof|sizeof
@@ -1493,8 +1473,6 @@ argument_list|(
 literal|0
 argument_list|,
 name|temp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2453,8 +2431,6 @@ argument_list|(
 argument|f
 argument_list|,
 argument|s
-argument_list|,
-argument|d
 argument_list|)
 end_macro
 
@@ -2468,9 +2444,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|s
-decl_stmt|,
-modifier|*
-name|d
 decl_stmt|;
 end_decl_stmt
 
@@ -2485,19 +2458,11 @@ name|fprintf
 argument_list|(
 name|ptid
 argument_list|,
-literal|"x font %d %s %s\n"
+literal|"x font %d %s\n"
 argument_list|,
 name|f
 argument_list|,
 name|s
-argument_list|,
-name|d
-operator|==
-literal|0
-condition|?
-literal|""
-else|:
-name|d
 argument_list|)
 expr_stmt|;
 name|ptfont
