@@ -1712,7 +1712,7 @@ argument_list|)
 expr_stmt|;
 name|yp_error
 argument_list|(
-literal|"there may be more than one user with the same name - continuing"
+literal|"there may be more than one user \ with the same name - continuing"
 argument_list|)
 expr_stmt|;
 continue|continue;
