@@ -298,6 +298,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* MIB variables: net.inet.ip.{rtexpire,rtmaxcache,rtminexpire}. */
+end_comment
+
 begin_decl_stmt
 name|int
 name|rtq_reallyold
@@ -496,6 +500,9 @@ decl_stmt|;
 name|int
 name|found
 decl_stmt|;
+name|int
+name|updating
+decl_stmt|;
 name|time_t
 name|nextstop
 decl_stmt|;
@@ -504,7 +511,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Get rid of old routes.  When draining, this deletes everything, even when  * the timeout is not expired yet.  */
+comment|/*  * Get rid of old routes.  When draining, this deletes everything, even when  * the timeout is not expired yet.  When updating, this makes sure that  * nothing has a timeout longer than the current value of rtq_reallyold.  */
 end_comment
 
 begin_function
@@ -582,20 +589,6 @@ operator|<=
 name|time
 operator|.
 name|tv_sec
-operator|||
-operator|(
-name|rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_expire
-operator|-
-name|time
-operator|.
-name|tv_sec
-operator|>
-name|rtq_reallyold
-operator|)
 condition|)
 block|{
 if|if
@@ -669,6 +662,40 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|ap
+operator|->
+name|updating
+operator|&&
+operator|(
+name|time
+operator|.
+name|tv_sec
+operator|-
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_expire
+operator|>
+name|rtq_reallyold
+operator|)
+condition|)
+block|{
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_expire
+operator|=
+name|time
+operator|.
+name|tv_sec
+operator|+
+name|rtq_reallyold
+expr_stmt|;
+block|}
 name|ap
 operator|->
 name|nextstop
@@ -777,6 +804,10 @@ name|arg
 operator|.
 name|draining
 operator|=
+name|arg
+operator|.
+name|updating
+operator|=
 literal|0
 expr_stmt|;
 name|s
@@ -875,6 +906,12 @@ operator|.
 name|killed
 operator|=
 literal|0
+expr_stmt|;
+name|arg
+operator|.
+name|updating
+operator|=
+literal|1
 expr_stmt|;
 name|s
 operator|=
@@ -980,6 +1017,12 @@ operator|.
 name|draining
 operator|=
 literal|1
+expr_stmt|;
+name|arg
+operator|.
+name|updating
+operator|=
+literal|0
 expr_stmt|;
 name|s
 operator|=
