@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.19 1995/10/25 15:38:35 jkh Exp $"
+literal|"$Id: pen.c,v 1.20 1996/02/09 12:05:26 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -429,7 +429,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Requested space: %d bytes, free space: %d bytes in %s\n"
+literal|"Requested space: %d bytes, free space: %qd bytes in %s\n"
 argument_list|,
 operator|(
 name|int
@@ -660,7 +660,7 @@ block|}
 end_function
 
 begin_function
-name|size_t
+name|off_t
 name|min_free
 parameter_list|(
 name|char
@@ -696,10 +696,16 @@ literal|1
 return|;
 block|}
 return|return
+operator|(
+name|off_t
+operator|)
 name|buf
 operator|.
 name|f_bavail
 operator|*
+operator|(
+name|off_t
+operator|)
 name|buf
 operator|.
 name|f_bsize

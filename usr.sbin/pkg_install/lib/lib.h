@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.18 1995/08/26 10:15:12 jkh Exp $ */
+comment|/* $Id: lib.h,v 1.19 1995/10/25 15:38:34 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -468,7 +468,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|size_t
+name|off_t
 name|min_free
 parameter_list|(
 name|char
