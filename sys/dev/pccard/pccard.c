@@ -3125,8 +3125,11 @@ name|pf
 operator|->
 name|dev
 operator|,
-literal|"MFC: I/O base 0x%x IOSIZE %lld\n"
+literal|"MFC: I/O base 0x%llx IOSIZE %lld\n"
 operator|,
+operator|(
+name|uint64_t
+operator|)
 name|pf
 operator|->
 name|pf_mfc_iobase
