@@ -1069,28 +1069,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-name|c
-operator|=
-name|getc
+operator|!
+name|feof
 argument_list|(
 name|f
 argument_list|)
-operator|)
-operator|!=
-name|EOF
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|ungetc
-argument_list|(
-name|c
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 operator|(
@@ -1125,7 +1110,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Use fgetln so that we can handle essentially infinite input data. 	 * Can't use the pointer into the stdio buffer as the process space 	 * because the ungetc() can cause it to move. 	 */
+comment|/* 	 * Use fgetln so that we can handle essentially infinite input data. 	 */
 name|p
 operator|=
 name|fgetln
@@ -1178,16 +1163,10 @@ expr_stmt|;
 comment|/* Advance to next non-empty file */
 while|while
 condition|(
-operator|(
-name|c
-operator|=
-name|getc
+name|feof
 argument_list|(
 name|f
 argument_list|)
-operator|)
-operator|==
-name|EOF
 condition|)
 block|{
 operator|(
@@ -1278,16 +1257,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|ungetc
-argument_list|(
-name|c
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
