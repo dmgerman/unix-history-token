@@ -441,7 +441,7 @@ decl_stmt|;
 name|char
 name|patt
 index|[
-literal|16
+literal|32
 index|]
 decl_stmt|;
 name|vfsname
