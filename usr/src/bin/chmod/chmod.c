@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chmod.c	8.5 (Berkeley) %G%"
+literal|"@(#)chmod.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -721,6 +721,17 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|errno
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"fts_read"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|rval
