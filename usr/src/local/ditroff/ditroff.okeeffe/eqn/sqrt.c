@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"sqrt.c	(CWI)	1.1	85/03/01"
+literal|"sqrt.c	(CWI)	1.2	85/03/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,18 +83,9 @@ expr_stmt|;
 if|if
 condition|(
 name|ttype
-operator|==
-name|DEVCAT
-operator|||
-name|ttype
-operator|==
-name|DEVAPS
-operator|||
-name|ttype
-operator|==
-name|DEVHAR
+operator|!=
+name|DEV202
 condition|)
-comment|/*jna trying*/
 name|eht
 index|[
 name|yyval
@@ -110,13 +101,7 @@ name|nps
 argument_list|)
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|ttype
-operator|==
-name|DEV202
-condition|)
+else|else
 name|eht
 index|[
 name|yyval
@@ -198,18 +183,9 @@ comment|/* proper position for sqrt */
 if|if
 condition|(
 name|ttype
-operator|==
-name|DEVCAT
-operator|||
-name|ttype
-operator|==
-name|DEVAPS
-operator|||
-name|ttype
-operator|==
-name|DEVHAR
+operator|!=
+name|DEV202
 condition|)
-comment|/*jna trying*/
 name|printf
 argument_list|(
 literal|"\\v'-.2m'\\(sr\\l'\\n(%du\\(rn'\\v'.2m'"
