@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-ppc.c -- Assemble for the PowerPC or POWER (RS/6000)    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-ppc.c -- Assemble for the PowerPC or POWER (RS/6000)    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -4182,7 +4182,7 @@ name|ppc_cpu
 operator|=
 name|PPC_OPCODE_POWER
 expr_stmt|;
-comment|/* -m601 means to assemble for the Motorola PowerPC 601, which includes 	 instructions that are holdovers from the Power.  */
+comment|/* -m601 means to assemble for the PowerPC 601, which includes 	 instructions that are holdovers from the Power.  */
 elseif|else
 if|if
 condition|(
@@ -4201,7 +4201,7 @@ name|PPC_OPCODE_PPC
 operator||
 name|PPC_OPCODE_601
 expr_stmt|;
-comment|/* -mppc, -mppc32, -m603, and -m604 mean to assemble for the 	 Motorola PowerPC 603/604.  */
+comment|/* -mppc, -mppc32, -m603, and -m604 mean to assemble for the 	 PowerPC 603/604.  */
 elseif|else
 if|if
 condition|(
@@ -4245,7 +4245,7 @@ name|ppc_cpu
 operator|=
 name|PPC_OPCODE_PPC
 expr_stmt|;
-comment|/* -m403 and -m405 mean to assemble for the Motorola PowerPC 403/405.  */
+comment|/* -m403 and -m405 mean to assemble for the PowerPC 403/405.  */
 elseif|else
 if|if
 condition|(
@@ -4460,6 +4460,32 @@ operator||
 name|PPC_OPCODE_BOOKE64
 operator||
 name|PPC_OPCODE_64
+expr_stmt|;
+name|ppc_size
+operator|=
+name|PPC_OPCODE_64
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"power4"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|ppc_cpu
+operator|=
+name|PPC_OPCODE_PPC
+operator||
+name|PPC_OPCODE_64
+operator||
+name|PPC_OPCODE_POWER4
 expr_stmt|;
 name|ppc_size
 operator|=
@@ -4781,7 +4807,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\ PowerPC options:\n\ -u			ignored\n\ -mpwrx, -mpwr2		generate code for IBM POWER/2 (RIOS2)\n\ -mpwr			generate code for IBM POWER (RIOS1)\n\ -m601			generate code for Motorola PowerPC 601\n\ -mppc, -mppc32, -m603, -m604\n\ 			generate code for Motorola PowerPC 603/604\n\ -m403, -m405            generate code for Motorola PowerPC 403/405\n\ -m7400, -m7410, -m7450, -m7455\n\ 			generate code For Motorola PowerPC 7400/7410/7450/7455\n\ -mppc64, -m620		generate code for Motorola PowerPC 620\n\ -mppc64bridge		generate code for PowerPC 64, including bridge insns\n\ -mbooke64		generate code for 64-bit PowerPC BookE\n\ -mbooke, mbooke32	generate code for 32-bit PowerPC BookE\n\ -maltivec		generate code for AltiVec\n\ -mcom			generate code Power/PowerPC common instructions\n\ -many			generate code for any architecture (PWR/PWRX/PPC)\n\ -mregnames		Allow symbolic names for registers\n\ -mno-regnames		Do not allow symbolic names for registers\n"
+literal|"\ PowerPC options:\n\ -u			ignored\n\ -mpwrx, -mpwr2		generate code for POWER/2 (RIOS2)\n\ -mpwr			generate code for POWER (RIOS1)\n\ -m601			generate code for PowerPC 601\n\ -mppc, -mppc32, -m603, -m604\n\ 			generate code for PowerPC 603/604\n\ -m403, -m405            generate code for PowerPC 403/405\n\ -m7400, -m7410, -m7450, -m7455\n\ 			generate code For PowerPC 7400/7410/7450/7455\n\ -mppc64, -m620		generate code for PowerPC 620/625/630\n\ -mppc64bridge		generate code for PowerPC 64, including bridge insns\n\ -mbooke64		generate code for 64-bit PowerPC BookE\n\ -mbooke, mbooke32	generate code for 32-bit PowerPC BookE\n\ -mpower4		generate code for Power4 architecture\n\ -maltivec		generate code for AltiVec\n\ -mcom			generate code Power/PowerPC common instructions\n\ -many			generate code for any architecture (PWR/PWRX/PPC)\n\ -mregnames		Allow symbolic names for registers\n\ -mno-regnames		Do not allow symbolic names for registers\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5322,6 +5348,38 @@ name|PPC_OPCODE_64_BRIDGE
 operator|)
 operator|!=
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|op
+operator|->
+name|flags
+operator|&
+operator|(
+name|PPC_OPCODE_POWER4
+operator||
+name|PPC_OPCODE_NOPOWER4
+operator|)
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+operator|(
+name|op
+operator|->
+name|flags
+operator|&
+name|PPC_OPCODE_POWER4
+operator|)
+operator|==
+operator|(
+name|ppc_cpu
+operator|&
+name|PPC_OPCODE_POWER4
+operator|)
+operator|)
 operator|)
 condition|)
 block|{

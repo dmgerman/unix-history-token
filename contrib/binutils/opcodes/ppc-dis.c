@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ppc-dis.c -- Disassemble PowerPC instructions    Copyright 1994, 1995, 2000 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ppc-dis.c -- Disassemble PowerPC instructions    Copyright 1994, 1995, 2000, 2001, 2002 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -70,7 +70,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Determine which set of machines to disassemble for.  PPC403/601 or    Motorola BookE.  For convenience, also disassemble instructions    supported by the AltiVec vector unit.  */
+comment|/* Determine which set of machines to disassemble for.  PPC403/601 or    BookE.  For convenience, also disassemble instructions supported    by the AltiVec vector unit.  */
 end_comment
 
 begin_function
@@ -155,6 +155,27 @@ operator||=
 name|PPC_OPCODE_403
 operator||
 name|PPC_OPCODE_601
+expr_stmt|;
+if|if
+condition|(
+name|info
+operator|->
+name|disassembler_options
+operator|&&
+name|strcmp
+argument_list|(
+name|info
+operator|->
+name|disassembler_options
+argument_list|,
+literal|"power4"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|dialect
+operator||=
+name|PPC_OPCODE_POWER4
 expr_stmt|;
 if|if
 condition|(
