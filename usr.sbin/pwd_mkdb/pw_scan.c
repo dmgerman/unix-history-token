@@ -286,6 +286,27 @@ name|_PWF_UID
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|pw
+operator|->
+name|pw_name
+index|[
+literal|0
+index|]
+operator|!=
+literal|'+'
+operator|&&
+name|pw
+operator|->
+name|pw_name
+index|[
+literal|0
+index|]
+operator|!=
+literal|'-'
+condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"no uid for user %s"
@@ -300,6 +321,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 name|id
 operator|=
