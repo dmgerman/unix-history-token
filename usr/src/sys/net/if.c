@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.c	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2658,9 +2658,6 @@ operator|->
 name|ifr_metric
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 case|case
 name|SIOCADDMULTI
 case|:
@@ -2718,8 +2715,6 @@ name|data
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
 default|default:
 if|if
 condition|(
