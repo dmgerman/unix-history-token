@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rpc_svcout.c,v 1.1 1993/09/13 23:20:19 jtc Exp $"
+literal|"$Id: rpc_svcout.c,v 1.1 1994/08/07 18:01:36 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1169,7 +1169,7 @@ literal|"getargs"
 argument_list|,
 name|TRANSP
 argument_list|,
-literal|"&"
+literal|"(caddr_t)&"
 argument_list|,
 name|ARG
 argument_list|)
@@ -1245,7 +1245,7 @@ literal|"freeargs"
 argument_list|,
 name|TRANSP
 argument_list|,
-literal|"&"
+literal|"(caddr_t)&"
 argument_list|,
 name|ARG
 argument_list|)

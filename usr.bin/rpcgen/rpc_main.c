@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rpc_main.c,v 1.1 1993/09/13 23:20:15 jtc Exp $"
+literal|"$Id: rpc_main.c,v 1.1 1994/08/07 18:01:31 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -465,7 +465,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * add extension to filename   */
+comment|/*  * strip path and add extension to filename   */
 end_comment
 
 begin_function
@@ -474,13 +474,13 @@ name|char
 modifier|*
 name|extendfile
 parameter_list|(
-name|file
+name|path
 parameter_list|,
 name|ext
 parameter_list|)
 name|char
 modifier|*
-name|file
+name|path
 decl_stmt|;
 name|char
 modifier|*
@@ -489,12 +489,39 @@ decl_stmt|;
 block|{
 name|char
 modifier|*
+name|file
+decl_stmt|;
+name|char
+modifier|*
 name|res
 decl_stmt|;
 name|char
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|file
+operator|=
+name|rindex
+argument_list|(
+name|path
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|file
+operator|=
+name|path
+expr_stmt|;
+else|else
+name|file
+operator|++
+expr_stmt|;
 name|res
 operator|=
 name|alloc
