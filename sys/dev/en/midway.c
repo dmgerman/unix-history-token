@@ -9272,7 +9272,9 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ext_free
+name|ext_type
+operator|!=
+name|EXT_CLUSTER
 condition|)
 block|{
 comment|/* external buffer isn't an ordinary mbuf cluster! */
