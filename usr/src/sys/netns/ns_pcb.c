@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|"errno.h"
 end_include
 
 begin_include
@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"protosw.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../net/if.h"
 end_include
 
@@ -49,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|"../net/route.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"protosw.h"
 end_include
 
 begin_include
@@ -349,10 +349,16 @@ name|aport
 operator|<
 name|NSPORT_RESERVED
 operator|&&
-name|u
-operator|.
-name|u_uid
-operator|!=
+operator|(
+name|nsp
+operator|->
+name|nsp_socket
+operator|->
+name|so_state
+operator|&
+name|SS_PRIV
+operator|)
+operator|==
 literal|0
 condition|)
 return|return
