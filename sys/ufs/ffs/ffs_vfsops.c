@@ -3479,10 +3479,26 @@ block|}
 ifdef|#
 directive|ifdef
 name|FFS_EXTATTR
-comment|/* 	 * XXX Auto-starting of EAs would go here. 	 * 	 * Auto-starting would: 	 *	- check for /.attribute in the fs, and extattr_start if so 	 *	- for each file in .attribute, enable that file with 	 * 	  an attribute of the same name. 	 * Not clear how to report errors -- probably eat them. 	 * This would all happen while the file system was busy/not 	 * available, so would effectively be "atomic". 	 */
-comment|/* ufs_extattr_autostart(mp, ump); */
+ifdef|#
+directive|ifdef
+name|FFS_EXTATTR_AUTOSTART
+comment|/* 	 * 	 * Auto-starting does the following: 	 *	- check for /.attribute in the fs, and extattr_start if so 	 *	- for each file in .attribute, enable that file with 	 * 	  an attribute of the same name. 	 * Not clear how to report errors -- probably eat them. 	 * This would all happen while the file system was busy/not 	 * available, so would effectively be "atomic". 	 */
+operator|(
+name|void
+operator|)
+name|ufs_extattr_autostart
+argument_list|(
+name|mp
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+comment|/* !FFS_EXTATTR_AUTOSTART */
+endif|#
+directive|endif
+comment|/* !FFS_EXTATTR */
 return|return
 operator|(
 literal|0

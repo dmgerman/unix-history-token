@@ -322,6 +322,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ufs_extattr_autostart
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ufs_extattr_stop
 parameter_list|(
 name|struct
