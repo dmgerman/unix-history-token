@@ -4,7 +4,7 @@ comment|/* This file contains code for X-CHESS.    Copyright (C) 1986 Free Softw
 end_comment
 
 begin_comment
-comment|/* RCS Info: $Revision: 1.2 $ on $Date: 86/11/23 17:18:10 $  *           $Source: /users/faustus/xchess/RCS/program.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  *  * The interface to whichever chess playing program we are using...  */
+comment|/* RCS Info: $Revision: 1.1.1.1 $ on $Date: 1993/06/12 14:41:13 $  *           $Source: /a/cvs/386BSD/src/gnu/chess/Xchess/program.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  *  * The interface to whichever chess playing program we are using...  */
 end_comment
 
 begin_include
@@ -655,6 +655,36 @@ name|int
 name|i
 decl_stmt|;
 comment|/* Do a poll... */
+ifdef|#
+directive|ifdef
+name|__386BSD__
+if|if
+condition|(
+operator|!
+operator|(
+name|i
+operator|=
+name|select
+argument_list|(
+literal|32
+argument_list|,
+operator|&
+name|rfd
+argument_list|,
+operator|&
+name|wfd
+argument_list|,
+operator|&
+name|xfd
+argument_list|,
+operator|&
+name|notime
+argument_list|)
+operator|)
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 operator|!
@@ -686,6 +716,8 @@ name|_cnt
 condition|)
 block|{
 comment|/* Bad stuff... */
+endif|#
+directive|endif
 if|if
 condition|(
 name|debug
@@ -853,9 +885,6 @@ name|m
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|program_undo
 parameter_list|()
@@ -869,9 +898,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_function
 name|void
 name|program_easy
 parameter_list|(
