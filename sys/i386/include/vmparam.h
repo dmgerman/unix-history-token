@@ -141,7 +141,7 @@ begin_define
 define|#
 directive|define
 name|MAXSSIZ
-value|MAXDSIZ
+value|(2*1024*1024)
 end_define
 
 begin_comment
