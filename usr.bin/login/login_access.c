@@ -51,6 +51,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<grp.h>
 end_include
 
@@ -78,44 +84,11 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|struct
-name|group
-modifier|*
-name|getgrnam
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Path name of the access control file. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TABLE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TABLE
-value|"/etc/login.access"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_comment
 comment|/* Delimiters for fields and for lists of users, ttys or hosts. */
@@ -274,7 +247,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|TABLE
+name|_PATH_LOGACCESS
 argument_list|,
 literal|"r"
 argument_list|)
@@ -324,7 +297,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: line %d: missing newline or line too long"
 argument_list|,
-name|TABLE
+name|_PATH_LOGACCESS
 argument_list|,
 name|lineno
 argument_list|)
@@ -444,7 +417,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: line %d: bad field count"
 argument_list|,
-name|TABLE
+name|_PATH_LOGACCESS
 argument_list|,
 name|lineno
 argument_list|)
@@ -474,7 +447,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: line %d: bad first field"
 argument_list|,
-name|TABLE
+name|_PATH_LOGACCESS
 argument_list|,
 name|lineno
 argument_list|)
@@ -527,7 +500,7 @@ name|LOG_ERR
 argument_list|,
 literal|"cannot open %s: %m"
 argument_list|,
-name|TABLE
+name|_PATH_LOGACCESS
 argument_list|)
 expr_stmt|;
 block|}
