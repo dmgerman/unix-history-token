@@ -8717,6 +8717,22 @@ operator|~
 name|B_DONE
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|BUF_REFCNT
+argument_list|(
+name|bp
+argument_list|)
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"getblk: bp %p not locked"
+operator|,
+name|bp
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|bp
@@ -8805,6 +8821,22 @@ operator||=
 name|B_INVAL
 expr_stmt|;
 comment|/* b_dep cleared by getnewbuf() */
+name|KASSERT
+argument_list|(
+name|BUF_REFCNT
+argument_list|(
+name|bp
+argument_list|)
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"geteblk: bp %p not locked"
+operator|,
+name|bp
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|bp
