@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	from: @(#)ufs_lookup.c	7.33 (Berkeley) 5/19/91  *  *	@(#)cd9660_lookup.c	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	from: @(#)ufs_lookup.c	7.33 (Berkeley) 5/19/91  *  *	@(#)cd9660_lookup.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -142,17 +142,17 @@ name|endsearch
 decl_stmt|;
 comment|/* offset to end directory search */
 name|struct
-name|iso_node
+name|vnode
 modifier|*
 name|pdp
 decl_stmt|;
 comment|/* saved dp during symlink work */
 name|struct
-name|iso_node
+name|vnode
 modifier|*
 name|tdp
 decl_stmt|;
-comment|/* returned by iget */
+comment|/* returned by cd9660_vget_internal */
 name|int
 name|lockparent
 decl_stmt|;
@@ -374,7 +374,7 @@ directive|endif
 comment|/* 		 * Get the next vnode in the path. 		 * See comment below starting `Step through' for 		 * an explaination of the locking protocol. 		 */
 name|pdp
 operator|=
-name|dp
+name|vdp
 expr_stmt|;
 name|dp
 operator|=
@@ -399,7 +399,7 @@ if|if
 condition|(
 name|pdp
 operator|==
-name|dp
+name|vdp
 condition|)
 block|{
 name|VREF
@@ -420,7 +420,7 @@ operator|&
 name|ISDOTDOT
 condition|)
 block|{
-name|ISO_IUNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -447,7 +447,9 @@ operator|&
 name|ISLASTCN
 operator|)
 condition|)
-name|ISO_ILOCK
+name|error
+operator|=
+name|VOP_LOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -478,7 +480,7 @@ operator|&
 name|ISLASTCN
 operator|)
 condition|)
-name|ISO_IUNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -504,9 +506,9 @@ operator|(
 literal|0
 operator|)
 return|;
-name|iso_iput
+name|vput
 argument_list|(
-name|dp
+name|vdp
 argument_list|)
 expr_stmt|;
 if|if
@@ -515,7 +517,7 @@ name|lockparent
 operator|&&
 name|pdp
 operator|!=
-name|dp
+name|vdp
 operator|&&
 operator|(
 name|flags
@@ -523,26 +525,35 @@ operator|&
 name|ISLASTCN
 operator|)
 condition|)
-name|ISO_IUNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|pdp
 argument_list|)
 expr_stmt|;
 block|}
-name|ISO_ILOCK
+if|if
+condition|(
+name|error
+operator|=
+name|VOP_LOCK
 argument_list|(
 name|pdp
 argument_list|)
-expr_stmt|;
-name|dp
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|vdp
 operator|=
 name|pdp
 expr_stmt|;
-name|vdp
-operator|=
-name|ITOV
-argument_list|(
 name|dp
+operator|=
+name|VTOI
+argument_list|(
+name|pdp
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1395,7 +1406,7 @@ expr_stmt|;
 comment|/* 	 * Step through the translation in the name.  We do not `iput' the 	 * directory because we may need it again if a symbolic link 	 * is relative to the current directory.  Instead we save it 	 * unlocked as "pdp".  We must get the target inode before unlocking 	 * the directory to insure that the inode will not be removed 	 * before we get it.  We prevent deadlock by always fetching 	 * inodes from the root, moving down the directory tree. Thus 	 * when following backward pointers ".." we must unlock the 	 * parent directory before getting the requested directory. 	 * There is a potential race condition here if both the current 	 * and parent directories are removed before the `iget' for the 	 * inode associated with ".." returns.  We hope that this occurs 	 * infrequently since we cannot avoid this race condition without 	 * implementing a sophisticated deadlock detection algorithm. 	 * Note also that this simple deadlock detection scheme will not 	 * work if the file system has any hard links other than ".." 	 * that point backwards in the directory structure. 	 */
 name|pdp
 operator|=
-name|dp
+name|vdp
 expr_stmt|;
 comment|/* 	 * If ino is different from dp->i_ino, 	 * it's a relocated directory. 	 */
 if|if
@@ -1405,7 +1416,7 @@ operator|&
 name|ISDOTDOT
 condition|)
 block|{
-name|ISO_IUNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -1415,13 +1426,18 @@ if|if
 condition|(
 name|error
 operator|=
-name|iso_iget
+name|cd9660_vget_internal
 argument_list|(
-name|dp
+name|vdp
+operator|->
+name|v_mount
 argument_list|,
 name|dp
 operator|->
 name|i_ino
+argument_list|,
+operator|&
+name|tdp
 argument_list|,
 name|dp
 operator|->
@@ -1429,14 +1445,11 @@ name|i_ino
 operator|!=
 name|ino
 argument_list|,
-operator|&
-name|tdp
-argument_list|,
 name|ep
 argument_list|)
 condition|)
 block|{
-name|ISO_ILOCK
+name|VOP_LOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -1456,19 +1469,32 @@ name|flags
 operator|&
 name|ISLASTCN
 operator|)
-condition|)
-name|ISO_ILOCK
+operator|&&
+operator|(
+name|error
+operator|=
+name|VOP_LOCK
 argument_list|(
 name|pdp
 argument_list|)
-expr_stmt|;
-operator|*
-name|vpp
-operator|=
-name|ITOV
+operator|)
+condition|)
+block|{
+name|vput
 argument_list|(
 name|tdp
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+operator|*
+name|vpp
+operator|=
+name|tdp
 expr_stmt|;
 block|}
 elseif|else
@@ -1501,22 +1527,24 @@ if|if
 condition|(
 name|error
 operator|=
-name|iso_iget
+name|cd9660_vget_internal
 argument_list|(
-name|dp
+name|vdp
+operator|->
+name|v_mount
 argument_list|,
 name|dp
 operator|->
 name|i_ino
+argument_list|,
+operator|&
+name|tdp
 argument_list|,
 name|dp
 operator|->
 name|i_ino
 operator|!=
 name|ino
-argument_list|,
-operator|&
-name|tdp
 argument_list|,
 name|ep
 argument_list|)
@@ -1538,7 +1566,7 @@ operator|&
 name|ISLASTCN
 operator|)
 condition|)
-name|ISO_IUNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -1546,10 +1574,7 @@ expr_stmt|;
 operator|*
 name|vpp
 operator|=
-name|ITOV
-argument_list|(
 name|tdp
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Insert name into cache if appropriate. 	 */

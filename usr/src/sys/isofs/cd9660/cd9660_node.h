@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_node.h	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_node.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -75,12 +75,13 @@ block|{
 name|struct
 name|iso_dnode
 modifier|*
-name|d_chain
-index|[
-literal|2
-index|]
+name|d_next
+decl_stmt|,
+modifier|*
+modifier|*
+name|d_prev
 decl_stmt|;
-comment|/* hash chain, MUST be first */
+comment|/* hash chain */
 name|dev_t
 name|i_dev
 decl_stmt|;
@@ -97,20 +98,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|d_forw
-value|d_chain[0]
-end_define
-
-begin_define
-define|#
-directive|define
-name|d_back
-value|d_chain[1]
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -123,12 +110,13 @@ block|{
 name|struct
 name|iso_node
 modifier|*
-name|i_chain
-index|[
-literal|2
-index|]
+name|i_next
+decl_stmt|,
+modifier|*
+modifier|*
+name|i_prev
 decl_stmt|;
-comment|/* hash chain, MUST be first */
+comment|/* hash chain */
 name|struct
 name|vnode
 modifier|*
@@ -182,11 +170,10 @@ name|ino_t
 name|i_ino
 decl_stmt|;
 comment|/* inode number of found directory */
-name|long
-name|i_spare0
-decl_stmt|;
-name|long
-name|i_spare1
+name|pid_t
+name|i_lockholder
+decl_stmt|,
+name|i_lockwaiter
 decl_stmt|;
 name|long
 name|iso_extent
@@ -228,7 +215,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ILOCKED
+name|IN_LOCKED
 value|0x0001
 end_define
 
@@ -239,7 +226,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IWANT
+name|IN_WANTED
 value|0x0002
 end_define
 
@@ -250,7 +237,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IACC
+name|IN_ACCESS
 value|0x0020
 end_define
 
@@ -276,26 +263,6 @@ parameter_list|(
 name|ip
 parameter_list|)
 value|((ip)->i_vnode)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISO_ILOCK
-parameter_list|(
-name|ip
-parameter_list|)
-value|iso_ilock(ip)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISO_IUNLOCK
-parameter_list|(
-name|ip
-parameter_list|)
-value|iso_iunlock(ip)
 end_define
 
 begin_comment
@@ -620,6 +587,50 @@ operator|*
 operator|,
 expr|struct
 name|buf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|cd9660_ihashget
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+operator|,
+name|ino_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|cd9660_ihashins
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|iso_node
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|cd9660_ihashrem
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|iso_node
 operator|*
 operator|)
 argument_list|)
