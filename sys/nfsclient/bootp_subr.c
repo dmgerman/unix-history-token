@@ -4510,7 +4510,7 @@ operator|=
 operator|(
 literal|1200
 operator|)
-operator|%
+operator|/
 literal|256
 expr_stmt|;
 name|call
@@ -4524,7 +4524,7 @@ operator|=
 operator|(
 literal|1200
 operator|)
-operator|/
+operator|%
 literal|256
 expr_stmt|;
 name|call
