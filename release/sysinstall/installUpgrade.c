@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.33.2.22 1998/08/28 01:03:58 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.33.2.23 1998/11/05 17:47:42 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1594,41 +1594,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|extractingBin
-condition|)
-block|{
-name|msgNotify
-argument_list|(
-literal|"OK, now it's time to go pound on your root a little bit to create all the\n"
-literal|"/dev entries and such that a new system expects to see.  I'll also perform a\n"
-literal|"few \"fixup\" operations to repair the effects of splatting a bin distribution\n"
-literal|"on top of an existing system.."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-name|installFixup
-argument_list|(
-name|self
-argument_list|)
-argument_list|)
-operator|==
-name|DITEM_FAILURE
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Hmmmmm.  The fixups don't seem to have been very happy.\n"
-literal|"You may wish to examine the system a little more closely when\n"
-literal|"it comes time to merge your /etc customizations back."
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 name|msgNotify
 argument_list|(
 literal|"First stage of upgrade completed successfully!\n\n"
@@ -2119,35 +2084,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-name|msgNotify
-argument_list|(
-literal|"OK, now it's time to go pound on your root a little bit to create all the\n"
-literal|"/dev entries and such that a new system expects to see.  I'll also perform a\n"
-literal|"few \"fixup\" operations to repair the effects of splatting a bin distribution\n"
-literal|"on top of an existing system.."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-name|installFixup
-argument_list|(
-name|self
-argument_list|)
-argument_list|)
-operator|==
-name|DITEM_FAILURE
-condition|)
-block|{
-name|msgNotify
-argument_list|(
-literal|"Hmmmmm.  The fixups don't seem to have been very happy.\n"
-literal|"You may wish to examine the system a little more closely when\n"
-literal|"it comes time to merge your /etc customizations back."
-argument_list|)
-expr_stmt|;
 block|}
 name|msgNotify
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.134.2.71 1998/09/29 05:13:52 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.134.2.72 1998/10/28 10:59:45 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -859,6 +859,11 @@ name|alreadyDone
 init|=
 name|FALSE
 decl_stmt|;
+name|int
+name|status
+init|=
+name|DITEM_SUCCESS
+decl_stmt|;
 if|if
 condition|(
 name|alreadyDone
@@ -1004,8 +1009,38 @@ argument_list|,
 literal|"yes"
 argument_list|)
 expr_stmt|;
+comment|/* Configure various files in /etc */
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
 name|configResolv
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
+argument_list|)
+operator|==
+name|DITEM_FAILURE
+condition|)
+name|status
+operator|=
+name|DITEM_FAILURE
+expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|configFstab
+argument_list|(
+name|NULL
+argument_list|)
+argument_list|)
+operator|==
+name|DITEM_FAILURE
+condition|)
+name|status
+operator|=
+name|DITEM_FAILURE
 expr_stmt|;
 comment|/* stick a helpful shell over on the 4th VTY */
 name|systemCreateHoloshell
@@ -1016,7 +1051,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 return|return
-name|DITEM_SUCCESS
+name|status
 return|;
 block|}
 end_function
@@ -2599,9 +2634,6 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|Boolean
-name|need_bin
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2666,14 +2698,11 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
+comment|/* Installation stuff we wouldn't do to a running system */
 if|if
 condition|(
 name|RunningAsInit
-condition|)
-block|{
-comment|/* Do things we wouldn't do to a multi-user system */
-if|if
-condition|(
+operator|&&
 name|DITEM_STATUS
 argument_list|(
 operator|(
@@ -2689,24 +2718,6 @@ condition|)
 return|return
 name|i
 return|;
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-operator|(
-name|i
-operator|=
-name|configFstab
-argument_list|()
-operator|)
-argument_list|)
-operator|==
-name|DITEM_FAILURE
-condition|)
-return|return
-name|i
-return|;
-block|}
 name|try_media
 label|:
 if|if
@@ -2757,34 +2768,10 @@ operator||
 name|DITEM_RESTORE
 return|;
 block|}
-name|need_bin
-operator|=
-name|Dists
-operator|&
-name|DIST_BIN
-expr_stmt|;
+comment|/* Now go get it all */
 name|i
 operator|=
 name|distExtractAll
-argument_list|(
-name|self
-argument_list|)
-expr_stmt|;
-comment|/* Only do fixup if bin dist was successfully extracted */
-if|if
-condition|(
-name|need_bin
-operator|&&
-operator|!
-operator|(
-name|Dists
-operator|&
-name|DIST_BIN
-operator|)
-condition|)
-name|i
-operator||=
-name|installFixup
 argument_list|(
 name|self
 argument_list|)
@@ -2873,7 +2860,7 @@ end_function
 
 begin_function
 name|int
-name|installFixup
+name|installFixupBin
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -2888,6 +2875,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* All of this is done only as init, just to be safe */
+if|if
+condition|(
+name|RunningAsInit
+condition|)
+block|{
+comment|/* Fix up kernel first */
 if|if
 condition|(
 operator|!
@@ -2915,7 +2909,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to link /kernel into place!"
+literal|"Unable to copy /kernel into place!"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2958,12 +2952,7 @@ name|DITEM_FAILURE
 return|;
 block|}
 block|}
-comment|/* Resurrect /dev after bin distribution screws it up */
-if|if
-condition|(
-name|RunningAsInit
-condition|)
-block|{
+comment|/* BOGON #1: Resurrect /dev after bin distribution screws it up */
 name|msgNotify
 argument_list|(
 literal|"Remaking all devices.. Please wait!"
@@ -3137,45 +3126,6 @@ block|}
 block|}
 block|}
 block|}
-comment|/* Do all the last ugly work-arounds here */
-name|msgNotify
-argument_list|(
-literal|"Fixing permissions.."
-argument_list|)
-expr_stmt|;
-comment|/* BOGON #1:  XFree86 requires various specialized fixups */
-if|if
-condition|(
-name|directory_exists
-argument_list|(
-literal|"/usr/X11R6"
-argument_list|)
-condition|)
-block|{
-name|vsystem
-argument_list|(
-literal|"chmod -R a+r /usr/X11R6"
-argument_list|)
-expr_stmt|;
-name|vsystem
-argument_list|(
-literal|"find /usr/X11R6 -type d | xargs chmod a+x"
-argument_list|)
-expr_stmt|;
-comment|/* Also do bogus minimal package registration so ports don't whine */
-if|if
-condition|(
-name|file_readable
-argument_list|(
-literal|"/usr/X11R6/lib/X11/pkgreg.tar.gz"
-argument_list|)
-condition|)
-name|vsystem
-argument_list|(
-literal|"tar xpzf /usr/X11R6/lib/X11/pkgreg.tar.gz -C /&& rm /usr/X11R6/lib/X11/pkgreg.tar.gz"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* BOGON #2: We leave /etc in a bad state */
 name|chmod
 argument_list|(
@@ -3259,6 +3209,71 @@ argument_list|(
 literal|"mtree -deU -f /etc/mtree/BSD.usr.dist -p /usr"
 argument_list|)
 expr_stmt|;
+comment|/* Do all the last ugly work-arounds here */
+block|}
+return|return
+name|DITEM_SUCCESS
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Fix side-effects from the the XFree86 installation */
+end_comment
+
+begin_function
+name|int
+name|installFixupXFree
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+comment|/* BOGON #1:  XFree86 requires various specialized fixups */
+if|if
+condition|(
+name|directory_exists
+argument_list|(
+literal|"/usr/X11R6"
+argument_list|)
+condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"Fixing permissions in XFree86 tree.."
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"chmod -R a+r /usr/X11R6"
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"find /usr/X11R6 -type d | xargs chmod a+x"
+argument_list|)
+expr_stmt|;
+comment|/* Also do bogus minimal package registration so ports don't whine */
+if|if
+condition|(
+name|file_readable
+argument_list|(
+literal|"/usr/X11R6/lib/X11/pkgreg.tar.gz"
+argument_list|)
+condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"Installing package metainfo.."
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"tar xpzf /usr/X11R6/lib/X11/pkgreg.tar.gz -C /&& rm /usr/X11R6/lib/X11/pkgreg.tar.gz"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 name|DITEM_SUCCESS
