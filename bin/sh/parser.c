@@ -145,6 +145,12 @@ directive|include
 file|"show.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"eval.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -669,6 +675,10 @@ block|{
 name|int
 name|t
 decl_stmt|;
+name|tokpushback
+operator|=
+literal|0
+expr_stmt|;
 name|doprompt
 operator|=
 name|interact
@@ -3628,14 +3638,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_function_decl
-name|STATIC
-name|int
-name|xxreadtoken
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 name|STATIC

@@ -153,19 +153,6 @@ directive|undef
 name|eflag
 end_undef
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|argptr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* argument list for builtin command */
-end_comment
-
 begin_comment
 comment|/*  * The read builtin.  The -r option causes backslashes to be treated like  * ordinary characters.  *  * This uses unbuffered input, which may be avoidable in some cases.  */
 end_comment
@@ -289,7 +276,7 @@ literal|'p'
 case|:
 name|prompt
 operator|=
-name|optarg
+name|shoptarg
 expr_stmt|;
 break|break;
 case|case
@@ -313,7 +300,7 @@ name|tv_sec
 operator|=
 name|strtol
 argument_list|(
-name|optarg
+name|shoptarg
 argument_list|,
 operator|&
 name|tvptr
@@ -325,7 +312,7 @@ if|if
 condition|(
 name|tvptr
 operator|==
-name|optarg
+name|shoptarg
 condition|)
 name|error
 argument_list|(

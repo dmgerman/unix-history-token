@@ -4255,14 +4255,6 @@ name|STATIC
 name|int
 name|cmdnleft
 decl_stmt|;
-name|STATIC
-name|void
-name|cmdtxt
-argument_list|()
-decl_stmt|,
-name|cmdputs
-argument_list|()
-decl_stmt|;
 define|#
 directive|define
 name|MAXCMDTEXT

@@ -416,7 +416,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|optarg
+name|shoptarg
 decl_stmt|;
 end_decl_stmt
 
