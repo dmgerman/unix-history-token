@@ -297,6 +297,11 @@ return|;
 comment|/* XXX */
 if|if
 condition|(
+operator|*
+name|decoder
+operator|->
+name|init
+operator|&&
 call|(
 modifier|*
 name|decoder
@@ -799,6 +804,10 @@ condition|(
 name|error
 operator|==
 literal|0
+operator|&&
+name|splash_decoder
+operator|->
+name|term
 condition|)
 name|error
 operator|=
