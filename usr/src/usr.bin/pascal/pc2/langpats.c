@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c 1.12 %G%"
+literal|"@(#)langpats.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,10 +312,35 @@ endif|vax
 ifdef|#
 directive|ifdef
 name|mc68000
+comment|/*  * General Pascal library routines  */
 block|{
-literal|"NONE"
+literal|"_ACTFILE\n"
 block|,
-literal|"IMPLEMENTED"
+literal|"	movl	sp@,a0\n\ 	movl	a0@(12),d0\n"
+block|}
+block|,
+block|{
+literal|"_ADDT\n"
+block|,
+literal|"	movl	a2,sp@-\n\ 	movl	sp@(8),a2\n\ 	movl	sp@(12),a1\n\ 	movl	sp@(4),a0\n\ 	movl	sp@(16),d1\n\ 	subql	#1,d1\n\ 1:\n\ 	movl	a2@+,d0\n\ 	orl	a1@+,d0\n\ 	movl	d0,a0@+\n\ 	dbra	d1,1b\n\ 	movl	sp@+,a2\n\ 	movl	sp@,d0\n"
+block|}
+block|,
+block|{
+literal|"_SUBT\n"
+block|,
+literal|"	movl	a2,sp@-\n\ 	movl	sp@(8),a2\n\ 	movl	sp@(12),a1\n\ 	movl	sp@(4),a0\n\ 	movl	sp@(16),d1\n\ 	subql	#1,d1\n\ 1:\n\ 	movl	a1@+,d0\n\ 	notl	d0\n\ 	andl	a2@+,d0\n\ 	movl	d0,a0@+\n\ 	dbra	d1,1b\n\ 	movl	sp@+,a2\n\ 	movl	sp@,d0\n"
+block|}
+block|,
+block|{
+literal|"_MULT\n"
+block|,
+literal|"	movl	a2,sp@-\n\ 	movl	sp@(8),a2\n\ 	movl	sp@(12),a1\n\ 	movl	sp@(4),a0\n\ 	movl	sp@(16),d1\n\ 	subql	#1,d1\n\ 1:\n\ 	movl	a2@+,d0\n\ 	andl	a1@+,d0\n\ 	movl	d0,a0@+\n\ 	dbra	d1,1b\n\ 	movl	sp@+,a2\n\ 	movl	sp@,d0\n"
+block|}
+block|,
+block|{
+literal|"_IN\n"
+block|,
+literal|"	movl	sp@,d1\n\ 	subl	sp@(4),d1\n\ 	cmpl	sp@(8),d1\n\ 	jbhi	1f\n\ 	movl	sp@(12),a0\n\ 	movl	d1,d0\n\ 	lsrl	#3,d0\n\ 	btst	d1,a0@(0,d0:l)\n\ 	jbne	1f\n\ 	moveq	#1,d0\n\ 	jbra	2f\n\ 1:\n\ 	moveq	#0,d0\n\ 2:\n"
 block|}
 block|,
 endif|#
@@ -576,7 +601,7 @@ continue|continue;
 block|}
 name|cp
 operator|+=
-literal|7
+name|TEMPLATESIZE
 expr_stmt|;
 name|HASH
 argument_list|(
