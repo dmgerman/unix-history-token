@@ -1194,6 +1194,10 @@ name|CB_SM_POWER
 value|0x8
 end_define
 
+begin_comment
+comment|/* Socket State Register */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1362,6 +1366,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CB_SS_CARD_MASK
+value|0x00003c00
+end_define
+
+begin_comment
+comment|/* *VCARD signal */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CB_SS_5VSOCK
 value|0x10000000
 end_define
@@ -1401,6 +1416,10 @@ end_define
 
 begin_comment
 comment|/* Y.Y V Socket */
+end_comment
+
+begin_comment
+comment|/* Socket power register */
 end_comment
 
 begin_define
@@ -1511,6 +1530,98 @@ define|#
 directive|define
 name|CB_SP_VPP_YV
 value|0x05
+end_define
+
+begin_comment
+comment|/* Socket force register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CB_SF_INTCVS
+value|(1<< 14)
+end_define
+
+begin_comment
+comment|/* Interregate CVS/CCD pins */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CB_SF_5VCARD
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SF_3VCARD
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SF_BADVCC
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SF_DATALOST
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SF_NOTACARD
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SF_CBCARD
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SF_16CARD
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SF_POWERCYCLE
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SF_CCD2
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SF_CCD1
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SF_CSTCHG
+value|(1<< 0)
 end_define
 
 begin_comment

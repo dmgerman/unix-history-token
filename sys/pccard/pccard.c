@@ -1194,25 +1194,6 @@ name|state
 operator|=
 name|filled
 expr_stmt|;
-comment|/* 	 *	Enable 5V to the card so that the CIS can be read. 	 */
-name|slt
-operator|->
-name|pwr
-operator|.
-name|vcc
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|slt
-operator|->
-name|pwr
-operator|.
-name|vpp
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 comment|/* 	 * Disable any pending timeouts for this slot, and explicitly 	 * power it off right now.  Then, re-enable the power using 	 * the (possibly new) power settings. 	 */
 name|untimeout
 argument_list|(
@@ -1232,6 +1213,25 @@ name|power_off_slot
 argument_list|(
 name|slt
 argument_list|)
+expr_stmt|;
+comment|/* 	 *	Enable 5V to the card so that the CIS can be read.  Well, 	 * enable the most natural voltage so that the CIS can be read. 	 */
+name|slt
+operator|->
+name|pwr
+operator|.
+name|vcc
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|slt
+operator|->
+name|pwr
+operator|.
+name|vpp
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|slt
 operator|->
@@ -1254,7 +1254,6 @@ expr_stmt|;
 name|pccard_insert_beep
 argument_list|()
 expr_stmt|;
-comment|/* 	 *	Now start resetting the card. 	 */
 name|slt
 operator|->
 name|ctrl

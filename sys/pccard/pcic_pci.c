@@ -738,7 +738,7 @@ literal|"Cirrus Logic PD6832 PCI-CardBus Bridge"
 block|,
 name|PCIC_PD673X
 block|,
-name|PCIC_PD_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_pd68xx_chip
@@ -751,7 +751,7 @@ literal|"Cirrus Logic PD6833 PCI-CardBus Bridge"
 block|,
 name|PCIC_PD673X
 block|,
-name|PCIC_PD_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_pd68xx_chip
@@ -764,7 +764,7 @@ literal|"Cirrus Logic PD6834 PCI-CardBus Bridge"
 block|,
 name|PCIC_PD673X
 block|,
-name|PCIC_PD_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_pd68xx_chip
@@ -803,7 +803,7 @@ literal|"O2micro 6832/6833 PCI-Cardbus Bridge"
 block|,
 name|PCIC_I82365
 block|,
-name|PCIC_AB_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_oz68xx_chip
@@ -816,7 +816,7 @@ literal|"O2micro 6836/6860 PCI-Cardbus Bridge"
 block|,
 name|PCIC_I82365
 block|,
-name|PCIC_AB_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_oz68xx_chip
@@ -829,7 +829,7 @@ literal|"O2micro 6812/6872 PCI-Cardbus Bridge"
 block|,
 name|PCIC_I82365
 block|,
-name|PCIC_AB_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_oz68xx_chip
@@ -842,7 +842,7 @@ literal|"O2micro 6912 PCI-Cardbus Bridge"
 block|,
 name|PCIC_I82365
 block|,
-name|PCIC_AB_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_oz68xx_chip
@@ -881,7 +881,7 @@ literal|"Ricoh RL5C465 PCI-CardBus Bridge"
 block|,
 name|PCIC_RF5C296
 block|,
-name|PCIC_RICOH_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ricoh_chip
@@ -894,7 +894,7 @@ literal|"Ricoh RL5C475 PCI-CardBus Bridge"
 block|,
 name|PCIC_RF5C296
 block|,
-name|PCIC_RICOH_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ricoh_chip
@@ -907,7 +907,7 @@ literal|"Ricoh RL5C476 PCI-CardBus Bridge"
 block|,
 name|PCIC_RF5C296
 block|,
-name|PCIC_RICOH_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ricoh_chip
@@ -920,7 +920,7 @@ literal|"Ricoh RL5C477 PCI-CardBus Bridge"
 block|,
 name|PCIC_RF5C296
 block|,
-name|PCIC_RICOH_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ricoh_chip
@@ -933,7 +933,7 @@ literal|"Ricoh RL5C478 PCI-CardBus Bridge"
 block|,
 name|PCIC_RF5C296
 block|,
-name|PCIC_RICOH_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ricoh_chip
@@ -946,7 +946,7 @@ literal|"TI PCI-1031 PCI-PCMCIA Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti113x_chip
@@ -959,7 +959,7 @@ literal|"TI PCI-1130 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti113x_chip
@@ -972,7 +972,7 @@ literal|"TI PCI-1131 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti113x_chip
@@ -985,7 +985,7 @@ literal|"TI PCI-1210 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -998,7 +998,7 @@ literal|"TI PCI-1211 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1011,7 +1011,7 @@ literal|"TI PCI-1220 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1024,7 +1024,7 @@ literal|"TI PCI-1221 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1037,7 +1037,7 @@ literal|"TI PCI-1225 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1050,7 +1050,7 @@ literal|"TI PCI-1250 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1063,7 +1063,7 @@ literal|"TI PCI-1251 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1076,7 +1076,7 @@ literal|"TI PCI-1251B PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1089,7 +1089,7 @@ literal|"TI PCI-1260 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1102,7 +1102,7 @@ literal|"TI PCI-1260B PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1115,7 +1115,7 @@ literal|"TI PCI-1410 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1128,7 +1128,7 @@ literal|"TI PCI-1420 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1141,7 +1141,7 @@ literal|"TI PCI-1421 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1154,7 +1154,7 @@ literal|"TI PCI-1450 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1167,7 +1167,7 @@ literal|"TI PCI-1451 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1180,7 +1180,7 @@ literal|"TI PCI-4410 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1193,7 +1193,7 @@ literal|"TI PCI-4450 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1206,7 +1206,7 @@ literal|"TI PCI-4451 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
@@ -1219,7 +1219,7 @@ literal|"Toshiba ToPIC95 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365
 block|,
-name|PCIC_AB_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_topic_chip
@@ -1232,7 +1232,7 @@ literal|"Toshiba ToPIC95B PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365
 block|,
-name|PCIC_AB_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_topic_chip
@@ -1245,7 +1245,7 @@ literal|"Toshiba ToPIC97 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_topic_chip
@@ -1258,7 +1258,7 @@ literal|"Toshiba ToPIC100 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365
 block|,
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 block|,
 operator|&
 name|pcic_pci_topic_chip
@@ -2951,36 +2951,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|device_id
-operator|==
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC100
-operator|||
-name|device_id
-operator|==
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC97
-condition|)
-block|{
-comment|/* 		 * We need to enable voltage sense and 3V cards explicitly 		 * in the bridge.  The datasheets I have for both the 		 * ToPIC 97 and 100 both lists these ports.  Without 		 * datasheets for the ToPIC95s, I can't tell if we need 		 * to do it there or not. 		 */
-name|pcic_setb
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|slots
-index|[
-literal|0
-index|]
-argument_list|,
-name|PCIC_TOPIC_FCR
-argument_list|,
-name|PCIC_FCR_3V_EN
-operator||
-name|PCIC_FCR_VS_EN
-argument_list|)
-expr_stmt|;
-block|}
 name|reg
 operator|=
 name|pci_read_config
@@ -3019,6 +2989,11 @@ name|device_id
 operator|==
 name|PCI_DEVICE_ID_TOSHIBA_TOPIC97
 condition|)
+block|{
+name|reg
+operator||=
+name|TOPIC97_SLOT_CTRL_PCIINT
+expr_stmt|;
 name|reg
 operator|&=
 operator|~
@@ -3028,6 +3003,7 @@ operator||
 name|TOPIC97_SLOT_CTRL_IRQP
 operator|)
 expr_stmt|;
+block|}
 name|pci_write_config
 argument_list|(
 name|dev
@@ -3044,6 +3020,36 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|device_id
+operator|==
+name|PCI_DEVICE_ID_TOSHIBA_TOPIC100
+operator|||
+name|device_id
+operator|==
+name|PCI_DEVICE_ID_TOSHIBA_TOPIC97
+condition|)
+block|{
+comment|/* 		 * We need to enable voltage sense and 3V cards explicitly 		 * in the bridge.  The datasheets I have for both the 		 * ToPIC 97 and 100 both lists these ports.  Without 		 * datasheets for the ToPIC95s, I can't tell if we need 		 * to do it there or not. 		 */
+name|pcic_setb
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|slots
+index|[
+literal|0
+index|]
+argument_list|,
+name|PCIC_TOPIC_FCR
+argument_list|,
+name|PCIC_FCR_3V_EN
+operator||
+name|PCIC_FCR_VS_EN
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3447,7 +3453,9 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"BAD Vcc request\n"
+literal|"BAD Vcc request: 0x%x\n"
+argument_list|,
+name|stat
 argument_list|)
 expr_stmt|;
 if|if
@@ -4633,10 +4641,9 @@ name|sc
 operator|->
 name|flags
 operator|=
-name|PCIC_DF_POWER
+name|PCIC_CARDBUS_POWER
 expr_stmt|;
 block|}
-comment|/* sc->flags = PCIC_CARDBUS_POWER; */
 name|sp
 operator|->
 name|slt
