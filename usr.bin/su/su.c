@@ -1589,16 +1589,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOGIN_CAP
-comment|/* Set everything now except the environment& umask */
+comment|/* 	 * Set all user context except for: 	 *   Environmental variables 	 *   Umask 	 *   Login records (wtmp, etc) 	 *   Path 	 */
 name|setwhat
 operator|=
-name|LOGIN_SETUSER
+name|LOGIN_SETALL
+operator|&
+operator|~
+operator|(
+name|LOGIN_SETENV
 operator||
-name|LOGIN_SETGROUP
+name|LOGIN_SETUMASK
 operator||
-name|LOGIN_SETRESOURCES
+name|LOGIN_SETLOGIN
 operator||
-name|LOGIN_SETPRIORITY
+name|LOGIN_SETPATH
+operator|)
 expr_stmt|;
 comment|/* 	 * Don't touch resource/priority settings if -m has been 	 * used or -l and -c hasn't, and we're not su'ing to root. 	 */
 if|if
