@@ -563,6 +563,14 @@ name|sc_sp
 decl_stmt|;
 comment|/* sp to restore */
 name|int
+name|sc_fp
+decl_stmt|;
+comment|/* fp to retore */
+name|int
+name|sc_ap
+decl_stmt|;
+comment|/* ap to retore */
+name|int
 name|sc_pc
 decl_stmt|;
 comment|/* pc to retore */
