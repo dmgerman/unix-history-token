@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mt.c	4.4 (Berkeley) 82/12/19"
+literal|"@(#)mt.c	4.5 (Berkeley) 83/01/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,13 +53,6 @@ parameter_list|,
 name|s2
 parameter_list|)
 value|(strcmp(s1, s2) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFTAPE
-value|"/dev/rmt12"
 end_define
 
 begin_struct
@@ -157,6 +150,38 @@ block|{
 literal|"status"
 block|,
 name|MTNOP
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"tense"
+block|,
+name|MTTENSE
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"tension"
+block|,
+name|MTTENSE
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"retension"
+block|,
+name|MTTENSE
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"erase"
+block|,
+name|MTERASE
 block|,
 literal|1
 block|}
@@ -488,7 +513,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s %d "
+literal|"%s %s %d "
+argument_list|,
+name|tape
 argument_list|,
 name|comp
 operator|->
@@ -604,6 +631,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/tmreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/arreg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|tape_desc
@@ -687,6 +737,31 @@ block|}
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|sun
+block|{
+name|MT_ISCPC
+block|,
+literal|"TapeMaster"
+block|,
+name|TMS_BITS
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|MT_ISARCH
+block|,
+literal|"Archive"
+block|,
+name|ARCH_CTRL_BITS
+block|,
+name|ARCH_BITS
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|}
@@ -765,11 +840,15 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"%s tape drive\n"
+literal|"%s tape drive, residual=%d\n"
 argument_list|,
 name|mt
 operator|->
 name|t_name
+argument_list|,
+name|bp
+operator|->
+name|mt_resid
 argument_list|)
 expr_stmt|;
 name|printreg
@@ -787,7 +866,7 @@ argument_list|)
 expr_stmt|;
 name|printreg
 argument_list|(
-literal|" er"
+literal|"\ner"
 argument_list|,
 name|bp
 operator|->
@@ -798,13 +877,9 @@ operator|->
 name|t_erbits
 argument_list|)
 expr_stmt|;
-name|printf
+name|putchar
 argument_list|(
-literal|"\nresidual=%d\n"
-argument_list|,
-name|bp
-operator|->
-name|mt_resid
+literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
@@ -829,13 +904,19 @@ begin_decl_stmt
 name|char
 modifier|*
 name|s
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|char
 modifier|*
 name|bits
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|register
 name|unsigned
 name|short
 name|v
@@ -856,6 +937,15 @@ specifier|register
 name|char
 name|c
 decl_stmt|;
+if|if
+condition|(
+name|bits
+operator|&&
+operator|*
+name|bits
+operator|==
+literal|8
+condition|)
 name|printf
 argument_list|(
 literal|"%s=%o"
@@ -864,6 +954,19 @@ name|s
 argument_list|,
 name|v
 argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%s=%x"
+argument_list|,
+name|s
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+name|bits
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -949,10 +1052,6 @@ operator|++
 control|)
 empty_stmt|;
 block|}
-if|if
-condition|(
-name|any
-condition|)
 name|putchar
 argument_list|(
 literal|'>'
