@@ -2291,8 +2291,6 @@ name|char
 name|buf
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 if|if
@@ -2320,18 +2318,6 @@ name|pw
 operator|->
 name|pw_dir
 argument_list|)
-expr_stmt|;
-name|buf
-index|[
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 if|if
 condition|(
