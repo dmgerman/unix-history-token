@@ -1695,13 +1695,32 @@ name|status
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|WEXITSTATUS
+argument_list|(
+name|ps
+operator|->
+name|status
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|strcpy
+argument_list|(
+name|s
+argument_list|,
+literal|"Done"
+argument_list|)
+expr_stmt|;
+else|else
 name|fmtstr
 argument_list|(
 name|s
 argument_list|,
 literal|64
 argument_list|,
-literal|"Exit %d"
+literal|"Done (%d)"
 argument_list|,
 name|WEXITSTATUS
 argument_list|(
