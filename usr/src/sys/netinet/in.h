@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in.h 4.10 82/03/05 */
+comment|/* in.h 4.11 82/03/15 */
 end_comment
 
 begin_comment
@@ -210,6 +210,53 @@ directive|define
 name|IPPORT_SUPDUP
 value|95
 end_define
+
+begin_comment
+comment|/*  * UNIX TCP sockets  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPORT_EXECSERVER
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPPORT_LOGINSERVER
+value|513
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPPORT_CMDSERVER
+value|514
+end_define
+
+begin_comment
+comment|/*  * UNIX UDP sockets  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPORT_BIFFUDP
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPPORT_WHOSERVER
+value|513
+end_define
+
+begin_comment
+comment|/*  * Ports< IPPORT_RESERVED are reserved for  * privileged processes (e.g. root).  */
+end_comment
 
 begin_define
 define|#
