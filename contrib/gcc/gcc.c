@@ -26547,7 +26547,7 @@ name|alloca
 argument_list|(
 name|strlen
 argument_list|(
-name|standard_exec_prefix
+name|FBSD_DATA_PREFIX
 argument_list|)
 operator|+
 name|strlen
@@ -26565,7 +26565,7 @@ name|strcpy
 argument_list|(
 name|specs_file
 argument_list|,
-name|standard_exec_prefix
+name|FBSD_DATA_PREFIX
 argument_list|)
 expr_stmt|;
 name|strcat
