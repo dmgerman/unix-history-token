@@ -8,7 +8,7 @@ name|char
 name|id_libF77
 index|[]
 init|=
-literal|"@(#)main.c	2.7	%G%"
+literal|"@(#)main.c	2.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,6 +189,18 @@ literal|1
 block|}
 block|,
 comment|/* SIGQUIT */
+ifdef|#
+directive|ifdef
+name|UCBVAX
+block|{
+literal|"Illegal "
+block|,
+literal|1
+block|}
+block|,
+comment|/* SIGILL  */
+else|#
+directive|else
 block|{
 literal|"Illegal instruction"
 block|,
@@ -196,6 +208,8 @@ literal|1
 block|}
 block|,
 comment|/* SIGILL  */
+endif|#
+directive|endif
 block|{
 literal|"Trace Trap"
 block|,
@@ -374,6 +388,34 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|action
+name|act_ill
+index|[]
+init|=
+block|{
+block|{
+literal|"addr mode"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"instruction"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"operand"
+block|,
+literal|0
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -520,6 +562,28 @@ name|s
 operator|==
 name|SIGILL
 condition|)
+block|{
+if|if
+condition|(
+name|t
+operator|==
+literal|4
+condition|)
+name|t
+operator|=
+literal|2
+expr_stmt|;
+comment|/* 4.0bsd botch */
+if|if
+condition|(
+name|t
+operator|>=
+literal|0
+operator|&&
+name|t
+operator|<=
+literal|2
+condition|)
 name|fprintf
 argument_list|(
 name|units
@@ -529,11 +593,32 @@ index|]
 operator|.
 name|ufd
 argument_list|,
-literal|": Code=%d"
+literal|"%s"
+argument_list|,
+name|act_ill
+index|[
+name|t
+index|]
+operator|.
+name|mesg
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|units
+index|[
+name|STDERR
+index|]
+operator|.
+name|ufd
+argument_list|,
+literal|"compat mode: Code=%d"
 argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
+block|}
 name|putc
 argument_list|(
 literal|'\n'
