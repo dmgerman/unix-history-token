@@ -249,7 +249,7 @@ literal|"%15s   %5d\n"
 argument_list|,
 name|ti
 operator|->
-name|typename
+name|type_name
 argument_list|,
 name|ti
 operator|->
