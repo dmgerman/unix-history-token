@@ -81,9 +81,6 @@ begin_enum
 enum|enum
 name|g_events
 block|{
-name|EV_NEW_CLASS
-block|,
-comment|/* class */
 name|EV_NEW_PROVIDER
 block|,
 comment|/* provider */
