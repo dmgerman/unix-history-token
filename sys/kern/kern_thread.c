@@ -685,6 +685,12 @@ name|td_state
 operator|=
 name|TDS_INACTIVE
 expr_stmt|;
+name|td
+operator|->
+name|td_oncpu
+operator|=
+name|NOCPU
+expr_stmt|;
 block|}
 end_function
 

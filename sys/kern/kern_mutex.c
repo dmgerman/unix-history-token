@@ -181,8 +181,12 @@ parameter_list|(
 name|td
 parameter_list|)
 define|\
-value|((td)->td_kse != NULL&& (td)->td_kse->ke_oncpu != NOCPU)
+value|(td->td_state == TDS_RUNNING)
 end_define
+
+begin_comment
+comment|/* ((td)->td_oncpu != NOCPU) */
+end_comment
 
 begin_comment
 comment|/*  * Lock classes for sleep and spin mutexes.  */

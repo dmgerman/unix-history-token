@@ -1652,9 +1652,7 @@ parameter_list|)
 block|{
 name|td
 operator|->
-name|td_kse
-operator|->
-name|ke_oncpu
+name|td_oncpu
 operator|=
 name|PCPU_GET
 argument_list|(
@@ -1715,9 +1713,9 @@ name|td
 operator|->
 name|td_lastcpu
 operator|=
-name|ke
+name|td
 operator|->
-name|ke_oncpu
+name|td_oncpu
 expr_stmt|;
 name|td
 operator|->
@@ -1725,9 +1723,9 @@ name|td_last_kse
 operator|=
 name|ke
 expr_stmt|;
-name|ke
+name|td
 operator|->
-name|ke_oncpu
+name|td_oncpu
 operator|=
 name|NOCPU
 expr_stmt|;

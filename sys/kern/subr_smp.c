@@ -582,9 +582,7 @@ name|id
 operator|=
 name|td
 operator|->
-name|td_kse
-operator|->
-name|ke_oncpu
+name|td_oncpu
 expr_stmt|;
 if|if
 condition|(

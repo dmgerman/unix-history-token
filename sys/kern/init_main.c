@@ -1371,9 +1371,9 @@ operator|=
 name|ke
 expr_stmt|;
 comment|/* XXXKSE */
-name|ke
+name|td
 operator|->
-name|ke_oncpu
+name|td_oncpu
 operator|=
 literal|0
 expr_stmt|;

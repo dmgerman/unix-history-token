@@ -648,9 +648,7 @@ literal|"[CPU %d]"
 argument_list|,
 name|td
 operator|->
-name|td_kse
-operator|->
-name|ke_oncpu
+name|td_oncpu
 argument_list|)
 expr_stmt|;
 break|break;

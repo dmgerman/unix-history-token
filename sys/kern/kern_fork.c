@@ -3084,9 +3084,7 @@ name|td_proc
 expr_stmt|;
 name|td
 operator|->
-name|td_kse
-operator|->
-name|ke_oncpu
+name|td_oncpu
 operator|=
 name|PCPU_GET
 argument_list|(

@@ -567,6 +567,10 @@ name|u_char
 name|td_inktrace
 decl_stmt|;
 comment|/* (k) Currently handling a KTRACE. */
+name|u_char
+name|td_oncpu
+decl_stmt|;
+comment|/* (j) Which cpu we are on. */
 name|short
 name|td_locks
 decl_stmt|;
