@@ -443,6 +443,17 @@ begin_comment
 comment|/* someone wants to lock */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NSIZECHANGED
+value|0x2000
+end_define
+
+begin_comment
+comment|/* File size has changed: need cache inval */
+end_comment
+
 begin_comment
 comment|/*  * Convert between nfsnode pointers and vnode pointers  */
 end_comment
