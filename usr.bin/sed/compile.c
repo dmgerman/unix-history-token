@@ -3465,8 +3465,9 @@ name|p
 operator|=
 name|compile_delimited
 argument_list|(
-operator|--
 name|p
+operator|-
+literal|1
 argument_list|,
 name|new
 argument_list|)
