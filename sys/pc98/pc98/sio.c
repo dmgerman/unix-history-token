@@ -529,17 +529,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|com_scr
-value|7
-end_define
-
-begin_comment
-comment|/* scratch register for 16450-16550 (R/W) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|sio_getreg
 parameter_list|(
 name|com
