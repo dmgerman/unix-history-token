@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ypmatch.c,v 1.2.6.1 1997/09/01 06:06:23 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,13 +62,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -121,6 +127,12 @@ block|{
 literal|"passwd"
 block|,
 literal|"passwd.byname"
+block|}
+block|,
+block|{
+literal|"master.passwd"
+block|,
+literal|"master.passwd.byname"
 block|}
 block|,
 block|{

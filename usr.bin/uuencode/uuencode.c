@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: uuencode.c,v 1.1.1.1.8.3 1998/03/08 14:29:25 jkh Exp $"
+literal|"$Id: uuencode.c,v 1.1.1.1.8.4 1998/07/17 07:25:45 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ypwhich.c,v 1.7.2.1 1997/09/01 06:08:30 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,18 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -206,6 +218,12 @@ literal|"passwd.byname"
 block|}
 block|,
 block|{
+literal|"master.passwd"
+block|,
+literal|"master.passwd.byname"
+block|}
+block|,
+block|{
 literal|"group"
 block|,
 literal|"group.byname"
@@ -321,7 +339,8 @@ name|sock
 decl_stmt|,
 name|r
 decl_stmt|;
-name|u_long
+name|struct
+name|in_addr
 name|ss_addr
 decl_stmt|;
 name|sock
@@ -480,7 +499,8 @@ name|ss_addr
 operator|=
 operator|*
 operator|(
-name|u_long
+expr|struct
+name|in_addr
 operator|*
 operator|)
 name|ypbr
