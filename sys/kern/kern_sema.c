@@ -125,12 +125,13 @@ name|sema_value
 operator|=
 name|value
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_LOCK
 argument_list|,
+literal|"%s(%p, %d, \"%s\")"
+argument_list|,
 name|__func__
-literal|"(%p, %d, \"%s\")"
 argument_list|,
 name|sema
 argument_list|,
@@ -152,12 +153,13 @@ modifier|*
 name|sema
 parameter_list|)
 block|{
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_LOCK
 argument_list|,
+literal|"%s(%p) \"%s\""
+argument_list|,
 name|__func__
-literal|"(%p) \"%s\""
 argument_list|,
 name|sema
 argument_list|,
@@ -257,12 +259,13 @@ operator|->
 name|sema_cv
 argument_list|)
 expr_stmt|;
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_LOCK
 argument_list|,
+literal|"%s(%p) \"%s\" v = %d at %s:%d"
+argument_list|,
 name|__func__
-literal|"(%p) \"%s\" v = %d at %s:%d"
 argument_list|,
 name|sema
 argument_list|,
@@ -358,12 +361,13 @@ operator|->
 name|sema_value
 operator|--
 expr_stmt|;
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_LOCK
 argument_list|,
+literal|"%s(%p) \"%s\" v = %d at %s:%d"
+argument_list|,
 name|__func__
-literal|"(%p) \"%s\" v = %d at %s:%d"
 argument_list|,
 name|sema
 argument_list|,
@@ -495,12 +499,13 @@ name|ret
 operator|=
 literal|1
 expr_stmt|;
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_LOCK
 argument_list|,
+literal|"%s(%p) \"%s\" v = %d at %s:%d"
+argument_list|,
 name|__func__
-literal|"(%p) \"%s\" v = %d at %s:%d"
 argument_list|,
 name|sema
 argument_list|,
@@ -528,12 +533,13 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-name|CTR4
+name|CTR5
 argument_list|(
 name|KTR_LOCK
 argument_list|,
+literal|"%s(%p) \"%s\" fail at %s:%d"
+argument_list|,
 name|__func__
-literal|"(%p) \"%s\" fail at %s:%d"
 argument_list|,
 name|sema
 argument_list|,
@@ -615,12 +621,13 @@ name|ret
 operator|=
 literal|1
 expr_stmt|;
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_LOCK
 argument_list|,
+literal|"%s(%p) \"%s\" v = %d at %s:%d"
+argument_list|,
 name|__func__
-literal|"(%p) \"%s\" v = %d at %s:%d"
 argument_list|,
 name|sema
 argument_list|,
@@ -648,12 +655,13 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-name|CTR4
+name|CTR5
 argument_list|(
 name|KTR_LOCK
 argument_list|,
+literal|"%s(%p) \"%s\" fail at %s:%d"
+argument_list|,
 name|__func__
-literal|"(%p) \"%s\" fail at %s:%d"
 argument_list|,
 name|sema
 argument_list|,

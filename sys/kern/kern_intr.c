@@ -671,12 +671,13 @@ operator|&=
 operator|~
 name|IT_ENTROPY
 expr_stmt|;
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_INTR
 argument_list|,
+literal|"%s: updated %s\n"
+argument_list|,
 name|__func__
-literal|": updated %s\n"
 argument_list|,
 name|p
 operator|->
@@ -978,12 +979,13 @@ operator|->
 name|it_lock
 argument_list|)
 expr_stmt|;
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_INTR
 argument_list|,
+literal|"%s: created %s"
+argument_list|,
 name|__func__
-literal|": created %s"
 argument_list|,
 name|ithd
 operator|->
@@ -1123,12 +1125,13 @@ operator|->
 name|it_lock
 argument_list|)
 expr_stmt|;
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_INTR
 argument_list|,
+literal|"%s: killing %s"
+argument_list|,
 name|__func__
-literal|": killing %s"
 argument_list|,
 name|ithread
 operator|->
@@ -1447,12 +1450,13 @@ name|cookiep
 operator|=
 name|ih
 expr_stmt|;
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_INTR
 argument_list|,
+literal|"%s: added %s to %s"
+argument_list|,
 name|__func__
-literal|": added %s to %s"
 argument_list|,
 name|ih
 operator|->
@@ -1561,12 +1565,13 @@ name|ih_name
 operator|)
 argument_list|)
 expr_stmt|;
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_INTR
 argument_list|,
+literal|"%s: removing %s from %s"
+argument_list|,
 name|__func__
-literal|": removing %s from %s"
 argument_list|,
 name|handler
 operator|->
@@ -1864,12 +1869,13 @@ name|it_name
 operator|)
 argument_list|)
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_INTR
 argument_list|,
+literal|"%s: pid %d: (%s) need = %d"
+argument_list|,
 name|__func__
-literal|": pid %d: (%s) need = %d"
 argument_list|,
 name|p
 operator|->
@@ -1906,12 +1912,13 @@ operator|==
 name|SWAIT
 condition|)
 block|{
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_INTR
 argument_list|,
+literal|"%s: setrunqueue %d"
+argument_list|,
 name|__func__
-literal|": setrunqueue %d"
 argument_list|,
 name|p
 operator|->
@@ -1984,12 +1991,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_INTR
 argument_list|,
+literal|"%s: pid %d: it_need %d, state %d"
+argument_list|,
 name|__func__
-literal|": pid %d: it_need %d, state %d"
 argument_list|,
 name|p
 operator|->
@@ -2385,8 +2393,9 @@ operator|==
 name|ithd
 argument_list|,
 operator|(
+literal|"%s: ithread and proc linkage out of sync"
+operator|,
 name|__func__
-literal|": ithread and proc linkage out of sync"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2407,12 +2416,13 @@ operator|&
 name|IT_DEAD
 condition|)
 block|{
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_INTR
 argument_list|,
+literal|"%s: pid %d: (%s) exiting"
+argument_list|,
 name|__func__
-literal|": pid %d: (%s) exiting"
 argument_list|,
 name|p
 operator|->
@@ -2456,12 +2466,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_INTR
 argument_list|,
+literal|"%s: pid %d: (%s) need=%d"
+argument_list|,
 name|__func__
-literal|": pid %d: (%s) need=%d"
 argument_list|,
 name|p
 operator|->
@@ -2529,12 +2540,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_INTR
 argument_list|,
+literal|"%s: pid %d ih=%p: %p(%p) flg=%x"
+argument_list|,
 name|__func__
-literal|": pid %d ih=%p: %p(%p) flg=%x"
 argument_list|,
 name|p
 operator|->
@@ -2717,12 +2729,13 @@ operator|.
 name|ru_nvcsw
 operator|++
 expr_stmt|;
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_INTR
 argument_list|,
+literal|"%s: pid %d: done"
+argument_list|,
 name|__func__
-literal|": pid %d: done"
 argument_list|,
 name|p
 operator|->
@@ -2732,12 +2745,13 @@ expr_stmt|;
 name|mi_switch
 argument_list|()
 expr_stmt|;
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_INTR
 argument_list|,
+literal|"%s: pid %d: resumed"
+argument_list|,
 name|__func__
-literal|": pid %d: resumed"
 argument_list|,
 name|p
 operator|->

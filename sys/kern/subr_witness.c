@@ -1291,12 +1291,13 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-name|CTR0
+name|CTR1
 argument_list|(
 name|KTR_WITNESS
 argument_list|,
+literal|"%s: initializing witness"
+argument_list|,
 name|__func__
-literal|": initializing witness"
 argument_list|)
 expr_stmt|;
 name|STAILQ_INSERT_HEAD
@@ -1913,12 +1914,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_WITNESS
 argument_list|,
+literal|"%s: marking witness %s as dead"
+argument_list|,
 name|__func__
-literal|": marking witness %s as dead"
 argument_list|,
 name|w
 operator|->
@@ -2582,12 +2584,13 @@ literal|"recurse"
 argument_list|)
 expr_stmt|;
 block|}
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_WITNESS
 argument_list|,
+literal|"%s: pid %d recursed on %s r=%d"
+argument_list|,
 name|__func__
-literal|": pid %d recursed on %s r=%d"
 argument_list|,
 name|td
 operator|->
@@ -3237,12 +3240,13 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_WITNESS
 argument_list|,
+literal|"%s: adding %s as a child of %s"
+argument_list|,
 name|__func__
-literal|": adding %s as a child of %s"
 argument_list|,
 name|lock
 operator|->
@@ -3344,12 +3348,13 @@ operator|=
 operator|*
 name|lock_list
 expr_stmt|;
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_WITNESS
 argument_list|,
+literal|"%s: pid %d added lle %p"
+argument_list|,
 name|__func__
-literal|": pid %d added lle %p"
 argument_list|,
 name|td
 operator|->
@@ -3420,12 +3425,13 @@ name|li_flags
 operator|=
 literal|0
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_WITNESS
 argument_list|,
+literal|"%s: pid %d added %s as lle[%d]"
+argument_list|,
 name|__func__
-literal|": pid %d added %s as lle[%d]"
 argument_list|,
 name|td
 operator|->
@@ -4227,12 +4233,13 @@ operator|>
 literal|0
 condition|)
 block|{
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_WITNESS
 argument_list|,
+literal|"%s: pid %d unrecursed on %s r=%d"
+argument_list|,
 name|__func__
-literal|": pid %d unrecursed on %s r=%d"
 argument_list|,
 name|td
 operator|->
@@ -4265,12 +4272,13 @@ operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_WITNESS
 argument_list|,
+literal|"%s: pid %d removed %s from lle[%d]"
+argument_list|,
 name|__func__
-literal|": pid %d removed %s from lle[%d]"
 argument_list|,
 name|td
 operator|->
@@ -4371,12 +4379,13 @@ name|lle
 operator|->
 name|ll_next
 expr_stmt|;
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_WITNESS
 argument_list|,
+literal|"%s: pid %d removed lle %p"
+argument_list|,
 name|__func__
-literal|": pid %d removed lle %p"
 argument_list|,
 name|td
 operator|->

@@ -529,8 +529,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|"(): process already has P_INEXEC flag"
+literal|"%s(): process already has P_INEXEC flag"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
