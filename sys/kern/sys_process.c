@@ -923,13 +923,6 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-name|psignal
-argument_list|(
-name|p
-argument_list|,
-name|SIGCONT
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
