@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	3.15 %G%"
+literal|"@(#)startup.c	3.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,7 +153,6 @@ if|if
 condition|(
 name|openwin
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 name|r
@@ -197,8 +196,7 @@ name|w
 operator|=
 name|openwin
 argument_list|(
-operator|-
-literal|1
+literal|0
 argument_list|,
 literal|1
 argument_list|,
