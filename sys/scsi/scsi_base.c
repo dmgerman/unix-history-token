@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.29.4.1 1995/10/10 00:42:00 davidg Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.29.4.2 1996/04/01 00:26:03 gibbs Exp $  */
 end_comment
 
 begin_define
@@ -2335,6 +2335,11 @@ block|}
 comment|/* 	 * we have finished with the xfer stuct, free it and 	 * check if anyone else needs to be started up. 	 */
 name|bad
 label|:
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 name|free_xs
 argument_list|(
 name|xs
@@ -2345,6 +2350,11 @@ name|flags
 argument_list|)
 expr_stmt|;
 comment|/* includes the 'start' op */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bp
