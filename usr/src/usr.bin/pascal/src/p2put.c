@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p2put.c 1.11 %G%"
+literal|"@(#)p2put.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"objfmt.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pcops.h"
 end_include
 
@@ -45,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|"pc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"align.h"
 end_include
 
 begin_comment
@@ -346,9 +358,16 @@ argument_list|)
 expr_stmt|;
 name|p2word
 argument_list|(
+name|roundup
+argument_list|(
 name|BITSPERBYTE
 operator|*
 name|localbytes
+argument_list|,
+name|BITSPERBYTE
+operator|*
+name|A_STACK
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1513,6 +1532,11 @@ operator|!
 name|CGENNING
 condition|)
 return|return;
+name|label
+operator|=
+name|getlab
+argument_list|()
+expr_stmt|;
 name|putprintf
 argument_list|(
 literal|"	.data"
@@ -1520,23 +1544,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|putprintf
+name|aligndot
 argument_list|(
-literal|"	.align 2"
-argument_list|,
-literal|0
+name|A_DOUBLE
 argument_list|)
-expr_stmt|;
-name|label
-operator|=
-name|getlab
-argument_list|()
 expr_stmt|;
 name|putlab
 argument_list|(
 name|label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|vax
 name|putprintf
 argument_list|(
 literal|"	.double 0d%.20e"
@@ -1546,6 +1566,24 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|vax
+ifdef|#
+directive|ifdef
+name|mc68000
+name|putprintf
+argument_list|(
+literal|"	.long 	0x%x,0x%x"
+argument_list|,
+literal|0
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|mc68000
 name|putprintf
 argument_list|(
 literal|"	.text"
@@ -1646,6 +1684,11 @@ argument_list|(
 literal|"	.data"
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|aligndot
+argument_list|(
+name|A_STRUCT
 argument_list|)
 expr_stmt|;
 name|label
@@ -3157,6 +3200,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|vax
 name|putprintf
 argument_list|(
 literal|"	jbr	"
@@ -3175,6 +3221,33 @@ argument_list|,
 name|label
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|vax
+ifdef|#
+directive|ifdef
+name|mc68000
+name|putprintf
+argument_list|(
+literal|"	jra	"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+name|PREFIXFORMAT
+argument_list|,
+literal|0
+argument_list|,
+name|prefix
+argument_list|,
+name|label
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|mc68000
 block|}
 end_block
 
@@ -3193,15 +3266,9 @@ end_macro
 
 begin_block
 block|{
-name|putprintf
+name|panic
 argument_list|(
-literal|"#	PUT CALLED!: arg1 = %d arg2 = 0%o"
-argument_list|,
-literal|0
-argument_list|,
-name|arg1
-argument_list|,
-name|arg2
+literal|"put()"
 argument_list|)
 expr_stmt|;
 block|}
