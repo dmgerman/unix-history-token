@@ -6013,7 +6013,9 @@ argument_list|,
 name|tbuf
 argument_list|)
 expr_stmt|;
-name|tname
+name|template
+operator|->
+name|h_name
 operator|=
 name|bp
 expr_stmt|;
