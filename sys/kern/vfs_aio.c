@@ -1757,7 +1757,7 @@ name|AIO_LISTIO_MAX
 operator|*
 sizeof|sizeof
 argument_list|(
-name|int
+name|intptr_t
 argument_list|)
 argument_list|,
 literal|0
