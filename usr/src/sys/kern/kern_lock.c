@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.4 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -277,38 +277,30 @@ begin_comment
 comment|/*  * Set, change, or release a lock.  *  * Shared requests increment the shared count. Exclusive requests set the  * LK_WANT_EXCL flag (preventing further shared locks), and wait for already  * accepted shared locks and shared-to-exclusive upgrades to go away.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|lockmgr
-argument_list|(
+parameter_list|(
 name|lkp
-argument_list|,
+parameter_list|,
 name|p
-argument_list|,
+parameter_list|,
 name|flags
-argument_list|)
+parameter_list|)
 specifier|volatile
-expr|struct
+name|struct
 name|lock
-operator|*
+modifier|*
 name|lkp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|error
@@ -1146,7 +1138,7 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
