@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.41 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5388,6 +5388,9 @@ name|q_flags
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|QUEUE
 comment|/* 			**  Checkpoint the send list every few addresses 			*/
 if|if
 condition|(
@@ -5396,6 +5399,12 @@ operator|>=
 name|CheckpointInterval
 condition|)
 block|{
+name|FILE
+modifier|*
+name|nlockfp
+decl_stmt|;
+name|nlockfp
+operator|=
 name|queueup
 argument_list|(
 name|e
@@ -5405,11 +5414,29 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lockfp
+operator|!=
+name|NULL
+condition|)
+name|fclose
+argument_list|(
+name|lockfp
+argument_list|)
+expr_stmt|;
+name|lockfp
+operator|=
+name|nlockfp
+expr_stmt|;
 name|nsent
 operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* QUEUE */
 if|if
 condition|(
 name|deliver
