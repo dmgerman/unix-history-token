@@ -66,7 +66,7 @@ file|"var.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarHead --  *	Remove the tail of the given word and place the result in the given  *	buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The trimmed word is added to the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/**  * VarHead  *	Remove the tail of the given word and place the result in the given  *	buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The trimmed word is added to the buffer.  */
 end_comment
 
 begin_function
@@ -139,7 +139,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * If no directory part, give . (q.v. the POSIX standard) 	 */
+comment|/* 		 * If no directory part, give . (q.v. the POSIX standard) 		 */
 if|if
 condition|(
 name|addSpace
@@ -176,7 +176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarTail --  *	Remove the head of the given word and place the result in the given  *	buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The trimmed word is added to the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/**  * VarTail  *	Remove the head of the given word and place the result in the given  *	buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The trimmed word is added to the buffer.  */
 end_comment
 
 begin_function
@@ -268,7 +268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarSuffix --  *	Place the suffix of the given word in the given buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The suffix from the word is placed in the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/**  * VarSuffix  *	Place the suffix of the given word in the given buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The suffix from the word is placed in the buffer.  */
 end_comment
 
 begin_function
@@ -354,7 +354,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarRoot --  *	Remove the suffix of the given word and place the result in the  *	buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The trimmed word is added to the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/**  * VarRoot  *	Remove the suffix of the given word and place the result in the  *	buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The trimmed word is added to the buffer.  */
 end_comment
 
 begin_function
@@ -444,7 +444,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the :M modifier.  *	A space will be added if requested.  A pattern is supplied  *	which the word must match.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/**  * VarMatch  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the :M modifier.  *	A space will be added if requested.  A pattern is supplied  *	which the word must match.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  */
 end_comment
 
 begin_function
@@ -521,7 +521,7 @@ name|SYSVVARSUB
 end_ifdef
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarSYSVMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the System V %  *	modifiers.  A space is added if requested.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/**  * VarSYSVMatch  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the System V %  *	modifiers.  A space is added if requested.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  */
 end_comment
 
 begin_function
@@ -642,7 +642,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarNoMatch --  *	Place the word in the buffer if it doesn't match the given pattern.  *	Callback function for VarModify to implement the :N modifier.  A  *	space is added if requested.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/**  * VarNoMatch  *	Place the word in the buffer if it doesn't match the given pattern.  *	Callback function for VarModify to implement the :N modifier.  A  *	space is added if requested.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  */
 end_comment
 
 begin_function
@@ -714,7 +714,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarSubstitute --  *	Perform a string-substitution on the given word, placing the  *	result in the passed buffer.  A space is added if requested.  *  * Results:  *	TRUE if a space is needed before more characters are added.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/**  * VarSubstitute  *	Perform a string-substitution on the given word, placing the  *	result in the passed buffer.  A space is added if requested.  *  * Results:  *	TRUE if a space is needed before more characters are added.  */
 end_comment
 
 begin_function
@@ -767,7 +767,7 @@ literal|1
 condition|)
 block|{
 comment|/* substitute in each word of the variable */
-comment|/* 	 * Break substitution down into simple anchored cases 	 * and if none of them fits, perform the general substitution case. 	 */
+comment|/* 		 * Break substitution down into simple anchored cases 		 * and if none of them fits, perform the general substitution 		 * case. 		 */
 if|if
 condition|(
 operator|(
@@ -802,7 +802,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * Anchored at start and beginning of word matches pattern 		 */
+comment|/* 			 * Anchored at start and beginning of word matches 			 * pattern. 			 */
 if|if
 condition|(
 operator|(
@@ -825,7 +825,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 			 * Also anchored at end and matches to the end (word 			 * is same length as pattern) add space and rhs only 			 * if rhs is non-null. 			 */
+comment|/* 				 * Also anchored at end and matches to the end 				 * (word is same length as pattern) add space 				 * and rhs only if rhs is non-null. 				 */
 if|if
 condition|(
 name|Buf_Size
@@ -879,14 +879,14 @@ operator|&
 name|VAR_MATCH_END
 condition|)
 block|{
-comment|/* 		     * Doesn't match to end -- copy word wholesale 		     */
+comment|/* 				 * Doesn't match to end -- copy word wholesale 				 */
 goto|goto
 name|nosub
 goto|;
 block|}
 else|else
 block|{
-comment|/* 		     * Matches at start but need to copy in trailing characters 		     */
+comment|/* 				 * Matches at start but need to copy in 				 * trailing characters. 				 */
 if|if
 condition|(
 operator|(
@@ -977,7 +977,7 @@ operator|&
 name|VAR_MATCH_START
 condition|)
 block|{
-comment|/* 	     * Had to match at start of word and didn't -- copy whole word. 	     */
+comment|/* 			 * Had to match at start of word and didn't -- copy 			 * whole word. 			 */
 goto|goto
 name|nosub
 goto|;
@@ -992,7 +992,7 @@ operator|&
 name|VAR_MATCH_END
 condition|)
 block|{
-comment|/* 	     * Anchored at end, Find only place match could occur (leftLen 	     * characters from the end of the word) and see if it does. Note 	     * that because the $ will be left at the end of the lhs, we have 	     * to use strncmp. 	     */
+comment|/* 			 * Anchored at end, Find only place match could occur 			 * (leftLen characters from the end of the word) and 			 * see if it does. Note that because the $ will be 			 * left at the end of the lhs, we have to use strncmp. 			 */
 name|cp
 operator|=
 name|word
@@ -1040,10 +1040,9 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * Match found. If we will place characters in the buffer, 		 * add a space before hand as indicated by addSpace, then 		 * stuff in the initial, unmatched part of the word followed 		 * by the right-hand-side. 		 */
+comment|/* 				 * Match found. If we will place characters in 				 * the buffer, add a space before hand as 				 * indicated by addSpace, then stuff in the 				 * initial, unmatched part of the word followed 				 * by the right-hand-side. 				 */
 if|if
 condition|(
-operator|(
 operator|(
 name|cp
 operator|-
@@ -1056,7 +1055,6 @@ name|pattern
 operator|->
 name|rhs
 argument_list|)
-operator|)
 operator|!=
 literal|0
 condition|)
@@ -1103,7 +1101,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Had to match at end and didn't. Copy entire word. 		 */
+comment|/* 				 * Had to match at end and didn't. Copy entire 				 * word. 				 */
 goto|goto
 name|nosub
 goto|;
@@ -1111,7 +1109,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	     * Pattern is unanchored: search for the pattern in the word using 	     * strstr(3), copying unmatched portions and the 	     * right-hand-side for each match found, handling non-global 	     * substitutions correctly, etc. When the loop is done, any 	     * remaining part of the word (word and wordLen are adjusted 	     * accordingly through the loop) is copied straight into the 	     * buffer. 	     * addSpace is set FALSE as soon as a space is added to the 	     * buffer. 	     */
+comment|/* 			 * Pattern is unanchored: search for the pattern in the 			 * word using strstr(3), copying unmatched portions and 			 * the right-hand-side for each match found, handling 			 * non-global substitutions correctly, etc. When the 			 * loop is done, any remaining part of the word (word 			 * and wordLen are adjusted accordingly through the 			 * loop) is copied straight into the buffer. 			 * addSpace is set FALSE as soon as a space is added 			 * to the buffer. 			 */
 name|Boolean
 name|done
 decl_stmt|;
@@ -1308,7 +1306,7 @@ name|word
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	     * If added characters to the buffer, need to add a space 	     * before we add any more. If we didn't add any, just return 	     * the previous value of addSpace. 	     */
+comment|/* 			 * If added characters to the buffer, need to add a 			 * space before we add any more. If we didn't add any, 			 * just return the previous value of addSpace. 			 */
 return|return
 operator|(
 operator|(
@@ -1324,7 +1322,7 @@ name|addSpace
 operator|)
 return|;
 block|}
-comment|/* 	 * Common code for anchored substitutions: 	 * addSpace was set TRUE if characters were added to the buffer. 	 */
+comment|/* 		 * Common code for anchored substitutions: 		 * addSpace was set TRUE if characters were added to the buffer. 		 */
 return|return
 operator|(
 name|addSpace
@@ -1372,7 +1370,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarRESubstitute --  *	Perform a regex substitution on the given word, placing the  *	result in the passed buffer.  A space is added if requested.  *  * Results:  *	TRUE if a space is needed before more characters are added.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/**  * VarRESubstitute  *	Perform a regex substitution on the given word, placing the  *	result in the passed buffer.  A space is added if requested.  *  * Results:  *	TRUE if a space is needed before more characters are added.  */
 end_comment
 
 begin_function
@@ -1425,7 +1423,7 @@ directive|define
 name|MAYBE_ADD_SPACE
 parameter_list|()
 define|\
-value|if (addSpace&& !added)			\ 	    Buf_AddByte(buf, (Byte)' ');	\ 	added = 1
+value|if (addSpace&& !added)			\ 		Buf_AddByte(buf, (Byte)' ');	\ 	added = 1
 name|added
 operator|=
 literal|0
@@ -1458,10 +1456,12 @@ operator||
 name|VAR_SUB_MATCHED
 operator|)
 condition|)
+block|{
 name|xrv
 operator|=
 name|REG_NOMATCH
 expr_stmt|;
+block|}
 else|else
 block|{
 name|tryagain
