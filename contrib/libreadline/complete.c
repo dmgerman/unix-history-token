@@ -36,12 +36,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -129,6 +123,12 @@ end_endif
 begin_comment
 comment|/* HAVE_STDLIB_H */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_include
 include|#
@@ -634,7 +634,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Pointer to the generator function for completion_matches ().    NULL means to use filename_entry_function (), the default filename    completer. */
+comment|/* Pointer to the generator function for completion_matches ().    NULL means to use filename_completion_function (), the default filename    completer. */
 end_comment
 
 begin_decl_stmt
@@ -2845,7 +2845,7 @@ name|match
 parameter_list|,
 name|mtype
 parameter_list|,
-name|quote_char
+name|qc
 parameter_list|)
 name|char
 modifier|*
@@ -2853,9 +2853,12 @@ name|match
 decl_stmt|;
 name|int
 name|mtype
-decl_stmt|,
-name|quote_char
 decl_stmt|;
+name|char
+modifier|*
+name|qc
+decl_stmt|;
+comment|/* Pointer to quoting character, if any */
 block|{
 name|int
 name|should_quote
@@ -2865,8 +2868,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|replacement
-decl_stmt|,
-name|qc
 decl_stmt|;
 comment|/* If we are doing completion on quoted substrings, and any matches      contain any of the completer_word_break_characters, then auto-      matically prepend the substring with a quote character (just pick      the first one from the list of such) if it does not already begin      with a quote string.  FIXME: Need to remove any such automatically      inserted quote character when it no longer is necessary, such as      if we change the string we are completing on and the new set of      matches don't require a quoted substring. */
 name|replacement
@@ -2899,28 +2900,42 @@ name|should_quote
 operator|&&
 operator|(
 operator|!
-name|quote_char
+name|qc
 operator|||
-name|quote_char
+operator|!
+operator|*
+name|qc
+operator|||
+operator|*
+name|qc
 operator|==
 literal|'"'
 operator|||
-name|quote_char
+operator|*
+name|qc
 operator|==
 literal|'\''
 operator|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* !SHELL */
 name|should_quote
 operator|=
 name|should_quote
 operator|&&
+operator|(
 operator|!
-name|quote_char
+name|qc
+operator|||
+operator|!
+operator|*
+name|qc
+operator|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* !SHELL */
 if|if
 condition|(
 name|should_quote
@@ -2946,24 +2961,15 @@ name|mtype
 else|:
 name|NO_MATCH
 expr_stmt|;
+comment|/* Quote the replacement, since we found an embedded 	 word break character in a potential match. */
 if|if
 condition|(
 name|do_replace
 operator|!=
 name|NO_MATCH
-condition|)
-block|{
-comment|/* Quote the replacement, since we found an embedded 	     word break character in a potential match. */
-if|if
-condition|(
+operator|&&
 name|rl_filename_quoting_function
 condition|)
-block|{
-name|qc
-operator|=
-name|quote_char
-expr_stmt|;
-comment|/* must pass a (char *) to quoting function */
 name|replacement
 operator|=
 call|(
@@ -2975,16 +2981,9 @@ name|match
 argument_list|,
 name|do_replace
 argument_list|,
-operator|&
 name|qc
 argument_list|)
 expr_stmt|;
-name|quote_char
-operator|=
-name|qc
-expr_stmt|;
-block|}
-block|}
 block|}
 return|return
 operator|(
@@ -3005,7 +3004,7 @@ name|start
 parameter_list|,
 name|mtype
 parameter_list|,
-name|quote_char
+name|qc
 parameter_list|)
 name|char
 modifier|*
@@ -3015,14 +3014,28 @@ name|int
 name|start
 decl_stmt|,
 name|mtype
-decl_stmt|,
-name|quote_char
+decl_stmt|;
+name|char
+modifier|*
+name|qc
 decl_stmt|;
 block|{
 name|char
 modifier|*
 name|replacement
 decl_stmt|;
+name|char
+name|oqc
+decl_stmt|;
+name|oqc
+operator|=
+name|qc
+condition|?
+operator|*
+name|qc
+else|:
+literal|'\0'
+expr_stmt|;
 name|replacement
 operator|=
 name|make_quoted_replacement
@@ -3031,7 +3044,7 @@ name|match
 argument_list|,
 name|mtype
 argument_list|,
-name|quote_char
+name|qc
 argument_list|)
 expr_stmt|;
 comment|/* Now insert the match. */
@@ -3043,7 +3056,10 @@ block|{
 comment|/* Don't double an opening quote character. */
 if|if
 condition|(
-name|quote_char
+name|qc
+operator|&&
+operator|*
+name|qc
 operator|&&
 name|start
 operator|&&
@@ -3054,14 +3070,50 @@ operator|-
 literal|1
 index|]
 operator|==
-name|quote_char
+operator|*
+name|qc
 operator|&&
 name|replacement
 index|[
 literal|0
 index|]
 operator|==
-name|quote_char
+operator|*
+name|qc
+condition|)
+name|start
+operator|--
+expr_stmt|;
+comment|/* If make_quoted_replacement changed the quoting character, remove 	 the opening quote and insert the (fully-quoted) replacement. */
+elseif|else
+if|if
+condition|(
+name|qc
+operator|&&
+operator|(
+operator|*
+name|qc
+operator|!=
+name|oqc
+operator|)
+operator|&&
+name|start
+operator|&&
+name|rl_line_buffer
+index|[
+name|start
+operator|-
+literal|1
+index|]
+operator|==
+name|oqc
+operator|&&
+name|replacement
+index|[
+literal|0
+index|]
+operator|!=
+name|oqc
 condition|)
 name|start
 operator|--
@@ -3288,7 +3340,7 @@ name|matches
 parameter_list|,
 name|point
 parameter_list|,
-name|quote_char
+name|qc
 parameter_list|)
 name|char
 modifier|*
@@ -3297,8 +3349,10 @@ name|matches
 decl_stmt|;
 name|int
 name|point
-decl_stmt|,
-name|quote_char
+decl_stmt|;
+name|char
+modifier|*
+name|qc
 decl_stmt|;
 block|{
 name|int
@@ -3314,7 +3368,10 @@ expr_stmt|;
 comment|/* remove any opening quote character; make_quoted_replacement will add      it back. */
 if|if
 condition|(
-name|quote_char
+name|qc
+operator|&&
+operator|*
+name|qc
 operator|&&
 name|point
 operator|&&
@@ -3325,7 +3382,8 @@ operator|-
 literal|1
 index|]
 operator|==
-name|quote_char
+operator|*
+name|qc
 condition|)
 name|point
 operator|--
@@ -3375,7 +3433,7 @@ index|]
 argument_list|,
 name|SINGLE_MATCH
 argument_list|,
-name|quote_char
+name|qc
 argument_list|)
 expr_stmt|;
 name|rl_insert_text
@@ -3417,7 +3475,7 @@ index|]
 argument_list|,
 name|SINGLE_MATCH
 argument_list|,
-name|quote_char
+name|qc
 argument_list|)
 expr_stmt|;
 name|rl_insert_text
@@ -3609,11 +3667,6 @@ argument_list|,
 name|quote_char
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|text
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|matches
@@ -3627,6 +3680,11 @@ expr_stmt|;
 name|FREE
 argument_list|(
 name|saved_line_buffer
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|text
 argument_list|)
 expr_stmt|;
 return|return
@@ -3723,6 +3781,11 @@ argument_list|(
 name|saved_line_buffer
 argument_list|)
 expr_stmt|;
+name|FREE
+argument_list|(
+name|text
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3782,6 +3845,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|free
+argument_list|(
+name|text
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|what_to_do
@@ -3820,6 +3888,7 @@ name|MULT_MATCH
 else|:
 name|SINGLE_MATCH
 argument_list|,
+operator|&
 name|quote_char
 argument_list|)
 expr_stmt|;
@@ -3881,6 +3950,7 @@ name|matches
 argument_list|,
 name|start
 argument_list|,
+operator|&
 name|quote_char
 argument_list|)
 expr_stmt|;
@@ -4070,6 +4140,12 @@ name|character
 operator|=
 literal|'/'
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|S_ISCHR
+argument_list|)
 elseif|else
 if|if
 condition|(
@@ -4084,6 +4160,15 @@ name|character
 operator|=
 literal|'%'
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* S_ISCHR */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|S_ISBLK
+argument_list|)
 elseif|else
 if|if
 condition|(
@@ -4098,6 +4183,9 @@ name|character
 operator|=
 literal|'#'
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* S_ISBLK */
 if|#
 directive|if
 name|defined
@@ -4972,6 +5060,12 @@ specifier|static
 name|DIR
 modifier|*
 name|directory
+init|=
+operator|(
+name|DIR
+operator|*
+operator|)
+name|NULL
 decl_stmt|;
 specifier|static
 name|char
@@ -5030,6 +5124,26 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* If we were interrupted before closing the directory or reading 	 all of its contents, close it. */
+if|if
+condition|(
+name|directory
+condition|)
+block|{
+name|closedir
+argument_list|(
+name|directory
+argument_list|)
+expr_stmt|;
+name|directory
+operator|=
+operator|(
+name|DIR
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+block|}
 name|FREE
 argument_list|(
 name|dirname

@@ -88,6 +88,18 @@ comment|/* _FUNCTION_DEF */
 end_comment
 
 begin_comment
+comment|/* If non-null, this contains the address of a function that the application    wants called before trying the standard tilde expansions.  The function    is called with the text sans tilde, and returns a malloc()'ed string    which is the expansion, or a NULL pointer if the expansion fails. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|CPFunction
+modifier|*
+name|tilde_expansion_preexpansion_hook
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* If non-null, this contains the address of a function to call if the    standard meaning for expanding a tilde fails.  The function is called    with the text (sans tilde, as in "foo"), and returns a malloc()'ed string    which is the expansion, or a NULL pointer if there is no expansion. */
 end_comment
 

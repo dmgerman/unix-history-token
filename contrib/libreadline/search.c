@@ -65,6 +65,37 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STDLIB_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"ansi_stdlib.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -83,6 +114,23 @@ directive|include
 file|"history.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|abs
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|abs
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -90,7 +138,7 @@ name|abs
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)> 0) ? (x) : -(x))
+value|(((x)>= 0) ? (x) : -(x))
 end_define
 
 begin_decl_stmt

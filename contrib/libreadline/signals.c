@@ -372,6 +372,41 @@ begin_comment
 comment|/* **************************************************************** */
 end_comment
 
+begin_comment
+comment|/* If we're not being compiled as part of bash, initialize handlers for    and catch the job control signals (SIGTTIN, SIGTTOU, SIGTSTP) and    SIGTERM. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SHELL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HANDLE_JOB_SIGNALS
+end_define
+
+begin_define
+define|#
+directive|define
+name|HANDLE_SIGTERM
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !SHELL */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -451,10 +486,9 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|SHELL
+name|HANDLE_JOB_SIGNALS
 argument_list|)
 end_if
 
@@ -466,8 +500,6 @@ decl_stmt|,
 name|old_ttou
 decl_stmt|,
 name|old_ttin
-decl_stmt|,
-name|old_term
 decl_stmt|;
 end_decl_stmt
 
@@ -477,8 +509,29 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !SHELL */
+comment|/* HANDLE_JOB_SIGNALS */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HANDLE_SIGTERM
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|sighandler_cxt
+name|old_term
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -537,9 +590,16 @@ argument_list|)
 name|long
 name|omask
 decl_stmt|;
+else|#
+directive|else
+comment|/* !HAVE_BSD_SIGNALS */
+name|sighandler_cxt
+name|dummy_cxt
+decl_stmt|;
+comment|/* needed for rl_set_sighandler call */
 endif|#
 directive|endif
-comment|/* HAVE_BSD_SIGNALS */
+comment|/* !HAVE_BSD_SIGNALS */
 endif|#
 directive|endif
 comment|/* !HAVE_POSIX_SIGNALS */
@@ -573,11 +633,8 @@ name|sig
 argument_list|,
 name|SIG_IGN
 argument_list|,
-operator|(
-name|sighandler_cxt
-operator|*
-operator|)
-name|NULL
+operator|&
+name|dummy_cxt
 argument_list|)
 expr_stmt|;
 endif|#
@@ -817,6 +874,28 @@ name|SigHandler
 modifier|*
 name|oh
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MUST_REINSTALL_SIGHANDLERS
+argument_list|)
+name|sighandler_cxt
+name|dummy_winch
+decl_stmt|;
+comment|/* We don't want to change old_winch -- it holds the state of SIGWINCH      disposition set by the calling application.  We need this state      because we call the application's SIGWINCH handler after updating      our own idea of the screen size. */
+name|rl_set_sighandler
+argument_list|(
+name|SIGWINCH
+argument_list|,
+name|rl_handle_sigwinch
+argument_list|,
+operator|&
+name|dummy_winch
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|readline_echoing_p
@@ -1202,10 +1281,9 @@ directive|endif
 comment|/* HAVE_POSIX_SIGNALS */
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|SHELL
+name|HANDLE_JOB_SIGNALS
 argument_list|)
 if|#
 directive|if
@@ -1320,6 +1398,15 @@ block|}
 endif|#
 directive|endif
 comment|/* SIGTTOU */
+endif|#
+directive|endif
+comment|/* HANDLE_JOB_SIGNALS */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HANDLE_SIGTERM
+argument_list|)
 comment|/* Handle SIGTERM if we're not being compiled as part of bash. */
 name|rl_set_sighandler
 argument_list|(
@@ -1333,7 +1420,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !SHELL */
+comment|/* HANDLE_SIGTERM */
 if|#
 directive|if
 name|defined
@@ -1407,10 +1494,9 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|SHELL
+name|HANDLE_JOB_SIGNALS
 argument_list|)
 if|#
 directive|if
@@ -1462,6 +1548,15 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SIGTTOU */
+endif|#
+directive|endif
+comment|/* HANDLE_JOB_SIGNALS */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HANDLE_SIGTERM
+argument_list|)
 name|rl_sigaction
 argument_list|(
 name|SIGTERM
@@ -1475,7 +1570,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !SHELL */
+comment|/* HANDLE_SIGTERM */
 if|#
 directive|if
 name|defined

@@ -36,12 +36,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -54,13 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
+file|"posixjmp.h"
 end_include
 
 begin_if
@@ -125,6 +113,18 @@ end_endif
 begin_comment
 comment|/* HAVE_STDLIB_H */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_comment
 comment|/* System-specific feature definitions and include files. */
@@ -195,7 +195,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|jmp_buf
+name|procenv_t
 name|readline_top_level
 decl_stmt|;
 end_decl_stmt
@@ -982,88 +982,6 @@ endif|#
 directive|endif
 block|}
 end_block
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SHELL
-argument_list|)
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|savestring
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|savestring
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Backwards compatibility, now that savestring has been removed from    all `public' readline header files. */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|savestring
-parameter_list|(
-name|s
-parameter_list|)
-name|char
-modifier|*
-name|s
-decl_stmt|;
-block|{
-return|return
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|strcpy
-argument_list|(
-name|xmalloc
-argument_list|(
-literal|1
-operator|+
-operator|(
-name|int
-operator|)
-name|strlen
-argument_list|(
-name|s
-argument_list|)
-argument_list|)
-argument_list|,
-operator|(
-name|s
-operator|)
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !SHELL */
-end_comment
 
 begin_comment
 comment|/* Function equivalents for the macros defined in chartypes.h. */

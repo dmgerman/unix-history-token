@@ -316,6 +316,12 @@ name|rl_dump_functions
 block|}
 block|,
 block|{
+literal|"dump-macros"
+block|,
+name|rl_dump_macros
+block|}
+block|,
+block|{
 literal|"dump-variables"
 block|,
 name|rl_dump_variables

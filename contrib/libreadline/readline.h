@@ -452,16 +452,13 @@ begin_comment
 comment|/* Things for vi mode. Not available unless readline is compiled -DVI_MODE. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|rl_vi_check
-argument_list|()
-decl_stmt|,
-name|rl_vi_textmod_command
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -1267,6 +1264,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* The prompt readline uses.  This is set from the argument to    readline (), and should not be assigned to directly. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|rl_prompt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* The line buffer that is in use. */
 end_comment
 
@@ -1309,6 +1318,16 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|rl_pending_input
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Non-zero if we called this function from _rl_dispatch().  It's present    so functions can find out whether they were called from a key binding    or directly from an application. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rl_dispatching
 decl_stmt|;
 end_decl_stmt
 
@@ -1636,6 +1655,28 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|rl_completion_append_character
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Up to this many items will be displayed in response to a    possible-completions call.  After that, we ask the user if she    is sure she wants to see them all.  The default value is 100. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rl_completion_query_items
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* If non-zero, then disallow duplicates in the matches. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rl_ignore_completion_duplicates
 decl_stmt|;
 end_decl_stmt
 

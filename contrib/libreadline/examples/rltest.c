@@ -19,6 +19,36 @@ begin_comment
 comment|/* **************************************************************** */
 end_comment
 
+begin_comment
+comment|/*  * Remove the next line if you're compiling this against an installed  * libreadline.a  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|READLINE_LIBRARY
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_CONFIG_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -34,13 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../readline.h"
+file|"readline.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../history.h"
+file|"history.h"
 end_include
 
 begin_function

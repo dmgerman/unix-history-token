@@ -101,6 +101,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|_rl_init_line_state
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -344,6 +352,17 @@ call|)
 argument_list|(
 name|line
 argument_list|)
+expr_stmt|;
+comment|/* If the user did not clear out the line, do it for him. */
+if|if
+condition|(
+name|rl_line_buffer
+index|[
+literal|0
+index|]
+condition|)
+name|_rl_init_line_state
+argument_list|()
 expr_stmt|;
 comment|/* Redisplay the prompt if readline_handler_{install,remove} not called. */
 if|if
