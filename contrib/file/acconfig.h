@@ -3,23 +3,21 @@ begin_comment
 comment|/* Autoheader needs me */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|PACKAGE
-value|"file"
-end_define
+end_undef
 
 begin_comment
 comment|/* Autoheader needs me */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|VERSION
-value|"3.35"
-end_define
+end_undef
 
 begin_comment
 comment|/* Define if builtin ELF support is enabled.  */

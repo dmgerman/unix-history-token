@@ -193,7 +193,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: file.c,v 1.56 2001/03/11 20:29:16 christos Exp $"
+literal|"@(#)$Id: file.c,v 1.58 2001/07/22 21:04:15 christos Exp $"
 argument_list|)
 end_macro
 
@@ -216,7 +216,7 @@ begin_define
 define|#
 directive|define
 name|USAGE
-value|"Usage: %s [-bciknvzL] [-f namefile] [-m magicfiles] file...\n"
+value|"Usage: %s [-bciknsvzL] [-f namefile] [-m magicfiles] file...\n"
 end_define
 
 begin_else
@@ -228,7 +228,7 @@ begin_define
 define|#
 directive|define
 name|USAGE
-value|"Usage: %s [-bciknvz] [-f namefile] [-m magicfiles] file...\n"
+value|"Usage: %s [-bciknsvz] [-f namefile] [-m magicfiles] file...\n"
 end_define
 
 begin_endif
@@ -349,11 +349,13 @@ specifier|const
 name|char
 modifier|*
 name|magicfile
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* where magic be found 		*/
+comment|/* where the magic is		*/
 end_comment
 
 begin_decl_stmt
@@ -491,6 +493,16 @@ decl_stmt|;
 name|char
 modifier|*
 name|mime
+decl_stmt|,
+modifier|*
+name|home
+decl_stmt|,
+modifier|*
+name|usermagic
+decl_stmt|;
+name|struct
+name|stat
+name|sb
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -534,22 +546,101 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|magicfile
+operator|=
+name|default_magicfile
+expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
-name|magicfile
+name|usermagic
 operator|=
 name|getenv
 argument_list|(
 literal|"MAGIC"
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 name|magicfile
 operator|=
-name|default_magicfile
+name|usermagic
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|home
+operator|=
+name|getenv
+argument_list|(
+literal|"HOME"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|usermagic
+operator|=
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
+name|home
+argument_list|)
+operator|+
+literal|8
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|usermagic
+argument_list|,
+name|home
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|usermagic
+argument_list|,
+literal|"/.magic"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|usermagic
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|free
+argument_list|(
+name|usermagic
+argument_list|)
+expr_stmt|;
+else|else
+name|magicfile
+operator|=
+name|usermagic
+expr_stmt|;
+block|}
+block|}
 while|while
 condition|(
 operator|(
@@ -661,7 +752,7 @@ argument_list|(
 name|magicfile
 argument_list|)
 operator|+
-literal|5
+literal|6
 argument_list|)
 operator|)
 operator|!=
@@ -1678,9 +1769,6 @@ argument_list|,
 name|progname
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QUICK
 operator|(
 name|void
 operator|)
@@ -1693,8 +1781,6 @@ argument_list|,
 name|progname
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 literal|1
