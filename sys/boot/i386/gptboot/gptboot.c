@@ -1202,6 +1202,10 @@ name|roundup2
 argument_list|(
 name|__base
 operator|+
+operator|(
+name|int32_t
+operator|)
+operator|&
 name|_end
 argument_list|,
 literal|0x10000
