@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip.h	6.3	84/05/22	*/
+comment|/*	ip.h	6.4	84/10/19	*/
 end_comment
 
 begin_comment
@@ -422,6 +422,17 @@ end_define
 
 begin_comment
 comment|/* subtracted when forwarding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_MSS
+value|576
+end_define
+
+begin_comment
+comment|/* default maximum segment size */
 end_comment
 
 end_unit
