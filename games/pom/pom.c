@@ -302,6 +302,8 @@ name|days
 operator|+=
 name|isleap
 argument_list|(
+literal|1900
+operator|+
 name|cnt
 argument_list|)
 condition|?
