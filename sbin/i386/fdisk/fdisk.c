@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fdisk.c,v 1.23 1998/07/06 06:44:36 charnier Exp $"
+literal|"$Id: fdisk.c,v 1.24 1998/09/16 19:25:47 obrien Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1640,6 +1640,12 @@ block|{
 literal|0x94
 block|,
 literal|"Amoeba bad block table"
+block|}
+block|,
+block|{
+literal|0x9F
+block|,
+literal|"BSD/OS"
 block|}
 block|,
 block|{
