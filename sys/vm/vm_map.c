@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -962,6 +968,12 @@ name|PAGE_SIZE
 argument_list|)
 operator|/
 literal|8
+operator|+
+name|maxproc
+operator|*
+literal|2
+operator|+
+name|maxfiles
 argument_list|)
 expr_stmt|;
 name|vmspace_zone
