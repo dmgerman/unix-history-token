@@ -9477,6 +9477,17 @@ name|int
 name|write
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -9562,6 +9573,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|restore_intr
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -9579,6 +9595,17 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -9620,6 +9647,11 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+name|restore_intr
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -9637,7 +9669,18 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
 comment|/* 	 * Enable FEN so that we can access the fp registers. 	 */
+name|s
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
 name|alpha_pal_wrfen
 argument_list|(
 literal|1
@@ -9725,6 +9768,11 @@ operator|.
 name|md_flags
 operator||=
 name|MDP_FPUSED
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_function
