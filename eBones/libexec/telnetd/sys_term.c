@@ -8407,16 +8407,6 @@ argument_list|(
 operator|*
 name|cpp
 argument_list|,
-literal|"LD_NOSTD_PATH="
-argument_list|,
-literal|14
-argument_list|)
-operator|&&
-name|strncmp
-argument_list|(
-operator|*
-name|cpp
-argument_list|,
 literal|"LD_PRELOAD="
 argument_list|,
 literal|11
