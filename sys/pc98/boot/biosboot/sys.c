@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	$Id$  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	$Id: sys.c,v 1.10 1997/02/22 09:43:10 peter Exp $  */
 end_comment
 
 begin_comment
@@ -241,16 +241,33 @@ name|cnt2
 decl_stmt|,
 name|bnum2
 decl_stmt|;
+name|struct
+name|fs
+modifier|*
+name|fs_copy
+decl_stmt|;
 while|while
 condition|(
 name|count
+operator|>
+literal|0
+operator|&&
+name|poff
+operator|<
+name|inode
+operator|.
+name|i_size
 condition|)
 block|{
+name|fs_copy
+operator|=
+name|fs
+expr_stmt|;
 name|off
 operator|=
 name|blkoff
 argument_list|(
-name|fs
+name|fs_copy
 argument_list|,
 name|poff
 argument_list|)
@@ -259,7 +276,7 @@ name|logno
 operator|=
 name|lblkno
 argument_list|(
-name|fs
+name|fs_copy
 argument_list|,
 name|poff
 argument_list|)
@@ -270,7 +287,7 @@ name|size
 operator|=
 name|blksize
 argument_list|(
-name|fs
+name|fs_copy
 argument_list|,
 operator|&
 name|inode
@@ -282,7 +299,7 @@ name|bnum2
 operator|=
 name|fsbtodb
 argument_list|(
-name|fs
+name|fs_copy
 argument_list|,
 name|block_map
 argument_list|(
