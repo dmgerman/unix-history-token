@@ -1929,11 +1929,6 @@ argument_list|,
 literal|"objtrm"
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|!
@@ -1960,13 +1955,17 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+init|=
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|)
+name|object
+operator|->
+name|handle
 decl_stmt|;
 comment|/* 		 * Clean pages and flush buffers. 		 */
-name|VM_OBJECT_LOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|vm_object_page_clean
 argument_list|(
 name|object
@@ -1983,17 +1982,6 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|vp
-operator|=
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-name|object
-operator|->
-name|handle
-expr_stmt|;
 name|vinvalbuf
 argument_list|(
 name|vp
@@ -2007,6 +1995,11 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 block|}
@@ -2131,6 +2124,11 @@ expr_stmt|;
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Let the pager know object is dead. 	 */
