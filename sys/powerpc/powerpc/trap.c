@@ -999,25 +999,19 @@ literal|"already have a ucred"
 operator|)
 argument_list|)
 expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
 name|td
 operator|->
 name|td_ucred
-operator|=
-name|crhold
-argument_list|(
+operator|!=
 name|p
 operator|->
 name|p_ucred
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
+condition|)
+name|cred_update_thread
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* User Mode Traps */
@@ -1253,6 +1247,9 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1278,6 +1275,8 @@ name|td_ucred
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
