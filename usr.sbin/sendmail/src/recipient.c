@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.108.1.1 (Berkeley) 9/12/96"
+literal|"@(#)recipient.c	8.116 (Berkeley) 8/17/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -763,10 +763,25 @@ index|]
 decl_stmt|;
 comment|/* unquoted image of the user name */
 specifier|extern
+name|void
+name|alias
+name|__P
+argument_list|(
+operator|(
+name|ADDRESS
+operator|*
+operator|,
+name|ADDRESS
+operator|*
+operator|*
+operator|,
 name|int
-name|safefile
-parameter_list|()
-function_decl|;
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 name|e
 operator|->
 name|e_to
@@ -882,7 +897,7 @@ literal|"5.4.6"
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"554 aliasing/forwarding loop broken (%d aliases deep; %d max"
+literal|"554 aliasing/forwarding loop broken (%d aliases deep; %d max)"
 argument_list|,
 name|aliaslevel
 argument_list|,
@@ -1875,6 +1890,26 @@ name|m_flags
 argument_list|)
 condition|)
 block|{
+specifier|extern
+name|void
+name|maplocaluser
+name|__P
+argument_list|(
+operator|(
+name|ADDRESS
+operator|*
+operator|,
+name|ADDRESS
+operator|*
+operator|*
+operator|,
+name|int
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 name|maplocaluser
 argument_list|(
 name|a
@@ -1927,12 +1962,25 @@ modifier|*
 name|pw
 decl_stmt|;
 specifier|extern
-name|struct
-name|passwd
-modifier|*
-name|finduser
-parameter_list|()
-function_decl|;
+name|void
+name|forward
+name|__P
+argument_list|(
+operator|(
+name|ADDRESS
+operator|*
+operator|,
+name|ADDRESS
+operator|*
+operator|*
+operator|,
+name|int
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* warning -- finduser may trash buf */
 name|pw
 operator|=
@@ -2938,7 +2986,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|if (strcasecmp(pw->pw_name, name) == 0) 		{ 			if (tTd(29, 4)) 				printf("found (case wrapped)\n"); 			*fuzzyp = TRUE; 			return pw; 		}
+block|if (strcasecmp(pw->pw_name, name) == 0) 		{ 			if (tTd(29, 4)) 				printf("found (case wrapped)\n"); 			break; 		}
 endif|#
 directive|endif
 name|buildfname
@@ -3004,18 +3052,21 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
+block|}
+if|if
+condition|(
+name|pw
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|fuzzyp
 operator|=
 name|TRUE
 expr_stmt|;
-return|return
-operator|(
-name|pw
-operator|)
-return|;
-block|}
-block|}
+elseif|else
 if|if
 condition|(
 name|tTd
@@ -3030,6 +3081,18 @@ argument_list|(
 literal|"no fuzzy match found\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|DEC_OSF_BROKEN_GETPWENT
+comment|/* DEC OSF/1 3.2 or earlier */
+name|endpwent
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+name|pw
+return|;
 else|#
 directive|else
 if|if
@@ -3046,13 +3109,11 @@ argument_list|(
 literal|"not found (fuzzy disabled)\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
 endif|#
 directive|endif
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 block|}
 end_function
 
@@ -4365,12 +4426,20 @@ return|return
 name|rval
 return|;
 block|}
-comment|/* 	** Check to see if some bad guy can write this file 	** 	**	This should really do something clever with group 	**	permissions; currently we just view world writable 	**	as unsafe.  Also, we don't check for writable 	**	directories in the path.  We've got to leave 	**	something for the local sysad to do. 	*/
+comment|/* 	** Check to see if some bad guy can write this file 	** 	**	Group write checking could be more clever, e.g., 	**	guessing as to which groups are actually safe ("sys" 	**	may be; "user" probably is not). 	**	Also, we don't check for writable 	**	directories in the path.  We've got to leave 	**	something for the local sysad to do. 	*/
 if|if
 condition|(
 name|bitset
 argument_list|(
 name|S_IWOTH
+operator||
+operator|(
+name|UnsafeGroupWrites
+condition|?
+name|S_IWGRP
+else|:
+literal|0
+operator|)
 argument_list|,
 name|st
 operator|.
@@ -4391,7 +4460,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: world writable %s file, marked unsafe"
+literal|"%s: %s writable %s file, marked unsafe"
 argument_list|,
 name|shortenstring
 argument_list|(
@@ -4399,6 +4468,19 @@ name|fname
 argument_list|,
 literal|203
 argument_list|)
+argument_list|,
+name|bitset
+argument_list|(
+name|S_IWOTH
+argument_list|,
+name|st
+operator|.
+name|st_mode
+argument_list|)
+condition|?
+literal|"world"
+else|:
+literal|"group"
 argument_list|,
 name|forwarding
 condition|?

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.119.1.2 (Berkeley) 9/16/96 (with daemon mode)"
+literal|"@(#)daemon.c	8.145 (Berkeley) 10/12/96 (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.119.1.2 (Berkeley) 9/16/96 (without daemon mode)"
+literal|"@(#)daemon.c	8.145 (Berkeley) 10/12/96 (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,14 +143,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  DAEMON.C -- routines to use when running as a daemon. ** **	This entire file is highly dependent on the 4.2 BSD **	interprocess communication primitives.  No attempt has **	been made to make this file portable to Version 7, **	Version 6, MPX files, etc.  If you should try such a **	thing yourself, I recommend chucking the entire file **	and starting from scratch.  Basic semantics are: ** **	getrequests() **		Opens a port and initiates a connection. **		Returns in a child.  Must set InChannel and **		OutChannel appropriately. **	clrdaemon() **		Close any open files associated with getting **		the connection; this is used when running the queue, **		etc., to avoid having extra file descriptors during **		the queue run and to avoid confusing the network **		code (if it cares). **	makeconnection(host, port, outfile, infile, usesecureport) **		Make a connection to the named host on the given **		port.  Set *outfile and *infile to the files **		appropriate for communication.  Returns zero on **		success, else an exit status describing the **		error. **	host_map_lookup(map, hbuf, avp, pstat) **		Convert the entry in hbuf into a canonical form. */
+comment|/* **  DAEMON.C -- routines to use when running as a daemon. ** **	This entire file is highly dependent on the 4.2 BSD **	interprocess communication primitives.  No attempt has **	been made to make this file portable to Version 7, **	Version 6, MPX files, etc.  If you should try such a **	thing yourself, I recommend chucking the entire file **	and starting from scratch.  Basic semantics are: ** **	getrequests(e) **		Opens a port and initiates a connection. **		Returns in a child.  Must set InChannel and **		OutChannel appropriately. **	clrdaemon() **		Close any open files associated with getting **		the connection; this is used when running the queue, **		etc., to avoid having extra file descriptors during **		the queue run and to avoid confusing the network **		code (if it cares). **	makeconnection(host, port, outfile, infile, e) **		Make a connection to the named host on the given **		port.  Set *outfile and *infile to the files **		appropriate for communication.  Returns zero on **		success, else an exit status describing the **		error. **	host_map_lookup(map, hbuf, avp, pstat) **		Convert the entry in hbuf into a canonical form. */
 end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* **  GETREQUESTS -- open mail IPC port and get requests. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Waits until some interesting activity occurs.  When **		it does, a child is created to process it, and the **		parent waits for completion.  Return from this **		routine is always in the child.  The file pointers **		"InChannel" and "OutChannel" should be set to point **		to the communication channel. */
+comment|/* **  GETREQUESTS -- open mail IPC port and get requests. ** **	Parameters: **		e -- the current envelope. ** **	Returns: **		TRUE -- if a "null server" should be used -- that is, one **			that rejects all commands. **		FALSE -- to use a normal server. ** **	Side Effects: **		Waits until some interesting activity occurs.  When **		it does, a child is created to process it, and the **		parent waits for completion.  Return from this **		routine is always in the child.  The file pointers **		"InChannel" and "OutChannel" should be set to point **		to the communication channel. */
 end_comment
 
 begin_decl_stmt
@@ -213,9 +213,15 @@ comment|/* size of TCP send buffer */
 end_comment
 
 begin_function
-name|void
+name|bool
 name|getrequests
-parameter_list|()
+parameter_list|(
+name|e
+parameter_list|)
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
 block|{
 name|int
 name|t
@@ -245,6 +251,16 @@ name|void
 name|reapchild
 parameter_list|()
 function_decl|;
+specifier|extern
+name|int
+name|opendaemonsocket
+name|__P
+argument_list|(
+operator|(
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* 	**  Set up the address for the mailer. 	*/
 if|if
 condition|(
@@ -414,8 +430,11 @@ name|fprintf
 argument_list|(
 name|pidf
 argument_list|,
-literal|"%d\n"
+literal|"%ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|getpid
 argument_list|()
 argument_list|)
@@ -456,7 +475,7 @@ argument_list|,
 sizeof|sizeof
 name|jbuf
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|j_has_dot
@@ -514,15 +533,19 @@ name|getla
 parameter_list|()
 function_decl|;
 comment|/* see if we are rejecting connections */
-name|CurrentLA
-operator|=
-name|getla
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|refuseconnections
-argument_list|()
+argument_list|(
+name|ntohs
+argument_list|(
+name|DaemonAddr
+operator|.
+name|sin
+operator|.
+name|sin_port
+argument_list|)
+argument_list|)
 condition|)
 block|{
 if|if
@@ -588,6 +611,17 @@ index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
+specifier|extern
+name|void
+name|dumpstate
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 name|expand
 argument_list|(
 literal|"\201j"
@@ -597,7 +631,7 @@ argument_list|,
 sizeof|sizeof
 name|jbuf
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -664,7 +698,16 @@ directive|endif
 comment|/* wait for a connection */
 name|setproctitle
 argument_list|(
-literal|"accepting connections"
+literal|"accepting connections on port %d"
+argument_list|,
+name|ntohs
+argument_list|(
+name|DaemonAddr
+operator|.
+name|sin
+operator|.
+name|sin_port
+argument_list|)
 argument_list|)
 expr_stmt|;
 do|do
@@ -805,12 +848,6 @@ modifier|*
 name|p
 decl_stmt|;
 specifier|extern
-name|char
-modifier|*
-name|hostnamebyanyaddr
-parameter_list|()
-function_decl|;
-specifier|extern
 name|void
 name|intsig
 parameter_list|()
@@ -821,6 +858,9 @@ name|inchannel
 decl_stmt|,
 modifier|*
 name|outchannel
+decl_stmt|;
+name|bool
+name|nullconn
 decl_stmt|;
 comment|/* 			**  CHILD -- return to caller. 			**	Collect verified idea of sending host. 			**	Verify calling user id if possible here. 			*/
 operator|(
@@ -878,6 +918,9 @@ argument_list|(
 name|p
 argument_list|)
 operator|>
+operator|(
+name|SIZE_T
+operator|)
 name|MAXNAME
 condition|)
 name|p
@@ -966,7 +1009,33 @@ name|DisConnected
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* should we check for illegal connection here? XXX */
+comment|/* validate the connection */
+name|HoldErrs
+operator|=
+name|TRUE
+expr_stmt|;
+name|nullconn
+operator|=
+operator|!
+name|validate_connection
+argument_list|(
+operator|&
+name|RealHostAddr
+argument_list|,
+name|RealHostName
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|HoldErrs
+operator|=
+name|FALSE
+expr_stmt|;
+if|if
+condition|(
+name|nullconn
+condition|)
+break|break;
 ifdef|#
 directive|ifdef
 name|XLA
@@ -1003,13 +1072,18 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"getreq: returning\n"
+literal|"getreq: returning (normal server)\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|FALSE
+return|;
 block|}
-name|CurChildren
-operator|++
+comment|/* parent -- keep track of children */
+name|proc_list_add
+argument_list|(
+name|pid
+argument_list|)
 expr_stmt|;
 comment|/* close the port so that others will hang (for a while) */
 operator|(
@@ -1021,7 +1095,23 @@ name|t
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*NOTREACHED*/
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|15
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"getreq: returning (null server)\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|TRUE
+return|;
 block|}
 end_function
 
@@ -1435,6 +1525,11 @@ expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+comment|/* avoid compiler warning on IRIX */
 block|}
 end_function
 
@@ -1816,54 +1911,55 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|=
-name|htonl
-argument_list|(
-name|inet_network
+name|inet_addr
 argument_list|(
 name|v
-argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
 block|{
 specifier|register
 name|struct
-name|netent
+name|hostent
 modifier|*
-name|np
+name|hp
 decl_stmt|;
-name|np
+name|hp
 operator|=
-name|getnetbyname
+name|sm_gethostbyname
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|np
+name|hp
 operator|==
 name|NULL
 condition|)
 name|syserr
 argument_list|(
-literal|"554 network \"%s\" unknown"
+literal|"554 host \"%s\" unknown"
 argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
 else|else
+name|bcopy
+argument_list|(
+name|hp
+operator|->
+name|h_addr
+argument_list|,
+operator|&
 name|DaemonAddr
 operator|.
 name|sin
 operator|.
 name|sin_addr
-operator|.
-name|s_addr
-operator|=
-name|np
-operator|->
-name|n_net
+argument_list|,
+name|INADDRSZ
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -2139,7 +2235,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAKECONNECTION -- make a connection to an SMTP socket on another machine. ** **	Parameters: **		host -- the name of the host. **		port -- the port number to connect to. **		mci -- a pointer to the mail connection information **			structure to be filled in. **		usesecureport -- if set, use a low numbered (reserved) **			port to provide some rudimentary authentication. ** **	Returns: **		An exit code telling whether the connection could be **			made and if not why not. ** **	Side Effects: **		none. */
+comment|/* **  MAKECONNECTION -- make a connection to an SMTP socket on another machine. ** **	Parameters: **		host -- the name of the host. **		port -- the port number to connect to. **		mci -- a pointer to the mail connection information **			structure to be filled in. **		e -- the current envelope. ** **	Returns: **		An exit code telling whether the connection could be **			made and if not why not. ** **	Side Effects: **		none. */
 end_comment
 
 begin_decl_stmt
@@ -2189,7 +2285,7 @@ name|port
 parameter_list|,
 name|mci
 parameter_list|,
-name|usesecureport
+name|e
 parameter_list|)
 name|char
 modifier|*
@@ -2203,8 +2299,9 @@ name|MCI
 modifier|*
 name|mci
 decl_stmt|;
-name|bool
-name|usesecureport
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 block|{
 specifier|register
@@ -2336,8 +2433,7 @@ if|if
 condition|(
 name|hid
 operator|==
-operator|-
-literal|1
+name|INADDR_NONE
 condition|)
 endif|#
 directive|endif
@@ -2453,6 +2549,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+specifier|extern
+name|char
+name|MsgBuf
+index|[]
+decl_stmt|;
 name|usrerr
 argument_list|(
 literal|"553 Invalid numeric domain spec \"%s\""
@@ -2465,6 +2566,15 @@ operator|->
 name|mci_status
 operator|=
 literal|"5.1.2"
+expr_stmt|;
+name|mci
+operator|->
+name|mci_rstatus
+operator|=
+name|newstr
+argument_list|(
+name|MsgBuf
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2498,6 +2608,8 @@ endif|#
 directive|endif
 block|}
 else|else
+block|{
+comment|/* contortion to get around SGI cc complaints */
 block|{
 specifier|register
 name|char
@@ -2586,6 +2698,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+block|}
 name|gothostent
 label|:
 if|if
@@ -2623,6 +2736,12 @@ operator|->
 name|mci_status
 operator|=
 literal|"4.4.3"
+expr_stmt|;
+name|mci
+operator|->
+name|mci_rstatus
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -2917,7 +3036,16 @@ name|addr
 expr_stmt|;
 if|if
 condition|(
-name|usesecureport
+name|bitnset
+argument_list|(
+name|M_SECURE_PORT
+argument_list|,
+name|mci
+operator|->
+name|mci_mailer
+operator|->
+name|m_flags
+argument_list|)
 condition|)
 block|{
 name|int
@@ -3070,7 +3198,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|CurEnv
+name|e
 operator|->
 name|e_xfp
 operator|!=
@@ -3081,7 +3209,7 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_xfp
 argument_list|)
@@ -3105,17 +3233,40 @@ condition|)
 block|{
 if|if
 condition|(
+name|e
+operator|->
+name|e_ntries
+operator|<=
+literal|0
+operator|&&
 name|TimeOuts
 operator|.
-name|to_connect
-operator|==
+name|to_iconnect
+operator|!=
 literal|0
 condition|)
 name|ev
 operator|=
-name|NULL
+name|setevent
+argument_list|(
+name|TimeOuts
+operator|.
+name|to_iconnect
+argument_list|,
+name|connecttimeout
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|TimeOuts
+operator|.
+name|to_connect
+operator|!=
+literal|0
+condition|)
 name|ev
 operator|=
 name|setevent
@@ -3128,6 +3279,11 @@ name|connecttimeout
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+else|else
+name|ev
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -3461,11 +3617,6 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-specifier|extern
-name|bool
-name|getcanonname
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|gethostname
@@ -3817,12 +3968,6 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|hostnamebyanyaddr
-parameter_list|()
-function_decl|;
 name|falen
 operator|=
 sizeof|sizeof
@@ -3916,6 +4061,24 @@ operator|&
 name|RealHostAddr
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|RealHostName
+argument_list|)
+operator|>
+name|MAXNAME
+condition|)
+name|RealHostName
+index|[
+name|MAXNAME
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 block|}
 if|if
@@ -4250,6 +4413,23 @@ name|nleft
 operator|-=
 name|i
 expr_stmt|;
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|ibuf
+argument_list|,
+literal|'\n'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+break|break;
 block|}
 operator|(
 name|void
@@ -4413,72 +4593,6 @@ name|noident
 goto|;
 block|}
 comment|/* p now points to the OSTYPE field */
-while|while
-condition|(
-name|isascii
-argument_list|(
-operator|*
-name|p
-argument_list|)
-operator|&&
-name|isspace
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|)
-name|p
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|strncasecmp
-argument_list|(
-name|p
-argument_list|,
-literal|"other"
-argument_list|,
-literal|5
-argument_list|)
-operator|==
-literal|0
-operator|&&
-operator|(
-name|p
-index|[
-literal|5
-index|]
-operator|==
-literal|':'
-operator|||
-name|p
-index|[
-literal|5
-index|]
-operator|==
-literal|' '
-operator|||
-name|p
-index|[
-literal|5
-index|]
-operator|==
-literal|','
-operator|||
-name|p
-index|[
-literal|5
-index|]
-operator|==
-literal|'\0'
-operator|)
-condition|)
-block|{
-comment|/* not useful information */
-goto|goto
-name|noident
-goto|;
-block|}
 name|p
 operator|=
 name|strchr
@@ -5293,11 +5407,6 @@ operator|!=
 literal|'['
 condition|)
 block|{
-specifier|extern
-name|bool
-name|getcanonname
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|tTd
@@ -5323,16 +5432,6 @@ operator||=
 name|NCF_VALID
 expr_stmt|;
 comment|/* will be soon */
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|name
-argument_list|)
-operator|<
-sizeof|sizeof
-name|hbuf
-condition|)
 name|snprintf
 argument_list|(
 name|hbuf
@@ -5377,6 +5476,48 @@ argument_list|,
 name|hbuf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|MF_MATCHONLY
+argument_list|,
+name|map
+operator|->
+name|map_mflags
+argument_list|)
+condition|)
+block|{
+name|cp
+operator|=
+name|map_rewrite
+argument_list|(
+name|map
+argument_list|,
+name|name
+argument_list|,
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+argument_list|,
+name|av
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|s_namecanon
+operator|.
+name|nc_cname
+operator|=
+name|newstr
+argument_list|(
+name|hbuf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|cp
 operator|=
 name|map_rewrite
@@ -5404,18 +5545,13 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|cp
 return|;
 block|}
 else|else
 block|{
-specifier|register
-name|struct
-name|hostent
-modifier|*
-name|hp
-decl_stmt|;
 name|s
 operator|->
 name|s_namecanon

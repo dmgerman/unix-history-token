@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.49 (Berkeley) 10/29/95"
+literal|"@(#)collect.c	8.58 (Berkeley) 9/18/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,11 +261,11 @@ decl_stmt|;
 name|int
 name|mstate
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|pbp
 decl_stmt|;
-name|char
+name|u_char
 name|peekbuf
 index|[
 literal|8
@@ -501,6 +501,12 @@ block|{
 ifdef|#
 directive|ifdef
 name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|2
+condition|)
 name|syslog
 argument_list|(
 name|LOG_NOTICE
@@ -703,16 +709,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|headeronly
-condition|)
-name|e
-operator|->
-name|e_msgsize
-operator|++
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -847,6 +843,9 @@ condition|(
 name|c
 operator|==
 literal|'\n'
+operator|&&
+operator|!
+name|ignrdot
 condition|)
 goto|goto
 name|readerr
@@ -958,6 +957,16 @@ name|IS_NORM
 expr_stmt|;
 name|bufferchar
 label|:
+if|if
+condition|(
+operator|!
+name|headeronly
+condition|)
+name|e
+operator|->
+name|e_msgsize
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|mstate
@@ -1072,6 +1081,26 @@ name|obuf
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|c
+operator|>=
+literal|0200
+operator|&&
+name|c
+operator|<=
+literal|0237
+condition|)
+block|{
+if|#
+directive|if
+literal|0
+comment|/* causes complaints -- figure out something for 8.9 */
+block|usrerr("Illegal character 0x%x in header", c);
+endif|#
+directive|endif
+block|}
+elseif|else
 if|if
 condition|(
 name|c
@@ -2069,6 +2098,16 @@ name|MM_MIME8BIT
 argument_list|,
 name|MimeMode
 argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_IS_MIME
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 condition|)
 block|{
 name|e
@@ -2235,6 +2274,20 @@ name|avail
 decl_stmt|;
 name|long
 name|bsize
+decl_stmt|;
+specifier|extern
+name|long
+name|freediskspace
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|long
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 name|e
 operator|->
@@ -2719,12 +2772,6 @@ name|char
 modifier|*
 name|q
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|arpadate
-parameter_list|()
-function_decl|;
 comment|/* we have found a date */
 name|q
 operator|=
