@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.28 (Berkeley) %G%"
+literal|"@(#)table.c	1.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,37 +181,6 @@ name|RESCC
 block|,
 literal|"	cvtZLf	AL,TA1\n"
 block|,
-else|#
-directive|else
-name|SCONV
-block|,
-name|INTAREG
-operator||
-name|FORCC
-block|,
-comment|/* rub some bits off that mantissa... */
-name|SAREG
-operator||
-name|AWD
-block|,
-name|TWORD
-operator||
-name|TDOUBLE
-block|,
-name|SANY
-block|,
-name|TFLOAT
-block|,
-name|NAREG
-operator||
-name|NASL
-block|,
-name|RESC1
-operator||
-name|RESCC
-block|,
-literal|"	cvtZLf	AL,A1\n	clrl	U1\n"
-block|,
 endif|#
 directive|endif
 comment|/* take care of redundant conversions introduced by reclaim() */
@@ -285,37 +254,15 @@ name|SAREG
 operator||
 name|AWD
 block|,
-name|TWORD
-operator||
-name|TDOUBLE
+name|TANY
 block|,
 name|SANY
 block|,
-name|TFLOAT
+name|TANY
 block|,
 name|NAREG
 operator||
 name|NASL
-block|,
-name|RNULL
-block|,
-literal|"	cvtZLf	AL,A1\n	cvtfd	A1,-(sp)\n"
-block|,
-name|SCONV
-block|,
-name|FORARG
-block|,
-name|SAREG
-operator||
-name|AWD
-block|,
-name|TANY
-block|,
-name|SANY
-block|,
-name|TANY
-block|,
-literal|0
 block|,
 name|RNULL
 block|,
@@ -1302,6 +1249,40 @@ block|,
 name|RESC1
 block|,
 literal|"	ZD\n"
+block|,
+name|ASSIGN
+block|,
+name|INAREG
+operator||
+name|FOREFF
+operator||
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TFLOAT
+operator||
+name|TDOUBLE
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TUCHAR
+operator||
+name|TUSHORT
+block|,
+name|NAREG
+operator||
+name|NASL
+block|,
+name|RLEFT
+operator||
+name|RESCC
+block|,
+literal|"	ZA\n"
 block|,
 name|ASSIGN
 block|,
