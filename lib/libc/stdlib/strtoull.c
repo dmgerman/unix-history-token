@@ -109,7 +109,8 @@ name|u_quad_t
 name|acc
 decl_stmt|;
 specifier|register
-name|int
+name|unsigned
+name|char
 name|c
 decl_stmt|;
 specifier|register
@@ -289,6 +290,15 @@ name|s
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|isascii
+argument_list|(
+name|c
+argument_list|)
+condition|)
+break|break;
 if|if
 condition|(
 name|isdigit
