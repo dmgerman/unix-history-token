@@ -1609,13 +1609,8 @@ name|defined
 argument_list|(
 name|__GNUC__
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__sputc
 parameter_list|(
