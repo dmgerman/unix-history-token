@@ -2877,9 +2877,19 @@ name|slt
 operator|->
 name|cdata
 decl_stmt|;
-name|printf
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
 argument_list|(
-literal|"reset %d\n"
+name|sp
+operator|->
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"reset %d "
 argument_list|,
 name|slt
 operator|->
@@ -2897,6 +2907,15 @@ case|case
 literal|0
 case|:
 comment|/* Something funny happended on the way to the pub... */
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 return|return;
 case|case
 literal|1
@@ -2911,6 +2930,10 @@ argument_list|,
 name|PCIC_CARDRESET
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"int is %x stat is %x\n"
@@ -2971,6 +2994,10 @@ operator||
 name|PCIC_IOCARD
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"int is %x stat is %x\n"
@@ -3020,6 +3047,10 @@ case|case
 literal|3
 case|:
 comment|/* Wait if card needs more time */
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"int is %x stat is %x\n"
