@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trapov_.c	5.3	%G%  *  *	Fortran/C floating-point overflow handler  *  *	The idea of these routines is to catch floating-point overflows  *	and print an eror message.  When we then get a reserved operand  *	exception, we then fix up the value to the highest possible  *	number.  Keen, no?  *	Messy, yes!  *  *	Synopsis:  *		call trapov(n)  *			causes overflows to be trapped, with the first 'n'  *			overflows getting an "Overflow!" message printed.  *		k = ovcnt(0)  *			causes 'k' to get the number of overflows since the  *			last call to trapov().  *  *	Gary Klimowicz, April 17, 1981  *	Integerated with libF77: David Wasley, UCB, July 1981.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trapov_.c	5.4	%G%  *  *	Fortran/C floating-point overflow handler  *  *	The idea of these routines is to catch floating-point overflows  *	and print an eror message.  When we then get a reserved operand  *	exception, we then fix up the value to the highest possible  *	number.  Keen, no?  *	Messy, yes!  *  *	Synopsis:  *		call trapov(n)  *			causes overflows to be trapped, with the first 'n'  *			overflows getting an "Overflow!" message printed.  *		k = ovcnt(0)  *			causes 'k' to get the number of overflows since the  *			last call to trapov().  *  *	Gary Klimowicz, April 17, 1981  *	Integerated with libF77: David Wasley, UCB, July 1981.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|SIG_VAL
-value|int (*)()
+value|void (*)()
 end_define
 
 begin_comment
@@ -459,33 +459,25 @@ name|retrn
 union|;
 end_union
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|sigill_default
-function_decl|)
-parameter_list|()
 init|=
 operator|(
 name|SIG_VAL
 operator|)
 operator|-
 literal|1
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|sigfpe_default
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_escape
 end_escape
@@ -519,21 +511,13 @@ end_decl_stmt
 
 begin_block
 block|{
-extern|extern got_overflow(
-block|)
-end_block
-
-begin_operator
-operator|,
-end_operator
-
-begin_expr_stmt
+name|void
+name|got_overflow
+argument_list|()
+decl_stmt|,
 name|got_illegal_instruction
 argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+decl_stmt|;
 name|sigfpe_default
 operator|=
 name|signal
@@ -543,9 +527,6 @@ argument_list|,
 name|got_overflow
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|sigill_default
@@ -565,24 +546,15 @@ argument_list|,
 name|got_illegal_instruction
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|total_overflows
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|max_messages
 operator|=
 operator|*
 name|count
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|retrn
 operator|.
 name|v_double
@@ -590,10 +562,10 @@ operator|=
 operator|*
 name|rtnval
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  *	got_overflow - routine called when overflow occurs  *  *	This routine just prints a message about the overflow.  *	It is impossible to find the bad result at this point.  *	Instead, we wait until we get the reserved operand exception  *	when we try to use it.  This raises the SIGILL signal.  */
 end_comment
 
@@ -601,27 +573,30 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_expr_stmt
-unit|got_overflow
-operator|(
-name|signo
-operator|,
-name|codeword
-operator|,
-name|myaddr
-operator|,
-name|pc
-operator|,
-name|ps
-operator|)
+begin_macro
+name|got_overflow
+argument_list|(
+argument|signo
+argument_list|,
+argument|codeword
+argument_list|,
+argument|myaddr
+argument_list|,
+argument|pc
+argument_list|,
+argument|ps
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|myaddr
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|pc
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -689,8 +664,6 @@ name|SIG_VAL
 operator|)
 literal|7
 condition|)
-return|return
-operator|(
 call|(
 modifier|*
 name|sigfpe_default
@@ -706,8 +679,7 @@ name|pc
 argument_list|,
 name|ps
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 else|else
 name|sigdie
 argument_list|(
@@ -2779,33 +2751,25 @@ name|retrn
 union|;
 end_union
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|sigill_default
-function_decl|)
-parameter_list|()
 init|=
 operator|(
 name|SIG_VAL
 operator|)
 operator|-
 literal|1
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|sigfpe_default
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_escape
 end_escape
@@ -2839,15 +2803,10 @@ end_decl_stmt
 
 begin_block
 block|{
-extern|extern got_overflow(
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
+name|void
+name|got_overflow
+parameter_list|()
+function_decl|;
 name|sigfpe_default
 operator|=
 name|signal
@@ -2857,24 +2816,15 @@ argument_list|,
 name|got_overflow
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|total_overflows
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|max_messages
 operator|=
 operator|*
 name|count
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|retrn
 operator|.
 name|v_double
@@ -2882,10 +2832,10 @@ operator|=
 operator|*
 name|rtnval
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  *	got_overflow - routine called when overflow occurs  *  *	This routine just prints a message about the overflow.  *	It is impossible to find the bad result at this point.  * 	 NEXT 2 LINES DON'T HOLD FOR TAHOE !  *	Instead, we wait until we get the reserved operand exception  *	when we try to use it.  This raises the SIGILL signal.  */
 end_comment
 
@@ -2893,31 +2843,26 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_expr_stmt
-unit|got_overflow
-operator|(
+begin_function
+name|void
+name|got_overflow
+parameter_list|(
 name|signo
-operator|,
+parameter_list|,
 name|codeword
-operator|,
+parameter_list|,
 name|sc
-operator|)
+parameter_list|)
 name|int
 name|signo
-operator|,
+decl_stmt|,
 name|codeword
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|sigcontext
 modifier|*
 name|sc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 modifier|*
@@ -2971,8 +2916,6 @@ name|SIG_VAL
 operator|)
 literal|7
 condition|)
-return|return
-operator|(
 call|(
 modifier|*
 name|sigfpe_default
@@ -2984,8 +2927,7 @@ name|codeword
 argument_list|,
 name|sc
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 else|else
 name|sigdie
 argument_list|(
@@ -3060,7 +3002,7 @@ block|}
 return|return;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 name|int

@@ -4,7 +4,7 @@ comment|/* #define OLD_BSD if you're running< 4.2 bsd */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trpfpe_.c	5.4	%G%  *  *  *	Fortran floating-point error handler  *  *	Synopsis:  *		call trpfpe (n, retval)  *			causes floating point faults to be trapped, with the  *			first 'n' errors getting a message printed.  *			'retval' is put in place of the bad result.  *		k = fpecnt()  *			causes 'k' to get the number of errors since the  *			last call to trpfpe().  *  *		common /fpeflt/ fpflag  *		logical fpflag  *			fpflag will become .true. on faults  *  *	David Wasley, UCBerkeley, June 1983.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trpfpe_.c	5.5	%G%  *  *  *	Fortran floating-point error handler  *  *	Synopsis:  *		call trpfpe (n, retval)  *			causes floating point faults to be trapped, with the  *			first 'n' errors getting a message printed.  *			'retval' is put in place of the bad result.  *		k = fpecnt()  *			causes 'k' to get the number of errors since the  *			last call to trpfpe().  *  *		common /fpeflt/ fpflag  *		logical fpflag  *			fpflag will become .true. on faults  *  *	David Wasley, UCBerkeley, June 1983.  */
 end_comment
 
 begin_include
@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|SIG_VAL
-value|int (*)()
+value|void (*)()
 end_define
 
 begin_ifdef
@@ -1461,41 +1461,30 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_function
+name|void
 name|on_fpe
-argument_list|(
-argument|signo
-argument_list|,
-argument|code
-argument_list|,
-argument|sc
-argument_list|,
-argument|grbg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|signo
+parameter_list|,
+name|code
+parameter_list|,
+name|sc
+parameter_list|,
+name|grbg
+parameter_list|)
 name|int
 name|signo
 decl_stmt|,
 name|code
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sigcontext
 modifier|*
 name|sc
 decl_stmt|;
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 comment|/* 	 * There must be at least 5 register variables here 	 * so our entry mask will save R11-R7. 	 */
 specifier|register
@@ -1584,8 +1573,6 @@ comment|/* user specified */
 ifdef|#
 directive|ifdef
 name|OLD_BSD
-return|return
-operator|(
 call|(
 modifier|*
 name|sigfpe_dfl
@@ -1601,12 +1588,9 @@ name|pc
 argument_list|,
 name|ps
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 else|#
 directive|else
-return|return
-operator|(
 call|(
 modifier|*
 name|sigfpe_dfl
@@ -1620,8 +1604,7 @@ name|sc
 argument_list|,
 name|grbg
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 endif|#
 directive|endif
 else|else
@@ -2262,7 +2245,7 @@ name|on_fpe
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|trpfpe_
@@ -2888,18 +2871,14 @@ begin_comment
 comment|/* fortran "common /fpeflt/ flag" */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|sigfpe_dfl
-function_decl|)
-parameter_list|()
 init|=
 name|SIG_DFL
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* if we can't fix it ... */
@@ -2959,34 +2938,26 @@ begin_comment
 comment|/*  * Trap& repair floating exceptions so that a program may proceed.  * There is no notion of "correctness" here; just the ability to continue.  *  * The on_fpe() routine first checks the type code to see if the  * exception is repairable. If so, it checks the opcode to see if  * it is one that it knows. If this is true, it then simulates the  * VAX cpu in retrieving operands in order to increment iPC correctly.  * It notes where the result of the operation would have been stored  * and substitutes a previously supplied value.  *  DOES NOT REPAIR ON TAHOE !!!  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|on_fpe
-argument_list|(
-argument|signo
-argument_list|,
-argument|code
-argument_list|,
-argument|sc
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|signo
+parameter_list|,
+name|code
+parameter_list|,
+name|sc
+parameter_list|)
 name|int
 name|signo
 decl_stmt|,
 name|code
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sigcontext
 modifier|*
 name|sc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* 	 * There must be at least 11 register variables here 	 * so our entry mask will save R12-R2. 	 */
 specifier|register
@@ -3093,8 +3064,6 @@ operator|)
 literal|7
 condition|)
 comment|/* user specified */
-return|return
-operator|(
 call|(
 modifier|*
 name|sigfpe_dfl
@@ -3106,8 +3075,7 @@ name|code
 argument_list|,
 name|sc
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 elseif|else
 if|if
 condition|(
@@ -3310,7 +3278,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|trpfpe_
