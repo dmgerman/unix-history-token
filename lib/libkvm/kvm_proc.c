@@ -3074,7 +3074,7 @@ name|read
 argument_list|(
 name|fd
 argument_list|,
-name|buf
+name|cp
 argument_list|,
 name|len
 argument_list|)
