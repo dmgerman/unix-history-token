@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/*  *	$Id: if_ppp.c,v 1.5 1993/11/25 01:34:04 wollman Exp $  * 	From: if_ppp.c,v 1.22 1993/08/31 23:20:40 paulus Exp  *	From: if_ppp.c,v 1.21 1993/08/29 11:22:37 paulus Exp  *	From: if_sl.c,v 1.11 84/10/04 12:54:47 rick Exp   */
+comment|/*  *	$Id: if_ppp.c,v 1.6 1993/12/19 00:52:03 wollman Exp $  * 	From: if_ppp.c,v 1.22 1993/08/31 23:20:40 paulus Exp  *	From: if_ppp.c,v 1.21 1993/08/29 11:22:37 paulus Exp  *	From: if_sl.c,v 1.11 84/10/04 12:54:47 rick Exp   */
 end_comment
 
 begin_include
@@ -54,18 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dkstat.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"socket.h"
 end_include
 
@@ -97,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"conf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dkstat.h"
 end_include
 
 begin_include
@@ -905,6 +899,16 @@ directive|endif
 block|}
 block|}
 end_function
+
+begin_expr_stmt
+name|TEXT_SET
+argument_list|(
+name|pseudo_set
+argument_list|,
+name|pppattach
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Line specific open routine.  * Attach the given tty to the first available ppp unit.  */
