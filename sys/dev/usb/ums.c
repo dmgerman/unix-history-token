@@ -2125,6 +2125,14 @@ name|sc
 operator|)
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|state
+operator|&=
+operator|~
+name|UMS_ASLEEP
+expr_stmt|;
+comment|/* PR2 */
 name|wakeup
 argument_list|(
 name|sc
@@ -2152,6 +2160,14 @@ name|rsel
 operator|)
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|state
+operator|&=
+operator|~
+name|UMS_SELECT
+expr_stmt|;
+comment|/* PR2 */
 name|selwakeup
 argument_list|(
 operator|&
@@ -2867,6 +2883,14 @@ name|sc
 operator|)
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|state
+operator|&=
+operator|~
+name|UMS_ASLEEP
+expr_stmt|;
+comment|/* PR2 */
 name|wakeup
 argument_list|(
 name|sc
@@ -2894,6 +2918,14 @@ name|rsel
 operator|)
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|state
+operator|&=
+operator|~
+name|UMS_SELECT
+expr_stmt|;
+comment|/* PR2 */
 name|selwakeup
 argument_list|(
 operator|&
@@ -3416,13 +3448,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|state
-operator|&=
-operator|~
-name|UMS_ASLEEP
-expr_stmt|;
+comment|/* PR2: statement moved to ums_poll/ums_detach 		sc->state&= ~UMS_ASLEEP; 		 */
 if|if
 condition|(
 name|error
@@ -3722,13 +3748,7 @@ operator|->
 name|rsel
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|state
-operator|&=
-operator|~
-name|UMS_SELECT
-expr_stmt|;
+comment|/* PR2: statement moved to ums_poll/ums_detach 			sc->state&= ~UMS_SELECT; 			 */
 block|}
 block|}
 name|splx
