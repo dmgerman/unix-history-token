@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.h	4.10	82/10/31	*/
+comment|/*	conf.h	4.11	83/05/18	*/
 end_comment
 
 begin_comment
@@ -36,6 +36,13 @@ name|int
 function_decl|(
 modifier|*
 name|d_dump
+function_decl|)
+parameter_list|()
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|d_psize
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -278,6 +285,9 @@ name|sw_dev
 decl_stmt|;
 name|int
 name|sw_freed
+decl_stmt|;
+name|int
+name|sw_nblks
 decl_stmt|;
 block|}
 struct|;

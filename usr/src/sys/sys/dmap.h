@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmap.h	4.4	82/05/04	*/
+comment|/*	dmap.h	4.5	83/05/18	*/
 end_comment
 
 begin_comment
@@ -16,50 +16,6 @@ end_define
 
 begin_comment
 comment|/* size of the swap area map */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMMIN
-value|32
-end_define
-
-begin_comment
-comment|/* the initial block size in clicks */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DMMAX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DMMAX
-value|1024
-end_define
-
-begin_comment
-comment|/* max block size alloc on drum = .5M byte */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|DMTEXT
-value|1024
-end_define
-
-begin_comment
-comment|/* size of blocks of pure text = .5M byte */
 end_comment
 
 begin_struct
@@ -95,6 +51,16 @@ begin_decl_stmt
 name|struct
 name|dmap
 name|zdmap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|dmmin
+decl_stmt|,
+name|dmmax
+decl_stmt|,
+name|dmtext
 decl_stmt|;
 end_decl_stmt
 

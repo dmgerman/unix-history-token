@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.20	83/01/16	*/
+comment|/*	buf.h	4.21	83/05/18	*/
 end_comment
 
 begin_comment
@@ -145,11 +145,6 @@ directive|define
 name|b_errcnt
 value|b_resid
 comment|/* while i/o in progress: # retries */
-define|#
-directive|define
-name|b_pfcent
-value|b_resid
-comment|/* garbage: don't ask */
 name|struct
 name|proc
 modifier|*
@@ -164,6 +159,27 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* function called by iodone */
+name|int
+name|b_pfcent
+decl_stmt|;
+comment|/* center page when swapping cluster */
+ifdef|#
+directive|ifdef
+name|sun
+name|caddr_t
+name|b_saddr
+decl_stmt|;
+comment|/* saved address */
+name|short
+name|b_kmx
+decl_stmt|;
+comment|/* saved kernelmap index */
+name|short
+name|b_npte
+decl_stmt|;
+comment|/* number of pte's mapped */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -310,20 +326,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|nswbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|short
-modifier|*
-name|swsize
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-modifier|*
-name|swpf
 decl_stmt|;
 end_decl_stmt
 
