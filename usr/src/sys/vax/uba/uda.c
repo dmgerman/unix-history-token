@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.16 (Berkeley) %G%  *  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.17 (Berkeley) %G%  *  */
 end_comment
 
 begin_comment
@@ -7381,8 +7381,6 @@ name|int
 name|error
 init|=
 literal|0
-decl_stmt|,
-name|wlab
 decl_stmt|;
 name|lp
 operator|=
@@ -7531,30 +7529,6 @@ break|break;
 case|case
 name|DIOCWDINFO
 case|:
-comment|/* simulate opening partition 0 so write succeeds */
-name|ra
-operator|->
-name|ra_openpart
-operator||=
-operator|(
-literal|1
-operator|<<
-literal|0
-operator|)
-expr_stmt|;
-comment|/* XXX */
-name|wlab
-operator|=
-name|ra
-operator|->
-name|ra_wlabel
-expr_stmt|;
-name|ra
-operator|->
-name|ra_wlabel
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7605,11 +7579,38 @@ operator|==
 literal|0
 condition|)
 block|{
+name|int
+name|wlab
+decl_stmt|;
 name|ra
 operator|->
 name|ra_state
 operator|=
 name|OPEN
+expr_stmt|;
+comment|/* simulate opening partition 0 so write succeeds */
+name|ra
+operator|->
+name|ra_openpart
+operator||=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+expr_stmt|;
+comment|/* XXX */
+name|wlab
+operator|=
+name|ra
+operator|->
+name|ra_wlabel
+expr_stmt|;
+name|ra
+operator|->
+name|ra_wlabel
+operator|=
+literal|1
 expr_stmt|;
 name|error
 operator|=
@@ -7622,7 +7623,6 @@ argument_list|,
 name|lp
 argument_list|)
 expr_stmt|;
-block|}
 name|ra
 operator|->
 name|ra_openpart
@@ -7641,6 +7641,7 @@ name|ra_wlabel
 operator|=
 name|wlab
 expr_stmt|;
+block|}
 break|break;
 ifdef|#
 directive|ifdef

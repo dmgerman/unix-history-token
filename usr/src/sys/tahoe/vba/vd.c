@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)vd.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)vd.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5217,8 +5217,6 @@ name|error
 init|=
 literal|0
 decl_stmt|,
-name|wlab
-decl_stmt|,
 name|vdformat
 argument_list|()
 decl_stmt|;
@@ -5387,30 +5385,6 @@ break|break;
 case|case
 name|DIOCWDINFO
 case|:
-comment|/* simulate opening partition 0 so write succeeds */
-name|dk
-operator|->
-name|dk_openpart
-operator||=
-operator|(
-literal|1
-operator|<<
-literal|0
-operator|)
-expr_stmt|;
-comment|/* XXX */
-name|wlab
-operator|=
-name|dk
-operator|->
-name|dk_wlabel
-expr_stmt|;
-name|dk
-operator|->
-name|dk_wlabel
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5461,11 +5435,38 @@ operator|==
 literal|0
 condition|)
 block|{
+name|int
+name|wlab
+decl_stmt|;
 name|dk
 operator|->
 name|dk_state
 operator|=
 name|OPEN
+expr_stmt|;
+comment|/* simulate opening partition 0 so write succeeds */
+name|dk
+operator|->
+name|dk_openpart
+operator||=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+expr_stmt|;
+comment|/* XXX */
+name|wlab
+operator|=
+name|dk
+operator|->
+name|dk_wlabel
+expr_stmt|;
+name|dk
+operator|->
+name|dk_wlabel
+operator|=
+literal|1
 expr_stmt|;
 name|error
 operator|=
@@ -5478,7 +5479,6 @@ argument_list|,
 name|lp
 argument_list|)
 expr_stmt|;
-block|}
 name|dk
 operator|->
 name|dk_openpart
@@ -5497,6 +5497,7 @@ name|dk_wlabel
 operator|=
 name|wlab
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|DIOCWFORMAT
