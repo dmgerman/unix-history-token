@@ -119,6 +119,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -790,7 +796,7 @@ operator|&
 name|SWIF_DEV_PREFIX
 operator|)
 condition|?
-literal|"/dev/"
+name|_PATH_DEV
 else|:
 literal|""
 operator|)

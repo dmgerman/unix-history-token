@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stab.h>
 end_include
 
@@ -199,7 +205,7 @@ define|#
 directive|define
 name|anon_open
 parameter_list|()
-value|do {					\ 	if ((anon_fd = open("/dev/zero", O_RDWR, 0)) == -1)	\ 		err("open: %s", "/dev/zero");			\ } while (0)
+value|do {					\ 	if ((anon_fd = open(_PATH_DEVZERO, O_RDWR, 0)) == -1)	\ 		err("open: %s", _PATH_DEVZERO);			\ } while (0)
 end_define
 
 begin_define

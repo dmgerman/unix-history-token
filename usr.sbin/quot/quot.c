@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -2974,7 +2980,9 @@ name|sprintf
 argument_list|(
 name|dev
 argument_list|,
-literal|"/dev/%s"
+literal|"%s%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|nm
 operator|+

@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bwx.h>
 end_include
 
@@ -163,7 +169,7 @@ name|mem_fd
 operator|=
 name|open
 argument_list|(
-literal|"/dev/mem"
+name|_PATH_MEM
 argument_list|,
 name|O_RDWR
 argument_list|)
@@ -178,7 +184,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"/dev/mem"
+name|_PATH_MEM
 argument_list|)
 expr_stmt|;
 name|bwx_int1_ports

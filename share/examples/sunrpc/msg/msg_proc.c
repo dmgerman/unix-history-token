@@ -4,8 +4,18 @@ comment|/* @(#)msg_proc.c	2.1 88/08/11 4.0 RPCSRC */
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * msg_proc.c: implementation of the remote procedure "printmessage"  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_include
 include|#
@@ -63,7 +73,7 @@ name|f
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/console"
+name|_PATH_CONSOLE
 argument_list|,
 literal|"w"
 argument_list|)

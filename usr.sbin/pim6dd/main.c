@@ -14,6 +14,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"defs.h"
 end_include
 
@@ -1986,7 +1992,7 @@ name|t
 operator|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|2
 argument_list|)

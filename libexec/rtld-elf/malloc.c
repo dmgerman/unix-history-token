@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -1890,7 +1896,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-literal|"/dev/zero"
+name|_PATH_DEVZERO
 argument_list|,
 name|O_RDWR
 argument_list|,
@@ -1906,7 +1912,7 @@ literal|1
 condition|)
 name|perror
 argument_list|(
-literal|"/dev/zero"
+name|_PATH_DEVZERO
 argument_list|)
 expr_stmt|;
 endif|#

@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1193,7 +1199,9 @@ name|vnp
 operator|->
 name|dev
 argument_list|,
-literal|"/dev/%s"
+literal|"%s%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|vnp
 operator|->

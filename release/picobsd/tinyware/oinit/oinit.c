@@ -4178,7 +4178,7 @@ name|mount
 argument_list|(
 literal|"devfs"
 argument_list|,
-literal|"/dev"
+name|_PATH_DEV
 argument_list|,
 name|MNT_NOEXEC
 operator||
@@ -4219,7 +4219,7 @@ index|]
 operator|.
 name|tty
 argument_list|,
-literal|"/dev/console"
+name|_PATH_CONSOLE
 argument_list|)
 expr_stmt|;
 block|}
@@ -4234,7 +4234,9 @@ index|]
 operator|.
 name|tty
 argument_list|,
-literal|"/dev/ttyv%c"
+literal|"%sv%c"
+argument_list|,
+name|_PATH_TTY
 argument_list|,
 name|vty
 index|[

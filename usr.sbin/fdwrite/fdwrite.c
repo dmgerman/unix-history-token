@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -517,7 +523,7 @@ name|tty
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|"r+"
 argument_list|)
@@ -531,7 +537,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|)
 expr_stmt|;
 name|setbuf

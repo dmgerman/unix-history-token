@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* Still missing:  *  * mkctm   *	-B regex	Bogus  *	-I regex	Ignore  *      -D int		Damage  *	-q		decrease verbosity  *	-v		increase verbosity  *      -l file		logfile  *	name		cvs-cur  *	prefix		src/secure  *	dir1		"Soll"  *	dir2		"Ist"  *  */
 end_comment
 
@@ -79,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -3742,7 +3752,7 @@ name|logf
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|"w"
 argument_list|)

@@ -4,6 +4,10 @@ comment|/* Kernel core dump functions below target vector, for GDB.    Copyright
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * This works like "remote" but, you use it like this:  *     target kcore /dev/mem  * or  *     target kcore /var/crash/host/core.0  *  * This way makes it easy to short-circut the whole bfd monster,  * and direct the inferior stuff to our libkvm implementation.  */
 end_comment
 
@@ -53,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<kvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -346,9 +356,12 @@ name|strncmp
 argument_list|(
 name|core_file
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|,
-literal|5
+sizeof|sizeof
+name|_PATH_DEV
+operator|-
+literal|1
 argument_list|)
 condition|)
 block|{

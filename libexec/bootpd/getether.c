@@ -41,6 +41,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<syslog.h>
 end_include
 
@@ -1038,7 +1044,9 @@ argument_list|(
 name|devname
 argument_list|)
 argument_list|,
-literal|"/dev/%s"
+literal|"%s%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|ifname
 argument_list|)

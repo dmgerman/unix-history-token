@@ -72,6 +72,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -1071,7 +1077,7 @@ operator|=
 name|zbufalc
 argument_list|(
 sizeof|sizeof
-expr|"/dev/"
+name|_PATH_DEV
 operator|+
 name|strlen
 argument_list|(
@@ -1083,7 +1089,9 @@ name|sprintf
 argument_list|(
 name|zfreedev
 argument_list|,
-literal|"/dev/%s"
+literal|"%s%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|zdevice
 argument_list|)

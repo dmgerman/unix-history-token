@@ -3,6 +3,10 @@ begin_comment
 comment|/*                                VTTEST.C           Written Novemeber 1983 - July 1984 by Per Lindberg,          Stockholm University Computer Center (QZ), Sweden.                    THE MAD PROGRAMMER STRIKES AGAIN!                     This software is (c) 1984 by QZ                Non-commercial use and copying allowed.  If you are developing a commercial product, and use this program to do it, and that product is successful, please send a sum of money of your choice to the address below.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -12581,7 +12585,7 @@ argument_list|)
 expr_stmt|;
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 name|O_RDWR
 operator||

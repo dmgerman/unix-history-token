@@ -39,6 +39,12 @@ directive|include
 file|<arpa/inet.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -827,7 +833,9 @@ argument_list|(
 name|devicename
 argument_list|)
 argument_list|,
-literal|"/dev/i4b%s%d"
+literal|"%si4b%s%d"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|device
 argument_list|,

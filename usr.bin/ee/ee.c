@@ -141,6 +141,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -4280,7 +4286,7 @@ name|bit_bucket
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|"w"
 argument_list|)

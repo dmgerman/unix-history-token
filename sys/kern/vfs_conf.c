@@ -85,6 +85,12 @@ directive|include
 file|<sys/cons.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -834,7 +840,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                       eg. ufs:/dev/da0s1a\n"
+literal|"                       eg. ufs:%sda0s1a\n"
+argument_list|,
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 name|printf

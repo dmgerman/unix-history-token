@@ -527,7 +527,9 @@ argument_list|(
 name|targdevname
 argument_list|)
 argument_list|,
-literal|"/dev/targ%d"
+literal|"%starg%d"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|alloc_unit
 operator|.

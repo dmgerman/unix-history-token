@@ -906,7 +906,7 @@ name|NULL
 condition|)
 name|freopen
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|"w"
 argument_list|,

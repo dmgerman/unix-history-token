@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lib.h"
 end_include
 
@@ -1680,7 +1686,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"mtree -U -f %s -d -e -p %s>/dev/null\n"
+literal|"mtree -U -f %s -d -e -p %s>%s\n"
 argument_list|,
 name|MTREE_FNAME
 argument_list|,
@@ -1691,6 +1697,8 @@ operator|->
 name|name
 else|:
 literal|"/"
+argument_list|,
+name|_PATH_DEVNULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1703,7 +1711,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"/usr/sbin/mtree -U -f %s -d -e -p %s>/dev/null"
+literal|"/usr/sbin/mtree -U -f %s -d -e -p %s>%s"
 argument_list|,
 name|MTREE_FNAME
 argument_list|,
@@ -1715,6 +1723,8 @@ name|name
 else|:
 literal|"/"
 argument_list|)
+operator|,
+name|_PATH_DEVNULL
 condition|)
 name|warnx
 argument_list|(

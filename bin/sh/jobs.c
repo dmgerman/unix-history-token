@@ -101,6 +101,12 @@ directive|include
 file|<sys/resource.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -2920,7 +2926,7 @@ if|if
 condition|(
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -2929,7 +2935,9 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Can't open /dev/null: %s"
+literal|"Can't open %s: %s"
+argument_list|,
+name|_PATH_DEVNULL
 argument_list|,
 name|strerror
 argument_list|(
@@ -2986,7 +2994,7 @@ if|if
 condition|(
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -2995,7 +3003,9 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Can't open /dev/null: %s"
+literal|"Can't open %s: %s"
+argument_list|,
+name|_PATH_DEVNULL
 argument_list|,
 name|strerror
 argument_list|(

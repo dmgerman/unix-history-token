@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -602,7 +608,8 @@ name|snp
 index|[]
 init|=
 block|{
-literal|"/dev/snpX"
+name|_PATH_DEV
+literal|"snpX"
 block|}
 decl_stmt|;
 name|char
@@ -964,9 +971,12 @@ name|strncmp
 argument_list|(
 name|name
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|,
-literal|5
+sizeof|sizeof
+name|_PATH_DEV
+operator|-
+literal|1
 argument_list|)
 condition|)
 block|{
@@ -998,7 +1008,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"/dev/tty%s"
+literal|"%s%s"
+argument_list|,
+name|_PATH_TTY
 argument_list|,
 name|name
 argument_list|)
@@ -1008,7 +1020,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"/dev/%s"
+literal|"%s%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|name
 argument_list|)

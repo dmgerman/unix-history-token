@@ -3,6 +3,10 @@ begin_comment
 comment|/* portnm.c    Get the port name of stdin.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -54,6 +58,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -167,10 +177,10 @@ name|strncmp
 argument_list|(
 name|z
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|,
 sizeof|sizeof
-expr|"/dev/"
+name|_PATH_DEV
 operator|-
 literal|1
 argument_list|)
@@ -181,7 +191,7 @@ return|return
 name|z
 operator|+
 sizeof|sizeof
-expr|"/dev/"
+name|_PATH_DEV
 operator|-
 literal|1
 return|;

@@ -3,6 +3,10 @@ begin_comment
 comment|/* tstout.c    Put together by Ian Lance Taylor<ian@airs.com>     This program is used to logout a program run by the tstuu program.    I needed this because on Ultrix 4.0 I can't get the uucp program    to run without invoking it via /bin/login and having it start up    as a shell.  If I don't do it this way, it gets a SIGSEGV trap    for some reason.  Most systems probably don't need to do things    this way.  It will only work on BSD systems anyhow, I suspect.     The code for this comes from "UNIX Network Programming" by W.    Richard Stevens, Prentice-Hall 1990.  Most of it is from 4.3BSD, as    noted in the comments.     This program must run suid to root.    */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -121,10 +125,10 @@ index|[
 literal|1
 index|]
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|,
 sizeof|sizeof
-expr|"/dev/"
+name|_PATH_DEV
 operator|-
 literal|1
 argument_list|)

@@ -234,7 +234,7 @@ directive|define
 name|INIT_MMAP
 parameter_list|()
 define|\
-value|{ if ((fdzero = _open("/dev/zero", O_RDWR, 0000)) == -1) \ 	    wrterror("open of /dev/zero"); }
+value|{ if ((fdzero = _open(_PATH_DEVZERO, O_RDWR, 0000)) == -1) \ 	    wrterror("open of /dev/zero"); }
 end_define
 
 begin_define
@@ -320,6 +320,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include

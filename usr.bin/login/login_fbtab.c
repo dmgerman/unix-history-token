@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -256,9 +262,12 @@ name|strncmp
 argument_list|(
 name|devname
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|,
-literal|5
+sizeof|sizeof
+name|_PATH_DEV
+operator|-
+literal|1
 argument_list|)
 operator|!=
 literal|0

@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/file.h>
 end_include
 
@@ -1314,7 +1320,7 @@ name|f
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1324,7 +1330,7 @@ name|err
 argument_list|(
 name|ERROR_EXIT
 argument_list|,
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|)
 expr_stmt|;
 block|}

@@ -87,6 +87,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -374,7 +380,7 @@ index|[
 name|MAXPATHLEN
 index|]
 init|=
-literal|"/dev/tty"
+name|_PATH_TTY
 decl_stmt|;
 end_decl_stmt
 
@@ -4974,9 +4980,12 @@ name|strncmp
 argument_list|(
 name|dev
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|,
-literal|5
+sizeof|sizeof
+name|_PATH_DEV
+operator|-
+literal|1
 argument_list|)
 operator|==
 literal|0
@@ -8597,11 +8606,14 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|,
 name|cp
 argument_list|,
-literal|5
+sizeof|sizeof
+name|_PATH_DEV
+operator|-
+literal|1
 argument_list|)
 operator|!=
 literal|0
@@ -8611,7 +8623,7 @@ name|strcpy
 argument_list|(
 name|dev
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 name|strncat
@@ -8622,7 +8634,10 @@ name|cp
 argument_list|,
 name|MAXPATHLEN
 operator|-
-literal|5
+sizeof|sizeof
+name|_PATH_DEV
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|dev

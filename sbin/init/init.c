@@ -130,6 +130,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -1330,7 +1336,7 @@ name|mount
 argument_list|(
 literal|"devfs"
 argument_list|,
-literal|"/dev"
+name|_PATH_DEV
 argument_list|,
 name|MNT_NOEXEC
 operator||

@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -472,7 +478,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 name|O_RDWR
 argument_list|)
