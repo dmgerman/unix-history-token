@@ -415,15 +415,36 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|char
-name|keys3a
+modifier|*
+modifier|*
+name|whichkey
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|keysgeneric
 index|[]
 init|=
+block|{
 include|#
 directive|include
 file|"default.map"
 comment|/* Define the default default */
+literal|0
+block|,
+comment|/* Terminate list of entries */
+block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_escape
 end_escape
@@ -498,20 +519,21 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 operator|*
 name|environPointer
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
-name|character
-operator|=
-literal|0xff
-operator|&
-operator|*
-name|environPointer
-operator|++
-expr_stmt|;
-block|}
-else|else
+comment|/* 	     * If we have reached the end of this string, go on to 	     * the next (if there is a next). 	     */
+if|if
+condition|(
+name|whichkey
+operator|==
+literal|0
+condition|)
 block|{
 specifier|static
 name|char
@@ -519,6 +541,7 @@ name|suffix
 init|=
 literal|'A'
 decl_stmt|;
+comment|/* From environment */
 name|char
 name|envname
 index|[
@@ -551,6 +574,20 @@ argument_list|(
 name|envname
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|whichkey
+operator|++
+expr_stmt|;
+comment|/* default map */
+name|environPointer
+operator|=
+operator|*
+name|whichkey
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 operator|*
@@ -572,7 +609,6 @@ name|character
 operator|=
 name|EOF
 expr_stmt|;
-block|}
 block|}
 block|}
 else|else
@@ -4027,16 +4063,21 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !defined(MSDOS) */
-name|environPointer
-operator|=
-name|keys3a
-expr_stmt|;
-comment|/* use incore table */
 name|usePointer
 operator|=
 literal|1
 expr_stmt|;
 comment|/* flag use of non-file */
+name|whichkey
+operator|=
+name|keysgeneric
+expr_stmt|;
+name|environPointer
+operator|=
+operator|*
+name|whichkey
+expr_stmt|;
+comment|/* use default table */
 block|}
 block|}
 else|else
