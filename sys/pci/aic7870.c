@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7880, aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7870.c,v 1.40 1996/10/25 06:43:10 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7880, aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7870.c,v 1.41 1996/10/28 06:10:33 gibbs Exp $  */
 end_comment
 
 begin_if
@@ -1524,6 +1524,23 @@ name|scb_data
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|aic398X_count
+operator|==
+literal|3
+condition|)
+block|{
+comment|/* 				 * This is the last device on this RAID 				 * controller, so reset our counts. 				 * XXX This won't work for the multiple 3980 				 * controllers since they have only 2 channels, 				 * but I'm not even sure if Adaptec actually 				 * went through with their plans to produce 				 * this controller. 				 */
+name|aic398X_count
+operator|=
+literal|0
+expr_stmt|;
+name|first_398X
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|PCI_DEVICE_ID_ADAPTEC_3940U
@@ -1633,15 +1650,6 @@ break|break;
 case|case
 name|PCI_DEVICE_ID_ADAPTEC_AIC7810
 case|:
-comment|/* 		 * This is the first device probed on a RAID 		 * controller, so reset our counts. 		 */
-name|aic398X_count
-operator|=
-literal|0
-expr_stmt|;
-name|first_398X
-operator|=
-name|NULL
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"RAID functionality unsupported\n"
@@ -1733,6 +1741,79 @@ endif|#
 directive|endif
 if|#
 directive|if
+name|AHC_DEBUG
+block|{
+name|u_int32_t
+name|config_info
+decl_stmt|;
+name|config_info
+operator|=
+name|pci_conf_read
+argument_list|(
+name|config_id
+argument_list|,
+name|DEVCONFIG
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"DEVCONF == 0x%x\n"
+argument_list|,
+name|config_info
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|io_port
+operator|+
+name|HCNTRL
+argument_list|,
+name|IRQMS
+operator||
+name|INTEN
+operator||
+name|PAUSE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"SEECTL == 0x%x, BRDCTL == 0x%x\n"
+literal|"SXFRCTL0 == 0x%x, SXFRCTL1 == 0x%x\n"
+argument_list|,
+name|inb
+argument_list|(
+name|io_port
+operator|+
+name|SEECTL
+argument_list|)
+argument_list|,
+name|inb
+argument_list|(
+name|io_port
+operator|+
+literal|0x1D
+argument_list|)
+argument_list|,
+name|inb
+argument_list|(
+name|io_port
+operator|+
+name|SXFRCTL0
+argument_list|)
+argument_list|,
+name|inb
+argument_list|(
+name|io_port
+operator|+
+name|SXFRCTL1
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__FreeBSD__
@@ -1770,6 +1851,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|AHC_SHARE_SCBS
 if|if
 condition|(
 name|ahc_t
@@ -1817,9 +1901,6 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|AHC_SHARE_SCBS
 if|if
 condition|(
 name|devconfig
@@ -1894,9 +1975,9 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+block|}
 endif|#
 directive|endif
-block|}
 if|#
 directive|if
 name|defined
