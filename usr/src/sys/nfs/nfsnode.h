@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -286,6 +286,24 @@ name|np
 parameter_list|)
 value|((struct vnode *)(np)->n_vnode)
 end_define
+
+begin_comment
+comment|/*  * Queue head for nfsiod's  */
+end_comment
+
+begin_macro
+name|TAILQ_HEAD
+argument_list|(
+argument|nfsbufs
+argument_list|,
+argument|buf
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|nfs_bufq
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
