@@ -447,14 +447,14 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|key_prefered_oldsa
+name|key_preferred_oldsa
 init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* prefered old sa rather than new sa.*/
+comment|/* preferred old sa rather than new sa.*/
 end_comment
 
 begin_decl_stmt
@@ -1430,12 +1430,12 @@ name|_net_key
 argument_list|,
 name|KEYCTL_PREFERED_OLDSA
 argument_list|,
-name|prefered_oldsa
+name|preferred_oldsa
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,\
 operator|&
-name|key_prefered_oldsa
+name|key_preferred_oldsa
 argument_list|,
 literal|0
 argument_list|,
@@ -4716,7 +4716,7 @@ expr_stmt|;
 comment|/* What the best method is to compare ? */
 if|if
 condition|(
-name|key_prefered_oldsa
+name|key_preferred_oldsa
 condition|)
 block|{
 if|if
@@ -4742,7 +4742,7 @@ block|}
 continue|continue;
 comment|/*NOTREACHED*/
 block|}
-comment|/* prefered new sa rather than old sa */
+comment|/* preferred new sa rather than old sa */
 if|if
 condition|(
 name|candidate
