@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dmesg.c	5.6 (Berkeley) %G%"
+literal|"@(#)dmesg.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -266,7 +266,7 @@ index|[
 literal|2
 index|]
 else|:
-name|_PATH_VMUNIX
+name|_PATH_UNIX
 argument_list|,
 name|nl
 argument_list|)
