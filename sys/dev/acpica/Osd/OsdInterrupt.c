@@ -173,6 +173,10 @@ condition|(
 name|InterruptHandler
 operator|!=
 name|NULL
+operator|&&
+name|InterruptHandler
+operator|!=
+name|ServiceRoutine
 condition|)
 block|{
 name|device_printf
