@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arch.c	5.7 (Berkeley) %G%"
+literal|"@(#)arch.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,18 @@ directive|include
 file|"hash.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"dir.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|Lst
@@ -116,14 +128,68 @@ name|Arch
 typedef|;
 end_typedef
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|int
+name|ArchFindArchive
+name|__P
+argument_list|(
+operator|(
+name|Arch
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|ar_hdr
+modifier|*
+name|ArchStatMember
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|Boolean
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|FILE
 modifier|*
 name|ArchFindMember
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+expr|struct
+name|ar_hdr
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Arch_ParseArchive --  *	Parse the archive specification in the given line and find/create  *	the nodes for the specified archive members, placing their nodes  *	on the given list.  *  * Results:  *	SUCCESS if it was a valid specification. The linePtr is updated  *	to point to the first non-space after the archive spec. The  *	nodes for the members are placed on the given list.  *  * Side Effects:  *	Some nodes may be created. The given list is extended.  *  *-----------------------------------------------------------------------  */
@@ -179,7 +245,7 @@ comment|/* Member-part of specification */
 name|char
 name|nameBuf
 index|[
-name|BSIZE
+name|MAKE_BSIZE
 index|]
 decl_stmt|;
 comment|/* temporary place for node name */
@@ -310,6 +376,8 @@ name|libName
 operator|=
 name|Var_Subst
 argument_list|(
+name|NULL
+argument_list|,
 name|libName
 argument_list|,
 name|ctxt
@@ -318,10 +386,11 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 comment|/* 	 * First skip to the start of the member's name, mark that 	 * place and skip to the end of it (either white-space or 	 * a close paren). 	 */
 name|Boolean
@@ -521,6 +590,8 @@ name|memName
 operator|=
 name|Var_Subst
 argument_list|(
+name|NULL
+argument_list|,
 name|memName
 argument_list|,
 name|ctxt
@@ -561,7 +632,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|memName
 argument_list|,
@@ -1044,7 +1115,7 @@ comment|/* Holds copy of last path element from member, if 			     * it has to b
 comment|/*      * Because of space constraints and similar things, files are archived      * using their final path components, not the entire thing, so we need      * to point 'member' to the final component, if there is one, to make      * the comparisons easier...      */
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|member
 argument_list|,
@@ -1541,14 +1612,8 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-operator|(
-name|Address
-operator|)
-operator|&
-name|arh
-argument_list|,
 operator|(
 name|Address
 operator|)
@@ -1556,6 +1621,12 @@ name|Hash_GetValue
 argument_list|(
 name|he
 argument_list|)
+argument_list|,
+operator|(
+name|Address
+operator|)
+operator|&
+name|arh
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1829,7 +1900,7 @@ block|}
 comment|/*      * Because of space constraints and similar things, files are archived      * using their final path components, not the entire thing, so we need      * to point 'member' to the final component, if there is one, to make      * the comparisons easier...      */
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|member
 argument_list|,
@@ -2516,7 +2587,7 @@ block|{
 comment|/* 	     * If the parent is an archive specification and is being made 	     * and its member's name matches the name of the node we were 	     * given, record the modification time of the parent in the 	     * child. We keep searching its parents in case some other 	     * parent requires this child to exist... 	     */
 name|nameStart
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|pgn
 operator|->
@@ -2529,7 +2600,7 @@ literal|1
 expr_stmt|;
 name|nameEnd
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|nameStart
 argument_list|,

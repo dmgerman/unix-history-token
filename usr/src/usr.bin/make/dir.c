@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.7 (Berkeley) %G%"
+literal|"@(#)dir.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ directive|include
 file|"hash.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"dir.h"
+end_include
+
 begin_comment
 comment|/*  *	A search path consists of a Lst of Path structures. A Path structure  *	has in it the name of the directory and a hash table of all the files  *	in the directory. This is used to cut down on the number of system  *	calls necessary to find implicit dependents and their like. Since  *	these searches are made before any actions are taken, we need not  *	worry about the directory changing due to creation commands. If this  *	hampers the style of some makefiles, they must be changed.  *  *	A list of all previously-read directories is kept in the  *	openDirectories Lst. This list is checked first before a directory  *	is opened.  *  *	The need for the caching of whole directories is brought about by  *	the multi-level transformation code in suff.c, which tends to search  *	for far more files than regular make does. In the initial  *	implementation, the amount of time spent performing "stat" calls was  *	truly astronomical. The problem with hashing at the start is,  *	of course, that pmake doesn't then detect changes to these directories  *	during the course of the make. Three possibilities suggest themselves:  *  *	    1) just use stat to test for a file's existence. As mentioned  *	       above, this is very inefficient due to the number of checks  *	       engendered by the multi-level transformation code.  *	    2) use readdir() and company to search the directories, keeping  *	       them open between checks. I have tried this and while it  *	       didn't slow down the process too much, it could severely  *	       affect the amount of parallelism available as each directory  *	       open would take another file descriptor out of play for  *	       handling I/O for another job. Given that it is only recently  *	       that UNIX OS's have taken to allowing more than 20 or 32  *	       file descriptors for a process, this doesn't seem acceptable  *	       to me.  *	    3) record the mtime of the directory in the Path structure and  *	       verify the directory hasn't changed since the contents were  *	       hashed. This will catch the creation or deletion of files,  *	       but not the updating of files. However, since it is the  *	       creation and deletion that is the problem, this could be  *	       a good thing to do. Unfortunately, if the directory (say ".")  *	       were fairly large and changed fairly frequently, the constant  *	       rehashing could seriously degrade performance. It might be  *	       good in such cases to keep track of the number of rehashes  *	       and if the number goes over a (small) limit, resort to using  *	       stat in its place.  *  *	An additional thing to consider is that pmake is used primarily  *	to create C programs and until recently pcc-based compilers refused  *	to allow you to specify where the resulting object file should be  *	placed. This forced all objects to be created in the current  *	directory. This isn't meant as a full excuse, just an explanation of  *	some of the reasons for the caching used here.  *  *	One more note: the location of a target's file is only performed  *	on the downward traversal of the graph and then only for terminal  *	nodes in the graph. This could be construed as wrong in some cases,  *	but prevents inadvertent modification of files when the "installed"  *	directory for a file is provided in the search path.  *  *	Another data structure maintained by this module is an mtime  *	cache used when the searching of cached directories fails to find  *	a file. In the past, Dir_FindFile would simply perform an access()  *	call in such a case to determine if the file could be found using  *	just the name given. When this hit, however, all that was gained  *	was the knowledge that the file existed. Given that an access() is  *	essentially a stat() without the copyout() call, and that the same  *	filesystem overhead would have to be incurred in Dir_MTime, it made  *	sense to replace the access() with a stat() and record the mtime  *	in a cache for when Dir_MTime was actually called.  */
 end_comment
@@ -117,33 +123,6 @@ begin_comment
 comment|/* Sought by itself */
 end_comment
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|Path
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* Name of directory */
-name|int
-name|refCount
-decl_stmt|;
-comment|/* Number of paths with this directory */
-name|int
-name|hits
-decl_stmt|;
-comment|/* the number of times a file in this 				 * directory has been found */
-name|Hash_Table
-name|files
-decl_stmt|;
-comment|/* Hash table of files in directory */
-block|}
-name|Path
-typedef|;
-end_typedef
-
 begin_decl_stmt
 specifier|static
 name|Path
@@ -166,6 +145,109 @@ end_decl_stmt
 begin_comment
 comment|/* Results of doing a last-resort stat in 			     * Dir_FindFile -- if we have to go to the 			     * system to find the file, we might as well 			     * have its mtime on record. XXX: If this is done 			     * way early, there's a chance other rules will 			     * have already updated the file, in which case 			     * we'll update it again. Generally, there won't 			     * be two rules to update a single file, so this 			     * should be ok, but... */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|DirFindName
+name|__P
+argument_list|(
+operator|(
+name|Path
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|DirMatchFiles
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|Path
+operator|*
+operator|,
+name|Lst
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|DirExpandCurly
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|Lst
+operator|,
+name|Lst
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|DirExpandInt
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|Lst
+operator|,
+name|Lst
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|DirPrintWord
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|DirPrintDir
+name|__P
+argument_list|(
+operator|(
+name|Path
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_Init --  *	initialize things for this module  *  * Results:  *	none  *  * Side Effects:  *	some directories may be opened.  *-----------------------------------------------------------------------  */
@@ -334,7 +416,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * DirMatchFiles --  * 	Given a pattern and a Path structure, see if any files  *	match the pattern and add their names to the 'expansions' list if  *	any do. This is incomplete -- it doesn't take care of patterns like  *	src/*src/*.c properly (just *.c on any of the directories), but it  *	will do for now.  *  * Results:  *	Always returns 0  *  * Side Effects:  *	File names are added to the expansions lst. The directory will be  *	fully hashed when this is done.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * DirMatchFiles --  * 	Given a pattern and a Path structure, see if any files  *	match the pattern and add their names to the 'expansions' list if  *	any do. This is incomplete -- it doesn't take care of patterns like  *	src / *src / *.c properly (just *.c on any of the directories), but it  *	will do for now.  *  * Results:  *	Always returns 0  *  * Side Effects:  *	File names are added to the expansions lst. The directory will be  *	fully hashed when this is done.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -372,11 +454,6 @@ modifier|*
 name|entry
 decl_stmt|;
 comment|/* Current entry in the table */
-name|char
-modifier|*
-name|f
-decl_stmt|;
-comment|/* Current entry in the directory */
 name|Boolean
 name|isDot
 decl_stmt|;
@@ -1075,7 +1152,7 @@ expr_stmt|;
 block|}
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|word
 argument_list|,
@@ -1103,7 +1180,7 @@ else|else
 block|{
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|word
 argument_list|,
@@ -1390,9 +1467,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|putchar
+name|fputc
 argument_list|(
 literal|'\n'
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -1473,7 +1552,7 @@ comment|/* Entry for mtimes table */
 comment|/*      * Find the final component of the name and note whether it has a      * slash in it (the name, I mean)      */
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|name
 argument_list|,
@@ -2109,7 +2188,7 @@ expr_stmt|;
 comment|/* 		 * We've found another directory to search. We know there's 		 * a slash in 'file' because we put one there. We nuke it after 		 * finding it and call Dir_AddDir to add this new directory 		 * onto the existing search path. Once that's done, we restore 		 * the slash and triumphantly return the file name, knowing 		 * that should a file in this directory every be referenced 		 * again in such a manner, we will find it without having to do 		 * numerous numbers of access calls. Hurrah! 		 */
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|file
 argument_list|,
@@ -2165,7 +2244,8 @@ operator|&
 name|mtimes
 argument_list|,
 operator|(
-name|ClientData
+name|char
+operator|*
 operator|)
 name|file
 argument_list|,
@@ -2664,6 +2744,9 @@ literal|"Using cached time %s for %s\n"
 argument_list|,
 name|Targ_FmtTime
 argument_list|(
+operator|(
+name|time_t
+operator|)
 name|Hash_GetValue
 argument_list|(
 name|entry
@@ -2819,14 +2902,6 @@ modifier|*
 name|dp
 decl_stmt|;
 comment|/* entry in directory */
-name|Hash_Entry
-modifier|*
-name|he
-decl_stmt|;
-name|char
-modifier|*
-name|fName
-decl_stmt|;
 name|ln
 operator|=
 name|Lst_Find
@@ -3285,13 +3360,6 @@ name|p
 decl_stmt|;
 comment|/* The directory descriptor to nuke */
 block|{
-name|Hash_Search
-name|thing1
-decl_stmt|;
-name|Hash_Entry
-modifier|*
-name|thing2
-decl_stmt|;
 name|p
 operator|->
 name|refCount
@@ -3513,12 +3581,10 @@ begin_comment
 comment|/********** DEBUG INFO **********/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|Dir_PrintDirectories
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|LstNode
 name|ln
@@ -3634,7 +3700,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -3665,20 +3731,15 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|Dir_PrintPath
-argument_list|(
-argument|path
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|path
+parameter_list|)
 name|Lst
 name|path
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|Lst_ForEach
 argument_list|(
@@ -3693,7 +3754,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

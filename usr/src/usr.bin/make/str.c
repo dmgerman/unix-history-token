@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	5.8 (Berkeley) %G%"
+literal|"@(#)str.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,11 +110,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* copy first string into place */
-name|bcopy
+name|memcpy
 argument_list|(
-name|s1
-argument_list|,
 name|result
+argument_list|,
+name|s1
 argument_list|,
 name|len1
 argument_list|)
@@ -158,13 +158,13 @@ name|len1
 expr_stmt|;
 block|}
 comment|/* copy second string plus EOS into place */
-name|bcopy
+name|memcpy
 argument_list|(
-name|s2
-argument_list|,
 name|result
 operator|+
 name|len1
+argument_list|,
+name|s2
 argument_list|,
 name|len2
 operator|+
@@ -307,7 +307,25 @@ name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* skip leading space chars. 	for (; *str == ' ' || *str == '\t'; ++str);  	/* allocate room for a copy of the string */
+comment|/* skip leading space chars. */
+for|for
+control|(
+init|;
+operator|*
+name|str
+operator|==
+literal|' '
+operator|||
+operator|*
+name|str
+operator|==
+literal|'\t'
+condition|;
+operator|++
+name|str
+control|)
+continue|continue;
+comment|/* allocate room for a copy of the string */
 if|if
 condition|(
 operator|(
@@ -391,6 +409,9 @@ break|break;
 else|else
 name|inquote
 operator|=
+operator|(
+name|char
+operator|)
 name|ch
 expr_stmt|;
 continue|continue;
@@ -579,6 +600,9 @@ operator|*
 name|t
 operator|++
 operator|=
+operator|(
+name|char
+operator|)
 name|ch
 expr_stmt|;
 block|}
@@ -722,37 +746,26 @@ begin_comment
 comment|/*  * Str_Match --  *   * See if a particular string matches a particular pattern.  *   * Results: Non-zero is returned if string matches pattern, 0 otherwise. The  * matching operation permits the following special characters in the  * pattern: *?\[] (see the man page for details on what these mean).  *   * Side effects: None.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|Str_Match
-argument_list|(
+parameter_list|(
 name|string
-argument_list|,
+parameter_list|,
 name|pattern
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|string
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+decl_stmt|;
 comment|/* String */
-end_comment
-
-begin_decl_stmt
 specifier|register
 name|char
 modifier|*
 name|pattern
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Pattern */
-end_comment
-
-begin_block
 block|{
 name|char
 name|c2
@@ -1056,7 +1069,7 @@ name|string
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

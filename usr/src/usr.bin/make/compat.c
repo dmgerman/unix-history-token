@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compat.c	5.9 (Berkeley) %G%"
+literal|"@(#)compat.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -65,12 +65,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
@@ -78,6 +72,24 @@ begin_include
 include|#
 directive|include
 file|"make.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hash.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dir.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"job.h"
 end_include
 
 begin_decl_stmt
@@ -119,13 +131,52 @@ name|ENDNode
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|void
+name|CompatInterrupt
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|CompatRunCommand
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|GNode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|CompatMake
+name|__P
+argument_list|(
+operator|(
+name|GNode
+operator|*
+operator|,
+name|GNode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * CompatInterrupt --  *	Interrupt the creation of the current target and remove it if  *	it ain't precious.  *  * Results:  *	None.  *  * Side Effects:  *	The target is removed and the process exits. If .INTERRUPT exists,  *	its commands are run first WITH INTERRUPTS IGNORED..  *  *-----------------------------------------------------------------------  */
@@ -145,10 +196,6 @@ block|{
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-name|struct
-name|stat
-name|sb
 decl_stmt|;
 if|if
 condition|(
@@ -178,22 +225,6 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|stat
-argument_list|(
-name|file
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-operator|&&
-name|S_ISREG
-argument_list|(
-name|sb
-operator|.
-name|st_mode
-argument_list|)
-operator|&&
 name|unlink
 argument_list|(
 name|file
@@ -316,10 +347,6 @@ name|int
 name|cpid
 decl_stmt|;
 comment|/* Child actually found */
-name|int
-name|numWritten
-decl_stmt|;
-comment|/* Number of bytes written for error message */
 name|ReturnStatus
 name|stat
 decl_stmt|;
@@ -379,6 +406,8 @@ name|cmdStart
 operator|=
 name|Var_Subst
 argument_list|(
+name|NULL
+argument_list|,
 name|cmd
 argument_list|,
 name|gn
@@ -539,6 +568,10 @@ init|;
 operator|!
 name|meta
 index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 index|]
@@ -707,8 +740,9 @@ argument_list|,
 name|av
 argument_list|)
 expr_stmt|;
-name|numWritten
-operator|=
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|2
@@ -727,8 +761,9 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|numWritten
-operator|=
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|2
@@ -1359,6 +1394,24 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|gn
+operator|->
+name|cmtime
+operator|>
+name|gn
+operator|->
+name|mtime
+condition|)
+name|gn
+operator|->
+name|mtime
+operator|=
+name|gn
+operator|->
+name|cmtime
+expr_stmt|;
+if|if
+condition|(
 name|DEBUG
 argument_list|(
 name|MAKE
@@ -1571,6 +1624,8 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+default|default:
+break|break;
 block|}
 block|}
 return|return
@@ -1607,6 +1662,8 @@ comment|/* Pointer to string of shell meta-characters */
 name|GNode
 modifier|*
 name|gn
+init|=
+name|NULL
 decl_stmt|;
 comment|/* Current root target */
 name|int
@@ -1710,6 +1767,10 @@ control|)
 block|{
 name|meta
 index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 index|]

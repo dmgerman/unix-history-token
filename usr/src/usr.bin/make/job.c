@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)job.c	5.17 (Berkeley) %G%"
+literal|"@(#)job.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"make.h"
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -65,12 +71,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
@@ -90,6 +90,30 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"make.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hash.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dir.h"
 end_include
 
 begin_include
@@ -116,6 +140,7 @@ comment|/*  * error handling variables   */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|errors
 init|=
@@ -128,6 +153,7 @@ comment|/* number of errors reported */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aborting
 init|=
@@ -383,6 +409,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|Shell
 modifier|*
 name|commandShell
@@ -400,6 +427,7 @@ comment|/* this is the shell to 						   * which we pass all 						   * commands
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|shellPath
@@ -443,6 +471,7 @@ comment|/* The most local ones we can have */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nJobs
 decl_stmt|;
@@ -453,6 +482,7 @@ comment|/* The number of children currently running */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nLocal
 decl_stmt|;
@@ -463,6 +493,7 @@ comment|/* The number of local children */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|Lst
 name|jobs
 decl_stmt|;
@@ -473,6 +504,7 @@ comment|/* The structures that describe them */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|Boolean
 name|jobFull
 decl_stmt|;
@@ -505,6 +537,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|GNode
 modifier|*
 name|lastNode
@@ -516,6 +549,7 @@ comment|/* The node for which output was most recently 				 * produced. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|targFmt
@@ -542,6 +576,7 @@ comment|/*  * When JobStart attempts to run a job remotely but can't, and isn't 
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|Lst
 name|stoppedJobs
 decl_stmt|;
@@ -550,6 +585,37 @@ end_decl_stmt
 begin_comment
 comment|/* Lst of Job structures describing 				 * jobs that were stopped due to concurrency 				 * limits or migration home */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_PGRP
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SYSV
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KILL
+parameter_list|(
+name|pid
+parameter_list|,
+name|sig
+parameter_list|)
+value|killpg (-(pid),(sig))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_if
 if|#
@@ -569,7 +635,7 @@ name|pid
 parameter_list|,
 name|sig
 parameter_list|)
-value|killpg((pid),(sig))
+value|killpg ((pid),(sig))
 end_define
 
 begin_else
@@ -586,7 +652,7 @@ name|pid
 parameter_list|,
 name|sig
 parameter_list|)
-value|kill((pid),(sig))
+value|kill ((pid),(sig))
 end_define
 
 begin_endif
@@ -594,29 +660,219 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+name|int
+name|JobCondPassSig
+name|__P
+argument_list|(
+operator|(
+name|Job
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|JobPassSig
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|JobCmpPid
+name|__P
+argument_list|(
+operator|(
+name|Job
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|JobPrintCommand
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|Job
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|JobSaveCommand
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|GNode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|JobFinish
+name|__P
+argument_list|(
+operator|(
+name|Job
+operator|*
+operator|,
+expr|union
+name|wait
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|JobExec
+name|__P
+argument_list|(
+operator|(
+name|Job
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|JobMakeArgv
+name|__P
+argument_list|(
+operator|(
+name|Job
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|JobRestart
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|Job
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|JobStart
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|GNode
+operator|*
+operator|,
+name|int
+operator|,
+name|Job
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|void
+name|JobDoOutput
+name|__P
+argument_list|(
+operator|(
+name|Job
+operator|*
+operator|,
+name|Boolean
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|Shell
+modifier|*
+name|JobMatchShell
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|JobInterrupt
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * JobCondPassSig --  *	Pass a signal to a job if the job is remote or if USE_PGRP  *	is defined.  *  * Results:  *	=== 0  *  * Side Effects:  *	None, except the job may bite it.  *  *-----------------------------------------------------------------------  */
@@ -780,7 +1036,9 @@ name|SIGQUIT
 condition|)
 block|{
 name|Finish
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Send ourselves the signal now we've given the message to everyone else.      * Note we block everything else possible while we're getting the signal.      * This ensures that all our jobs get continued when we wake up before      * we take any other signal.      */
@@ -971,6 +1229,14 @@ operator|==
 literal|0
 condition|)
 block|{
+name|job
+operator|->
+name|node
+operator|->
+name|type
+operator||=
+name|OP_SAVE_CMDS
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1053,6 +1319,8 @@ name|cmd
 operator|=
 name|Var_Subst
 argument_list|(
+name|NULL
+argument_list|,
 name|cmd
 argument_list|,
 name|job
@@ -1437,6 +1705,8 @@ name|cmd
 operator|=
 name|Var_Subst
 argument_list|(
+name|NULL
+argument_list|,
 name|cmd
 argument_list|,
 name|gn
@@ -1476,6 +1746,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|JobFinish
 parameter_list|(
@@ -2483,11 +2754,6 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* Times for utimes() call */
-name|struct
-name|stat
-name|attr
-decl_stmt|;
-comment|/* Attributes of the file */
 if|if
 condition|(
 name|gn
@@ -2714,33 +2980,38 @@ begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Job_CheckCommands --  *	Make sure the given node has all the commands it needs.   *  * Results:  *	TRUE if the commands list is/was ok.  *  * Side Effects:  *	The node will have commands from the .DEFAULT rule added to it  *	if it needs them.  *-----------------------------------------------------------------------  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|Boolean
 name|Job_CheckCommands
-argument_list|(
+parameter_list|(
 name|gn
-argument_list|,
+parameter_list|,
 name|abortProc
-argument_list|)
+parameter_list|)
 name|GNode
 modifier|*
 name|gn
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* The target whose commands need 				     * verifying */
-end_comment
-
-begin_function_decl
-name|void
-function_decl|(
-modifier|*
-name|abortProc
-function_decl|)
-parameter_list|()
-function_decl|;
+function_decl|void
+parameter_list|(
+function_decl|*abortProc
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Function to abort with message */
@@ -3355,10 +3626,6 @@ name|job
 operator|->
 name|rmtID
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 literal|0
 expr_stmt|;
 block|}
@@ -3394,8 +3661,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|RMT_NO_EXEC
 name|jobExecFinish
 label|:
+endif|#
+directive|endif
 comment|/*      * Now the job is actually running, add it to the table.      */
 name|nJobs
 operator|+=
@@ -4300,13 +4572,6 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* Argument vector to shell */
-name|char
-name|args
-index|[
-literal|5
-index|]
-decl_stmt|;
-comment|/* arguments to shell */
 specifier|static
 name|int
 name|jobno
@@ -4562,7 +4827,7 @@ expr_stmt|;
 comment|/* 	 * used to be backwards; replace when start doing multiple commands 	 * per shell. 	 */
 if|if
 condition|(
-literal|1
+name|compatMake
 condition|)
 block|{
 comment|/* 	     * Be compatible: If this is the first time for this node, 	     * verify its commands are ok and open the commands list for 	     * sequential access by later invocations of JobStart. 	     * Once that is done, we take the next command off the list 	     * and print it to the command file. If the command was an 	     * ellipsis, note that there's nothing more to execute. 	     */
@@ -5296,6 +5561,7 @@ comment|/*-  *------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|JobDoOutput
 parameter_list|(
@@ -5339,10 +5605,6 @@ name|int
 name|nRead
 decl_stmt|;
 comment|/* (Temporary) number of bytes read */
-name|char
-name|c
-decl_stmt|;
-comment|/* character after noPrint string */
 name|FILE
 modifier|*
 name|oFILE
@@ -5820,8 +6082,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|bcopy
+comment|/* shift the remaining characters down */
+name|memcpy
 argument_list|(
+name|job
+operator|->
+name|outBuf
+argument_list|,
 operator|&
 name|job
 operator|->
@@ -5832,12 +6099,6 @@ operator|+
 literal|1
 index|]
 argument_list|,
-comment|/* shift the remaining */
-name|job
-operator|->
-name|outBuf
-argument_list|,
-comment|/* characters down */
 name|max
 operator|-
 operator|(
@@ -6415,10 +6676,15 @@ name|Job
 modifier|*
 name|job
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RMT_WILL_WATCH
 name|int
 name|pnJobs
 decl_stmt|;
 comment|/* Previous nJobs */
+endif|#
+directive|endif
 name|fflush
 argument_list|(
 name|stdout
@@ -6483,13 +6749,13 @@ operator|&
 name|readfds
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
 literal|0
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
 literal|0
@@ -7378,13 +7644,15 @@ operator|&
 name|wordCount
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|Address
 operator|)
 operator|&
 name|newShell
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7854,7 +8122,7 @@ name|path
 expr_stmt|;
 name|path
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|path
 argument_list|,
@@ -8057,10 +8325,6 @@ modifier|*
 name|interrupt
 decl_stmt|;
 comment|/* the node describing the .INTERRUPT target */
-name|struct
-name|stat
-name|sb
-decl_stmt|;
 name|aborting
 operator|=
 name|ABORT_INTERRUPT
@@ -8141,22 +8405,6 @@ operator|)
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|stat
-argument_list|(
-name|file
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-operator|&&
-name|S_ISREG
-argument_list|(
-name|sb
-operator|.
-name|st_mode
-argument_list|)
-operator|&&
 name|unlink
 argument_list|(
 name|file
@@ -8641,9 +8889,7 @@ argument_list|)
 operator|>
 literal|0
 condition|)
-block|{
-empty_stmt|;
-block|}
+continue|continue;
 operator|(
 name|void
 operator|)

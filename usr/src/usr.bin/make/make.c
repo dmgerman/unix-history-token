@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)make.c	5.3 (Berkeley) %G%"
+literal|"@(#)make.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,24 @@ begin_include
 include|#
 directive|include
 file|"make.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hash.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dir.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"job.h"
 end_include
 
 begin_decl_stmt
@@ -59,6 +77,68 @@ end_decl_stmt
 begin_comment
 comment|/* Number of nodes to be processed. If this 				 * is non-zero when Job_Empty() returns 				 * TRUE, there's a cycle in the graph */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|MakeAddChild
+name|__P
+argument_list|(
+operator|(
+name|GNode
+operator|*
+operator|,
+name|Lst
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|MakeAddAllSrc
+name|__P
+argument_list|(
+operator|(
+name|GNode
+operator|*
+operator|,
+name|GNode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|Boolean
+name|MakeStartJobs
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|MakePrintStatus
+name|__P
+argument_list|(
+operator|(
+name|GNode
+operator|*
+operator|,
+name|Boolean
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Make_TimeStamp --  *	Set the cmtime field of a parent node based on the mtime stamp in its  *	child. Called from MakeOODate via Lst_ForEach.   *  * Results:  *	Always returns 0.   *  * Side Effects:  *	The cmtime of the parent node will be changed if the mtime  *	field of the child is greater than it.  *-----------------------------------------------------------------------  */
@@ -869,9 +949,18 @@ block|}
 else|#
 directive|else
 comment|/* 	 * This is what Make does and it's actually a good thing, as it 	 * allows rules like 	 * 	 *	cmp -s y.tab.h parse.h || cp y.tab.h parse.h 	 * 	 * to function as intended. Unfortunately, thanks to the stateless 	 * nature of NFS (by which I mean the loose coupling of two clients 	 * using the same file from a common server), there are times 	 * when the modification time of a file created on a remote 	 * machine will not be modified before the local stat() implied by 	 * the Dir_MTime occurs, thus leading us to believe that the file 	 * is unchanged, wreaking havoc with files that depend on this one. 	 * 	 * I have decided it is better to make too much than to make too 	 * little, so this stuff is commented out unless you're sure it's ok. 	 * -- ardeb 1/12/88 	 */
+comment|/* 	 * Christos, 4/9/92: If we are  saving commands pretend that 	 * the target is made now. Otherwise archives with ... rules 	 * don't work! 	 */
 if|if
 condition|(
 name|noExecute
+operator|||
+operator|(
+name|cgn
+operator|->
+name|type
+operator|&
+name|OP_SAVE_CMDS
+operator|)
 operator|||
 name|Dir_MTime
 argument_list|(

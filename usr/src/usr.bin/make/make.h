@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * %sccs.include.redist.c%  *  *	@(#)make.h	5.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * %sccs.include.redist.c%  *  *	@(#)make.h	5.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -36,6 +42,35 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -53,6 +88,12 @@ begin_include
 include|#
 directive|include
 file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"buf.h"
 end_include
 
 begin_comment
@@ -455,7 +496,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSIZE
+name|MAKE_BSIZE
 value|256
 end_define
 
@@ -731,6 +772,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|Boolean
+name|compatMake
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* True if we are make compatible */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
 name|ignoreErrors
 decl_stmt|;
 end_decl_stmt
@@ -978,6 +1030,13 @@ name|DEBUG_VAR
 value|0x0200
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEBUG_FOR
+value|0x0400
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1052,11 +1111,97 @@ directive|include
 file|"nonints.h"
 end_include
 
+begin_decl_stmt
+name|void
+name|Make_DoAllVar
+name|__P
+argument_list|(
+operator|(
+name|GNode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|Make_HandleUse
+name|__P
+argument_list|(
+operator|(
+name|GNode
+operator|*
+operator|,
+name|GNode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|Make_OODate
+name|__P
+argument_list|(
+operator|(
+name|GNode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|Make_Run
+name|__P
+argument_list|(
+operator|(
+name|Lst
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|Make_TimeStamp
+name|__P
+argument_list|(
+operator|(
+name|GNode
+operator|*
+operator|,
+name|GNode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|Make_Update
+name|__P
+argument_list|(
+operator|(
+name|GNode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
-endif|_MAKE_H_
 end_endif
+
+begin_comment
+comment|/* _MAKE_H_ */
+end_comment
 
 end_unit
 

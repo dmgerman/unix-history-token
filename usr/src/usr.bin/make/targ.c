@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)targ.c	5.9 (Berkeley) %G%"
+literal|"@(#)targ.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,12 @@ begin_include
 include|#
 directive|include
 file|"hash.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dir.h"
 end_include
 
 begin_decl_stmt
@@ -309,6 +315,12 @@ name|Lst_Init
 argument_list|(
 name|FALSE
 argument_list|)
+expr_stmt|;
+name|gn
+operator|->
+name|suffix
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -811,6 +823,7 @@ end_function
 begin_function
 specifier|static
 name|int
+comment|/*ARGSUSED*/
 name|TargPrintName
 parameter_list|(
 name|gn
@@ -875,7 +888,7 @@ block|}
 block|}
 endif|#
 directive|endif
-endif|notdef
+comment|/* notdef */
 return|return
 operator|(
 literal|0
@@ -1430,7 +1443,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|putc
+name|fputc
 argument_list|(
 literal|'\n'
 argument_list|,
@@ -1469,7 +1482,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|putc
+name|fputc
 argument_list|(
 literal|'\n'
 argument_list|,
@@ -1544,7 +1557,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|putc
+name|fputc
 argument_list|(
 literal|'\n'
 argument_list|,
@@ -1663,24 +1676,16 @@ begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Targ_PrintGraph --  *	print the entire graph. heh heh  *  * Results:  *	none  *  * Side Effects:  *	lots o' output  *-----------------------------------------------------------------------  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|Targ_PrintGraph
-argument_list|(
-argument|pass
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pass
+parameter_list|)
 name|int
 name|pass
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Which pass this is. 1 => no processing 			 * 2 => processing done */
-end_comment
-
-begin_block
 block|{
 name|printf
 argument_list|(
@@ -1753,7 +1758,7 @@ name|Suff_PrintAll
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.5 (Berkeley) %G%"
+literal|"@(#)hash.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"make.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hash.h"
 end_include
 
@@ -48,13 +54,19 @@ begin_comment
 comment|/*  * Forward references to local procedures that are used before they're  * defined:  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|RebuildTable
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|Hash_Table
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*   * The following defines the ratio of # entries to # buckets  * at which we rebuild the table to make it larger.  */
@@ -128,8 +140,7 @@ name|i
 operator|<<=
 literal|1
 control|)
-comment|/* void */
-empty_stmt|;
+continue|continue;
 block|}
 name|t
 operator|->
@@ -217,6 +228,8 @@ name|h
 decl_stmt|,
 modifier|*
 name|nexth
+init|=
+name|NULL
 decl_stmt|;
 specifier|register
 name|int
@@ -989,6 +1002,8 @@ name|e
 decl_stmt|,
 modifier|*
 name|next
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 modifier|*
