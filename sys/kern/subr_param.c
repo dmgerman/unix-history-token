@@ -453,13 +453,21 @@ name|physpages
 parameter_list|)
 block|{
 comment|/* Base parameters */
-if|if
-condition|(
-operator|(
 name|maxusers
 operator|=
 name|MAXUSERS
-operator|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.maxusers"
+argument_list|,
+operator|&
+name|maxusers
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|maxusers
 operator|==
 literal|0
 condition|)
@@ -499,14 +507,6 @@ operator|=
 literal|384
 expr_stmt|;
 block|}
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"kern.maxusers"
-argument_list|,
-operator|&
-name|maxusers
-argument_list|)
-expr_stmt|;
 comment|/* 	 * The following can be overridden after boot via sysctl.  Note: 	 * unless overriden, these macros are ultimately based on maxusers. 	 */
 name|maxproc
 operator|=
