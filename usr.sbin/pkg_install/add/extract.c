@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: extract.c,v 1.7 1995/05/19 22:40:54 jkh Exp $"
+literal|"$Id: extract.c,v 1.7.4.1 1997/02/14 01:54:12 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,7 +127,7 @@ expr_stmt|;
 comment|/* some slop for the tar cmd text, 					   and sh -c */
 name|where_args
 operator|=
-name|malloc
+name|alloca
 argument_list|(
 name|maxargs
 argument_list|)
@@ -144,7 +144,7 @@ argument_list|)
 expr_stmt|;
 name|perm_args
 operator|=
-name|malloc
+name|alloca
 argument_list|(
 name|maxargs
 argument_list|)
@@ -314,6 +314,29 @@ literal|0
 condition|)
 block|{
 comment|/* try to add to list of perms to be changed, 		       and run in bulk. */
+if|if
+condition|(
+name|p
+operator|->
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+operator|||
+name|TOOBIG
+argument_list|(
+name|p
+operator|->
+name|name
+argument_list|)
+condition|)
+name|PUSHOUT
+argument_list|(
+name|Directory
+argument_list|)
+expr_stmt|;
 name|add_count
 operator|=
 name|snprintf
@@ -352,24 +375,6 @@ name|perm_count
 operator|+=
 name|add_count
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|name
-index|[
-literal|0
-index|]
-operator|==
-literal|'/'
-condition|)
-block|{
-name|PUSHOUT
-argument_list|(
-name|Directory
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
