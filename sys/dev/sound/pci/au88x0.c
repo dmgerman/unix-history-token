@@ -1227,9 +1227,8 @@ name|aui
 operator|->
 name|aui_bufsize
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
