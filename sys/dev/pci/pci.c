@@ -1068,9 +1068,20 @@ name|pci_quirks
 index|[]
 init|=
 block|{
-comment|/* 	 * The Intel 82371AB has a map register at offset 0x90. 	 */
+comment|/* The Intel 82371AB has a map register at offset 0x90. */
 block|{
 literal|0x71138086
+block|,
+name|PCI_QUIRK_MAP_REG
+block|,
+literal|0x90
+block|,
+literal|0
+block|}
+block|,
+comment|/* As does the Serverworks OSB4 (the SMBus mapping register) */
+block|{
+literal|0x02001166
 block|,
 name|PCI_QUIRK_MAP_REG
 block|,
