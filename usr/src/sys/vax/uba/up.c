@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.50	82/05/19	*/
+comment|/*	up.c	4.51	82/05/19	*/
 end_comment
 
 begin_include
@@ -292,7 +292,7 @@ endif|#
 directive|endif
 block|}
 struct|,
-name|am_sizes
+name|upam_sizes
 index|[
 literal|8
 index|]
@@ -568,7 +568,7 @@ literal|16
 block|,
 literal|1024
 block|,
-name|am_sizes
+name|upam_sizes
 block|,
 comment|/* ampex capricorn */
 block|}
