@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	@(#)tmscp.h	1.2 (Berkeley) %G% */
+end_comment
+
+begin_comment
 comment|/*  *	@(#)tmscp.h	1.3	10/21/85  * Definitions for the Tape Mass Storage Control Protocol  */
 end_comment
 
@@ -534,7 +538,18 @@ value|0010000
 end_define
 
 begin_comment
-comment|/* Write protect (software or volume) * / #define	M_UF_WBKNV	0000100		/* Write back (enables cache) */
+comment|/* Write protect (software or volume) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_UF_WBKNV
+value|0000100
+end_define
+
+begin_comment
+comment|/* Write back (enables cache) */
 end_comment
 
 begin_define
@@ -802,7 +817,7 @@ value|037
 end_define
 
 begin_comment
-comment|/* Message from an internal diagnostic  */
+comment|/* Message from an internal diagnostic */
 end_comment
 
 begin_comment
@@ -1181,7 +1196,29 @@ value|mscp_un.mscp_getunitsts.Mscp_format
 end_define
 
 begin_comment
-comment|/* density:0=high * / #define	mscp_speed	mscp_un.mscp_getunitsts.Mscp_speed  /* (ips*bpi)/1000 * / #define	mscp_fmtmenu	mscp_un.mscp_getunitsts.Mscp_fmtmenu   /*  * Online / Set Unit Characteristics end packet  */
+comment|/* density:0=high */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mscp_speed
+value|mscp_un.mscp_getunitsts.Mscp_speed
+end_define
+
+begin_comment
+comment|/* (ips*bpi)/1000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mscp_fmtmenu
+value|mscp_un.mscp_getunitsts.Mscp_fmtmenu
+end_define
+
+begin_comment
+comment|/*  * Online / Set Unit Characteristics end packet  */
 end_comment
 
 begin_define
@@ -1229,7 +1266,18 @@ value|mscp_usefrac
 end_define
 
 begin_comment
-comment|/* controller soft& hardware version * / #define	mscp_cntid	mscp_unitid	/* controller id */
+comment|/* controller soft& hardware version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mscp_cntid
+value|mscp_unitid
+end_define
+
+begin_comment
+comment|/* controller id */
 end_comment
 
 begin_comment
