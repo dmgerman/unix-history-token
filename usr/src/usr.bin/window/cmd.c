@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.16 83/11/30"
+literal|"@(#)cmd.c	3.17 83/12/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -1119,6 +1119,8 @@ argument_list|(
 name|selwin
 operator|=
 name|w
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1132,6 +1134,8 @@ begin_expr_stmt
 name|front
 argument_list|(
 name|w
+argument_list|,
+name|doreframe
 argument_list|)
 specifier|register
 expr|struct
@@ -1174,6 +1178,14 @@ name|reframe
 argument_list|()
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|doreframe
+condition|)
+name|reframe
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 
