@@ -415,7 +415,7 @@ comment|/* INVARIANTS */
 end_comment
 
 begin_comment
-comment|/*  *	malloc:  *  *	Allocate a block of memory.  *  *	If M_NOWAIT is set, this routine will not block and return NULL if  *	the allocation fails.  *  *	If M_ASLEEP is set (M_NOWAIT must also be set), this routine  *	will have the side effect of calling asleep() if it returns NULL,  *	allowing the parent to await() at some future time.  */
+comment|/*  *	malloc:  *  *	Allocate a block of memory.  *  *	If M_NOWAIT is set, this routine will not block and return NULL if  *	the allocation fails.  */
 end_comment
 
 begin_function
@@ -569,45 +569,6 @@ operator|->
 name|ks_limit
 condition|)
 block|{
-if|if
-condition|(
-name|flags
-operator|&
-name|M_ASLEEP
-condition|)
-block|{
-if|if
-condition|(
-name|ksp
-operator|->
-name|ks_limblocks
-operator|<
-literal|65535
-condition|)
-name|ksp
-operator|->
-name|ks_limblocks
-operator|++
-expr_stmt|;
-name|asleep
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|ksp
-argument_list|,
-name|PSWP
-operator|+
-literal|2
-argument_list|,
-name|type
-operator|->
-name|ks_shortdesc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|flags
