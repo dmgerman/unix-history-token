@@ -402,6 +402,12 @@ modifier|*
 name|pipe_peer
 decl_stmt|;
 comment|/* link with other direction */
+name|struct
+name|pipepair
+modifier|*
+name|pipe_pair
+decl_stmt|;
+comment|/* container structure pointer */
 name|u_int
 name|pipe_state
 decl_stmt|;
@@ -410,18 +416,39 @@ name|int
 name|pipe_busy
 decl_stmt|;
 comment|/* busy flag, mostly to handle rundown sanely */
+name|int
+name|pipe_present
+decl_stmt|;
+comment|/* still present? */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Container structure to hold the two pipe endpoints, mutex, and label  * pointer.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pipepair
+block|{
+name|struct
+name|pipe
+name|pp_rpipe
+decl_stmt|;
+name|struct
+name|pipe
+name|pp_wpipe
+decl_stmt|;
+name|struct
+name|mtx
+name|pp_mtx
+decl_stmt|;
 name|struct
 name|label
 modifier|*
-name|pipe_label
+name|pp_label
 decl_stmt|;
-comment|/* pipe MAC label - shared */
-name|struct
-name|mtx
-modifier|*
-name|pipe_mtxp
-decl_stmt|;
-comment|/* shared mutex between both pipes */
 block|}
 struct|;
 end_struct
@@ -433,7 +460,7 @@ name|PIPE_MTX
 parameter_list|(
 name|pipe
 parameter_list|)
-value|(pipe)->pipe_mtxp
+value|(&(pipe)->pipe_pair->pp_mtx)
 end_define
 
 begin_define

@@ -524,7 +524,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|pipe
+name|pipepair
 struct_decl|;
 end_struct_decl
 
@@ -675,7 +675,7 @@ name|void
 name|mac_init_pipe
 parameter_list|(
 name|struct
-name|pipe
+name|pipepair
 modifier|*
 parameter_list|)
 function_decl|;
@@ -856,7 +856,7 @@ name|void
 name|mac_destroy_pipe
 parameter_list|(
 name|struct
-name|pipe
+name|pipepair
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1292,9 +1292,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|pipe
+name|pipepair
 modifier|*
-name|pipe
+name|pp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1948,9 +1948,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|pipe
+name|pipepair
 modifier|*
-name|pipe
+name|pp
 parameter_list|,
 name|unsigned
 name|long
@@ -1973,9 +1973,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|pipe
+name|pipepair
 modifier|*
-name|pipe
+name|pp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1990,9 +1990,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|pipe
+name|pipepair
 modifier|*
-name|pipe
+name|pp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2007,9 +2007,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|pipe
+name|pipepair
 modifier|*
-name|pipe
+name|pp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2024,9 +2024,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|pipe
+name|pipepair
 modifier|*
-name|pipe
+name|pp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3166,9 +3166,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|pipe
+name|pipepair
 modifier|*
-name|pipe
+name|pp
 parameter_list|,
 name|struct
 name|label

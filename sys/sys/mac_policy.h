@@ -79,7 +79,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|pipe
+name|pipepair
 struct_decl|;
 end_struct_decl
 
@@ -1355,9 +1355,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|pipe
+name|pipepair
 modifier|*
-name|pipe
+name|pp
 parameter_list|,
 name|struct
 name|label
@@ -1436,9 +1436,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|pipe
+name|pipepair
 modifier|*
-name|pipe
+name|pp
 parameter_list|,
 name|struct
 name|label
@@ -2355,9 +2355,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|pipe
+name|pipepair
 modifier|*
-name|pipe
+name|pp
 parameter_list|,
 name|struct
 name|label
@@ -2385,9 +2385,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|pipe
+name|pipepair
 modifier|*
-name|pipe
+name|pp
 parameter_list|,
 name|struct
 name|label
@@ -2407,9 +2407,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|pipe
+name|pipepair
 modifier|*
-name|pipe
+name|pp
 parameter_list|,
 name|struct
 name|label
@@ -2429,9 +2429,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|pipe
+name|pipepair
 modifier|*
-name|pipe
+name|pp
 parameter_list|,
 name|struct
 name|label
@@ -2456,9 +2456,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|pipe
+name|pipepair
 modifier|*
-name|pipe
+name|pp
 parameter_list|,
 name|struct
 name|label
@@ -2478,9 +2478,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|pipe
+name|pipepair
 modifier|*
-name|pipe
+name|pp
 parameter_list|,
 name|struct
 name|label

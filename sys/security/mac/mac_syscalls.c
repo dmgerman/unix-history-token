@@ -2779,7 +2779,9 @@ name|mac_copy_pipe_label
 argument_list|(
 name|pipe
 operator|->
-name|pipe_label
+name|pipe_pair
+operator|->
+name|pp_label
 argument_list|,
 name|intlabel
 argument_list|)
@@ -3865,6 +3867,8 @@ operator|->
 name|td_ucred
 argument_list|,
 name|pipe
+operator|->
+name|pipe_pair
 argument_list|,
 name|intlabel
 argument_list|)
