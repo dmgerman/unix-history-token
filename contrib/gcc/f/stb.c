@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* stb.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996 Free Software Foundation, Inc.    Contributed by James Craig Burley (burley@gnu.org).  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       st.c     Description:       Parses the proper form for statements, builds up expression trees for       them, but does not actually implement them.  Uses ffebad (primarily via       ffesta_ffebad_start) to indicate errors in form.	In many cases, an invalid       statement form indicates another possible statement needs to be looked at       by ffest.	 In a few cases, a valid statement form might not completely       determine the nature of the statement, as in REALFUNCTIONA(B), which is       a valid form for either the first statement of a function named A taking       an argument named B or for the declaration of a real array named FUNCTIONA       with an adjustable size of B.  A similar (though somewhat easier) choice       must be made for the statement-function-def vs. assignment forms, as in       the case of FOO(A) = A+2.0.        A given parser consists of one or more state handlers, the first of which       is the initial state, and the last of which (for any given input) returns       control to a final state handler (ffesta_zero or ffesta_two, explained       below).  The functions handling the states for a given parser usually have       the same names, differing only in the final number, as in ffestb_foo_       (handles the initial state), ffestb_foo_1_, ffestb_foo_2_ (handle       subsequent states), although liberties sometimes are taken with the "foo"       part either when keywords are clarified into given statements or are       transferred into other possible areas.  (For example, the type-name       states can hop over to _dummy_ functions when the FUNCTION or RECURSIVE       keywords are seen, though this kind of thing is kept to a minimum.)  Only       the names without numbers are exported to the rest of ffest; the others       are local (static).        Each initial state is provided with the first token in ffesta_tokens[0],       which will be killed upon return to the final state (ffesta_zero or       ffelex_swallow_tokens passed through to ffesta_zero), so while it may       be changed to another token, a valid token must be left there to be       killed.  Also, a "convenient" array of tokens are left in       ffesta_tokens[1..FFESTA_tokensMAX].  The initial state of this set of       elements is undefined, thus, if tokens are stored here, they must be       killed before returning to the final state.  Any parser may also use       cross-state local variables by sticking a structure containing storage       for those variables in the local union ffestb_local_ (unless the union       goes on strike).	Furthermore, parsers that handle more than one first or       second tokens (like _varlist_, which handles EXTERNAL, INTENT, INTRINSIC,       OPTIONAL,       PUBLIC, or PRIVATE, and _endxyz_, which handles ENDBLOCK, ENDBLOCKDATA,       ENDDO, ENDIF, and so on) may expect arguments from ffest in the       ffest-wide union ffest_args_, the substructure specific to the parser.        A parser's responsibility is: to call either ffesta_confirmed or       ffest_ffebad_start before returning to the final state; to be the only       parser that can possibly call ffesta_confirmed for a given statement;       to call ffest_ffebad_start immediately upon recognizing a bad token       (specifically one that another statement parser might confirm upon);       to call ffestc functions only after calling ffesta_confirmed and only       when ffesta_is_inhibited returns FALSE; and to call ffesta_is_inhibited       only after calling ffesta_confirmed.  Confirm as early as reasonably       possible, even when only one ffestc function is called for the statement       later on, because early confirmation can enhance the error-reporting       capabilities if a subsequent error is detected and this parser isn't       the first possibility for the statement.        To assist the parser, functions like ffesta_ffebad_1t and _1p_ have       been provided to make use of ffest_ffebad_start fairly easy.     Modifications: */
+comment|/* stb.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       st.c     Description:       Parses the proper form for statements, builds up expression trees for       them, but does not actually implement them.  Uses ffebad (primarily via       ffesta_ffebad_start) to indicate errors in form.	In many cases, an invalid       statement form indicates another possible statement needs to be looked at       by ffest.	 In a few cases, a valid statement form might not completely       determine the nature of the statement, as in REALFUNCTIONA(B), which is       a valid form for either the first statement of a function named A taking       an argument named B or for the declaration of a real array named FUNCTIONA       with an adjustable size of B.  A similar (though somewhat easier) choice       must be made for the statement-function-def vs. assignment forms, as in       the case of FOO(A) = A+2.0.        A given parser consists of one or more state handlers, the first of which       is the initial state, and the last of which (for any given input) returns       control to a final state handler (ffesta_zero or ffesta_two, explained       below).  The functions handling the states for a given parser usually have       the same names, differing only in the final number, as in ffestb_foo_       (handles the initial state), ffestb_foo_1_, ffestb_foo_2_ (handle       subsequent states), although liberties sometimes are taken with the "foo"       part either when keywords are clarified into given statements or are       transferred into other possible areas.  (For example, the type-name       states can hop over to _dummy_ functions when the FUNCTION or RECURSIVE       keywords are seen, though this kind of thing is kept to a minimum.)  Only       the names without numbers are exported to the rest of ffest; the others       are local (static).        Each initial state is provided with the first token in ffesta_tokens[0],       which will be killed upon return to the final state (ffesta_zero or       ffelex_swallow_tokens passed through to ffesta_zero), so while it may       be changed to another token, a valid token must be left there to be       killed.  Also, a "convenient" array of tokens are left in       ffesta_tokens[1..FFESTA_tokensMAX].  The initial state of this set of       elements is undefined, thus, if tokens are stored here, they must be       killed before returning to the final state.  Any parser may also use       cross-state local variables by sticking a structure containing storage       for those variables in the local union ffestb_local_ (unless the union       goes on strike).	Furthermore, parsers that handle more than one first or       second tokens (like _varlist_, which handles EXTERNAL, INTENT, INTRINSIC,       OPTIONAL,       PUBLIC, or PRIVATE, and _endxyz_, which handles ENDBLOCK, ENDBLOCKDATA,       ENDDO, ENDIF, and so on) may expect arguments from ffest in the       ffest-wide union ffest_args_, the substructure specific to the parser.        A parser's responsibility is: to call either ffesta_confirmed or       ffest_ffebad_start before returning to the final state; to be the only       parser that can possibly call ffesta_confirmed for a given statement;       to call ffest_ffebad_start immediately upon recognizing a bad token       (specifically one that another statement parser might confirm upon);       to call ffestc functions only after calling ffesta_confirmed and only       when ffesta_is_inhibited returns FALSE; and to call ffesta_is_inhibited       only after calling ffesta_confirmed.  Confirm as early as reasonably       possible, even when only one ffestc function is called for the statement       later on, because early confirmation can enhance the error-reporting       capabilities if a subsequent error is detected and this parser isn't       the first possibility for the statement.        To assist the parser, functions like ffesta_ffebad_1t and _1p_ have       been provided to make use of ffest_ffebad_start fairly easy.     Modifications: */
 end_comment
 
 begin_comment
@@ -691,6 +691,7 @@ name|dimlist
 struct|;
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|badname
@@ -743,6 +744,7 @@ name|ffelexHandler
 name|imp_handler
 decl_stmt|;
 comment|/* Call if paren list wasn't letters. */
+specifier|const
 name|char
 modifier|*
 name|badname
@@ -9783,6 +9785,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -10608,6 +10612,7 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -12574,6 +12579,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -12943,6 +12950,7 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -13668,6 +13676,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -14514,6 +14524,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -15597,6 +15609,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -18652,6 +18666,8 @@ name|bool
 name|vxtparam
 decl_stmt|;
 comment|/* TRUE if it might really be a VXT PARAMETER 				   stmt. */
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -19182,6 +19198,7 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -19518,6 +19535,7 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -20165,6 +20183,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -22149,6 +22169,7 @@ name|ffelexToken
 name|t
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -22403,6 +22424,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -23296,6 +23319,8 @@ name|ffelexToken
 name|t
 parameter_list|)
 block|{
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -24004,7 +24029,24 @@ name|data
 operator|.
 name|expr
 operator|=
+name|ffeexpr_convert
+argument_list|(
 name|expr
+argument_list|,
+name|ft
+argument_list|,
+name|t
+argument_list|,
+name|FFEINFO_basictypeINTEGER
+argument_list|,
+name|FFEINFO_kindtypeINTEGER1
+argument_list|,
+literal|0
+argument_list|,
+name|FFETARGET_charactersizeNONE
+argument_list|,
+name|FFEEXPR_contextLET
+argument_list|)
 expr_stmt|;
 name|ffesta_tokens
 index|[
@@ -25062,6 +25104,7 @@ name|ffelexToken
 name|t
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -26460,6 +26503,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -26903,6 +26948,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -27343,6 +27390,8 @@ name|ffelexToken
 name|t
 parameter_list|)
 block|{
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -28950,6 +28999,7 @@ name|ffelexToken
 name|t
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -29199,6 +29249,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -29739,6 +29791,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -30273,6 +30327,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -31127,6 +31183,7 @@ name|ffelexToken
 name|t
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -31384,6 +31441,7 @@ name|ffelexToken
 name|t
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -32919,6 +32977,7 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -33979,6 +34038,7 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -34662,6 +34722,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -37041,6 +37103,7 @@ decl_stmt|;
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -40261,6 +40324,10 @@ operator|||
 operator|!
 name|ffelex_is_firstnamechar
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -40766,6 +40833,7 @@ comment|/* New NAMES requires splitting kP from new 				   edit desc. */
 name|ffestrFormat
 name|kw
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -42353,6 +42421,7 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -46147,6 +46216,7 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -47630,6 +47700,7 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -49069,6 +49140,7 @@ name|ffelexToken
 name|t
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -49665,6 +49737,7 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -50250,6 +50323,7 @@ name|ffelexToken
 name|t
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -50504,6 +50578,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -51356,6 +51432,7 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -52105,6 +52182,7 @@ name|ffelexToken
 name|t
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -73383,6 +73461,7 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -77073,6 +77152,7 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -78787,6 +78867,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -79801,6 +79883,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -80709,6 +80793,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -83008,6 +83094,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -83912,6 +84000,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -84745,6 +84835,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -85460,6 +85552,7 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -92870,6 +92963,8 @@ decl_stmt|;
 name|bool
 name|asterisk_ok
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -94560,6 +94655,7 @@ name|ffelexToken
 name|t
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -96833,6 +96929,7 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -98034,6 +98131,7 @@ name|ffelexToken
 name|t
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -99003,6 +99101,8 @@ name|ffelexToken
 name|t
 parameter_list|)
 block|{
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -99714,6 +99814,8 @@ block|{
 name|ffeTokenLength
 name|i
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* scan-decls.c - Extracts declarations from cpp output.    Copyright (C) 1993, 1995, 1997, 1998 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Per Bothner<bothner@cygnus.com>, July 1993.  */
+comment|/* scan-decls.c - Extracts declarations from cpp output.    Copyright (C) 1993, 1995, 97-98, 1999 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Per Bothner<bothner@cygnus.com>, July 1993.  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"system.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gansidecl.h"
 end_include
 
 begin_include
@@ -165,11 +159,13 @@ name|pfile
 decl_stmt|;
 name|int
 name|argc
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|int
@@ -504,6 +500,9 @@ argument_list|(
 name|pfile
 argument_list|)
 operator|==
+operator|(
+name|size_t
+operator|)
 name|start_written
 operator|+
 literal|1
@@ -586,8 +585,12 @@ condition|)
 goto|goto
 name|new_statement
 goto|;
-name|handle_comma
-label|:
+if|#
+directive|if
+literal|0
+block|handle_comma:
+endif|#
+directive|endif
 comment|/* Handle multiple declarators in a single declaration, 	     as in:  extern char *strcpy (), *strcat (), ... ; */
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code to allocate RTL structures.    Copyright (C) 1997 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code to allocate RTL structures.    Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -15,25 +15,11 @@ directive|include
 file|"system.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"obstack.h"
-end_include
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_alloc
-value|xmalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_free
-value|free
-end_define
+begin_undef
+undef|#
+directive|undef
+name|abort
+end_undef
 
 begin_define
 define|#
@@ -273,6 +259,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Decode a format letter into a C type string.  */
+end_comment
+
 begin_function
 specifier|static
 specifier|const
@@ -345,6 +335,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* Decode a format letter into the proper accessor function.  */
+end_comment
+
 begin_function
 specifier|static
 specifier|const
@@ -416,6 +410,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* Return true if a format character doesn't need normal processing.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -471,6 +469,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Return true if an rtx requires special processing.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -507,6 +509,20 @@ index|]
 operator|.
 name|enumname
 argument_list|,
+literal|"CONST_DOUBLE"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|defs
+index|[
+name|idx
+index|]
+operator|.
+name|enumname
+argument_list|,
 literal|"REG"
 argument_list|)
 operator|==
@@ -529,6 +545,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Fill `formats' with all unique format strings.  */
+end_comment
 
 begin_function
 specifier|static
@@ -621,6 +641,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* Emit a prototype for the rtx generator for a format.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -705,6 +729,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Emit a define mapping an rtx code to the generator for its format.  */
+end_comment
 
 begin_function
 specifier|static
@@ -869,6 +897,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Emit the implementation for the rtx generator for a format.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1084,6 +1116,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Emit the `do not edit' banner.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1096,22 +1132,26 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
-name|fprintf
+name|fputs
 argument_list|(
-name|f
-argument_list|,
 literal|"/* Generated automaticaly by the program `gengenrtl'\n"
+argument_list|,
+name|f
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fputs
 argument_list|(
-name|f
-argument_list|,
 literal|"   from the RTL description file `rtl.def' */\n\n"
+argument_list|,
+name|f
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Emit "genrtl.h".  */
+end_comment
 
 begin_function
 specifier|static
@@ -1199,6 +1239,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* Emit "genrtl.c".  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1282,42 +1326,7 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"  if (sizeof(struct rtx_def) - sizeof(rtunion) == sizeof(int))\n"
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"    *(int *)rt = 0;\n"
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"  else if (sizeof(struct rtx_def) - sizeof(rtunion) == sizeof(HOST_WIDE_INT))\n"
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"    *(HOST_WIDE_INT *)rt = 0;\n"
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"  else\n"
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"    bzero((char *) rt, sizeof(struct rtx_def) - sizeof(rtunion));\n\n"
+literal|"  memset(rt, 0, sizeof(struct rtx_def) - sizeof(rtunion));\n\n"
 argument_list|,
 name|f
 argument_list|)
@@ -1359,32 +1368,24 @@ name|defined
 argument_list|(
 name|USE_C_ALLOCA
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
 end_if
 
 begin_function
-name|char
-modifier|*
+name|PTR
 name|xmalloc
 parameter_list|(
 name|nbytes
 parameter_list|)
-name|int
+name|size_t
 name|nbytes
 decl_stmt|;
 block|{
-name|char
-modifier|*
+specifier|register
+name|PTR
 name|tmp
 init|=
 operator|(
-name|char
-operator|*
+name|PTR
 operator|)
 name|malloc
 argument_list|(
@@ -1424,7 +1425,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* USE_C_ALLOCA&& !__GNUC__ */
+comment|/* USE_C_ALLOCA */
 end_comment
 
 begin_function

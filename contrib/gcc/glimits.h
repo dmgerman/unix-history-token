@@ -319,17 +319,15 @@ argument_list|(
 name|__alpha__
 argument_list|)
 operator|||
-operator|(
 name|defined
 argument_list|(
 name|__sparc_v9__
 argument_list|)
-operator|&&
+operator|||
 name|defined
 argument_list|(
-name|__arch64__
+name|__sparcv9
 argument_list|)
-operator|)
 end_if
 
 begin_define

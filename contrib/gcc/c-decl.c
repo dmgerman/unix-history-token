@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Process declarations and variables for C compiler.    Copyright (C) 1988, 92-97, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Process declarations and variables for C compiler.    Copyright (C) 1988, 92-98, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -75,20 +75,6 @@ begin_decl_stmt
 specifier|extern
 name|cpp_reader
 name|parse_in
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|cpp_options
-name|parse_options
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|cpp_initialized
 decl_stmt|;
 end_decl_stmt
 
@@ -540,11 +526,24 @@ name|intDI_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|HOST_BITS_PER_WIDE_INT
+operator|>=
+literal|64
+end_if
+
 begin_decl_stmt
 name|tree
 name|intTI_type_node
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|tree
@@ -570,11 +569,24 @@ name|unsigned_intDI_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|HOST_BITS_PER_WIDE_INT
+operator|>=
+literal|64
+end_if
+
 begin_decl_stmt
 name|tree
 name|unsigned_intTI_type_node
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* a VOID_TYPE node.  */
@@ -1198,8 +1210,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
+name|int
 name|redeclaration_error_message
 name|PROTO
 argument_list|(
@@ -1406,6 +1417,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means use the ISO C9x dialect of C.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|flag_isoc9x
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero means that we have builtin functions, and main is an int */
 end_comment
 
@@ -1450,18 +1473,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means handle `#ident' directives.  0 means ignore them.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|flag_no_ident
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Nonzero means warn about use of implicit int. */
 end_comment
 
@@ -1499,7 +1510,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|warn_write_strings
+name|flag_const_strings
 decl_stmt|;
 end_decl_stmt
 
@@ -1520,6 +1531,16 @@ end_comment
 begin_decl_stmt
 name|int
 name|warn_bad_function_cast
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn about functions which might be candidates for attribute noreturn. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|warn_missing_noreturn
 decl_stmt|;
 end_decl_stmt
 
@@ -1744,6 +1765,7 @@ name|argv
 parameter_list|)
 name|int
 name|argc
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|char
 modifier|*
@@ -1766,36 +1788,6 @@ decl_stmt|;
 if|#
 directive|if
 name|USE_CPPLIB
-if|if
-condition|(
-operator|!
-name|cpp_initialized
-condition|)
-block|{
-name|cpp_reader_init
-argument_list|(
-operator|&
-name|parse_in
-argument_list|)
-expr_stmt|;
-name|parse_in
-operator|.
-name|data
-operator|=
-operator|&
-name|parse_options
-expr_stmt|;
-name|cpp_options_init
-argument_list|(
-operator|&
-name|parse_options
-argument_list|)
-expr_stmt|;
-name|cpp_initialized
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|strings_processed
 operator|=
 name|cpp_handle_option
@@ -1956,6 +1948,207 @@ expr_stmt|;
 name|flag_writable_strings
 operator|=
 literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|p
+argument_list|,
+literal|"-std="
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+block|{
+comment|/* Select the appropriate language standard.  We currently 	 recognize: 	 -std=iso9899:1990	same as -ansi 	 -std=iso9899:199409	ISO C as modified in amend. 1 	 -std=iso9899:199x	ISO C 9x 	 -std=c89		same as -std=iso9899:1990 	 -std=c9x		same as -std=iso9899:199x 	 -std=gnu89		default, iso9899:1990 + gnu extensions 	 -std=gnu9x		iso9899:199x + gnu extensions       */
+specifier|const
+name|char
+modifier|*
+name|argstart
+init|=
+operator|&
+name|p
+index|[
+literal|5
+index|]
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argstart
+argument_list|,
+literal|"iso9899:1990"
+argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|argstart
+argument_list|,
+literal|"c89"
+argument_list|)
+condition|)
+block|{
+name|iso_1990
+label|:
+name|flag_traditional
+operator|=
+literal|0
+expr_stmt|;
+name|flag_writable_strings
+operator|=
+literal|0
+expr_stmt|;
+name|flag_no_asm
+operator|=
+literal|1
+expr_stmt|;
+name|flag_no_nonansi_builtin
+operator|=
+literal|1
+expr_stmt|;
+name|flag_isoc9x
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argstart
+argument_list|,
+literal|"iso9899:199409"
+argument_list|)
+condition|)
+block|{
+comment|/* ??? The changes since ISO C 1990 are not supported.  */
+goto|goto
+name|iso_1990
+goto|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argstart
+argument_list|,
+literal|"iso9899:199x"
+argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|argstart
+argument_list|,
+literal|"c9x"
+argument_list|)
+condition|)
+block|{
+name|flag_traditional
+operator|=
+literal|0
+expr_stmt|;
+name|flag_writable_strings
+operator|=
+literal|0
+expr_stmt|;
+name|flag_no_asm
+operator|=
+literal|1
+expr_stmt|;
+name|flag_no_nonansi_builtin
+operator|=
+literal|1
+expr_stmt|;
+name|flag_isoc9x
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argstart
+argument_list|,
+literal|"gnu89"
+argument_list|)
+condition|)
+block|{
+name|flag_traditional
+operator|=
+literal|0
+expr_stmt|;
+name|flag_writable_strings
+operator|=
+literal|0
+expr_stmt|;
+name|flag_no_asm
+operator|=
+literal|0
+expr_stmt|;
+name|flag_no_nonansi_builtin
+operator|=
+literal|0
+expr_stmt|;
+name|flag_isoc9x
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argstart
+argument_list|,
+literal|"gnu9x"
+argument_list|)
+condition|)
+block|{
+name|flag_traditional
+operator|=
+literal|0
+expr_stmt|;
+name|flag_writable_strings
+operator|=
+literal|0
+expr_stmt|;
+name|flag_no_asm
+operator|=
+literal|0
+expr_stmt|;
+name|flag_no_nonansi_builtin
+operator|=
+literal|0
+expr_stmt|;
+name|flag_isoc9x
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+name|error
+argument_list|(
+literal|"unknown C standard `%s'"
+argument_list|,
+name|argstart
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -2264,47 +2457,12 @@ name|strcmp
 argument_list|(
 name|p
 argument_list|,
-literal|"-fno-ident"
-argument_list|)
-condition|)
-name|flag_no_ident
-operator|=
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|p
-argument_list|,
-literal|"-fident"
-argument_list|)
-condition|)
-name|flag_no_ident
-operator|=
-literal|0
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|p
-argument_list|,
 literal|"-ansi"
 argument_list|)
 condition|)
-name|flag_no_asm
-operator|=
-literal|1
-operator|,
-name|flag_no_nonansi_builtin
-operator|=
-literal|1
-expr_stmt|;
+goto|goto
+name|iso_1990
+goto|;
 elseif|else
 if|if
 condition|(
@@ -2467,7 +2625,7 @@ argument_list|,
 literal|"-Wwrite-strings"
 argument_list|)
 condition|)
-name|warn_write_strings
+name|flag_const_strings
 operator|=
 literal|1
 expr_stmt|;
@@ -2482,7 +2640,7 @@ argument_list|,
 literal|"-Wno-write-strings"
 argument_list|)
 condition|)
-name|warn_write_strings
+name|flag_const_strings
 operator|=
 literal|0
 expr_stmt|;
@@ -2543,6 +2701,36 @@ literal|"-Wno-bad-function-cast"
 argument_list|)
 condition|)
 name|warn_bad_function_cast
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"-Wmissing-noreturn"
+argument_list|)
+condition|)
+name|warn_missing_noreturn
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"-Wno-missing-noreturn"
+argument_list|)
+condition|)
+name|warn_missing_noreturn
 operator|=
 literal|0
 expr_stmt|;
@@ -3094,7 +3282,8 @@ argument_list|)
 condition|)
 name|warn_main
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 elseif|else
 if|if
@@ -3660,6 +3849,7 @@ name|definition_flag
 parameter_list|)
 name|int
 name|definition_flag
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|current_binding_level
@@ -3954,9 +4144,7 @@ if|#
 directive|if
 literal|0
 comment|/* Warn about incomplete structure types in this level.  */
-block|for (link = tags; link; link = TREE_CHAIN (link))     if (TYPE_SIZE (TREE_VALUE (link)) == 0)       { 	tree type = TREE_VALUE (link); 	char *errmsg; 	switch (TREE_CODE (type)) 	  { 	  case RECORD_TYPE: 	    errmsg = "`struct %s' incomplete in scope ending here"; 	    break; 	  case UNION_TYPE: 	    errmsg = "`union %s' incomplete in scope ending here"; 	    break; 	  case ENUMERAL_TYPE: 	    errmsg = "`enum %s' incomplete in scope ending here"; 	    break; 	  } 	if (TREE_CODE (TYPE_NAME (type)) == IDENTIFIER_NODE) 	  error (errmsg, IDENTIFIER_POINTER (TYPE_NAME (type))); 	else
-comment|/* If this type has a typedef-name, the TYPE_NAME is a TYPE_DECL.  */
-block|error (errmsg, IDENTIFIER_POINTER (DECL_NAME (TYPE_NAME (type))));       }
+block|for (link = tags; link; link = TREE_CHAIN (link))     if (TYPE_SIZE (TREE_VALUE (link)) == 0)       { 	tree type = TREE_VALUE (link); 	tree type_name = TYPE_NAME (type); 	char *id = IDENTIFIER_POINTER (TREE_CODE (type_name) == IDENTIFIER_NODE 				       ? type_name 				       : DECL_NAME (type_name)); 	switch (TREE_CODE (type)) 	  { 	  case RECORD_TYPE: 	    error ("`struct %s' incomplete in scope ending here", id); 	    break; 	  case UNION_TYPE: 	    error ("`union %s' incomplete in scope ending here", id); 	    break; 	  case ENUMERAL_TYPE: 	    error ("`enum %s' incomplete in scope ending here", id); 	    break; 	  }       }
 endif|#
 directive|endif
 comment|/* 0 */
@@ -5271,8 +5459,7 @@ argument_list|(
 name|newdecl
 argument_list|)
 decl_stmt|;
-name|char
-modifier|*
+name|int
 name|errmsg
 init|=
 literal|0
@@ -6219,12 +6406,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"A parameter list with an ellipsis can't match"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"an empty parameter name list declaration."
+literal|"A parameter list with an ellipsis can't match an empty parameter name list declaration."
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6246,12 +6428,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"An argument type that has a default promotion"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"can't match an empty parameter name list declaration."
+literal|"An argument type that has a default promotion can't match an empty parameter name list declaration."
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6282,13 +6459,49 @@ condition|(
 name|errmsg
 condition|)
 block|{
+switch|switch
+condition|(
+name|errmsg
+condition|)
+block|{
+case|case
+literal|1
+case|:
 name|error_with_decl
 argument_list|(
 name|newdecl
 argument_list|,
-name|errmsg
+literal|"redefinition of `%s'"
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|error_with_decl
+argument_list|(
+name|newdecl
+argument_list|,
+literal|"redeclaration of `%s'"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|error_with_decl
+argument_list|(
+name|newdecl
+argument_list|,
+literal|"conflicting declarations of `%s'"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
 name|error_with_decl
 argument_list|(
 name|olddecl
@@ -6435,27 +6648,6 @@ name|nargs
 operator|=
 literal|1
 init|;
-operator|(
-name|TYPE_MAIN_VARIANT
-argument_list|(
-name|TREE_VALUE
-argument_list|(
-name|parm
-argument_list|)
-argument_list|)
-operator|!=
-name|void_type_node
-operator|||
-name|TYPE_MAIN_VARIANT
-argument_list|(
-name|TREE_VALUE
-argument_list|(
-name|type
-argument_list|)
-argument_list|)
-operator|!=
-name|void_type_node
-operator|)
 condition|;
 name|parm
 operator|=
@@ -6486,6 +6678,45 @@ argument_list|)
 argument_list|)
 operator|==
 name|void_type_node
+operator|&&
+name|TYPE_MAIN_VARIANT
+argument_list|(
+name|TREE_VALUE
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+operator|==
+name|void_type_node
+condition|)
+block|{
+name|warning_with_decl
+argument_list|(
+name|newdecl
+argument_list|,
+literal|"prototype for `%s' follows"
+argument_list|)
+expr_stmt|;
+name|warning_with_decl
+argument_list|(
+name|olddecl
+argument_list|,
+literal|"non-prototype definition here"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|TYPE_MAIN_VARIANT
+argument_list|(
+name|TREE_VALUE
+argument_list|(
+name|parm
+argument_list|)
+argument_list|)
+operator|==
+name|void_type_node
 operator|||
 name|TYPE_MAIN_VARIANT
 argument_list|(
@@ -6498,9 +6729,23 @@ operator|==
 name|void_type_node
 condition|)
 block|{
+name|error_with_decl
+argument_list|(
+name|newdecl
+argument_list|,
+literal|"prototype for `%s' follows and number of arguments doesn't match"
+argument_list|)
+expr_stmt|;
+name|error_with_decl
+argument_list|(
+name|olddecl
+argument_list|,
+literal|"non-prototype definition here"
+argument_list|)
+expr_stmt|;
 name|errmsg
 operator|=
-literal|"prototype for `%s' follows and number of arguments"
+literal|1
 expr_stmt|;
 break|break;
 block|}
@@ -6550,23 +6795,11 @@ operator|)
 operator|)
 condition|)
 block|{
-name|errmsg
-operator|=
-literal|"prototype for `%s' follows and argument %d"
-expr_stmt|;
-break|break;
-block|}
-block|}
-if|if
-condition|(
-name|errmsg
-condition|)
-block|{
 name|error_with_decl
 argument_list|(
 name|newdecl
 argument_list|,
-name|errmsg
+literal|"prototype for `%s' follows and argument %d doesn't match"
 argument_list|,
 name|nargs
 argument_list|)
@@ -6575,26 +6808,15 @@ name|error_with_decl
 argument_list|(
 name|olddecl
 argument_list|,
-literal|"doesn't match non-prototype definition here"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|warning_with_decl
-argument_list|(
-name|newdecl
-argument_list|,
-literal|"prototype for `%s' follows"
-argument_list|)
-expr_stmt|;
-name|warning_with_decl
-argument_list|(
-name|olddecl
-argument_list|,
 literal|"non-prototype definition here"
 argument_list|)
 expr_stmt|;
+name|errmsg
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 block|}
 block|}
 comment|/* Warn about mismatches in various flags.  */
@@ -6697,6 +6919,36 @@ argument_list|(
 name|newdecl
 argument_list|,
 literal|"static declaration for `%s' follows non-static"
+argument_list|)
+expr_stmt|;
+comment|/* If warn_traditional, warn when a non-static function 	     declaration follows a static one. */
+if|if
+condition|(
+name|warn_traditional
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|olddecl
+argument_list|)
+operator|==
+name|FUNCTION_DECL
+operator|&&
+operator|!
+name|TREE_PUBLIC
+argument_list|(
+name|olddecl
+argument_list|)
+operator|&&
+name|TREE_PUBLIC
+argument_list|(
+name|newdecl
+argument_list|)
+condition|)
+name|warning_with_decl
+argument_list|(
+name|newdecl
+argument_list|,
+literal|"non-static declaration for `%s' follows static"
 argument_list|)
 expr_stmt|;
 comment|/* Warn when const declaration follows a non-const 	     declaration, but not for functions.  */
@@ -7289,6 +7541,26 @@ argument_list|(
 name|olddecl
 argument_list|)
 expr_stmt|;
+name|DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT
+argument_list|(
+name|newdecl
+argument_list|)
+operator||=
+name|DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT
+argument_list|(
+name|olddecl
+argument_list|)
+expr_stmt|;
+name|DECL_NO_CHECK_MEMORY_USAGE
+argument_list|(
+name|newdecl
+argument_list|)
+operator||=
+name|DECL_NO_CHECK_MEMORY_USAGE
+argument_list|(
+name|olddecl
+argument_list|)
+expr_stmt|;
 block|}
 name|pop_obstacks
 argument_list|()
@@ -7675,7 +7947,10 @@ argument_list|(
 name|newdecl
 argument_list|)
 operator|=
+name|DECL_ORIGIN
+argument_list|(
 name|olddecl
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -8953,7 +9228,10 @@ argument_list|(
 name|x
 argument_list|)
 operator|=
+name|DECL_ORIGIN
+argument_list|(
 name|oldglobal
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Inner extern decl is built-in if global one is.  */
@@ -9183,9 +9461,12 @@ condition|)
 block|{
 name|char
 modifier|*
-name|warnstring
+name|id
 init|=
-literal|0
+name|IDENTIFIER_POINTER
+argument_list|(
+name|name
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -9218,9 +9499,12 @@ argument_list|)
 operator|==
 name|PARM_DECL
 condition|)
-name|warnstring
-operator|=
+name|warning
+argument_list|(
 literal|"declaration of `%s' shadows a parameter"
+argument_list|,
+name|id
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -9229,9 +9513,12 @@ name|oldlocal
 operator|!=
 literal|0
 condition|)
-name|warnstring
-operator|=
+name|warning
+argument_list|(
 literal|"declaration of `%s' shadows previous local"
+argument_list|,
+name|id
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -9250,22 +9537,11 @@ argument_list|)
 operator|!=
 name|error_mark_node
 condition|)
-name|warnstring
-operator|=
-literal|"declaration of `%s' shadows global declaration"
-expr_stmt|;
-if|if
-condition|(
-name|warnstring
-condition|)
 name|warning
 argument_list|(
-name|warnstring
+literal|"declaration of `%s' shadows global declaration"
 argument_list|,
-name|IDENTIFIER_POINTER
-argument_list|(
-name|name
-argument_list|)
+name|id
 argument_list|)
 expr_stmt|;
 block|}
@@ -9580,13 +9856,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return zero if the declaration NEWDECL is valid    when the declaration OLDDECL (assumed to be for the same name)    has already been seen.    Otherwise return an error message format string with a %s    where the identifier should go.  */
+comment|/* Return zero if the declaration NEWDECL is valid    when the declaration OLDDECL (assumed to be for the same name)    has already been seen.    Otherwise return 1 if NEWDECL is a redefinition, 2 if it is a redeclaration,    and 3 if it is a conflicting declaration.  */
 end_comment
 
 begin_function
 specifier|static
-name|char
-modifier|*
+name|int
 name|redeclaration_error_message
 parameter_list|(
 name|newdecl
@@ -9663,7 +9938,7 @@ return|return
 literal|0
 return|;
 return|return
-literal|"redefinition of `%s'"
+literal|1
 return|;
 block|}
 elseif|else
@@ -9722,7 +9997,7 @@ operator|)
 operator|)
 condition|)
 return|return
-literal|"redefinition of `%s'"
+literal|1
 return|;
 return|return
 literal|0
@@ -9771,7 +10046,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-literal|"redefinition of `%s'"
+literal|1
 return|;
 comment|/* Now we have two tentative defs, or one tentative and one real def.  */
 comment|/* Insist that the linkage match.  */
@@ -9788,7 +10063,7 @@ name|newdecl
 argument_list|)
 condition|)
 return|return
-literal|"conflicting declarations of `%s'"
+literal|3
 return|;
 return|return
 literal|0
@@ -9844,7 +10119,7 @@ name|olddecl
 argument_list|)
 condition|)
 return|return
-literal|"redeclaration of `%s'"
+literal|2
 return|;
 return|return
 literal|0
@@ -11200,6 +11475,11 @@ name|intDI_type_node
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|HOST_BITS_PER_WIDE_INT
+operator|>=
+literal|64
 name|intTI_type_node
 operator|=
 name|make_signed_type
@@ -11222,6 +11502,8 @@ name|intTI_type_node
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|unsigned_intQI_type_node
 operator|=
 name|make_unsigned_type
@@ -11310,6 +11592,11 @@ name|unsigned_intDI_type_node
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|HOST_BITS_PER_WIDE_INT
+operator|>=
+literal|64
 name|unsigned_intTI_type_node
 operator|=
 name|make_unsigned_type
@@ -11332,6 +11619,8 @@ name|unsigned_intTI_type_node
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|float_type_node
 operator|=
 name|make_node
@@ -12329,22 +12618,11 @@ argument_list|)
 expr_stmt|;
 name|builtin_function
 argument_list|(
-literal|"__builtin_fp"
+literal|"__builtin_dwarf_cfa"
 argument_list|,
 name|ptr_ftype_void
 argument_list|,
-name|BUILT_IN_FP
-argument_list|,
-name|NULL_PTR
-argument_list|)
-expr_stmt|;
-name|builtin_function
-argument_list|(
-literal|"__builtin_sp"
-argument_list|,
-name|ptr_ftype_void
-argument_list|,
-name|BUILT_IN_SP
+name|BUILT_IN_DWARF_CFA
 argument_list|,
 name|NULL_PTR
 argument_list|)
@@ -12400,52 +12678,7 @@ argument_list|)
 expr_stmt|;
 name|builtin_function
 argument_list|(
-literal|"__builtin_set_return_addr_reg"
-argument_list|,
-name|build_function_type
-argument_list|(
-name|void_type_node
-argument_list|,
-name|tree_cons
-argument_list|(
-name|NULL_TREE
-argument_list|,
-name|ptr_type_node
-argument_list|,
-name|endlink
-argument_list|)
-argument_list|)
-argument_list|,
-name|BUILT_IN_SET_RETURN_ADDR_REG
-argument_list|,
-name|NULL_PTR
-argument_list|)
-expr_stmt|;
-name|builtin_function
-argument_list|(
-literal|"__builtin_eh_stub_old"
-argument_list|,
-name|ptr_ftype_void
-argument_list|,
-name|BUILT_IN_EH_STUB_OLD
-argument_list|,
-name|NULL_PTR
-argument_list|)
-expr_stmt|;
-name|builtin_function
-argument_list|(
-literal|"__builtin_eh_stub"
-argument_list|,
-name|ptr_ftype_void
-argument_list|,
-name|BUILT_IN_EH_STUB
-argument_list|,
-name|NULL_PTR
-argument_list|)
-expr_stmt|;
-name|builtin_function
-argument_list|(
-literal|"__builtin_set_eh_regs"
+literal|"__builtin_eh_return"
 argument_list|,
 name|build_function_type
 argument_list|(
@@ -12468,12 +12701,19 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|,
+name|tree_cons
+argument_list|(
+name|NULL_TREE
+argument_list|,
+name|ptr_type_node
+argument_list|,
 name|endlink
 argument_list|)
 argument_list|)
 argument_list|)
+argument_list|)
 argument_list|,
-name|BUILT_IN_SET_EH_REGS
+name|BUILT_IN_EH_RETURN
 argument_list|,
 name|NULL_PTR
 argument_list|)
@@ -13379,7 +13619,6 @@ name|finish_incomplete_decl
 expr_stmt|;
 name|lang_get_alias_set
 operator|=
-operator|&
 name|c_get_alias_set
 expr_stmt|;
 block|}
@@ -13401,6 +13640,7 @@ name|function_code
 parameter_list|,
 name|library_name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -13412,6 +13652,7 @@ name|enum
 name|built_in_function
 name|function_code
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|library_name
@@ -13982,6 +14223,8 @@ expr_stmt|;
 if|if
 condition|(
 name|warn_main
+operator|>
+literal|0
 operator|&&
 name|TREE_CODE
 argument_list|(
@@ -15869,7 +16112,15 @@ name|int
 name|constp
 decl_stmt|;
 name|int
+name|restrictp
+decl_stmt|;
+name|int
 name|volatilep
+decl_stmt|;
+name|int
+name|type_quals
+init|=
+name|TYPE_UNQUALIFIED
 decl_stmt|;
 name|int
 name|inlinep
@@ -15894,6 +16145,7 @@ name|typedef_decl
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -16490,7 +16742,7 @@ argument_list|()
 operator|)
 condition|)
 block|{
-comment|/* C9x will probably require a diagnostic here. 	     For now, issue a warning if -Wreturn-type and this is a function, 	     or if -Wimplicit; prefer the former warning since it is more 	     explicit.  */
+comment|/* Issue a warning if this is an ISO C 9x program or if -Wreturn-type 	     and this is a function, or if -Wimplicit; prefer the former 	     warning since it is more explicit.  */
 if|if
 condition|(
 operator|(
@@ -16509,6 +16761,8 @@ elseif|else
 if|if
 condition|(
 name|warn_implicit_int
+operator|||
+name|flag_isoc9x
 condition|)
 name|warning
 argument_list|(
@@ -17271,7 +17525,7 @@ name|type
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Set CONSTP if this declaration is `const', whether by      explicit specification or via a typedef.      Likewise for VOLATILEP.  */
+comment|/* Figure out the type qualifiers for the declaration.  There are      two ways a declaration can become qualified.  One is something      like `const int i' where the `const' is explicit.  Another is      something like `typedef const int CI; CI i' where the type of the      declaration contains the `const'.  */
 name|constp
 operator|=
 operator|!
@@ -17288,6 +17542,26 @@ name|RID_CONST
 operator|)
 operator|+
 name|TYPE_READONLY
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
+name|restrictp
+operator|=
+operator|!
+operator|!
+operator|(
+name|specbits
+operator|&
+literal|1
+operator|<<
+operator|(
+name|int
+operator|)
+name|RID_RESTRICT
+operator|)
+operator|+
+name|TYPE_RESTRICT
 argument_list|(
 name|type
 argument_list|)
@@ -17342,6 +17616,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|restrictp
+operator|>
+literal|1
+condition|)
+name|pedwarn
+argument_list|(
+literal|"duplicate `restrict'"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|volatilep
 operator|>
 literal|1
@@ -17357,12 +17642,7 @@ operator|!
 name|flag_gen_aux_info
 operator|&&
 operator|(
-name|TYPE_READONLY
-argument_list|(
-name|type
-argument_list|)
-operator|||
-name|TYPE_VOLATILE
+name|TYPE_QUALS
 argument_list|(
 name|type
 argument_list|)
@@ -17374,6 +17654,34 @@ name|TYPE_MAIN_VARIANT
 argument_list|(
 name|type
 argument_list|)
+expr_stmt|;
+name|type_quals
+operator|=
+operator|(
+operator|(
+name|constp
+condition|?
+name|TYPE_QUAL_CONST
+else|:
+literal|0
+operator|)
+operator||
+operator|(
+name|restrictp
+condition|?
+name|TYPE_QUAL_RESTRICT
+else|:
+literal|0
+operator|)
+operator||
+operator|(
+name|volatilep
+condition|?
+name|TYPE_QUAL_VOLATILE
+else|:
+literal|0
+operator|)
+operator|)
 expr_stmt|;
 comment|/* Warn if two storage classes are given. Default to `auto'.  */
 block|{
@@ -18277,26 +18585,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|constp
-operator|||
-name|volatilep
+name|type_quals
 condition|)
 name|type
 operator|=
-name|c_build_type_variant
+name|c_build_qualified_type
 argument_list|(
 name|type
 argument_list|,
-name|constp
-argument_list|,
-name|volatilep
+name|type_quals
 argument_list|)
 expr_stmt|;
 if|#
 directive|if
 literal|0
 comment|/* don't clear these; leave them set so that the array type 	   or the variable is itself const or volatile.  */
-block|constp = 0; 	  volatilep = 0;
+block|type_quals = TYPE_UNQUALIFIED;
 endif|#
 directive|endif
 if|if
@@ -18474,31 +18778,23 @@ comment|/* Omit the arg types if -traditional, since the arg types 	     and the
 block|type = build_function_type (type, 				      flag_traditional  				      ? NULL_TREE : arg_types);
 endif|#
 directive|endif
-comment|/* ANSI seems to say that `const int foo ();' 	     does not make the function foo const.  */
+comment|/* Type qualifiers before the return type of the function 	     qualify the return type, not the function type.  */
 if|if
 condition|(
-name|constp
-operator|||
-name|volatilep
+name|type_quals
 condition|)
 name|type
 operator|=
-name|c_build_type_variant
+name|c_build_qualified_type
 argument_list|(
 name|type
 argument_list|,
-name|constp
-argument_list|,
-name|volatilep
+name|type_quals
 argument_list|)
 expr_stmt|;
-name|constp
+name|type_quals
 operator|=
-literal|0
-expr_stmt|;
-name|volatilep
-operator|=
-literal|0
+name|TYPE_UNQUALIFIED
 expr_stmt|;
 name|type
 operator|=
@@ -18574,41 +18870,29 @@ argument_list|)
 operator|==
 name|FUNCTION_TYPE
 operator|&&
-operator|(
-name|constp
-operator|||
-name|volatilep
-operator|)
+name|type_quals
 condition|)
 name|pedwarn
 argument_list|(
-literal|"ANSI C forbids const or volatile function types"
+literal|"ANSI C forbids qualified function types"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|constp
-operator|||
-name|volatilep
+name|type_quals
 condition|)
 name|type
 operator|=
-name|c_build_type_variant
+name|c_build_qualified_type
 argument_list|(
 name|type
 argument_list|,
-name|constp
-argument_list|,
-name|volatilep
+name|type_quals
 argument_list|)
 expr_stmt|;
-name|constp
+name|type_quals
 operator|=
-literal|0
-expr_stmt|;
-name|volatilep
-operator|=
-literal|0
+name|TYPE_UNQUALIFIED
 expr_stmt|;
 name|size_varies
 operator|=
@@ -18639,6 +18923,18 @@ name|erred
 init|=
 literal|0
 decl_stmt|;
+name|constp
+operator|=
+literal|0
+expr_stmt|;
+name|volatilep
+operator|=
+literal|0
+expr_stmt|;
+name|restrictp
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|typemodlist
@@ -18658,12 +18954,17 @@ name|typemodlist
 argument_list|)
 control|)
 block|{
-if|if
-condition|(
+name|tree
+name|qualifier
+init|=
 name|TREE_VALUE
 argument_list|(
 name|typemodlist
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|qualifier
 operator|==
 name|ridpointers
 index|[
@@ -18679,10 +18980,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|TREE_VALUE
-argument_list|(
-name|typemodlist
-argument_list|)
+name|qualifier
 operator|==
 name|ridpointers
 index|[
@@ -18693,6 +18991,22 @@ name|RID_VOLATILE
 index|]
 condition|)
 name|volatilep
+operator|++
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|qualifier
+operator|==
+name|ridpointers
+index|[
+operator|(
+name|int
+operator|)
+name|RID_RESTRICT
+index|]
+condition|)
+name|restrictp
 operator|++
 expr_stmt|;
 elseif|else
@@ -18734,6 +19048,45 @@ name|pedwarn
 argument_list|(
 literal|"duplicate `volatile'"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|restrictp
+operator|>
+literal|1
+condition|)
+name|pedwarn
+argument_list|(
+literal|"duplicate `restrict'"
+argument_list|)
+expr_stmt|;
+name|type_quals
+operator|=
+operator|(
+operator|(
+name|constp
+condition|?
+name|TYPE_QUAL_CONST
+else|:
+literal|0
+operator|)
+operator||
+operator|(
+name|restrictp
+condition|?
+name|TYPE_QUAL_RESTRICT
+else|:
+literal|0
+operator|)
+operator||
+operator|(
+name|volatilep
+condition|?
+name|TYPE_QUAL_VOLATILE
+else|:
+literal|0
+operator|)
+operator|)
 expr_stmt|;
 block|}
 name|declarator
@@ -18812,32 +19165,24 @@ argument_list|)
 operator|==
 name|FUNCTION_TYPE
 operator|&&
-operator|(
-name|constp
-operator|||
-name|volatilep
-operator|)
+name|type_quals
 condition|)
 name|pedwarn
 argument_list|(
-literal|"ANSI C forbids const or volatile function types"
+literal|"ANSI C forbids qualified function types"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|constp
-operator|||
-name|volatilep
+name|type_quals
 condition|)
 name|type
 operator|=
-name|c_build_type_variant
+name|c_build_qualified_type
 argument_list|(
 name|type
 argument_list|,
-name|constp
-argument_list|,
-name|volatilep
+name|type_quals
 argument_list|)
 expr_stmt|;
 name|decl
@@ -18969,11 +19314,7 @@ argument_list|)
 operator|==
 name|FUNCTION_TYPE
 operator|&&
-operator|(
-name|constp
-operator|||
-name|volatilep
-operator|)
+name|type_quals
 condition|)
 name|pedwarn
 argument_list|(
@@ -18982,19 +19323,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|constp
-operator|||
-name|volatilep
+name|type_quals
 condition|)
 name|type
 operator|=
-name|c_build_type_variant
+name|c_build_qualified_type
 argument_list|(
 name|type
 argument_list|,
-name|constp
-argument_list|,
-name|volatilep
+name|type_quals
 argument_list|)
 expr_stmt|;
 name|pop_obstacks
@@ -19135,19 +19472,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|constp
-operator|||
-name|volatilep
+name|type_quals
 condition|)
 name|type
 operator|=
-name|c_build_type_variant
+name|c_build_qualified_type
 argument_list|(
 name|type
 argument_list|,
-name|constp
-argument_list|,
-name|volatilep
+name|type_quals
 argument_list|)
 expr_stmt|;
 name|type
@@ -19157,11 +19490,9 @@ argument_list|(
 name|type
 argument_list|)
 expr_stmt|;
-name|volatilep
+name|type_quals
 operator|=
-name|constp
-operator|=
-literal|0
+name|TYPE_UNQUALIFIED
 expr_stmt|;
 name|size_varies
 operator|=
@@ -19183,32 +19514,24 @@ if|if
 condition|(
 name|pedantic
 operator|&&
-operator|(
-name|constp
-operator|||
-name|volatilep
-operator|)
+name|type_quals
 condition|)
 name|pedwarn
 argument_list|(
-literal|"ANSI C forbids const or volatile function types"
+literal|"ANSI C forbids qualified function types"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|constp
-operator|||
-name|volatilep
+name|type_quals
 condition|)
 name|type
 operator|=
-name|c_build_type_variant
+name|c_build_qualified_type
 argument_list|(
 name|type
 argument_list|,
-name|constp
-argument_list|,
-name|volatilep
+name|type_quals
 argument_list|)
 expr_stmt|;
 name|type
@@ -19218,11 +19541,9 @@ argument_list|(
 name|type
 argument_list|)
 expr_stmt|;
-name|volatilep
+name|type_quals
 operator|=
-name|constp
-operator|=
-literal|0
+name|TYPE_UNQUALIFIED
 expr_stmt|;
 block|}
 name|decl
@@ -19415,27 +19736,21 @@ argument_list|)
 operator|==
 name|ARRAY_TYPE
 operator|&&
-operator|(
-name|constp
-operator|||
-name|volatilep
-operator|)
+name|type_quals
 condition|)
 block|{
 name|type
 operator|=
 name|build_array_type
 argument_list|(
-name|c_build_type_variant
+name|c_build_qualified_type
 argument_list|(
 name|TREE_TYPE
 argument_list|(
 name|type
 argument_list|)
 argument_list|,
-name|constp
-argument_list|,
-name|volatilep
+name|type_quals
 argument_list|)
 argument_list|,
 name|TYPE_DOMAIN
@@ -19448,7 +19763,7 @@ if|#
 directive|if
 literal|0
 comment|/* Leave the field const or volatile as well.  */
-block|constp = volatilep = 0;
+block|type_quals = TYPE_UNQUALIFIED;
 endif|#
 directive|endif
 block|}
@@ -19633,11 +19948,7 @@ if|if
 condition|(
 name|pedantic
 operator|&&
-operator|(
-name|constp
-operator|||
-name|volatilep
-operator|)
+name|type_quals
 operator|&&
 operator|!
 name|DECL_IN_SYSTEM_HEADER
@@ -19647,7 +19958,7 @@ argument_list|)
 condition|)
 name|pedwarn
 argument_list|(
-literal|"ANSI C forbids const or volatile functions"
+literal|"ANSI C forbids qualified function types"
 argument_list|)
 expr_stmt|;
 if|if
@@ -19667,8 +19978,7 @@ argument_list|)
 operator|==
 name|void_type_node
 operator|&&
-operator|(
-name|TYPE_READONLY
+name|TYPE_QUALS
 argument_list|(
 name|TREE_TYPE
 argument_list|(
@@ -19678,18 +19988,6 @@ name|decl
 argument_list|)
 argument_list|)
 argument_list|)
-operator|||
-name|TYPE_VOLATILE
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|decl
-argument_list|)
-argument_list|)
-argument_list|)
-operator|)
 operator|&&
 operator|!
 name|DECL_IN_SYSTEM_HEADER
@@ -19699,12 +19997,17 @@ argument_list|)
 condition|)
 name|pedwarn
 argument_list|(
-literal|"ANSI C forbids const or volatile void function return type"
+literal|"ANSI C forbids qualified void function return type"
 argument_list|)
 expr_stmt|;
+comment|/* GNU C interprets a `volatile void' return type to indicate 	   that the function does not return.  */
 if|if
 condition|(
-name|volatilep
+operator|(
+name|type_quals
+operator|&
+name|TYPE_QUAL_VOLATILE
+operator|)
 operator|&&
 name|TREE_TYPE
 argument_list|(
@@ -19848,27 +20151,21 @@ argument_list|)
 operator|==
 name|ARRAY_TYPE
 operator|&&
-operator|(
-name|constp
-operator|||
-name|volatilep
-operator|)
+name|type_quals
 condition|)
 block|{
 name|type
 operator|=
 name|build_array_type
 argument_list|(
-name|c_build_type_variant
+name|c_build_qualified_type
 argument_list|(
 name|TREE_TYPE
 argument_list|(
 name|type
 argument_list|)
 argument_list|,
-name|constp
-argument_list|,
-name|volatilep
+name|type_quals
 argument_list|)
 argument_list|,
 name|TYPE_DOMAIN
@@ -19881,7 +20178,7 @@ if|#
 directive|if
 literal|0
 comment|/* Leave the variable const or volatile as well.  */
-block|constp = volatilep = 0;
+block|type_quals = TYPE_UNQUALIFIED;
 endif|#
 directive|endif
 block|}
@@ -20061,37 +20358,13 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Record constancy and volatility.  */
-if|if
-condition|(
-name|constp
-condition|)
-name|TREE_READONLY
+name|c_apply_type_quals_to_decl
 argument_list|(
+name|type_quals
+argument_list|,
 name|decl
 argument_list|)
-operator|=
-literal|1
 expr_stmt|;
-if|if
-condition|(
-name|volatilep
-condition|)
-block|{
-name|TREE_SIDE_EFFECTS
-argument_list|(
-name|decl
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
-name|TREE_THIS_VOLATILE
-argument_list|(
-name|decl
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
-block|}
 comment|/* If a type has volatile components, it should be stored in memory.        Otherwise, the fact that those components are volatile        will be ignored, and would even crash the compiler.  */
 if|if
 condition|(
@@ -20982,12 +21255,7 @@ condition|)
 block|{
 name|warning
 argument_list|(
-literal|"its scope is only this definition or declaration,"
-argument_list|)
-expr_stmt|;
-name|warning
-argument_list|(
-literal|"which is probably not what you want."
+literal|"its scope is only this definition or declaration, which is probably not what you want."
 argument_list|)
 expr_stmt|;
 name|already
@@ -21335,12 +21603,15 @@ name|declspecs
 parameter_list|,
 name|width
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|line
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|tree
 name|declarator
@@ -21684,9 +21955,14 @@ literal|0
 condition|)
 name|pedwarn
 argument_list|(
-literal|"%s has no %smembers"
-argument_list|,
 operator|(
+name|fieldlist
+condition|?
+literal|"%s has no named members"
+else|:
+literal|"%s has no members"
+operator|)
+argument_list|,
 name|TREE_CODE
 argument_list|(
 name|t
@@ -21696,16 +21972,7 @@ name|UNION_TYPE
 condition|?
 literal|"union"
 else|:
-literal|"structure"
-operator|)
-argument_list|,
-operator|(
-name|fieldlist
-condition|?
-literal|"named "
-else|:
-literal|""
-operator|)
+literal|"struct"
 argument_list|)
 expr_stmt|;
 block|}
@@ -24503,6 +24770,18 @@ argument_list|)
 operator|=
 name|current_extern_inline
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SET_DEFAULT_DECL_ATTRIBUTES
+name|SET_DEFAULT_DECL_ATTRIBUTES
+argument_list|(
+name|decl1
+argument_list|,
+name|attributes
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* This function exists in static storage.      (This does not mean `static' in the C sense!)  */
 name|TREE_STATIC
 argument_list|(
@@ -24529,6 +24808,8 @@ comment|/* Warn for unlikely, improbable, or stupid declarations of `main'. */
 if|if
 condition|(
 name|warn_main
+operator|>
+literal|0
 operator|&&
 name|strcmp
 argument_list|(
@@ -27020,7 +27301,7 @@ operator|!=
 name|integer_type_node
 condition|)
 block|{
-comment|/* You would expect the sense of this test to be the other way 	     around, but if warn_main is set, we will already have warned, 	     so this would be a duplicate.  This is the warning you get 	     in some environments even if you *don't* ask for it, because 	     these are environments where it may be more of a problem than 	     usual.  */
+comment|/* If warn_main is 1 (-Wmain) or 2 (-Wall), we have already warned. 	     If warn_main is -1 (-Wno-main) we don't want to be warned. */
 if|if
 condition|(
 operator|!
@@ -27070,6 +27351,27 @@ expr_stmt|;
 name|current_function_returns_null
 operator||=
 name|can_reach_end
+expr_stmt|;
+if|if
+condition|(
+name|warn_missing_noreturn
+operator|&&
+operator|!
+name|TREE_THIS_VOLATILE
+argument_list|(
+name|fndecl
+argument_list|)
+operator|&&
+operator|!
+name|current_function_returns_null
+operator|&&
+operator|!
+name|current_function_returns_value
+condition|)
+name|warning
+argument_list|(
+literal|"function might be possible candidate for attribute `noreturn'"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

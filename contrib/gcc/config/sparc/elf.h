@@ -92,5 +92,65 @@ name|LONG_DOUBLE_TYPE_SIZE
 value|64
 end_define
 
+begin_comment
+comment|/* This solaris2 define does not apply.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|STDC_0_IN_SYSTEM_HEADERS
+end_undef
+
+begin_comment
+comment|/* We don't want to use the Solaris2 specific long long int conversion    routines.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|INIT_SUBTARGET_OPTABS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|INIT_SUBTARGET_OPTABS
+end_define
+
+begin_comment
+comment|/* ??? We haven't added Solaris2 equivalent 64 bit library routines to    lb1sp*.asm, so we need to avoid using them.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|MULDI3_LIBCALL
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|DIVDI3_LIBCALL
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|UDIVDI3_LIBCALL
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MODDI3_LIBCALL
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|UMODDI3_LIBCALL
+end_undef
+
 end_unit
 

@@ -257,78 +257,7 @@ value|fprintf (FILE, "\t.word .L%d\n", VALUE)
 end_define
 
 begin_comment
-comment|/* Output assembler code to FILE to increment profiler label # LABELNO    for profiling a function entry.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|FUNCTION_PROFILER
-end_undef
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_PROFILER
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|fprintf (FILE, "\tsethi %%hi(.LP%d),%%o0\n\tcall mcount\n\tor %%lo(.LP%d),%%o0,%%o0\n", \ 	   (LABELNO), (LABELNO))
-end_define
-
-begin_comment
-comment|/* Output assembler code to FILE to initialize this source file's    basic block profiling info, if that has not already been done.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|FUNCTION_BLOCK_PROFILER
-end_undef
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_BLOCK_PROFILER
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|fprintf (FILE, "\tsethi %%hi(.LPBX0),%%o0\n\tld [%%lo(.LPBX0)+%%o0],%%o1\n\ttst %%o1\n\tbne .LPY%d\n\tnop\n\tcall ___bb_init_func\n\tnop\n.LPY%d:\n",  \ 	   (LABELNO), (LABELNO))
-end_define
-
-begin_comment
-comment|/* Output assembler code to FILE to increment the entry-count for    the BLOCKNO'th basic block in this source file.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|BLOCK_PROFILER
-end_undef
-
-begin_define
-define|#
-directive|define
-name|BLOCK_PROFILER
-parameter_list|(
-name|FILE
-parameter_list|,
-name|BLOCKNO
-parameter_list|)
-define|\
-value|{								\   int blockn = (BLOCKNO);					\   fprintf (FILE, "\tsethi %%hi(.LPBX2+%d),%%g1\n\tld [%%lo(.LPBX2+%d)+%%g1],%%g2\n\ \tadd %%g2,1,%%g2\n\tst %%g2,[%%lo(.LPBX2+%d)+%%g1]\n",		\ 	   4 * blockn, 4 * blockn, 4 * blockn);			\   CC_STATUS_INIT;
-comment|/* We have clobbered %g1.  Also %g2.  */
-value|\ }
-end_define
-
-begin_comment
-comment|/*   This is needed for SunOS 4.0, and should not hurt for 3.2    versions either.  */
+comment|/* This is needed for SunOS 4.0, and should not hurt for 3.2    versions either.  */
 end_comment
 
 begin_undef

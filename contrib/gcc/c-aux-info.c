@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate information regarding function declarations and definitions based    on information stored in GCC's tree structure.  This code implements the    -aux-info option.    Copyright (C) 1989, 91, 94, 95, 97, 1998 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@segfault.us.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate information regarding function declarations and definitions based    on information stored in GCC's tree structure.  This code implements the    -aux-info option.    Copyright (C) 1989, 91, 94, 95, 97-98, 1999 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@segfault.us.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"toplev.h"
 end_include
 
 begin_include
@@ -56,48 +62,10 @@ end_typedef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|data_type
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|concat
-name|PROTO
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|concat3
-name|PROTO
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +77,7 @@ name|affix_data_type
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -118,6 +87,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|gen_formal_list_for_type
@@ -147,6 +117,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|gen_formal_list_for_func_def
@@ -163,12 +134,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|gen_type
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -182,6 +155,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|gen_decl
@@ -202,241 +176,233 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  Take two strings and mash them together into a newly allocated area.  */
+comment|/* Concatenate a sequence of strings, returning the result.     This function is based on the one in libiberty.  */
 end_comment
 
-begin_function
-specifier|static
+begin_comment
+comment|/* This definition will conflict with the one from prefix.c in    libcpp.a when linking cc1 and cc1obj.  So only provide it if we are    not using libcpp.a */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_CPPLIB
+end_ifndef
+
+begin_decl_stmt
 name|char
 modifier|*
 name|concat
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
+name|VPROTO
+argument_list|(
+operator|(
+specifier|const
 name|char
-modifier|*
-name|s1
-decl_stmt|;
-name|char
-modifier|*
-name|s2
-decl_stmt|;
+operator|*
+name|first
+operator|,
+operator|...
+operator|)
+argument_list|)
 block|{
+specifier|register
 name|int
-name|size1
-decl_stmt|,
-name|size2
+name|length
 decl_stmt|;
+specifier|register
 name|char
 modifier|*
-name|ret_val
+name|newstr
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|s1
-condition|)
-name|s1
-operator|=
-literal|""
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|s2
-condition|)
-name|s2
-operator|=
-literal|""
-expr_stmt|;
-name|size1
-operator|=
-name|strlen
+specifier|register
+name|char
+modifier|*
+name|end
+decl_stmt|;
+specifier|register
+specifier|const
+name|char
+modifier|*
+name|arg
+decl_stmt|;
+name|va_list
+name|args
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|ANSI_PROTOTYPES
+specifier|const
+name|char
+modifier|*
+name|first
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* First compute the size of the result and get sufficient memory.  */
+name|VA_START
 argument_list|(
-name|s1
+name|args
+argument_list|,
+name|first
 argument_list|)
 expr_stmt|;
-name|size2
+ifndef|#
+directive|ifndef
+name|ANSI_PROTOTYPES
+name|first
 operator|=
-name|strlen
+name|va_arg
 argument_list|(
-name|s2
+name|args
+argument_list|,
+specifier|const
+name|char
+operator|*
 argument_list|)
 expr_stmt|;
-name|ret_val
+endif|#
+directive|endif
+name|arg
 operator|=
-name|xmalloc
+name|first
+expr_stmt|;
+name|length
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+name|arg
+operator|!=
+literal|0
+condition|)
+block|{
+name|length
+operator|+=
+name|strlen
 argument_list|(
-name|size1
-operator|+
-name|size2
+name|arg
+argument_list|)
+expr_stmt|;
+name|arg
+operator|=
+name|va_arg
+argument_list|(
+name|args
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+block|}
+name|newstr
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|length
 operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|va_end
 argument_list|(
-name|ret_val
-argument_list|,
-name|s1
+name|args
 argument_list|)
 expr_stmt|;
-name|strcpy
+comment|/* Now copy the individual pieces to the result string.  */
+name|VA_START
 argument_list|(
-operator|&
-name|ret_val
-index|[
-name|size1
-index|]
+name|args
 argument_list|,
-name|s2
+name|first
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ANSI_PROTOTYPES
+name|first
+operator|=
+name|va_arg
+argument_list|(
+name|args
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|end
+operator|=
+name|newstr
+expr_stmt|;
+name|arg
+operator|=
+name|first
+expr_stmt|;
+while|while
+condition|(
+name|arg
+operator|!=
+literal|0
+condition|)
+block|{
+while|while
+condition|(
+operator|*
+name|arg
+condition|)
+operator|*
+name|end
+operator|++
+operator|=
+operator|*
+name|arg
+operator|++
+expr_stmt|;
+name|arg
+operator|=
+name|va_arg
+argument_list|(
+name|args
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|end
+operator|=
+literal|'\000'
+expr_stmt|;
+name|va_end
+argument_list|(
+name|args
 argument_list|)
 expr_stmt|;
 return|return
-name|ret_val
+operator|(
+name|newstr
+operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/*  Take three strings and mash them together into a newly allocated area.  */
+comment|/* ! USE_CPPLIB */
 end_comment
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|concat3
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|,
-name|s3
-parameter_list|)
-name|char
-modifier|*
-name|s1
-decl_stmt|;
-name|char
-modifier|*
-name|s2
-decl_stmt|;
-name|char
-modifier|*
-name|s3
-decl_stmt|;
-block|{
-name|int
-name|size1
-decl_stmt|,
-name|size2
-decl_stmt|,
-name|size3
-decl_stmt|;
-name|char
-modifier|*
-name|ret_val
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|s1
-condition|)
-name|s1
-operator|=
-literal|""
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|s2
-condition|)
-name|s2
-operator|=
-literal|""
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|s3
-condition|)
-name|s3
-operator|=
-literal|""
-expr_stmt|;
-name|size1
-operator|=
-name|strlen
-argument_list|(
-name|s1
-argument_list|)
-expr_stmt|;
-name|size2
-operator|=
-name|strlen
-argument_list|(
-name|s2
-argument_list|)
-expr_stmt|;
-name|size3
-operator|=
-name|strlen
-argument_list|(
-name|s3
-argument_list|)
-expr_stmt|;
-name|ret_val
-operator|=
-name|xmalloc
-argument_list|(
-name|size1
-operator|+
-name|size2
-operator|+
-name|size3
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|ret_val
-argument_list|,
-name|s1
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-operator|&
-name|ret_val
-index|[
-name|size1
-index|]
-argument_list|,
-name|s2
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-operator|&
-name|ret_val
-index|[
-name|size1
-operator|+
-name|size2
-index|]
-argument_list|,
-name|s3
-argument_list|)
-expr_stmt|;
-return|return
-name|ret_val
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/* Given a string representing an entire type or an entire declaration    which only lacks the actual "data-type" specifier (at its left end),    affix the data-type specifier to the left end of the given type    specification or object declaration.     Because of C language weirdness, the data-type specifier (which normally    goes in at the very left end) may have to be slipped in just to the    right of any leading "const" or "volatile" qualifiers (there may be more    than one).  Actually this may not be strictly necessary because it seems    that GCC (at least) accepts `<data-type> const foo;' and treats it the    same as `const<data-type> foo;' but people are accustomed to seeing    `const char *foo;' and *not* `char const *foo;' so we try to create types    that look as expected.  */
@@ -448,13 +414,32 @@ name|char
 modifier|*
 name|affix_data_type
 parameter_list|(
-name|type_or_decl
+name|param
 parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|param
+decl_stmt|;
+block|{
 name|char
 modifier|*
 name|type_or_decl
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|alloca
+argument_list|(
+name|strlen
+argument_list|(
+name|param
+argument_list|)
+operator|+
+literal|1
+argument_list|)
 decl_stmt|;
-block|{
 name|char
 modifier|*
 name|p
@@ -468,6 +453,13 @@ decl_stmt|;
 name|char
 name|saved
 decl_stmt|;
+name|strcpy
+argument_list|(
+name|type_or_decl
+argument_list|,
+name|param
+argument_list|)
+expr_stmt|;
 comment|/* Skip as many leading const's or volatile's as there are.  */
 for|for
 control|(
@@ -523,13 +515,15 @@ operator|==
 name|type_or_decl
 condition|)
 return|return
-name|concat3
+name|concat
 argument_list|(
 name|data_type
 argument_list|,
 literal|" "
 argument_list|,
 name|type_or_decl
+argument_list|,
+name|NULL_PTR
 argument_list|)
 return|;
 name|saved
@@ -549,6 +543,8 @@ argument_list|(
 name|type_or_decl
 argument_list|,
 name|data_type
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 operator|*
@@ -557,13 +553,15 @@ operator|=
 name|saved
 expr_stmt|;
 return|return
-name|concat3
+name|concat
 argument_list|(
 name|qualifiers_then_data_type
 argument_list|,
 literal|" "
 argument_list|,
 name|p
+argument_list|,
+name|NULL_PTR
 argument_list|)
 return|;
 block|}
@@ -575,6 +573,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|gen_formal_list_for_type
@@ -590,6 +589,7 @@ name|formals_style
 name|style
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|formal_list
@@ -627,6 +627,7 @@ operator|!=
 name|void_type_node
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|this_type
@@ -643,6 +644,8 @@ argument_list|(
 name|formal_list
 argument_list|,
 literal|", "
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 name|this_type
@@ -677,6 +680,8 @@ name|affix_data_type
 argument_list|(
 name|this_type
 argument_list|)
+argument_list|,
+name|NULL_PTR
 argument_list|)
 else|:
 name|concat
@@ -684,6 +689,8 @@ argument_list|(
 name|formal_list
 argument_list|,
 name|data_type
+argument_list|,
+name|NULL_PTR
 argument_list|)
 operator|)
 expr_stmt|;
@@ -736,17 +743,21 @@ argument_list|(
 name|formal_list
 argument_list|,
 literal|", ..."
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|concat3
+name|concat
 argument_list|(
 literal|" ("
 argument_list|,
 name|formal_list
 argument_list|,
 literal|")"
+argument_list|,
+name|NULL_PTR
 argument_list|)
 return|;
 block|}
@@ -816,6 +827,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|gen_formal_list_for_func_def
@@ -831,6 +843,7 @@ name|formals_style
 name|style
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|formal_list
@@ -852,6 +865,7 @@ condition|(
 name|formal_decl
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|this_formal
@@ -882,6 +896,8 @@ argument_list|(
 name|formal_list
 argument_list|,
 literal|", "
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 name|this_formal
@@ -903,13 +919,15 @@ name|k_and_r_decls
 condition|)
 name|formal_list
 operator|=
-name|concat3
+name|concat
 argument_list|(
 name|formal_list
 argument_list|,
 name|this_formal
 argument_list|,
 literal|"; "
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 else|else
@@ -920,6 +938,8 @@ argument_list|(
 name|formal_list
 argument_list|,
 name|this_formal
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 name|formal_decl
@@ -952,6 +972,8 @@ argument_list|(
 name|formal_list
 argument_list|,
 literal|"void"
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 if|if
@@ -971,6 +993,8 @@ argument_list|(
 name|formal_list
 argument_list|,
 literal|", ..."
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 block|}
@@ -990,13 +1014,15 @@ operator|)
 condition|)
 name|formal_list
 operator|=
-name|concat3
+name|concat
 argument_list|(
 literal|" ("
 argument_list|,
 name|formal_list
 argument_list|,
 literal|")"
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 return|return
@@ -1011,6 +1037,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|gen_type
@@ -1021,6 +1048,7 @@ name|t
 parameter_list|,
 name|style
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|ret_val
@@ -1093,6 +1121,8 @@ argument_list|(
 literal|"const "
 argument_list|,
 name|ret_val
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1109,6 +1139,8 @@ argument_list|(
 literal|"volatile "
 argument_list|,
 name|ret_val
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 name|ret_val
@@ -1118,6 +1150,8 @@ argument_list|(
 literal|"*"
 argument_list|,
 name|ret_val
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1144,13 +1178,15 @@ name|FUNCTION_TYPE
 condition|)
 name|ret_val
 operator|=
-name|concat3
+name|concat
 argument_list|(
 literal|"("
 argument_list|,
 name|ret_val
 argument_list|,
 literal|")"
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 name|ret_val
@@ -1201,6 +1237,8 @@ argument_list|(
 name|ret_val
 argument_list|,
 literal|"[]"
+argument_list|,
+name|NULL_PTR
 argument_list|)
 argument_list|,
 name|TREE_TYPE
@@ -1230,6 +1268,8 @@ argument_list|(
 name|ret_val
 argument_list|,
 literal|"[0]"
+argument_list|,
+name|NULL_PTR
 argument_list|)
 argument_list|,
 name|TREE_TYPE
@@ -1284,6 +1324,8 @@ argument_list|(
 name|ret_val
 argument_list|,
 name|buff
+argument_list|,
+name|NULL_PTR
 argument_list|)
 argument_list|,
 name|TREE_TYPE
@@ -1313,6 +1355,8 @@ name|t
 argument_list|,
 name|style
 argument_list|)
+argument_list|,
+name|NULL_PTR
 argument_list|)
 argument_list|,
 name|TREE_TYPE
@@ -1388,6 +1432,8 @@ literal|0
 argument_list|,
 name|ansi
 argument_list|)
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 name|chain_p
@@ -1404,18 +1450,22 @@ argument_list|(
 name|data_type
 argument_list|,
 literal|"; "
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 block|}
 name|data_type
 operator|=
-name|concat3
+name|concat
 argument_list|(
 literal|"{ "
 argument_list|,
 name|data_type
 argument_list|,
 literal|"}"
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 block|}
@@ -1426,6 +1476,8 @@ argument_list|(
 literal|"struct "
 argument_list|,
 name|data_type
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1481,6 +1533,8 @@ literal|0
 argument_list|,
 name|ansi
 argument_list|)
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 name|chain_p
@@ -1497,18 +1551,22 @@ argument_list|(
 name|data_type
 argument_list|,
 literal|"; "
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 block|}
 name|data_type
 operator|=
-name|concat3
+name|concat
 argument_list|(
 literal|"{ "
 argument_list|,
 name|data_type
 argument_list|,
 literal|"}"
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 block|}
@@ -1519,6 +1577,8 @@ argument_list|(
 literal|"union "
 argument_list|,
 name|data_type
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1573,6 +1633,8 @@ argument_list|(
 name|chain_p
 argument_list|)
 argument_list|)
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 name|chain_p
@@ -1593,18 +1655,22 @@ argument_list|(
 name|data_type
 argument_list|,
 literal|", "
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 block|}
 name|data_type
 operator|=
-name|concat3
+name|concat
 argument_list|(
 literal|"{ "
 argument_list|,
 name|data_type
 argument_list|,
 literal|" }"
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 block|}
@@ -1615,6 +1681,8 @@ argument_list|(
 literal|"enum "
 argument_list|,
 name|data_type
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1648,7 +1716,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Normally, `unsigned' is part of the deal.  Not so if it comes     	     with `const' or `volatile'.  */
+comment|/* Normally, `unsigned' is part of the deal.  Not so if it comes     	     with a type qualifier.  */
 if|if
 condition|(
 name|TREE_UNSIGNED
@@ -1656,17 +1724,10 @@ argument_list|(
 name|t
 argument_list|)
 operator|&&
-operator|(
-name|TYPE_READONLY
+name|TYPE_QUALS
 argument_list|(
 name|t
 argument_list|)
-operator|||
-name|TYPE_VOLATILE
-argument_list|(
-name|t
-argument_list|)
-operator|)
 condition|)
 name|data_type
 operator|=
@@ -1675,6 +1736,8 @@ argument_list|(
 literal|"unsigned "
 argument_list|,
 name|data_type
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1731,6 +1794,8 @@ argument_list|(
 literal|"const "
 argument_list|,
 name|ret_val
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1747,6 +1812,26 @@ argument_list|(
 literal|"volatile "
 argument_list|,
 name|ret_val
+argument_list|,
+name|NULL_PTR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TYPE_RESTRICT
+argument_list|(
+name|t
+argument_list|)
+condition|)
+name|ret_val
+operator|=
+name|concat
+argument_list|(
+literal|"restrict "
+argument_list|,
+name|ret_val
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 return|return
@@ -1761,6 +1846,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|gen_decl
@@ -1781,6 +1867,7 @@ name|formals_style
 name|style
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|ret_val
@@ -1832,6 +1919,8 @@ argument_list|(
 literal|"volatile "
 argument_list|,
 name|ret_val
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1848,6 +1937,8 @@ argument_list|(
 literal|"const "
 argument_list|,
 name|ret_val
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 name|data_type
@@ -1879,6 +1970,8 @@ name|decl
 argument_list|,
 name|ansi
 argument_list|)
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 comment|/* Since we have already added in the formals list stuff, here we don't          add the whole "type" of the function we are considering (which          would include its parameter-list info), rather, we only add in          the "type" of the "type" of the function, which is really just          the return-type of the function (and does not include the parameter          list info).  */
@@ -1943,6 +2036,8 @@ argument_list|(
 literal|"register "
 argument_list|,
 name|ret_val
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1959,6 +2054,8 @@ argument_list|(
 literal|"extern "
 argument_list|,
 name|ret_val
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1983,6 +2080,8 @@ argument_list|(
 literal|"static "
 argument_list|,
 name|ret_val
+argument_list|,
+name|NULL_PTR
 argument_list|)
 expr_stmt|;
 return|return

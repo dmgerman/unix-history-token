@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* std.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996 Free Software Foundation, Inc.    Contributed by James Craig Burley (burley@gnu.org).  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       st.c     Description:       Implements the various statements and such like.     Modifications:       21-Nov-91	 JCB  2.0 	 Split out actual code generation to ffeste. */
+comment|/* std.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       st.c     Description:       Implements the various statements and such like.     Modifications:       21-Nov-91	 JCB  2.0 	 Split out actual code generation to ffeste. */
 end_comment
 
 begin_comment
@@ -489,6 +489,9 @@ block|{
 name|mallocPool
 name|pool
 decl_stmt|;
+name|ffestw
+name|block
+decl_stmt|;
 name|ffebld
 name|expr
 decl_stmt|;
@@ -500,11 +503,30 @@ block|{
 name|mallocPool
 name|pool
 decl_stmt|;
+name|ffestw
+name|block
+decl_stmt|;
 name|ffebld
 name|expr
 decl_stmt|;
 block|}
 name|R804
+struct|;
+struct|struct
+block|{
+name|ffestw
+name|block
+decl_stmt|;
+block|}
+name|R805
+struct|;
+struct|struct
+block|{
+name|ffestw
+name|block
+decl_stmt|;
+block|}
+name|R806
 struct|;
 struct|struct
 block|{
@@ -1352,6 +1374,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -1370,6 +1393,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -1388,6 +1412,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -1406,6 +1431,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -1424,6 +1450,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -1442,6 +1469,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -1460,6 +1488,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -1478,6 +1507,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -1496,6 +1526,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -1514,6 +1545,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -2379,6 +2411,14 @@ name|u
 operator|.
 name|R803
 operator|.
+name|block
+argument_list|,
+name|stmt
+operator|->
+name|u
+operator|.
+name|R803
+operator|.
 name|expr
 argument_list|)
 expr_stmt|;
@@ -2408,6 +2448,14 @@ name|okay
 condition|)
 name|ffeste_R804
 argument_list|(
+name|stmt
+operator|->
+name|u
+operator|.
+name|R803
+operator|.
+name|block
+argument_list|,
 name|stmt
 operator|->
 name|u
@@ -2442,7 +2490,15 @@ condition|(
 name|okay
 condition|)
 name|ffeste_R805
-argument_list|()
+argument_list|(
+name|stmt
+operator|->
+name|u
+operator|.
+name|R803
+operator|.
+name|block
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2458,7 +2514,26 @@ condition|(
 name|okay
 condition|)
 name|ffeste_R806
-argument_list|()
+argument_list|(
+name|stmt
+operator|->
+name|u
+operator|.
+name|R806
+operator|.
+name|block
+argument_list|)
+expr_stmt|;
+name|ffestw_kill
+argument_list|(
+name|stmt
+operator|->
+name|u
+operator|.
+name|R806
+operator|.
+name|block
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -6058,11 +6133,21 @@ argument_list|(
 name|FFESTD_stmtidFORMATLABEL_
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* Don't bother with this.  See FORMAT statement.  */
+comment|/* Prepend FORMAT label instead of appending it, so all the        FORMAT label/statement pairs end up at the top of the list.        This helps ensure all decls for a block (in the GBE) are        known before any executable statements are generated.  */
+block|stmt->previous = (ffestdStmt_)&ffestd_stmt_list_.first;     stmt->next = ffestd_stmt_list_.first;     stmt->next->previous = stmt;     stmt->previous->next = stmt;
+else|#
+directive|else
 name|ffestd_stmt_append_
 argument_list|(
 name|stmt
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|stmt
 operator|->
 name|u
@@ -9266,7 +9351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ffestd_R745 -- Implicit END WHERE statement     ffestd_R745(TRUE);     Implement the end of the current WHERE "block".  ok==TRUE iff statement    following WHERE (substatement) is valid; else, statement is invalid    or stack forcibly popped due to ffestd_eof_().  */
+comment|/* ffestd_R745 -- Implicit END WHERE statement.  */
 end_comment
 
 begin_function
@@ -9311,7 +9396,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ffestd_R803 -- Block IF (IF-THEN) statement     ffestd_R803(construct_name,expr,expr_token);     Make sure statement is valid here; implement.  */
+comment|/* Block IF (IF-THEN) statement.  */
 end_comment
 
 begin_function
@@ -9380,6 +9465,20 @@ name|u
 operator|.
 name|R803
 operator|.
+name|block
+operator|=
+name|ffestw_use
+argument_list|(
+name|ffestw_stack_top
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|stmt
+operator|->
+name|u
+operator|.
+name|R803
+operator|.
 name|expr
 operator|=
 name|expr
@@ -9406,7 +9505,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ffestd_R804 -- ELSE IF statement     ffestd_R804(expr,expr_token,name_token);     Make sure ffestd_kind_ identifies an IF block.  If not    NULL, make sure name_token gives the correct name.  Implement the else    of the IF block.  */
+comment|/* ELSE IF statement.  */
 end_comment
 
 begin_function
@@ -9475,6 +9574,20 @@ name|u
 operator|.
 name|R804
 operator|.
+name|block
+operator|=
+name|ffestw_use
+argument_list|(
+name|ffestw_stack_top
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|stmt
+operator|->
+name|u
+operator|.
+name|R804
+operator|.
 name|expr
 operator|=
 name|expr
@@ -9491,7 +9604,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ffestd_R805 -- ELSE statement     ffestd_R805(name_token);     Make sure ffestd_kind_ identifies an IF block.  If not    NULL, make sure name_token gives the correct name.  Implement the ELSE    of the IF block.  */
+comment|/* ELSE statement.  */
 end_comment
 
 begin_function
@@ -9539,6 +9652,20 @@ argument_list|(
 name|stmt
 argument_list|)
 expr_stmt|;
+name|stmt
+operator|->
+name|u
+operator|.
+name|R805
+operator|.
+name|block
+operator|=
+name|ffestw_use
+argument_list|(
+name|ffestw_stack_top
+argument_list|()
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -9546,7 +9673,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ffestd_R806 -- End an IF-THEN     ffestd_R806(TRUE);  */
+comment|/* END IF statement.  */
 end_comment
 
 begin_function
@@ -9588,6 +9715,20 @@ expr_stmt|;
 name|ffestd_subr_line_save_
 argument_list|(
 name|stmt
+argument_list|)
+expr_stmt|;
+name|stmt
+operator|->
+name|u
+operator|.
+name|R806
+operator|.
+name|block
+operator|=
+name|ffestw_use
+argument_list|(
+name|ffestw_stack_top
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -13299,11 +13440,21 @@ argument_list|(
 name|FFESTD_stmtidR1001_
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* Don't bother with this.  After all, things like cilists also are        declared midway through code-generation.  Perhaps the only problems        the gcc back end has with midway declarations are with stack vars,        maybe only with vars that can be put in registers.  Unless/until the        need is established, handle FORMAT just like cilists and others; at        that point, they'd likely *all* have to be fixed, which would be        very painful anyway.  */
+comment|/* Insert FORMAT statement just after the first item on the        statement list, which must be a FORMAT label, which see.  */
+block|assert (ffestd_stmt_list_.first->id == FFESTD_stmtidFORMATLABEL_);     stmt->previous = ffestd_stmt_list_.first;     stmt->next = ffestd_stmt_list_.first->next;     stmt->next->previous = stmt;     stmt->previous->next = stmt;
+else|#
+directive|else
 name|ffestd_stmt_append_
 argument_list|(
 name|stmt
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|stmt
 operator|->
 name|u
@@ -14048,6 +14199,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -14236,6 +14388,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -14423,6 +14576,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -14668,6 +14822,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -14912,6 +15067,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -15214,6 +15370,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -15258,6 +15415,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -15353,6 +15511,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -15447,6 +15606,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -15541,6 +15701,7 @@ parameter_list|,
 name|ffesttFormatList
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string

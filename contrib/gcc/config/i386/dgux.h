@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for GNU compiler for Intel 80x86 running DG/ux    Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.    Currently maintained by gcc@dg-rtp.dg.com.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Target definitions for GNU compiler for Intel 80x86 running DG/ux    Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.    Currently maintained by gcc@dg-rtp.dg.com.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|VERSION_INFO2
-value|"$Revision: 1.3 $"
+value|"$Revision: 1.6 $"
 end_define
 
 begin_endif
@@ -139,7 +139,7 @@ value|0x04000000
 end_define
 
 begin_comment
-comment|/* Emit 'ident' to .s */
+comment|/* Warn when structures are passed */
 end_comment
 
 begin_define
@@ -188,7 +188,7 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{ "standard",			 MASK_STANDARD },          \     { "legend",				-MASK_NOLEGEND },          \     { "no-legend",			 MASK_NOLEGEND },          \     { "external-legend",		 MASK_EXTERNAL_LEGEND },   \     { "identify-revision", 		 MASK_IDENTIFY_REVISION }, \     { "warn-passed-structs", 		 MASK_WARN_PASS_STRUCT },
+value|{ "standard",			 MASK_STANDARD, "Retain standard MXDB information" },          \     { "legend",				-MASK_NOLEGEND, "Retain legend information" },          \     { "no-legend",			 MASK_NOLEGEND, "" },          \     { "external-legend",		 MASK_EXTERNAL_LEGEND, "Generate external legend information" },   \     { "identify-revision", 		 MASK_IDENTIFY_REVISION, "Emit identifying info in .s file" }, \     { "warn-passed-structs", 		 MASK_WARN_PASS_STRUCT, "Warn when a function arg is a structure" },
 end_define
 
 begin_undef
@@ -305,7 +305,7 @@ parameter_list|,
 name|SIZE
 parameter_list|)
 define|\
-value|do {							\     extern int flag_signed_bitfields;			\     flag_signed_bitfields = 0;				\     abort_helper ();					\     optimization_options (LEVEL,SIZE);			\   } while (0)
+value|do {							\     extern int flag_signed_bitfields;			\     flag_signed_bitfields = 0;				\     optimization_options (LEVEL,SIZE);			\   } while (0)
 end_define
 
 begin_comment
@@ -502,90 +502,6 @@ end_endif
 
 begin_comment
 comment|/* CROSS_COMPILE */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|no_abort
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CRT_BEGIN
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CRT_END
-argument_list|)
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|abort
-end_undef
-
-begin_decl_stmt
-name|char
-name|insn
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|insn_
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|file_
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|line_
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|abort
-parameter_list|()
-define|\
-value|(insn_ = (int) insn,		\    file_ = __FILE__,		\    line_ = __LINE__,		\    fancy_abort ())
-end_define
-
-begin_define
-define|#
-directive|define
-name|abort_helper
-parameter_list|()
-define|\
-value|do {				\     extern void abort_aux ();	\     atexit (abort_aux);		\   } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_abort_aux
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* no abort */
 end_comment
 
 begin_comment

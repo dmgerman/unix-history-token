@@ -8,7 +8,7 @@ comment|/* Compile this one with gcc.  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1997 Free Software Foundation, Inc.    Contributed by Jason Merrill<jason@cygnus.com>.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.    Contributed by Jason Merrill<jason@cygnus.com>.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -71,12 +71,6 @@ ifdef|#
 directive|ifdef
 name|DWARF2_UNWIND_INFO
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"gansidecl.h"
-end_include
 
 begin_include
 include|#
@@ -216,6 +210,10 @@ name|char
 name|ubyte
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Terminology:    CIE - Common Information Element    FDE - Frame Descriptor Element     There is one per function, and it describes where the function code    is located, and what the register lifetimes and stack layout are    within the function.     The data structures are defined in the DWARF specfication, although    not in a very readable way (see LITERATURE).     Every time an exception is thrown, the code needs to locate the FDE    for the current function, and starts to look for exception regions    from that FDE. This works in a two-level search:    a) in a linear search, find the shared image (i.e. DLL) containing       the PC    b) using the FDE table for that shared object, locate the FDE using       binary search (which requires the sorting).  */
+end_comment
 
 begin_comment
 comment|/* The first few fields of a CIE.  The CIE_id field is 0 for a CIE,    to distinguish it from a valid FDE.  FDEs are aligned to an addressing    unit boundary, but the fields within are unaligned.  */
@@ -369,6 +367,106 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* This is undefined below if we need it to be an actual function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|init_object_mutex_once
+parameter_list|()
+end_define
+
+begin_if
+if|#
+directive|if
+name|__GTHREADS
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GTHREAD_MUTEX_INIT_FUNCTION
+end_ifdef
+
+begin_comment
+comment|/* Helper for init_object_mutex_once.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|init_object_mutex
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|__GTHREAD_MUTEX_INIT_FUNCTION
+argument_list|(
+operator|&
+name|object_mutex
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Call this to arrange to initialize the object mutex.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|init_object_mutex_once
+end_undef
+
+begin_function
+specifier|static
+name|void
+name|init_object_mutex_once
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|static
+name|__gthread_once_t
+name|once
+init|=
+name|__GTHREAD_ONCE_INIT
+decl_stmt|;
+name|__gthread_once
+argument_list|(
+operator|&
+name|once
+argument_list|,
+name|init_object_mutex
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GTHREAD_MUTEX_INIT_FUNCTION */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GTHREADS */
+end_comment
 
 begin_escape
 end_escape
@@ -2215,6 +2313,9 @@ name|lo
 decl_stmt|,
 name|hi
 decl_stmt|;
+name|init_object_mutex_once
+argument_list|()
+expr_stmt|;
 name|__gthread_mutex_lock
 argument_list|(
 operator|&
@@ -3256,6 +3357,9 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
+name|init_object_mutex_once
+argument_list|()
+expr_stmt|;
 name|__gthread_mutex_lock
 argument_list|(
 operator|&
@@ -3365,6 +3469,9 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
+name|init_object_mutex_once
+argument_list|()
+expr_stmt|;
 name|__gthread_mutex_lock
 argument_list|(
 operator|&
@@ -3448,6 +3555,9 @@ modifier|*
 modifier|*
 name|p
 decl_stmt|;
+name|init_object_mutex_once
+argument_list|()
+expr_stmt|;
 name|__gthread_mutex_lock
 argument_list|(
 operator|&

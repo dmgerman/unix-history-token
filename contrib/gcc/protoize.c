@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Protoize program - Original version by Ron Guilmette (rfg@segfault.us.com).    Copyright (C) 1989, 92-97, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Protoize program - Original version by Ron Guilmette (rfg@segfault.us.com).    Copyright (C) 1989, 92-98, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -184,34 +184,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -221,8 +193,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|"intl.h"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|abort
+end_undef
 
 begin_if
 if|#
@@ -235,7 +213,12 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__CYGWIN32__
+name|__CYGWIN__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_UWIN
 argument_list|)
 end_if
 
@@ -284,12 +267,6 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gansidecl.h"
 end_include
 
 begin_comment
@@ -481,128 +458,56 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|choose_temp_base
+specifier|static
+name|void
+name|usage
 name|PROTO
 argument_list|(
 operator|(
 name|void
 operator|)
 argument_list|)
+name|ATTRIBUTE_NORETURN
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|my_strerror
+specifier|static
+name|void
+name|aux_info_corrupted
 name|PROTO
 argument_list|(
 operator|(
-name|int
+name|void
 operator|)
 argument_list|)
+name|ATTRIBUTE_NORETURN
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|pexecute
+specifier|static
+name|void
+name|declare_source_confusing
 name|PROTO
 argument_list|(
 operator|(
 specifier|const
 name|char
 operator|*
-operator|,
-name|char
-operator|*
-specifier|const
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
+name|ATTRIBUTE_NORETURN
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|pwait
-name|PROTO
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Flag arguments to pexecute.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PEXECUTE_FIRST
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PEXECUTE_LAST
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|PEXECUTE_SEARCH
-value|4
-end_define
 
 begin_comment
 comment|/* Aliases for pointers to void.    These were made to facilitate compilation with old brain-dead DEC C    compilers which didn't properly grok `void*' types.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_typedef
 typedef|typedef
-name|void
-modifier|*
+name|PTR
 name|pointer_type
 typedef|;
 end_typedef
@@ -610,37 +515,10 @@ end_typedef
 begin_typedef
 typedef|typedef
 specifier|const
-name|void
-modifier|*
+name|PTR
 name|const_pointer_type
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|pointer_type
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|const_pointer_type
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -657,12 +535,6 @@ directive|include
 file|<signal.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
-end_include
-
 begin_else
 else|#
 directive|else
@@ -671,90 +543,6 @@ end_else
 begin_comment
 comment|/* !defined(POSIX) */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WIFSIGNALED
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|WIFSIGNALED
-parameter_list|(
-name|S
-parameter_list|)
-value|(((S)& 0xff) != 0&& ((S)& 0xff) != 0x7f)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WTERMSIG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|WTERMSIG
-parameter_list|(
-name|S
-parameter_list|)
-value|((S)& 0x7f)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WIFEXITED
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|WIFEXITED
-parameter_list|(
-name|S
-parameter_list|)
-value|(((S)& 0xff) == 0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WEXITSTATUS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|WEXITSTATUS
-parameter_list|(
-name|S
-parameter_list|)
-value|(((S)& 0xff00)>> 8)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Declaring stat or __flsbuf with a prototype    causes conflicts with system headers on some systems.  */
@@ -812,6 +600,16 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|fputs
+end_ifndef
+
+begin_comment
+comment|/* This may have been #defined by "system.h".  */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|int
@@ -820,6 +618,21 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|fputc
+end_ifndef
+
+begin_comment
+comment|/* some systems define this as a macro. */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|int
@@ -827,6 +640,11 @@ name|fputc
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -859,43 +677,6 @@ unit|extern size_t   strlen ()
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Fork is not declared because the declaration caused a conflict    on the HPPA.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|USG
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|VMS
-argument_list|)
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|fork
-value|vfork
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* (defined (USG) || defined (VMS)) */
-end_comment
 
 begin_endif
 endif|#
@@ -2234,10 +2015,107 @@ end_function_decl
 begin_escape
 end_escape
 
+begin_comment
+comment|/* Translate and output an error message.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|notice
+name|PVPROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|ATTRIBUTE_PRINTF_1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|notice
+name|VPROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|msgid
+operator|,
+operator|...
+operator|)
+argument_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|ANSI_PROTOTYPES
+specifier|const
+name|char
+modifier|*
+name|msgid
+decl_stmt|;
+endif|#
+directive|endif
+name|va_list
+name|ap
+decl_stmt|;
+name|VA_START
+argument_list|(
+name|ap
+argument_list|,
+name|msgid
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ANSI_PROTOTYPES
+name|msgid
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|_
+argument_list|(
+name|msgid
+argument_list|)
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_escape
+end_escape
+
 begin_function
 name|char
 modifier|*
-name|my_strerror
+name|xstrerror
 parameter_list|(
 name|e
 parameter_list|)
@@ -2256,13 +2134,6 @@ argument_list|)
 return|;
 else|#
 directive|else
-specifier|static
-name|char
-name|buffer
-index|[
-literal|30
-index|]
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2287,17 +2158,8 @@ index|[
 name|e
 index|]
 return|;
-name|sprintf
-argument_list|(
-name|buffer
-argument_list|,
-literal|"Unknown error %d"
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
 return|return
-name|buffer
+literal|"errno = ?"
 return|;
 endif|#
 directive|endif
@@ -2325,11 +2187,10 @@ name|size_t
 name|byte_count
 decl_stmt|;
 block|{
+specifier|register
 name|pointer_type
 name|rv
-decl_stmt|;
-name|rv
-operator|=
+init|=
 operator|(
 name|pointer_type
 operator|)
@@ -2337,7 +2198,7 @@ name|malloc
 argument_list|(
 name|byte_count
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|rv
@@ -2345,10 +2206,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"\n%s: virtual memory exceeded\n"
 argument_list|,
 name|pname
@@ -2359,12 +2218,7 @@ argument_list|(
 name|FATAL_EXIT_CODE
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
-comment|/* avoid warnings */
 block|}
-else|else
 return|return
 name|rv
 return|;
@@ -2390,9 +2244,14 @@ name|size_t
 name|byte_count
 decl_stmt|;
 block|{
+specifier|register
 name|pointer_type
 name|rv
 decl_stmt|;
+if|if
+condition|(
+name|old_space
+condition|)
 name|rv
 operator|=
 operator|(
@@ -2405,6 +2264,17 @@ argument_list|,
 name|byte_count
 argument_list|)
 expr_stmt|;
+else|else
+name|rv
+operator|=
+operator|(
+name|pointer_type
+operator|)
+name|malloc
+argument_list|(
+name|byte_count
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rv
@@ -2412,10 +2282,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"\n%s: virtual memory exceeded\n"
 argument_list|,
 name|pname
@@ -2426,12 +2294,7 @@ argument_list|(
 name|FATAL_EXIT_CODE
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
-comment|/* avoid warnings */
 block|}
-else|else
 return|return
 name|rv
 return|;
@@ -2607,10 +2470,8 @@ name|void
 name|fancy_abort
 parameter_list|()
 block|{
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: internal abort\n"
 argument_list|,
 name|pname
@@ -2958,10 +2819,8 @@ condition|)
 continue|continue;
 endif|#
 directive|endif
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: error writing file `%s': %s\n"
 argument_list|,
 name|pname
@@ -2973,7 +2832,7 @@ argument_list|,
 name|out_fname
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -3047,6 +2906,7 @@ name|is_id_char
 parameter_list|(
 name|ch
 parameter_list|)
+name|unsigned
 name|char
 name|ch
 decl_stmt|;
@@ -3087,10 +2947,8 @@ block|{
 ifdef|#
 directive|ifdef
 name|UNPROTOIZE
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: usage '%s [ -VqfnkN ] [ -i<istring> ] [ filename ... ]'\n"
 argument_list|,
 name|pname
@@ -3101,10 +2959,8 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* !defined (UNPROTOIZE) */
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: usage '%s [ -VqfnkNlgC ] [ -B<dirname> ] [ filename ... ]'\n"
 argument_list|,
 name|pname
@@ -3240,7 +3096,7 @@ comment|/* Should have been an absolutized filename.  */
 end_comment
 
 begin_endif
-unit|}    if (my_access (path, R_OK))     {       if (!quiet_flag)         fprintf (stderr, "%s: warning: no read access for file `%s'\n", 		 pname, shortpath (NULL, path));       return 0;     }    if (my_access (path, W_OK))     {       if (!quiet_flag)         fprintf (stderr, "%s: warning: no write access for file `%s'\n", 		 pname, shortpath (NULL, path));       return 0;     }    if (my_access (dir_name, W_OK))     {       if (!quiet_flag)         fprintf (stderr, "%s: warning: no write access for dir containing `%s'\n", 		 pname, shortpath (NULL, path));       return 0;     }    return 1; }
+unit|}    if (my_access (path, R_OK))     {       if (!quiet_flag)         notice ("%s: warning: no read access for file `%s'\n", 		pname, shortpath (NULL, path));       return 0;     }    if (my_access (path, W_OK))     {       if (!quiet_flag)         notice ("%s: warning: no write access for file `%s'\n", 		pname, shortpath (NULL, path));       return 0;     }    if (my_access (dir_name, W_OK))     {       if (!quiet_flag)         notice ("%s: warning: no write access for dir containing `%s'\n", 		pname, shortpath (NULL, path));       return 0;     }    return 1; }
 endif|#
 directive|endif
 end_endif
@@ -4624,9 +4480,22 @@ name|inp
 operator|++
 expr_stmt|;
 comment|/* copy first slash */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|apollo
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTERIX
+argument_list|)
 if|if
 condition|(
 name|inp
@@ -4801,10 +4670,8 @@ name|abs_buffer
 condition|)
 block|{
 comment|/* Catch cases like /.. where we try to backup to a 			   point above the absolute root of the logical file 			   system.  */
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: invalid file name: %s\n"
 argument_list|,
 name|pname
@@ -5289,10 +5156,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %s: can't get status: %s\n"
 argument_list|,
 name|pname
@@ -5304,7 +5169,7 @@ argument_list|,
 name|filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -5365,10 +5230,8 @@ name|void
 name|aux_info_corrupted
 parameter_list|()
 block|{
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"\n%s: fatal error: aux info file corrupted at line %d\n"
 argument_list|,
 name|pname
@@ -6495,10 +6358,8 @@ name|ansi_decl
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s:%d: declaration of function `%s' takes different forms\n"
 argument_list|,
 name|def_dec_p
@@ -7049,6 +6910,11 @@ while|while
 condition|(
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|params_list
 argument_list|)
@@ -7075,6 +6941,11 @@ operator|&&
 operator|!
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|params_list
 argument_list|)
@@ -7142,6 +7013,11 @@ while|while
 condition|(
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|params_list
 argument_list|)
@@ -7157,6 +7033,11 @@ operator|&&
 operator|!
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|params_list
 argument_list|)
@@ -7376,10 +7257,8 @@ condition|(
 operator|!
 name|quiet_flag
 condition|)
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: compiling `%s'\n"
 argument_list|,
 name|pname
@@ -7481,7 +7360,7 @@ name|stderr
 argument_list|,
 literal|": %s\n"
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -7511,15 +7390,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: wait: %s\n"
 argument_list|,
 name|pname
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno
 argument_list|)
@@ -7537,10 +7414,8 @@ name|wait_status
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: subprocess got fatal signal %d\n"
 argument_list|,
 name|pname
@@ -7573,10 +7448,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %s exited with status %d\n"
 argument_list|,
 name|pname
@@ -7741,10 +7614,8 @@ condition|(
 name|is_syscalls
 condition|)
 block|{
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: warning: missing SYSCALLS file `%s'\n"
 argument_list|,
 name|pname
@@ -7766,10 +7637,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: can't read aux info file `%s': %s\n"
 argument_list|,
 name|pname
@@ -7781,7 +7650,7 @@ argument_list|,
 name|aux_info_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -7839,10 +7708,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: can't read aux info file `%s': %s\n"
 argument_list|,
 name|pname
@@ -7854,7 +7721,7 @@ argument_list|,
 name|aux_info_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -7891,10 +7758,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: can't get status of aux info file `%s': %s\n"
 argument_list|,
 name|pname
@@ -7906,7 +7771,7 @@ argument_list|,
 name|aux_info_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -7964,10 +7829,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: can't get status of aux info file `%s': %s\n"
 argument_list|,
 name|pname
@@ -7979,7 +7842,7 @@ argument_list|,
 name|base_source_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -8038,10 +7901,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: can't open aux info file `%s' for reading: %s\n"
 argument_list|,
 name|pname
@@ -8053,7 +7914,7 @@ argument_list|,
 name|aux_info_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -8094,6 +7955,9 @@ argument_list|,
 name|aux_info_size
 argument_list|)
 operator|!=
+operator|(
+name|int
+operator|)
 name|aux_info_size
 condition|)
 block|{
@@ -8102,10 +7966,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: error reading aux info file `%s': %s\n"
 argument_list|,
 name|pname
@@ -8117,7 +7979,7 @@ argument_list|,
 name|aux_info_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -8149,10 +8011,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: error closing aux info file `%s': %s\n"
 argument_list|,
 name|pname
@@ -8164,7 +8024,7 @@ argument_list|,
 name|aux_info_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -8207,10 +8067,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: can't delete aux info file `%s': %s\n"
 argument_list|,
 name|pname
@@ -8222,7 +8080,7 @@ argument_list|,
 name|aux_info_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -8439,10 +8297,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: can't delete file `%s': %s\n"
 argument_list|,
 name|pname
@@ -8454,7 +8310,7 @@ argument_list|,
 name|aux_info_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -8688,10 +8544,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: warning: can't link file `%s' to `%s': %s\n"
 argument_list|,
 name|pname
@@ -8710,7 +8564,7 @@ argument_list|,
 name|new_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -8737,10 +8591,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: warning: can't delete file `%s': %s\n"
 argument_list|,
 name|pname
@@ -8752,7 +8604,7 @@ argument_list|,
 name|filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -9062,10 +8914,8 @@ name|conflict_noted
 operator|=
 literal|1
 expr_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: conflicting extern definitions of '%s'\n"
 argument_list|,
 name|pname
@@ -9083,10 +8933,8 @@ operator|!
 name|quiet_flag
 condition|)
 block|{
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: declarations of '%s' will not be converted\n"
 argument_list|,
 name|pname
@@ -9098,10 +8946,8 @@ operator|->
 name|symbol
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: conflict list for '%s' follows:\n"
 argument_list|,
 name|pname
@@ -9238,10 +9084,8 @@ condition|(
 operator|!
 name|quiet_flag
 condition|)
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: warning: using formals list from %s(%d) for function `%s'\n"
 argument_list|,
 name|pname
@@ -9394,10 +9238,8 @@ argument_list|,
 literal|");"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %d: `%s' used but missing from SYSCALLS\n"
 argument_list|,
 name|shortpath
@@ -9421,7 +9263,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|else               fprintf (stderr, "%s: %d: warning: no extern definition for `%s'\n", 		       shortpath (NULL, file), user->line, 		       user->hash_entry->symbol);
+block|else               notice ("%s: %d: warning: no extern definition for `%s'\n", 		      shortpath (NULL, file), user->line, 		      user->hash_entry->symbol);
 endif|#
 directive|endif
 block|}
@@ -9538,10 +9380,8 @@ condition|(
 operator|!
 name|quiet_flag
 condition|)
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: warning: no static definition for `%s' in file `%s'\n"
 argument_list|,
 name|pname
@@ -9575,10 +9415,8 @@ operator|>
 literal|1
 condition|)
 block|{
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: multiple static defs of `%s' in file `%s'\n"
 argument_list|,
 name|pname
@@ -10026,10 +9864,8 @@ name|clean_p
 operator|==
 literal|0
 condition|)
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %d: warning: source too confusing\n"
 argument_list|,
 name|shortpath
@@ -10043,10 +9879,8 @@ name|last_known_line_number
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %d: warning: source too confusing\n"
 argument_list|,
 name|shortpath
@@ -10197,6 +10031,11 @@ name|ptr
 init|;
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -10635,10 +10474,8 @@ condition|(
 operator|!
 name|quiet_flag
 condition|)
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %d: warning: varargs function declaration not converted\n"
 argument_list|,
 name|shortpath
@@ -10679,10 +10516,8 @@ block|{
 name|restore_pointers
 argument_list|()
 expr_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: declaration of function `%s' not converted\n"
 argument_list|,
 name|pname
@@ -10946,10 +10781,8 @@ condition|(
 operator|!
 name|quiet_flag
 condition|)
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: warning: too many parameter lists in declaration of `%s'\n"
 argument_list|,
 name|pname
@@ -11028,10 +10861,8 @@ condition|(
 operator|!
 name|quiet_flag
 condition|)
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"\n%s: warning: too few parameter lists in declaration of `%s'\n"
 argument_list|,
 name|pname
@@ -11186,6 +11017,11 @@ while|while
 condition|(
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|next_end
 argument_list|)
@@ -11287,6 +11123,11 @@ literal|1
 init|;
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|func_name_limit
 argument_list|)
@@ -11368,10 +11209,8 @@ name|func_name_len
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %d: warning: found `%s' but expected `%s'\n"
 argument_list|,
 name|shortpath
@@ -11557,6 +11396,10 @@ if|if
 condition|(
 name|ISSPACE
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|end_formals
 argument_list|)
@@ -11565,6 +11408,10 @@ while|while
 condition|(
 name|ISSPACE
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|end_formals
 argument_list|)
@@ -11644,6 +11491,11 @@ if|if
 condition|(
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|end_formals
 argument_list|)
@@ -11652,6 +11504,11 @@ while|while
 condition|(
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|end_formals
 argument_list|)
@@ -11701,6 +11558,10 @@ operator|)
 operator|||
 name|ISALPHA
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ch
 argument_list|)
 condition|)
@@ -11794,10 +11655,8 @@ block|{
 name|restore_pointers
 argument_list|()
 expr_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: local declaration for function `%s' not inserted\n"
 argument_list|,
 name|pname
@@ -11848,10 +11707,8 @@ condition|(
 operator|!
 name|quiet_flag
 condition|)
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"\n%s: %d: warning: can't add declaration of `%s' into macro call\n"
 argument_list|,
 name|def_dec_p
@@ -11903,6 +11760,11 @@ name|ep
 init|;
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|sp
 argument_list|)
@@ -12036,10 +11898,8 @@ block|{
 name|restore_pointers
 argument_list|()
 expr_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: global declarations for file `%s' not inserted\n"
 argument_list|,
 name|pname
@@ -12108,6 +11968,11 @@ while|while
 condition|(
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|scan_p
 argument_list|)
@@ -12344,10 +12209,8 @@ block|{
 name|restore_pointers
 argument_list|()
 expr_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: definition of function `%s' not converted\n"
 argument_list|,
 name|pname
@@ -12381,10 +12244,8 @@ condition|(
 operator|!
 name|quiet_flag
 condition|)
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %d: warning: definition of %s not converted\n"
 argument_list|,
 name|shortpath
@@ -12432,10 +12293,8 @@ block|{
 name|restore_pointers
 argument_list|()
 expr_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: definition of function `%s' not converted\n"
 argument_list|,
 name|pname
@@ -12740,6 +12599,11 @@ condition|(
 operator|!
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|scan_orig
 argument_list|)
@@ -12926,6 +12790,11 @@ condition|(
 operator|!
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|scan_p
 argument_list|)
@@ -12996,6 +12865,11 @@ condition|(
 operator|!
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|scan_p
 argument_list|)
@@ -13060,6 +12934,11 @@ operator|&&
 operator|!
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 name|scan_p
 index|[
 literal|1
@@ -13078,6 +12957,11 @@ condition|(
 operator|!
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|scan_p
 argument_list|)
@@ -13142,6 +13026,11 @@ operator|&&
 operator|!
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 name|scan_p
 index|[
 literal|1
@@ -13160,6 +13049,11 @@ condition|(
 operator|!
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|scan_p
 argument_list|)
@@ -13185,6 +13079,11 @@ condition|(
 operator|!
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|scan_p
 argument_list|)
@@ -13434,6 +13333,11 @@ literal|1
 init|;
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ahead_p
 argument_list|)
@@ -13459,6 +13363,11 @@ if|if
 condition|(
 name|ISALPHA
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ahead_p
 argument_list|)
@@ -13511,6 +13420,11 @@ literal|1
 init|;
 name|ISSPACE
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|last_r_paren
 argument_list|)
@@ -13715,7 +13629,7 @@ goto|;
 if|#
 directive|if
 literal|0
-block|fprintf (stderr, "%s: found definition of `%s' at %s(%d)\n", 			     pname, 			     func_name, 			     shortpath (NULL, file_p->hash_entry->symbol), 			     identify_lineno (id_start));
+block|notice ("%s: found definition of `%s' at %s(%d)\n", 			    pname, 			    func_name, 			    shortpath (NULL, file_p->hash_entry->symbol), 			    identify_lineno (id_start));
 endif|#
 directive|endif
 comment|/* 0 */
@@ -13752,10 +13666,8 @@ goto|goto
 name|not_missed
 goto|;
 comment|/* If we make it here, then we did not know about this 		       function definition.  */
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %d: warning: `%s' excluded by preprocessing\n"
 argument_list|,
 name|shortpath
@@ -13777,10 +13689,8 @@ argument_list|,
 name|func_name
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: function definition not converted\n"
 argument_list|,
 name|pname
@@ -13903,10 +13813,8 @@ endif|#
 directive|endif
 comment|/* defined (UNPROTOIZE) */
 condition|)
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: `%s' not converted\n"
 argument_list|,
 name|pname
@@ -13926,10 +13834,8 @@ if|if
 condition|(
 name|nochange_flag
 condition|)
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: would convert file `%s'\n"
 argument_list|,
 name|pname
@@ -13943,10 +13849,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: converting file `%s'\n"
 argument_list|,
 name|pname
@@ -13989,10 +13893,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: can't get status for file `%s': %s\n"
 argument_list|,
 name|pname
@@ -14004,7 +13906,7 @@ argument_list|,
 name|convert_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -14141,10 +14043,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: can't open file `%s' for reading: %s\n"
 argument_list|,
 name|pname
@@ -14156,7 +14056,7 @@ argument_list|,
 name|convert_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -14176,6 +14076,9 @@ argument_list|,
 name|orig_size
 argument_list|)
 operator|!=
+operator|(
+name|int
+operator|)
 name|orig_size
 condition|)
 block|{
@@ -14189,10 +14092,8 @@ argument_list|(
 name|input_file
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"\n%s: error reading input file `%s': %s\n"
 argument_list|,
 name|pname
@@ -14204,7 +14105,7 @@ argument_list|,
 name|convert_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -14272,7 +14173,7 @@ directive|if
 literal|0
 block|{     int clean_file;     size_t clean_size = orig_text_limit - orig_text_base;     char *const clean_filename = (char *) alloca (strlen (convert_filename) + 6 + 1);
 comment|/* Open (and create) the clean file.  */
-block|strcpy (clean_filename, convert_filename);     strcat (clean_filename, ".clean");     if ((clean_file = creat (clean_filename, 0666)) == -1)       { 	int errno_val = errno;         fprintf (stderr, "%s: can't create/open clean file `%s': %s\n", 		 pname, shortpath (NULL, clean_filename), 		 my_strerror (errno_val));         return;       }
+block|strcpy (clean_filename, convert_filename);     strcat (clean_filename, ".clean");     if ((clean_file = creat (clean_filename, 0666)) == -1)       { 	int errno_val = errno;         notice ("%s: can't create/open clean file `%s': %s\n", 		pname, shortpath (NULL, clean_filename), 		xstrerror (errno_val));         return;       }
 comment|/* Write the clean file.  */
 block|safe_write (clean_file, new_clean_text_base, clean_size, clean_filename);        close (clean_file);   }
 endif|#
@@ -14534,10 +14435,8 @@ condition|(
 operator|!
 name|quiet_flag
 condition|)
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: warning: file `%s' already saved in `%s'\n"
 argument_list|,
 name|pname
@@ -14560,10 +14459,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: can't link file `%s' to `%s': %s\n"
 argument_list|,
 name|pname
@@ -14582,7 +14479,7 @@ argument_list|,
 name|new_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -14608,10 +14505,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: can't delete file `%s': %s\n"
 argument_list|,
 name|pname
@@ -14623,7 +14518,7 @@ argument_list|,
 name|convert_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -14658,10 +14553,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: can't create/open output file `%s': %s\n"
 argument_list|,
 name|pname
@@ -14673,7 +14566,7 @@ argument_list|,
 name|convert_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -14755,10 +14648,8 @@ name|errno_val
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: can't change mode of file `%s': %s\n"
 argument_list|,
 name|pname
@@ -14770,7 +14661,7 @@ argument_list|,
 name|convert_filename
 argument_list|)
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno_val
 argument_list|)
@@ -15276,6 +15167,36 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_LC_MESSAGES
+name|setlocale
+argument_list|(
+name|LC_MESSAGES
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+operator|(
+name|void
+operator|)
+name|bindtextdomain
+argument_list|(
+name|PACKAGE
+argument_list|,
+name|localedir
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|textdomain
+argument_list|(
+name|PACKAGE
+argument_list|)
+expr_stmt|;
 name|cwd_buffer
 operator|=
 name|getpwd
@@ -15287,15 +15208,13 @@ operator|!
 name|cwd_buffer
 condition|)
 block|{
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: cannot get working directory: %s\n"
 argument_list|,
 name|pname
 argument_list|,
-name|my_strerror
+name|xstrerror
 argument_list|(
 name|errno
 argument_list|)
@@ -15629,10 +15548,8 @@ name|path
 expr_stmt|;
 else|else
 block|{
-name|fprintf
+name|notice
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: input file names must have .c suffixes: %s\n"
 argument_list|,
 name|pname
@@ -15668,6 +15585,11 @@ name|varargs_style_indicator
 init|;
 name|ISALNUM
 argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)

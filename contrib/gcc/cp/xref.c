@@ -316,10 +316,12 @@ typedef|typedef
 struct|struct
 name|_XREF_FILE
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|outname
@@ -503,6 +505,7 @@ name|find_file
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -512,6 +515,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -526,6 +530,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|fctname
@@ -540,6 +545,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|declname
@@ -568,12 +574,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|fixname
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -591,8 +599,24 @@ name|open_xref_file
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|classname
+name|PROTO
+argument_list|(
+operator|(
+name|tree
 operator|)
 argument_list|)
 decl_stmt|;
@@ -608,6 +632,7 @@ name|GNU_xref_begin
 parameter_list|(
 name|file
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
@@ -749,6 +774,7 @@ name|GNU_xref_file
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -878,7 +904,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -1076,6 +1102,7 @@ name|lxs
 decl_stmt|,
 name|oxs
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|stype
@@ -1315,6 +1342,7 @@ parameter_list|)
 name|tree
 name|fndecl
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1391,12 +1419,14 @@ name|xf
 decl_stmt|,
 name|xf1
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cls
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2086,6 +2116,7 @@ parameter_list|)
 name|tree
 name|fndecl
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2100,6 +2131,7 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s
@@ -2432,6 +2464,7 @@ name|tree
 name|name
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|s
@@ -2569,6 +2602,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|classname
@@ -2756,6 +2790,7 @@ block|{
 name|XREF_FILE
 name|xf
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|prot
@@ -2765,6 +2800,7 @@ name|confg
 decl_stmt|,
 name|pure
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|d
@@ -3191,6 +3227,7 @@ name|find_file
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3241,6 +3278,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -3293,6 +3331,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|fctname
@@ -3310,6 +3349,7 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s
@@ -3383,6 +3423,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|declname
@@ -3474,6 +3515,10 @@ literal|0
 operator|&&
 name|ISSPACE
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|typ
 index|[
 name|i
@@ -3688,6 +3733,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|fixname
@@ -3696,6 +3742,7 @@ name|nam
 parameter_list|,
 name|buf
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|nam
@@ -3705,10 +3752,12 @@ modifier|*
 name|buf
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|t
 decl_stmt|;
@@ -3796,15 +3845,18 @@ name|open_xref_file
 parameter_list|(
 name|file
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|t
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* stw.h -- Private #include File (module.h template V1.0)    Copyright (C) 1995 Free Software Foundation, Inc.    Contributed by James Craig Burley (burley@gnu.org).  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Owning Modules:       stw.c     Modifications: */
+comment|/* stw.h -- Private #include File (module.h template V1.0)    Copyright (C) 1995 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Owning Modules:       stw.c     Modifications: */
 end_comment
 
 begin_comment
@@ -229,6 +229,10 @@ name|bool
 name|select_break_
 decl_stmt|;
 comment|/* TRUE when CASE should start with gen 				   "break;". */
+name|int
+name|ifthen_fake_else_
+decl_stmt|;
+comment|/* Number of fake `else' introductions.  */
 endif|#
 directive|endif
 comment|/* FFECOM_targetCURRENT == FFECOM_targetGCC*/
@@ -340,7 +344,9 @@ end_comment
 begin_function_decl
 name|void
 name|ffestw_display_state
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -366,14 +372,18 @@ end_function_decl
 begin_function_decl
 name|ffestw
 name|ffestw_new
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|ffestw
 name|ffestw_pop
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -489,6 +499,16 @@ parameter_list|(
 name|b
 parameter_list|)
 value|((b)->do_tvar_)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ffestw_ifthen_fake_else
+parameter_list|(
+name|b
+parameter_list|)
+value|((b)->ifthen_fake_else_)
 end_define
 
 begin_define
@@ -683,6 +703,18 @@ parameter_list|,
 name|d
 parameter_list|)
 value|((b)->do_tvar_ = (d))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ffestw_set_ifthen_fake_else
+parameter_list|(
+name|b
+parameter_list|,
+name|e
+parameter_list|)
+value|((b)->ifthen_fake_else_ = (e))
 end_define
 
 begin_define

@@ -51,7 +51,7 @@ value|""
 end_define
 
 begin_comment
-comment|/* VxWorks uses object files, not loadable images.  make linker just    combine objects. */
+comment|/* VxWorks uses object files, not loadable images.  Make linker just combine    objects.  Also show using 32 bit mode and set start of text to 0.  */
 end_comment
 
 begin_undef
@@ -64,7 +64,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"-r"
+value|"-r -taso -T 0"
 end_define
 
 begin_comment

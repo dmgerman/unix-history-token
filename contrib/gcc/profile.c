@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Calculate branch probabilities, and basic block execution counts.     Copyright (C) 1990, 91-94, 96, 97, 1998 Free Software Foundation, Inc.    Contributed by James E. Wilson, UC Berkeley/Cygnus Support;    based on some ideas from Dain Samples of UC Berkeley.    Further mangling by Bob Manson, Cygnus Support.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Calculate branch probabilities, and basic block execution counts.     Copyright (C) 1990, 91-94, 96-98, 1999 Free Software Foundation, Inc.    Contributed by James E. Wilson, UC Berkeley/Cygnus Support;    based on some ideas from Dain Samples of UC Berkeley.    Further mangling by Bob Manson, Cygnus Support.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -94,15 +94,6 @@ include|#
 directive|include
 file|"toplev.h"
 end_include
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|xmalloc
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* One of these is dynamically created whenever we identify an arc in the    function.  */
@@ -5586,6 +5577,7 @@ name|init_branch_prob
 parameter_list|(
 name|filename
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -6695,9 +6687,42 @@ argument_list|,
 name|void_type_node
 argument_list|)
 expr_stmt|;
+name|fndecl
+operator|=
+name|pushdecl
+argument_list|(
+name|fndecl
+argument_list|)
+expr_stmt|;
+name|rest_of_decl_compilation
+argument_list|(
+name|fndecl
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|announce_function
+argument_list|(
+name|fndecl
+argument_list|)
+expr_stmt|;
 name|current_function_decl
 operator|=
 name|fndecl
+expr_stmt|;
+name|DECL_INITIAL
+argument_list|(
+name|fndecl
+argument_list|)
+operator|=
+name|error_mark_node
+expr_stmt|;
+name|temporary_allocation
+argument_list|()
 expr_stmt|;
 name|pushlevel
 argument_list|(

@@ -9,6 +9,12 @@ directive|include
 file|"i386/gas.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"dbxcoff.h"
+end_include
+
 begin_comment
 comment|/* Specify predefined symbols in preprocessor.  */
 end_comment
@@ -26,6 +32,10 @@ name|CPP_PREDEFINES
 value|"-Di386"
 end_define
 
+begin_comment
+comment|/* We want to be able to get DBX debugging information via -gstabs.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -35,7 +45,20 @@ end_undef
 begin_define
 define|#
 directive|define
-name|SDB_DEBUGGING_INFO
+name|DBX_DEBUGGING_INFO
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PREFERRED_DEBUGGING_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PREFERRED_DEBUGGING_TYPE
+value|SDB_DEBUG
 end_define
 
 begin_comment

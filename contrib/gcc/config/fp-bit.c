@@ -686,32 +686,26 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|float
 name|SFtype
 name|__attribute__
-argument_list|(
-operator|(
+typedef|((
 name|mode
-argument_list|(
+typedef|(
 name|SF
-argument_list|)
-operator|)
-argument_list|)
-typedef|;
+typedef|)));
 end_typedef
 
 begin_typedef
 typedef|typedef
+name|float
 name|DFtype
 name|__attribute__
-argument_list|(
-operator|(
+typedef|((
 name|mode
-argument_list|(
+typedef|(
 name|DF
-argument_list|)
-operator|)
-argument_list|)
-typedef|;
+typedef|)));
 end_typedef
 
 begin_typedef
@@ -2152,10 +2146,6 @@ name|exp
 operator|=
 literal|0
 expr_stmt|;
-name|sign
-operator|=
-literal|0
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3181,7 +3171,7 @@ block|}
 if|if
 condition|(
 name|tfraction
-operator|>
+operator|>=
 literal|0
 condition|)
 block|{
@@ -4288,10 +4278,6 @@ parameter_list|,
 name|fp_number_type
 modifier|*
 name|b
-parameter_list|,
-name|fp_number_type
-modifier|*
-name|tmp
 parameter_list|)
 block|{
 name|fractype
@@ -4585,9 +4571,6 @@ name|fp_number_type
 name|b
 decl_stmt|;
 name|fp_number_type
-name|tmp
-decl_stmt|;
-name|fp_number_type
 modifier|*
 name|res
 decl_stmt|;
@@ -4626,9 +4609,6 @@ name|a
 argument_list|,
 operator|&
 name|b
-argument_list|,
-operator|&
-name|tmp
 argument_list|)
 expr_stmt|;
 return|return
@@ -5699,6 +5679,9 @@ if|if
 condition|(
 name|arg_a
 operator|==
+operator|(
+name|SItype
+operator|)
 literal|0x80000000
 condition|)
 block|{

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Loop optimization definitions for GNU C-Compiler    Copyright (C) 1991, 1995 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Loop optimization definitions for GNU C-Compiler    Copyright (C) 1991, 1995, 1998, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"varray.h"
+end_include
 
 begin_comment
 comment|/* Get the luid of an insn.  Catch the error of trying to reference the LUID    of an insn added during loop, since these don't have LUIDs.  */
@@ -79,6 +85,7 @@ modifier|*
 name|location
 decl_stmt|;
 comment|/* Place in the insn where this giv occurs. 				   If GIV_TYPE is DEST_REG, this is 0.  */
+comment|/* For a biv, this is the place where add_val 				   was found.  */
 name|enum
 name|machine_mode
 name|mode
@@ -105,6 +112,10 @@ name|rtx
 name|final_value
 decl_stmt|;
 comment|/* If the giv is used outside the loop, and its 				   final value could be calculated, it is put 				   here, and the giv is made replaceable.  Set 				   the giv to this value before the loop.  */
+name|unsigned
+name|combined_with
+decl_stmt|;
+comment|/* The number of givs this giv has been 				   combined with.  If nonzero, this giv 				   cannot combine with any other giv.  */
 name|unsigned
 name|replaceable
 range|:
@@ -148,12 +159,6 @@ literal|1
 decl_stmt|;
 comment|/* For giv's, 1 if this giv cannot derive 				   another giv.  This occurs in many cases 				   where a giv's lifetime spans an update to 				   a biv. */
 name|unsigned
-name|combined_with
-range|:
-literal|1
-decl_stmt|;
-comment|/* 1 if this giv has been combined with.  It 				   then cannot combine with any other giv.  */
-name|unsigned
 name|maybe_dead
 range|:
 literal|1
@@ -176,14 +181,16 @@ name|shared
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|no_const_addval
+range|:
+literal|1
+decl_stmt|;
+comment|/* 1 if add_val does not contain a const. */
 name|int
 name|lifetime
 decl_stmt|;
 comment|/* Length of life of this giv */
-name|int
-name|times_used
-decl_stmt|;
-comment|/* # times this giv is used. */
 name|rtx
 name|derive_adjustment
 decl_stmt|;
@@ -200,16 +207,30 @@ modifier|*
 name|same
 decl_stmt|;
 comment|/* If this giv has been combined with another 				   giv, this points to the base giv.  The base 				   giv will have COMBINED_WITH non-zero.  */
+name|struct
+name|induction
+modifier|*
+name|derived_from
+decl_stmt|;
+comment|/* For a giv, if we decided to derive this 				   giv from another one.  */
 name|HOST_WIDE_INT
 name|const_adjust
 decl_stmt|;
 comment|/* Used by loop unrolling, when an address giv 				   is split, and a constant is eliminated from 				   the address, the -constant is stored here 				   for later use. */
+name|int
+name|ix
+decl_stmt|;
+comment|/* Used by recombine_givs, as n index into 				   the stats array.  */
 name|struct
 name|induction
 modifier|*
 name|same_insn
 decl_stmt|;
 comment|/* If there are multiple identical givs in 				   the same insn, then all but one have this 				   field set, and they all point to the giv 				   that doesn't have this field set.  */
+name|rtx
+name|last_use
+decl_stmt|;
+comment|/* For a giv made from a biv increment, this is 				   a substitute for the lifetime information. */
 block|}
 struct|;
 end_struct
@@ -301,6 +322,64 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Information required to calculate the number of loop iterations.     This is set by loop_iterations.  */
+end_comment
+
+begin_struct
+struct|struct
+name|loop_info
+block|{
+comment|/* Register or constant initial loop value.  */
+name|rtx
+name|initial_value
+decl_stmt|;
+comment|/* Register or constant value used for comparison test.  */
+name|rtx
+name|comparison_value
+decl_stmt|;
+comment|/* Register or constant approximate final value.  */
+name|rtx
+name|final_value
+decl_stmt|;
+comment|/* Register or constant initial loop value with term common to      final_value removed.  */
+name|rtx
+name|initial_equiv_value
+decl_stmt|;
+comment|/* Register or constant final loop value with term common to      initial_value removed.  */
+name|rtx
+name|final_equiv_value
+decl_stmt|;
+comment|/* Register corresponding to iteration variable.  */
+name|rtx
+name|iteration_var
+decl_stmt|;
+comment|/* Constant loop increment.  */
+name|rtx
+name|increment
+decl_stmt|;
+name|enum
+name|rtx_code
+name|comparison_code
+decl_stmt|;
+comment|/* Holds the number of loop iterations.  It is zero if the number      could not be calculated.  Must be unsigned since the number of      iterations can be as high as 2^wordsize - 1.  For loops with a      wider iterator, this number will be zero if the number of loop      iterations is too large for an unsigned integer to hold.  */
+name|unsigned
+name|HOST_WIDE_INT
+name|n_iterations
+decl_stmt|;
+comment|/* The loop unrolling factor.      Potential values:      0: unrolled      1: not unrolled.      -1: completely unrolled>0: holds the unroll exact factor.  */
+name|unsigned
+name|int
+name|unroll_number
+decl_stmt|;
+comment|/* Non-zero if the loop has a NOTE_INSN_LOOP_VTOP.  */
+name|rtx
+name|vtop
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* Definitions used by the basic induction variable discovery code.  */
 end_comment
 
@@ -372,14 +451,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|HOST_WIDE_INT
-name|loop_n_iterations
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|max_reg_before_loop
 decl_stmt|;
@@ -395,22 +466,39 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|enum
-name|iv_mode
-modifier|*
+name|varray_type
 name|reg_iv_type
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|induction
-modifier|*
-modifier|*
+name|varray_type
 name|reg_iv_info
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|REG_IV_TYPE
+parameter_list|(
+name|n
+parameter_list|)
+define|\
+value|(*(enum iv_mode *)&VARRAY_INT(reg_iv_type, (n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|REG_IV_INFO
+parameter_list|(
+name|n
+parameter_list|)
+define|\
+value|(*(struct induction **)&VARRAY_GENERIC_PTR(reg_iv_info, (n)))
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -428,6 +516,15 @@ name|struct
 name|iv_class
 modifier|*
 name|loop_iv_list
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|first_increment_giv
+decl_stmt|,
+name|last_increment_giv
 decl_stmt|;
 end_decl_stmt
 
@@ -479,29 +576,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Forward declarations for non-static functions declared in stmt.c.  */
-end_comment
-
 begin_decl_stmt
-name|void
-name|find_loop_tree_blocks
+name|rtx
+name|express_from
 name|PROTO
 argument_list|(
 operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|unroll_block_trees
-name|PROTO
-argument_list|(
-operator|(
-name|void
+expr|struct
+name|induction
+operator|*
+operator|,
+expr|struct
+name|induction
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -520,6 +607,10 @@ operator|,
 name|rtx
 operator|,
 name|rtx
+operator|,
+expr|struct
+name|loop_info
+operator|*
 operator|,
 name|int
 operator|)
@@ -555,6 +646,40 @@ operator|(
 name|rtx
 operator|,
 name|rtx
+operator|,
+expr|struct
+name|loop_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|precondition_loop_p
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+expr|struct
+name|loop_info
+operator|*
+operator|,
+name|rtx
+operator|*
+operator|,
+name|rtx
+operator|*
+operator|,
+name|rtx
+operator|*
+operator|,
+expr|enum
+name|machine_mode
+operator|*
+name|mode
 operator|)
 argument_list|)
 decl_stmt|;
@@ -573,6 +698,9 @@ operator|,
 name|rtx
 operator|,
 name|rtx
+operator|,
+name|unsigned
+name|HOST_WIDE_INT
 operator|)
 argument_list|)
 decl_stmt|;
@@ -591,6 +719,9 @@ operator|,
 name|rtx
 operator|,
 name|rtx
+operator|,
+name|unsigned
+name|HOST_WIDE_INT
 operator|)
 argument_list|)
 decl_stmt|;
@@ -629,39 +760,54 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
-modifier|*
-name|loop_unroll_factor
+name|loop_insn_first_p
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAIFA
-end_ifdef
-
-begin_comment
-comment|/* variables for interaction between unroll.c and loop.c, for    the insertion of branch-on-count instruction. */
-end_comment
 
 begin_decl_stmt
 specifier|extern
-name|rtx
+name|int
 modifier|*
-name|loop_start_value
+name|loop_unroll_number
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* HAIFA */
+comment|/* Forward declarations for non-static functions declared in stmt.c.  */
 end_comment
+
+begin_decl_stmt
+name|void
+name|find_loop_tree_blocks
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|unroll_block_trees
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

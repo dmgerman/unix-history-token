@@ -21,12 +21,6 @@ directive|include
 file|<new>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__HONOR_STD
-end_ifdef
-
 begin_expr_stmt
 name|using
 name|std
@@ -42,11 +36,6 @@ operator|::
 name|set_new_handler
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

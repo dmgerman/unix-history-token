@@ -32,6 +32,7 @@ value|STRINGIFY(SYM),
 end_define
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|tree_codes
@@ -41,6 +42,9 @@ block|{
 include|#
 directive|include
 file|"tree.def"
+include|#
+directive|include
+file|"gencheck.h"
 operator|(
 name|char
 operator|*
@@ -80,6 +84,7 @@ name|char
 modifier|*
 name|argv
 index|[]
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|int
@@ -168,12 +173,6 @@ name|defined
 argument_list|(
 name|USE_C_ALLOCA
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
 end_if
 
 begin_comment
@@ -181,23 +180,21 @@ comment|/* FIXME: We only need an xmalloc definition because we are forced to   
 end_comment
 
 begin_function
-name|char
-modifier|*
+name|PTR
 name|xmalloc
 parameter_list|(
 name|nbytes
 parameter_list|)
-name|int
+name|size_t
 name|nbytes
 decl_stmt|;
 block|{
-name|char
-modifier|*
+specifier|register
+name|PTR
 name|tmp
 init|=
 operator|(
-name|char
-operator|*
+name|PTR
 operator|)
 name|malloc
 argument_list|(
@@ -237,7 +234,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* USE_C_ALLOCA&& !__GNUC__ */
+comment|/* USE_C_ALLOCA */
 end_comment
 
 end_unit

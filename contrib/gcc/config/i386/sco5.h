@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running SCO Unix System V 3.2 Version 5.    Copyright (C) 1992, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.    Contributed by Kean Johnston (hug@netcom.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running SCO Unix System V 3.2 Version 5.    Copyright (C) 1992, 95-98, 1999 Free Software Foundation, Inc.    Contributed by Kean Johnston (hug@netcom.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -675,7 +675,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|do {									\   fprintf ((FILE), "%s\t\"GCC: (GNU) %s\"\n",				\     IDENT_ASM_OP, version_string);					\ } while (0)
+value|do {									\      if (!flag_no_ident)						\ 	fprintf ((FILE), "%s\t\"GCC: (GNU) %s\"\n",			\ 		 IDENT_ASM_OP, version_string);				\ } while (0)
 end_define
 
 begin_undef
@@ -1462,7 +1462,7 @@ parameter_list|,
 name|RELOC
 parameter_list|)
 define|\
-value|{									\   if (TREE_CODE (DECL) == STRING_CST)					\     {									\       if (! flag_writable_strings)					\ 	const_section ();						\       else								\ 	data_section ();						\     }									\   else if (TREE_CODE (DECL) == VAR_DECL)				\     {									\       if ((TARGET_ELF&& flag_pic&& RELOC)				\ 	  || !TREE_READONLY (DECL) || TREE_SIDE_EFFECTS (DECL)		\ 	  || !DECL_INITIAL (DECL)					\ 	  || (DECL_INITIAL (DECL) != error_mark_node			\&& !TREE_CONSTANT (DECL_INITIAL (DECL))))			\ 	data_section ();						\       else								\ 	const_section ();						\     }									\   else									\     const_section ();							\ }
+value|{									\   if (TARGET_ELF&& flag_pic&& RELOC)					\      data_section ();							\   else if (TREE_CODE (DECL) == STRING_CST)				\     {									\       if (! flag_writable_strings)					\ 	const_section ();						\       else								\ 	data_section ();						\     }									\   else if (TREE_CODE (DECL) == VAR_DECL)				\     {									\       if (! DECL_READONLY_SECTION (DECL, RELOC)) 			\ 	data_section ();						\       else								\ 	const_section ();						\     }									\   else									\     const_section ();							\ }
 end_define
 
 begin_undef
@@ -1509,7 +1509,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_DEFAULT
-value|0301
+value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS)
 end_define
 
 begin_undef
@@ -1523,6 +1523,30 @@ define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
 value|1
+end_define
+
+begin_comment
+comment|/* Though OpenServer support .weak in COFF, g++ doesn't play nice with it  * so we'll punt on it for now  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUPPORTS_WEAK
+value|(TARGET_ELF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASM_WEAKEN_LABEL
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|)
+define|\
+value|do { fputs ("\t.weak\t", FILE); assemble_name (FILE, NAME);		\ 	fputc ('\n', FILE); } while (0)
 end_define
 
 begin_undef
@@ -1825,13 +1849,34 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{ "coff", MASK_COFF }, 		\ 	{ "elf", -MASK_COFF },
+value|{ "coff", MASK_COFF, "Generate COFF output" }, 		\ 	{ "elf", -MASK_COFF, "Generate ELF output"  },
 end_define
 
 begin_define
 define|#
 directive|define
 name|NO_DOLLAR_IN_LABEL
+end_define
+
+begin_comment
+comment|/* Implicit library calls should use memcpy, not bcopy, etc.  They are     faster on OpenServer libraries. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_MEM_FUNCTIONS
+end_define
+
+begin_comment
+comment|/* Biggest alignment supported by the object file format of this    machine.  Use this macro to limit the alignment which can be    specified using the `__attribute__ ((aligned (N)))' construct.  If    not defined, the default value is `BIGGEST_ALIGNMENT'.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_OFILE_ALIGNMENT
+value|(32768*8)
 end_define
 
 begin_comment

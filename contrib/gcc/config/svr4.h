@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for some    generic System V Release 4 system.    Copyright (C) 1991, 94-97, 1998 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     To use this file, make up a file with a name like:  	?????svr4.h     where ????? is replaced by the name of the basic hardware that you    are targeting for.  Then, in the file ?????svr4.h, put something    like:  	#include "?????.h" 	#include "svr4.h"     followed by any really system-specific defines (or overrides of    defines) which you find that you need.  For example, CPP_PREDEFINES    is defined here with only the defined -Dunix and -DSVR4.  You should    probably override that in your target-specific ?????svr4.h file    with a set of defines that includes these, but also contains an    appropriate define for the type of hardware that you are targeting. */
+comment|/* Operating system specific defines to be used when targeting GCC for some    generic System V Release 4 system.    Copyright (C) 1991, 94-98, 1999 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     To use this file, make up a file with a name like:  	?????svr4.h     where ????? is replaced by the name of the basic hardware that you    are targeting for.  Then, in the file ?????svr4.h, put something    like:  	#include "?????.h" 	#include "svr4.h"     followed by any really system-specific defines (or overrides of    defines) which you find that you need.  For example, CPP_PREDEFINES    is defined here with only the defined -Dunix and -DSVR4.  You should    probably override that in your target-specific ?????svr4.h file    with a set of defines that includes these, but also contains an    appropriate define for the type of hardware that you are targeting. */
 end_comment
 
 begin_comment
@@ -268,7 +268,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|do {				 				\      fprintf ((FILE), "\t%s\t\"GCC: (GNU) %s\"\n",		\ 	      IDENT_ASM_OP, version_string);			\    } while (0)
+value|do {				 				\      if (!flag_no_ident)					\ 	fprintf ((FILE), "\t%s\t\"GCC: (GNU) %s\"\n",		\ 		 IDENT_ASM_OP, version_string);			\    } while (0)
 end_define
 
 begin_comment
@@ -353,11 +353,22 @@ begin_comment
 comment|/* All ELF targets can support DWARF-2.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DWARF2_DEBUGGING_INFO
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|DWARF2_DEBUGGING_INFO
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The numbers used to denote specific machine registers in the System V    Release 4 DWARF debugging information are quite likely to be totally    different from the numbers used in BSD stabs debugging information    for the same kind of target machine.  Thus, we undefine the macro    DBX_REGISTER_NUMBER here as an extra inducement to get people to    provide proper machine-specific definitions of DBX_REGISTER_NUMBER    (which is also used to provide DWARF registers numbers in dwarfout.c)    in their tm.h files which include this file.  */
@@ -368,26 +379,6 @@ undef|#
 directive|undef
 name|DBX_REGISTER_NUMBER
 end_undef
-
-begin_comment
-comment|/* gas on SVR4 supports the use of .stabs.  Permit -gstabs to be used    in general, although it will only work when using gas.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DBX_DEBUGGING_INFO
-end_define
-
-begin_comment
-comment|/* When generating stabs debugging, use N_BINCL entries.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DBX_USE_BINCL
-end_define
 
 begin_comment
 comment|/* Use DWARF debugging info by default.  */
@@ -412,85 +403,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Make LBRAC and RBRAC addresses relative to the start of the    function.  The native Solaris stabs debugging format works this    way, gdb expects it, and it reduces the number of relocation    entries.  */
+comment|/* But allow STABS to be supoorted as well.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DBX_BLOCKS_FUNCTION_RELATIVE
-value|1
-end_define
-
-begin_comment
-comment|/* When using stabs, gcc2_compiled must be a stabs entry, not an    ordinary symbol, or gdb won't see it.  Furthermore, since gdb reads    the input piecemeal, starting with each N_SO, it's a lot easier if    the gcc2 flag symbol is *after* the N_SO rather than before it.  So    we emit an N_OPT stab there.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_IDENTIFY_GCC
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|do									\   {									\     if (write_symbols != DBX_DEBUG)					\       fputs ("gcc2_compiled.:\n", FILE);				\   }									\ while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_IDENTIFY_GCC_AFTER_SOURCE
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|do									\   {									\     if (write_symbols == DBX_DEBUG)					\       fputs ("\t.stabs\t\"gcc2_compiled.\", 0x3c, 0, 0, 0\n", FILE);	\   }									\ while (0)
-end_define
-
-begin_comment
-comment|/* Like block addresses, stabs line numbers are relative to the    current function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_SOURCE_LINE
-parameter_list|(
-name|file
-parameter_list|,
-name|line
-parameter_list|)
-define|\
-value|do									\   {									\     static int sym_lineno = 1;						\     fprintf (file, ".stabn 68,0,%d,.LM%d-",				\ 	     line, sym_lineno);						\     assemble_name (file,						\ 		   XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));\     fprintf (file, "\n.LM%d:\n", sym_lineno);				\     sym_lineno += 1;							\   }									\ while (0)
-end_define
-
-begin_comment
-comment|/* In order for relative line numbers to work, we must output the    stabs entry for the function name first.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DBX_FUNCTION_FIRST
-end_define
-
-begin_comment
-comment|/* Generate a blank trailing N_SO to mark the end of the .o file, since    we can't depend upon the linker to mark .o file boundaries with    embedded stabs.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DBX_OUTPUT_MAIN_SOURCE_FILE_END
-parameter_list|(
-name|FILE
-parameter_list|,
-name|FILENAME
-parameter_list|)
-define|\
-value|do									\   {									\     text_section ();							\     fprintf (FILE,							\ 	   "\t.stabs \"\",%d,0,0,.Letext\n.Letext:\n", N_SO);		\   }									\ while (0)
-end_define
+begin_include
+include|#
+directive|include
+file|"dbxelf.h"
+end_include
 
 begin_comment
 comment|/* Define the actual types of some ANSI-mandated types.  (These    definitions should work for most SVR4 systems).  */
@@ -1066,7 +986,7 @@ parameter_list|,
 name|RELOC
 parameter_list|)
 define|\
-value|do {								\   int len;							\   char *name, *string, *prefix;					\ 								\   name = IDENTIFIER_POINTER (DECL_ASSEMBLER_NAME (DECL));	\ 								\   if (! DECL_ONE_ONLY (DECL))					\     prefix = ".";						\   else if (TREE_CODE (DECL) == FUNCTION_DECL)			\     prefix = ".gnu.linkonce.t.";				\   else if (DECL_READONLY_SECTION (DECL, RELOC))			\     prefix = ".gnu.linkonce.r.";				\   else								\     prefix = ".gnu.linkonce.d.";				\ 								\   len = strlen (name) + strlen (prefix);			\   string = alloca (len + 1);					\   sprintf (string, "%s%s", prefix, name);			\ 								\   DECL_SECTION_NAME (DECL) = build_string (len, string);	\ } while (0)
+value|do {								\   int len;							\   char *name, *string, *prefix;					\ 								\   name = IDENTIFIER_POINTER (DECL_ASSEMBLER_NAME (DECL));	\ 								\   if (! DECL_ONE_ONLY (DECL))					\     {								\       prefix = ".";                                             \       if (TREE_CODE (DECL) == FUNCTION_DECL)			\ 	prefix = ".text.";					\       else if (DECL_READONLY_SECTION (DECL, RELOC))		\ 	prefix = ".rodata.";					\       else							\ 	prefix = ".data.";					\     }								\   else if (TREE_CODE (DECL) == FUNCTION_DECL)			\     prefix = ".gnu.linkonce.t.";				\   else if (DECL_READONLY_SECTION (DECL, RELOC))			\     prefix = ".gnu.linkonce.r.";				\   else								\     prefix = ".gnu.linkonce.d.";				\ 								\   len = strlen (name) + strlen (prefix);			\   string = alloca (len + 1);					\   sprintf (string, "%s%s", prefix, name);			\ 								\   DECL_SECTION_NAME (DECL) = build_string (len, string);	\ } while (0)
 end_define
 
 begin_comment
@@ -1365,7 +1285,7 @@ parameter_list|,
 name|LENGTH
 parameter_list|)
 define|\
-value|do									\     {									\       register unsigned char *_ascii_bytes = (unsigned char *) (STR);	\       register unsigned char *limit = _ascii_bytes + (LENGTH);		\       register unsigned bytes_in_chunk = 0;				\       for (; _ascii_bytes< limit; _ascii_bytes++)			\         {								\ 	  register unsigned char *p;					\ 	  if (bytes_in_chunk>= 60)					\ 	    {								\ 	      fprintf ((FILE), "\"\n");					\ 	      bytes_in_chunk = 0;					\ 	    }								\ 	  for (p = _ascii_bytes; p< limit&& *p != '\0'; p++)		\ 	    continue;							\ 	  if (p< limit&& (p - _ascii_bytes)<= STRING_LIMIT)		\ 	    {								\ 	      if (bytes_in_chunk> 0)					\ 		{							\ 		  fprintf ((FILE), "\"\n");				\ 		  bytes_in_chunk = 0;					\ 		}							\ 	      ASM_OUTPUT_LIMITED_STRING ((FILE), _ascii_bytes);		\ 	      _ascii_bytes = p;						\ 	    }								\ 	  else								\ 	    {								\ 	      register int escape;					\ 	      register unsigned ch;					\ 	      if (bytes_in_chunk == 0)					\ 		fprintf ((FILE), "\t%s\t\"", ASCII_DATA_ASM_OP);	\ 	      switch (escape = ESCAPES[ch = *_ascii_bytes])		\ 		{							\ 		case 0:							\ 		  putc (ch, (FILE));					\ 		  bytes_in_chunk++;					\ 		  break;						\ 		case 1:							\ 		  fprintf ((FILE), "\\%03o", ch);			\ 		  bytes_in_chunk += 4;					\ 		  break;						\ 		default:						\ 		  putc ('\\', (FILE));					\ 		  putc (escape, (FILE));				\ 		  bytes_in_chunk += 2;					\ 		  break;						\ 		}							\ 	    }								\ 	}								\       if (bytes_in_chunk> 0)						\         fprintf ((FILE), "\"\n");					\     }									\   while (0)
+value|do									\     {									\       register unsigned char *_ascii_bytes = (unsigned char *) (STR);	\       register unsigned char *limit = _ascii_bytes + (LENGTH);		\       register unsigned bytes_in_chunk = 0;				\       for (; _ascii_bytes< limit; _ascii_bytes++)			\         {								\ 	  register unsigned char *p;					\ 	  if (bytes_in_chunk>= 60)					\ 	    {								\ 	      fprintf ((FILE), "\"\n");					\ 	      bytes_in_chunk = 0;					\ 	    }								\ 	  for (p = _ascii_bytes; p< limit&& *p != '\0'; p++)		\ 	    continue;							\ 	  if (p< limit&& (p - _ascii_bytes)<= (long)STRING_LIMIT)	\ 	    {								\ 	      if (bytes_in_chunk> 0)					\ 		{							\ 		  fprintf ((FILE), "\"\n");				\ 		  bytes_in_chunk = 0;					\ 		}							\ 	      ASM_OUTPUT_LIMITED_STRING ((FILE), _ascii_bytes);		\ 	      _ascii_bytes = p;						\ 	    }								\ 	  else								\ 	    {								\ 	      register int escape;					\ 	      register unsigned ch;					\ 	      if (bytes_in_chunk == 0)					\ 		fprintf ((FILE), "\t%s\t\"", ASCII_DATA_ASM_OP);	\ 	      switch (escape = ESCAPES[ch = *_ascii_bytes])		\ 		{							\ 		case 0:							\ 		  putc (ch, (FILE));					\ 		  bytes_in_chunk++;					\ 		  break;						\ 		case 1:							\ 		  fprintf ((FILE), "\\%03o", ch);			\ 		  bytes_in_chunk += 4;					\ 		  break;						\ 		default:						\ 		  putc ('\\', (FILE));					\ 		  putc (escape, (FILE));				\ 		  bytes_in_chunk += 2;					\ 		  break;						\ 		}							\ 	    }								\ 	}								\       if (bytes_in_chunk> 0)						\         fprintf ((FILE), "\"\n");					\     }									\   while (0)
 end_define
 
 begin_comment

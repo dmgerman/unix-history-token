@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Subroutines for insn-output.c for Windows NT.    Contributed by Douglas Rupp (drupp@cs.washington.edu)    Copyright (C) 1995, 1997 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Subroutines for insn-output.c for Windows NT.    Contributed by Douglas Rupp (drupp@cs.washington.edu)    Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -1912,7 +1912,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The Microsoft linker requires that every function be marked as    DT_FCN.  When using gas on cygwin32, we must emit appropriate .type    directives.  */
+comment|/* The Microsoft linker requires that every function be marked as    DT_FCN.  When using gas on cygwin, we must emit appropriate .type    directives.  */
 end_comment
 
 begin_include
@@ -2073,8 +2073,70 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|extern_list
+modifier|*
+name|exports_head
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* This is called at the end of assembly.  For each external function    which has not been defined, we output a declaration now.  */
+comment|/* Assemble an export symbol entry.  We need to keep a list of    these, so that we can output the export list at the end of the    assembly.  We used to output these export symbols in each function,    but that causes problems with GNU ld when the sections are     linkonce.  */
+end_comment
+
+begin_function
+name|void
+name|i386_pe_record_exported_symbol
+parameter_list|(
+name|name
+parameter_list|)
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|{
+name|struct
+name|extern_list
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
+operator|(
+expr|struct
+name|extern_list
+operator|*
+operator|)
+name|permalloc
+argument_list|(
+sizeof|sizeof
+expr|*
+name|p
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|next
+operator|=
+name|exports_head
+expr_stmt|;
+name|p
+operator|->
+name|name
+operator|=
+name|name
+expr_stmt|;
+name|exports_head
+operator|=
+name|p
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* This is called at the end of assembly.  For each external function    which has not been defined, we output a declaration now.  We also    output the .drectve section.  */
 end_comment
 
 begin_function
@@ -2159,6 +2221,45 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|exports_head
+condition|)
+name|drectve_section
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|exports_head
+init|;
+name|p
+operator|!=
+name|NULL
+condition|;
+name|p
+operator|=
+name|p
+operator|->
+name|next
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|"\t.ascii \" -export:%s\"\n"
+argument_list|,
+name|I386_PE_STRIP_ENCODING
+argument_list|(
+name|p
+operator|->
+name|name
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function

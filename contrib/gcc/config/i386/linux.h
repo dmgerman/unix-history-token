@@ -224,10 +224,6 @@ name|WCHAR_TYPE_SIZE
 value|BITS_PER_WORD
 end_define
 
-begin_comment
-comment|/* The egcs-1.1 branch is the last time we will have -Di386.  -D__i386__ is the thing to use.  */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
@@ -238,7 +234,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-D__ELF__ -Dunix -Di386 -D__i386__ -Dlinux -Asystem(posix)"
+value|"-D__ELF__ -Dunix -D__i386__ -Dlinux -Asystem(posix)"
 end_define
 
 begin_undef
@@ -412,7 +408,7 @@ parameter_list|,
 name|MAX_SKIP
 parameter_list|)
 define|\
-value|if ((LOG)!=0) \     if ((MAX_SKIP)==0) fprintf ((FILE), "\t.p2align %d\n", (LOG)); \     else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP))
+value|do {									\     if ((LOG) != 0) {							\       if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG));	\       else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP));	\     }									\   } while (0)
 end_define
 
 begin_endif

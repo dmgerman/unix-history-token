@@ -1,83 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Provide a version _doprnt in terms of fprintf.    By Kaveh Ghazi  (ghazi@caip.rutgers.edu)  3/29/98    Copyright (C) 1998 Free Software Foundation, Inc.  */
+comment|/* Provide a version _doprnt in terms of fprintf.    Copyright (C) 1998 Free Software Foundation, Inc.    Contributed by Kaveh Ghazi  (ghazi@caip.rutgers.edu)  3/29/98  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
-begin_include
+begin_expr_stmt
+operator|*
+operator|/
 include|#
 directive|include
 file|"config.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
 include|#
 directive|include
 file|"system.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gansidecl.h"
-end_include
-
-begin_undef
 undef|#
 directive|undef
 name|_doprnt
-end_undef
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|TEST
-end_ifdef
-
-begin_comment
 comment|/* Make sure to use the internal one. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|_doprnt
 value|my_doprnt
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_define
 define|#
 directive|define
 name|COPY_VA_INT
@@ -87,9 +34,6 @@ comment|/* Go past the asterisk. */
 value|\ 	 *sptr = '\0';
 comment|/* NULL terminate sptr. */
 value|\ 	 sprintf(buf, "%d", value); \ 	 strcat(sptr, buf); \ 	 while (*sptr) sptr++; \      } while (0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|PRINT_CHAR
@@ -98,9 +42,6 @@ name|CHAR
 parameter_list|)
 define|\
 value|do { \ 	 putc(CHAR, stream); \ 	 ptr++; \ 	 total_printed++; \ 	 continue; \      } while (0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|PRINT_TYPE
@@ -113,30 +54,36 @@ comment|/* Copy the type specifier. */
 value|\ 	*sptr = '\0';
 comment|/* NULL terminate sptr. */
 value|\ 	result = fprintf(stream, specifier, value); \ 	if (result == -1) \ 	  return -1; \ 	else \ 	  { \ 	    total_printed += result; \ 	    continue; \ 	  } \       } while (0)
-end_define
-
-begin_function
 name|int
 name|_doprnt
-parameter_list|(
-name|format
-parameter_list|,
-name|ap
-parameter_list|,
-name|stream
-parameter_list|)
+argument_list|(
+argument|format
+argument_list|,
+argument|ap
+argument_list|,
+argument|stream
+argument_list|)
 specifier|const
 name|char
-modifier|*
+operator|*
 name|format
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|va_list
 name|ap
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|FILE
 modifier|*
 name|stream
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|const
 name|char
@@ -551,7 +498,7 @@ return|return
 name|total_printed
 return|;
 block|}
-end_function
+end_block
 
 begin_ifdef
 ifdef|#
@@ -636,7 +583,7 @@ name|result
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|__STDC__
+name|ANSI_PROTOTYPES
 name|char
 modifier|*
 name|format
@@ -652,7 +599,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|__STDC__
+name|ANSI_PROTOTYPES
 name|format
 operator|=
 name|va_arg

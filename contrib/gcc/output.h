@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations for insn-output.c.  These functions are defined in recog.c,    final.c, and varasm.c.    Copyright (C) 1987, 1991, 1994, 1997 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Declarations for insn-output.c.  These functions are defined in recog.c,    final.c, and varasm.c.    Copyright (C) 1987, 1991, 1994, 97-98, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -32,6 +32,7 @@ name|end_final
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -269,6 +270,7 @@ name|output_operand_lossage
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -287,6 +289,7 @@ name|output_asm_insn
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -305,6 +308,23 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|insn_current_reference_address
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Find the alignment associated with a CODE_LABEL.    Defined in final.c.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|label_to_alignment
 name|PROTO
 argument_list|(
 operator|(
@@ -376,8 +396,6 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|asm_fprintf
-name|PROTO
-argument_list|(
 name|PVPROTO
 argument_list|(
 operator|(
@@ -385,13 +403,13 @@ name|FILE
 operator|*
 name|file
 operator|,
+specifier|const
 name|char
 operator|*
 name|p
 operator|,
 operator|...
 operator|)
-argument_list|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -588,6 +606,8 @@ name|int
 operator|,
 name|FILE
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -627,6 +647,23 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|data_section
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Tell assembler to make sure its in the data section.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|force_data_section
 name|PROTO
 argument_list|(
 operator|(
@@ -713,6 +750,7 @@ argument_list|(
 operator|(
 name|tree
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -827,6 +865,7 @@ name|decode_reg_name
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -853,6 +892,7 @@ argument_list|(
 operator|(
 name|tree
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1067,6 +1107,7 @@ name|assemble_string
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1541,6 +1582,50 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero if function being compiled doesn't contain any calls    (ignoring the prologue and epilogue).  This is set prior to    local register allocation and is valid for the remaining    compiler passes. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|current_function_is_leaf
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if function being compiled doesn't modify the stack pointer    (ignoring the prologue and epilogue).  This is only valid after    life_analysis has run. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|current_function_sp_is_unchanging
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if the function being compiled is a leaf function which only    uses leaf registers.  This is valid after reload (specifically after    sched2) and is useful only if the port defines LEAF_REGISTERS.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|current_function_uses_only_leaf_regs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if the function being compiled issues a computed jump.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|current_function_has_computed_jump
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero if the current function returns a pointer type */
 end_comment
 
@@ -1757,6 +1842,29 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Default file in which to dump debug output.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUFSIZ
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|rtl_dump_file
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Decide whether DECL needs to be in a writable section.  RELOC is the same    as for SELECT_SECTION.  */
 end_comment
 
@@ -1772,6 +1880,47 @@ parameter_list|)
 define|\
 value|(TREE_READONLY (DECL)					\&& ! TREE_THIS_VOLATILE (DECL)			\&& DECL_INITIAL (DECL)				\&& (DECL_INITIAL (DECL) == error_mark_node		\        || TREE_CONSTANT (DECL_INITIAL (DECL)))		\&& ! (RELOC&& (flag_pic || DECL_ONE_ONLY (DECL))))
 end_define
+
+begin_comment
+comment|/* User label prefix in effect for this compilation.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|user_label_prefix
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This macro gets just the user-specified name    out of the string in a SYMBOL_REF.  On most machines,    we discard the * if any and that's all.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STRIP_NAME_ENCODING
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STRIP_NAME_ENCODING
+parameter_list|(
+name|VAR
+parameter_list|,
+name|SYMBOL_NAME
+parameter_list|)
+define|\
+value|(VAR) = ((SYMBOL_NAME) + ((SYMBOL_NAME)[0] == '*'))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

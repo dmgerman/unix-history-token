@@ -1,20 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This goes away when the math-emulator is fixed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_CPU_DEFAULT
-value|0400
-end_define
-
-begin_comment
-comment|/* TARGET_NO_FANCY_MATH_387 */
-end_comment
-
-begin_comment
 comment|/* This is tested by i386gas.h.  */
 end_comment
 
@@ -49,6 +34,24 @@ include|#
 directive|include
 file|<netbsd.h>
 end_include
+
+begin_comment
+comment|/* This goes away when the math-emulator is fixed */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_DEFAULT
+define|\
+value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_NO_FANCY_MATH_387)
+end_define
 
 begin_undef
 undef|#

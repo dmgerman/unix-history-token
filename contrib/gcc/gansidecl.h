@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ANSI and traditional C compatibility macros.    Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ANSI and traditional C compatibility macros.    Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -10,166 +10,118 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ANSIDECL_H
+name|__GANSIDECL_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ANSIDECL_H
+name|__GANSIDECL_H__
+end_define
+
+begin_include
+include|#
+directive|include
+file|"ansidecl.h"
+end_include
+
+begin_comment
+comment|/* Undef ansidecl.h's "obsolete" version. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PROTO
+end_undef
+
+begin_comment
+comment|/* These macros are deprecated, use ansidecl.h's PARAMS style instead. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROTO
+parameter_list|(
+name|ARGS
+parameter_list|)
+value|PARAMS(ARGS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VPROTO
+parameter_list|(
+name|ARGS
+parameter_list|)
+value|VPARAMS(ARGS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PVPROTO
+parameter_list|(
+name|ARGS
+parameter_list|)
+value|PARAMS(ARGS)
 end_define
 
 begin_comment
-comment|/* Add prototype support.  */
+comment|/* Autoconf will possibly define the `inline' or `const' keywords as    macros, however this is only valid for the stage1 compiler.  If we    detect a modern version of gcc, unconditionally reset the values.    This makes sure the right thing happens in stage2 and later.  We    need to do this very early; i.e. before any systems header files or    gcc header files in case they use these keywords.  Otherwise    conflicts might occur. */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PROTO
-end_ifndef
 
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|USE_PROTOTYPES
-argument_list|)
-condition|?
-name|USE_PROTOTYPES
-expr|:
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
+name|__GNUC__
+operator|>
+literal|2
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+literal|7
+operator|)
 end_if
 
-begin_define
-define|#
-directive|define
-name|PROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|ARGS
-end_define
+begin_undef
+undef|#
+directive|undef
+name|const
+end_undef
 
-begin_else
-else|#
-directive|else
-end_else
+begin_undef
+undef|#
+directive|undef
+name|inline
+end_undef
 
 begin_define
 define|#
 directive|define
-name|PROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|()
+name|inline
+value|__inline__
 end_define
+
+begin_comment
+comment|/* Modern gcc can use `__inline__' freely. */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VPROTO
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PVPROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|ARGS
-end_define
-
-begin_define
-define|#
-directive|define
-name|VPROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|ARGS
-end_define
-
-begin_define
-define|#
-directive|define
-name|VA_START
-parameter_list|(
-name|va_list
-parameter_list|,
-name|var
-parameter_list|)
-value|va_start(va_list,var)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PVPROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|VPROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|(va_alist) va_dcl
-end_define
-
-begin_define
-define|#
-directive|define
-name|VA_START
-parameter_list|(
-name|va_list
-parameter_list|,
-name|var
-parameter_list|)
-value|va_start(va_list)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* GCC>= 2.7 */
+end_comment
 
 begin_if
 if|#
@@ -206,6 +158,66 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|ATTRIBUTE_UNUSED_LABEL
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|<
+literal|2
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|<
+literal|93
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_UNUSED_LABEL
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_UNUSED_LABEL
+value|ATTRIBUTE_UNUSED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC< 2.93 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_UNUSED_LABEL */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ATTRIBUTE_UNUSED
 end_ifndef
 
@@ -223,6 +235,28 @@ end_endif
 
 begin_comment
 comment|/* ATTRIBUTE_UNUSED */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_NORETURN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NORETURN
+value|__attribute__ ((__noreturn__))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_NORETURN */
 end_comment
 
 begin_ifndef
@@ -287,56 +321,12 @@ begin_comment
 comment|/* ATTRIBUTE_PRINTF */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GENERIC_PTR
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_PROTOTYPES
-argument_list|)
-condition|?
-name|USE_PROTOTYPES
-expr|:
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|GENERIC_PTR
-value|void *
+value|PTR
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|GENERIC_PTR
-value|char *
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -348,49 +338,7 @@ begin_define
 define|#
 directive|define
 name|NULL_PTR
-value|((GENERIC_PTR) 0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PTR
-value|void *
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PTR
-value|char *
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|const
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|const
+value|((PTR) 0)
 end_define
 
 begin_endif
@@ -404,16 +352,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! __STDC__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ANSIDECL_H */
+comment|/* __GANSIDECL_H__ */
 end_comment
 
 end_unit

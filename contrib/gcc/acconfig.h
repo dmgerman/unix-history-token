@@ -1,5 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* Define if you can safely include both<string.h> and<strings.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|STRING_WITH_STRINGS
+end_undef
+
+begin_comment
 comment|/* Define if printf supports "%p".  */
 end_comment
 
@@ -17,6 +27,36 @@ begin_undef
 undef|#
 directive|undef
 name|ENABLE_CHECKING
+end_undef
+
+begin_comment
+comment|/* Define to 1 if NLS is requested.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ENABLE_NLS
+end_undef
+
+begin_comment
+comment|/* Define as 1 if you have catgets and don't want to use GNU gettext.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_CATGETS
+end_undef
+
+begin_comment
+comment|/* Define as 1 if you have gettext and don't want to use GNU gettext.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_GETTEXT
 end_undef
 
 begin_comment
@@ -60,6 +100,26 @@ name|HAVE_GAS_BALIGN_AND_P2ALIGN
 end_undef
 
 begin_comment
+comment|/* Define if your assembler supports .subsection and .subsection -1 starts    emitting at the beginning of your section */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_GAS_SUBSECTION_ORDERING
+end_undef
+
+begin_comment
+comment|/* Define if your assembler uses the old HImode fild and fist notation.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_GAS_FILDS_FISTS
+end_undef
+
+begin_comment
 comment|/* Define if you have a working<inttypes.h> header file.  */
 end_comment
 
@@ -67,6 +127,26 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_INTTYPES_H
+end_undef
+
+begin_comment
+comment|/* Define if your locale.h file contains LC_MESSAGES.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_LC_MESSAGES
+end_undef
+
+begin_comment
+comment|/* Define as 1 if you have the stpcpy function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STPCPY
 end_undef
 
 begin_comment
@@ -180,6 +260,16 @@ name|NEED_DECLARATION_ATOL
 end_undef
 
 begin_comment
+comment|/* Whether atof must be declared even if<stdlib.h> is included.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NEED_DECLARATION_ATOF
+end_undef
+
+begin_comment
 comment|/* Whether sbrk must be declared even if<stdlib.h> is included.  */
 end_comment
 
@@ -207,6 +297,26 @@ begin_undef
 undef|#
 directive|undef
 name|NEED_DECLARATION_STRERROR
+end_undef
+
+begin_comment
+comment|/* Whether strsignal must be declared even if<string.h> is included.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NEED_DECLARATION_STRSIGNAL
+end_undef
+
+begin_comment
+comment|/* Whether strstr must be declared even if<string.h> is included.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NEED_DECLARATION_STRSTR
 end_undef
 
 begin_comment
@@ -250,13 +360,73 @@ name|NEED_DECLARATION_SETRLIMIT
 end_undef
 
 begin_comment
-comment|/* Define if you want expensive run-time checks. */
+comment|/* Whether putc_unlocked must be declared even if<stdio.h> is included.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|ENABLE_CHECKING
+name|NEED_DECLARATION_PUTC_UNLOCKED
+end_undef
+
+begin_comment
+comment|/* Whether fputs_unlocked must be declared even if<stdio.h> is included.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NEED_DECLARATION_FPUTS_UNLOCKED
+end_undef
+
+begin_comment
+comment|/* Define to enable the use of a default assembler. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DEFAULT_ASSEMBLER
+end_undef
+
+begin_comment
+comment|/* Define to enable the use of a default linker. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DEFAULT_LINKER
+end_undef
+
+begin_comment
+comment|/* Define if host mkdir takes a single argument. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|MKDIR_TAKES_ONE_ARG
+end_undef
+
+begin_comment
+comment|/* Define to the name of the distribution.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PACKAGE
+end_undef
+
+begin_comment
+comment|/* Define to the version of the distribution.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|VERSION
 end_undef
 
 begin_expr_stmt

@@ -467,7 +467,7 @@ define|#
 directive|define
 name|INIT_SUBTARGET_OPTABS
 define|\
-value|fixsfdi_libfunc = gen_rtx_SYMBOL_REF (Pmode, "__ftoll");	\   fixunssfdi_libfunc = gen_rtx_SYMBOL_REF (Pmode, "__ftoull");	\   fixdfdi_libfunc = gen_rtx_SYMBOL_REF (Pmode, "__dtoll");	\   fixunsdfdi_libfunc = gen_rtx_SYMBOL_REF (Pmode, "__dtoull")
+value|fixsfdi_libfunc = gen_rtx_SYMBOL_REF (Pmode, \ 	TARGET_ARCH64 ? "__ftol" : "__ftoll");	\   fixunssfdi_libfunc = gen_rtx_SYMBOL_REF (Pmode, \ 	TARGET_ARCH64 ? "__ftoul" : "__ftoull");	\   fixdfdi_libfunc = gen_rtx_SYMBOL_REF (Pmode, \ 	TARGET_ARCH64 ? "__dtol" : "__dtoll");	\   fixunsdfdi_libfunc = gen_rtx_SYMBOL_REF (Pmode, \ 	TARGET_ARCH64 ? "__dtoul" : "__dtoull")
 end_define
 
 begin_comment

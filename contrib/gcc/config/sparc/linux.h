@@ -265,7 +265,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-D__ELF__ -Dunix -Dsparc -D__sparc__ -Dlinux -Asystem(unix) -Asystem(posix)"
+value|"-D__ELF__ -Dunix -D__sparc__ -Dlinux -Asystem(unix) -Asystem(posix)"
 end_define
 
 begin_undef

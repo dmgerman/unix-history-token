@@ -257,7 +257,21 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!posix*:%{pg:-lgcrt0.o}%{!pg: \      %{p:%e-p profiling is no longer supported.  Use -pg instead.} \      %{!p:-lcrt0.o}}}\      %{posix*:%{pg:-lgposixcrt0.o}%{!pg: \      %{p:%e-p profiling is no longer supported.  Use -pg instead.} \      %{!p:-lposixcrt0.o}}}"
+value|"%{!posix*:%{pg:-lgcrt0.o}%{!pg: \      %{p:%e-p profiling is no longer supported.  Use -pg instead.} \      %{!p:-lcrt0.o}}}\      %{posix*:%{pg:-lgposixcrt0.o}%{!pg: \      %{p:%e-p profiling is no longer supported.  Use -pg instead.} \      %{!p:-lposixcrt0.o}}} \      -lcrtbegin.o"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ENDFILE_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_SPEC
+define|\
+value|"-lcrtend.o"
 end_define
 
 begin_comment
@@ -370,6 +384,16 @@ value|fprintf (FILE,							\ 	   "\t.text\n\t.stabs \"%s\",%d,0,0,Letext\nLetext
 end_define
 
 begin_comment
+comment|/* Define our object format type for crtstuff.c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJECT_FORMAT_MACHO
+end_define
+
+begin_comment
 comment|/* Don't use .gcc_compiled symbols to communicate with GDB;    They interfere with numerically sorted symbol lists. */
 end_comment
 
@@ -444,6 +468,13 @@ define|\
 value|do { destructor_section ();                                   \        ASM_OUTPUT_ALIGN (FILE, 1);                              \        fprintf (FILE, "\t.long ");                              \        assemble_name (FILE, NAME);                              \        fprintf (FILE, "\n");                                    \        fprintf (FILE, ".reference .destructors_used\n");        \       } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|EH_FRAME_SECTION_ASM_OP
+value|".section __TEXT,__eh_frame,regular"
+end_define
+
 begin_comment
 comment|/* Don't output a .file directive.  That is only used by the assembler for    error reporting.  */
 end_comment
@@ -495,12 +526,22 @@ define|#
 directive|define
 name|HANDLE_PRAGMA
 parameter_list|(
-name|FINPUT
+name|GETC
 parameter_list|,
-name|NODE
+name|UNGETC
+parameter_list|,
+name|NAME
 parameter_list|)
-value|handle_pragma (FINPUT, NODE)
+value|handle_pragma (GETC, UNGETC, NAME)
 end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|handle_pragma
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Give methods pretty symbol names on NeXT. */
@@ -570,7 +611,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do { if (NAME[0] == '+' || NAME[0] == '-') fprintf (FILE, "\"%s\"", NAME); \        else if (!strncmp (NAME, "_OBJC_", 6)) fprintf (FILE, "L%s", NAME);   \        else if (!strncmp (NAME, ".objc_class_name_", 17))		\ 	 fprintf (FILE, "%s", NAME);					\        else fprintf (FILE, "%s%s", USER_LABEL_PREFIX, NAME); } while (0)
+value|do { if (NAME[0] == '+' || NAME[0] == '-') fprintf (FILE, "\"%s\"", NAME); \        else if (!strncmp (NAME, "_OBJC_", 6)) fprintf (FILE, "L%s", NAME);   \        else if (!strncmp (NAME, ".objc_class_name_", 17))		\ 	 fprintf (FILE, "%s", NAME);					\        else asm_fprintf (FILE, "%U%s", NAME); } while (0)
 end_define
 
 begin_undef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for code generation pass of GNU compiler.    Copyright (C) 1987, 91-97, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for code generation pass of GNU compiler.    Copyright (C) 1987, 91-98, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -242,7 +242,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means stack pops must not be deferred, and deferred stack    pops must not be output.  It is nonzero inside a function call,    inside a conditional expression, inside a statement expression,    and in other cases as well.  */
+comment|/* This is nonzero if memory access checking be enabled in the current    function.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|current_function_check_memory_usage
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Under some ABIs, it is the caller's responsibility to pop arguments    pushed for function calls.  A naive implementation would simply pop    the arguments immediately after each call.  However, if several    function calls are made in a row, it is typically cheaper to pop    all the arguments after all of the calls are complete since a    single pop instruction can be used.  Therefore, GCC attempts to    defer popping the arguments until absolutely necessary.  (For    example, at the end of a conditional, the arguments must be popped,    since code outside the conditional won't know whether or not the    arguments need to be popped.)     When INHIBIT_DEFER_POP is non-zero, however, the compiler does not    attempt to defer pops.  Instead, the stack is popped immediately    after each call.  Rather then setting this variable directly, use    NO_DEFER_POP and OK_DEFER_POP.  */
 end_comment
 
 begin_decl_stmt
@@ -251,6 +262,28 @@ name|int
 name|inhibit_defer_pop
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Prevent the compiler from deferring stack pops.  See    inhibit_defer_pop for more information.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_DEFER_POP
+value|(inhibit_defer_pop += 1)
+end_define
+
+begin_comment
+comment|/* Allow the compiler to defer stack pops.  See inhibit_defer_pop for    more information.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OK_DEFER_POP
+value|(inhibit_defer_pop -= 1)
+end_define
 
 begin_comment
 comment|/* Number of function calls seen so far in current function.  */
@@ -264,13 +297,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* RTX for stack slot that holds the current handler for nonlocal gotos.    Zero when function does not have nonlocal labels.  */
+comment|/* List (chain of EXPR_LIST) of stack slots that hold the current handlers    for nonlocal gotos.  There is one for every nonlocal label in the function;    this list matches the one in nonlocal_labels.    Zero when function does not have nonlocal labels.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|rtx
-name|nonlocal_goto_handler_slot
+name|nonlocal_goto_handler_slots
 decl_stmt|;
 end_decl_stmt
 
@@ -310,20 +343,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|NO_DEFER_POP
-value|(inhibit_defer_pop += 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|OK_DEFER_POP
-value|(inhibit_defer_pop -= 1)
-end_define
 
 begin_comment
 comment|/* Number of units that we should eventually pop off the stack.    These are the arguments to function calls that have already returned.  */
@@ -540,6 +559,55 @@ begin_define
 define|#
 directive|define
 name|STRICT_ARGUMENT_NAMING
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Provide a default value for PRETEND_OUTGOING_VARARGS_NAMED.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SETUP_INCOMING_VARARGS
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PRETEND_OUTGOING_VARARGS_NAMED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PRETEND_OUTGOING_VARARGS_NAMED
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* It is an error to define PRETEND_OUTGOING_VARARGS_NAMED without    defining SETUP_INCOMING_VARARGS.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRETEND_OUTGOING_VARARGS_NAMED
 value|0
 end_define
 
@@ -1555,6 +1623,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|rtx
+name|rethrow_libfunc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
 name|sjthrow_libfunc
 decl_stmt|;
 end_decl_stmt
@@ -1584,6 +1659,13 @@ begin_decl_stmt
 specifier|extern
 name|rtx
 name|longjmp_libfunc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|eh_rtime_match_libfunc
 decl_stmt|;
 end_decl_stmt
 
@@ -2088,6 +2170,24 @@ name|chkr_check_str_libfunc
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* For instrument-functions.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|profile_function_entry_libfunc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|profile_function_exit_libfunc
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
@@ -2331,8 +2431,6 @@ operator|,
 name|rtx
 operator|,
 name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2494,6 +2592,39 @@ operator|,
 name|int
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Emit a pair of rtl insns to compare two rtx's and to jump     to a label if the comparison is true.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|emit_cmp_and_jump_insns
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+expr|enum
+name|rtx_code
+operator|,
+name|rtx
+operator|,
+expr|enum
+name|machine_mode
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|rtx
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3073,6 +3204,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Tell if something has a queued subexpression.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|queued_subexp_p
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Emit some rtl insns to move data between rtx's, converting machine modes.    Both modes must be floating or both fixed.  */
 end_comment
 
@@ -3255,6 +3403,38 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TREE_CODE
+end_ifdef
+
+begin_comment
+comment|/* Copy BLKmode object from a set of registers. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|copy_blkmode_from_reg
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Mark REG as holding a parameter for the next CALL_INSN.  */
@@ -4766,6 +4946,36 @@ operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TREE_CODE
+end_ifdef
+
+begin_comment
+comment|/* Hook called by output_constant for language-specific tree codes.    It is up to the language front-end to install a hook if it has any    such codes that output_constant needs to know about.  Returns a    language-independent constant equivalent to its input.  */
+end_comment
+
+begin_extern
+extern|extern tree (*lang_expand_constant
+end_extern
+
+begin_expr_stmt
+unit|)
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Code to maintain a C++ template repository.    Copyright (C) 1995, 1997 Free Software Foundation, Inc.    Contributed by Jason Merrill (jason@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Code to maintain a C++ template repository.    Copyright (C) 1995, 96-97, 1998 Free Software Foundation, Inc.    Contributed by Jason Merrill (jason@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -100,6 +100,7 @@ name|get_base_filename
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -114,6 +115,7 @@ name|open_repo_file
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -300,6 +302,26 @@ operator|==
 literal|'t'
 condition|)
 block|{
+comment|/* If we're not done setting up the class, we may not have set up 	 the vtable, so going ahead would give the wrong answer.          See g++.pt/instantiate4.C.  */
+if|if
+condition|(
+name|TYPE_SIZE
+argument_list|(
+name|t
+argument_list|)
+operator|==
+name|NULL_TREE
+operator|||
+name|TYPE_BEING_DEFINED
+argument_list|(
+name|t
+argument_list|)
+condition|)
+name|my_friendly_abort
+argument_list|(
+literal|981113
+argument_list|)
+expr_stmt|;
 name|t
 operator|=
 name|TYPE_BINFO_VTABLE
@@ -679,6 +701,7 @@ name|get_base_filename
 parameter_list|(
 name|filename
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -804,16 +827,19 @@ name|open_repo_file
 parameter_list|(
 name|filename
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename
 decl_stmt|;
 block|{
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s
@@ -974,6 +1000,7 @@ name|init_repo
 parameter_list|(
 name|filename
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Implementation of Fortran lexer    Copyright (C) 1995-1997 Free Software Foundation, Inc.    Contributed by James Craig Burley (burley@gnu.org).  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Implementation of Fortran lexer    Copyright (C) 1995-1998 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -4144,6 +4144,62 @@ operator|==
 name|FFECOM_targetGCC
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+name|HANDLE_PRAGMA
+end_if
+
+begin_comment
+comment|/* Local versions of these macros, that can be passed as function pointers.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|pragma_getc
+parameter_list|()
+block|{
+return|return
+name|getc
+argument_list|(
+name|finput
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|pragma_ungetc
+parameter_list|(
+name|arg
+parameter_list|)
+name|int
+name|arg
+decl_stmt|;
+block|{
+name|ungetc
+argument_list|(
+name|arg
+argument_list|,
+name|finput
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HANDLE_PRAGMA */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -4282,34 +4338,35 @@ name|EOF
 operator|)
 condition|)
 block|{
-goto|goto
-name|skipline
-goto|;
 if|#
 directive|if
 literal|0
 comment|/* g77 doesn't handle pragmas, so ignores them FOR NOW. */
-ifdef|#
-directive|ifdef
-name|HANDLE_SYSV_PRAGMA
-block|return handle_sysv_pragma (finput, c);
-else|#
-directive|else
-comment|/* !HANDLE_SYSV_PRAGMA */
+block|static char buffer [128]; 	      char * buff = buffer;
+comment|/* Read the pragma name into a buffer.  */
+block|while (isspace (c = getc (finput))) 		continue; 	       	      do 		{ 		  * buff ++ = c; 		  c = getc (finput); 		} 	      while (c != EOF&& ! isspace (c)&& c != '\n'&& buff< buffer + 128);  	      pragma_ungetc (c); 		 	      * -- buff = 0;
 ifdef|#
 directive|ifdef
 name|HANDLE_PRAGMA
-block|HANDLE_PRAGMA (finput);
+block|if (HANDLE_PRAGMA (pragma_getc, pragma_ungetc, buffer)) 		goto skipline;
 endif|#
 directive|endif
 comment|/* HANDLE_PRAGMA */
-block|goto skipline;
+ifdef|#
+directive|ifdef
+name|HANDLE_GENERIC_PRAGMAS
+block|if (handle_generic_pragma (buffer)) 		goto skipline;
 endif|#
 directive|endif
-comment|/* !HANDLE_SYSV_PRAGMA */
+comment|/* !HANDLE_GENERIC_PRAGMAS */
+comment|/* Issue a warning message if we have been asked to do so. 		 Ignoring unknown pragmas in system header file unless 		 an explcit -Wunknown-pragmas has been given. */
+block|if (warn_unknown_pragmas> 1 		  || (warn_unknown_pragmas&& ! in_system_header)) 		warning ("ignoring pragma: %s", token_buffer);
 endif|#
 directive|endif
 comment|/* 0 */
+goto|goto
+name|skipline
+goto|;
 block|}
 block|}
 elseif|else
@@ -4721,8 +4778,8 @@ goto|;
 block|}
 if|if
 condition|(
-name|ffe_is_ident
-argument_list|()
+operator|!
+name|flag_no_ident
 condition|)
 block|{
 ifdef|#
@@ -6343,6 +6400,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ffelex_type_string_
@@ -6352,6 +6410,7 @@ name|type
 parameter_list|)
 block|{
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|types
@@ -14238,6 +14297,7 @@ name|ffeTokenLength
 name|start
 parameter_list|)
 block|{
+name|unsigned
 name|char
 modifier|*
 name|p
@@ -14839,12 +14899,18 @@ name|assert
 argument_list|(
 name|ffelex_is_firstnamechar
 argument_list|(
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 name|t
 operator|->
 name|text
 index|[
 name|start
 index|]
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -15039,12 +15105,18 @@ name|assert
 argument_list|(
 name|ffelex_is_firstnamechar
 argument_list|(
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 name|t
 operator|->
 name|text
 index|[
 name|start
 index|]
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -15174,6 +15246,7 @@ begin_function
 name|ffelexToken
 name|ffelex_token_new_character
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
@@ -15337,6 +15410,7 @@ begin_function
 name|ffelexToken
 name|ffelex_token_new_name
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
@@ -15355,6 +15429,10 @@ name|assert
 argument_list|(
 name|ffelex_is_firstnamechar
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s
 argument_list|)
@@ -15450,6 +15528,7 @@ begin_function
 name|ffelexToken
 name|ffelex_token_new_names
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
@@ -15468,6 +15547,10 @@ name|assert
 argument_list|(
 name|ffelex_is_firstnamechar
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s
 argument_list|)
@@ -15575,6 +15658,7 @@ begin_function
 name|ffelexToken
 name|ffelex_token_new_number
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s

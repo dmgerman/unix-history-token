@@ -4,7 +4,7 @@ comment|// RTTI support internals for -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1994, 1995, 1996 Free Software Foundation
+comment|// Copyright (C) 1994, 1995, 1996, 1998 Free Software Foundation
 end_comment
 
 begin_include
@@ -185,7 +185,7 @@ name|bool
 name|is_virtual
 operator|:
 literal|1
-block|;
+block|;     enum
 name|access
 name|access
 operator|:

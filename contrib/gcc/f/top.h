@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* top.h -- Public #include File (module.h template V1.0)    Copyright (C) 1995-1997 Free Software Foundation, Inc.    Contributed by James Craig Burley (burley@gnu.org).  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Owning Modules:       top.c     Modifications: */
+comment|/* top.h -- Public #include File (module.h template V1.0)    Copyright (C) 1995-1997 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Owning Modules:       top.c     Modifications: */
 end_comment
 
 begin_comment
@@ -248,6 +248,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|bool
+name|ffe_is_flatten_arrays_
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
 name|ffe_is_free_form_
 decl_stmt|;
 end_decl_stmt
@@ -256,13 +263,6 @@ begin_decl_stmt
 specifier|extern
 name|bool
 name|ffe_is_globals_
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|ffe_is_ident_
 decl_stmt|;
 end_decl_stmt
 
@@ -298,6 +298,13 @@ begin_decl_stmt
 specifier|extern
 name|bool
 name|ffe_is_silent_
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|ffe_is_subscript_check_
 decl_stmt|;
 end_decl_stmt
 
@@ -886,6 +893,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|ffe_is_flatten_arrays
+parameter_list|()
+value|ffe_is_flatten_arrays_
+end_define
+
+begin_define
+define|#
+directive|define
 name|ffe_is_free_form
 parameter_list|()
 value|ffe_is_free_form_
@@ -897,14 +912,6 @@ directive|define
 name|ffe_is_globals
 parameter_list|()
 value|ffe_is_globals_
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffe_is_ident
-parameter_list|()
-value|ffe_is_ident_
 end_define
 
 begin_define
@@ -977,6 +984,14 @@ directive|define
 name|ffe_is_silent
 parameter_list|()
 value|ffe_is_silent_
+end_define
+
+begin_define
+define|#
+directive|define
+name|ffe_is_subscript_check
+parameter_list|()
+value|ffe_is_subscript_check_
 end_define
 
 begin_define
@@ -1344,6 +1359,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ffe_set_is_flatten_arrays
+parameter_list|(
+name|f
+parameter_list|)
+value|(ffe_is_flatten_arrays_ = (f))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ffe_set_is_free_form
 parameter_list|(
 name|f
@@ -1359,16 +1384,6 @@ parameter_list|(
 name|f
 parameter_list|)
 value|(ffe_is_globals_ = (f))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffe_set_is_ident
-parameter_list|(
-name|f
-parameter_list|)
-value|(ffe_is_ident_ = (f))
 end_define
 
 begin_define
@@ -1449,6 +1464,16 @@ parameter_list|(
 name|f
 parameter_list|)
 value|(ffe_is_silent_ = (f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ffe_set_is_subscript_check
+parameter_list|(
+name|f
+parameter_list|)
+value|(ffe_is_subscript_check_ = (f))
 end_define
 
 begin_define

@@ -51,6 +51,45 @@ directive|include
 file|"output.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|USE_CPPLIB
+end_if
+
+begin_include
+include|#
+directive|include
+file|"cpplib.h"
+end_include
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|yy_cur
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|cpp_reader
+name|parse_in
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|cpp_options
+name|parse_options
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Each of the functions defined here    is an alternative to a function in objc-actions.c.  */
 end_comment
@@ -87,7 +126,32 @@ begin_function
 name|void
 name|lang_init_options
 parameter_list|()
-block|{ }
+block|{
+if|#
+directive|if
+name|USE_CPPLIB
+name|cpp_reader_init
+argument_list|(
+operator|&
+name|parse_in
+argument_list|)
+expr_stmt|;
+name|parse_in
+operator|.
+name|opts
+operator|=
+operator|&
+name|parse_options
+expr_stmt|;
+name|cpp_options_init
+argument_list|(
+operator|&
+name|parse_options
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 end_function
 
 begin_function
@@ -95,12 +159,12 @@ name|void
 name|lang_init
 parameter_list|()
 block|{
+comment|/* the beginning of the file is a new line; check for # */
+comment|/* With luck, we discover the real source file's name from that      and put it in input_filename.  */
 if|#
 directive|if
 operator|!
 name|USE_CPPLIB
-comment|/* the beginning of the file is a new line; check for # */
-comment|/* With luck, we discover the real source file's name from that      and put it in input_filename.  */
 name|ungetc
 argument_list|(
 name|check_newline
@@ -108,6 +172,14 @@ argument_list|()
 argument_list|,
 name|finput
 argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|check_newline
+argument_list|()
+expr_stmt|;
+name|yy_cur
+operator|--
 expr_stmt|;
 endif|#
 directive|endif
@@ -302,6 +374,7 @@ name|int
 name|len
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|str

@@ -64,17 +64,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Maximum number of SCRATCH rtx's in each block of this function.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|max_scratch
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Register information indexed by register number */
 end_comment
 
@@ -499,43 +488,59 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Allocated in local_alloc.  */
+comment|/* Select a register mode required for caller save of hard regno REGNO.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HARD_REGNO_CALLER_SAVE_MODE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HARD_REGNO_CALLER_SAVE_MODE
+parameter_list|(
+name|REGNO
+parameter_list|,
+name|NREGS
+parameter_list|)
+define|\
+value|choose_hard_reg_mode (REGNO, NREGS)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* A list of SCRATCH rtl allocated by local-alloc.  */
+comment|/* Registers that get partially clobbered by a call in a given mode.     These must not be call used registers.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|rtx
-modifier|*
-name|scratch_list
-decl_stmt|;
-end_decl_stmt
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HARD_REGNO_CALL_PART_CLOBBERED
+end_ifndef
 
-begin_comment
-comment|/* The basic block in which each SCRATCH is used.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|HARD_REGNO_CALL_PART_CLOBBERED
+parameter_list|(
+name|REGNO
+parameter_list|,
+name|MODE
+parameter_list|)
+value|0
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-modifier|*
-name|scratch_block
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The length of the arrays pointed to by scratch_block and scratch_list.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|scratch_list_length
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Allocate reg_n_info tables */

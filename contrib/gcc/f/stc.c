@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* stc.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995-1997 Free Software Foundation, Inc.    Contributed by James Craig Burley (burley@gnu.org).  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       st.c     Description:       Verifies the proper semantics for statements, checking expressions already       semantically analyzed individually, collectively, checking label defs and       refs, and so on.	Uses ffebad to indicate errors in semantics.        In many cases, both a token and a keyword (ffestrFirst, ffestrSecond,       or ffestrOther) is provided.  ONLY USE THE TOKEN as a pointer to the       source-code location for an error message or similar; use the keyword       as the semantic matching for the token, since the token's text might       not match the keyword's code.  For example, INTENT(IN OUT) A in free       source form passes to ffestc_R519_start the token "IN" but the keyword       FFESTR_otherINOUT, and the latter is correct.        Generally, either a single ffestc function handles an entire statement,       in which case its name is ffestc_xyz_, or more than one function is       needed, in which case its names are ffestc_xyz_start_,       ffestc_xyz_item_ or ffestc_xyz_item_abc_, and ffestc_xyz_finish_.       The caller must call _start_ before calling any _item_ functions, and       must call _finish_ afterwards.  If it is clearly a syntactic matter as       to restrictions on the number and variety of _item_ calls, then the caller       should report any errors and ffestc_ should presume it has been taken       care of and handle any semantic problems with grace and no error messages.       If the permitted number and variety of _item_ calls has some basis in       semantics, then the caller should not generate any messages and ffestc       should do all the checking.        A few ffestc functions have names rather than grammar numbers, like       ffestc_elsewhere and ffestc_end.	These are cases where the actual       statement depends on its context rather than just its form; ELSE WHERE       may be the obvious (WHERE...ELSE WHERE...END WHERE) or something a little       more subtle (WHERE: IF THEN...ELSE WHERE...END IF WHERE).	 The actual       ffestc functions do exist and do work, but may or may not be invoked       by ffestb depending on whether some form of resolution is possible.       For example, ffestc_R1103 end-program-stmt is reachable directly when       END PROGRAM [name] is specified, or via ffestc_end when END is specified       and the context is a main program.  So ffestc_xyz_ should make a quick       determination of the context and pick the appropriate ffestc_Nxyz_       function to invoke, without a lot of ceremony.     Modifications: */
+comment|/* stc.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995-1997 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       st.c     Description:       Verifies the proper semantics for statements, checking expressions already       semantically analyzed individually, collectively, checking label defs and       refs, and so on.	Uses ffebad to indicate errors in semantics.        In many cases, both a token and a keyword (ffestrFirst, ffestrSecond,       or ffestrOther) is provided.  ONLY USE THE TOKEN as a pointer to the       source-code location for an error message or similar; use the keyword       as the semantic matching for the token, since the token's text might       not match the keyword's code.  For example, INTENT(IN OUT) A in free       source form passes to ffestc_R519_start the token "IN" but the keyword       FFESTR_otherINOUT, and the latter is correct.        Generally, either a single ffestc function handles an entire statement,       in which case its name is ffestc_xyz_, or more than one function is       needed, in which case its names are ffestc_xyz_start_,       ffestc_xyz_item_ or ffestc_xyz_item_abc_, and ffestc_xyz_finish_.       The caller must call _start_ before calling any _item_ functions, and       must call _finish_ afterwards.  If it is clearly a syntactic matter as       to restrictions on the number and variety of _item_ calls, then the caller       should report any errors and ffestc_ should presume it has been taken       care of and handle any semantic problems with grace and no error messages.       If the permitted number and variety of _item_ calls has some basis in       semantics, then the caller should not generate any messages and ffestc       should do all the checking.        A few ffestc functions have names rather than grammar numbers, like       ffestc_elsewhere and ffestc_end.	These are cases where the actual       statement depends on its context rather than just its form; ELSE WHERE       may be the obvious (WHERE...ELSE WHERE...END WHERE) or something a little       more subtle (WHERE: IF THEN...ELSE WHERE...END IF WHERE).	 The actual       ffestc functions do exist and do work, but may or may not be invoked       by ffestb depending on whether some form of resolution is possible.       For example, ffestc_R1103 end-program-stmt is reachable directly when       END PROGRAM [name] is specified, or via ffestc_end when END is specified       and the context is a main program.  So ffestc_xyz_ should make a quick       determination of the context and pick the appropriate ffestc_Nxyz_       function to invoke, without a lot of ceremony.     Modifications: */
 end_comment
 
 begin_comment
@@ -1620,6 +1620,7 @@ specifier|static
 name|int
 name|ffestc_subr_binsrch_
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1632,6 +1633,7 @@ name|ffestpFile
 modifier|*
 name|spec
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|whine
@@ -1680,6 +1682,7 @@ specifier|static
 name|bool
 name|ffestc_subr_is_present_
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1696,6 +1699,7 @@ specifier|static
 name|int
 name|ffestc_subr_speccmp_
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|string
@@ -1704,6 +1708,7 @@ name|ffestpFile
 modifier|*
 name|spec
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -16584,6 +16589,7 @@ specifier|static
 name|int
 name|ffestc_subr_binsrch_
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -16596,6 +16602,7 @@ name|ffestpFile
 modifier|*
 name|spec
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|whine
@@ -16616,6 +16623,7 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|str
@@ -17149,6 +17157,7 @@ specifier|static
 name|bool
 name|ffestc_subr_is_present_
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -17225,6 +17234,7 @@ specifier|static
 name|int
 name|ffestc_subr_speccmp_
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|string
@@ -17233,6 +17243,7 @@ name|ffestpFile
 modifier|*
 name|spec
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -32824,6 +32835,26 @@ return|return;
 name|ffestc_labeldef_branch_begin_
 argument_list|()
 expr_stmt|;
+comment|/* Mark target symbol as target of an ASSIGN.  */
+if|if
+condition|(
+name|ffebld_op
+argument_list|(
+name|target
+argument_list|)
+operator|==
+name|FFEBLD_opSYMTER
+condition|)
+name|ffesymbol_set_assigned
+argument_list|(
+name|ffebld_symter
+argument_list|(
+name|target
+argument_list|)
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ffestc_labelref_is_assignable_
@@ -33351,6 +33382,7 @@ decl_stmt|;
 name|int
 name|expect_file
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|status_strs
@@ -33368,6 +33400,7 @@ block|,
 literal|"Unknown"
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|access_strs
@@ -33383,6 +33416,7 @@ block|,
 literal|"Sequential"
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|blank_strs
@@ -33394,6 +33428,7 @@ block|,
 literal|"Zero"
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|carriagecontrol_strs
@@ -33407,6 +33442,7 @@ block|,
 literal|"None"
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|dispose_strs
@@ -33428,6 +33464,7 @@ block|,
 literal|"Submit/Delete"
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|form_strs
@@ -33439,6 +33476,7 @@ block|,
 literal|"Unformatted"
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|organization_strs
@@ -33452,6 +33490,7 @@ block|,
 literal|"Sequential"
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|position_strs
@@ -33465,6 +33504,7 @@ block|,
 literal|"Rewind"
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|action_strs
@@ -33478,6 +33518,7 @@ block|,
 literal|"Write"
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|delim_strs
@@ -33491,6 +33532,7 @@ block|,
 literal|"Quote"
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|recordtype_strs
@@ -33510,6 +33552,7 @@ block|,
 literal|"Variable"
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pad_strs
@@ -34302,6 +34345,7 @@ name|void
 name|ffestc_R907
 parameter_list|()
 block|{
+specifier|const
 name|char
 modifier|*
 name|status_strs

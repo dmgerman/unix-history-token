@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Read and manage MIPS symbol tables from object modules.    Copyright (C) 1991, 1994, 1995, 1997 Free Software Foundation, Inc.    Contributed by hartzell@boulder.colorado.edu,    Rewritten by meissner@osf.org.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Read and manage MIPS symbol tables from object modules.    Copyright (C) 1991, 1994, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.    Contributed by hartzell@boulder.colorado.edu,    Rewritten by meissner@osf.org.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -122,16 +122,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
+begin_define
+define|#
+directive|define
+name|__proto
+parameter_list|(
+name|x
+parameter_list|)
+value|PARAMS(x)
+end_define
 
 begin_typedef
 typedef|typedef
-name|void
-modifier|*
+name|PTR
 name|PTR_T
 typedef|;
 end_typedef
@@ -139,111 +142,10 @@ end_typedef
 begin_typedef
 typedef|typedef
 specifier|const
-name|void
-modifier|*
-name|CPTR_T
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|__proto
-parameter_list|(
-name|x
-parameter_list|)
-value|x
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_STDIO_H_
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__STDIO_H__
-argument_list|)
-end_if
-
-begin_comment
-comment|/* Ultrix 4.0, SGI */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
 name|PTR_T
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
 name|CPTR_T
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|PTR_T
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Ultrix 3.1 */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|CPTR_T
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|__proto
-parameter_list|(
-name|x
-parameter_list|)
-value|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -273,8 +175,85 @@ name|ulong
 value|unsigned long
 end_define
 
+begin_function
+specifier|static
+name|void
+name|fatal
+parameter_list|(
+name|s
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|s
+decl_stmt|;
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|FATAL_EXIT_CODE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
-comment|/* Do to size_t being defined in sys/types.h and different    in stddef.h, we have to do this by hand.....  Note, these    types are correct for MIPS based systems, and may not be    correct for other systems.  */
+comment|/* Same as `malloc' but report error if no memory available.  */
+end_comment
+
+begin_comment
+comment|/* Do this before size_t is fiddled with so it matches the prototype    in libiberty.h . */
+end_comment
+
+begin_function
+name|PTR
+name|xmalloc
+parameter_list|(
+name|size
+parameter_list|)
+name|size_t
+name|size
+decl_stmt|;
+block|{
+specifier|register
+name|PTR
+name|value
+init|=
+operator|(
+name|PTR
+operator|)
+name|malloc
+argument_list|(
+name|size
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|value
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"Virtual memory exhausted."
+argument_list|)
+expr_stmt|;
+return|return
+name|value
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Due to size_t being defined in sys/types.h and different    in stddef.h, we have to do this by hand.....  Note, these    types are correct for MIPS based systems, and may not be    correct for other systems.  */
 end_comment
 
 begin_define
@@ -1344,6 +1323,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|st_to_string
@@ -1357,6 +1337,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|sc_to_string
@@ -1370,6 +1351,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|glevel_to_string
@@ -1383,6 +1365,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|lang_to_string
@@ -1396,6 +1379,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|type_to_string
@@ -1420,6 +1404,12 @@ directive|ifndef
 name|__alpha
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_DECLARATION_MALLOC
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|PTR_T
@@ -1432,6 +1422,17 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_DECLARATION_CALLOC
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -1448,6 +1449,17 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_DECLARATION_REALLOC
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|PTR_T
@@ -1463,18 +1475,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|free
-name|__proto
-argument_list|(
-operator|(
-name|PTR_T
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1720,6 +1724,7 @@ comment|/* Convert language code to string format.  */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|lang_to_string
@@ -1804,6 +1809,7 @@ comment|/* Convert storage class to string.  */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|sc_to_string
@@ -1978,6 +1984,7 @@ comment|/* Convert symbol type to string.  */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|st_to_string
@@ -2163,6 +2170,7 @@ comment|/* Convert debug level to string.  */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|glevel_to_string
@@ -2217,6 +2225,7 @@ comment|/* Convert the type information to string format.  */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|type_to_string
@@ -4859,6 +4868,7 @@ operator|->
 name|prev
 control|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|class
@@ -5042,6 +5052,7 @@ literal|0
 index|]
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|stab_name
@@ -5539,11 +5550,19 @@ literal|"\nFile #%d, \"%s\"\n\n"
 argument_list|,
 name|number
 argument_list|,
+name|fdp
+operator|->
+name|rss
+operator|!=
+name|issNil
+condition|?
 name|str_base
 operator|+
 name|fdp
 operator|->
 name|rss
+else|:
+literal|"<unknown>"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -6261,6 +6280,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|ulong
+operator|)
 name|fdp
 operator|->
 name|crfd
@@ -6359,6 +6381,12 @@ name|ipdFirst
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|l_symbols
+operator|!=
+literal|0
+condition|)
 name|printf
 argument_list|(
 literal|"\t    Name index   = %-11ld Name          = \"%s\"\n"
@@ -7851,74 +7879,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|fatal
-parameter_list|(
-name|s
-parameter_list|)
-name|char
-modifier|*
-name|s
-decl_stmt|;
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Same as `malloc' but report error if no memory available.  */
-end_comment
-
-begin_function
-name|PTR_T
-name|xmalloc
-parameter_list|(
-name|size
-parameter_list|)
-name|unsigned
-name|size
-decl_stmt|;
-block|{
-specifier|register
-name|PTR_T
-name|value
-init|=
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|value
-operator|==
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"Virtual memory exhausted."
-argument_list|)
-expr_stmt|;
-return|return
-name|value
-return|;
 block|}
 end_function
 

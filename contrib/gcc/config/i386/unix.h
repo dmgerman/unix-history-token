@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Unix assembler syntax for the Intel 80386.    Copyright (C) 1988, 1994 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Unix assembler syntax for the Intel 80386.    Copyright (C) 1988, 1994, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -422,14 +422,14 @@ value|(fputs (".globl ", FILE), assemble_name (FILE, NAME), fputs ("\n", FILE))
 end_define
 
 begin_comment
-comment|/* By default, target has a 80387, uses IEEE compatible arithmetic,    and returns float values in the 387, ie,    (TARGET_80387 | TARGET_IEEE_FP | TARGET_FLOAT_RETURNS_IN_80387) */
+comment|/* By default, target has a 80387, uses IEEE compatible arithmetic,    and returns float values in the 387.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TARGET_DEFAULT
-value|0301
+value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS)
 end_define
 
 begin_comment
@@ -480,7 +480,7 @@ parameter_list|,
 name|FUNCTION
 parameter_list|)
 define|\
-value|do {									      \   tree parm;								      \ 									      \   if (i386_regparm> 0)							      \     parm = TYPE_ARG_TYPES (TREE_TYPE (function));			      \   else									      \     parm = NULL_TREE;							      \   for (; parm; parm = TREE_CHAIN (parm))				      \     if (TREE_VALUE (parm) == void_type_node)				      \       break;								      \   fprintf (FILE, "\taddl $%d,%s\n", DELTA,				      \ 	   parm ? "%eax"						      \ 	   : aggregate_value_p (TREE_TYPE (TREE_TYPE (FUNCTION))) ? "8(%esp)" \ 	   : "4(%esp)");						      \ 									      \   if (flag_pic)								      \     {									      \       rtx xops[2];							      \       xops[0] = pic_offset_table_rtx;					      \       xops[1] = (rtx) gen_label_rtx ();					      \ 									      \       if (i386_regparm> 2)						      \ 	abort ();							      \       output_asm_insn ("push%L0 %0", xops);				      \       output_asm_insn (AS1 (call,%P1), xops);				      \       ASM_OUTPUT_INTERNAL_LABEL (FILE, "L", CODE_LABEL_NUMBER (xops[1]));     \       output_asm_insn (AS1 (pop%L0,%0), xops);				      \       output_asm_insn ("addl $_GLOBAL_OFFSET_TABLE_+[.-%P1],%0", xops);	      \       fprintf (FILE, "\tmovl ");					      \       assemble_name (FILE, XSTR (XEXP (DECL_RTL (FUNCTION), 0), 0));	      \       fprintf (FILE, "@GOT(%%ebx),%%ecx\n\tpopl %%ebx\n\tjmp *%%ecx\n");      \     }									      \   else									      \     {									      \       fprintf (FILE, "\tjmp ");						      \       assemble_name (FILE, XSTR (XEXP (DECL_RTL (FUNCTION), 0), 0));	      \       fprintf (FILE, "\n");						      \     }									      \ } while (0)
+value|do {									      \   tree parm;								      \ 									      \   if (i386_regparm> 0)							      \     parm = TYPE_ARG_TYPES (TREE_TYPE (function));			      \   else									      \     parm = NULL_TREE;							      \   for (; parm; parm = TREE_CHAIN (parm))				      \     if (TREE_VALUE (parm) == void_type_node)				      \       break;								      \   fprintf (FILE, "\taddl $%d,%s\n", DELTA,				      \ 	   parm ? "%eax"						      \ 	   : aggregate_value_p (TREE_TYPE (TREE_TYPE (FUNCTION))) ? "8(%esp)" \ 	   : "4(%esp)");						      \ 									      \   if (flag_pic)								      \     {									      \       rtx xops[2];							      \       xops[0] = pic_offset_table_rtx;					      \       xops[1] = (rtx) gen_label_rtx ();					      \ 									      \       if (i386_regparm> 2)						      \ 	abort ();							      \       output_asm_insn ("push%L0 %0", xops);				      \       output_asm_insn (AS1 (call,%P1), xops);				      \       ASM_OUTPUT_INTERNAL_LABEL (FILE, "L", CODE_LABEL_NUMBER (xops[1]));     \       output_asm_insn (AS1 (pop%L0,%0), xops);				      \       output_asm_insn ("addl $%__GLOBAL_OFFSET_TABLE_+[.-%P1],%0", xops);     \       fprintf (FILE, "\tmovl ");					      \       assemble_name (FILE, XSTR (XEXP (DECL_RTL (FUNCTION), 0), 0));	      \       fprintf (FILE, "@GOT(%%ebx),%%ecx\n\tpopl %%ebx\n\tjmp *%%ecx\n");      \     }									      \   else									      \     {									      \       fprintf (FILE, "\tjmp ");						      \       assemble_name (FILE, XSTR (XEXP (DECL_RTL (FUNCTION), 0), 0));	      \       fprintf (FILE, "\n");						      \     }									      \ } while (0)
 end_define
 
 end_unit

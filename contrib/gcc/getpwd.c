@@ -15,12 +15,6 @@ directive|include
 file|"system.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
 begin_comment
 comment|/* Virtually every UN*X system now in common use (except for pre-4.3-tahoe    BSD systems) now provides getcwd as called for by POSIX.  Allow for    the few exceptions to the general rule here.  */
 end_comment
@@ -123,14 +117,6 @@ begin_comment
 comment|/* (defined (USG) || defined (VMS)) */
 end_comment
 
-begin_function_decl
-name|char
-modifier|*
-name|xmalloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_if
 if|#
 directive|if
@@ -150,7 +136,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|__CYGWIN32__
+name|__CYGWIN__
 argument_list|)
 operator|)
 operator|)
@@ -338,7 +324,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* VMS || _WIN32&& !__CYGWIN32__ */
+comment|/* VMS || _WIN32&& !__CYGWIN__ */
 end_comment
 
 begin_ifndef
@@ -412,7 +398,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VMS || _WIN32&& !__CYGWIN32__ */
+comment|/* VMS || _WIN32&& !__CYGWIN__ */
 end_comment
 
 end_unit
