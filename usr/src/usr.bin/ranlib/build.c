@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)build.c	5.1 (Berkeley) %G%"
+literal|"@(#)build.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,6 +173,17 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|fp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|rexec
+argument_list|()
+decl_stmt|,
+name|symobj
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -434,27 +445,22 @@ begin_comment
 comment|/*  * rexec  *	Read the exec structure; ignore any files that don't look  *	exactly right.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|rexec
-argument_list|(
+parameter_list|(
 name|rfd
-argument_list|,
+parameter_list|,
 name|wfd
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|rfd
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|wfd
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|RLIB
@@ -939,25 +945,27 @@ name|SEEK_SET
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * symobj --  *	Write the symbol table into the archive, computing offsets as  *	writing.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|symobj
-argument_list|()
+parameter_list|()
 block|{
 specifier|register
 name|RLIB
-operator|*
+modifier|*
 name|rp
-block|; 	struct
+decl_stmt|;
+name|struct
 name|ranlib
 name|rn
-block|;
+decl_stmt|;
 name|char
 name|hb
 index|[
@@ -969,24 +977,24 @@ argument_list|)
 operator|+
 literal|1
 index|]
-block|,
+decl_stmt|,
 name|pad
-block|;
+decl_stmt|;
 name|long
 name|ransize
-block|,
+decl_stmt|,
 name|size
-block|,
+decl_stmt|,
 name|stroff
-block|;
+decl_stmt|;
 name|gid_t
 name|getgid
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|uid_t
 name|getuid
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/* Rewind the archive, leaving the magic number. */
 if|if
 condition|(
@@ -1036,9 +1044,6 @@ argument_list|)
 operator|+
 name|tsymlen
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|ransize
@@ -1059,20 +1064,11 @@ name|pad
 operator|=
 literal|'\0'
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* Put out the ranlib archive file header. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|DEFMODE
 value|(S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
-end_define
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -1096,16 +1092,15 @@ name|DEFMODE
 operator|&
 operator|~
 name|umask
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|ransize
 argument_list|,
 name|ARFMAG
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -1129,13 +1124,7 @@ argument_list|(
 name|tname
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* First long is the size of the ranlib structure section. */
-end_comment
-
-begin_expr_stmt
 name|size
 operator|=
 name|symcnt
@@ -1146,9 +1135,6 @@ expr|struct
 name|ranlib
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -1176,13 +1162,7 @@ argument_list|(
 name|tname
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* Offset of the first archive file. */
-end_comment
-
-begin_expr_stmt
 name|size
 operator|=
 name|SARMAG
@@ -1195,13 +1175,7 @@ argument_list|)
 operator|+
 name|ransize
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Write out the ranlib structures.  The offset into the string 	 * table is cumulative, the offset into the archive is the value 	 * set in rexec() plus the offset to the first archive file. 	 */
-end_comment
-
-begin_for
 for|for
 control|(
 name|rp
@@ -1274,13 +1248,7 @@ name|archive
 argument_list|)
 expr_stmt|;
 block|}
-end_for
-
-begin_comment
 comment|/* Second long is the size of the string table. */
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -1308,13 +1276,7 @@ argument_list|(
 name|tname
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* Write out the string table. */
-end_comment
-
-begin_for
 for|for
 control|(
 name|rp
@@ -1352,9 +1314,6 @@ argument_list|(
 name|tname
 argument_list|)
 expr_stmt|;
-end_for
-
-begin_if
 if|if
 condition|(
 name|pad
@@ -1380,9 +1339,6 @@ argument_list|(
 name|tname
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -1391,8 +1347,8 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
-unit|}
 end_unit
 
