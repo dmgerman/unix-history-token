@@ -235,8 +235,6 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|outfile
-init|=
-name|stderr
 decl_stmt|;
 end_decl_stmt
 
@@ -581,6 +579,10 @@ name|sigexit
 init|=
 literal|0
 decl_stmt|;
+name|outfile
+operator|=
+name|stdout
+expr_stmt|;
 while|while
 condition|(
 operator|(
