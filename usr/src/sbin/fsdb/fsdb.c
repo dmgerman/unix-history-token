@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fsdb.c	5.5 (Berkeley) %G%"
+literal|"@(#)fsdb.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,55 +77,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NFS
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/inode.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/dir.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
 
 begin_include
 include|#
@@ -148,17 +107,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/fsdir.h>
+file|<stdio.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
 
-begin_comment
-comment|/*NFS */
-end_comment
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_comment
 comment|/*  * Defines from the 4.3-tahoe file system, for systems with the 4.2 or 4.3  * file system.  */

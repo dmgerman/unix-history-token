@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotacheck.c	5.10 (Berkeley) %G%"
+literal|"@(#)quotacheck.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,49 +59,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/inode.h>
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/fs.h>
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/quota.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -119,6 +95,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/inode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/quota.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fstab.h>
 end_include
 
@@ -126,6 +120,24 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_union

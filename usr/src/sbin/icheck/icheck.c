@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)icheck.c	5.4 (Berkeley) %G%"
+literal|"@(#)icheck.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,36 @@ name|MAXNINDIR
 value|(MAXBSIZE / sizeof (daddr_t))
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/inode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/fs.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -66,24 +96,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/inode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fs.h>
-end_include
 
 begin_union
 union|union
