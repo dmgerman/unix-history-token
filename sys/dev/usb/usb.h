@@ -2217,6 +2217,10 @@ struct|struct
 name|usb_device_info
 block|{
 name|u_int8_t
+name|bus
+decl_stmt|;
+comment|/* bus number */
+name|u_int8_t
 name|addr
 decl_stmt|;
 comment|/* device address */
@@ -2226,33 +2230,53 @@ index|[
 name|USB_MAX_STRING_LEN
 index|]
 decl_stmt|;
+comment|/* iProduct */
 name|char
 name|vendor
 index|[
 name|USB_MAX_STRING_LEN
 index|]
 decl_stmt|;
+comment|/* iManufacturer */
 name|char
 name|release
 index|[
 literal|8
 index|]
 decl_stmt|;
+comment|/* string of releaseNo*/
 name|u_int16_t
 name|productNo
 decl_stmt|;
+comment|/* idProduct */
 name|u_int16_t
 name|vendorNo
 decl_stmt|;
+comment|/* idVendor */
+name|u_int16_t
+name|releaseNo
+decl_stmt|;
+comment|/* bcdDevice */
 name|u_int8_t
 name|class
 decl_stmt|;
+comment|/* bDeviceClass */
+name|u_int8_t
+name|subclass
+decl_stmt|;
+comment|/* bDeviceSubclass */
+name|u_int8_t
+name|protocol
+decl_stmt|;
+comment|/* bDeviceProtocol */
 name|u_int8_t
 name|config
 decl_stmt|;
+comment|/* config index */
 name|u_int8_t
 name|lowspeed
 decl_stmt|;
+comment|/* lowsped yes/no */
 name|int
 name|power
 decl_stmt|;
@@ -2260,6 +2284,7 @@ comment|/* power consumption in mA, 0 if selfpowered */
 name|int
 name|nports
 decl_stmt|;
+comment|/* 0 if not hub */
 name|u_int8_t
 name|ports
 index|[
