@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tc-i386.c,v 1.4 1995/05/30 04:47:29 rgrimes Exp $"
+literal|"$Id: tc-i386.c,v 1.5 1996/10/01 00:12:43 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -10943,6 +10943,13 @@ name|fixP
 operator|->
 name|fx_addsy
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|S_SET_EXTERNAL
+argument_list|(
+name|fixP
+operator|->
+name|fx_addsy
 argument_list|)
 expr_stmt|;
 name|extrn_bit
