@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_err[] = "@(#)err.c	1.9";  *  * file i/o error and initialization routines  */
+comment|/* char id_err[] = "@(#)err.c	1.10";  *  * file i/o error and initialization routines  */
 end_comment
 
 begin_include
@@ -662,6 +662,28 @@ expr_stmt|;
 name|_cleanup
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|vax
+name|signal
+argument_list|(
+name|SIGILL
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+else|pdp11
+name|signal
+argument_list|(
+name|SIGIOT
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|abort
 argument_list|()
 expr_stmt|;
