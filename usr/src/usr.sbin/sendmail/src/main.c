@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.86
+literal|3.87
 operator|%
 name|G
 operator|%
@@ -2526,10 +2526,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|CurEnv
 operator|->
-name|e_queueup
+name|e_df
+operator|!=
+name|NULL
 condition|)
 operator|(
 name|void

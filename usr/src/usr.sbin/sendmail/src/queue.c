@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.23
+literal|3.24
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.23
+literal|3.24
 operator|%
 name|G
 operator|%
@@ -689,6 +689,13 @@ name|unlink
 argument_list|(
 name|cf
 argument_list|)
+expr_stmt|;
+comment|/* disconnect this temp file from the job */
+name|e
+operator|->
+name|e_df
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_block
