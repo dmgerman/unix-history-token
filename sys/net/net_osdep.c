@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: net_osdep.c,v 1.9 2001/04/06 09:22:05 itojun Exp $	*/
+comment|/*	$KAME: net_osdep.c,v 1.10 2001/07/26 19:08:37 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -169,10 +169,9 @@ name|snprintf
 argument_list|(
 name|cp
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|nam
-argument_list|)
+name|IFNAMSIZ
+operator|+
+literal|10
 argument_list|,
 literal|"%s%d"
 argument_list|,
