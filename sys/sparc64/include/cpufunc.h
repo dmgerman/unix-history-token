@@ -298,13 +298,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm __volatile("ta 1");
+asm|__asm __volatile("ta %%xcc, 1" : :);
 block|}
 end_function
-
-begin_comment
-comment|/*  * XXX use %pil for these.  */
-end_comment
 
 begin_function
 specifier|static
@@ -316,33 +312,27 @@ name|void
 parameter_list|)
 block|{
 name|critical_t
-name|ie
+name|pil
 decl_stmt|;
-name|ie
+name|pil
 operator|=
 name|rdpr
 argument_list|(
-name|pstate
+name|pil
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ie
-operator|&
-name|PSTATE_IE
-condition|)
 name|wrpr
 argument_list|(
-name|pstate
+name|pil
 argument_list|,
-name|ie
+literal|0
 argument_list|,
-name|PSTATE_IE
+literal|14
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ie
+name|pil
 operator|)
 return|;
 block|}
@@ -355,26 +345,24 @@ name|void
 name|critical_exit
 parameter_list|(
 name|critical_t
-name|ie
+name|pil
 parameter_list|)
 block|{
-if|if
-condition|(
-name|ie
-operator|&
-name|PSTATE_IE
-condition|)
 name|wrpr
 argument_list|(
-name|pstate
+name|pil
 argument_list|,
-name|ie
+name|pil
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Ultrasparc II doesn't implement popc in hardware.  Suck.  */
+end_comment
 
 begin_if
 if|#
