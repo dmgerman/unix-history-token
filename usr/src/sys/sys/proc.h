@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	8.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -899,44 +899,35 @@ begin_comment
 comment|/* Current and max number of procs. */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|pidhashmask
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* In param.c. */
-end_comment
-
-begin_extern
-extern|extern LIST_HEAD(
-operator|,
-extern|proc
-end_extern
-
 begin_expr_stmt
-unit|)
-name|allproc
+name|LIST_HEAD
+argument_list|(
+name|proclist
+argument_list|,
+name|proc
+argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|proclist
+name|allproc
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* List of all processes. */
 end_comment
 
-begin_extern
-extern|extern LIST_HEAD(
-operator|,
-extern|proc
-end_extern
-
-begin_expr_stmt
-unit|)
+begin_decl_stmt
+specifier|extern
+name|struct
+name|proclist
 name|zombproc
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* List of zombie processes. */
