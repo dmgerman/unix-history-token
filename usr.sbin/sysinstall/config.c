@@ -4565,7 +4565,7 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"echo '#and, finally, /a to 2 privileged machines allowed to write on it as root.'>> /etc/exports"
+literal|"echo '#and, /a to a network of privileged machines allowed to write on it as root.'>> /etc/exports"
 argument_list|)
 expr_stmt|;
 name|vsystem
@@ -4580,7 +4580,7 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"echo '#/a      -maproot=0  bill albert'>> /etc/exports"
+literal|"echo '#/a      -maproot=0  -network 10.0.1.0 -mask 255.255.248.0'>> /etc/exports"
 argument_list|)
 expr_stmt|;
 name|vsystem
