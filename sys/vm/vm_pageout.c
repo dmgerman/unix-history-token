@@ -4043,9 +4043,14 @@ block|}
 endif|#
 directive|endif
 block|}
-comment|/* 	 * If we are out of swap and were not able to reach our paging 	 * target, kill the largest process. 	 * 	 * We keep the process bigproc locked once we find it to keep anyone 	 * from messing with it; however, there is a possibility of 	 * deadlock if process B is bigproc and one of it's child processes 	 * attempts to propagate a signal to B while we are waiting for A's 	 * lock while walking this list.  To avoid this, we don't block on 	 * the process lock but just skip a process if it is already locked. 	 */
+comment|/* 	 * If we are critically low on one of RAM or swap and low on 	 * the other, kill the largest process.  However, we avoid 	 * doing this on the first pass in order to give ourselves a 	 * chance to flush out dirty vnode-backed pages and to allow 	 * active pages to be moved to the inactive queue and reclaimed. 	 * 	 * We keep the process bigproc locked once we find it to keep anyone 	 * from messing with it; however, there is a possibility of 	 * deadlock if process B is bigproc and one of it's child processes 	 * attempts to propagate a signal to B while we are waiting for A's 	 * lock while walking this list.  To avoid this, we don't block on 	 * the process lock but just skip a process if it is already locked. 	 */
 if|if
 condition|(
+name|pass
+operator|!=
+literal|0
+operator|&&
+operator|(
 operator|(
 name|vm_swap_size
 operator|<
@@ -4063,14 +4068,9 @@ argument_list|()
 operator|>
 literal|0
 operator|)
+operator|)
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|if ((vm_swap_size< 64 || swap_pager_full)&& vm_page_count_min()) {
-endif|#
-directive|endif
 name|bigproc
 operator|=
 name|NULL
