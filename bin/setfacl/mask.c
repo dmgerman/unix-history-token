@@ -224,9 +224,11 @@ return|return
 literal|0
 return|;
 block|}
+operator|*
+operator|*
 name|prev_acl
 operator|=
-operator|&
+operator|*
 name|acl
 expr_stmt|;
 name|acl_free
