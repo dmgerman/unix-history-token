@@ -571,6 +571,20 @@ name|WriteKeystrokeParms
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|OPTION_SINGLE_KEYSTROKE
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_MULTIPLE_KEYSTROKES
+value|0x30
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
