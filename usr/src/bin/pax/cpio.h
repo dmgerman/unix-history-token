@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  *  *	@(#)cpio.h	1.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  *  *	@(#)cpio.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -122,7 +122,7 @@ comment|/* type of file */
 end_comment
 
 begin_comment
-comment|/*  * Data Interchange Format - Extended cpio Format - POSIX 1003.1-1990  */
+comment|/*  * Data Interchange Format - Extended cpio header format - POSIX 1003.1-1990  */
 end_comment
 
 begin_typedef
@@ -222,6 +222,12 @@ begin_comment
 comment|/* transportable archive id */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_PAX_
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -230,7 +236,7 @@ value|"070707"
 end_define
 
 begin_comment
-comment|/* ascii string of above */
+comment|/* ascii equivalent string of MAGIC */
 end_comment
 
 begin_define
@@ -248,8 +254,17 @@ begin_comment
 comment|/* used for dev/inode remaps */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Binary cpio structure   *  * CAUTION! CAUTION! CAUTION!  * Each field really represents a 16 bit short (NOT ASCII). We deal with it as  * an array of chars in an attempt to improve portability!!  */
+comment|/* _PAX_ */
+end_comment
+
+begin_comment
+comment|/*  * Binary cpio header structure   *  * CAUTION! CAUTION! CAUTION!  * Each field really represents a 16 bit short (NOT ASCII). Described as  * an array of chars in an attempt to improve portability!!  */
 end_comment
 
 begin_typedef
@@ -339,8 +354,14 @@ name|HD_BCPIO
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_PAX_
+end_ifdef
+
 begin_comment
-comment|/*  * extraction and creation macros  */
+comment|/*  * extraction and creation macros for binary cpio  */
 end_comment
 
 begin_define
@@ -404,7 +425,7 @@ value|((char)((val)& 0xff))
 end_define
 
 begin_comment
-comment|/*  * masks and pads  */
+comment|/*  * binary cpio masks and pads  */
 end_comment
 
 begin_define
@@ -432,8 +453,17 @@ begin_comment
 comment|/* mask for dev/ino fields */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * System VR4 cpio structure   */
+comment|/* _PAX_ */
+end_comment
+
+begin_comment
+comment|/*  * System VR4 cpio header structure (with/without file data crc)  */
 end_comment
 
 begin_typedef
@@ -537,7 +567,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* 0 OR CRC of bytes in FILE */
+comment|/* 0 OR CRC of bytes of FILE data */
 block|}
 name|HD_VCPIO
 typedef|;
@@ -557,23 +587,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AVMAGIC
-value|"070701"
-end_define
-
-begin_comment
-comment|/* ascii string of above */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VCMAGIC
 value|070702
 end_define
 
 begin_comment
 comment|/* sVr4 new portable archive id CRC */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_PAX_
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|AVMAGIC
+value|"070701"
+end_define
+
+begin_comment
+comment|/* ascii string of above */
 end_comment
 
 begin_define
@@ -598,7 +634,7 @@ value|((4 - ((x)& 3))& 3)
 end_define
 
 begin_comment
-comment|/*pad to next 4 byte word */
+comment|/* pad to next 4 byte word */
 end_comment
 
 begin_define
@@ -610,6 +646,15 @@ end_define
 
 begin_comment
 comment|/* mask for dev/ino fields */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _PAX_ */
 end_comment
 
 end_unit
