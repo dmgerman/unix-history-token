@@ -3462,7 +3462,7 @@ argument_list|)
 condition|)
 name|msgNotify
 argument_list|(
-literal|"Loading of dependant package %s failed"
+literal|"Loading of dependent package %s failed"
 argument_list|,
 name|cp
 argument_list|)
@@ -3470,7 +3470,7 @@ expr_stmt|;
 else|else
 name|msgConfirm
 argument_list|(
-literal|"Loading of dependant package %s failed"
+literal|"Loading of dependent package %s failed"
 argument_list|,
 name|cp
 argument_list|)
