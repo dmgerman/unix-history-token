@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.2 (Berkeley) %G%"
+literal|"@(#)err.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,32 +49,6 @@ end_include
 begin_comment
 comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	If the first character of the syserr message is `!' it will **	log this as an ALERT message and exit immediately.  This can **	leave queue files in an indeterminate state, so it should not **	be used lightly. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|lint
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|sys_nerr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|lint
-end_endif
 
 begin_decl_stmt
 name|char
@@ -885,6 +859,15 @@ literal|0
 index|]
 operator|==
 literal|'5'
+operator|&&
+name|bitset
+argument_list|(
+name|EF_GLOBALERRS
+argument_list|,
+name|CurEnv
+operator|->
+name|e_flags
+argument_list|)
 condition|)
 name|CurEnv
 operator|->
@@ -1206,18 +1189,6 @@ name|int
 name|errno
 decl_stmt|;
 block|{
-specifier|extern
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|sys_errlist
-index|[]
-decl_stmt|;
-specifier|extern
-name|int
-name|sys_nerr
-decl_stmt|;
 specifier|static
 name|char
 name|buf
@@ -1225,6 +1196,21 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|ERRLIST_PREDEFINED
+specifier|extern
+name|char
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
+specifier|extern
+name|int
+name|sys_nerr
+decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SMTP

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.3		%G%"
+literal|"@(#)sendmail.h	8.4		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1497,17 +1497,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EF_TIMEOUT
-value|000004
-end_define
-
-begin_comment
-comment|/* this message is too old */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|EF_CLRQUEUE
 value|000010
 end_define
@@ -1602,6 +1591,17 @@ end_define
 
 begin_comment
 comment|/* this envelope is from queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_GLOBALERRS
+value|010000
+end_define
+
+begin_comment
+comment|/* treat errors as global */
 end_comment
 
 begin_decl_stmt
@@ -4140,6 +4140,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* use Errors-To: header (back compat) */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|TryNullMXList
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if we are the best MX, try host directly */
 end_comment
 
 begin_decl_stmt
