@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.53	82/12/17	*/
+comment|/*	kern_proc.c	4.54	82/12/21	*/
 end_comment
 
 begin_include
@@ -1782,9 +1782,12 @@ name|argdev
 argument_list|,
 name|bno
 operator|+
+name|ctod
+argument_list|(
 name|nc
 operator|/
 name|NBPG
+argument_list|)
 argument_list|,
 name|CLSIZE
 operator|*
