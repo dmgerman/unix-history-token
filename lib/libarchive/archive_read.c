@@ -898,6 +898,18 @@ name|entryp
 operator|=
 name|entry
 expr_stmt|;
+name|a
+operator|->
+name|read_data_output_offset
+operator|=
+literal|0
+expr_stmt|;
+name|a
+operator|->
+name|read_data_remaining
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -1142,7 +1154,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read data from an archive entry, using a read(2)-style interface.  * This is a convenience routine that just calls  * archive_read_data_block and copies the results into the client  * buffer, filling any gaps with zero bytes.  Clients using this  * API can be completely ignorant of sparse-file issues; sparse files  * will simply be padded with nulls.  */
+comment|/*  * Read data from an archive entry, using a read(2)-style interface.  * This is a convenience routine that just calls  * archive_read_data_block and copies the results into the client  * buffer, filling any gaps with zero bytes.  Clients using this  * API can be completely ignorant of sparse-file issues; sparse files  * will simply be padded with nulls.  *  * DO NOT intermingle calls to this function and archive_read_data_block  * to read a single entry body.  */
 end_comment
 
 begin_function
