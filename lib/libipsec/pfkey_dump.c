@@ -395,7 +395,11 @@ block|,
 literal|"mip"
 block|,
 literal|"ipcomp"
-block|, }
+block|,
+literal|"policy"
+block|,
+literal|"tcp"
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -477,6 +481,12 @@ block|{
 name|SADB_X_AALG_NULL
 block|,
 literal|"null"
+block|, }
+block|,
+block|{
+name|SADB_X_AALG_TCP_MD5
+block|,
+literal|"tcp-md5"
 block|, }
 block|,
 ifdef|#

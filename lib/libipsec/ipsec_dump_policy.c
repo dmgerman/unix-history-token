@@ -756,6 +756,13 @@ operator|=
 literal|"ipcomp"
 expr_stmt|;
 break|break;
+case|case
+name|IPPROTO_TCP
+case|:
+name|proto
+operator|=
+literal|"tcp"
+expr_stmt|;
 default|default:
 name|__ipsec_errcode
 operator|=

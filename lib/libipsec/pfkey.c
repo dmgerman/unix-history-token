@@ -430,7 +430,9 @@ block|,
 name|NULL
 block|,
 name|NULL
-block|, }
+block|,
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -446,7 +448,9 @@ block|,
 name|SADB_SATYPE_ESP
 block|,
 name|SADB_X_SATYPE_IPCOMP
-block|, }
+block|,
+name|SADB_X_SATYPE_TCPSIGNATURE
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -4642,6 +4646,42 @@ literal|1
 return|;
 block|}
 break|break;
+case|case
+name|SADB_X_SATYPE_TCPSIGNATURE
+case|:
+if|if
+condition|(
+name|e_type
+operator|!=
+name|SADB_EALG_NONE
+condition|)
+block|{
+name|__ipsec_errcode
+operator|=
+name|EIPSEC_INVAL_ALGS
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|a_type
+operator|!=
+name|SADB_X_AALG_TCP_MD5
+condition|)
+block|{
+name|__ipsec_errcode
+operator|=
+name|EIPSEC_INVAL_ALGS
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+break|break;
 default|default:
 name|__ipsec_errcode
 operator|=
@@ -5659,6 +5699,9 @@ name|SADB_SATYPE_ESP
 case|:
 case|case
 name|SADB_X_SATYPE_IPCOMP
+case|:
+case|case
+name|SADB_X_SATYPE_TCPSIGNATURE
 case|:
 break|break;
 default|default:
@@ -7465,6 +7508,9 @@ name|SADB_SATYPE_AH
 case|:
 case|case
 name|SADB_X_SATYPE_IPCOMP
+case|:
+case|case
+name|SADB_X_SATYPE_TCPSIGNATURE
 case|:
 switch|switch
 condition|(
