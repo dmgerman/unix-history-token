@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.h	7.1 (Berkeley) %G%  *  * scsi.h --  *  *	Common declarations for SCSI command formaters. This file only covers  *	definitions pertaining to the SCSI common command set that are  *	common to all SCSI device types (ie disk, tapes, WORM, printers, etc).  *	Some of the references from the proceedings of the  *	1984 Mini/Micro Northeast conference might help in understanding SCSI.   *  * from: $Header: /sprite/src/kernel/dev/RCS/scsi.h,  *	v 9.1 90/02/13 23:11:24 jhh Exp $ SPRITE (Berkeley)  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.h	7.2 (Berkeley) %G%  *  * scsi.h --  *  *	Common declarations for SCSI command formaters. This file only covers  *	definitions pertaining to the SCSI common command set that are  *	common to all SCSI device types (ie disk, tapes, WORM, printers, etc).  *	Some of the references from the proceedings of the  *	1984 Mini/Micro Northeast conference might help in understanding SCSI.   *  * from: $Header: /sprite/src/kernel/dev/RCS/scsi.h,  *	v 9.1 90/02/13 23:11:24 jhh Exp $ SPRITE (Berkeley)  */
 end_comment
 
 begin_ifndef
@@ -1404,7 +1404,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/*  * Standard header for SCSI_MODE_SELECT commands for tapes.  */
+comment|/*  * Standard header for SCSI_MODE_SENSE and SCSI_MODE_SELECT commands for tapes.  */
 end_comment
 
 begin_typedef
@@ -1412,24 +1412,25 @@ typedef|typedef
 struct|struct
 name|ScsiTapeModeSelectHdr
 block|{
+name|u_char
+name|len
+decl_stmt|;
+comment|/* length */
+name|u_char
+name|media
+decl_stmt|;
+comment|/* media type */
 if|#
 directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
 name|u_char
-name|reserved
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* Reserved. */
-name|u_char
-name|reserved2
+name|writeprot
 range|:
 literal|1
 decl_stmt|;
-comment|/*  "" */
+comment|/* Write protected media */
 name|u_char
 name|bufferedMode
 range|:
@@ -1442,20 +1443,9 @@ range|:
 literal|4
 decl_stmt|;
 comment|/* Drive speed. */
-name|u_char
-name|length
-decl_stmt|;
-comment|/* Block descriptor length. */
 else|#
 directive|else
 name|u_char
-name|reserved
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* Reserved. */
-name|u_char
 name|speed
 range|:
 literal|4
@@ -1468,17 +1458,56 @@ literal|3
 decl_stmt|;
 comment|/* Type of buffer to be done. */
 name|u_char
-name|reserved2
+name|writeprot
 range|:
 literal|1
 decl_stmt|;
-comment|/*  "" */
+comment|/* Write protected media */
+endif|#
+directive|endif
 name|u_char
 name|length
 decl_stmt|;
 comment|/* Block descriptor length. */
-endif|#
-directive|endif
+name|u_char
+name|density
+decl_stmt|;
+comment|/* tape density code */
+name|u_char
+name|blocks_2
+decl_stmt|;
+comment|/* number of blocks (MSB) */
+name|u_char
+name|blocks_1
+decl_stmt|;
+comment|/* number of blocks */
+name|u_char
+name|blocks_0
+decl_stmt|;
+comment|/* number of blocks (LSB) */
+name|u_char
+name|reserved
+decl_stmt|;
+comment|/* */
+name|u_char
+name|block_size2
+decl_stmt|;
+comment|/* Tape block size (MSB) */
+name|u_char
+name|block_size1
+decl_stmt|;
+comment|/* Tape block size */
+name|u_char
+name|block_size0
+decl_stmt|;
+comment|/* Tape block size (LSB) */
+name|u_char
+name|vendor
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* vendor specific data */
 block|}
 name|ScsiTapeModeSelectHdr
 typedef|;
