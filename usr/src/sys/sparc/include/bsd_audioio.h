@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)bsd_audioio.h	7.2 (Berkeley) %G%  *  * from: $Header: bsd_audioio.h,v 1.4 92/07/13 00:31:22 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)bsd_audioio.h	7.3 (Berkeley) %G%  *  * from: $Header: bsd_audioio.h,v 1.5 92/11/21 20:46:46 van Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -23,28 +23,28 @@ begin_define
 define|#
 directive|define
 name|AUDIO_MIN_GAIN
-value|0
+value|(0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_MAX_GAIN
-value|255
+value|(255)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_ENCODING_ULAW
-value|1
+value|(1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_ENCODING_ALAW
-value|2
+value|(2)
 end_define
 
 begin_struct
@@ -69,8 +69,21 @@ decl_stmt|;
 name|u_int
 name|port
 decl_stmt|;
+name|u_long
+name|seek
+decl_stmt|;
+comment|/* BSD extension */
+name|u_int
+name|ispare
+index|[
+literal|3
+index|]
+decl_stmt|;
 name|u_int
 name|samples
+decl_stmt|;
+name|u_int
+name|eof
 decl_stmt|;
 name|u_char
 name|pause
@@ -82,11 +95,16 @@ name|u_char
 name|waiting
 decl_stmt|;
 name|u_char
+name|cspare
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|u_char
 name|open
 decl_stmt|;
-comment|/* BSD extensions */
-name|u_long
-name|seek
+name|u_char
+name|active
 decl_stmt|;
 block|}
 struct|;
@@ -120,6 +138,10 @@ name|u_int
 name|lowat
 decl_stmt|;
 comment|/* output low water mark */
+name|u_int
+name|backlog
+decl_stmt|;
+comment|/* samples of output backlog to gen. */
 block|}
 struct|;
 end_struct
@@ -169,56 +191,56 @@ begin_define
 define|#
 directive|define
 name|AUDIO_GETINFO
-value|_IOR(A, 1, struct audio_info)
+value|_IOR(A, 21, struct audio_info)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_SETINFO
-value|_IOWR(A, 2, struct audio_info)
+value|_IOWR(A, 22, struct audio_info)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_DRAIN
-value|_IO(A, 3)
+value|_IO(A, 23)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_FLUSH
-value|_IO(A, 4)
+value|_IO(A, 24)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_WSEEK
-value|_IOR(A, 5, u_long)
+value|_IOR(A, 25, u_long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_RERROR
-value|_IOR(A, 6, int)
+value|_IOR(A, 26, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_GETMAP
-value|_IOR(A, 20, struct mapreg)
+value|_IOR(A, 27, struct mapreg)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_SETMAP
-value|_IOW(A, 21, struct mapreg)
+value|_IOW(A, 28, struct mapreg)
 end_define
 
 begin_else
@@ -230,56 +252,56 @@ begin_define
 define|#
 directive|define
 name|AUDIO_GETINFO
-value|_IOR('A', 1, struct audio_info)
+value|_IOR('A', 21, struct audio_info)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_SETINFO
-value|_IOWR('A', 2, struct audio_info)
+value|_IOWR('A', 22, struct audio_info)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_DRAIN
-value|_IO('A', 3)
+value|_IO('A', 23)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_FLUSH
-value|_IO('A', 4)
+value|_IO('A', 24)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_WSEEK
-value|_IOR('A', 5, u_long)
+value|_IOR('A', 25, u_long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_RERROR
-value|_IOR('A', 6, int)
+value|_IOR('A', 26, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_GETMAP
-value|_IOR('A', 20, struct mapreg)
+value|_IOR('A', 27, struct mapreg)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUDIO_SETMAP
-value|_IOW('A', 21, struct mapreg)
+value|_IOW('A', 28, struct mapreg)
 end_define
 
 begin_endif
