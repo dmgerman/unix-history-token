@@ -102,7 +102,7 @@ file|"pci_if.h"
 end_include
 
 begin_comment
-comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+comment|/* Hooks for the ACPI CA debugging infrastructure. */
 end_comment
 
 begin_define
@@ -1105,13 +1105,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"ACPI PCI bus"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|acpi_get_handle
@@ -1126,6 +1119,13 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"ACPI PCI bus"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1181,9 +1181,6 @@ name|acpi_pci_devinfo
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|AcpiWalkNamespace
 argument_list|(
 name|ACPI_TYPE_DEVICE

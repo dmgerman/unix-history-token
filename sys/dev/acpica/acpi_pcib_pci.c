@@ -38,13 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -96,7 +96,7 @@ file|"pcib_if.h"
 end_include
 
 begin_comment
-comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+comment|/* Hooks for the ACPI CA debugging infrastructure. */
 end_comment
 
 begin_define
@@ -426,23 +426,19 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|pci_get_class
 argument_list|(
 name|dev
 argument_list|)
 operator|!=
 name|PCIC_BRIDGE
-operator|)
 operator|||
-operator|(
 name|pci_get_subclass
 argument_list|(
 name|dev
 argument_list|)
 operator|!=
 name|PCIS_BRIDGE_PCI
-operator|)
 operator|||
 name|acpi_disabled
 argument_list|(
@@ -470,9 +466,10 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
 name|pci_cfgregopen
 argument_list|()
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
