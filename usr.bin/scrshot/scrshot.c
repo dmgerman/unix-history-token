@@ -258,6 +258,11 @@ operator|.
 name|ysize
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
