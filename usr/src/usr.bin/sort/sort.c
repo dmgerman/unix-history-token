@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sort.c	4.7 (Berkeley) %G%"
+literal|"@(#)sort.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3533,6 +3533,11 @@ else|else
 name|oldfile
 argument_list|()
 expr_stmt|;
+name|clearerr
+argument_list|(
+name|os
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|lp
@@ -3574,6 +3579,22 @@ operator|!=
 literal|'\n'
 condition|)
 do|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|os
+argument_list|)
+condition|)
+block|{
+name|error
+operator|=
+literal|1
+expr_stmt|;
+name|term
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 name|fclose
 argument_list|(
@@ -3860,6 +3881,11 @@ condition|(
 name|l
 condition|)
 do|;
+name|clearerr
+argument_list|(
+name|os
+argument_list|)
+expr_stmt|;
 name|muflg
 operator|=
 name|mflg
@@ -3931,6 +3957,7 @@ name|l
 argument_list|)
 operator|)
 condition|)
+block|{
 do|do
 name|putc
 argument_list|(
@@ -3949,6 +3976,23 @@ operator|!=
 literal|'\n'
 condition|)
 do|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|os
+argument_list|)
+condition|)
+block|{
+name|error
+operator|=
+literal|1
+expr_stmt|;
+name|term
+argument_list|()
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|muflg
