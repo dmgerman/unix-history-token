@@ -502,6 +502,7 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+modifier|*
 parameter_list|,
 name|int
 modifier|*
@@ -7711,6 +7712,7 @@ decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
+modifier|*
 name|m_head
 decl_stmt|;
 name|int
@@ -7769,7 +7771,10 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|*
 name|m_head
+operator|)
 operator|->
 name|m_pkthdr
 operator|.
@@ -7785,7 +7790,10 @@ name|RL_TDESC_CMD_IPCSUM
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|*
 name|m_head
+operator|)
 operator|->
 name|m_pkthdr
 operator|.
@@ -7801,7 +7809,10 @@ name|RL_TDESC_CMD_TCPCSUM
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|*
 name|m_head
+operator|)
 operator|->
 name|m_pkthdr
 operator|.
@@ -7886,6 +7897,7 @@ name|rl_mtag
 argument_list|,
 name|map
 argument_list|,
+operator|*
 name|m_head
 argument_list|,
 name|re_dma_map_desc
@@ -7938,6 +7950,7 @@ name|m_new
 operator|=
 name|m_defrag
 argument_list|(
+operator|*
 name|m_head
 argument_list|,
 name|M_DONTWAIT
@@ -7951,10 +7964,11 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|1
+name|ENOBUFS
 operator|)
 return|;
 else|else
+operator|*
 name|m_head
 operator|=
 name|m_new
@@ -8004,6 +8018,7 @@ name|rl_mtag
 argument_list|,
 name|map
 argument_list|,
+operator|*
 name|m_head
 argument_list|,
 name|re_dma_map_desc
@@ -8083,6 +8098,7 @@ operator|.
 name|rl_idx
 index|]
 operator|=
+operator|*
 name|m_head
 expr_stmt|;
 name|sc
@@ -8107,6 +8123,7 @@ name|arpcom
 operator|.
 name|ac_if
 argument_list|,
+operator|*
 name|m_head
 argument_list|)
 expr_stmt|;
@@ -8338,6 +8355,7 @@ name|re_encap
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|m_head
 argument_list|,
 operator|&
