@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	5.21 (Berkeley) %G%"
+literal|"@(#)file.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2712,21 +2712,6 @@ literal|0
 index|]
 argument_list|)
 argument_list|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-specifier|const
-name|void
-operator|*
-argument_list|,
-specifier|const
-name|void
-operator|*
-argument_list|)
-operator|)
 name|sortscmp
 argument_list|)
 expr_stmt|;

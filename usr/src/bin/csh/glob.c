@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.32 (Berkeley) %G%"
+literal|"@(#)glob.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4219,13 +4219,11 @@ parameter_list|,
 name|b
 parameter_list|)
 specifier|register
-name|Char
-modifier|*
+name|void
 modifier|*
 name|a
 decl_stmt|,
 decl|*
-modifier|*
 name|b
 decl_stmt|;
 end_function
@@ -4254,7 +4252,6 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|!
 name|a
 condition|)
 comment|/* check for NULL */
@@ -4282,12 +4279,22 @@ if|if
 condition|(
 operator|!
 operator|*
+operator|(
+name|Char
+operator|*
+operator|*
+operator|)
 name|a
 condition|)
 comment|/* check for NULL */
 return|return
 operator|(
 operator|*
+operator|(
+name|Char
+operator|*
+operator|*
+operator|)
 name|b
 condition|?
 literal|1
@@ -4299,6 +4306,11 @@ if|if
 condition|(
 operator|!
 operator|*
+operator|(
+name|Char
+operator|*
+operator|*
+operator|)
 name|b
 condition|)
 return|return
@@ -4329,6 +4341,11 @@ argument_list|,
 name|short2str
 argument_list|(
 operator|*
+operator|(
+name|Char
+operator|*
+operator|*
+operator|)
 name|a
 argument_list|)
 argument_list|)
@@ -4345,6 +4362,11 @@ argument_list|,
 name|short2str
 argument_list|(
 operator|*
+operator|(
+name|Char
+operator|*
+operator|*
+operator|)
 name|b
 argument_list|)
 argument_list|)
@@ -4360,9 +4382,19 @@ operator|)
 name|Strcmp
 argument_list|(
 operator|*
+operator|(
+name|Char
+operator|*
+operator|*
+operator|)
 name|a
 argument_list|,
 operator|*
+operator|(
+name|Char
+operator|*
+operator|*
+operator|)
 name|b
 argument_list|)
 operator|)
