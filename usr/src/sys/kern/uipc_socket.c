@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2041,6 +2041,9 @@ argument_list|,
 name|caddr_t
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|uio
@@ -2257,7 +2260,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Implement receive operations on a socket.  * We depend on the way that records are added to the sockbuf  * by sbappend*.  In particular, each record (mbufs linked through m_next)  * must begin with an address if the protocol so specifies,  * followed by an optional mbuf or mbufs containing ancillary data,  * and then zero or more mbufs of data.  * In order to avoid blocking network interrupts for the entire time here,  * we splx() while doing the actual copy to user space.  * Although the sockbuf is locked, new data may still be appended,  * and thus we must maintain consistency of the sockbuf during that time.  *   * The caller may receive the data as a single mbuf chain by supplying  * an mbuf **mp0 for use in returning the chain.  The uio is then used  * only for the count in uio_resid.  */
+comment|/*  * Implement receive operations on a socket.  * We depend on the way that records are added to the sockbuf  * by sbappend*.  In particular, each record (mbufs linked through m_next)  * must begin with an address if the protocol so specifies,  * followed by an optional mbuf or mbufs containing ancillary data,  * and then zero or more mbufs of data.  * In order to avoid blocking network interrupts for the entire time here,  * we splx() while doing the actual copy to user space.  * Although the sockbuf is locked, new data may still be appended,  * and thus we must maintain consistency of the sockbuf during that time.  *  * The caller may receive the data as a single mbuf chain by supplying  * an mbuf **mp0 for use in returning the chain.  The uio is then used  * only for the count in uio_resid.  */
 end_comment
 
 begin_expr_stmt
@@ -3232,12 +3235,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|type
-operator|=
-name|m
-operator|->
-name|m_type
-expr_stmt|;
 name|so
 operator|->
 name|so_state
