@@ -2447,9 +2447,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"warn: colors are now defined "
-literal|"using a-h instead of 0-9. "
-literal|"see manual page.\n"
+literal|"warn: LSCOLOURS should use "
+literal|"characters a-h instead of 0-9 ("
+literal|"see the manual page)\n"
 argument_list|)
 expr_stmt|;
 block|}
