@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * Quite extensively rewritten by Poul-Henning Kamp of the FreeBSD  * project, to make these variables more userfriendly.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_sysctl.c	8.4 (Berkeley) 4/14/94  * $Id: kern_mib.c,v 1.2 1996/07/25 18:02:40 wollman Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * Quite extensively rewritten by Poul-Henning Kamp of the FreeBSD  * project, to make these variables more userfriendly.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_sysctl.c	8.4 (Berkeley) 4/14/94  * $Id: kern_mib.c,v 1.3 1996/09/28 15:43:39 bde Exp $  */
 end_comment
 
 begin_include
@@ -783,7 +783,7 @@ name|USER_CS_PATH
 argument_list|,
 name|cs_path
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|""
 argument_list|,
@@ -803,7 +803,7 @@ name|USER_BC_BASE_MAX
 argument_list|,
 name|bc_base_max
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -823,7 +823,7 @@ name|USER_BC_DIM_MAX
 argument_list|,
 name|bc_dim_max
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -843,7 +843,7 @@ name|USER_BC_SCALE_MAX
 argument_list|,
 name|bc_scale_max
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -863,7 +863,7 @@ name|USER_BC_STRING_MAX
 argument_list|,
 name|bc_string_max
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -883,7 +883,7 @@ name|USER_COLL_WEIGHTS_MAX
 argument_list|,
 name|coll_weights_max
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -903,7 +903,7 @@ name|USER_EXPR_NEST_MAX
 argument_list|,
 name|expr_nest_max
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -923,7 +923,7 @@ name|USER_LINE_MAX
 argument_list|,
 name|line_max
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -943,7 +943,7 @@ name|USER_RE_DUP_MAX
 argument_list|,
 name|re_dup_max
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -963,7 +963,7 @@ name|USER_POSIX2_VERSION
 argument_list|,
 name|posix2_version
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -983,7 +983,7 @@ name|USER_POSIX2_C_BIND
 argument_list|,
 name|posix2_c_bind
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -1003,7 +1003,7 @@ name|USER_POSIX2_C_DEV
 argument_list|,
 name|posix2_c_dev
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -1023,7 +1023,7 @@ name|USER_POSIX2_CHAR_TERM
 argument_list|,
 name|posix2_char_term
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -1043,7 +1043,7 @@ name|USER_POSIX2_FORT_DEV
 argument_list|,
 name|posix2_fort_dev
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -1063,7 +1063,7 @@ name|USER_POSIX2_FORT_RUN
 argument_list|,
 name|posix2_fort_run
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -1083,7 +1083,7 @@ name|USER_POSIX2_LOCALEDEF
 argument_list|,
 name|posix2_localedef
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -1103,7 +1103,7 @@ name|USER_POSIX2_SW_DEV
 argument_list|,
 name|posix2_sw_dev
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -1123,7 +1123,7 @@ name|USER_POSIX2_UPE
 argument_list|,
 name|posix2_upe
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -1143,7 +1143,7 @@ name|USER_STREAM_MAX
 argument_list|,
 name|stream_max
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
@@ -1163,7 +1163,7 @@ name|USER_TZNAME_MAX
 argument_list|,
 name|tzname_max
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
