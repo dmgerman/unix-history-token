@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyword.c	5.15 (Berkeley) %G%"
+literal|"@(#)keyword.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -3427,12 +3433,9 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|vent
@@ -3478,9 +3481,11 @@ condition|(
 operator|!
 name|vhead
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"no valid keywords\n"
+literal|1
+argument_list|,
+literal|"no valid keywords"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3525,7 +3530,7 @@ name|p
 expr_stmt|;
 name|hp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
@@ -3591,14 +3596,9 @@ condition|(
 name|hp
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ps: %s: illegal keyword specification\n"
+literal|"%s: illegal keyword specification"
 argument_list|,
 name|p
 argument_list|)
@@ -3631,14 +3631,9 @@ operator|!
 name|v
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ps: keyword %s not found\n"
+literal|"%s: keyword not found"
 argument_list|,
 name|p
 argument_list|)
