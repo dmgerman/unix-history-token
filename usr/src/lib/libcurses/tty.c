@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	8.1 (Berkeley) %G%"
+literal|"@(#)tty.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -811,6 +811,9 @@ name|int
 name|endwin
 parameter_list|()
 block|{
+name|__restore_stophandler
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|curscr
