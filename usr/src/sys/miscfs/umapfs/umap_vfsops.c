@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vfsops.c	8.4 (Berkeley) %G%  *  * @(#)null_vfsops.c       1.5 (Berkeley) 7/10/92  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vfsops.c	8.5 (Berkeley) %G%  *  * @(#)null_vfsops.c       1.5 (Berkeley) 7/10/92  */
 end_comment
 
 begin_comment
@@ -602,11 +602,9 @@ name|qaddr_t
 operator|)
 name|amp
 expr_stmt|;
-name|getnewfsid
+name|vfs_getnewfsid
 argument_list|(
 name|mp
-argument_list|,
-name|MOUNT_LOFS
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1534,11 +1532,20 @@ name|umapfs_init
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|vfsconf
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|umapfs_sysctl
+value|((int (*) __P((int *, u_int, void *, size_t *, void *, \ 	    size_t, struct proc *)))eopnotsupp)
+end_define
 
 begin_decl_stmt
 name|struct
@@ -1567,6 +1574,8 @@ block|,
 name|umapfs_vptofh
 block|,
 name|umapfs_init
+block|,
+name|umapfs_sysctl
 block|, }
 decl_stmt|;
 end_decl_stmt
