@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cp.c,v 1.15 1998/05/06 06:50:22 charnier Exp $"
+literal|"$Id: cp.c,v 1.16 1998/05/13 07:25:14 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -887,6 +887,9 @@ condition|)
 block|{
 case|case
 name|FTS_NS
+case|:
+case|case
+name|FTS_DNR
 case|:
 case|case
 name|FTS_ERR
