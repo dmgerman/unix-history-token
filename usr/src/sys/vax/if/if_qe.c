@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Digital Equipment Corp.  *  * %sccs.include.redist.c%  *  *	@(#)if_qe.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Digital Equipment Corp.  *  * %sccs.include.redist.c%  *  *	@(#)if_qe.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -349,15 +349,11 @@ begin_comment
 comment|/* timeout when no xmits in progress */
 end_comment
 
-begin_comment
-comment|/*  * This constant should really be 60 because the qna adds 4 bytes of crc.  * However when set to 60 our packets are ignored by deuna's , 3coms are  * okay ??????????????????????????????????????????  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|MINDATA
-value|64
+value|60
 end_define
 
 begin_comment
@@ -2357,6 +2353,16 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|len
+operator|<
+name|MINDATA
+condition|)
+name|len
+operator|=
+name|MINDATA
+expr_stmt|;
 comment|/* 		 *  Does buffer end on odd byte ? 		 */
 if|if
 condition|(
@@ -2375,16 +2381,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|len
-operator|<
-name|MINDATA
-condition|)
-name|len
-operator|=
-name|MINDATA
-expr_stmt|;
 name|rp
 operator|->
 name|qe_buf_len
