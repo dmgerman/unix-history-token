@@ -1766,14 +1766,6 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|ltmfrmt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
 name|argv0
 decl_stmt|;
 end_decl_stmt

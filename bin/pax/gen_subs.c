@@ -290,14 +290,7 @@ argument_list|,
 name|f_mode
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ltmfrmt
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* 		 * no locale specified format. time format based on age 		 * compared to the time pax was started. 		 */
+comment|/* 	 * time format based on age compared to the time pax was started. 	 */
 if|if
 condition|(
 operator|(
@@ -318,12 +311,6 @@ else|else
 name|timefrmt
 operator|=
 name|CURFRMT
-expr_stmt|;
-block|}
-else|else
-name|timefrmt
-operator|=
-name|ltmfrmt
 expr_stmt|;
 comment|/* 	 * print file mode, link count, uid, gid and time 	 */
 if|if
@@ -649,14 +636,6 @@ name|timefrmt
 decl_stmt|;
 if|if
 condition|(
-name|ltmfrmt
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* 		 * no locale specified format 		 */
-if|if
-condition|(
 operator|(
 name|arcn
 operator|->
@@ -684,12 +663,6 @@ else|else
 name|timefrmt
 operator|=
 name|CURFRMT
-expr_stmt|;
-block|}
-else|else
-name|timefrmt
-operator|=
-name|ltmfrmt
 expr_stmt|;
 comment|/* 	 * convert time to string, and print 	 */
 if|if
