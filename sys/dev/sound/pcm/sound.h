@@ -714,6 +714,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+modifier|*
+name|pcm_getdevinfo
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pcm_setswap
 parameter_list|(
 name|device_t

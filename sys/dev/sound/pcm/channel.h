@@ -129,6 +129,9 @@ parameter_list|(
 name|pcm_channel
 modifier|*
 name|c
+parameter_list|,
+name|u_int32_t
+name|fmt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -185,6 +188,9 @@ parameter_list|(
 name|pcm_channel
 modifier|*
 name|c
+parameter_list|,
+name|int
+name|blkcnt
 parameter_list|,
 name|int
 name|blksz
@@ -466,6 +472,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHN_F_NOTRIGGER
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHN_F_BUSY
 value|0x00001000
 end_define
@@ -544,7 +557,7 @@ begin_define
 define|#
 directive|define
 name|CHN_2NDBUFBLKNUM
-value|(8)
+value|(32)
 end_define
 
 begin_comment
@@ -554,8 +567,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHN_2NDBUFWHOLESIZE
-value|(CHN_2NDBUFBLKSIZE * CHN_2NDBUFBLKNUM)
+name|CHN_2NDBUFMAXSIZE
+value|(131072)
 end_define
 
 end_unit

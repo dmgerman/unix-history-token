@@ -156,7 +156,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* PROPOSAL: each unit needs: status, mixer, dsp, dspW, audio, sequencer, midi-in, seq2, sndproc = 9 devices dspW and audio are deprecated. dsp needs min 64 channels, will give it 256  minor = (unit<< 12) + (dev<< 8) + channel currently minor = (channel<< 8) + (unit<< 4) + dev  nomenclature: 	/dev/pcmX/dsp.(0..255) 	/dev/pcmX/dspW 	/dev/pcmX/audio 	/dev/pcmX/status 	/dev/pcmX/mixer 	[etc.]  currently: minor = (channel<< 8) + (unit<< 4) + dev */
+comment|/* PROPOSAL: each unit needs: status, mixer, dsp, dspW, audio, sequencer, midi-in, seq2, sndproc = 9 devices dspW and audio are deprecated. dsp needs min 64 channels, will give it 256  minor = (unit<< 20) + (dev<< 16) + channel currently minor = (channel<< 16) + (unit<< 4) + dev  nomenclature: 	/dev/pcmX/dsp.(0..255) 	/dev/pcmX/dspW 	/dev/pcmX/audio 	/dev/pcmX/status 	/dev/pcmX/mixer 	[etc.] */
 end_comment
 
 begin_define
@@ -176,7 +176,7 @@ name|PCMCHAN
 parameter_list|(
 name|x
 parameter_list|)
-value|((PCMMINOR(x)& 0x0000ff00)>> 8)
+value|((PCMMINOR(x)& 0x00ff0000)>> 16)
 end_define
 
 begin_define
@@ -210,7 +210,7 @@ name|d
 parameter_list|,
 name|c
 parameter_list|)
-value|((((c)& 0xff)<< 8) | (((u)& 0x0f)<< 4) | ((d)& 0x0f))
+value|((((c)& 0xff)<< 16) | (((u)& 0x0f)<< 4) | ((d)& 0x0f))
 end_define
 
 begin_decl_stmt
@@ -578,6 +578,32 @@ end_function
 
 begin_function
 name|void
+modifier|*
+name|pcm_getdevinfo
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|snddev_info
+modifier|*
+name|d
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+return|return
+name|d
+operator|->
+name|devinfo
+return|;
+block|}
+end_function
+
+begin_function
+name|void
 name|pcm_setswap
 parameter_list|(
 name|device_t
@@ -820,6 +846,55 @@ argument_list|(
 name|d
 operator|->
 name|arec
+argument_list|,
+name|sz
+argument_list|)
+expr_stmt|;
+name|sz
+operator|=
+operator|(
+name|numplay
+operator|+
+name|numrec
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
+name|d
+operator|->
+name|ref
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|sz
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|d
+operator|->
+name|ref
+condition|)
+goto|goto
+name|no
+goto|;
+name|bzero
+argument_list|(
+name|d
+operator|->
+name|ref
 argument_list|,
 name|sz
 argument_list|)
