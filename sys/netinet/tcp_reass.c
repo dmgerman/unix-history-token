@@ -11275,7 +11275,7 @@ literal|2
 operator|*
 name|tcp_msl
 argument_list|,
-name|tcp_timer_2msl
+name|tcp_timer_2msl_tw
 argument_list|,
 name|tw
 argument_list|)
