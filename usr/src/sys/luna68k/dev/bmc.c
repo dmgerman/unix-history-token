@@ -1,20 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)bmc.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)bmc.c	7.7 (Berkeley) %G%  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|BMC_NOCONSOLE
-end_define
-
-begin_define
-define|#
-directive|define
-name|BMC_CNPORT
-value|1
-end_define
 
 begin_include
 include|#
@@ -93,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/stinger.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<luna68k/dev/device.h>
 end_include
 
@@ -106,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<luna68k/dev/siovar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<luna68k/luna68k/cons.h>
 end_include
 
 begin_function_decl
@@ -204,9 +203,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|bmc_config_done
-init|=
-literal|0
+name|bmc_active
 decl_stmt|;
 end_decl_stmt
 
@@ -1449,22 +1446,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_block
-block|{ }
-end_block
-
-begin_expr_stmt
-name|bmcinit
-argument_list|(
-name|port
-argument_list|)
-specifier|register
-name|int
-name|port
-expr_stmt|;
-end_expr_stmt
-
-begin_block
 block|{
+name|int
+name|unit
+init|=
+name|hd
+operator|->
+name|hp_unit
+decl_stmt|;
 specifier|register
 name|struct
 name|bmc_softc
@@ -1474,32 +1463,73 @@ init|=
 operator|&
 name|bmc_softc
 index|[
-literal|0
+name|unit
 index|]
 decl_stmt|;
-comment|/* 	 * if BMC is already configured, should be skipped.          */
+specifier|register
+name|struct
+name|sio_portc
+modifier|*
+name|pc
+decl_stmt|;
 if|if
 condition|(
-name|bmc_config_done
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* 	 * Check out bitmap Interface board 	 */
-comment|/* port checking (for keyboard) */
-if|if
-condition|(
-name|port
+name|sc
+operator|->
+name|sc_pc
 operator|!=
-literal|1
+literal|0
 condition|)
+block|{
+name|pc
+operator|=
+name|sc
+operator|->
+name|sc_pc
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"bmc%d: port %d, address 0x%x, intr 0x%x (console)\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_unit
+argument_list|,
+name|pc
+operator|->
+name|pc_port
+argument_list|,
+name|pc
+operator|->
+name|pc_addr
+argument_list|,
+name|pc
+operator|->
+name|pc_intr
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
+comment|/* 	 * Check out bitmap Interface board 	 */
+if|if
+condition|(
+name|KernInter
+operator|.
+name|plane
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* locate the major number */
 for|for
 control|(
@@ -1530,42 +1560,48 @@ name|sc
 operator|->
 name|sc_pc
 operator|=
+name|pc
+operator|=
 name|sio_port_assign
 argument_list|(
-name|port
+name|BMC_PORT
 argument_list|,
 name|bmcmajor
 argument_list|,
-literal|0
+name|unit
 argument_list|,
 name|bmcintr
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"bmc%d: port %d, address 0x%x\n"
+literal|"bmc%d: port %d, address 0x%x, intr 0x%x\n"
 argument_list|,
-name|sc
-operator|->
-name|sc_pc
+name|pc
 operator|->
 name|pc_unit
 argument_list|,
-name|port
-argument_list|,
-name|sc
+name|pc
 operator|->
-name|sc_pc
+name|pc_port
+argument_list|,
+name|pc
 operator|->
 name|pc_addr
+argument_list|,
+name|pc
+operator|->
+name|pc_intr
 argument_list|)
 expr_stmt|;
 name|bmdinit
 argument_list|()
 expr_stmt|;
-name|bmc_config_done
-operator|=
+name|bmc_active
+operator||=
 literal|1
+operator|<<
+name|unit
 expr_stmt|;
 return|return
 operator|(
@@ -1676,6 +1712,25 @@ condition|(
 name|unit
 operator|>=
 name|NBMC
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|bmc_active
+operator|&
+operator|(
+literal|1
+operator|<<
+name|unit
+operator|)
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -2909,12 +2964,6 @@ begin_comment
 comment|/*  * Following are all routines needed for SIO to act as console  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"../luna68k/cons.h"
-end_include
-
 begin_expr_stmt
 name|bmccnprobe
 argument_list|(
@@ -2930,9 +2979,25 @@ end_expr_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|BMC_NOCONSOLE
+if|if
+condition|(
+operator|(
+name|KernInter
+operator|.
+name|dipsw
+operator|&
+name|KIFF_DIPSW_NOBM
+operator|)
+operator|||
+operator|(
+name|KernInter
+operator|.
+name|plane
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
 name|cp
 operator|->
 name|cn_pri
@@ -2940,10 +3005,7 @@ operator|=
 name|CN_DEAD
 expr_stmt|;
 return|return;
-else|#
-directive|else
-comment|/* check DIP-SW setup */
-comment|/* check bitmap interface board */
+block|}
 comment|/* locate the major number */
 for|for
 control|(
@@ -2998,12 +3060,6 @@ name|cn_pri
 operator|=
 name|CN_INTERNAL
 expr_stmt|;
-name|bmc_config_done
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -3068,7 +3124,7 @@ name|sc_pc
 operator|=
 name|sio_port_assign
 argument_list|(
-name|BMC_CNPORT
+name|BMC_PORT
 argument_list|,
 name|bmcmajor
 argument_list|,
@@ -3079,6 +3135,12 @@ argument_list|)
 expr_stmt|;
 name|bmcconsole
 operator|=
+name|unit
+expr_stmt|;
+name|bmc_active
+operator||=
+literal|1
+operator|<<
 name|unit
 expr_stmt|;
 block|}
