@@ -976,9 +976,11 @@ comment|/* sorted list of free space on drive */
 name|u_int64_t
 name|offset
 decl_stmt|;
-name|long
+comment|/* offset of entry */
+name|u_int64_t
 name|sectors
 decl_stmt|;
+comment|/* and length in sectors */
 block|}
 modifier|*
 name|freelist
