@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.c,v 1.54 2001/11/09 14:59:11 augustss Exp $	*/
+comment|/*	$NetBSD: usb.c,v 1.56 2001/11/13 07:55:30 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -3685,6 +3685,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* USB_USE_SOFTINTR */
 block|}
 end_function
 
