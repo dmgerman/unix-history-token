@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine clears up to the end of line  *  * %G% (Berkeley) @(#)clrtoeol.c	1.2  */
+comment|/*  *	This routine clears up to the end of line  *  * %G% (Berkeley) @(#)clrtoeol.c	1.3  */
 end_comment
 
 begin_macro
