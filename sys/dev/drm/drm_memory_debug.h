@@ -9,6 +9,20 @@ directive|include
 file|"drmP.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|DRM_SYSCTL_PRINT
+parameter_list|(
+name|fmt
+parameter_list|,
+name|arg
+modifier|...
+parameter_list|)
+define|\
+value|do {								\ 	snprintf(buf, sizeof(buf), fmt, ##arg);			\ 	error = SYSCTL_OUT(req, buf, strlen(buf));		\ 	if (error)						\ 		return error;					\ } while (0)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct

@@ -6273,7 +6273,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|_HAVE_DMA_IRQ
+name|__HAVE_IRQ
 comment|/* Make sure interrupts are disabled here because the uninstall ioctl 	 * may not have been called from userspace and after dev_private 	 * is freed, it's too late. 	 */
 if|if
 condition|(

@@ -20,30 +20,10 @@ define|#
 directive|define
 name|GET_RING_HEAD
 parameter_list|(
-name|ring
+name|dev_priv
 parameter_list|)
-value|DRM_READ32(  (ring)->ring_rptr, 0 )
+value|R128_READ( R128_PM4_BUFFER_DL_RPTR )
 end_define
-
-begin_comment
-comment|/* (ring)->head */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SET_RING_HEAD
-parameter_list|(
-name|ring
-parameter_list|,
-name|val
-parameter_list|)
-value|DRM_WRITE32( (ring)->ring_rptr, 0, (val) )
-end_define
-
-begin_comment
-comment|/* (ring)->head */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -92,11 +72,6 @@ decl_stmt|;
 name|int
 name|size_l2qw
 decl_stmt|;
-specifier|volatile
-name|u32
-modifier|*
-name|head
-decl_stmt|;
 name|u32
 name|tail
 decl_stmt|;
@@ -108,10 +83,6 @@ name|space
 decl_stmt|;
 name|int
 name|high_mark
-decl_stmt|;
-name|drm_local_map_t
-modifier|*
-name|ring_rptr
 decl_stmt|;
 block|}
 name|drm_r128_ring_buffer_t
@@ -417,56 +388,6 @@ name|n
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function
-specifier|static
-name|__inline__
-name|void
-name|r128_update_ring_snapshot
-parameter_list|(
-name|drm_r128_ring_buffer_t
-modifier|*
-name|ring
-parameter_list|)
-block|{
-name|ring
-operator|->
-name|space
-operator|=
-operator|(
-name|GET_RING_HEAD
-argument_list|(
-name|ring
-argument_list|)
-operator|-
-name|ring
-operator|->
-name|tail
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-name|u32
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ring
-operator|->
-name|space
-operator|<=
-literal|0
-condition|)
-name|ring
-operator|->
-name|space
-operator|+=
-name|ring
-operator|->
-name|size
-expr_stmt|;
-block|}
-end_function
 
 begin_function_decl
 specifier|extern
@@ -1330,6 +1251,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R128_PM4_BUFFER_CNTL_NOUPDATE
+value|(1<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
 name|R128_PM4_BUFFER_WM_CNTL
 value|0x0708
 end_define
@@ -1994,6 +1922,65 @@ parameter_list|)
 value|(R128_CCE_PACKET3 |		\ 					 (pkt) | ((n)<< 16))
 end_define
 
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|r128_update_ring_snapshot
+parameter_list|(
+name|drm_r128_private_t
+modifier|*
+name|dev_priv
+parameter_list|)
+block|{
+name|drm_r128_ring_buffer_t
+modifier|*
+name|ring
+init|=
+operator|&
+name|dev_priv
+operator|->
+name|ring
+decl_stmt|;
+name|ring
+operator|->
+name|space
+operator|=
+operator|(
+name|GET_RING_HEAD
+argument_list|(
+name|dev_priv
+argument_list|)
+operator|-
+name|ring
+operator|->
+name|tail
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u32
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ring
+operator|->
+name|space
+operator|<=
+literal|0
+condition|)
+name|ring
+operator|->
+name|space
+operator|+=
+name|ring
+operator|->
+name|size
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* ================================================================  * Misc helper macros  */
 end_comment
@@ -2006,7 +1993,7 @@ parameter_list|(
 name|dev_priv
 parameter_list|)
 define|\
-value|do {									\ 	drm_r128_ring_buffer_t *ring =&dev_priv->ring; int i;		\ 	if ( ring->space< ring->high_mark ) {				\ 		for ( i = 0 ; i< dev_priv->usec_timeout ; i++ ) {	\ 			r128_update_ring_snapshot( ring );		\ 			if ( ring->space>= ring->high_mark )		\ 				goto __ring_space_done;			\ 			DRM_UDELAY(1);				\ 		}							\ 		DRM_ERROR( "ring space check failed!\n" );		\ 		return DRM_ERR(EBUSY);				\ 	}								\  __ring_space_done:							\ 	;								\ } while (0)
+value|do {									\ 	drm_r128_ring_buffer_t *ring =&dev_priv->ring; int i;		\ 	if ( ring->space< ring->high_mark ) {				\ 		for ( i = 0 ; i< dev_priv->usec_timeout ; i++ ) {	\ 			r128_update_ring_snapshot( dev_priv );		\ 			if ( ring->space>= ring->high_mark )		\ 				goto __ring_space_done;			\ 			DRM_UDELAY(1);				\ 		}							\ 		DRM_ERROR( "ring space check failed!\n" );		\ 		return DRM_ERR(EBUSY);				\ 	}								\  __ring_space_done:							\ 	;								\ } while (0)
 end_define
 
 begin_define
@@ -2032,41 +2019,6 @@ begin_comment
 comment|/* ================================================================  * Ring control  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|r128_flush_write_combine
-parameter_list|()
-value|(void) GET_RING_HEAD(&dev_priv->ring )
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|r128_flush_write_combine
-parameter_list|()
-value|DRM_WRITEMEMORYBARRIER()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -2079,7 +2031,7 @@ define|#
 directive|define
 name|RING_LOCALS
 define|\
-value|int write; unsigned int tail_mask; volatile u32 *ring;
+value|int write, _nr; unsigned int tail_mask; volatile u32 *ring;
 end_define
 
 begin_define
@@ -2089,7 +2041,7 @@ name|BEGIN_RING
 parameter_list|(
 name|n
 parameter_list|)
-value|do {						\ 	if ( R128_VERBOSE ) {						\ 		DRM_INFO( "BEGIN_RING( %d ) in %s\n",			\ 			   (n), __FUNCTION__ );				\ 	}								\ 	if ( dev_priv->ring.space<= (n) * sizeof(u32) ) {		\ 		r128_wait_ring( dev_priv, (n) * sizeof(u32) );		\ 	}								\ 	dev_priv->ring.space -= (n) * sizeof(u32);			\ 	ring = dev_priv->ring.start;					\ 	write = dev_priv->ring.tail;					\ 	tail_mask = dev_priv->ring.tail_mask;				\ } while (0)
+value|do {						\ 	if ( R128_VERBOSE ) {						\ 		DRM_INFO( "BEGIN_RING( %d ) in %s\n",			\ 			   (n), __FUNCTION__ );				\ 	}								\ 	if ( dev_priv->ring.space<= (n) * sizeof(u32) ) {		\ 		COMMIT_RING();						\ 		r128_wait_ring( dev_priv, (n) * sizeof(u32) );		\ 	}								\ 	_nr = n; dev_priv->ring.space -= (n) * sizeof(u32);		\ 	ring = dev_priv->ring.start;					\ 	write = dev_priv->ring.tail;					\ 	tail_mask = dev_priv->ring.tail_mask;				\ } while (0)
 end_define
 
 begin_comment
@@ -2108,7 +2060,15 @@ define|#
 directive|define
 name|ADVANCE_RING
 parameter_list|()
-value|do {						\ 	if ( R128_VERBOSE ) {						\ 		DRM_INFO( "ADVANCE_RING() wr=0x%06x tail=0x%06x\n",	\ 			  write, dev_priv->ring.tail );			\ 	}								\ 	if ( R128_BROKEN_CCE&& write< 32 ) {				\ 		memcpy( dev_priv->ring.end,				\ 			dev_priv->ring.start,				\ 			write * sizeof(u32) );				\ 	}								\ 	r128_flush_write_combine();					\ 	dev_priv->ring.tail = write;					\ 	R128_WRITE( R128_PM4_BUFFER_DL_WPTR, write );			\ } while (0)
+value|do {						\ 	if ( R128_VERBOSE ) {						\ 		DRM_INFO( "ADVANCE_RING() wr=0x%06x tail=0x%06x\n",	\ 			  write, dev_priv->ring.tail );			\ 	}								\ 	if ( R128_BROKEN_CCE&& write< 32 ) {				\ 		memcpy( dev_priv->ring.end,				\ 			dev_priv->ring.start,				\ 			write * sizeof(u32) );				\ 	}								\ 	if (((dev_priv->ring.tail + _nr)& tail_mask) != write) {	\ 		DRM_ERROR( 						\ 			"ADVANCE_RING(): mismatch: nr: %x write: %x line: %d\n",	\ 			((dev_priv->ring.tail + _nr)& tail_mask),	\ 			write, __LINE__);				\ 	} else								\ 		dev_priv->ring.tail = write;				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMMIT_RING
+parameter_list|()
+value|do {						\ 	if ( R128_VERBOSE ) {						\ 		DRM_INFO( "COMMIT_RING() tail=0x%06x\n",		\ 			dev_priv->ring.tail );				\ 	}								\ 	DRM_MEMORYBARRIER();						\ 	R128_WRITE( R128_PM4_BUFFER_DL_WPTR, dev_priv->ring.tail );	\ 	R128_READ( R128_PM4_BUFFER_DL_WPTR );				\ } while (0)
 end_define
 
 begin_define

@@ -41,7 +41,7 @@ begin_function
 name|irqreturn_t
 name|DRM
 function|(
-name|dma_service
+name|irq_handler
 function|)
 parameter_list|(
 name|DRM_IRQ_ARGS

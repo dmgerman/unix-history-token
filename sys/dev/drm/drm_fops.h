@@ -9,6 +9,10 @@ directive|include
 file|"dev/drm/drmP.h"
 end_include
 
+begin_comment
+comment|/* Requires device lock held */
+end_comment
+
 begin_function
 name|drm_file_t
 modifier|*
@@ -105,7 +109,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* DRM(open) is called whenever a process opens /dev/drm. */
+comment|/* DRM(open_helper) is called whenever a process opens /dev/drm. */
 end_comment
 
 begin_function
@@ -170,7 +174,9 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* FIXME: linux mallocs and bzeros here */
+name|DRM_LOCK
+argument_list|()
+expr_stmt|;
 name|priv
 operator|=
 operator|(
@@ -220,6 +226,23 @@ argument_list|,
 name|DRM_MEM_FILES
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|priv
+operator|==
+name|NULL
+condition|)
+block|{
+name|DRM_UNLOCK
+argument_list|()
+expr_stmt|;
+return|return
+name|DRM_ERR
+argument_list|(
+name|ENOMEM
+argument_list|)
+return|;
+block|}
 name|bzero
 argument_list|(
 name|priv
@@ -312,8 +335,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|DRM_LOCK
-expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -326,9 +347,10 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-name|DRM_UNLOCK
-expr_stmt|;
 block|}
+name|DRM_UNLOCK
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__

@@ -72,6 +72,7 @@ name|magic
 argument_list|)
 decl_stmt|;
 name|DRM_LOCK
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -114,6 +115,7 @@ break|break;
 block|}
 block|}
 name|DRM_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|retval
@@ -122,6 +124,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|DRM
 function|(
@@ -227,6 +230,7 @@ operator|=
 name|NULL
 expr_stmt|;
 name|DRM_LOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -291,6 +295,7 @@ name|entry
 expr_stmt|;
 block|}
 name|DRM_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 literal|0
@@ -299,6 +304,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|DRM
 function|(
@@ -344,6 +350,7 @@ name|magic
 argument_list|)
 expr_stmt|;
 name|DRM_LOCK
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -449,6 +456,7 @@ name|next
 expr_stmt|;
 block|}
 name|DRM_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 literal|0
@@ -456,6 +464,7 @@ return|;
 block|}
 block|}
 name|DRM_UNLOCK
+argument_list|()
 expr_stmt|;
 name|DRM
 argument_list|(
@@ -501,9 +510,18 @@ decl_stmt|;
 name|drm_auth_t
 name|auth
 decl_stmt|;
+name|drm_file_t
+modifier|*
+name|priv
+decl_stmt|;
 name|DRM_DEVICE
 expr_stmt|;
-name|DRM_PRIV
+name|DRM_GET_PRIV_WITH_RETURN
+argument_list|(
+name|priv
+argument_list|,
+name|filp
+argument_list|)
 expr_stmt|;
 comment|/* Find unique magic */
 if|if

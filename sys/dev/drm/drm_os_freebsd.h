@@ -163,11 +163,24 @@ directive|include
 file|<machine/resource.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|480000
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/endian.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -303,7 +316,7 @@ begin_define
 define|#
 directive|define
 name|__REALLY_HAVE_MTRR
-value|(__HAVE_MTRR)&& (__FreeBSD_version>= 500000)
+value|(__HAVE_MTRR)&& (__FreeBSD_version>= 460000)
 end_define
 
 begin_else
@@ -541,10 +554,30 @@ name|DRM_CURRENTPID
 value|curthread->td_proc->p_pid
 end_define
 
+begin_define
+define|#
+directive|define
+name|DRM_LOCK
+parameter_list|()
+value|mtx_lock(&dev->dev_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_UNLOCK
+parameter_list|()
+value|mtx_unlock(&dev->dev_lock)
+end_define
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* There is no need for locking on FreeBSD 4.x.  Synchronization is handled by  * the fact that there is no reentrancy of the kernel except for interrupt  * handlers, and the interrupt handler synchronization is managed by spls.  */
+end_comment
 
 begin_define
 define|#
@@ -564,7 +597,6 @@ begin_define
 define|#
 directive|define
 name|DRM_SPINTYPE
-value|struct simplelock
 end_define
 
 begin_define
@@ -576,7 +608,6 @@ name|l
 parameter_list|,
 name|name
 parameter_list|)
-value|simple_lock_init(&l)
 end_define
 
 begin_define
@@ -595,7 +626,6 @@ name|DRM_SPINLOCK
 parameter_list|(
 name|l
 parameter_list|)
-value|simple_lock(l)
 end_define
 
 begin_define
@@ -605,7 +635,6 @@ name|DRM_SPINUNLOCK
 parameter_list|(
 name|u
 parameter_list|)
-value|simple_unlock(u);
 end_define
 
 begin_define
@@ -613,6 +642,20 @@ define|#
 directive|define
 name|DRM_CURRENTPID
 value|curproc->p_pid
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_LOCK
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_UNLOCK
+parameter_list|()
 end_define
 
 begin_endif
@@ -636,20 +679,6 @@ define|#
 directive|define
 name|DRM_IOCTL_ARGS
 value|dev_t kdev, u_long cmd, caddr_t data, int flags, DRM_STRUCTPROC *p, DRMFILE filp
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_LOCK
-value|lockmgr(&dev->dev_lock, LK_EXCLUSIVE, 0, DRM_CURPROC)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_UNLOCK
-value|lockmgr(&dev->dev_lock, LK_RELEASE, 0, DRM_CURPROC)
 end_define
 
 begin_define
@@ -813,9 +842,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|DRM_PRIV
+name|DRM_MTRR_WC
+value|MDF_WRITECOMBINE
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_GET_PRIV_WITH_RETURN
+parameter_list|(
+name|_priv
+parameter_list|,
+name|_filp
+parameter_list|)
 define|\
-value|drm_file_t	*priv	= (drm_file_t *) DRM(find_file_by_proc)(dev, p); \ 	if (!priv) {						\ 		DRM_DEBUG("can't find authenticator\n");	\ 		return EINVAL;					\ 	}
+value|do {								\ 	if (_filp != (DRMFILE)DRM_CURRENTPID) {			\ 		DRM_ERROR("filp doesn't match curproc\n");	\ 		return EINVAL;					\ 	}							\ 	DRM_LOCK();						\ 	_priv = DRM(find_file_by_proc)(dev, DRM_CURPROC);	\ 	DRM_UNLOCK();						\ 	if (_priv == NULL) {					\ 		DRM_ERROR("can't find authenticator\n");	\ 		return EINVAL;					\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -858,6 +899,19 @@ name|DRM_HZ
 value|hz
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>
+literal|500000
+end_if
+
 begin_define
 define|#
 directive|define
@@ -872,8 +926,35 @@ parameter_list|,
 name|condition
 parameter_list|)
 define|\
-value|while (!condition) {							\ 	ret = tsleep(&(queue), PZERO | PCATCH, "drmwtq", (timeout) );	\ 	if ( ret )							\ 		return ret;						\ }
+value|for ( ret = 0 ; !ret&& !(condition) ; ) {			\ 	mtx_lock(&dev->irq_lock);				\ 	if (!(condition))					\ 	   ret = msleep(&(queue),&dev->irq_lock, 	\ 			 PZERO | PCATCH, "drmwtq", (timeout));	\ 	mtx_unlock(&dev->irq_lock);			\ }
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DRM_WAIT_ON
+parameter_list|(
+name|ret
+parameter_list|,
+name|queue
+parameter_list|,
+name|timeout
+parameter_list|,
+name|condition
+parameter_list|)
+define|\
+value|for ( ret = 0 ; !ret&& !(condition) ; ) {		\         int s = spldrm();				\ 	if (!(condition))				\ 	   ret = tsleep(&(queue), PZERO | PCATCH, 	\ 			 "drmwtq", (timeout) );		\ 	splx(s);					\ }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1146,28 +1227,13 @@ directive|undef
 name|malloctype
 end_undef
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|drm_chipinfo
-block|{
-name|int
-name|vendor
-decl_stmt|;
-name|int
-name|device
-decl_stmt|;
-name|int
-name|supported
-decl_stmt|;
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|}
-name|drm_chipinfo_t
-typedef|;
-end_typedef
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|480000
+end_if
 
 begin_define
 define|#
@@ -1188,6 +1254,36 @@ name|x
 parameter_list|)
 value|le32toh(x)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|cpu_to_le32
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|le32_to_cpu
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -1782,7 +1878,7 @@ name|arg
 modifier|...
 parameter_list|)
 define|\
-value|printf("error: " "[" DRM_NAME ":%s] *ERROR* " fmt , __func__ , ## arg)
+value|printf("error: [" DRM_NAME ":pid%d:%s] *ERROR* " fmt,		\ 	    DRM_CURRENTPID, __func__ , ## arg)
 end_define
 
 begin_define
@@ -1798,7 +1894,7 @@ name|arg
 modifier|...
 parameter_list|)
 define|\
-value|printf("error: " "[" DRM_NAME ":%s:%s] *ERROR* " fmt , \ 		__func__, DRM(mem_stats)[area].name , ##arg)
+value|printf("error: [" DRM_NAME ":pid%d:%s:%s] *ERROR* " fmt,	\ 	    DRM_CURRENTPID , __func__, DRM(mem_stats)[area].name , ##arg)
 end_define
 
 begin_define
@@ -1811,7 +1907,7 @@ parameter_list|,
 name|arg
 modifier|...
 parameter_list|)
-value|printf("info: " "[" DRM_NAME "] " fmt , ## arg)
+value|printf("info: [" DRM_NAME "] " fmt , ## arg)
 end_define
 
 begin_if
@@ -1831,7 +1927,7 @@ name|arg
 modifier|...
 parameter_list|)
 define|\
-value|do {								  \ 		if (DRM(flags)& DRM_FLAG_DEBUG)			  \ 			printf("[" DRM_NAME ":%s] " fmt , __func__ , ## arg); \ 	} while (0)
+value|do {								\ 		if (DRM(flags)& DRM_FLAG_DEBUG)			\ 			printf("[" DRM_NAME ":pid%d:%s] " fmt,		\ 			    DRM_CURRENTPID, __func__ , ## arg);		\ 	} while (0)
 end_define
 
 begin_else
@@ -1904,20 +2000,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|DRM_SYSCTL_PRINT
-parameter_list|(
-name|fmt
-parameter_list|,
-name|arg
-modifier|...
-parameter_list|)
-define|\
-value|do {						\   snprintf(buf, sizeof(buf), fmt, ##arg);	\   error = SYSCTL_OUT(req, buf, strlen(buf));	\   if (error) return error;			\ } while (0)
-end_define
 
 begin_define
 define|#

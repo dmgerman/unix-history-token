@@ -186,7 +186,7 @@ argument_list|(
 name|M_DRM
 argument_list|)
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|,
 literal|0ul
 argument_list|,

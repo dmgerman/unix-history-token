@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*   * Copyright 2003 Eric Anholt  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *   * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  *  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -104,26 +104,20 @@ name|page
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|dma
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-comment|/* Error */
-if|if
-condition|(
-operator|!
+operator|==
+name|NULL
+operator|||
 name|dma
 operator|->
 name|pagelist
+operator|==
+name|NULL
 condition|)
 return|return
 operator|-
 literal|1
 return|;
-comment|/* Nothing allocated */
 name|page
 operator|=
 name|offset
@@ -280,33 +274,16 @@ name|drm_file_t
 modifier|*
 name|priv
 decl_stmt|;
+name|DRM_GET_PRIV_WITH_RETURN
+argument_list|(
 name|priv
-operator|=
-name|DRM
-argument_list|(
-name|find_file_by_proc
-argument_list|)
-argument_list|(
-name|dev
 argument_list|,
-name|DRM_CURPROC
+operator|(
+name|DRMFILE
+operator|)
+name|DRM_CURRENTPID
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|priv
-condition|)
-block|{
-name|DRM_DEBUG
-argument_list|(
-literal|"can't find authenticator\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
 if|if
 condition|(
 operator|!

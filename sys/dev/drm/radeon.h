@@ -136,6 +136,14 @@ define|\
 value|[DRM_IOCTL_NR(DRM_IOCTL_DMA)]               = { radeon_cp_buffers,  1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_CP_INIT)]    = { radeon_cp_init,     1, 1 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_CP_START)]   = { radeon_cp_start,    1, 1 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_CP_STOP)]    = { radeon_cp_stop,     1, 1 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_CP_RESET)]   = { radeon_cp_reset,    1, 1 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_CP_IDLE)]    = { radeon_cp_idle,     1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_CP_RESUME)]  = { radeon_cp_resume,   1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_RESET)]    = { radeon_engine_reset,  1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_FULLSCREEN)] = { radeon_fullscreen,  1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_SWAP)]       = { radeon_cp_swap,     1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_CLEAR)]      = { radeon_cp_clear,    1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_VERTEX)]     = { radeon_cp_vertex,   1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_INDICES)]    = { radeon_cp_indices,  1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_TEXTURE)]    = { radeon_cp_texture,  1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_STIPPLE)]    = { radeon_cp_stipple,  1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_INDIRECT)]   = { radeon_cp_indirect, 1, 1 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_VERTEX2)]    = { radeon_cp_vertex2,  1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_CMDBUF)]     = { radeon_cp_cmdbuf,   1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_GETPARAM)]   = { radeon_cp_getparam, 1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_FLIP)]       = { radeon_cp_flip,     1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_ALLOC)]      = { radeon_mem_alloc,   1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_FREE)]       = { radeon_mem_free,    1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_INIT_HEAP)]  = { radeon_mem_init_heap, 1, 1 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_IRQ_EMIT)]   = { radeon_irq_emit, 1, 0 }, \  [DRM_IOCTL_NR(DRM_IOCTL_RADEON_IRQ_WAIT)]   = { radeon_irq_wait, 1, 0 },
 end_define
 
+begin_define
+define|#
+directive|define
+name|DRIVER_PCI_IDS
+define|\
+value|{0x1002, 0x4242, 0, "ATI Radeon BB R200 AIW 8500DV"},		\ 	{0x1002, 0x4964, 0, "ATI Radeon Id R250 9000"},			\ 	{0x1002, 0x4965, 0, "ATI Radeon Ie R250 9000"},			\ 	{0x1002, 0x4966, 0, "ATI Radeon If R250 9000"},			\ 	{0x1002, 0x4967, 0, "ATI Radeon Ig R250 9000"},			\ 	{0x1002, 0x4C57, 0, "ATI Radeon LW Mobility 7500 M7"},		\ 	{0x1002, 0x4C58, 0, "ATI Radeon LX RV200 Mobility FireGL 7800 M7"}, \ 	{0x1002, 0x4C59, 0, "ATI Radeon LY Mobility M6"},		\ 	{0x1002, 0x4C5A, 0, "ATI Radeon LZ Mobility M6"},		\ 	{0x1002, 0x4C64, 0, "ATI Radeon Ld R250 Mobility 9000 M9"},	\ 	{0x1002, 0x4C65, 0, "ATI Radeon Le R250 Mobility 9000 M9"},	\ 	{0x1002, 0x4C66, 0, "ATI Radeon Lf R250 Mobility 9000 M9"},	\ 	{0x1002, 0x4C67, 0, "ATI Radeon Lg R250 Mobility 9000 M9"},	\ 	{0x1002, 0x5144, 0, "ATI Radeon QD R100"},			\ 	{0x1002, 0x5145, 0, "ATI Radeon QE R100"},			\ 	{0x1002, 0x5146, 0, "ATI Radeon QF R100"},			\ 	{0x1002, 0x5147, 0, "ATI Radeon QG R100"},			\ 	{0x1002, 0x5148, 0, "ATI Radeon QH R200 8500"},			\ 	{0x1002, 0x5149, 0, "ATI Radeon QI R200"},			\ 	{0x1002, 0x514A, 0, "ATI Radeon QJ R200"},			\ 	{0x1002, 0x514B, 0, "ATI Radeon QK R200"},			\ 	{0x1002, 0x514C, 0, "ATI Radeon QL R200 8500 LE"},		\ 	{0x1002, 0x514D, 0, "ATI Radeon QM R200 9100"},			\ 	{0x1002, 0x514E, 0, "ATI Radeon QN R200 8500 LE"},		\ 	{0x1002, 0x514F, 0, "ATI Radeon QO R200 8500 LE"},		\ 	{0x1002, 0x5157, 0, "ATI Radeon QW RV200 7500"},		\ 	{0x1002, 0x5158, 0, "ATI Radeon QX RV200 7500"},		\ 	{0x1002, 0x5159, 0, "ATI Radeon QY RV100 7000/VE"},		\ 	{0x1002, 0x515A, 0, "ATI Radeon QZ RV100 7000/VE"},		\ 	{0x1002, 0x5168, 0, "ATI Radeon Qh R200"},			\ 	{0x1002, 0x5169, 0, "ATI Radeon Qi R200"},			\ 	{0x1002, 0x516A, 0, "ATI Radeon Qj R200"},			\ 	{0x1002, 0x516B, 0, "ATI Radeon Qk R200"},			\ 	{0x1002, 0x516C, 0, "ATI Radeon Ql R200"},			\ 	{0x1002, 0x5961, 0, "ATI Radeon RV280 9200"},			\ 	{0, 0, 0, NULL}
+end_define
+
 begin_comment
 comment|/* When a client dies:  *    - Check for and clean up flipped page state  *    - Free any alloced GART memory.  *  * DRM infrastructure takes care of reclaiming dma buffers.  */
 end_comment
@@ -146,7 +154,7 @@ directive|define
 name|DRIVER_PRERELEASE
 parameter_list|()
 define|\
-value|do {									\ 	if ( dev->dev_private ) {					\ 		drm_radeon_private_t *dev_priv = dev->dev_private;	\ 		if ( dev_priv->page_flipping ) {			\ 			radeon_do_cleanup_pageflip( dev );		\ 		}							\                 radeon_mem_release( filp, dev_priv->gart_heap );	\                 radeon_mem_release( filp, dev_priv->fb_heap );		\ 	}								\ } while (0)
+value|do {									\ 	if ( dev->dev_private ) {					\ 		drm_radeon_private_t *dev_priv = dev->dev_private;	\ 		if ( dev_priv->page_flipping ) {			\ 			radeon_do_cleanup_pageflip( dev );		\ 		}							\ 		radeon_mem_release( filp, dev_priv->gart_heap );	\ 		radeon_mem_release( filp, dev_priv->fb_heap );		\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -180,7 +188,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|__HAVE_DMA_IRQ
+name|__HAVE_IRQ
 value|1
 end_define
 

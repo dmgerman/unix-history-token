@@ -123,7 +123,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|XFree86Server
+name|IN_MODULE
 argument_list|)
 end_if
 
@@ -335,42 +335,6 @@ define|#
 directive|define
 name|DRM_DEV_GID
 value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|CONFIG_XFREE86_VERSION
-operator|>=
-name|XFREE86_VERSION
-argument_list|(
-literal|4
-operator|,
-literal|1
-operator|,
-literal|0
-operator|,
-literal|0
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|DRM_MAJOR
-value|226
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_MAX_MINOR
-value|15
 end_define
 
 begin_endif
@@ -1558,6 +1522,28 @@ name|drm_scatter_gather_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|drm_set_version
+block|{
+name|int
+name|drm_di_major
+decl_stmt|;
+name|int
+name|drm_di_minor
+decl_stmt|;
+name|int
+name|drm_dd_major
+decl_stmt|;
+name|int
+name|drm_dd_minor
+decl_stmt|;
+block|}
+name|drm_set_version_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -1658,6 +1644,13 @@ define|#
 directive|define
 name|DRM_IOCTL_GET_STATS
 value|DRM_IOR( 0x06, drm_stats_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_SET_VERSION
+value|DRM_IOWR(0x07, drm_set_version_t)
 end_define
 
 begin_define

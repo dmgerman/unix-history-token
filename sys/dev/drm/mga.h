@@ -121,6 +121,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|DRIVER_PCI_IDS
+define|\
+value|{0x102b, 0x0521, 0, "Matrox G200 (AGP)"},			\ 	{0x102b, 0x0525, 0, "Matrox G400/G450 (AGP)"},			\ 	{0x102b, 0x2527, 0, "Matrox G550 (AGP)"},			\ 	{0, 0, 0, NULL}
+end_define
+
+begin_define
+define|#
+directive|define
 name|__HAVE_COUNTERS
 value|3
 end_define
@@ -172,7 +180,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|__HAVE_DMA_IRQ
+name|__HAVE_IRQ
 value|1
 end_define
 

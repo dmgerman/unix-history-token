@@ -151,6 +151,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|DRIVER_PCI_IDS
+define|\
+value|{0x1039, 0x0300, 0, "SiS 300/305"},				\ 	{0x1039, 0x5300, 0, "SiS 540"},					\ 	{0x1039, 0x6300, 0, "SiS 630"},					\ 	{0x1039, 0x7300, 0, "SiS 730"},					\ 	{0, 0, 0, NULL}
+end_define
+
+begin_define
+define|#
+directive|define
 name|__HAVE_COUNTERS
 value|5
 end_define

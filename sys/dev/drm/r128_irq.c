@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|irqreturn_t
-name|r128_dma_service
+name|r128_irq_handler
 parameter_list|(
 name|DRM_IRQ_ARGS
 parameter_list|)

@@ -108,13 +108,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__HAVE_DMA_IRQ
+name|__HAVE_IRQ
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__HAVE_DMA_IRQ
+name|__HAVE_IRQ
 value|0
 end_define
 
@@ -465,38 +465,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DRM_LEFTCOUNT
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)->rp + (x)->count - (x)->wp) % ((x)->count + 1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BUFCOUNT
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)->count - DRM_LEFTCOUNT(x))
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_WAITCOUNT
-parameter_list|(
-name|dev
-parameter_list|,
-name|idx
-parameter_list|)
-value|DRM_BUFCOUNT(&dev->queuelist[idx]->waitlist)
-end_define
-
-begin_define
-define|#
-directive|define
 name|DRM_GET_PRIV_SAREA
 parameter_list|(
 name|_dev
@@ -507,6 +475,29 @@ name|_map
 parameter_list|)
 value|do {	\ 	(_map) = (_dev)->context_sareas[_ctx];		\ } while(0)
 end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|drm_pci_id_list
+block|{
+name|int
+name|vendor
+decl_stmt|;
+name|int
+name|device
+decl_stmt|;
+name|long
+name|driver_private
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+name|drm_pci_id_list_t
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -674,54 +665,6 @@ name|drm_buf_t
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* bufs is one longer than it has to be */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|drm_waitlist
-block|{
-name|int
-name|count
-decl_stmt|;
-comment|/* Number of possible buffers	   */
-name|drm_buf_t
-modifier|*
-modifier|*
-name|bufs
-decl_stmt|;
-comment|/* List of pointers to buffers	   */
-name|drm_buf_t
-modifier|*
-modifier|*
-name|rp
-decl_stmt|;
-comment|/* Read pointer			   */
-name|drm_buf_t
-modifier|*
-modifier|*
-name|wp
-decl_stmt|;
-comment|/* Write pointer		   */
-name|drm_buf_t
-modifier|*
-modifier|*
-name|end
-decl_stmt|;
-comment|/* End pointer			   */
-name|DRM_SPINTYPE
-name|read_lock
-decl_stmt|;
-name|DRM_SPINTYPE
-name|write_lock
-decl_stmt|;
-block|}
-name|drm_waitlist_t
-typedef|;
-end_typedef
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -748,9 +691,6 @@ name|int
 name|high_mark
 decl_stmt|;
 comment|/* High water mark		   */
-name|DRM_SPINTYPE
-name|lock
-decl_stmt|;
 block|}
 name|drm_freelist_t
 typedef|;
@@ -882,7 +822,7 @@ name|DRMFILE
 name|filp
 decl_stmt|;
 comment|/* Unique identifier of holding process (NULL is kernel)*/
-name|wait_queue_head_t
+name|int
 name|lock_queue
 decl_stmt|;
 comment|/* Queue of blocked processes	   */
@@ -895,6 +835,10 @@ block|}
 name|drm_lock_data_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* This structure, in the drm_device_t, is always initialized while the device  * is open.  dev->dma_lock protects the incrementing of dev->buf_use, which  * when set marks that no further bufs may be allocated until device teardown  * occurs (when the last open of the device has closed).  The high/low  * watermarks of bufs are only touched by the X Server, and thus not  * concurrently accessed, so no locking is needed.  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -1239,15 +1183,43 @@ name|flags
 decl_stmt|;
 comment|/* Flags to open(2)		   */
 comment|/* Locks */
-name|DRM_SPINTYPE
-name|count_lock
-decl_stmt|;
-comment|/* For open_count, buf_use, buf_alloc */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>
+literal|500000
+if|#
+directive|if
+name|__HAVE_DMA
 name|struct
-name|lock
+name|mtx
+name|dma_lock
+decl_stmt|;
+comment|/* protects dev->dma */
+endif|#
+directive|endif
+if|#
+directive|if
+name|__HAVE_IRQ
+name|struct
+name|mtx
+name|irq_lock
+decl_stmt|;
+comment|/* protects irq condition checks */
+endif|#
+directive|endif
+name|struct
+name|mtx
 name|dev_lock
 decl_stmt|;
-comment|/* For others			   */
+comment|/* protects everything else */
+endif|#
+directive|endif
 comment|/* Usage Counters */
 name|int
 name|open_count
@@ -1288,12 +1260,11 @@ index|[
 name|DRM_HASH_SIZE
 index|]
 decl_stmt|;
-comment|/* Memory management */
+comment|/* Linked list of mappable regions. Protected by dev_lock */
 name|drm_map_list_t
 modifier|*
 name|maplist
 decl_stmt|;
-comment|/* Linked list of regions	   */
 name|drm_local_map_t
 modifier|*
 modifier|*
@@ -1354,11 +1325,6 @@ name|atomic_t
 name|context_flag
 decl_stmt|;
 comment|/* Context swapping flag	   */
-name|struct
-name|callout
-name|timer
-decl_stmt|;
-comment|/* Timer for delaying ctx switch   */
 name|int
 name|last_context
 decl_stmt|;
@@ -1377,20 +1343,13 @@ directive|endif
 if|#
 directive|if
 name|__HAVE_VBL_IRQ
-name|wait_queue_head_t
+name|int
 name|vbl_queue
 decl_stmt|;
 comment|/* vbl wait channel */
 name|atomic_t
 name|vbl_received
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* vbl signals are untested */
-block|struct drm_vbl_sig_list vbl_sig_list; 	DRM_SPINTYPE      vbl_lock;
-endif|#
-directive|endif
 endif|#
 directive|endif
 ifdef|#
@@ -1451,67 +1410,6 @@ name|int
 name|DRM
 parameter_list|(
 name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Authentication (drm_auth.h) */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|DRM
-function_decl|(
-name|add_magic
-function_decl|)
-parameter_list|(
-name|drm_device_t
-modifier|*
-name|dev
-parameter_list|,
-name|drm_file_t
-modifier|*
-name|priv
-parameter_list|,
-name|drm_magic_t
-name|magic
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|DRM
-function_decl|(
-name|remove_magic
-function_decl|)
-parameter_list|(
-name|drm_device_t
-modifier|*
-name|dev
-parameter_list|,
-name|drm_magic_t
-name|magic
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Driver support (drm_drv.h) */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|DRM
-function_decl|(
-name|version
-function_decl|)
-parameter_list|(
-name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1662,6 +1560,48 @@ parameter_list|(
 name|drm_local_map_t
 modifier|*
 name|map
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|DRM
+function_decl|(
+name|mtrr_add
+function_decl|)
+parameter_list|(
+name|unsigned
+name|long
+name|offset
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|DRM
+function_decl|(
+name|mtrr_del
+function_decl|)
+parameter_list|(
+name|unsigned
+name|long
+name|offset
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2031,11 +1971,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
-name|__HAVE_DMA_IRQ
+name|__HAVE_IRQ
 end_if
+
+begin_comment
+comment|/* IRQ support (drm_irq.h) */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -2075,7 +2024,7 @@ specifier|extern
 name|irqreturn_t
 name|DRM
 function_decl|(
-name|dma_service
+name|irq_handler
 function_decl|)
 parameter_list|(
 name|DRM_IRQ_ARGS
@@ -2131,7 +2080,7 @@ end_function_decl
 begin_if
 if|#
 directive|if
-name|__HAVE_DMA_IRQ_BH
+name|__HAVE_IRQ_BH
 end_if
 
 begin_function_decl
@@ -2139,7 +2088,7 @@ specifier|extern
 name|void
 name|DRM
 function_decl|(
-name|dma_immediate_bh
+name|irq_immediate_bh
 function_decl|)
 parameter_list|(
 name|DRM_TASKQUEUE_ARGS
@@ -2156,98 +2105,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Buffer list support (drm_lists.h) */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__HAVE_DMA_WAITLIST
-end_if
-
-begin_function_decl
-specifier|extern
-name|int
-name|DRM
-function_decl|(
-name|waitlist_create
-function_decl|)
-parameter_list|(
-name|drm_waitlist_t
-modifier|*
-name|bl
-parameter_list|,
-name|int
-name|count
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|DRM
-function_decl|(
-name|waitlist_destroy
-function_decl|)
-parameter_list|(
-name|drm_waitlist_t
-modifier|*
-name|bl
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|DRM
-function_decl|(
-name|waitlist_put
-function_decl|)
-parameter_list|(
-name|drm_waitlist_t
-modifier|*
-name|bl
-parameter_list|,
-name|drm_buf_t
-modifier|*
-name|buf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|drm_buf_t
-modifier|*
-name|DRM
-function_decl|(
-name|waitlist_get
-function_decl|)
-parameter_list|(
-name|drm_waitlist_t
-modifier|*
-name|bl
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __HAVE_DMA */
-end_comment
 
 begin_if
 if|#
@@ -2530,6 +2387,32 @@ name|int
 name|DRM
 function_decl|(
 name|unlock
+function_decl|)
+parameter_list|(
+name|DRM_IOCTL_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|DRM
+function_decl|(
+name|version
+function_decl|)
+parameter_list|(
+name|DRM_IOCTL_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|DRM
+function_decl|(
+name|setversion
 function_decl|)
 parameter_list|(
 name|DRM_IOCTL_ARGS
@@ -2920,12 +2803,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DMA support (drm_dma.h) */
+comment|/* IRQ support (drm_irq.h) */
 end_comment
 
 begin_if
 if|#
 directive|if
+name|__HAVE_IRQ
+operator|||
 name|__HAVE_DMA
 end_if
 

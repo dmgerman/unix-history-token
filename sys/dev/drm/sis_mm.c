@@ -550,7 +550,7 @@ argument_list|)
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"free fb, offset = %d\n"
+literal|"free fb, offset = 0x%lx\n"
 argument_list|,
 name|fb
 operator|.

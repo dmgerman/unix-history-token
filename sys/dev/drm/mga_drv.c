@@ -33,72 +33,6 @@ directive|include
 file|"dev/drm/mga_drv.h"
 end_include
 
-begin_comment
-comment|/* List acquired from http://www.yourvote.com/pci/pcihdr.h and xc/xc/programs/Xserver/hw/xfree86/common/xf86PciInfo.h  * Please report to anholt@teleport.com inaccuracies or if a chip you have works that is marked unsupported here.  */
-end_comment
-
-begin_decl_stmt
-name|drm_chipinfo_t
-name|DRM
-argument_list|(
-name|devicelist
-argument_list|)
-decl|[]
-init|=
-block|{
-block|{
-literal|0x102b
-block|,
-literal|0x0520
-block|,
-literal|0
-block|,
-literal|"Matrox G200 (PCI)"
-block|}
-block|,
-block|{
-literal|0x102b
-block|,
-literal|0x0521
-block|,
-literal|1
-block|,
-literal|"Matrox G200 (AGP)"
-block|}
-block|,
-block|{
-literal|0x102b
-block|,
-literal|0x0525
-block|,
-literal|1
-block|,
-literal|"Matrox G400/G450 (AGP)"
-block|}
-block|,
-block|{
-literal|0x102b
-block|,
-literal|0x2527
-block|,
-literal|1
-block|,
-literal|"Matrox G550 (AGP)"
-block|}
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_include
 include|#
 directive|include
@@ -151,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"dev/drm/drm_ioctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dev/drm/drm_irq.h"
 end_include
 
 begin_include
