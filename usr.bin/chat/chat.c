@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chat.c,v 1.17 1997/11/27 06:37:15 paulus Exp $"
+literal|"$Id: chat.c,v 1.19 1998/03/24 23:57:48 paulus Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5961,6 +5961,54 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Gross kludge to handle Solaris versions>= 2.6 having usleep.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOL2
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|MAXUID
+operator|>
+literal|65536
+end_if
+
+begin_comment
+comment|/* then this is Solaris 2.6 or later */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NO_USLEEP
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOL2 */
+end_comment
 
 begin_ifdef
 ifdef|#
