@@ -1552,6 +1552,7 @@ name|char
 modifier|*
 name|tparm
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1562,6 +1563,7 @@ specifier|extern
 name|int
 name|tputs
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
