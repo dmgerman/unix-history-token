@@ -1949,9 +1949,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: mv [-f | -i] [-v] source target"
+literal|"usage: mv [-f | -i | -n] [-v] source target"
 argument_list|,
-literal|"       mv [-f | -i] [-v] source ... directory"
+literal|"       mv [-f | -i | -n] [-v] source ... directory"
 argument_list|)
 expr_stmt|;
 name|exit
