@@ -250,12 +250,20 @@ name|__ct_rune_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* arg type for ctype funcs */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|__ct_rune_t
 name|__rune_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* rune_t (see above) */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -264,12 +272,20 @@ name|__wchar_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* wchar_t (see above) */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|__ct_rune_t
 name|__wint_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* wint_t (see above) */
+end_comment
 
 begin_comment
 comment|/*  * dev_t has differing meanings in userland and the kernel.  */
@@ -280,12 +296,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_struct_decl
-struct_decl|struct
-name|cdev
-struct_decl|;
-end_struct_decl
 
 begin_typedef
 typedef|typedef
