@@ -4490,7 +4490,6 @@ name|EFAULT
 operator|)
 return|;
 block|}
-comment|/* XXXKSE could use atomic CMPXCH here */
 name|PROC_LOCK
 argument_list|(
 name|p
