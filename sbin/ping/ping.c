@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.18 1997/03/02 06:32:40 imp Exp $"
+literal|"$Id: ping.c,v 1.19 1997/03/02 20:01:13 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1546,6 +1546,26 @@ operator|=
 sizeof|sizeof
 expr|*
 name|to
+expr_stmt|;
+if|if
+condition|(
+name|hp
+operator|->
+name|h_length
+operator|>
+sizeof|sizeof
+argument_list|(
+name|to
+operator|->
+name|sin_addr
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"gethostbyname2 returned an illegal address"
+argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
