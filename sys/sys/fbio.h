@@ -1757,7 +1757,7 @@ value|98
 end_define
 
 begin_comment
-comment|/* PC98 80x25 */
+comment|/* PC98 text 80x25 */
 end_comment
 
 begin_define
@@ -1768,7 +1768,40 @@ value|99
 end_define
 
 begin_comment
-comment|/* PC98 80x30 */
+comment|/* PC98 text 80x30 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PC98_EGC640x400
+value|100
+end_define
+
+begin_comment
+comment|/* PC98 graphic 640x400 16 colors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PC98_PEGC640x400
+value|101
+end_define
+
+begin_comment
+comment|/* PC98 graphic 640x400 256 colors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PC98_PEGC640x480
+value|102
+end_define
+
+begin_comment
+comment|/* PC98 graphic 640x480 256 colors */
 end_comment
 
 begin_define

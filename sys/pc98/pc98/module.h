@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10,14 +14,14 @@ begin_define
 define|#
 directive|define
 name|_HS
-value|0 + 1
+value|1 + 1
 end_define
 
 begin_define
 define|#
 directive|define
 name|_VS
-value|1
+value|2
 end_define
 
 begin_define
@@ -31,21 +35,21 @@ begin_define
 define|#
 directive|define
 name|_HBP
-value|4 + 1
+value|14 + 1
 end_define
 
 begin_define
 define|#
 directive|define
 name|_VFP
-value|2
+value|11
 end_define
 
 begin_define
 define|#
 directive|define
 name|_VBP
-value|25
+value|44
 end_define
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, 1995, 1996.  FreeBSD(98) porting team.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1994, 1995, 1996.  FreeBSD(98) porting team.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -56,7 +56,7 @@ begin_define
 define|#
 directive|define
 name|_VS
-value|7
+value|2
 end_define
 
 begin_endif
@@ -74,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|_HS
-value|6 + 1
+value|1 + 1
 end_define
 
 begin_endif
@@ -92,7 +92,7 @@ begin_define
 define|#
 directive|define
 name|_HFP
-value|10 + 1
+value|3 + 1
 end_define
 
 begin_endif
@@ -110,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|_HBP
-value|7 + 1
+value|14 + 1
 end_define
 
 begin_endif
@@ -128,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|_VFP
-value|7
+value|11
 end_define
 
 begin_endif
@@ -146,7 +146,7 @@ begin_define
 define|#
 directive|define
 name|_VBP
-value|25
+value|44
 end_define
 
 begin_endif
@@ -271,6 +271,20 @@ define|#
 directive|define
 name|GDC_LF
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|_24KHZ
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|_31KHZ
+value|1
 end_define
 
 begin_define
@@ -454,6 +468,8 @@ name|initialize_gdc
 parameter_list|(
 name|unsigned
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -467,9 +483,13 @@ index|[
 literal|2
 index|]
 index|[
+literal|2
+index|]
+index|[
 literal|8
 index|]
 init|=
+block|{
 block|{
 block|{
 literal|78
@@ -489,6 +509,7 @@ block|,
 literal|400
 block|}
 block|,
+comment|/* 400/24k */
 block|{
 name|_CR
 operator|-
@@ -515,8 +536,53 @@ block|,
 name|_LF
 block|}
 block|}
+block|,
+comment|/* 480/24k */
+block|{
+block|{
+literal|78
+block|,
+literal|2
+block|,
+literal|7
+block|,
+literal|3
+block|,
+literal|7
+block|,
+literal|13
+block|,
+literal|34
+block|,
+literal|400
+block|}
+block|,
+comment|/* 400/31k */
+block|{
+literal|78
+block|,
+literal|2
+block|,
+literal|11
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|6
+block|,
+literal|37
+block|,
+literal|480
+block|}
+block|}
+block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* 480/31k */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -524,12 +590,16 @@ name|unsigned
 name|int
 name|slave_param
 index|[
+literal|2
+index|]
+index|[
 literal|6
 index|]
 index|[
 literal|8
 index|]
 init|=
+block|{
 block|{
 block|{
 literal|38
@@ -740,6 +810,128 @@ block|,
 name|_VBP
 block|,
 name|_LF
+block|}
+block|}
+block|,
+block|{
+block|{
+literal|38
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|1
+block|,
+literal|3
+block|,
+literal|13
+block|,
+literal|34
+block|,
+literal|400
+block|}
+block|,
+comment|/* normal */
+block|{
+literal|78
+block|,
+literal|2
+block|,
+literal|7
+block|,
+literal|3
+block|,
+literal|7
+block|,
+literal|13
+block|,
+literal|34
+block|,
+literal|400
+block|}
+block|,
+block|{
+literal|38
+block|,
+literal|2
+block|,
+literal|5
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|6
+operator|+
+literal|48
+block|,
+literal|37
+operator|+
+literal|32
+block|,
+literal|400
+block|}
+block|,
+comment|/* 30& 400 */
+block|{
+literal|78
+block|,
+literal|2
+block|,
+literal|11
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|6
+operator|+
+literal|48
+block|,
+literal|37
+operator|+
+literal|32
+block|,
+literal|400
+block|}
+block|,
+block|{
+literal|38
+block|,
+literal|2
+block|,
+literal|5
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|6
+block|,
+literal|37
+block|,
+literal|480
+block|}
+block|,
+comment|/* 30& 480 */
+block|{
+literal|78
+block|,
+literal|2
+block|,
+literal|11
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|6
+block|,
+literal|37
+block|,
+literal|480
+block|}
 block|}
 block|}
 decl_stmt|;
