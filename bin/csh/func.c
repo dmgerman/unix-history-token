@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: func.c,v 1.10 1998/02/28 10:49:56 jraynard Exp $"
+literal|"$Id: func.c,v 1.11 1998/07/27 21:15:52 nectar Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3428,6 +3428,7 @@ name|c
 operator|==
 literal|'"'
 condition|)
+block|{
 if|if
 condition|(
 name|d
@@ -3449,6 +3450,7 @@ name|d
 operator|=
 literal|0
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|c

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lex.c,v 1.9 1998/05/06 06:50:52 charnier Exp $"
+literal|"$Id: lex.c,v 1.10 1998/05/13 07:29:05 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6138,8 +6138,9 @@ name|int
 name|c
 decl_stmt|;
 specifier|static
+name|int
 name|sincereal
-expr_stmt|;
+decl_stmt|;
 name|aret
 operator|=
 name|F_SEEK

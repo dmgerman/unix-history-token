@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dol.c,v 1.7 1998/05/06 06:50:39 charnier Exp $"
+literal|"$Id: dol.c,v 1.8 1998/05/13 07:28:52 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2671,6 +2671,7 @@ name|subscr
 operator|>
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|subscr
@@ -2692,6 +2693,7 @@ name|upb
 operator|=
 name|subscr
 expr_stmt|;
+block|}
 name|unDredc
 argument_list|(
 name|c

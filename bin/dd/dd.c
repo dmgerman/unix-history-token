@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dd.c,v 1.14 1998/05/06 06:51:39 charnier Exp $"
+literal|"$Id: dd.c,v 1.15 1998/05/13 07:33:47 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -799,12 +799,14 @@ operator||
 name|C_UCASE
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|ddflags
 operator|&
 name|C_ASCII
 condition|)
+block|{
 if|if
 condition|(
 name|ddflags
@@ -887,6 +889,7 @@ name|cnt
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -895,6 +898,7 @@ name|ddflags
 operator|&
 name|C_EBCDIC
 condition|)
+block|{
 if|if
 condition|(
 name|ddflags
@@ -971,6 +975,7 @@ name|cnt
 argument_list|)
 index|]
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1070,6 +1075,7 @@ index|]
 operator|=
 name|cnt
 expr_stmt|;
+block|}
 block|}
 block|}
 operator|(

@@ -2830,6 +2830,7 @@ if|if
 condition|(
 name|source
 condition|)
+block|{
 if|if
 condition|(
 name|ces
@@ -2860,6 +2861,7 @@ argument_list|(
 literal|" source:<>"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|intaddr

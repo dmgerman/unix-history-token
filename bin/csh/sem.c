@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sem.c,v 1.7 1998/02/28 10:50:00 jraynard Exp $"
+literal|"$Id: sem.c,v 1.8 1998/05/06 06:51:00 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -884,6 +884,7 @@ operator|==
 name|doeval
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|t
@@ -1526,6 +1527,7 @@ operator|->
 name|t_nice
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if

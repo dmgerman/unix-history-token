@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cp.c,v 1.16 1998/05/13 07:25:14 charnier Exp $"
+literal|"$Id: cp.c,v 1.17 1998/06/09 13:42:51 dt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -956,6 +956,7 @@ name|fts_level
 operator|==
 name|FTS_ROOTLEVEL
 condition|)
+block|{
 if|if
 condition|(
 name|type
@@ -1025,6 +1026,7 @@ name|curr
 operator|->
 name|fts_pathlen
 expr_stmt|;
+block|}
 name|p
 operator|=
 operator|&

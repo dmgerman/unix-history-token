@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: input.c,v 1.11 1998/05/18 06:43:45 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -780,11 +780,6 @@ name|more
 decl_stmt|;
 name|int
 name|something
-decl_stmt|;
-specifier|extern
-name|EditLine
-modifier|*
-name|el
 decl_stmt|;
 name|char
 name|savec

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: utils.c,v 1.20 1998/06/10 06:29:23 peter Exp $"
+literal|"$Id: utils.c,v 1.21 1998/11/18 11:47:45 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -746,6 +746,7 @@ name|st_uid
 operator|==
 name|myuid
 condition|)
+block|{
 if|if
 condition|(
 name|fstat
@@ -810,6 +811,7 @@ name|rval
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 operator|(
 name|void
