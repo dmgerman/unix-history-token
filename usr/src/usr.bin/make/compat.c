@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compat.c	5.3 (Berkeley) %G%"
+literal|"@(#)compat.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -360,7 +360,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/*      * Str_BreakString will return an argv with a NULL in av[1], thus causing      * execvp to choke and die horribly. Besides, how can we execute a null      * command? In any case, we warn the user that the command expanded to      * nothing (is this the right thing to do?).      */
+comment|/*      * brk_string will return an argv with a NULL in av[1], thus causing      * execvp to choke and die horribly. Besides, how can we execute a null      * command? In any case, we warn the user that the command expanded to      * nothing (is this the right thing to do?).      */
 if|if
 condition|(
 operator|*
@@ -627,16 +627,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * No meta-characters, so no need to exec a shell. Break the command 	 * into words to form an argument vector we can execute. 	 * Str_BreakString sticks our name in av[0], so we have to 	 * skip over it... 	 */
+comment|/* 	 * No meta-characters, so no need to exec a shell. Break the command 	 * into words to form an argument vector we can execute. 	 * brk_string sticks our name in av[0], so we have to 	 * skip over it... 	 */
 name|av
 operator|=
-name|Str_BreakString
+name|brk_string
 argument_list|(
 name|cmd
-argument_list|,
-literal|" \t"
-argument_list|,
-literal|"\n"
 argument_list|,
 operator|&
 name|argc
@@ -746,27 +742,6 @@ block|}
 name|exit
 argument_list|(
 literal|1
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|argc
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 	 * If there's a vector that needs freeing (the command was executed 	 * directly), do so now, being sure to back up the argument vector 	 * to where it started... 	 */
-name|av
-operator|-=
-literal|1
-expr_stmt|;
-name|Str_FreeVec
-argument_list|(
-name|argc
-argument_list|,
-name|av
 argument_list|)
 expr_stmt|;
 block|}
