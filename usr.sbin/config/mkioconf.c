@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkioconf.c,v 1.51 1999/04/18 13:36:29 peter Exp $"
+literal|"$Id: mkioconf.c,v 1.52 1999/04/18 14:27:33 kato Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -870,13 +870,13 @@ if|if
 condition|(
 name|machine
 operator|==
-name|MACHINE_I386
+name|MACHINE_PC98
 condition|)
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include<isa/isareg.h>\n"
+literal|"#include<pc98/pc98/pc98.h>\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -884,7 +884,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include<pc98/pc98/pc98.h>\n"
+literal|"#include<isa/isareg.h>\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
