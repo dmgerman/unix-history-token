@@ -644,9 +644,9 @@ operator|.
 name|ips_badhlen
 operator|++
 expr_stmt|;
-goto|goto
-name|drop
-goto|;
+return|return
+literal|1
+return|;
 block|}
 name|ip
 operator|=
