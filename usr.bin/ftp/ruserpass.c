@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$Id: ruserpass.c,v 1.7 1997/12/13 20:38:20 pst Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$NetBSD: ruserpass.c,v 1.14.2.1 1997/11/18 01:02:05 mellon Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1985, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -9,15 +23,38 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)ruserpass.c	8.3 (Berkeley) 4/2/94"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)ruserpass.c	8.4 (Berkeley) 4/27/95";
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$Id: ruserpass.c,v 1.7 1997/12/13 20:38:20 pst Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__RCSID_SOURCE
+argument_list|(
+literal|"$NetBSD: ruserpass.c,v 1.14.2.1 1997/11/18 01:02:05 mellon Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -248,15 +285,17 @@ name|apass
 parameter_list|,
 name|aacct
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|host
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|char
+modifier|*
 modifier|*
 name|aname
 decl_stmt|,
-modifier|*
+decl|*
 modifier|*
 name|apass
 decl_stmt|,
@@ -321,6 +360,24 @@ name|hdir
 operator|=
 literal|"."
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|hdir
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+literal|".netrc"
+argument_list|)
+operator|<
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -329,15 +386,34 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|buf
-argument_list|)
 argument_list|,
 literal|"%s/.netrc"
 argument_list|,
 name|hdir
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|warnx
+argument_list|(
+literal|"%s/.netrc: %s"
+argument_list|,
+name|hdir
+argument_list|,
+name|strerror
+argument_list|(
+name|ENAMETOOLONG
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|cfile
 operator|=
 name|fopen
@@ -620,34 +696,29 @@ condition|(
 operator|*
 name|aname
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 operator|*
 name|aname
 operator|=
-name|malloc
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|strlen
+name|strdup
 argument_list|(
 name|tokval
-argument_list|)
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
+if|if
+condition|(
 operator|*
 name|aname
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
 argument_list|,
-name|tokval
+literal|"can't strdup *aname"
 argument_list|)
 expr_stmt|;
 block|}
@@ -734,34 +805,29 @@ operator|&&
 operator|*
 name|apass
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 operator|*
 name|apass
 operator|=
-name|malloc
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|strlen
+name|strdup
 argument_list|(
 name|tokval
-argument_list|)
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
+if|if
+condition|(
 operator|*
 name|apass
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
 argument_list|,
-name|tokval
+literal|"can't strdup *apass"
 argument_list|)
 expr_stmt|;
 block|}
@@ -817,34 +883,29 @@ operator|&&
 operator|*
 name|aacct
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 operator|*
 name|aacct
 operator|=
-name|malloc
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|strlen
+name|strdup
 argument_list|(
 name|tokval
-argument_list|)
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
+if|if
+condition|(
 operator|*
 name|aacct
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
 argument_list|,
-name|tokval
+literal|"can't strdup *aacct"
 argument_list|)
 expr_stmt|;
 block|}
@@ -883,16 +944,18 @@ argument_list|)
 operator|)
 operator|!=
 name|EOF
+condition|)
+if|if
+condition|(
+name|c
+operator|!=
+literal|' '
 operator|&&
 name|c
-operator|==
-literal|' '
-operator|||
-name|c
-operator|==
+operator|!=
 literal|'\t'
 condition|)
-empty_stmt|;
+break|break;
 if|if
 condition|(
 name|c
@@ -904,9 +967,9 @@ operator|==
 literal|'\n'
 condition|)
 block|{
-name|printf
+name|puts
 argument_list|(
-literal|"Missing macdef name argument.\n"
+literal|"Missing macdef name argument."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -920,9 +983,9 @@ operator|==
 literal|16
 condition|)
 block|{
-name|printf
+name|puts
 argument_list|(
-literal|"Limit of 16 macros have already been defined\n"
+literal|"Limit of 16 macros have already been defined."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -965,11 +1028,19 @@ operator|)
 operator|!=
 name|EOF
 operator|&&
+operator|(
+operator|!
+name|isascii
+argument_list|(
+name|c
+argument_list|)
+operator|||
 operator|!
 name|isspace
 argument_list|(
 name|c
 argument_list|)
+operator|)
 condition|;
 operator|++
 name|i
@@ -989,9 +1060,9 @@ operator|==
 name|EOF
 condition|)
 block|{
-name|printf
+name|puts
 argument_list|(
-literal|"Macro definition missing null line terminator.\n"
+literal|"Macro definition missing null line terminator."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1036,9 +1107,9 @@ operator|==
 name|EOF
 condition|)
 block|{
-name|printf
+name|puts
 argument_list|(
-literal|"Macro definition missing null line terminator.\n"
+literal|"Macro definition missing null line terminator."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1115,9 +1186,9 @@ operator|==
 name|EOF
 condition|)
 block|{
-name|printf
+name|puts
 argument_list|(
-literal|"Macro definition missing null line terminator.\n"
+literal|"Macro definition missing null line terminator."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1182,9 +1253,9 @@ operator|+
 literal|4096
 condition|)
 block|{
-name|printf
+name|puts
 argument_list|(
-literal|"4K macro buffer exceeded\n"
+literal|"4K macro buffer exceeded."
 argument_list|)
 expr_stmt|;
 goto|goto

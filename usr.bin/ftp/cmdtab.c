@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$Id: cmdtab.c,v 1.6 1997/12/13 20:38:13 pst Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$NetBSD: cmdtab.c,v 1.17 1997/08/18 10:20:17 lukem Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1985, 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -9,15 +23,38 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)cmdtab.c	8.3 (Berkeley) 4/2/94"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)cmdtab.c	8.4 (Berkeley) 10/9/94";
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$Id: cmdtab.c,v 1.6 1997/12/13 20:38:13 pst Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__RCSID_SOURCE
+argument_list|(
+literal|"$NetBSD: cmdtab.c,v 1.17 1997/08/18 10:20:17 lukem Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -130,7 +167,7 @@ name|char
 name|connecthelp
 index|[]
 init|=
-literal|"connect to remote tftp"
+literal|"connect to remote ftp server"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,19 +182,19 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|deletehelp
+name|debughelp
 index|[]
 init|=
-literal|"delete remote file"
+literal|"toggle/set debugging mode"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|debughelp
+name|deletehelp
 index|[]
 init|=
-literal|"toggle/set debugging mode"
+literal|"delete remote file"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,12 +225,45 @@ literal|"execute macro"
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMALL
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|edithelp
+index|[]
+init|=
+literal|"toggle command line editing"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !SMALL */
+end_comment
+
 begin_decl_stmt
 name|char
 name|formhelp
 index|[]
 init|=
 literal|"set file transfer format"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|gatehelp
+index|[]
+init|=
+literal|"toggle gate-ftp; specify host[:port] to change proxy"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,7 +281,7 @@ name|char
 name|hashhelp
 index|[]
 init|=
-literal|"toggle printing `#' for each buffer transferred"
+literal|"toggle printing `#' marks; specify number to set size"
 decl_stmt|;
 end_decl_stmt
 
@@ -239,6 +309,15 @@ name|lcdhelp
 index|[]
 init|=
 literal|"change local working directory"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|lpwdhelp
+index|[]
+init|=
+literal|"print local working directory"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,19 +386,19 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|modtimehelp
+name|modehelp
 index|[]
 init|=
-literal|"show last modification time of remote file"
+literal|"set file transfer mode"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|modehelp
+name|modtimehelp
 index|[]
 init|=
-literal|"set file transfer mode"
+literal|"show last modification time of remote file"
 decl_stmt|;
 end_decl_stmt
 
@@ -370,6 +449,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|pagehelp
+index|[]
+init|=
+literal|"view a remote file through your pager"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|passivehelp
 index|[]
 init|=
@@ -383,6 +471,25 @@ name|porthelp
 index|[]
 init|=
 literal|"toggle use of PORT cmd for each data connection"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|preservehelp
+index|[]
+init|=
+literal|"toggle preservation of modification time of "
+literal|"retreived files"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|progresshelp
+index|[]
+init|=
+literal|"toggle transfer progress meter"
 decl_stmt|;
 end_decl_stmt
 
@@ -469,6 +576,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|resethelp
+index|[]
+init|=
+literal|"clear queued command replies"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|restarthelp
 index|[]
 init|=
@@ -514,15 +630,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|resethelp
-index|[]
-init|=
-literal|"clear queued command replies"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 name|sendhelp
 index|[]
 init|=
@@ -532,19 +639,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|sitehelp
+name|shellhelp
 index|[]
 init|=
-literal|"send site specific command to remote server\n\t\tTry \"rhelp site\" or \"site help\" for more information"
+literal|"escape to the shell"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|shellhelp
+name|sitehelp
 index|[]
 init|=
-literal|"escape to the shell"
+literal|"send site specific command to remote server\n"
+literal|"\t\tTry \"rhelp site\" or \"site help\" "
+literal|"for more information"
 decl_stmt|;
 end_decl_stmt
 
@@ -647,6 +756,62 @@ literal|"toggle verbose mode"
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMALL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CMPL
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMPL0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !SMALL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMPL
+parameter_list|(
+name|x
+parameter_list|)
+value|__STRING(x),
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMPL0
+value|"",
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !SMALL */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|cmd
@@ -665,6 +830,7 @@ literal|0
 block|,
 literal|0
 block|,
+name|CMPL0
 name|shell
 block|}
 block|,
@@ -679,6 +845,7 @@ literal|0
 block|,
 literal|0
 block|,
+name|CMPL0
 name|domacro
 block|}
 block|,
@@ -693,6 +860,7 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|account
 block|}
 block|,
@@ -707,6 +875,10 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|lr
+argument_list|)
 name|put
 block|}
 block|,
@@ -721,6 +893,7 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|setascii
 block|}
 block|,
@@ -735,6 +908,7 @@ literal|0
 block|,
 literal|0
 block|,
+name|CMPL0
 name|setbell
 block|}
 block|,
@@ -749,6 +923,7 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|setbinary
 block|}
 block|,
@@ -763,6 +938,7 @@ literal|0
 block|,
 literal|0
 block|,
+name|CMPL0
 name|quit
 block|}
 block|,
@@ -777,6 +953,7 @@ literal|0
 block|,
 literal|1
 block|,
+name|CMPL0
 name|setcase
 block|}
 block|,
@@ -791,6 +968,10 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|r
+argument_list|)
 name|cd
 block|}
 block|,
@@ -805,6 +986,7 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|cdup
 block|}
 block|,
@@ -819,6 +1001,10 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|nr
+argument_list|)
 name|do_chmod
 block|}
 block|,
@@ -833,6 +1019,7 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|disconnect
 block|}
 block|,
@@ -847,21 +1034,8 @@ literal|0
 block|,
 literal|0
 block|,
+name|CMPL0
 name|setcr
-block|}
-block|,
-block|{
-literal|"delete"
-block|,
-name|deletehelp
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|1
-block|,
-name|delete
 block|}
 block|,
 block|{
@@ -875,7 +1049,26 @@ literal|0
 block|,
 literal|0
 block|,
+name|CMPL0
 name|setdebug
+block|}
+block|,
+block|{
+literal|"delete"
+block|,
+name|deletehelp
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|CMPL
+argument_list|(
+argument|r
+argument_list|)
+name|delete
 block|}
 block|,
 block|{
@@ -889,6 +1082,10 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|rl
+argument_list|)
 name|ls
 block|}
 block|,
@@ -903,7 +1100,44 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|disconnect
+block|}
+block|,
+ifndef|#
+directive|ifndef
+name|SMALL
+block|{
+literal|"edit"
+block|,
+name|edithelp
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|CMPL0
+name|setedit
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* !SMALL */
+block|{
+literal|"exit"
+block|,
+name|quithelp
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|CMPL0
+name|quit
 block|}
 block|,
 block|{
@@ -917,6 +1151,7 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|setform
 block|}
 block|,
@@ -931,6 +1166,7 @@ literal|0
 block|,
 literal|1
 block|,
+name|CMPL0
 name|setpeer
 block|}
 block|,
@@ -945,7 +1181,26 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|rl
+argument_list|)
 name|get
+block|}
+block|,
+block|{
+literal|"gate"
+block|,
+name|gatehelp
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|CMPL0
+name|setgate
 block|}
 block|,
 block|{
@@ -959,6 +1214,7 @@ literal|0
 block|,
 literal|0
 block|,
+name|CMPL0
 name|setglob
 block|}
 block|,
@@ -973,6 +1229,7 @@ literal|0
 block|,
 literal|0
 block|,
+name|CMPL0
 name|sethash
 block|}
 block|,
@@ -987,6 +1244,10 @@ literal|0
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|C
+argument_list|)
 name|help
 block|}
 block|,
@@ -1001,6 +1262,7 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|idle
 block|}
 block|,
@@ -1015,6 +1277,7 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|setbinary
 block|}
 block|,
@@ -1029,7 +1292,44 @@ literal|0
 block|,
 literal|0
 block|,
+name|CMPL
+argument_list|(
+argument|l
+argument_list|)
 name|lcd
+block|}
+block|,
+block|{
+literal|"less"
+block|,
+name|pagehelp
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|CMPL
+argument_list|(
+argument|r
+argument_list|)
+name|page
+block|}
+block|,
+block|{
+literal|"lpwd"
+block|,
+name|lpwdhelp
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|CMPL0
+name|lpwd
 block|}
 block|,
 block|{
@@ -1043,6 +1343,10 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|rl
+argument_list|)
 name|ls
 block|}
 block|,
@@ -1057,6 +1361,7 @@ literal|0
 block|,
 literal|0
 block|,
+name|CMPL0
 name|macdef
 block|}
 block|,
@@ -1071,6 +1376,10 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|R
+argument_list|)
 name|mdelete
 block|}
 block|,
@@ -1085,6 +1394,10 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|R
+argument_list|)
 name|mls
 block|}
 block|,
@@ -1099,6 +1412,10 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|R
+argument_list|)
 name|mget
 block|}
 block|,
@@ -1113,6 +1430,10 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|r
+argument_list|)
 name|makedir
 block|}
 block|,
@@ -1127,6 +1448,10 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|R
+argument_list|)
 name|mls
 block|}
 block|,
@@ -1141,6 +1466,7 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|setftmode
 block|}
 block|,
@@ -1155,7 +1481,29 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|r
+argument_list|)
 name|modtime
+block|}
+block|,
+block|{
+literal|"more"
+block|,
+name|pagehelp
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|CMPL
+argument_list|(
+argument|r
+argument_list|)
+name|page
 block|}
 block|,
 block|{
@@ -1169,6 +1517,28 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|L
+argument_list|)
+name|mput
+block|}
+block|,
+block|{
+literal|"msend"
+block|,
+name|mputhelp
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|CMPL
+argument_list|(
+argument|L
+argument_list|)
 name|mput
 block|}
 block|,
@@ -1183,21 +1553,11 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|r
+argument_list|)
 name|newer
-block|}
-block|,
-block|{
-literal|"nmap"
-block|,
-name|nmaphelp
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|1
-block|,
-name|setnmap
 block|}
 block|,
 block|{
@@ -1211,7 +1571,26 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|rl
+argument_list|)
 name|ls
+block|}
+block|,
+block|{
+literal|"nmap"
+block|,
+name|nmaphelp
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|,
+name|CMPL0
+name|setnmap
 block|}
 block|,
 block|{
@@ -1225,6 +1604,7 @@ literal|0
 block|,
 literal|1
 block|,
+name|CMPL0
 name|setntrans
 block|}
 block|,
@@ -1239,21 +1619,26 @@ literal|0
 block|,
 literal|1
 block|,
+name|CMPL0
 name|setpeer
 block|}
 block|,
 block|{
-literal|"prompt"
+literal|"page"
 block|,
-name|prompthelp
+name|pagehelp
 block|,
-literal|0
+literal|1
 block|,
-literal|0
+literal|1
 block|,
-literal|0
+literal|1
 block|,
-name|setprompt
+name|CMPL
+argument_list|(
+argument|r
+argument_list|)
+name|page
 block|}
 block|,
 block|{
@@ -1267,7 +1652,53 @@ literal|0
 block|,
 literal|0
 block|,
+name|CMPL0
 name|setpassive
+block|}
+block|,
+block|{
+literal|"preserve"
+block|,
+name|preservehelp
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|CMPL0
+name|setpreserve
+block|}
+block|,
+block|{
+literal|"progress"
+block|,
+name|progresshelp
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|CMPL0
+name|setprogress
+block|}
+block|,
+block|{
+literal|"prompt"
+block|,
+name|prompthelp
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|CMPL0
+name|setprompt
 block|}
 block|,
 block|{
@@ -1281,21 +1712,11 @@ literal|0
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|c
+argument_list|)
 name|doproxy
-block|}
-block|,
-block|{
-literal|"sendport"
-block|,
-name|porthelp
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|setport
 block|}
 block|,
 block|{
@@ -1309,6 +1730,10 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|lr
+argument_list|)
 name|put
 block|}
 block|,
@@ -1323,6 +1748,7 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|pwd
 block|}
 block|,
@@ -1337,6 +1763,7 @@ literal|0
 block|,
 literal|0
 block|,
+name|CMPL0
 name|quit
 block|}
 block|,
@@ -1351,6 +1778,7 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|quote
 block|}
 block|,
@@ -1365,6 +1793,10 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|rl
+argument_list|)
 name|get
 block|}
 block|,
@@ -1379,35 +1811,11 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|rl
+argument_list|)
 name|reget
-block|}
-block|,
-block|{
-literal|"rstatus"
-block|,
-name|rmtstatushelp
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|1
-block|,
-name|rmtstatus
-block|}
-block|,
-block|{
-literal|"rhelp"
-block|,
-name|remotehelp
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|1
-block|,
-name|rmthelp
 block|}
 block|,
 block|{
@@ -1421,6 +1829,10 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|rr
+argument_list|)
 name|renamefile
 block|}
 block|,
@@ -1435,6 +1847,7 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|reset
 block|}
 block|,
@@ -1449,6 +1862,7 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|restart
 block|}
 block|,
@@ -1463,7 +1877,23 @@ literal|0
 block|,
 literal|0
 block|,
+name|CMPL0
 name|setrestrict
+block|}
+block|,
+block|{
+literal|"rhelp"
+block|,
+name|remotehelp
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|CMPL0
+name|rmthelp
 block|}
 block|,
 block|{
@@ -1477,7 +1907,29 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|r
+argument_list|)
 name|removedir
+block|}
+block|,
+block|{
+literal|"rstatus"
+block|,
+name|rmtstatushelp
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|CMPL
+argument_list|(
+argument|r
+argument_list|)
+name|rmtstatus
 block|}
 block|,
 block|{
@@ -1491,6 +1943,7 @@ literal|0
 block|,
 literal|1
 block|,
+name|CMPL0
 name|setrunique
 block|}
 block|,
@@ -1505,7 +1958,26 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|lr
+argument_list|)
 name|put
+block|}
+block|,
+block|{
+literal|"sendport"
+block|,
+name|porthelp
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|CMPL0
+name|setport
 block|}
 block|,
 block|{
@@ -1519,6 +1991,7 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|site
 block|}
 block|,
@@ -1533,6 +2006,10 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|r
+argument_list|)
 name|sizecmd
 block|}
 block|,
@@ -1547,6 +2024,7 @@ literal|0
 block|,
 literal|1
 block|,
+name|CMPL0
 name|status
 block|}
 block|,
@@ -1561,21 +2039,8 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|setstruct
-block|}
-block|,
-block|{
-literal|"system"
-block|,
-name|systemhelp
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|1
-block|,
-name|syst
 block|}
 block|,
 block|{
@@ -1589,7 +2054,23 @@ literal|0
 block|,
 literal|1
 block|,
+name|CMPL0
 name|setsunique
+block|}
+block|,
+block|{
+literal|"system"
+block|,
+name|systemhelp
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|CMPL0
+name|syst
 block|}
 block|,
 block|{
@@ -1603,6 +2084,7 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|settenex
 block|}
 block|,
@@ -1617,6 +2099,7 @@ literal|0
 block|,
 literal|0
 block|,
+name|CMPL0
 name|settrace
 block|}
 block|,
@@ -1631,21 +2114,8 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|settype
-block|}
-block|,
-block|{
-literal|"user"
-block|,
-name|userhelp
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|1
-block|,
-name|user
 block|}
 block|,
 block|{
@@ -1659,7 +2129,23 @@ literal|1
 block|,
 literal|1
 block|,
+name|CMPL0
 name|do_umask
+block|}
+block|,
+block|{
+literal|"user"
+block|,
+name|userhelp
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|CMPL0
+name|user
 block|}
 block|,
 block|{
@@ -1673,6 +2159,7 @@ literal|0
 block|,
 literal|0
 block|,
+name|CMPL0
 name|setverbose
 block|}
 block|,
@@ -1687,6 +2174,10 @@ literal|0
 block|,
 literal|1
 block|,
+name|CMPL
+argument_list|(
+argument|C
+argument_list|)
 name|help
 block|}
 block|,
