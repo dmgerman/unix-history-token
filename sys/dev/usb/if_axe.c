@@ -206,6 +206,12 @@ name|USB_PRODUCT_DLINK_DUBE100
 block|}
 block|,
 block|{
+name|USB_VENDOR_LINKSYS2
+block|,
+name|USB_PRODUCT_LINKSYS_USB200M
+block|}
+block|,
+block|{
 name|USB_VENDOR_NETGEAR
 block|,
 name|USB_PRODUCT_NETGEAR_FA120
