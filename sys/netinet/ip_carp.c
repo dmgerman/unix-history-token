@@ -8624,11 +8624,9 @@ name|sc_advskew
 operator|=
 literal|0
 expr_stmt|;
-name|carp_set_state
+name|carp_carpdev_state
 argument_list|(
-name|sc
-argument_list|,
-name|INIT
+name|cif
 argument_list|)
 expr_stmt|;
 name|carp_setrun
