@@ -1055,6 +1055,14 @@ operator|=
 name|count
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|buf1
+operator|->
+name|drive
+operator|>
+literal|0
+condition|)
 name|buf1
 operator|->
 name|bp
