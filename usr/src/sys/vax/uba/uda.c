@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	6.1	83/07/29	*/
+comment|/*	uda.c	6.2	83/11/15	*/
 end_comment
 
 begin_include
@@ -347,31 +347,31 @@ block|,
 comment|/* C=blk 0 thru end */
 literal|15884
 block|,
-literal|340670
+literal|242606
 block|,
-comment|/* D=blk 340670 thru 356553 */
-literal|55936
+comment|/* D=blk 242606 thru 258489 */
+literal|307200
 block|,
-literal|356554
+literal|258490
 block|,
-comment|/* E=blk 356554 thru 412489 */
+comment|/* E=blk 258490 thru 565689 */
 operator|-
 literal|1
 block|,
-literal|412490
+literal|565690
 block|,
-comment|/* F=blk 412490 thru end */
-literal|82080
+comment|/* F=blk 565690 thru end */
+operator|-
+literal|1
+block|,
+literal|242606
+block|,
+comment|/* G=blk 242606 thru end */
+literal|193282
 block|,
 literal|49324
 block|,
-comment|/* G=blk 49324 thru 131403 */
-operator|-
-literal|1
-block|,
-literal|131404
-block|,
-comment|/* H=blk 131404 thru end */
+comment|/* H=blk 49324 thru 242605 */
 block|}
 struct|;
 end_struct
