@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_glue.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_glue.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: kgdb_glue.c,v 1.4 91/03/08 07:02:37 van Exp $ (LBL)"
+literal|"@(#) $Header: /usr/src/sys/hp300/hp300/RCS/kgdb_glue.c,v 1.5 92/12/20 15:48:57 mike Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,70 +51,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * # of additional bytes in 680x0 exception frame format n.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|frame_bytes
-index|[
-literal|16
-index|]
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|fmt2
-argument_list|)
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|fmt9
-argument_list|)
-block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|fmtA
-argument_list|)
-block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|fmtB
-argument_list|)
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -280,7 +216,12 @@ name|fsize
 decl_stmt|,
 name|s
 decl_stmt|;
-comment|/* 	 * After a kernel mode trap, the saved sp doesn't point to the right 	 * place.  The correct value is the top of the frame. 	 */
+specifier|extern
+name|short
+name|exframesize
+index|[]
+decl_stmt|;
+comment|/* 	 * After a kernel mode trap, the saved sp doesn't point to the right 	 * place.  The correct value is the top of the frame (i.e. before the 	 * KGDB trap). 	 * 	 * XXX this may have to change if we implement an interrupt stack. 	 */
 name|fsize
 operator|=
 sizeof|sizeof
@@ -295,7 +236,7 @@ operator|.
 name|F_u
 argument_list|)
 operator|+
-name|frame_bytes
+name|exframesize
 index|[
 name|frame
 operator|.
@@ -446,7 +387,7 @@ name|osp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Restore the possible new context from frame, pop the 	 * unneeded usp (we trapped from kernel mode) and pad word, 	 * and return to the trapped thread. 	 */
-asm|asm("moveml sp@+,#0x7FFF; addql #6,sp; rte");
+asm|asm("moveml sp@+,#0x7FFF; addql #8,sp; rte");
 block|}
 end_block
 
