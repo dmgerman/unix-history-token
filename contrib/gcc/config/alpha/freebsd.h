@@ -243,19 +243,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|SET_ASM_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SET_ASM_OP
-value|".set"
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|OBJECT_FORMAT_COFF
 end_undef
 
