@@ -2110,6 +2110,15 @@ expr_stmt|;
 name|Dists
 operator|=
 name|DIST_BIN
+operator||
+name|DIST_CRYPTO
+expr_stmt|;
+name|CRYPTODists
+operator||=
+name|DIST_CRYPTO_BIN
+expr_stmt|;
+name|distVerifyFlags
+argument_list|()
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
