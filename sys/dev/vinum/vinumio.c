@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.35 1999/08/08 18:42:40 phk Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.25 1999/06/28 02:37:48 grog Exp grog $  */
 end_comment
 
 begin_include
@@ -51,7 +51,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Open the device associated with the drive, and set drive's vp.  * Return an error number   */
+comment|/*  * Open the device associated with the drive, and set drive's vp.  * Return an error number  */
 end_comment
 
 begin_function
@@ -182,7 +182,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 return|return
 name|error
 return|;
@@ -223,7 +222,6 @@ name|LOG_WARNING
 argument_list|,
 literal|"open_drive %s: use count %d, ignoring\n"
 argument_list|,
-comment|/* XXX where does this come from? */
 name|drive
 operator|->
 name|devicename
@@ -266,18 +264,6 @@ argument_list|(
 name|drive
 argument_list|)
 expr_stmt|;
-name|set_drive_state
-argument_list|(
-name|drive
-operator|->
-name|driveno
-argument_list|,
-name|drive_down
-argument_list|,
-name|setstate_force
-argument_list|)
-expr_stmt|;
-comment|/* this also closes the drive */
 name|drive
 operator|->
 name|lasterror
@@ -299,7 +285,6 @@ operator|->
 name|devicename
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 return|return
 name|ENOTBLK
 return|;
@@ -332,7 +317,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set some variables in the drive struct  * in more convenient form.  Return error indication   */
+comment|/*  * Set some variables in the drive struct  * in more convenient form.  Return error indication  */
 end_comment
 
 begin_function
@@ -351,7 +336,7 @@ name|blocksize
 operator|=
 name|BLKDEV_IOSIZE
 expr_stmt|;
-comment|/* XXX do we need this? */
+comment|/* do we need this? */
 name|drive
 operator|->
 name|secsperblock
@@ -463,7 +448,7 @@ name|DEV_BSIZE
 operator|-
 name|DATASTART
 expr_stmt|;
-comment|/*      * XXX Bug in 3.0 as of January 1998: you can open      * non-existent slices.  They have a length of 0       */
+comment|/*      * Bug in 3.0 as of January 1998: you can open      * non-existent slices.  They have a length of 0.      */
 if|if
 condition|(
 name|drive
@@ -618,7 +603,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize a drive: open the device and add device  * information   */
+comment|/*  * Initialize a drive: open the device and add device  * information  */
 end_comment
 
 begin_function
@@ -733,7 +718,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|close_drive
 argument_list|(
 name|drive
@@ -745,13 +729,6 @@ name|lasterror
 operator|=
 name|error
 expr_stmt|;
-name|drive
-operator|->
-name|state
-operator|=
-name|drive_down
-expr_stmt|;
-comment|/* don't tell the system about this one at all */
 return|return
 name|error
 return|;
@@ -791,19 +768,11 @@ operator|->
 name|devicename
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|close_drive
 argument_list|(
 name|drive
 argument_list|)
 expr_stmt|;
-name|drive
-operator|->
-name|state
-operator|=
-name|drive_down
-expr_stmt|;
-comment|/* don't tell the system about this one at all */
 return|return
 name|EFTYPE
 return|;
@@ -850,6 +819,13 @@ name|drive
 argument_list|)
 expr_stmt|;
 comment|/* and close it */
+name|drive
+operator|->
+name|state
+operator|=
+name|drive_down
+expr_stmt|;
+comment|/* don't tell the system about this one at all */
 name|unlockdrive
 argument_list|(
 name|drive
@@ -872,7 +848,7 @@ modifier|*
 name|drive
 parameter_list|)
 block|{
-comment|/*      * If we can't access the drive, we can't flush       * the queues, which spec_close() will try to      * do.  Get rid of them here first.      */
+comment|/*      * If we can't access the drive, we can't flush      * the queues, which spec_close() will try to      * do.  Get rid of them here first.      */
 if|if
 condition|(
 name|drive
@@ -968,7 +944,7 @@ operator|->
 name|v_usecount
 operator|)
 condition|)
-comment|/* XXX shouldn't happen */
+comment|/* shouldn't happen */
 name|log
 argument_list|(
 name|LOG_WARNING
@@ -1076,248 +1052,6 @@ argument_list|()
 expr_stmt|;
 comment|/* and save the updated configuration */
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  * Transfer drive data.  Usually called from one of these defines;  * #define read_drive(a, b, c, d) driveio (a, b, c, d, B_READ)  * #define write_drive(a, b, c, d) driveio (a, b, c, d, B_WRITE)  *  * length and offset are in bytes, but must be multiples of sector  * size.  The function *does not check* for this condition, and  * truncates ruthlessly.  * Return error number  */
-end_comment
-
-begin_function
-name|int
-name|driveio
-parameter_list|(
-name|struct
-name|drive
-modifier|*
-name|drive
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|size_t
-name|length
-parameter_list|,
-name|off_t
-name|offset
-parameter_list|,
-name|int
-name|flag
-parameter_list|)
-block|{
-name|int
-name|error
-decl_stmt|;
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
-name|char
-name|foo
-index|[
-literal|40
-index|]
-decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* to keep the compiler happy */
-while|while
-condition|(
-name|length
-condition|)
-block|{
-comment|/* divide into small enough blocks */
-name|int
-name|len
-init|=
-name|min
-argument_list|(
-name|length
-argument_list|,
-name|MAXBSIZE
-argument_list|)
-decl_stmt|;
-comment|/* maximum block device transfer is MAXBSIZE */
-name|bp
-operator|=
-name|geteblk
-argument_list|(
-name|len
-argument_list|)
-expr_stmt|;
-comment|/* get a buffer header */
-name|bp
-operator|->
-name|b_flags
-operator|=
-name|flag
-expr_stmt|;
-name|bp
-operator|->
-name|b_dev
-operator|=
-name|drive
-operator|->
-name|vp
-operator|->
-name|v_rdev
-expr_stmt|;
-comment|/* device */
-name|bp
-operator|->
-name|b_blkno
-operator|=
-name|offset
-operator|/
-name|drive
-operator|->
-name|partinfo
-operator|.
-name|disklab
-operator|->
-name|d_secsize
-expr_stmt|;
-comment|/* block number */
-name|bp
-operator|->
-name|b_data
-operator|=
-name|buf
-expr_stmt|;
-name|bp
-operator|->
-name|b_bcount
-operator|=
-name|len
-expr_stmt|;
-name|bp
-operator|->
-name|b_bufsize
-operator|=
-name|len
-expr_stmt|;
-operator|(
-operator|*
-name|devsw
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-operator|->
-name|d_strategy
-operator|)
-operator|(
-name|bp
-operator|)
-expr_stmt|;
-comment|/* initiate the transfer */
-name|error
-operator|=
-name|biowait
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"driveio: %s dev %d.%d, block 0x%x, len 0x%lx, error %d\n"
-argument_list|,
-comment|/* XXX */
-name|flag
-condition|?
-literal|"read"
-else|:
-literal|"write"
-argument_list|,
-name|major
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-argument_list|,
-name|minor
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-argument_list|,
-name|bp
-operator|->
-name|b_blkno
-argument_list|,
-name|bp
-operator|->
-name|b_bcount
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-name|bcopy
-argument_list|(
-name|buf
-argument_list|,
-name|foo
-argument_list|,
-literal|40
-argument_list|)
-expr_stmt|;
-name|foo
-index|[
-literal|39
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"---> %s\n"
-argument_list|,
-name|foo
-argument_list|)
-expr_stmt|;
-comment|/* XXXXXX */
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_INVAL
-operator||
-name|B_AGE
-expr_stmt|;
-name|brelse
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-break|break;
-name|length
-operator|-=
-name|len
-expr_stmt|;
-comment|/* update pointers */
-name|buf
-operator|+=
-name|len
-expr_stmt|;
-name|offset
-operator|+=
-name|len
-expr_stmt|;
-block|}
-return|return
-name|error
-return|;
 block|}
 end_function
 
@@ -1495,7 +1229,6 @@ operator|.
 name|uio_resid
 argument_list|)
 expr_stmt|;
-comment|/* XXX Check this.  I think the test is wrong */
 if|if
 condition|(
 name|drive
@@ -2006,7 +1739,6 @@ name|setstate_force
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* XXX Add other possibilities here */
 default|default:
 block|}
 return|return
@@ -2023,7 +1755,7 @@ name|drive
 operator|->
 name|blocksize
 condition|)
-comment|/* 	     * The transfer goes to the end of the block.  There's 	     * no need to wait for any more data to arrive.  	     */
+comment|/* 	     * The transfer goes to the end of the block.  There's 	     * no need to wait for any more data to arrive. 	     */
 name|bawrite
 argument_list|(
 name|bp
@@ -2107,7 +1839,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check a drive for a vinum header.  If found,   * update the drive information.  We come here  * with a partially populated drive structure  * which includes the device name.  *  * Return information on what we found.  *  * This function is called from two places: check_drive,  * which wants to find out whether the drive is a  * Vinum drive, and config_drive, which asserts that  * it is a vinum drive.  In the first case, we don't  * print error messages (verbose==0), in the second  * we do (verbose==1).  */
+comment|/*  * Check a drive for a vinum header.  If found,  * update the drive information.  We come here  * with a partially populated drive structure  * which includes the device name.  *  * Return information on what we found.  *  * This function is called from two places: check_drive,  * which wants to find out whether the drive is a  * Vinum drive, and config_drive, which asserts that  * it is a vinum drive.  In the first case, we don't  * print error messages (verbose==0), in the second  * we do (verbose==1).  */
 end_comment
 
 begin_function
@@ -2260,7 +1992,7 @@ operator|=
 name|DL_OURS
 expr_stmt|;
 block|}
-comment|/* 	 * We copy the drive anyway so that we have 	 * the correct name in the drive info.  This 	 * may not be the name specified  	 */
+comment|/* 	 * We copy the drive anyway so that we have 	 * the correct name in the drive info.  This 	 * may not be the name specified 	 */
 name|drive
 operator|->
 name|label
@@ -2305,7 +2037,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check a drive for a vinum header.  If found,   * read configuration information from the drive and  * incorporate the data into the configuration.  *  * Return drive number.  */
+comment|/*  * Check a drive for a vinum header.  If found,  * read configuration information from the drive and  * incorporate the data into the configuration.  *  * Return drive number.  */
 end_comment
 
 begin_function
@@ -3254,7 +2986,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * issue a save config request to the dæmon.  The actual work  * is done in process context by daemon_save_config   */
+comment|/*  * issue a save config request to the dæmon.  The actual work  * is done in process context by daemon_save_config  */
 end_comment
 
 begin_function
@@ -3279,7 +3011,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Write the configuration to all vinum slices.  This  * is performed by the dæmon only   */
+comment|/*  * Write the configuration to all vinum slices.  This  * is performed by the dæmon only  */
 end_comment
 
 begin_function
@@ -3439,7 +3171,7 @@ name|drive
 argument_list|)
 expr_stmt|;
 comment|/* don't let it change */
-comment|/* 	     * First, do some drive consistency checks.  Some 	     * of these are kludges, others require a process 	     * context and couldn't be done before  	     */
+comment|/* 	     * First, do some drive consistency checks.  Some 	     * of these are kludges, others require a process 	     * context and couldn't be done before 	     */
 if|if
 condition|(
 operator|(
@@ -3452,7 +3184,6 @@ index|]
 operator|==
 literal|'\0'
 operator|)
-comment|/* XXX we keep getting these nameless drives */
 operator|||
 operator|(
 name|drive
@@ -3468,29 +3199,7 @@ literal|'\0'
 operator|)
 condition|)
 block|{
-comment|/* XXX we keep getting these nameless drives */
 name|unlockdrive
-argument_list|(
-name|drive
-argument_list|)
-expr_stmt|;
-name|log
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"Removing incomplete drive, index %d\n"
-argument_list|,
-name|driveno
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|drive
-operator|->
-name|vp
-condition|)
-comment|/* how can it be open without a name? */
-name|close_drive
 argument_list|(
 name|drive
 argument_list|)
@@ -3838,21 +3547,26 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Disk labels are a mess.  The correct way to access them  * is with the DIOC[GSW]DINFO ioctls, but some programs, such  * as newfs, access the disk directly, so we have to write  * things there.  We do this only on request.  If a user  * request tries to read it directly, we fake up one on the fly.  */
+comment|/*  * Disk labels are a mess.  The correct way to  * access them is with the DIOC[GSW]DINFO ioctls,  * but some programs, such as newfs, access the  * disk directly, so we have to write things  * there.  We do this only on request.  If a user  * request tries to read it directly, we fake up  * one on the fly.  */
 end_comment
 
 begin_comment
-comment|/*  * get_volume_label returns a label structure to lp, which  * is allocated by the caller   */
+comment|/*  * get_volume_label returns a label structure to lp, which  * is allocated by the caller  */
 end_comment
 
 begin_function
 name|void
 name|get_volume_label
 parameter_list|(
-name|struct
-name|volume
+name|char
 modifier|*
-name|vol
+name|name
+parameter_list|,
+name|int
+name|plexes
+parameter_list|,
+name|u_int64_t
+name|size
 parameter_list|,
 name|struct
 name|disklabel
@@ -3899,8 +3613,6 @@ name|lp
 operator|->
 name|d_packname
 argument_list|,
-name|vol
-operator|->
 name|name
 argument_list|,
 name|min
@@ -3914,8 +3626,6 @@ argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|vol
-operator|->
 name|name
 argument_list|)
 argument_list|)
@@ -3927,8 +3637,6 @@ name|d_rpm
 operator|=
 literal|14400
 operator|*
-name|vol
-operator|->
 name|plexes
 expr_stmt|;
 comment|/* to keep them guessing */
@@ -3944,7 +3652,7 @@ name|d_flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Fitting unto the vine, a vinum has a single      *  track with all its sectors       */
+comment|/*      * Fitting unto the vine, a vinum has a single      * track with all its sectors.      */
 name|lp
 operator|->
 name|d_secsize
@@ -3956,8 +3664,6 @@ name|lp
 operator|->
 name|d_nsectors
 operator|=
-name|vol
-operator|->
 name|size
 expr_stmt|;
 comment|/* data sectors per track */
@@ -3979,8 +3685,6 @@ name|lp
 operator|->
 name|d_secpercyl
 operator|=
-name|vol
-operator|->
 name|size
 expr_stmt|;
 comment|/* data sectors per cylinder */
@@ -3988,8 +3692,6 @@ name|lp
 operator|->
 name|d_secperunit
 operator|=
-name|vol
-operator|->
 name|size
 expr_stmt|;
 comment|/* data sectors per unit */
@@ -4017,7 +3719,7 @@ name|d_magic2
 operator|=
 name|DISKMAGIC
 expr_stmt|;
-comment|/*      * Set up partitions a, b and c to be identical      * and the size of the volume.  a is UFS, b is      * swap, c is nothing       */
+comment|/*      * Set up partitions a, b and c to be identical      * and the size of the volume.  a is UFS, b is      * swap, c is nothing      */
 name|lp
 operator|->
 name|d_partitions
@@ -4027,8 +3729,6 @@ index|]
 operator|.
 name|p_size
 operator|=
-name|vol
-operator|->
 name|size
 expr_stmt|;
 name|lp
@@ -4087,8 +3787,6 @@ index|]
 operator|.
 name|p_size
 operator|=
-name|vol
-operator|->
 name|size
 expr_stmt|;
 name|lp
@@ -4112,8 +3810,6 @@ index|]
 operator|.
 name|p_size
 operator|=
-name|vol
-operator|->
 name|size
 expr_stmt|;
 name|lp
@@ -4130,8 +3826,6 @@ name|lp
 operator|->
 name|d_packname
 argument_list|,
-name|vol
-operator|->
 name|name
 argument_list|,
 name|min
@@ -4145,8 +3839,6 @@ argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|vol
-operator|->
 name|name
 argument_list|)
 argument_list|)
@@ -4296,6 +3988,16 @@ comment|/* I/O error */
 name|get_volume_label
 argument_list|(
 name|vol
+operator|->
+name|name
+argument_list|,
+name|vol
+operator|->
+name|plexes
+argument_list|,
+name|vol
+operator|->
+name|size
 argument_list|,
 name|lp
 argument_list|)
@@ -4906,7 +4608,7 @@ return|return
 name|ENOENT
 return|;
 block|}
-comment|/*      * We now have at least one drive      * open.  Sort them in order of config time      * and merge the config info with what we      * have already       */
+comment|/*      * We now have at least one drive      * open.  Sort them in order of config time      * and merge the config info with what we      * have already.      */
 name|qsort
 argument_list|(
 name|drivelist
@@ -5081,7 +4783,7 @@ operator|=
 name|error
 expr_stmt|;
 block|}
-comment|/* 	 * XXX At this point, check that the two copies are the same, and do something useful if not. 	 * In particular, consider which is newer, and what this means for the integrity of the 	 * data on the drive  	 */
+comment|/* 	 * At this point, check that the two copies 	 * are the same, and do something useful if 	 * not.  In particular, consider which is 	 * newer, and what this means for the 	 * integrity of the data on the drive. 	 */
 else|else
 block|{
 name|vinum_conf
@@ -5178,7 +4880,7 @@ literal|0
 condition|)
 block|{
 comment|/* error in config */
-comment|/* 			   * This config should have been parsed in user 			   * space.  If we run into problems here, something 			   * serious is afoot.  Complain and let the user 			   * snarf the config to see what's wrong  			 */
+comment|/* 			   * This config should have been parsed in user 			   * space.  If we run into problems here, something 			   * serious is afoot.  Complain and let the user 			   * snarf the config to see what's wrong. 			 */
 name|log
 argument_list|(
 name|LOG_ERR
@@ -5277,7 +4979,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compare the modification dates of the drives, for qsort.  * Return 1 if a< b, 0 if a == b, 01 if a> b: in other  * words, sort backwards   */
+comment|/*  * Compare the modification dates of the drives, for qsort.  * Return 1 if a< b, 0 if a == b, 01 if a> b: in other  * words, sort backwards.  */
 end_comment
 
 begin_function
@@ -5441,6 +5143,18 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 
