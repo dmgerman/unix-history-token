@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -112,6 +112,16 @@ name|sp
 init|=
 name|swbuf
 decl_stmt|;
+specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+operator|&
+name|proc0
+decl_stmt|;
+comment|/* XXX */
 name|struct
 name|swdevt
 modifier|*
@@ -229,8 +239,7 @@ name|error
 operator|=
 name|swfree
 argument_list|(
-operator|&
-name|proc0
+name|p
 argument_list|,
 literal|0
 argument_list|)
@@ -275,6 +284,7 @@ operator|,
 name|sp
 operator|++
 control|)
+block|{
 name|sp
 operator|->
 name|av_forw
@@ -282,6 +292,31 @@ operator|=
 name|sp
 operator|+
 literal|1
+expr_stmt|;
+name|sp
+operator|->
+name|b_rcred
+operator|=
+name|sp
+operator|->
+name|b_wcred
+operator|=
+name|p
+operator|->
+name|p_ucred
+expr_stmt|;
+block|}
+name|sp
+operator|->
+name|b_rcred
+operator|=
+name|sp
+operator|->
+name|b_wcred
+operator|=
+name|p
+operator|->
+name|p_ucred
 expr_stmt|;
 name|sp
 operator|->
