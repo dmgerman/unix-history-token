@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	8.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	8.12 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -3064,7 +3064,7 @@ specifier|register
 name|int
 name|signum
 decl_stmt|;
-name|u_int
+name|u_long
 name|code
 decl_stmt|;
 block|{
@@ -5160,56 +5160,33 @@ begin_comment
 comment|/*  * Nonexistent system call-- signal process (may want to handle it).  * Flag error in case process won't see signal immediately (blocked or ignored).  */
 end_comment
 
-begin_struct
-struct|struct
-name|nosys_args
-block|{
-name|int
-name|dummy
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|nosys
-argument_list|(
-argument|p
-argument_list|,
-argument|args
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|args
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|nosys_args
+name|void
 modifier|*
 name|args
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+name|register_t
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|psignal
 argument_list|(
@@ -5224,7 +5201,7 @@ name|ENOSYS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

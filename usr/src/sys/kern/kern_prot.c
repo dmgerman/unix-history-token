@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2364,7 +2364,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|short
+name|u_short
 modifier|*
 name|acflag
 decl_stmt|;
@@ -2472,22 +2472,17 @@ begin_comment
 comment|/*  * Free a cred structure.  * Throws away space when ref count gets to 0.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|crfree
-argument_list|(
-argument|cr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cr
+parameter_list|)
 name|struct
 name|ucred
 modifier|*
 name|cr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|s
@@ -2526,7 +2521,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Copy cred structure to a new one and free the old one.  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -199,12 +199,10 @@ begin_comment
 comment|/*  * Initialize global process hashing structures.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|procinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|LIST_INIT
 argument_list|(
@@ -261,7 +259,7 @@ name|uihash
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Change the count associated with number of processes  * a given user is using.  */
@@ -1113,20 +1111,18 @@ begin_comment
 comment|/*  * delete a process group  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|pgdelete
-argument_list|(
+parameter_list|(
 name|pgrp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|pgrp
-operator|*
+modifier|*
 name|pgrp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1193,7 +1189,7 @@ name|M_PGRP
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function_decl
 specifier|static
@@ -1207,39 +1203,31 @@ begin_comment
 comment|/*  * Adjust pgrp jobc counters when specified process changes process group.  * We count the number of processes in each process group that "qualify"  * the group for terminal job control (those with a parent in a different  * process group of the same session).  If that count reaches zero, the  * process group becomes orphaned.  Check both the specified process'  * process group and that of its children.  * entering == 0 => p is leaving specified group.  * entering == 1 => p is entering specified group.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|fixjobc
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|pgrp
-argument_list|,
+parameter_list|,
 name|entering
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|pgrp
 modifier|*
 name|pgrp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|entering
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1374,7 +1362,7 @@ name|hispgrp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*   * A process group has become orphaned;  * if there are any stopped processes in the group,  * hang-up all process in that group.  */

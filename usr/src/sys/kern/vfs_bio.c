@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * This code is derived from software contributed to Berkeley by  * Berkeley Software Design Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_bio.c	8.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * This code is derived from software contributed to Berkeley by  * Berkeley Software Design Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_bio.c	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1655,20 +1655,18 @@ begin_comment
 comment|/*  * Delayed write.  *  * The buffer is marked dirty, but is not queued for I/O.  * This routine should be used when the buffer is expected  * to be modified again soon, typically a small write that  * partially fills a buffer.  *  * NB: magnetic tapes cannot be delayed; they must be  * written in the order that the writes are requested.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|bdwrite
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|buf
-operator|*
+modifier|*
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|struct
 name|proc
@@ -1740,7 +1738,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_else
 else|else
@@ -1769,10 +1767,11 @@ comment|/*  * Asynchronous write.  * Start I/O on a buffer, but do not wait for 
 end_comment
 
 begin_expr_stmt
-unit|bawrite
-operator|(
+unit|void
+name|bawrite
+argument_list|(
 name|bp
-operator|)
+argument_list|)
 specifier|register
 expr|struct
 name|buf
@@ -1805,20 +1804,18 @@ begin_comment
 comment|/*  * Release a buffer.  * Even if the buffer is dirty, no I/O is started.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|brelse
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|buf
-operator|*
+modifier|*
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -2110,7 +2107,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check to see if a block is currently memory resident.  */

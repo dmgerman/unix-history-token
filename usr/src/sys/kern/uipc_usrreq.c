@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	8.5 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2374,22 +2374,17 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|unp_disconnect
-argument_list|(
-argument|unp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|unp
+parameter_list|)
 name|struct
 name|unpcb
 modifier|*
 name|unp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2534,7 +2529,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -2572,22 +2567,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_function
+name|void
 name|unp_shutdown
-argument_list|(
-argument|unp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|unp
+parameter_list|)
 name|struct
 name|unpcb
 modifier|*
 name|unp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|socket
@@ -2624,32 +2614,24 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|unp_drop
-argument_list|(
-argument|unp
-argument_list|,
-argument|errno
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|unp
+parameter_list|,
+name|errno
+parameter_list|)
 name|struct
 name|unpcb
 modifier|*
 name|unp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|errno
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|socket
@@ -2712,7 +2694,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -3209,13 +3191,6 @@ name|unp_gcing
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|unp_mark
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -3224,12 +3199,10 @@ name|unixdomain
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|unp_gc
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -3653,29 +3626,20 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|unp_dispose
-argument_list|(
-argument|m
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|int
-name|unp_discard
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|m
@@ -3688,25 +3652,25 @@ name|unp_discard
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_decl_stmt
+name|void
 name|unp_scan
 argument_list|(
 name|m0
 argument_list|,
 name|op
 argument_list|)
-specifier|register
-expr|struct
+decl|register struct
 name|mbuf
-operator|*
+modifier|*
 name|m0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
-name|int
+name|void
 function_decl|(
 modifier|*
 name|op
@@ -3876,22 +3840,17 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|unp_mark
-argument_list|(
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fp
+parameter_list|)
 name|struct
 name|file
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -3916,24 +3875,19 @@ name|FDEFER
 operator|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|unp_discard
-argument_list|(
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fp
+parameter_list|)
 name|struct
 name|file
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|fp
 operator|->
@@ -3959,7 +3913,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

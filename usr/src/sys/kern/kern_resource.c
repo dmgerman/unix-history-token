@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_resource.c	8.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_resource.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1776,53 +1776,42 @@ begin_comment
 comment|/*  * Transform the running time and tick information in proc p into user,  * system, and interrupt time usage.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|calcru
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|up
-argument_list|,
+parameter_list|,
 name|sp
-argument_list|,
+parameter_list|,
 name|ip
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|timeval
 modifier|*
 name|up
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|timeval
 modifier|*
 name|sp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|timeval
 modifier|*
 name|ip
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|u_quad_t
@@ -2077,7 +2066,7 @@ literal|1000000
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_struct
 struct|struct
@@ -2224,23 +2213,24 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|void
 name|ruadd
-argument_list|(
+parameter_list|(
 name|ru
-argument_list|,
+parameter_list|,
 name|ru2
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|rusage
-operator|*
+modifier|*
 name|ru
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|ru2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
