@@ -420,6 +420,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * NOTICE: The *userland* release date is available in  * /usr/include/osreldate.h  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -443,7 +447,7 @@ name|osreldate
 argument_list|,
 literal|0
 argument_list|,
-literal|"Operating system release date"
+literal|"Kernel release date"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
