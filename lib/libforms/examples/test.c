@@ -136,7 +136,9 @@ name|menu_field
 name|field7
 init|=
 block|{
-literal|4
+sizeof|sizeof
+expr|&
+name|options7
 block|,
 literal|0
 block|,
