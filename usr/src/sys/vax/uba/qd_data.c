@@ -24,7 +24,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
+file|"../vax/pte.h"
 end_include
 
 begin_comment
@@ -34,7 +34,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../machine/mtpr.h"
+file|"../vax/mtpr.h"
 end_include
 
 begin_comment
@@ -84,7 +84,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../vaxuba/qdioctl.h"
+file|"qdioctl.h"
 end_include
 
 begin_comment
@@ -130,16 +130,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/bk.h"
-end_include
-
-begin_comment
-comment|/* BKINPUT macro for line stuff */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"../h/clist.h"
 end_include
 
@@ -180,18 +170,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/cpuconf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/devio.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../vax/cpu.h"
 end_include
 
@@ -222,7 +200,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../vaxuba/qduser.h"
+file|"qduser.h"
 end_include
 
 begin_comment
@@ -232,7 +210,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../vaxuba/qdreg.h"
+file|"qdreg.h"
 end_include
 
 begin_comment
