@@ -715,6 +715,16 @@ comment|/* sequence # for outbound packets = #sent */
 end_comment
 
 begin_decl_stmt
+name|long
+name|nmissedmax
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max value of ntransmitted - nreceived - 1 */
+end_comment
+
+begin_decl_stmt
 name|int
 name|interval
 init|=
@@ -3808,11 +3818,24 @@ expr_stmt|;
 if|if
 condition|(
 name|ntransmitted
-operator|!=
+operator|-
 name|nreceived
-operator|+
+operator|-
 literal|1
-operator|&&
+operator|>
+name|nmissedmax
+condition|)
+block|{
+name|nmissedmax
+operator|=
+name|ntransmitted
+operator|-
+name|nreceived
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
 name|options
 operator|&
 name|F_MISSED
@@ -3830,6 +3853,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 name|finish
