@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"@(#)set.c	5.3 (Berkeley) %G%"
+literal|"@(#)set.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +23,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -930,11 +934,11 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|any
+name|index
 argument_list|(
-name|c
-argument_list|,
 literal|"+-"
+argument_list|,
+name|c
 argument_list|)
 condition|)
 block|{
@@ -959,11 +963,11 @@ else|else
 block|{
 if|if
 condition|(
-name|any
+name|index
 argument_list|(
-name|op
-argument_list|,
 literal|"<>"
+argument_list|,
+name|op
 argument_list|)
 condition|)
 block|{
@@ -2094,7 +2098,7 @@ condition|)
 block|{
 name|vec
 operator|=
-name|glob
+name|globall
 argument_list|(
 name|oldv
 argument_list|)
