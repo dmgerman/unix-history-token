@@ -1136,6 +1136,12 @@ operator|~
 name|EV_FLAG1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|immediate
+operator|==
+literal|0
+condition|)
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -1312,20 +1318,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * Process will already be reported as gone. 	 * Do not report anything else, as the knote will be destroyed soon. 	 */
-if|if
-condition|(
-name|kn
-operator|->
-name|kn_status
-operator|&
-name|KN_DETACHED
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 	 * process forked, and user wants to track the new process, 	 * so attach a new knote to it, and immediately report an 	 * event with the parent's pid. 	 */
 if|if
 condition|(

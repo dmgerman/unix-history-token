@@ -1539,6 +1539,27 @@ argument_list|,
 name|NOTE_EXIT
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Just delete all entries in the p_klist. At this point we won't 	 * report any more events, and there are nasty race conditions that 	 * can beat us if we don't. 	 */
+while|while
+condition|(
+name|SLIST_FIRST
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_klist
+argument_list|)
+condition|)
+name|SLIST_REMOVE_HEAD
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_klist
+argument_list|,
+name|kn_selnext
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Notify parent that we're gone.  If parent has the PS_NOCLDWAIT 	 * flag set, or if the handler is set to SIG_IGN, notify process 	 * 1 instead (and hope it will handle this situation). 	 */
 name|PROC_LOCK
 argument_list|(
