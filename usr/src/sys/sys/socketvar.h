@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socketvar.h	4.16	82/04/10	*/
+comment|/*	socketvar.h	4.17	82/07/21	*/
 end_comment
 
 begin_comment
@@ -37,6 +37,38 @@ modifier|*
 name|so_proto
 decl_stmt|;
 comment|/* protocol handle */
+comment|/*  * Variables for connection queueing.  * Socket where accepts occur is so_head in all subsidiary sockets.  * If so_head is 0, socket is not related to an accept.  * For head socket so_q0 queues partially completed connections,  * while so_q is a queue of connections ready to be accepted.  * If a connection is aborted and it has so_head set, then  * it has to be pulled out of either so_q0 or so_q.  * We allow connections to queue up based on current queue lengths  * and limit on number of queued connections for this socket.  */
+name|struct
+name|socket
+modifier|*
+name|so_head
+decl_stmt|;
+comment|/* back pointer to accept socket */
+name|struct
+name|socket
+modifier|*
+name|so_q0
+decl_stmt|;
+comment|/* queue of partial connections */
+name|short
+name|so_q0len
+decl_stmt|;
+comment|/* partials on so_q0 */
+name|struct
+name|socket
+modifier|*
+name|so_q
+decl_stmt|;
+comment|/* queue of incoming connections */
+name|short
+name|so_qlen
+decl_stmt|;
+comment|/* number of connections on so_q */
+name|short
+name|so_qlimit
+decl_stmt|;
+comment|/* max number queued connections */
+comment|/*  * Variables for socket buffering.  */
 struct|struct
 name|sockbuf
 block|{
@@ -137,7 +169,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SS_USERGONE
+name|SS_NOFDREF
 value|0x001
 end_define
 
@@ -203,19 +235,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SS_CONNAWAITING
-value|0x040
-end_define
-
-begin_comment
-comment|/* connections awaiting acceptance */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SS_RCVATMARK
-value|0x080
+value|0x040
 end_define
 
 begin_comment
@@ -226,7 +247,7 @@ begin_define
 define|#
 directive|define
 name|SS_PRIV
-value|0x100
+value|0x080
 end_define
 
 begin_comment
@@ -237,7 +258,7 @@ begin_define
 define|#
 directive|define
 name|SS_NBIO
-value|0x200
+value|0x100
 end_define
 
 begin_comment
@@ -248,7 +269,7 @@ begin_define
 define|#
 directive|define
 name|SS_ASYNC
-value|0x400
+value|0x200
 end_define
 
 begin_comment
@@ -301,7 +322,7 @@ parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|((so)->so_rcv.sb_cc || ((so)->so_state& (SS_CANTRCVMORE|SS_CONNAWAITING)))
+value|((so)->so_rcv.sb_cc || ((so)->so_state& SS_CANTRCVMORE) || (so)->so_qlen)
 end_define
 
 begin_comment
@@ -398,6 +419,26 @@ name|so
 parameter_list|)
 value|sbwakeup(&(so)->so_snd)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_function_decl
+name|struct
+name|socket
+modifier|*
+name|sonewconn
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

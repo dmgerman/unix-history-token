@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.2	82/07/22	*/
+comment|/*	sys_generic.c	5.3	82/07/24	*/
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"../h/tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/fcntl.h"
 end_include
 
 begin_include
@@ -135,6 +141,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"../h/descrip.h"
+end_include
 
 begin_comment
 comment|/*  * Read system call.  */
@@ -305,9 +317,9 @@ if|if
 condition|(
 name|fp
 operator|->
-name|f_flag
-operator|&
-name|FSOCKET
+name|f_type
+operator|==
+name|DTYPE_SOCKET
 condition|)
 name|u
 operator|.
@@ -577,9 +589,9 @@ if|if
 condition|(
 name|fp
 operator|->
-name|f_flag
-operator|&
-name|FSOCKET
+name|f_type
+operator|==
+name|DTYPE_SOCKET
 condition|)
 name|u
 operator|.
@@ -606,6 +618,22 @@ operator|=
 name|fp
 operator|->
 name|f_inode
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|f_flag
+operator|&
+name|O_APPEND
+condition|)
+name|fp
+operator|->
+name|f_offset
+operator|=
+name|ip
+operator|->
+name|i_size
 expr_stmt|;
 name|u
 operator|.
@@ -678,6 +706,24 @@ operator|.
 name|u_count
 expr_stmt|;
 block|}
+end_block
+
+begin_macro
+name|readv
+argument_list|()
+end_macro
+
+begin_block
+block|{  }
+end_block
+
+begin_macro
+name|writev
+argument_list|()
+end_macro
+
+begin_block
+block|{  }
 end_block
 
 begin_comment
@@ -828,9 +874,9 @@ if|if
 condition|(
 name|fp
 operator|->
-name|f_flag
-operator|&
-name|FSOCKET
+name|f_type
+operator|==
+name|DTYPE_SOCKET
 condition|)
 block|{
 name|soioctl

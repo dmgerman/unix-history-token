@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_time.c	5.1	82/07/15	*/
+comment|/*	kern_time.c	5.2	82/07/24	*/
 end_comment
 
 begin_include
@@ -99,12 +99,39 @@ directive|include
 file|"../h/mount.h"
 end_include
 
+begin_macro
+name|rtime
+argument_list|()
+end_macro
+
+begin_block
+block|{  }
+end_block
+
+begin_macro
+name|rusage
+argument_list|()
+end_macro
+
+begin_block
+block|{  }
+end_block
+
+begin_macro
+name|itimer
+argument_list|()
+end_macro
+
+begin_block
+block|{  }
+end_block
+
 begin_comment
-comment|/*  * return the current time (old-style entry)  */
+comment|/* BEGIN DEPRECATED */
 end_comment
 
 begin_macro
-name|gtime
+name|ogtime
 argument_list|()
 end_macro
 
@@ -134,7 +161,7 @@ comment|/*  * New time entry-- return TOD with milliseconds, timezone,  * DST fl
 end_comment
 
 begin_macro
-name|ftime
+name|oftime
 argument_list|()
 end_macro
 
@@ -276,6 +303,10 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/* END DEPRECATED */
+end_comment
 
 begin_comment
 comment|/*  * Set the time  */

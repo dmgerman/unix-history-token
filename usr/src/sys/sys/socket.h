@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.16	82/06/08	*/
+comment|/*	socket.h	4.17	82/07/21	*/
 end_comment
 
 begin_comment
@@ -112,6 +112,17 @@ end_define
 
 begin_comment
 comment|/* just use interface addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_NEWFDONCONN
+value|0x20
+end_define
+
+begin_comment
+comment|/* give new fd on connection */
 end_comment
 
 begin_comment

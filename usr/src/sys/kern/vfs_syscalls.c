@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_syscalls.c	4.29	82/07/22	*/
+comment|/*	vfs_syscalls.c	4.30	82/07/24	*/
 end_comment
 
 begin_include
@@ -96,6 +96,12 @@ begin_include
 include|#
 directive|include
 file|"../h/quota.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/descrip.h"
 end_include
 
 begin_macro
@@ -336,7 +342,7 @@ comment|/*  * Creat system call.  */
 end_comment
 
 begin_macro
-name|creat
+name|ocreat
 argument_list|()
 end_macro
 
@@ -598,6 +604,12 @@ name|FREAD
 operator||
 name|FWRITE
 operator|)
+expr_stmt|;
+name|fp
+operator|->
+name|f_type
+operator|=
+name|DTYPE_FILE
 expr_stmt|;
 name|i
 operator|=
@@ -1520,6 +1532,41 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * first entry in block, so set d_ino to zero. 		 */
+comment|/*ZZ*/
+if|if
+condition|(
+name|u
+operator|.
+name|u_offset
+operator|&
+literal|0x1ff
+condition|)
+name|printf
+argument_list|(
+literal|"missed dir compact dir %s/%d off %d file %s\n"
+comment|/*ZZ*/
+argument_list|,
+name|pp
+operator|->
+name|i_fs
+operator|->
+name|fs_fsmnt
+argument_list|,
+name|pp
+operator|->
+name|i_number
+argument_list|,
+name|u
+operator|.
+name|u_offset
+argument_list|,
+name|u
+operator|.
+name|u_dent
+operator|.
+name|d_name
+argument_list|)
+expr_stmt|;
 name|u
 operator|.
 name|u_base
@@ -1674,6 +1721,40 @@ name|u_dent
 operator|.
 name|d_reclen
 expr_stmt|;
+comment|/*ZZ*/
+if|if
+condition|(
+operator|(
+call|(
+name|int
+call|)
+argument_list|(
+name|bp
+operator|->
+name|b_un
+operator|.
+name|b_addr
+operator|+
+name|base
+argument_list|)
+operator|&
+literal|0x1ff
+operator|)
+operator|+
+name|u
+operator|.
+name|u_dent
+operator|.
+name|d_reclen
+operator|>
+literal|512
+condition|)
+comment|/*ZZ*/
+name|panic
+argument_list|(
+literal|"unlink: reclen"
+argument_list|)
+expr_stmt|;
 name|bwrite
 argument_list|(
 name|bp
@@ -1791,9 +1872,9 @@ if|if
 condition|(
 name|fp
 operator|->
-name|f_flag
-operator|&
-name|FSOCKET
+name|f_type
+operator|==
+name|DTYPE_SOCKET
 condition|)
 block|{
 name|u
@@ -2240,9 +2321,9 @@ if|if
 condition|(
 name|fp
 operator|->
-name|f_flag
-operator|&
-name|FSOCKET
+name|f_type
+operator|==
+name|DTYPE_SOCKET
 condition|)
 name|u
 operator|.
