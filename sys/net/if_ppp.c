@@ -863,7 +863,9 @@ name|sc_list
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1023,9 +1025,7 @@ operator|->
 name|sc_if
 argument_list|)
 expr_stmt|;
-return|return
-name|EINVAL
-return|;
+break|break;
 block|}
 return|return
 literal|0
