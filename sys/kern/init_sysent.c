@@ -3722,6 +3722,17 @@ name|munlockall
 block|}
 block|,
 comment|/* 325 = munlockall */
+block|{
+literal|2
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|__getcwd
+block|}
+block|,
+comment|/* 326 = __getcwd */
 block|}
 decl_stmt|;
 end_decl_stmt

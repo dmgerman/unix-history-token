@@ -1036,6 +1036,9 @@ comment|/* 324 = mlockall */
 literal|"munlockall"
 block|,
 comment|/* 325 = munlockall */
+literal|"__getcwd"
+block|,
+comment|/* 326 = __getcwd */
 block|}
 decl_stmt|;
 end_decl_stmt

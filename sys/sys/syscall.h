@@ -1524,8 +1524,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_MAXSYSCALL
+name|SYS___getcwd
 value|326
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_MAXSYSCALL
+value|327
 end_define
 
 end_unit

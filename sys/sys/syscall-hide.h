@@ -1677,5 +1677,12 @@ argument|munlockall
 argument_list|)
 end_macro
 
+begin_macro
+name|HIDE_BSD
+argument_list|(
+argument|__getcwd
+argument_list|)
+end_macro
+
 end_unit
 
