@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.40	82/10/20	*/
+comment|/*	ip_output.c	1.41	82/10/30	*/
 end_comment
 
 begin_include
@@ -483,13 +483,6 @@ operator|->
 name|if_mtu
 condition|)
 block|{
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
 name|ip
 operator|->
 name|ip_len
@@ -518,8 +511,6 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ip
 operator|->
 name|ip_sum
@@ -804,13 +795,6 @@ expr|struct
 name|ip
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
 name|mhip
 operator|->
 name|ip_len
@@ -825,8 +809,6 @@ operator|->
 name|ip_len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|mh
 operator|->
 name|m_next
@@ -866,13 +848,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
 name|mhip
 operator|->
 name|ip_off
@@ -887,8 +862,6 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|mhip
 operator|->
 name|ip_sum

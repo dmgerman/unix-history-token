@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_debug.c	4.7	82/10/17	*/
+comment|/*	tcp_debug.c	4.8	82/10/30	*/
 end_comment
 
 begin_include
@@ -404,13 +404,6 @@ name|ti
 operator|->
 name|ti_len
 expr_stmt|;
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
 if|if
 condition|(
 name|act
@@ -443,8 +436,6 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|act

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.81	82/10/20	*/
+comment|/*	tcp_input.c	1.82	82/10/30	*/
 end_comment
 
 begin_include
@@ -414,13 +414,6 @@ name|u_short
 operator|)
 name|tlen
 expr_stmt|;
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
 name|ti
 operator|->
 name|ti_len
@@ -435,8 +428,6 @@ operator|->
 name|ti_len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ti
@@ -697,13 +688,6 @@ name|m_len
 operator|-=
 name|off
 expr_stmt|;
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
 comment|/* 	 * Convert TCP protocol specific fields to host format. 	 */
 name|ti
 operator|->
@@ -749,8 +733,6 @@ operator|->
 name|ti_urp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Locate pcb for segment. 	 */
 name|inp
 operator|=
@@ -3190,13 +3172,6 @@ operator|+
 literal|2
 operator|)
 expr_stmt|;
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
 name|tp
 operator|->
 name|t_maxseg
@@ -3211,8 +3186,6 @@ operator|->
 name|t_maxseg
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 block|}
 block|}

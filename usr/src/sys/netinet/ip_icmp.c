@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.22	82/10/20	*/
+comment|/*	ip_icmp.c	4.23	82/10/30	*/
 end_comment
 
 begin_include
@@ -296,13 +296,6 @@ name|ip_len
 operator|+=
 name|oiplen
 expr_stmt|;
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
 name|nip
 operator|->
 name|ip_len
@@ -317,8 +310,6 @@ operator|->
 name|ip_len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Now, copy old ip header in front of icmp 	 * message.  This allows us to reuse any source 	 * routing info present. 	 */
 name|m
 operator|->
@@ -684,13 +675,6 @@ case|case
 name|ICMP_SOURCEQUENCH
 case|:
 comment|/* 		 * Problem with previous datagram; advise 		 * higher level routines. 		 */
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
 name|icp
 operator|->
 name|icmp_ip
@@ -709,8 +693,6 @@ operator|.
 name|ip_len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|icmplen

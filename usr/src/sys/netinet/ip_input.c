@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.56	82/10/23	*/
+comment|/*	ip_input.c	1.57	82/10/30	*/
 end_comment
 
 begin_include
@@ -504,13 +504,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
 comment|/* 	 * Convert fields to host representation. 	 */
 name|ip
 operator|->
@@ -551,8 +544,6 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Check that the amount of data in the buffers 	 * is as at least much as the IP header would have us expect. 	 * Trim mbufs if longer than we expect. 	 * Drop packet if shorter than we expect. 	 */
 name|i
 operator|=

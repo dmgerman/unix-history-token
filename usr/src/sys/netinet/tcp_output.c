@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.47	82/10/17	*/
+comment|/*	tcp_output.c	4.48	82/10/30	*/
 end_comment
 
 begin_include
@@ -674,13 +674,6 @@ name|tp
 operator|->
 name|rcv_nxt
 expr_stmt|;
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
 name|ti
 operator|->
 name|ti_seq
@@ -703,8 +696,6 @@ operator|->
 name|ti_ack
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Before ESTABLISHED, force sending of initial options 	 * unless TCP set to not do any options. 	 */
 if|if
 condition|(
@@ -761,13 +752,6 @@ argument_list|,
 literal|1024
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
 operator|*
 operator|(
 name|u_short
@@ -793,8 +777,6 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -1017,13 +999,6 @@ name|win
 operator|>
 literal|0
 condition|)
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
 name|ti
 operator|->
 name|ti_win
@@ -1036,16 +1011,6 @@ operator|)
 name|win
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|ti
-operator|->
-name|ti_win
-operator|=
-name|win
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|SEQ_GT
@@ -1072,13 +1037,6 @@ name|tp
 operator|->
 name|snd_nxt
 expr_stmt|;
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
 name|ti
 operator|->
 name|ti_urp
@@ -1090,8 +1048,6 @@ operator|->
 name|ti_urp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ti
 operator|->
 name|ti_flags
@@ -1153,13 +1109,6 @@ name|optlen
 operator|+
 name|len
 expr_stmt|;
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
 name|ti
 operator|->
 name|ti_len
@@ -1174,8 +1123,6 @@ operator|->
 name|ti_len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|ti
 operator|->

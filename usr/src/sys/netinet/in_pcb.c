@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	4.34	82/10/20	*/
+comment|/*	in_pcb.c	4.35	82/10/30	*/
 end_comment
 
 begin_include
@@ -463,29 +463,16 @@ block|{
 name|u_short
 name|aport
 init|=
+name|htons
+argument_list|(
 name|lport
+argument_list|)
 decl_stmt|;
 name|int
 name|wild
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-operator|||
-name|ns16032
-name|aport
-operator|=
-name|htons
-argument_list|(
-name|aport
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* GROSS */
 if|if
 condition|(
