@@ -607,6 +607,18 @@ end_macro
 begin_macro
 name|GENSET
 argument_list|(
+argument|setsoftcrypto
+argument_list|,
+argument|&ipending
+argument_list|,
+literal|1
+argument|<< SWI_CRYPTO
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSET
+argument_list|(
 argument|schedsofttty
 argument_list|,
 argument|&idelayed
