@@ -316,6 +316,9 @@ name|ncmd
 decl_stmt|,
 name|i
 decl_stmt|;
+name|systemSuspendDialog
+argument_list|()
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|myprompt
@@ -1153,6 +1156,9 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|systemResumeDialog
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
