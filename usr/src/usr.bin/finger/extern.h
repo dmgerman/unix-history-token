@@ -1,36 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.1 (Berkeley) %G%  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|PERSON
-modifier|*
-name|htab
-index|[
-name|HSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The buckets. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|PERSON
-modifier|*
-name|phead
-decl_stmt|,
-modifier|*
-name|ptail
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The linked list of all people. */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_decl_stmt
@@ -56,6 +26,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Number of people. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DB
+modifier|*
+name|db
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Database. */
 end_comment
 
 begin_decl_stmt

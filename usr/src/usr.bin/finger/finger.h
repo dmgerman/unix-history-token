@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)finger.h	5.6 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*  * All unique persons are linked in a list headed by "head" and linkd  * by the "next" field, as well as kept in a hash table.  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)finger.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -12,18 +8,6 @@ typedef|typedef
 struct|struct
 name|person
 block|{
-name|struct
-name|person
-modifier|*
-name|next
-decl_stmt|;
-comment|/* link to next person */
-name|struct
-name|person
-modifier|*
-name|hlink
-decl_stmt|;
-comment|/* link to next person in hash bucket */
 name|uid_t
 name|uid
 decl_stmt|;
@@ -71,7 +55,7 @@ decl_stmt|,
 modifier|*
 name|wtail
 decl_stmt|;
-comment|/* list of where he is or has been */
+comment|/* list of where user is or has been */
 block|}
 name|PERSON
 typedef|;
@@ -98,7 +82,7 @@ name|where
 modifier|*
 name|next
 decl_stmt|;
-comment|/* next place he is or has been */
+comment|/* next place user is or has been */
 name|enum
 name|status
 name|info
@@ -138,39 +122,6 @@ block|}
 name|WHERE
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|HBITS
-value|8
-end_define
-
-begin_comment
-comment|/* number of bits in hash code */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HSIZE
-value|(1<< 8)
-end_define
-
-begin_comment
-comment|/* hash table size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HMASK
-value|(HSIZE - 1)
-end_define
-
-begin_comment
-comment|/* hash code mask */
-end_comment
 
 begin_include
 include|#

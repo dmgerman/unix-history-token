@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)net.c	5.6 (Berkeley) %G%"
+literal|"@(#)net.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
 end_include
 
 begin_include
@@ -561,6 +567,11 @@ name|lastc
 operator|!=
 literal|'\n'
 condition|)
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'
