@@ -1086,7 +1086,68 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/*  	  * Attempt suspend mode. The drive uses increments of ten seconds. 	  * For the parameters, see ata-all.c and 8.42.4 p. 210 of the  	  * ATAPI-5 interface spec at http://www.t13.org. 	  */
+comment|/*  	 * Attempt to set the standby timer. 	 * The parameters are documented in sections 8.42.4 p. 210 and 	 * 8.14.4 (table 23) p. 118 of the ATAPI-5 interface spec  	 * http://www.t13.org. 	 */
+name|int
+name|value
+init|=
+name|ata_suspend
+decl_stmt|;
+if|if
+condition|(
+name|atadev
+operator|->
+name|param
+operator|->
+name|stdby_ovlap
+condition|)
+block|{
+comment|/*  	     * The device supports the standard values. 	     * Scale the seconds in value appropriately. 	     */
+if|if
+condition|(
+name|value
+operator|<=
+literal|1200
+condition|)
+comment|/* Values 1-240 specify 5 second increments. */
+name|value
+operator|/=
+literal|5
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|value
+operator|<=
+literal|18000
+condition|)
+comment|/* Values 241-251 specify 30 minute increments. */
+name|value
+operator|=
+operator|(
+name|value
+operator|/
+literal|60
+operator|/
+literal|30
+operator|)
+operator|+
+literal|241
+expr_stmt|;
+else|else
+comment|/* A period between 8 and 12 hours. */
+name|value
+operator|=
+literal|253
+expr_stmt|;
+block|}
+else|else
+name|ata_prtdev
+argument_list|(
+name|atadev
+argument_list|,
+literal|"timer value is vendor-specific\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ata_command
@@ -1097,9 +1158,7 @@ name|ATA_C_STANDBY
 argument_list|,
 literal|0
 argument_list|,
-name|ata_suspend
-operator|/
-literal|10
+name|value
 argument_list|,
 literal|0
 argument_list|,
