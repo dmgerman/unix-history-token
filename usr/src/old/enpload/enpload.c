@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)enpload.c	5.2 (Berkeley from CCI) %G%"
+literal|"@(#)enpload.c	5.3 (Berkeley from CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
