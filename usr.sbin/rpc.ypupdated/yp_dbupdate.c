@@ -146,6 +146,10 @@ name|map
 argument_list|,
 name|domain
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;

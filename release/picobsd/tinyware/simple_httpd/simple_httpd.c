@@ -1119,6 +1119,10 @@ name|filename
 argument_list|,
 name|par
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

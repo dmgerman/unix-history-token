@@ -2276,7 +2276,7 @@ argument|; 		} 		close(fds[
 literal|0
 argument|]); 		close(fds[
 literal|1
-argument|]); 		if (execlp(gzip_program, gzip_program, gzip_flags, NULL)<
+argument|]); 		if (execlp(gzip_program, gzip_program, gzip_flags, 		    (char *)NULL)<
 literal|0
 argument|) 			err(
 literal|1

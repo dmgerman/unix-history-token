@@ -1143,6 +1143,10 @@ literal|"/usr/bin/make"
 argument_list|,
 literal|"make"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;

@@ -280,6 +280,10 @@ literal|"makekey"
 argument_list|,
 literal|"-"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -289,6 +293,10 @@ literal|"/usr/libexec/makekey"
 argument_list|,
 literal|"-"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -299,6 +307,10 @@ literal|"/usr/lib/makekey"
 argument_list|,
 literal|"-"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -308,6 +320,10 @@ literal|"/usr/bin/makekey"
 argument_list|,
 literal|"-"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -318,6 +334,10 @@ literal|"/lib/makekey"
 argument_list|,
 literal|"-"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

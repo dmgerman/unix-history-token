@@ -1887,6 +1887,10 @@ literal|"std.300"
 argument_list|,
 literal|"-"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;

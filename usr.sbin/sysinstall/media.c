@@ -2743,6 +2743,10 @@ name|gunzip
 argument_list|,
 name|gunzip
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2910,6 +2914,10 @@ argument_list|,
 name|mediaTapeBlocksize
 argument_list|()
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2929,6 +2937,10 @@ argument_list|,
 name|mediaTapeBlocksize
 argument_list|()
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -3279,6 +3291,10 @@ name|gunzip
 argument_list|,
 name|gunzip
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -3441,6 +3457,10 @@ argument_list|,
 name|mediaTapeBlocksize
 argument_list|()
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -3460,6 +3480,10 @@ argument_list|,
 name|mediaTapeBlocksize
 argument_list|()
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

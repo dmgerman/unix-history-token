@@ -601,6 +601,10 @@ name|PREPROCESSOR
 argument_list|,
 name|PREPROCESSOR
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -610,6 +614,10 @@ literal|"app"
 argument_list|,
 literal|"app"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

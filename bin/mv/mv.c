@@ -1699,6 +1699,10 @@ name|from
 argument_list|,
 name|to
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1813,6 +1817,10 @@ literal|"-rf"
 argument_list|,
 name|from
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;

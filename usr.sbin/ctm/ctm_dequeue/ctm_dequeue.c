@@ -678,6 +678,10 @@ literal|"-odq"
 argument_list|,
 literal|"-t"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;

@@ -4845,6 +4845,10 @@ name|ed
 argument_list|,
 name|tmpfil
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

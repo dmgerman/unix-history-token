@@ -413,6 +413,10 @@ literal|"-c"
 argument_list|,
 name|s
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;

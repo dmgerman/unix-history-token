@@ -3623,6 +3623,10 @@ literal|"C"
 argument_list|,
 literal|"-F"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -7527,6 +7531,10 @@ name|cp
 argument_list|,
 literal|"-t"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -8531,6 +8539,10 @@ name|width
 argument_list|,
 name|length
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

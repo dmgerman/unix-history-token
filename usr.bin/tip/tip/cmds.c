@@ -3913,6 +3913,10 @@ argument_list|)
 argument_list|,
 name|cp
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -4322,6 +4326,10 @@ literal|"-c"
 argument_list|,
 name|s
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -5306,6 +5314,10 @@ literal|"-c"
 argument_list|,
 name|cmdbuf
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

@@ -672,6 +672,10 @@ name|mppath
 argument_list|,
 name|tempname
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -701,6 +705,10 @@ name|username
 argument_list|,
 name|tempname
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -869,6 +877,10 @@ name|p
 argument_list|,
 name|tempname
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;

@@ -1602,6 +1602,10 @@ literal|"-I"
 argument_list|,
 name|_PATH_INCLUDE
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1964,6 +1968,10 @@ literal|"-F"
 argument_list|,
 literal|"\"Reminder Service\""
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;

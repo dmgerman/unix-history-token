@@ -3125,6 +3125,10 @@ name|yppasswd_domain
 argument_list|,
 literal|"pushpw"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -3141,6 +3145,10 @@ name|passfile
 argument_list|,
 name|yppasswd_domain
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -3996,6 +4004,10 @@ name|domain
 argument_list|,
 literal|"pushpw"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -4014,6 +4026,10 @@ name|argp
 operator|->
 name|domain
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;

@@ -6828,6 +6828,10 @@ index|[
 literal|1
 index|]
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -6838,6 +6842,10 @@ name|shellp
 argument_list|,
 name|shellname
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

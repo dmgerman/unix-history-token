@@ -1992,6 +1992,10 @@ name|shell
 argument_list|,
 name|base
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2003,6 +2007,10 @@ name|_PATH_BSHELL
 argument_list|,
 literal|"sh"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

@@ -4,7 +4,7 @@ comment|/* Buffer management for tar.    Copyright (C) 1988, 1992, 1993 Free Sof
 end_comment
 
 begin_comment
-comment|/*  * Buffer management for tar.  *  * Written by John Gilmore, ihnp4!hoptoad!gnu, on 25 August 1985.  */
+comment|/*  * Buffer management for tar.  *  * Written by John Gilmore, ihnp4!hoptoad!gnu, on 25 August 1985.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -5530,6 +5530,10 @@ literal|"-sh"
 argument_list|,
 literal|"-i"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

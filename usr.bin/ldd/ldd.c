@@ -880,6 +880,10 @@ argument_list|,
 operator|*
 name|argv
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 operator|!=
