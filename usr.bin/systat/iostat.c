@@ -1558,9 +1558,9 @@ name|histogram
 argument_list|(
 name|mb_per_second
 argument_list|,
-literal|100
+literal|50
 argument_list|,
-literal|1.0
+literal|.5
 argument_list|)
 expr_stmt|;
 name|wmove
@@ -1579,7 +1579,7 @@ name|transfers_per_second
 argument_list|,
 literal|50
 argument_list|,
-literal|1.0
+literal|.5
 argument_list|)
 expr_stmt|;
 if|if
@@ -1603,7 +1603,7 @@ name|kb_per_transfer
 argument_list|,
 literal|50
 argument_list|,
-literal|1.0
+literal|.5
 argument_list|)
 expr_stmt|;
 block|}
