@@ -692,6 +692,11 @@ directive|define
 name|DTYPE_DOC2K
 value|13
 comment|/* Msys DiskOnChip */
+define|#
+directive|define
+name|DTYPE_JFS2
+value|16
+comment|/* IBM JFS 2 */
 if|#
 directive|if
 name|defined
@@ -748,6 +753,12 @@ block|,
 literal|"Vinum"
 block|,
 literal|"DOC2K"
+block|,
+literal|"?"
+block|,
+literal|"?"
+block|,
+literal|"jfs"
 block|,
 name|NULL
 block|}
@@ -935,6 +946,17 @@ begin_comment
 comment|/* Vinum drive */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FS_JFS2
+value|21
+end_define
+
+begin_comment
+comment|/* IBM JFS2 */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -978,6 +1000,22 @@ block|,
 literal|"boot"
 block|,
 literal|"vinum"
+block|,
+literal|"?"
+block|,
+literal|"?"
+block|,
+literal|"?"
+block|,
+literal|"?"
+block|,
+literal|"?"
+block|,
+literal|"?"
+block|,
+literal|"?"
+block|,
+literal|"jfs"
 block|,
 name|NULL
 block|}
