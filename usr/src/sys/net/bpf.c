@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)bpf.c	7.2 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf.c,v 1.23 91/01/30 18:22:13 mccanne Exp $";  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)bpf.c	7.3 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf.c,v 1.23 91/01/30 18:22:13 mccanne Exp $";  */
 end_comment
 
 begin_include
@@ -3791,6 +3791,10 @@ name|int
 name|pswitch
 decl_stmt|;
 block|{
+name|struct
+name|ifreq
+name|ifr
+decl_stmt|;
 comment|/*  	 * If the device is not configured up, we cannot put it in 	 * promiscuous mode. 	 */
 if|if
 condition|(
@@ -3859,6 +3863,14 @@ operator|~
 name|IFF_PROMISC
 expr_stmt|;
 block|}
+name|ifr
+operator|.
+name|ifr_flags
+operator|=
+name|ifp
+operator|->
+name|if_flags
+expr_stmt|;
 return|return
 operator|(
 call|(
@@ -3875,7 +3887,8 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-literal|0
+operator|&
+name|ifr
 argument_list|)
 operator|)
 return|;
