@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: main.c,v 1.5 84/12/26 10:40:16 linton Exp $"
+literal|"$Header: main.c,v 1.4 87/07/08 21:31:27 donn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +88,12 @@ begin_include
 include|#
 directive|include
 file|"main.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tree.h"
 end_include
 
 begin_include
@@ -172,6 +178,31 @@ parameter_list|)
 value|(interactive or isatty(fileno(file)))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IRIS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<termio.h>
+end_include
+
+begin_typedef
+typedef|typedef
+name|struct
+name|termio
+name|Ttyinfo
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -219,6 +250,11 @@ block|}
 name|Ttyinfo
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -326,6 +362,28 @@ end_comment
 
 begin_decl_stmt
 name|public
+name|boolean
+name|quiet
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't print heading */
+end_comment
+
+begin_decl_stmt
+name|public
+name|boolean
+name|autostrip
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* strip C++ prefixes */
+end_comment
+
+begin_decl_stmt
+name|public
 name|File
 name|corefile
 decl_stmt|;
@@ -334,6 +392,15 @@ end_decl_stmt
 begin_comment
 comment|/* File id of core dump */
 end_comment
+
+begin_decl_stmt
+name|public
+name|integer
+name|versionNumber
+init|=
+literal|4
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -423,6 +490,16 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|private
+name|char
+modifier|*
+modifier|*
+name|scanargs
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Main program.  */
 end_comment
@@ -442,14 +519,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
-name|integer
-name|i
-decl_stmt|;
-specifier|extern
-name|String
-name|date
-decl_stmt|;
 specifier|extern
 name|integer
 name|versionNumber
@@ -494,25 +563,25 @@ argument_list|,
 name|nil
 argument_list|)
 expr_stmt|;
+name|onsyserr
+argument_list|(
+name|EADDRINUSE
+argument_list|,
+name|nil
+argument_list|)
+expr_stmt|;
+name|onsyserr
+argument_list|(
+name|ENXIO
+argument_list|,
+name|nil
+argument_list|)
+expr_stmt|;
 name|setbuf
 argument_list|(
 name|stdout
 argument_list|,
 name|outbuf
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"dbx version 3.%d of %s.\nType 'help' for help.\n"
-argument_list|,
-name|versionNumber
-argument_list|,
-name|date
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
 argument_list|)
 expr_stmt|;
 name|argv
@@ -523,6 +592,22 @@ name|argc
 argument_list|,
 name|argv
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|not
+name|runfirst
+name|and
+name|not
+name|quiet
+condition|)
+block|{
+name|printheading
+argument_list|()
+expr_stmt|;
+block|}
+name|openfiles
+argument_list|()
 expr_stmt|;
 name|language_init
 argument_list|()
@@ -622,6 +707,32 @@ expr_stmt|;
 name|quit
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|public
+name|printheading
+parameter_list|()
+block|{
+specifier|extern
+name|String
+name|date
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"dbx version 3.%d of %s.\nType 'help' for help.\n"
+argument_list|,
+name|versionNumber
+argument_list|,
+name|date
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -732,6 +843,9 @@ name|coredump_getkerinfo
 argument_list|()
 expr_stmt|;
 block|}
+name|getsrcpos
+argument_list|()
+expr_stmt|;
 name|setcurfunc
 argument_list|(
 name|whatblock
@@ -1141,29 +1255,11 @@ modifier|*
 name|optarg
 decl_stmt|;
 specifier|extern
-name|int
+name|integer
 name|optind
 decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
-specifier|register
-name|Boolean
-name|foundfile
-decl_stmt|;
-specifier|register
-name|File
-name|f
-decl_stmt|;
-name|int
+name|integer
 name|ch
-decl_stmt|;
-name|char
-modifier|*
-name|tmp
 decl_stmt|;
 name|runfirst
 operator|=
@@ -1197,9 +1293,13 @@ name|vaddrs
 operator|=
 name|false
 expr_stmt|;
-name|foundfile
+name|quiet
 operator|=
 name|false
+expr_stmt|;
+name|autostrip
+operator|=
+name|true
 expr_stmt|;
 name|corefile
 operator|=
@@ -1237,7 +1337,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"I:bc:eiklnrs"
+literal|"I:abc:eiklnqrs"
 argument_list|)
 operator|)
 operator|!=
@@ -1265,6 +1365,14 @@ name|nil
 argument_list|,
 name|sourcepath
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
+name|autostrip
+operator|=
+name|false
 expr_stmt|;
 break|break;
 case|case
@@ -1336,6 +1444,14 @@ name|true
 expr_stmt|;
 break|break;
 case|case
+literal|'q'
+case|:
+name|quiet
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
 literal|'r'
 case|:
 comment|/* run program before accepting commands */
@@ -1380,10 +1496,6 @@ name|objname
 operator|=
 operator|*
 name|argv
-expr_stmt|;
-name|foundfile
-operator|=
-name|true
 expr_stmt|;
 if|if
 condition|(
@@ -1432,6 +1544,7 @@ name|and
 name|not
 name|runfirst
 condition|)
+block|{
 name|fatal
 argument_list|(
 literal|"extraneous argument %s"
@@ -1440,10 +1553,30 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+block|}
+return|return
+name|argv
+return|;
+block|}
+end_function
+
+begin_function
+name|private
+name|openfiles
+parameter_list|()
+block|{
+name|File
+name|f
+decl_stmt|;
+name|char
+modifier|*
+name|tmp
+decl_stmt|;
 if|if
 condition|(
-name|not
-name|foundfile
+name|objname
+operator|==
+name|nil
 name|and
 name|isatty
 argument_list|(
@@ -1630,11 +1763,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-return|return
-operator|(
-name|argv
-operator|)
-return|;
 block|}
 end_function
 
@@ -1658,6 +1786,23 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|IRIS
+name|ioctl
+argument_list|(
+name|fileno
+argument_list|(
+name|f
+argument_list|)
+argument_list|,
+name|TCGETA
+argument_list|,
+name|t
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|ioctl
 argument_list|(
 name|fileno
@@ -1759,6 +1904,30 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|t
+operator|->
+name|fcflags
+operator|&
+name|FASYNC
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* fprintf(stderr, "[async i/o found set -- reset]\n"); */
+name|t
+operator|->
+name|fcflags
+operator|&=
+operator|~
+name|FASYNC
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1778,6 +1947,23 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|IRIS
+name|ioctl
+argument_list|(
+name|fileno
+argument_list|(
+name|f
+argument_list|)
+argument_list|,
+name|TCSETA
+argument_list|,
+name|t
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|ioctl
 argument_list|(
 name|fileno
@@ -1863,6 +2049,28 @@ name|local
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|t
+operator|->
+name|fcflags
+operator|&
+name|FASYNC
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* fprintf(stderr, "[async i/o not set]\n"); */
+name|t
+operator|->
+name|fcflags
+operator|&=
+operator|~
+name|FASYNC
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1880,6 +2088,8 @@ operator|->
 name|fcflags
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)library.c	5.1 (Berkeley) %G%"
+literal|"@(#)library.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: library.c,v 1.5 84/12/26 10:39:52 linton Exp $"
+literal|"$Header: library.c,v 1.2 87/03/25 20:50:14 donn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,21 +303,29 @@ end_define
 begin_typedef
 typedef|typedef
 name|int
-name|INTFUNC
+name|IntFunc
 parameter_list|()
 function_decl|;
 end_typedef
+
+begin_function_decl
+name|IntFunc
+modifier|*
+name|onsyserr
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|INTFUNC
+name|IntFunc
 modifier|*
 name|func
 decl_stmt|;
 block|}
-name|ERRINFO
+name|ErrInfo
 typedef|;
 end_typedef
 
@@ -325,14 +333,14 @@ begin_define
 define|#
 directive|define
 name|ERR_IGNORE
-value|((INTFUNC *) 0)
+value|((IntFunc *) 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ERR_CATCH
-value|((INTFUNC *) 1)
+value|((IntFunc *) 1)
 end_define
 
 begin_comment
@@ -1473,7 +1481,7 @@ end_comment
 
 begin_decl_stmt
 name|private
-name|ERRINFO
+name|ErrInfo
 modifier|*
 name|errinfo
 decl_stmt|;
@@ -1493,7 +1501,7 @@ name|alloc
 argument_list|(
 name|sys_nerr
 argument_list|,
-name|ERRINFO
+name|ErrInfo
 argument_list|)
 expr_stmt|;
 for|for
@@ -1591,7 +1599,8 @@ name|public
 name|syserr
 parameter_list|()
 block|{
-name|ERRINFO
+specifier|register
+name|ErrInfo
 modifier|*
 name|e
 decl_stmt|;
@@ -1622,7 +1631,7 @@ name|errinfo
 operator|==
 name|nil
 argument_list|(
-name|ERRINFO
+name|ErrInfo
 operator|*
 argument_list|)
 condition|)
@@ -1740,11 +1749,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Change the action on receipt of an error.  */
+comment|/*  * Change the action on receipt of an error, returning the previous action.  */
 end_comment
 
 begin_function
 name|public
+name|IntFunc
+modifier|*
 name|onsyserr
 parameter_list|(
 name|n
@@ -1754,18 +1765,22 @@ parameter_list|)
 name|int
 name|n
 decl_stmt|;
-name|INTFUNC
+name|IntFunc
 modifier|*
 name|f
 decl_stmt|;
 block|{
+name|IntFunc
+modifier|*
+name|oldf
+decl_stmt|;
 if|if
 condition|(
 name|errinfo
 operator|==
 name|nil
 argument_list|(
-name|ERRINFO
+name|ErrInfo
 operator|*
 argument_list|)
 condition|)
@@ -1774,6 +1789,15 @@ name|initErrInfo
 argument_list|()
 expr_stmt|;
 block|}
+name|oldf
+operator|=
+name|errinfo
+index|[
+name|n
+index|]
+operator|.
+name|func
+expr_stmt|;
 name|errinfo
 index|[
 name|n
@@ -1783,12 +1807,21 @@ name|func
 operator|=
 name|f
 expr_stmt|;
+return|return
+name|oldf
+return|;
 block|}
 end_function
 
 begin_comment
 comment|/*  * Print the message associated with the given signal.  * Like a "perror" for signals.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIGWINCH
+end_ifdef
 
 begin_decl_stmt
 name|public
@@ -1798,6 +1831,99 @@ init|=
 name|NSIG
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+else|not 4.3 BSD
+end_else
+
+begin_comment
+comment|/*  * This table is correct for 4.2-like systems but will  * be inadequate for System V (which is the sort of  * Unix that needs it!).  */
+end_comment
+
+begin_decl_stmt
+name|public
+name|String
+name|sys_siglist
+index|[]
+init|=
+block|{
+literal|"no signal"
+block|,
+literal|"hangup"
+block|,
+literal|"interrupt"
+block|,
+literal|"quit"
+block|,
+literal|"illegal instruction"
+block|,
+literal|"trace trap"
+block|,
+literal|"IOT instruction"
+block|,
+literal|"EMT instruction"
+block|,
+literal|"floating point exception"
+block|,
+literal|"kill"
+block|,
+literal|"bus error"
+block|,
+literal|"segmentation violation"
+block|,
+literal|"bad argument to system call"
+block|,
+literal|"broken pipe"
+block|,
+literal|"alarm clock"
+block|,
+literal|"soft kill"
+block|,
+literal|"urgent I/O condition"
+block|,
+literal|"stop signal not from tty"
+block|,
+literal|"stop signal from tty"
+block|,
+literal|"continue"
+block|,
+literal|"child termination"
+block|,
+literal|"stop (tty input)"
+block|,
+literal|"stop (tty output)"
+block|,
+literal|"possible input/output"
+block|,
+literal|"exceeded CPU time limit"
+block|,
+literal|"exceeded file size limit"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|public
+name|int
+name|sys_nsig
+init|=
+sizeof|sizeof
+name|sys_siglist
+operator|/
+sizeof|sizeof
+name|sys_siglist
+index|[
+literal|0
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|public
@@ -2104,6 +2230,11 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|shouldquit
@@ -2181,6 +2312,11 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
@@ -2871,6 +3007,173 @@ empty_stmt|;
 block|}
 block|}
 end_block
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IRIS
+end_ifdef
+
+begin_comment
+comment|/* or in general for 4.2 - System V C library interface */
+end_comment
+
+begin_function
+name|public
+name|bcopy
+parameter_list|(
+name|fromaddr
+parameter_list|,
+name|toaddr
+parameter_list|,
+name|n
+parameter_list|)
+name|char
+modifier|*
+name|fromaddr
+decl_stmt|,
+decl|*
+name|toaddr
+decl_stmt|;
+end_function
+
+begin_decl_stmt
+name|int
+name|n
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|blt
+argument_list|(
+name|toaddr
+argument_list|,
+name|fromaddr
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_function
+name|public
+name|bzero
+parameter_list|(
+name|addr
+parameter_list|,
+name|n
+parameter_list|)
+name|char
+modifier|*
+name|addr
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+block|{
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+name|q
+decl_stmt|;
+name|p
+operator|=
+name|addr
+expr_stmt|;
+name|q
+operator|=
+name|p
+operator|+
+name|n
+expr_stmt|;
+while|while
+condition|(
+name|p
+operator|<
+name|q
+condition|)
+block|{
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_function
+name|public
+name|char
+modifier|*
+name|index
+parameter_list|(
+name|s
+parameter_list|,
+name|c
+parameter_list|)
+name|char
+modifier|*
+name|s
+decl_stmt|,
+name|c
+decl_stmt|;
+block|{
+return|return
+name|strchr
+argument_list|(
+name|s
+argument_list|,
+name|c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|public
+name|char
+modifier|*
+name|rindex
+parameter_list|(
+name|s
+parameter_list|,
+name|c
+parameter_list|)
+name|char
+modifier|*
+name|s
+decl_stmt|,
+name|c
+decl_stmt|;
+block|{
+return|return
+name|strrchr
+argument_list|(
+name|s
+argument_list|,
+name|c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

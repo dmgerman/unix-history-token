@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)names.c	5.1 (Berkeley) %G%"
+literal|"@(#)names.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: names.c,v 1.4 84/12/26 10:40:47 linton Exp $"
+literal|"$Header: names.c,v 1.2 87/03/26 20:16:59 donn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,11 +100,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * The hash table is a power of two, in order to make hashing faster.  * Using a non-prime is ok since we use chaining instead of re-hashing.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HASHTABLESIZE
-value|2997
+value|8192
 end_define
 
 begin_decl_stmt
@@ -125,7 +129,7 @@ begin_define
 define|#
 directive|define
 name|CHUNKSIZE
-value|200
+value|1000
 end_define
 
 begin_typedef
@@ -170,7 +174,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Given an identifier, convert it to a name.  * If it's not in the hash table, then put it there.  *  * The second argument specifies whether the string should be copied  * into newly allocated space if not found.  *  * Pardon my use of goto's, but it seemed more efficient and less convoluted  * than adding a collection of boolean variables.  This routine is time  * critical when starting up the debugger on large programs.  */
+comment|/*  * Given an identifier, convert it to a name.  * If it's not in the hash table, then put it there.  *  * The second argument specifies whether the string should be copied  * into newly allocated space if not found.  *  * This routine is time critical when starting up the debugger  * on large programs.  */
 end_comment
 
 begin_function
@@ -194,7 +198,7 @@ name|unsigned
 name|h
 decl_stmt|;
 specifier|register
-name|Char
+name|char
 modifier|*
 name|p
 decl_stmt|,
@@ -204,10 +208,9 @@ decl_stmt|;
 specifier|register
 name|Name
 name|n
-decl_stmt|;
-specifier|register
-name|Integer
-name|len
+decl_stmt|,
+modifier|*
+name|np
 decl_stmt|;
 name|Namepool
 name|newpool
@@ -246,23 +249,25 @@ operator|)
 expr_stmt|;
 block|}
 name|h
-operator|=
-name|h
-name|mod
+operator|&=
+operator|(
 name|HASHTABLESIZE
-expr_stmt|;
-name|len
-operator|=
-name|p
 operator|-
-name|s
+literal|1
+operator|)
 expr_stmt|;
-name|n
+name|np
 operator|=
+operator|&
 name|nametable
 index|[
 name|h
 index|]
+expr_stmt|;
+name|n
+operator|=
+operator|*
+name|np
 expr_stmt|;
 while|while
 condition|(
@@ -281,26 +286,15 @@ name|n
 operator|->
 name|identifier
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-if|if
+while|while
 condition|(
 operator|*
 name|p
-operator|!=
+operator|==
 operator|*
 name|q
 condition|)
 block|{
-goto|goto
-name|nomatch
-goto|;
-block|}
-elseif|else
 if|if
 condition|(
 operator|*
@@ -309,9 +303,9 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-goto|goto
-name|match
-goto|;
+return|return
+name|n
+return|;
 block|}
 operator|++
 name|p
@@ -320,8 +314,6 @@ operator|++
 name|q
 expr_stmt|;
 block|}
-name|nomatch
-label|:
 name|n
 operator|=
 name|n
@@ -329,7 +321,7 @@ operator|->
 name|chain
 expr_stmt|;
 block|}
-comment|/*      * Now we know that name hasn't been found (otherwise we'd have jumped      * down to match), so we allocate a name, store the identifier, and      * enter it in the hash table.      */
+comment|/*      * Now we know that name hasn't been found,      * so we allocate a name, store the identifier, and      * enter it in the hash table.      */
 if|if
 condition|(
 name|nleft
@@ -342,16 +334,6 @@ operator|=
 name|new
 argument_list|(
 name|Namepool
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|newpool
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|newpool
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|newpool
@@ -398,6 +380,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* this case doesn't happen very often */
 name|n
 operator|->
 name|identifier
@@ -406,7 +389,10 @@ name|newarr
 argument_list|(
 name|char
 argument_list|,
-name|len
+name|strlen
+argument_list|(
+name|s
+argument_list|)
 operator|+
 literal|1
 argument_list|)
@@ -448,21 +434,14 @@ name|n
 operator|->
 name|chain
 operator|=
-name|nametable
-index|[
-name|h
-index|]
+operator|*
+name|np
 expr_stmt|;
-name|nametable
-index|[
-name|h
-index|]
+operator|*
+name|np
 operator|=
 name|n
 expr_stmt|;
-comment|/*      * The two possibilities (name known versus unknown) rejoin.      */
-name|match
-label|:
 return|return
 name|n
 return|;
