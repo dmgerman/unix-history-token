@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, University of Vermont and State  *  Agricultural College.  * Copyright (c) 1992, 1993, Garrett A. Wollman.  *  * Portions:  * Copyright (c) 1990, 1991, William F. Jolitz  * Copyright (c) 1990, The Regents of the University of California  *  * 3Com 3C507 support:  * Copyright (c) 1993, 1994, Charles M. Hannum  *  * EtherExpress 16 support:  * Copyright (c) 1993, 1994, 1995, Rodney W. Grimes  * Copyright (c) 1997, Aaron C. Smith  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	Vermont and State Agricultural College and Garrett A. Wollman, by  *	William F. Jolitz, by the University of California, Berkeley,  *	Lawrence Berkeley Laboratory, and their contributors, by  *	Charles M. Hannum, by Rodney W. Grimes, and by Aaron C. Smith.  * 4. Neither the names of the Universities nor the names of the authors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE UNIVERSITY OR AUTHORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ie.c,v 1.62 1999/08/18 06:11:59 mdodd Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993, University of Vermont and State  *  Agricultural College.  * Copyright (c) 1992, 1993, Garrett A. Wollman.  *  * Portions:  * Copyright (c) 1990, 1991, William F. Jolitz  * Copyright (c) 1990, The Regents of the University of California  *  * 3Com 3C507 support:  * Copyright (c) 1993, 1994, Charles M. Hannum  *  * EtherExpress 16 support:  * Copyright (c) 1993, 1994, 1995, Rodney W. Grimes  * Copyright (c) 1997, Aaron C. Smith  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	Vermont and State Agricultural College and Garrett A. Wollman, by  *	William F. Jolitz, by the University of California, Berkeley,  *	Lawrence Berkeley Laboratory, and their contributors, by  *	Charles M. Hannum, by Rodney W. Grimes, and by Aaron C. Smith.  * 4. Neither the names of the Universities nor the names of the authors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE UNIVERSITY OR AUTHORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ie.c,v 1.63 1999/08/18 22:14:22 mdodd Exp $  */
 end_comment
 
 begin_comment
@@ -402,8 +402,8 @@ specifier|static
 name|void
 name|ieinit
 parameter_list|(
-name|int
-name|unit
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1071,6 +1071,9 @@ decl_stmt|;
 name|int
 name|hard_vers
 decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
 name|u_short
 name|port
 decl_stmt|;
@@ -1636,6 +1639,12 @@ name|dvp
 operator|->
 name|id_unit
 decl_stmt|;
+name|sc
+operator|->
+name|unit
+operator|=
+name|unit
+expr_stmt|;
 name|sc
 operator|->
 name|port
@@ -3691,6 +3700,12 @@ operator|->
 name|if_ioctl
 operator|=
 name|ieioctl
+expr_stmt|;
+name|ifp
+operator|->
+name|if_init
+operator|=
+name|ieinit
 expr_stmt|;
 name|ifp
 operator|->
@@ -9558,20 +9573,19 @@ specifier|static
 name|void
 name|ieinit
 parameter_list|(
-name|int
-name|unit
+name|xsc
 parameter_list|)
+name|void
+modifier|*
+name|xsc
+decl_stmt|;
 block|{
 name|struct
 name|ie_softc
 modifier|*
 name|ie
 init|=
-operator|&
-name|ie_softc
-index|[
-name|unit
-index|]
+name|xsc
 decl_stmt|;
 specifier|volatile
 name|struct
@@ -9676,6 +9690,8 @@ if|if
 condition|(
 name|command_and_wait
 argument_list|(
+name|sc
+operator|->
 name|unit
 argument_list|,
 name|IE_CU_START
@@ -9701,6 +9717,8 @@ name|printf
 argument_list|(
 literal|"ie%d: configure command failed\n"
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -9757,6 +9775,8 @@ operator|*
 operator|)
 name|ie_softc
 index|[
+name|sc
+operator|->
 name|unit
 index|]
 operator|.
@@ -9795,6 +9815,8 @@ if|if
 condition|(
 name|command_and_wait
 argument_list|(
+name|sc
+operator|->
 name|unit
 argument_list|,
 name|IE_CU_START
@@ -9821,6 +9843,8 @@ argument_list|(
 literal|"ie%d: individual address "
 literal|"setup command failed\n"
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -9830,6 +9854,8 @@ block|}
 comment|/* 	 * Now run the time-domain reflectometer. 	 */
 name|run_tdr
 argument_list|(
+name|sc
+operator|->
 name|unit
 argument_list|,
 operator|(
@@ -9849,6 +9875,8 @@ name|scb
 argument_list|,
 name|IE_ST_WHENCE
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|,
 name|ie
@@ -10133,6 +10161,8 @@ argument_list|)
 expr_stmt|;
 name|ee16_chan_attn
 argument_list|(
+name|sc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -10150,6 +10180,8 @@ expr_stmt|;
 comment|/* tell higher levels 							 * we're here */
 name|start_receiver
 argument_list|(
+name|sc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -10314,7 +10346,7 @@ name|ieinit
 argument_list|(
 name|ifp
 operator|->
-name|if_unit
+name|if_softc
 argument_list|)
 expr_stmt|;
 block|}
@@ -10366,7 +10398,7 @@ name|ieinit
 argument_list|(
 name|ifp
 operator|->
-name|if_unit
+name|if_softc
 argument_list|)
 expr_stmt|;
 block|}

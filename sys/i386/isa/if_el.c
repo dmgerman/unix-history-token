@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.42 1999/08/18 06:11:58 mdodd Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.43 1999/08/18 22:14:20 mdodd Exp $  */
 end_comment
 
 begin_comment
@@ -233,7 +233,8 @@ specifier|static
 name|void
 name|el_init
 parameter_list|(
-name|int
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -283,7 +284,8 @@ specifier|static
 name|void
 name|el_reset
 parameter_list|(
-name|int
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -305,7 +307,8 @@ specifier|static
 name|void
 name|el_stop
 parameter_list|(
-name|int
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -374,7 +377,8 @@ name|__inline
 name|void
 name|el_hardreset
 parameter_list|(
-name|int
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -669,15 +673,20 @@ name|__inline
 name|void
 name|el_hardreset
 parameter_list|(
-name|int
-name|unit
+name|xsc
 parameter_list|)
+name|void
+modifier|*
+name|xsc
+decl_stmt|;
 block|{
 specifier|register
 name|struct
 name|el_softc
 modifier|*
 name|sc
+init|=
+name|xsc
 decl_stmt|;
 specifier|register
 name|int
@@ -687,14 +696,6 @@ specifier|register
 name|int
 name|j
 decl_stmt|;
-name|sc
-operator|=
-operator|&
-name|el_softc
-index|[
-name|unit
-index|]
-expr_stmt|;
 name|base
 operator|=
 name|sc
@@ -839,9 +840,7 @@ argument_list|)
 expr_stmt|;
 name|el_hardreset
 argument_list|(
-name|idev
-operator|->
-name|id_unit
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Initialize ifnet structure */
@@ -894,6 +893,12 @@ operator|->
 name|if_watchdog
 operator|=
 name|el_watchdog
+expr_stmt|;
+name|ifp
+operator|->
+name|if_init
+operator|=
+name|el_init
 expr_stmt|;
 name|ifp
 operator|->
@@ -993,10 +998,20 @@ specifier|static
 name|void
 name|el_reset
 parameter_list|(
-name|int
-name|unit
+name|xsc
 parameter_list|)
+name|void
+modifier|*
+name|xsc
+decl_stmt|;
 block|{
+name|struct
+name|el_softc
+modifier|*
+name|sc
+init|=
+name|xsc
+decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -1014,12 +1029,12 @@ argument_list|()
 expr_stmt|;
 name|el_stop
 argument_list|(
-name|unit
+name|sc
 argument_list|)
 expr_stmt|;
 name|el_init
 argument_list|(
-name|unit
+name|sc
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1035,23 +1050,20 @@ specifier|static
 name|void
 name|el_stop
 parameter_list|(
-name|int
-name|unit
+name|xsc
 parameter_list|)
+name|void
+modifier|*
+name|xsc
+decl_stmt|;
 block|{
 name|struct
 name|el_softc
 modifier|*
 name|sc
+init|=
+name|xsc
 decl_stmt|;
-name|sc
-operator|=
-operator|&
-name|el_softc
-index|[
-name|unit
-index|]
-expr_stmt|;
 name|outb
 argument_list|(
 name|sc
@@ -1075,14 +1087,19 @@ specifier|static
 name|void
 name|el_init
 parameter_list|(
-name|int
-name|unit
+name|xse
 parameter_list|)
+name|void
+modifier|*
+name|xsc
+decl_stmt|;
 block|{
 name|struct
 name|el_softc
 modifier|*
 name|sc
+init|=
+name|xsc
 decl_stmt|;
 name|struct
 name|ifnet
@@ -1096,14 +1113,6 @@ name|u_short
 name|base
 decl_stmt|;
 comment|/* Set up pointers */
-name|sc
-operator|=
-operator|&
-name|el_softc
-index|[
-name|unit
-index|]
-expr_stmt|;
 name|ifp
 operator|=
 operator|&
@@ -1147,7 +1156,7 @@ argument_list|)
 expr_stmt|;
 name|el_hardreset
 argument_list|(
-name|unit
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Configure rx */
@@ -2311,7 +2320,7 @@ argument_list|)
 expr_stmt|;
 name|el_hardreset
 argument_list|(
-name|unit
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Put board back into receive mode */
@@ -3194,7 +3203,7 @@ name|el_stop
 argument_list|(
 name|ifp
 operator|->
-name|if_unit
+name|if_softc
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -3234,7 +3243,7 @@ name|el_init
 argument_list|(
 name|ifp
 operator|->
-name|if_unit
+name|if_softc
 argument_list|)
 expr_stmt|;
 block|}
@@ -3296,7 +3305,7 @@ name|el_reset
 argument_list|(
 name|ifp
 operator|->
-name|if_unit
+name|if_softc
 argument_list|)
 expr_stmt|;
 block|}
