@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Modifications to support NetBSD and media selection:  * Copyright (c) 1997 Jason R. Thorpe.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.62 1999/01/28 17:32:05 dillon Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Modifications to support NetBSD and media selection:  * Copyright (c) 1997 Jason R. Thorpe.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.63 1999/02/11 21:47:09 julian Exp $  */
 end_comment
 
 begin_comment
@@ -6149,6 +6149,8 @@ name|if_softc
 decl_stmt|;
 name|int
 name|flags
+decl_stmt|,
+name|stsflags
 decl_stmt|;
 switch|switch
 condition|(
@@ -6158,17 +6160,70 @@ name|phy_primary_device
 condition|)
 block|{
 case|case
-name|FXP_PHY_DP83840
-case|:
-case|case
-name|FXP_PHY_DP83840A
-case|:
-case|case
 name|FXP_PHY_82555
 case|:
 case|case
 name|FXP_PHY_82555B
 case|:
+case|case
+name|FXP_PHY_DP83840
+case|:
+case|case
+name|FXP_PHY_DP83840A
+case|:
+name|ifmr
+operator|->
+name|ifm_status
+operator|=
+name|IFM_AVALID
+expr_stmt|;
+comment|/* IFM_ACTIVE will be valid */
+name|ifmr
+operator|->
+name|ifm_active
+operator|=
+name|IFM_ETHER
+expr_stmt|;
+comment|/* 		 * the following is not an error. 		 * You need to read this register twice to get current 		 * status. This is correct documented behaviour, the 		 * first read gets latched values. 		 */
+name|stsflags
+operator|=
+name|fxp_mdi_read
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|phy_primary_addr
+argument_list|,
+name|FXP_PHY_STS
+argument_list|)
+expr_stmt|;
+name|stsflags
+operator|=
+name|fxp_mdi_read
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|phy_primary_addr
+argument_list|,
+name|FXP_PHY_STS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stsflags
+operator|&
+name|FXP_PHY_STS_LINK_STS
+condition|)
+name|ifmr
+operator|->
+name|ifm_status
+operator||=
+name|IFM_ACTIVE
+expr_stmt|;
+comment|/*  		 * If we are in auto mode, then try report the result. 		 */
 name|flags
 operator|=
 name|fxp_mdi_read
@@ -6181,12 +6236,6 @@ name|phy_primary_addr
 argument_list|,
 name|FXP_PHY_BMCR
 argument_list|)
-expr_stmt|;
-name|ifmr
-operator|->
-name|ifm_active
-operator|=
-name|IFM_ETHER
 expr_stmt|;
 if|if
 condition|(
@@ -6202,7 +6251,14 @@ operator||=
 name|IFM_AUTO
 expr_stmt|;
 comment|/* XXX presently 0 */
-comment|/* 			 * XXX Find the correct subset of chips that have  			 * the USC register.. 			 */
+if|if
+condition|(
+name|stsflags
+operator|&
+name|FXP_PHY_STS_AUTO_DONE
+condition|)
+block|{
+comment|/* 				 * Intel and National parts report 				 * differently on what they found. 				 */
 if|if
 condition|(
 operator|(
@@ -6267,9 +6323,47 @@ operator||=
 name|IFM_FDX
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* it's National. only know speed  */
+name|flags
+operator|=
+name|fxp_mdi_read
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|phy_primary_addr
+argument_list|,
+name|FXP_DP83840_PAR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|FXP_DP83840_PAR_SPEED_10
+condition|)
+name|ifmr
+operator|->
+name|ifm_active
+operator||=
+name|IFM_10_T
+expr_stmt|;
+else|else
+name|ifmr
+operator|->
+name|ifm_active
+operator||=
+name|IFM_100_TX
+expr_stmt|;
+block|}
+block|}
 block|}
 else|else
 block|{
+comment|/* in manual mode.. just report what we were set to */
 if|if
 condition|(
 name|flags
