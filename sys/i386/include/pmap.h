@@ -691,9 +691,6 @@ condition|(
 operator|(
 name|pa
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
 name|PTD
 index|[
 name|va
