@@ -1609,7 +1609,6 @@ name|pp
 operator|!=
 name|NULL
 condition|)
-empty_stmt|;
 name|pp
 operator|->
 name|p_size
