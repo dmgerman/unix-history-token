@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asexpr.h 4.3 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asexpr.h 4.4 %G%  */
 end_comment
 
 begin_comment
@@ -45,7 +45,7 @@ name|shiftover
 parameter_list|(
 name|token
 parameter_list|)
-value|if (val != token) { \ 					yyerror("token expected"); \ 					goto errorfix; \ 				} \ 				shift
+value|if (val != token) { \ 					shiftoerror(token); \ 					goto errorfix; \ 				} \ 				shift
 end_define
 
 begin_define

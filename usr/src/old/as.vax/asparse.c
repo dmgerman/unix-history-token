@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.9 %G%"
+literal|"@(#)asparse.c 4.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1245,6 +1245,10 @@ literal|"Illegal register"
 argument|); 		return(
 literal|0
 argument|); 	} 	*regnoback = locxp->e_xvalue; 	return(val); }
+comment|/*  *	Shift over error  */
+argument|shiftoerror(token) 	int	token; { 	char	*tok_to_name(); 	yyerror(
+literal|"%s expected"
+argument|, tok_to_name(token)); }
 comment|/*VARARGS1*/
 argument|yyerror(s, a1, a2,a3,a4,a5) 	char	*s; {
 define|#
