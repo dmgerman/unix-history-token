@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -7431,31 +7431,25 @@ name|mb2
 decl_stmt|;
 if|if
 condition|(
-name|vp
+name|tdvp
 operator|->
 name|v_mount
 operator|!=
-name|tdvp
+name|vp
 operator|->
 name|v_mount
 condition|)
 block|{
-comment|/*VOP_ABORTOP(vp, cnp);*/
-if|if
-condition|(
-name|tdvp
-operator|==
-name|vp
-condition|)
-name|vrele
+name|VOP_ABORTOP
 argument_list|(
-name|vp
+name|tdvp
+argument_list|,
+name|cnp
 argument_list|)
 expr_stmt|;
-else|else
 name|vput
 argument_list|(
-name|vp
+name|tdvp
 argument_list|)
 expr_stmt|;
 return|return
@@ -7467,7 +7461,7 @@ block|}
 comment|/* 	 * Push all writes to the server, so that the attribute cache 	 * doesn't get "out of sync" with the server. 	 * XXX There should be a better way! 	 */
 name|VOP_FSYNC
 argument_list|(
-name|tdvp
+name|vp
 argument_list|,
 name|cnp
 operator|->
@@ -7490,7 +7484,7 @@ operator|++
 expr_stmt|;
 name|nfsm_reqhead
 argument_list|(
-name|tdvp
+name|vp
 argument_list|,
 name|NFSPROC_LINK
 argument_list|,
@@ -7510,12 +7504,12 @@ argument_list|)
 expr_stmt|;
 name|nfsm_fhtom
 argument_list|(
-name|tdvp
+name|vp
 argument_list|)
 expr_stmt|;
 name|nfsm_fhtom
 argument_list|(
-name|vp
+name|tdvp
 argument_list|)
 expr_stmt|;
 name|nfsm_strtom
@@ -7533,7 +7527,7 @@ argument_list|)
 expr_stmt|;
 name|nfsm_request
 argument_list|(
-name|tdvp
+name|vp
 argument_list|,
 name|NFSPROC_LINK
 argument_list|,
@@ -7559,7 +7553,7 @@ argument_list|)
 expr_stmt|;
 name|VTONFS
 argument_list|(
-name|tdvp
+name|vp
 argument_list|)
 operator|->
 name|n_attrstamp
@@ -7568,7 +7562,7 @@ literal|0
 expr_stmt|;
 name|VTONFS
 argument_list|(
-name|tdvp
+name|vp
 argument_list|)
 operator|->
 name|n_flag
@@ -7577,16 +7571,16 @@ name|NMODIFIED
 expr_stmt|;
 name|VTONFS
 argument_list|(
-name|vp
+name|tdvp
 argument_list|)
 operator|->
 name|n_attrstamp
 operator|=
 literal|0
 expr_stmt|;
-name|vrele
+name|vput
 argument_list|(
-name|vp
+name|tdvp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Kludge: Map EEXIST => 0 assuming that it is a reply to a retry. 	 */

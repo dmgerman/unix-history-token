@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	8.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1879,7 +1879,7 @@ name|VTOI
 argument_list|(
 name|ap
 operator|->
-name|a_vp
+name|a_tdvp
 argument_list|)
 operator|->
 name|i_lfs
@@ -1889,7 +1889,7 @@ name|MARK_VNODE
 argument_list|(
 name|ap
 operator|->
-name|a_vp
+name|a_tdvp
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1905,7 +1905,7 @@ name|VTOI
 argument_list|(
 name|ap
 operator|->
-name|a_vp
+name|a_tdvp
 argument_list|)
 operator|->
 name|i_lfs

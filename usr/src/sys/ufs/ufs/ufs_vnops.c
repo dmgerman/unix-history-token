@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3095,18 +3095,18 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|vp
+name|tdvp
 operator|->
 name|v_mount
 operator|!=
-name|tdvp
+name|vp
 operator|->
 name|v_mount
 condition|)
 block|{
 name|VOP_ABORTOP
 argument_list|(
-name|vp
+name|tdvp
 argument_list|,
 name|cnp
 argument_list|)
@@ -3121,23 +3121,23 @@ goto|;
 block|}
 if|if
 condition|(
-name|vp
-operator|!=
 name|tdvp
+operator|!=
+name|vp
 operator|&&
 operator|(
 name|error
 operator|=
 name|VOP_LOCK
 argument_list|(
-name|tdvp
+name|vp
 argument_list|)
 operator|)
 condition|)
 block|{
 name|VOP_ABORTOP
 argument_list|(
-name|vp
+name|tdvp
 argument_list|,
 name|cnp
 argument_list|)
@@ -3150,7 +3150,7 @@ name|ip
 operator|=
 name|VTOI
 argument_list|(
-name|tdvp
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -3167,7 +3167,7 @@ condition|)
 block|{
 name|VOP_ABORTOP
 argument_list|(
-name|vp
+name|tdvp
 argument_list|,
 name|cnp
 argument_list|)
@@ -3195,7 +3195,7 @@ condition|)
 block|{
 name|VOP_ABORTOP
 argument_list|(
-name|vp
+name|tdvp
 argument_list|,
 name|cnp
 argument_list|)
@@ -3227,7 +3227,7 @@ name|error
 operator|=
 name|VOP_UPDATE
 argument_list|(
-name|tdvp
+name|vp
 argument_list|,
 operator|&
 name|tv
@@ -3249,7 +3249,7 @@ name|ufs_direnter
 argument_list|(
 name|ip
 argument_list|,
-name|vp
+name|tdvp
 argument_list|,
 name|cnp
 argument_list|)
@@ -3284,20 +3284,20 @@ name|out1
 label|:
 if|if
 condition|(
-name|vp
-operator|!=
 name|tdvp
+operator|!=
+name|vp
 condition|)
 name|VOP_UNLOCK
 argument_list|(
-name|tdvp
+name|vp
 argument_list|)
 expr_stmt|;
 name|out2
 label|:
 name|vput
 argument_list|(
-name|vp
+name|tdvp
 argument_list|)
 expr_stmt|;
 return|return
