@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cmds.c,v 1.7 1998/06/09 04:28:02 imp Exp $"
+literal|"$Id: cmds.c,v 1.9 1999/04/04 21:47:11 dt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1072,7 +1072,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|pwrite
+name|xpwrite
 argument_list|(
 name|FD
 argument_list|,
@@ -1118,7 +1118,7 @@ name|r
 operator|=
 literal|'\r'
 expr_stmt|;
-name|pwrite
+name|xpwrite
 argument_list|(
 name|FD
 argument_list|,
@@ -1532,7 +1532,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|pwrite
+name|xpwrite
 argument_list|(
 name|FD
 argument_list|,
@@ -1578,7 +1578,7 @@ name|r
 operator|=
 literal|'\r'
 expr_stmt|;
-name|pwrite
+name|xpwrite
 argument_list|(
 name|FD
 argument_list|,
@@ -2958,7 +2958,7 @@ name|cc
 operator|=
 name|c
 expr_stmt|;
-name|pwrite
+name|xpwrite
 argument_list|(
 name|FD
 argument_list|,
@@ -3101,7 +3101,7 @@ operator|>
 literal|3
 condition|)
 return|return;
-name|pwrite
+name|xpwrite
 argument_list|(
 name|FD
 argument_list|,

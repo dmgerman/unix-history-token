@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tip.c,v 1.8 1998/06/09 04:28:05 imp Exp $"
+literal|"$Id: tip.c,v 1.10 1999/04/04 21:47:11 dt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -287,7 +287,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|pwrite
+name|xpwrite
 name|__P
 argument_list|(
 operator|(
@@ -1965,7 +1965,7 @@ name|bol
 operator|=
 literal|1
 expr_stmt|;
-name|pwrite
+name|xpwrite
 argument_list|(
 name|FD
 argument_list|,
@@ -2062,7 +2062,7 @@ argument_list|(
 name|gch
 argument_list|)
 expr_stmt|;
-name|pwrite
+name|xpwrite
 argument_list|(
 name|FD
 argument_list|,
@@ -2223,7 +2223,7 @@ name|c
 operator|!=
 name|gch
 condition|)
-name|pwrite
+name|xpwrite
 argument_list|(
 name|FD
 argument_list|,
@@ -2984,7 +2984,7 @@ end_comment
 
 begin_function
 name|void
-name|pwrite
+name|xpwrite
 parameter_list|(
 name|fd
 parameter_list|,
