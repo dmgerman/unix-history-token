@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)remake.c 1.1 %G%"
+literal|"@(#)remake.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ file|"object.h"
 end_include
 
 begin_comment
-comment|/*  * Invoke "pi" on the dotpfile, then reread the symbol table information.  *  * We have to save tracing info before, and read it in after, because  * it might contain symbol table pointers.  */
+comment|/*  * Invoke "pi" on the dotpfile, then reread the symbol table information.  *  * We have to save tracing info before, and read it in after, because  * it might contain symbol table pointers.  *  * We also have to restart the process so that px dependent information  * is recomputed.  */
 end_comment
 
 begin_macro
@@ -118,6 +118,9 @@ name|bpfree
 argument_list|()
 expr_stmt|;
 name|objfree
+argument_list|()
+expr_stmt|;
+name|initstart
 argument_list|()
 expr_stmt|;
 name|readobj
