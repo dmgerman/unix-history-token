@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_bio.c	7.36 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_bio.c	7.37 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2902,6 +2902,14 @@ operator|->
 name|v_mountf
 control|)
 block|{
+if|if
+condition|(
+name|VOP_ISLOCKED
+argument_list|(
+name|vp
+argument_list|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|vget
