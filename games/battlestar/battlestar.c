@@ -89,6 +89,21 @@ name|char
 modifier|*
 name|next
 decl_stmt|;
+name|open_score_file
+argument_list|()
+expr_stmt|;
+comment|/* revoke privs. */
+name|egid
+operator|=
+name|getegid
+argument_list|()
+expr_stmt|;
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|initialize
 argument_list|(
 name|argc

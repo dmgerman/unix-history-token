@@ -121,6 +121,23 @@ function|;
 end_function
 
 begin_expr_stmt
+name|egid
+operator|=
+name|getegid
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|init
 argument_list|()
 expr_stmt|;
@@ -472,7 +489,7 @@ literal|0
 condition|;
 name|i
 operator|=
-name|link
+name|linkx
 index|[
 name|i
 index|]
@@ -1463,7 +1480,7 @@ index|]
 operator|==
 literal|0
 operator|||
-name|link
+name|linkx
 index|[
 name|atloc
 index|[

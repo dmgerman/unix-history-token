@@ -440,6 +440,19 @@ argument_list|,
 name|uid
 argument_list|)
 expr_stmt|;
+comment|/* revoke privs */
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 comment|/* initialization */
 name|bflag
 operator|=

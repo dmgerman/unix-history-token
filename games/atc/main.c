@@ -146,6 +146,19 @@ decl_stmt|,
 name|update
 argument_list|()
 decl_stmt|;
+comment|/* revoke privs */
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|start_time
 operator|=
 name|seed

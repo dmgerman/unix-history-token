@@ -1380,6 +1380,19 @@ specifier|extern
 name|short
 name|ospeed
 decl_stmt|;
+comment|/* revoke */
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|length
 operator|=
 literal|16

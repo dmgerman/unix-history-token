@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1729,6 +1735,12 @@ name|struct
 name|objs
 name|nightobjs
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|gid_t
+name|egid
 decl_stmt|;
 end_decl_stmt
 

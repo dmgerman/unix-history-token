@@ -122,6 +122,11 @@ argument_list|)
 expr_stmt|;
 else|else
 return|return;
+name|setegid
+argument_list|(
+name|egid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -143,8 +148,20 @@ argument_list|(
 name|home1
 argument_list|)
 expr_stmt|;
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|fread
 argument_list|(
 operator|&
@@ -665,6 +682,11 @@ argument_list|,
 name|home
 argument_list|)
 expr_stmt|;
+name|setegid
+argument_list|(
+name|egid
+argument_list|)
+expr_stmt|;
 comment|/* Try to open the file safely. */
 if|if
 condition|(
@@ -708,6 +730,12 @@ argument_list|,
 name|home1
 argument_list|)
 expr_stmt|;
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -717,9 +745,9 @@ if|if
 condition|(
 name|sbuf
 operator|.
-name|st_nlink
-operator|>
-literal|1
+name|st_mode
+operator|&
+name|S_IFLNK
 condition|)
 block|{
 name|fprintf
@@ -727,6 +755,12 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"No symlinks!\n"
+argument_list|)
+expr_stmt|;
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
 argument_list|)
 expr_stmt|;
 return|return;
@@ -758,6 +792,12 @@ argument_list|,
 name|home1
 argument_list|)
 expr_stmt|;
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -782,8 +822,20 @@ argument_list|(
 name|home1
 argument_list|)
 expr_stmt|;
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Saved in %s.\n"

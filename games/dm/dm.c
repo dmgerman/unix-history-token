@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nlist.h>
 end_include
 
@@ -207,7 +213,7 @@ operator|=
 operator|(
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 operator|*
 name|argv
@@ -300,6 +306,49 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+if|if
+condition|(
+sizeof|sizeof
+argument_list|(
+name|_PATH_HIDE
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|game
+argument_list|)
+operator|>
+sizeof|sizeof
+argument_list|(
+name|pbuf
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"dm: %s/%s: %s\n"
+argument_list|,
+name|_PATH_HIDE
+argument_list|,
+name|game
+argument_list|,
+name|strerror
+argument_list|(
+name|ENAMETOOLONG
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -346,13 +395,6 @@ argument_list|,
 name|priority
 argument_list|)
 expr_stmt|;
-name|setgid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|/* we run setgid kmem; lose it */
 name|execv
 argument_list|(
 name|pbuf
@@ -733,6 +775,9 @@ operator|<
 name|stop
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fputs
 argument_list|(
 literal|"dm: Sorry, games are not available from "
@@ -745,6 +790,9 @@ argument_list|(
 name|start
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fputs
 argument_list|(
 literal|" to "
@@ -757,6 +805,9 @@ argument_list|(
 name|stop
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fputs
 argument_list|(
 literal|" today.\n"
@@ -811,7 +862,7 @@ condition|)
 block|{
 name|p_tty
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|gametty
 argument_list|,
@@ -844,6 +895,9 @@ name|tty
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -947,6 +1001,9 @@ name|load
 argument_list|()
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fputs
 argument_list|(
 literal|"dm: Sorry, the load average is too high right now.\n"
@@ -977,6 +1034,9 @@ name|users
 argument_list|()
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fputs
 argument_list|(
 literal|"dm: Sorry, there are too many users logged on right now.\n"
@@ -1046,6 +1106,9 @@ operator|<
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fputs
 argument_list|(
 literal|"dm: getloadavg() failed.\n"
@@ -1307,6 +1370,9 @@ block|{
 case|case
 literal|0
 case|:
+operator|(
+name|void
+operator|)
 name|fputs
 argument_list|(
 literal|"midnight"
@@ -1318,6 +1384,9 @@ break|break;
 case|case
 literal|12
 case|:
+operator|(
+name|void
+operator|)
 name|fputs
 argument_list|(
 literal|"noon"
@@ -1333,6 +1402,9 @@ name|h
 operator|>
 literal|12
 condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1345,6 +1417,9 @@ literal|12
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr

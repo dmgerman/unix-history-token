@@ -11,6 +11,12 @@ begin_comment
 comment|/* hdr.h: included by c advent files */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_decl_stmt
 name|int
 name|datfd
@@ -419,7 +425,7 @@ index|[
 literal|101
 index|]
 decl_stmt|,
-name|link
+name|linkx
 index|[
 literal|201
 index|]
@@ -662,13 +668,7 @@ name|long
 name|crc
 parameter_list|()
 function_decl|;
-end_struct
-
-begin_comment
 comment|/* We need to get a little tricky to avoid strings */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|DECR
@@ -684,7 +684,10 @@ parameter_list|,
 name|e
 parameter_list|)
 value|decr('a'+'+','b'+'-','c'+'#','d'+'&','e'+'%')
-end_define
+name|gid_t
+name|egid
+decl_stmt|;
+end_struct
 
 end_unit
 

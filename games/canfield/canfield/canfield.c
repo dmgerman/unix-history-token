@@ -7899,11 +7899,6 @@ argument_list|(
 name|deck
 argument_list|)
 expr_stmt|;
-name|uid
-operator|=
-name|getuid
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|uid
@@ -7921,6 +7916,12 @@ argument_list|(
 name|_PATH_SCORE
 argument_list|,
 literal|2
+argument_list|)
+expr_stmt|;
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -8417,6 +8418,19 @@ argument_list|()
 expr_stmt|;
 name|initall
 argument_list|()
+expr_stmt|;
+comment|/* revoke privs */
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
 expr_stmt|;
 name|instruct
 argument_list|()

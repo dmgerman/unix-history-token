@@ -116,10 +116,16 @@ name|reg
 name|bool
 name|restore
 decl_stmt|;
-comment|/* run as the user */
-name|setuid
+comment|/* revoke */
+name|setegid
 argument_list|(
-name|getuid
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|setgid
+argument_list|(
+name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;

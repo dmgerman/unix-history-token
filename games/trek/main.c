@@ -153,6 +153,12 @@ name|struct
 name|sgttyb
 name|argp
 decl_stmt|;
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|av
 operator|=
 name|argv

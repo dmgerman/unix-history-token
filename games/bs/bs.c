@@ -6644,6 +6644,19 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
+comment|/* revoke privs */
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|do_options
 argument_list|(
 name|argc

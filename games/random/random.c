@@ -150,6 +150,19 @@ name|char
 modifier|*
 name|ep
 decl_stmt|;
+comment|/* revoke */
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|random_exit
 operator|=
 name|unbuffer_output
