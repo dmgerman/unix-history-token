@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/tcp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip6.h>
 end_include
 
@@ -2291,6 +2297,9 @@ argument_list|(
 name|so
 argument_list|,
 name|nam
+argument_list|,
+operator|&
+name|tcbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -2376,6 +2385,9 @@ argument_list|(
 name|so
 argument_list|,
 name|nam
+argument_list|,
+operator|&
+name|tcbinfo
 argument_list|)
 expr_stmt|;
 if|if

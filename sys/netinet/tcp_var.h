@@ -25,6 +25,12 @@ begin_comment
 comment|/* needed for in_conninfo, inp_gen_t */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<netinet/tcp.h>
+end_include
+
 begin_comment
 comment|/*  * Kernel variables for tcp.  */
 end_comment
