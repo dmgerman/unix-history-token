@@ -331,7 +331,7 @@ literal|"annotate"
 block|,
 literal|"ann"
 block|,
-name|NULL
+literal|"blame"
 block|,
 name|annotate
 block|,
