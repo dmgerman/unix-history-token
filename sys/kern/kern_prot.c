@@ -5442,7 +5442,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test the active securelevel against a given level.  securelevel_gt()  * implements (securelevel> level).  securelevel_ge() implements  * (securelevel>= level).  Note that the logic is inverted -- these  * functions return EPERM on "success" and 0 on "failure".  *  * cr is permitted to be NULL for the time being, as there were some  * existing securelevel checks that occurred without a process/credential  * context.  In the future this will be disallowed, so a kernel message  * is displayed.  *  * MPSAFE  */
+comment|/*  * Test the active securelevel against a given level.  securelevel_gt()  * implements (securelevel> level).  securelevel_ge() implements  * (securelevel>= level).  Note that the logic is inverted -- these  * functions return EPERM on "success" and 0 on "failure".  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -5465,15 +5465,15 @@ name|active_securelevel
 operator|=
 name|securelevel
 expr_stmt|;
-if|if
-condition|(
-name|cr
-operator|==
-name|NULL
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
-literal|"securelevel_gt: cr is NULL\n"
+name|cr
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"securelevel_gt: null cr"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5553,15 +5553,15 @@ name|active_securelevel
 operator|=
 name|securelevel
 expr_stmt|;
-if|if
-condition|(
-name|cr
-operator|==
-name|NULL
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
-literal|"securelevel_gt: cr is NULL\n"
+name|cr
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"securelevel_ge: null cr"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
