@@ -80,8 +80,7 @@ name|char
 name|bp_hops
 decl_stmt|;
 comment|/* gateway hops */
-name|unsigned
-name|int32
+name|u_int32
 name|bp_xid
 decl_stmt|;
 comment|/* transaction ID */
@@ -471,8 +470,7 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* magic number */
-name|unsigned
-name|int32
+name|u_int32
 name|v_flags
 decl_stmt|;
 comment|/* flags/opcodes, etc. */

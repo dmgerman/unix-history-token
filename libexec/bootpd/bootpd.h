@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * bootpd.h -- common header file for all the modules of the bootpd program.  */
+comment|/*  * bootpd.h -- common header file for all the modules of the bootpd program.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -475,8 +475,7 @@ decl_stmt|;
 name|int32
 name|time_offset
 decl_stmt|;
-name|unsigned
-name|int32
+name|u_int32
 name|bootsize
 decl_stmt|,
 name|msg_size
