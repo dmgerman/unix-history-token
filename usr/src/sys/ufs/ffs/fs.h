@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -647,10 +647,12 @@ comment|/* inode map */
 value|howmany((fs)->fs_ipg, NBBY) + \
 comment|/* block map */
 value|howmany((fs)->fs_cpg * (fs)->fs_spc / NSPF(fs), NBBY) +\
+comment|/* if present */
+value|((fs)->fs_contigsumsize<= 0 ? 0 : \
 comment|/* cluster sum */
 value|(fs)->fs_contigsumsize * sizeof(long) + \
 comment|/* cluster map */
-value|howmany((fs)->fs_cpg * (fs)->fs_spc / NSPB(fs), NBBY))
+value|howmany((fs)->fs_cpg * (fs)->fs_spc / NSPB(fs), NBBY)))
 end_define
 
 begin_comment
