@@ -1201,7 +1201,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s(%d): "
+literal|"%s:%d: "
 argument_list|,
 name|fn
 argument_list|,
@@ -1278,7 +1278,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s(%d): warning: "
+literal|"%s:%d: warning: "
 argument_list|,
 name|fn
 argument_list|,
@@ -1458,7 +1458,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s(%d): lint error: "
+literal|"%s:%d: lint error: "
 argument_list|,
 name|fn
 argument_list|,
@@ -1643,7 +1643,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s(%d): "
+literal|"%s:%d: "
 argument_list|,
 name|fn
 argument_list|,
