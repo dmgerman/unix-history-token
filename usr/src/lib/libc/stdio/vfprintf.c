@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.22 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -755,21 +755,12 @@ operator|=
 literal|'-'
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|sign
-condition|)
-name|PUTC
-argument_list|(
-name|sign
-argument_list|)
-expr_stmt|;
 name|base
 operator|=
 literal|10
 expr_stmt|;
 goto|goto
-name|num
+name|number
 goto|;
 case|case
 literal|'e'
@@ -808,6 +799,9 @@ argument_list|,
 operator|*
 name|fmt
 argument_list|,
+name|padc
+argument_list|,
+operator|&
 name|sign
 argument_list|,
 name|buf
@@ -826,6 +820,25 @@ name|t
 operator|=
 name|buf
 expr_stmt|;
+comment|/* 			 * zero-padded sign put out here; blank padded sign 			 * placed in number in _cvt(). 			 */
+if|if
+condition|(
+name|sign
+operator|&&
+name|padc
+operator|==
+literal|'0'
+condition|)
+block|{
+name|PUTC
+argument_list|(
+name|sign
+argument_list|)
+expr_stmt|;
+operator|--
+name|width
+expr_stmt|;
+block|}
 goto|goto
 name|pforw
 goto|;
@@ -895,12 +908,13 @@ operator|=
 literal|8
 expr_stmt|;
 goto|goto
-name|num
+name|nosign
 goto|;
 case|case
 literal|'p'
 case|:
 comment|/* 			 * ``The argument shall be a pointer to void.  The 			 * value of the pointer is converted to a sequence 			 * of printable characters, in an implementation- 			 * defined manner.'' 			 *	-- ANSI X3J11 			 */
+comment|/*NOSTRICT*/
 name|_ulong
 operator|=
 operator|(
@@ -919,7 +933,7 @@ operator|=
 literal|16
 expr_stmt|;
 goto|goto
-name|num
+name|nosign
 goto|;
 case|case
 literal|'s'
@@ -1123,7 +1137,7 @@ operator|=
 literal|10
 expr_stmt|;
 goto|goto
-name|num
+name|nosign
 goto|;
 case|case
 literal|'X'
@@ -1154,8 +1168,15 @@ operator|&=
 operator|~
 name|ALT
 expr_stmt|;
+comment|/* unsigned conversions */
+name|nosign
+label|:
+name|sign
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 			 * ``The result of converting a zero value with an 			 * explicit precision of zero is no characters.'' 			 *	-- ANSI X3J11 			 */
-name|num
+name|number
 label|:
 if|if
 condition|(
@@ -1197,10 +1218,6 @@ condition|(
 name|_ulong
 condition|)
 do|;
-name|digs
-operator|=
-literal|"0123456789abcdef"
-expr_stmt|;
 for|for
 control|(
 name|size
@@ -1226,6 +1243,7 @@ operator|--
 operator|=
 literal|'0'
 expr_stmt|;
+comment|/* alternate mode for hex and octal numbers */
 if|if
 condition|(
 name|flags
@@ -1245,35 +1263,35 @@ if|if
 condition|(
 name|padc
 operator|==
-literal|'0'
+literal|' '
 condition|)
 block|{
-name|PUTC
-argument_list|(
-literal|'0'
-argument_list|)
-expr_stmt|;
-name|PUTC
-argument_list|(
+operator|*
+name|t
+operator|--
+operator|=
 operator|*
 name|fmt
-argument_list|)
+expr_stmt|;
+operator|*
+name|t
+operator|--
+operator|=
+literal|'0'
 expr_stmt|;
 block|}
 else|else
 block|{
-operator|*
-name|t
-operator|--
-operator|=
+name|PUTC
+argument_list|(
+literal|'0'
+argument_list|)
+expr_stmt|;
+name|PUTC
+argument_list|(
 operator|*
 name|fmt
-expr_stmt|;
-operator|*
-name|t
-operator|--
-operator|=
-literal|'0'
+argument_list|)
 expr_stmt|;
 block|}
 name|width
@@ -1305,6 +1323,34 @@ name|width
 expr_stmt|;
 block|}
 break|break;
+block|}
+if|if
+condition|(
+name|sign
+condition|)
+block|{
+comment|/* avoid "0000-3" */
+if|if
+condition|(
+name|padc
+operator|==
+literal|' '
+condition|)
+operator|*
+name|t
+operator|--
+operator|=
+name|sign
+expr_stmt|;
+else|else
+name|PUTC
+argument_list|(
+name|sign
+argument_list|)
+expr_stmt|;
+operator|--
+name|width
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1353,6 +1399,10 @@ name|PUTC
 argument_list|(
 literal|' '
 argument_list|)
+expr_stmt|;
+name|digs
+operator|=
+literal|"0123456789abcdef"
 expr_stmt|;
 break|break;
 case|case
@@ -1419,6 +1469,8 @@ name|flags
 parameter_list|,
 name|fmtch
 parameter_list|,
+name|padc
+parameter_list|,
 name|sign
 parameter_list|,
 name|startp
@@ -1439,9 +1491,12 @@ name|u_char
 name|fmtch
 decl_stmt|;
 name|char
-name|sign
+name|padc
 decl_stmt|,
 decl|*
+name|sign
+decl_stmt|,
+modifier|*
 name|startp
 decl_stmt|,
 modifier|*
@@ -1498,8 +1553,7 @@ literal|0
 condition|)
 block|{
 operator|*
-name|startp
-operator|++
+name|sign
 operator|=
 literal|'-'
 expr_stmt|;
@@ -1509,15 +1563,21 @@ operator|-
 name|number
 expr_stmt|;
 block|}
-elseif|else
+comment|/* if blank padded, add sign in as part of the number */
 if|if
 condition|(
+operator|*
 name|sign
+operator|&&
+name|padc
+operator|==
+literal|' '
 condition|)
 operator|*
 name|startp
 operator|++
 operator|=
+operator|*
 name|sign
 expr_stmt|;
 switch|switch
