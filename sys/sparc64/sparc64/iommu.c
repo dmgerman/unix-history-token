@@ -15,12 +15,6 @@ begin_comment
 comment|/*  * UltraSPARC IOMMU support; used by both the sbus and pci code.  * Currently, the IOTSBs are synchronized, because determining the bus the map  * is to be loaded for is not possible with the current busdma code.  * The code is structured so that the IOMMUs can be easily divorced when that  * is fixed.  *  * TODO:  * - As soon as there is a newbus way to get a parent dma tag, divorce the  *   IOTSBs.  * - Support sub-page boundaries.  * - Fix alignment handling for small allocations (the possible page offset  *   of malloc()ed memory is not handled at all). Revise interaction of  *   alignment with the load_mbuf and load_uio functions.  * - Handle lowaddr and highaddr in some way, and try to work out a way  *   for filter callbacks to work. Currently, only lowaddr is honored  *   in that no addresses above it are considered at all.  * - Implement BUS_DMA_ALLOCNOW in bus_dma_tag_create as far as possible.  * - Check the possible return values and callback error arguments;  *   the callback currently gets called in error conditions where it should  *   not be.  * - When running out of DVMA space, return EINPROGRESS in the non-  *   BUS_DMA_NOWAIT case and delay the callback until sufficient space  *   becomes available.  * - Use the streaming cache unless BUS_DMA_COHERENT is specified; do not  *   flush the streaming cache when coherent mappings are synced.  * - Add bounce buffers to support machines with more than 16GB of RAM.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|__RMAN_RESOURCE_VISIBLE
-end_define
-
 begin_include
 include|#
 directive|include
