@@ -1140,6 +1140,17 @@ begin_comment
 comment|/* operate on regular data */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IO_NOMACCHECK
+value|0x1000
+end_define
+
+begin_comment
+comment|/* MAC checks unnecessary */
+end_comment
+
 begin_comment
 comment|/*  *  Modes.  Some values same as Ixxx entries from inode.h for now.  */
 end_comment
