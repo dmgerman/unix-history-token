@@ -140,37 +140,6 @@ argument_list|(
 name|ENXIO
 argument_list|)
 expr_stmt|;
-comment|/*      * Make sure that this bus hasn't already been found.      */
-if|if
-condition|(
-name|devclass_get_device
-argument_list|(
-name|devclass_find
-argument_list|(
-literal|"pci"
-argument_list|)
-argument_list|,
-name|busno
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"duplicate bus number %d - not probing bus\n"
-argument_list|,
-name|busno
-argument_list|)
-expr_stmt|;
-name|return_VALUE
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*      * Get the PCI interrupt routing table for this bus.      */
 name|prt
 operator|->
@@ -245,7 +214,7 @@ name|ENXIO
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Now go scan the bus.      *      * XXX It would be nice to defer this and count on the nexus getting it      * after the first pass, but this does not seem to be reliable.      */
+comment|/*      * Now go scan the bus.      */
 name|return_VALUE
 argument_list|(
 name|bus_generic_attach
