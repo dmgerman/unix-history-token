@@ -350,27 +350,6 @@ value|__si_u.__si_disk.__sid_copyonwrite
 end_define
 
 begin_comment
-comment|/*  * Special device management  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPECHSZ
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPECHASH
-parameter_list|(
-name|rdev
-parameter_list|)
-value|(((unsigned)(minor(rdev)))%SPECHSZ)
-end_define
-
-begin_comment
 comment|/*  * Definitions of device driver entry switches  */
 end_comment
 
