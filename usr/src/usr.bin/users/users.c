@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)users.c	5.11 (Berkeley) %G%"
+literal|"@(#)users.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,12 +56,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -306,7 +300,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s"
+literal|"%.*s"
+argument_list|,
+name|UT_NAMESIZE
 argument_list|,
 name|names
 index|[
@@ -401,11 +397,13 @@ begin_block
 block|{
 return|return
 operator|(
-name|strcmp
+name|strncmp
 argument_list|(
 name|p
 argument_list|,
 name|q
+argument_list|,
+name|UT_NAMESIZE
 argument_list|)
 operator|)
 return|;
