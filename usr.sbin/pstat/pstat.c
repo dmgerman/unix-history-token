@@ -2160,16 +2160,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"  %8lx"
+literal|"  %p"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|fp
 operator|->
-name|xun_data
-operator|.
-name|generic
+name|xf_data
 argument_list|)
 expr_stmt|;
 operator|(

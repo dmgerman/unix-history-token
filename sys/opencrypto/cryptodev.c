@@ -580,9 +580,7 @@ name|fcr
 init|=
 name|fp
 operator|->
-name|un_data
-operator|.
-name|fcrypt
+name|f_data
 decl_stmt|;
 name|struct
 name|csession
@@ -3116,9 +3114,7 @@ name|fcr
 init|=
 name|fp
 operator|->
-name|un_data
-operator|.
-name|fcrypt
+name|f_data
 decl_stmt|;
 name|struct
 name|csession
@@ -3170,9 +3166,7 @@ argument_list|)
 expr_stmt|;
 name|fp
 operator|->
-name|un_data
-operator|.
-name|fcrypt
+name|f_data
 operator|=
 name|NULL
 expr_stmt|;
@@ -3776,9 +3770,7 @@ name|cryptofops
 expr_stmt|;
 name|f
 operator|->
-name|un_data
-operator|.
-name|fcrypt
+name|f_data
 operator|=
 name|fcr
 expr_stmt|;

@@ -8449,9 +8449,7 @@ name|kn
 operator|->
 name|kn_fp
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
 decl_stmt|;
 name|struct
 name|sockbuf
@@ -8585,9 +8583,7 @@ name|kn
 operator|->
 name|kn_fp
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
 decl_stmt|;
 name|int
 name|s
@@ -8671,9 +8667,7 @@ name|kn
 operator|->
 name|kn_fp
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
 decl_stmt|;
 name|kn
 operator|->
@@ -8789,9 +8783,7 @@ name|kn
 operator|->
 name|kn_fp
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
 decl_stmt|;
 name|int
 name|s
@@ -8875,9 +8867,7 @@ name|kn
 operator|->
 name|kn_fp
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
 decl_stmt|;
 name|kn
 operator|->
@@ -9023,9 +9013,7 @@ name|kn
 operator|->
 name|kn_fp
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
 decl_stmt|;
 name|kn
 operator|->

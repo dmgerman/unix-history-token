@@ -1844,9 +1844,7 @@ condition|)
 block|{
 name|filetmp
 operator|.
-name|un_data
-operator|.
-name|socket
+name|f_data
 operator|=
 name|ap
 operator|->
@@ -1911,9 +1909,7 @@ condition|)
 block|{
 name|filetmp
 operator|.
-name|un_data
-operator|.
-name|socket
+name|f_data
 operator|=
 name|ap
 operator|->
@@ -2510,9 +2506,7 @@ expr_stmt|;
 block|}
 name|filetmp
 operator|.
-name|un_data
-operator|.
-name|socket
+name|f_data
 operator|=
 name|ap
 operator|->
@@ -2534,9 +2528,7 @@ if|if
 condition|(
 name|filetmp
 operator|.
-name|un_data
-operator|.
-name|socket
+name|f_data
 condition|)
 name|revents
 operator||=
@@ -2619,9 +2611,7 @@ condition|)
 block|{
 name|filetmp
 operator|.
-name|un_data
-operator|.
-name|socket
+name|f_data
 operator|=
 name|ap
 operator|->
@@ -2643,10 +2633,9 @@ if|if
 condition|(
 name|filetmp
 operator|.
-name|un_data
-operator|.
-name|socket
+name|f_data
 condition|)
+block|{
 name|revents
 operator||=
 name|soo_poll
@@ -2667,6 +2656,7 @@ operator|->
 name|a_td
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(

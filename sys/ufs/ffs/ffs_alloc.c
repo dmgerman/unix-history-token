@@ -12047,9 +12047,7 @@ name|vn_start_write
 argument_list|(
 name|fp
 operator|->
-name|un_data
-operator|.
-name|vnode
+name|f_data
 argument_list|,
 operator|&
 name|mp

@@ -6192,12 +6192,10 @@ name|so
 operator|=
 name|fp
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|FILE_UNLOCK
@@ -6467,9 +6465,7 @@ name|DTYPE_SOCKET
 operator|&&
 name|tfp
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
 operator|!=
 name|NULL
 condition|)
@@ -6483,9 +6479,7 @@ name|sorflush
 argument_list|(
 name|tfp
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
 argument_list|)
 expr_stmt|;
 block|}

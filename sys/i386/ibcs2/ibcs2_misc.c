@@ -1535,9 +1535,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|un_data
-operator|.
-name|vnode
+name|f_data
 expr_stmt|;
 if|if
 condition|(
@@ -2330,9 +2328,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|un_data
-operator|.
-name|vnode
+name|f_data
 expr_stmt|;
 if|if
 condition|(

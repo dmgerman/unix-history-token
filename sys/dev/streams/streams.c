@@ -1106,9 +1106,7 @@ argument_list|)
 expr_stmt|;
 name|fp
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
 operator|=
 name|so
 expr_stmt|;
@@ -1454,9 +1452,7 @@ name|so
 operator|=
 name|fp
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
 expr_stmt|;
 comment|/* 	 * mpfixme: lock socketbuffer here 	 */
 if|if
@@ -1594,11 +1590,16 @@ name|void
 modifier|*
 name|cookie
 init|=
+operator|(
+operator|(
+expr|struct
+name|socket
+operator|*
+operator|)
 name|fp
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
+operator|)
 operator|->
 name|so_emuldata
 decl_stmt|;
@@ -1733,9 +1734,7 @@ name|so
 init|=
 name|fp
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
 decl_stmt|;
 comment|/*	CHECKUNIT_DIAG(ENXIO);*/
 name|svr4_delete_socket

@@ -5356,9 +5356,7 @@ argument_list|)
 expr_stmt|;
 name|fp
 operator|->
-name|un_data
-operator|.
-name|vnode
+name|f_data
 operator|=
 name|lvp
 expr_stmt|;

@@ -13092,9 +13092,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|un_data
-operator|.
-name|vnode
+name|f_data
 expr_stmt|;
 name|mac_init_vnode_label
 argument_list|(
@@ -13141,9 +13139,7 @@ name|pipe
 operator|=
 name|fp
 operator|->
-name|un_data
-operator|.
-name|pipe
+name|f_data
 expr_stmt|;
 name|mac_init_pipe_label
 argument_list|(
@@ -14136,9 +14132,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|un_data
-operator|.
-name|vnode
+name|f_data
 expr_stmt|;
 name|error
 operator|=
@@ -14245,9 +14239,7 @@ name|pipe
 operator|=
 name|fp
 operator|->
-name|un_data
-operator|.
-name|pipe
+name|f_data
 expr_stmt|;
 name|PIPE_LOCK
 argument_list|(

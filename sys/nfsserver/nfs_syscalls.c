@@ -832,9 +832,7 @@ name|so
 operator|=
 name|fp
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
 expr_stmt|;
 if|#
 directive|if

@@ -1674,9 +1674,7 @@ name|vtrans
 argument_list|(
 name|file
 operator|.
-name|un_data
-operator|.
-name|vnode
+name|f_data
 argument_list|,
 name|i
 argument_list|,
@@ -1705,9 +1703,7 @@ name|socktrans
 argument_list|(
 name|file
 operator|.
-name|un_data
-operator|.
-name|socket
+name|f_data
 argument_list|,
 name|i
 argument_list|)
@@ -1736,9 +1732,7 @@ name|pipetrans
 argument_list|(
 name|file
 operator|.
-name|un_data
-operator|.
-name|pipe
+name|f_data
 argument_list|,
 name|i
 argument_list|,
@@ -1773,9 +1767,7 @@ name|vtrans
 argument_list|(
 name|file
 operator|.
-name|un_data
-operator|.
-name|vnode
+name|f_data
 argument_list|,
 name|i
 argument_list|,

@@ -383,9 +383,7 @@ name|so
 operator|=
 name|fp
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
 expr_stmt|;
 comment|/* XXX race against userland */
 if|if
@@ -782,9 +780,7 @@ argument_list|)
 operator|->
 name|pm_server
 operator|->
-name|un_data
-operator|.
-name|socket
+name|f_data
 argument_list|,
 literal|2
 argument_list|)
