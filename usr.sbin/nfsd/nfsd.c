@@ -242,13 +242,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|struct
-name|nfsd_srvargs
-name|nsd
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -4439,20 +4432,13 @@ name|status
 operator|=
 literal|0
 expr_stmt|;
-name|nsd
-operator|.
-name|nsd_nfsd
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|nfssvc
 argument_list|(
 name|NFSSVC_NFSD
 argument_list|,
-operator|&
-name|nsd
+name|NULL
 argument_list|)
 operator|<
 literal|0
