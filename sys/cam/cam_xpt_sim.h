@@ -57,7 +57,7 @@ begin_function_decl
 name|int32_t
 name|xpt_bus_deregister
 parameter_list|(
-name|u_int8_t
+name|path_id_t
 name|path_id
 parameter_list|)
 function_decl|;
