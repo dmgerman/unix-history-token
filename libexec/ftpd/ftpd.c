@@ -4175,6 +4175,10 @@ operator|=
 name|hrp
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|hp
+condition|)
 name|freehostent
 argument_list|(
 name|hp
