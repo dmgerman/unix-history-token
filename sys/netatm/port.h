@@ -20,64 +20,6 @@ name|_NETATM_PORT_H
 end_define
 
 begin_comment
-comment|/*  * Try to ensure that this system is supported  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|BSD
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199103
-operator|)
-operator|)
-end_if
-
-begin_comment
-comment|/* 4.3 BSD Net2 based */
-end_comment
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_elif
-
-begin_comment
-comment|/* SunOS4.x */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Ooops */
-end_comment
-
-begin_error
-error|#
-directive|error
-literal|"Undefined/unsupported system type"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * User-space memory management  *  * UM_ALLOC(size)	Returns an allocated kernel memory chunk of size bytes.  * UM_FREE(addr)	Free a kernel memory chunk of size bytes.  * UM_COPY(from, to, len)  *			Copies len bytes of data from from to to.  * UM_ZERO(addr, len)	Zeros len bytes of data from addr.  *  */
 end_comment
 
@@ -142,61 +84,6 @@ parameter_list|,
 name|len
 parameter_list|)
 value|bzero((void *)(addr), (size_t)(len))
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|UM_ALLOC
-parameter_list|(
-name|size
-parameter_list|)
-value|malloc(size)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UM_FREE
-parameter_list|(
-name|addr
-parameter_list|)
-value|free((char *)(addr))
-end_define
-
-begin_define
-define|#
-directive|define
-name|UM_COPY
-parameter_list|(
-name|from
-parameter_list|,
-name|to
-parameter_list|,
-name|len
-parameter_list|)
-value|bcopy((char *)(from), (char *)(to), (len))
-end_define
-
-begin_define
-define|#
-directive|define
-name|UM_ZERO
-parameter_list|(
-name|addr
-parameter_list|,
-name|len
-parameter_list|)
-value|bzero((char *)(addr), (len))
 end_define
 
 begin_endif
@@ -1195,25 +1082,6 @@ parameter_list|(
 name|t
 parameter_list|)
 value|microtime(&t)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|KT_TIME
-parameter_list|(
-name|t
-parameter_list|)
-value|uniqtime(&t)
 end_define
 
 begin_else

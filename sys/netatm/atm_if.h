@@ -1122,35 +1122,6 @@ value|((void) splx((u)->cu_savepri))
 end_define
 
 begin_comment
-comment|/*  * SBus defines  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|SBUS_BURST32
-value|0x20
-end_define
-
-begin_comment
-comment|/* Device supports 32-byte bursts */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Macro to schedule the ATM interrupt queue handler  */
 end_comment
 
