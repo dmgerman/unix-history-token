@@ -2975,7 +2975,7 @@ name|act
 operator|.
 name|sa_flags
 operator|=
-name|SA_RESETHAND
+literal|0
 expr_stmt|;
 name|sigemptyset
 argument_list|(
