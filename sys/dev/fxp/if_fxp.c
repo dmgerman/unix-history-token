@@ -2352,6 +2352,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|sc
+operator|->
+name|revision
+operator|==
+name|FXP_REV_82557
+operator|&&
 operator|(
 name|data
 operator|&
