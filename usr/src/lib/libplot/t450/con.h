@@ -1,11 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	con.h	4.1	83/06/27	*/
+comment|/*-  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)con.h	4.2 (Berkeley) %G%  */
 end_comment
-
-begin_empty
-empty|#
-end_empty
 
 begin_include
 include|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,18 +15,21 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)open.c	5.2 (Berkeley) %G%"
+literal|"@(#)open.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * Displays plot files on an HP7221 plotter.  * Cloned from bgplot.c and gigiplot.c by Jim Kleckner  * Thu Jun 30 13:35:04 PDT 1983  *  Requires a handshaking program such as hp7221cat to get  *  the plotter open and ready.  */
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*  * Displays plot files on an HP7221 plotter.  * Cloned from bgplot.c and gigiplot.c by Jim Kleckner  * Thu Jun 30 13:35:04 PDT 1983  *  * Requires a handshaking program such as hp7221cat to get the plotter  * open and ready.  */
 end_comment
 
 begin_include

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp7221.h	5.1 (Berkeley) %G%  *  *  * Displays plot files on an HP7221 plotter.  * Cloned from bgplot.c and gigiplot.c by Jim Kleckner  * Thu Jun 30 13:35:04 PDT 1983  *  Requires a handshaking program such as hp7221cat to get  *  the plotter open and ready.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)hp7221.h	5.2 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * Displays plot files on an HP7221 plotter.  * Cloned from bgplot.c and gigiplot.c by Jim Kleckner  * Thu Jun 30 13:35:04 PDT 1983  *  * Requires a handshaking program such as hp7221cat to get the plotter  * open and ready.  */
 end_comment
 
 begin_include
