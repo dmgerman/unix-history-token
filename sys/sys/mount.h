@@ -552,7 +552,8 @@ modifier|*
 name|mnt_cred
 decl_stmt|;
 comment|/* credentials of mounter */
-name|qaddr_t
+name|void
+modifier|*
 name|mnt_data
 decl_stmt|;
 comment|/* private data */
