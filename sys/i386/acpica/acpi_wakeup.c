@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
 end_include
 
@@ -494,6 +488,11 @@ decl_stmt|;
 name|u_long
 name|ef
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
 if|if
 condition|(
 name|sc
@@ -525,11 +524,26 @@ name|disable_intr
 argument_list|()
 expr_stmt|;
 comment|/* Create Identity Mapping */
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|curproc
+operator|)
+operator|==
+name|NULL
+condition|)
+name|p
+operator|=
+operator|&
+name|proc0
+expr_stmt|;
 name|pm
 operator|=
 name|vmspace_pmap
 argument_list|(
-name|CURPROC
+name|p
 operator|->
 name|p_vmspace
 argument_list|)
