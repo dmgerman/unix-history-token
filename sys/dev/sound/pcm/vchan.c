@@ -1448,7 +1448,7 @@ operator|&=
 operator|~
 name|CHN_F_BUSY
 expr_stmt|;
-comment|/* remove us from our grantparent's channel list */
+comment|/* remove us from our grandparent's channel list */
 name|err
 operator|=
 name|pcm_chn_remove

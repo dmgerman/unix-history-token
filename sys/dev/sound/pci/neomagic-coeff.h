@@ -12,7 +12,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|char
+name|u_char
 name|coefficients
 index|[
 name|NM_TOTAL_COEFF_COUNT
