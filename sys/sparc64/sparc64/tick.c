@@ -24,6 +24,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/interrupt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/timetc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -40,9 +58,23 @@ file|<machine/tick.h>
 end_include
 
 begin_decl_stmt
-specifier|static
+specifier|extern
 name|u_long
 name|tick_increment
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|tick_freq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|tick_MHz
 decl_stmt|;
 end_decl_stmt
 
@@ -107,6 +139,16 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|tick_freq
+operator|=
+name|clock
+expr_stmt|;
+name|tick_MHz
+operator|=
+name|clock
+operator|/
+literal|1000000
 expr_stmt|;
 name|tick_increment
 operator|=
