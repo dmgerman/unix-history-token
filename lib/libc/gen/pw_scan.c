@@ -897,6 +897,7 @@ operator|&&
 operator|*
 name|p
 condition|)
+block|{
 comment|/* empty == /bin/sh */
 for|for
 control|(
@@ -941,6 +942,10 @@ name|sh
 argument_list|)
 condition|)
 break|break;
+block|}
+name|endusershell
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(
