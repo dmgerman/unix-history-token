@@ -67,6 +67,25 @@ directive|include
 file|<ufs/ufs/inode.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|void
+name|ext2_checkoverlap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|,
+expr|struct
+name|inode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Return buffer with the contents of block "offset" from the beginning of  * directory "ip".  If "res" is non-zero, fill it in with a pointer to the  * remaining space in the directory.  */
 end_comment
@@ -230,21 +249,14 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|DIAGNOSTIC
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|ext2_checkoverlap
 parameter_list|(
@@ -461,7 +473,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DIAGNOSTIC */
+comment|/* DDB */
 end_comment
 
 end_unit

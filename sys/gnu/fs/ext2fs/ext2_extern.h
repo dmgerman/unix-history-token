@@ -746,35 +746,6 @@ parameter_list|)
 value|(vp->v_mount->mnt_stat.f_type == MOUNT_EXT2FS)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-end_ifdef
-
-begin_decl_stmt
-name|void
-name|ext2_checkoverlap
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|buf
-operator|*
-operator|,
-expr|struct
-name|inode
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|vop_t
