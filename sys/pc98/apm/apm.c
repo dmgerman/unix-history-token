@@ -5785,9 +5785,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -5905,9 +5905,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -6019,9 +6019,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -6884,9 +6884,9 @@ name|int
 name|events
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -6935,7 +6935,7 @@ else|else
 block|{
 name|selrecord
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|sc
