@@ -1367,6 +1367,7 @@ comment|/* getipnodebyname() internal routine for multiple query(PF_UNSPEC) supp
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|hostent
 modifier|*
