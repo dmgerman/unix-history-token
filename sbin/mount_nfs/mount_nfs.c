@@ -3178,6 +3178,8 @@ endif|#
 directive|endif
 name|u_short
 name|tport
+init|=
+literal|0
 decl_stmt|;
 specifier|static
 name|struct

@@ -329,6 +329,8 @@ decl_stmt|,
 name|ch
 decl_stmt|,
 name|errs
+init|=
+literal|0
 decl_stmt|,
 name|mnts
 decl_stmt|;
@@ -920,6 +922,8 @@ name|type
 decl_stmt|,
 modifier|*
 name|delimp
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|hostp
@@ -929,7 +933,8 @@ name|mntpt
 decl_stmt|,
 modifier|*
 name|origname
-decl_stmt|,
+decl_stmt|;
+name|char
 name|rname
 index|[
 name|MAXPATHLEN
