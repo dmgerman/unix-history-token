@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|4.6
+literal|4.7
 operator|%
 name|G
 operator|%
@@ -2034,7 +2034,7 @@ operator|*
 name|i
 argument_list|)
 expr_stmt|;
-name|bmove
+name|bcopy
 argument_list|(
 operator|(
 name|char
