@@ -203,13 +203,6 @@ name|struct
 name|pccard_product
 name|mpp_product
 decl_stmt|;
-name|uint32_t
-name|mpp_ioalign
-decl_stmt|;
-comment|/* required alignment */
-name|int
-name|mpp_enet_maddr
-decl_stmt|;
 name|int
 name|mpp_flags
 decl_stmt|;
@@ -233,11 +226,6 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-literal|0
-block|,
-operator|-
-literal|1
-block|,
 name|MPP_MBH10302
 block|}
 block|,
@@ -252,8 +240,6 @@ literal|0
 argument_list|)
 block|,
 literal|0
-block|,
-literal|0xf2c
 block|}
 block|,
 block|{
@@ -267,8 +253,6 @@ literal|0
 argument_list|)
 block|,
 literal|0
-block|,
-literal|0x1cc
 block|}
 block|,
 block|{
@@ -282,8 +266,6 @@ literal|0
 argument_list|)
 block|,
 literal|0
-block|,
-literal|0x1cc
 block|}
 block|,
 comment|/* These need to be second */
@@ -298,9 +280,6 @@ literal|0
 argument_list|)
 block|,
 literal|0
-block|,
-operator|-
-literal|1
 block|}
 block|,
 block|{
@@ -314,16 +293,13 @@ literal|0
 argument_list|)
 block|,
 literal|0
-block|,
-operator|-
-literal|1
 block|}
 block|,
 if|#
 directive|if
 literal|0
 comment|/* XXX 86960-based? */
-block|{ PCMCIA_CARD(TDK, LAK_DFL9610, 1), 0, -1 },
+block|{ PCMCIA_CARD(TDK, LAK_DFL9610, 1), 0 },
 endif|#
 directive|endif
 block|{
@@ -337,9 +313,6 @@ literal|0
 argument_list|)
 block|,
 literal|0
-block|,
-operator|-
-literal|1
 block|}
 block|,
 block|{
@@ -352,10 +325,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-literal|0x20
-block|,
-operator|-
-literal|1
+literal|0
 block|}
 block|,
 block|{
@@ -369,9 +339,6 @@ literal|0
 argument_list|)
 block|,
 literal|0
-block|,
-operator|-
-literal|1
 block|}
 block|,
 block|{
@@ -383,11 +350,6 @@ name|NE200T
 argument_list|,
 literal|0
 argument_list|)
-block|,
-literal|0
-block|,
-operator|-
-literal|1
 block|,
 name|MPP_MBH10302
 block|}
@@ -404,8 +366,6 @@ literal|0
 argument_list|)
 block|,
 literal|0
-block|,
-literal|0x1fc
 block|}
 block|,
 block|{
