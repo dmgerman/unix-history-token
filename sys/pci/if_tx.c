@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: if_tx.c,v 1.3 1998/10/10 04:30:09 jason Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_tx.c,v 1.18 1998/12/07 21:58:46 archie Exp $ */
+comment|/*	$Id: if_tx.c,v 1.19 1998/12/09 01:12:18 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -1939,6 +1939,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|epic_freebsd_probe
@@ -2036,6 +2037,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|epic_freebsd_probe

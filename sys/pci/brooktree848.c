@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.59 1998/11/08 12:39:06 dfr Exp $ */
+comment|/* $Id: brooktree848.c,v 1.60 1998/12/07 21:58:45 archie Exp $ */
 end_comment
 
 begin_comment
@@ -708,6 +708,7 @@ end_define
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|bktr_probe
@@ -4201,6 +4202,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|bktr_probe

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: xrpu.c,v 1.3 1998/10/24 19:47:42 phk Exp $  *  * A very simple device driver for PCI cards based on Xilinx 6200 series  * FPGA/RPU devices.  Current Functionality is to allow you to open and  * mmap the entire thing into your program.  *  * Hardware currently supported:  *	www.vcc.com HotWorks 1 6216 based card.  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: xrpu.c,v 1.4 1998/11/08 12:39:06 dfr Exp $  *  * A very simple device driver for PCI cards based on Xilinx 6200 series  * FPGA/RPU devices.  Current Functionality is to allow you to open and  * mmap the entire thing into your program.  *  * Hardware currently supported:  *	www.vcc.com HotWorks 1 6216 based card.  *  */
 end_comment
 
 begin_include
@@ -71,6 +71,7 @@ end_include
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|xrpu_probe
@@ -1433,6 +1434,7 @@ end_expr_stmt
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|xrpu_probe

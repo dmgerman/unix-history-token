@@ -8,7 +8,7 @@ comment|/*  *  dptpci.c:  PCI Bus Attachment for DPT SCSI HBAs  */
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_pci.c,v 1.9 1998/10/07 03:40:51 gibbs Exp $"
+empty|#ident "$Id: dpt_pci.c,v 1.10 1998/12/07 21:58:46 archie Exp $"
 end_empty
 
 begin_include
@@ -140,6 +140,7 @@ end_comment
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|dpt_pci_probe
@@ -212,6 +213,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|dpt_pci_probe

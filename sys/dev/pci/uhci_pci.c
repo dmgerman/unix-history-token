@@ -365,6 +365,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|uhci_pci_probe
@@ -537,6 +538,7 @@ end_elif
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|uhci_pci_probe
