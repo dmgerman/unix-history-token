@@ -2423,7 +2423,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * Unprivileged processes and privileged processes in 		 * jail() are not permitted to set system flags. 		 * Privileged processes not in jail() may only set system 		 * flags if the securelevel<= 0. 		 */
+comment|/* 		 * Unprivileged processes and privileged processes in 		 * jail() are not permitted to set system flags. 		 * Privileged non-jail processes may not set system flags 		 * securelevel> 0. 		 */
 if|if
 condition|(
 operator|!
