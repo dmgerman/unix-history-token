@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclIOSock.c --  *  *	Common routines used by all socket based channel types.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclIOSock.c 1.16 96/03/12 07:04:33  */
+comment|/*   * tclIOSock.c --  *  *	Common routines used by all socket based channel types.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclIOSock.c 1.20 97/04/25 16:36:40  */
 end_comment
 
 begin_include
@@ -58,14 +58,31 @@ name|struct
 name|servent
 modifier|*
 name|sp
-init|=
+decl_stmt|;
+comment|/* Protocol info for named services */
+if|if
+condition|(
+name|Tcl_GetInt
+argument_list|(
+name|interp
+argument_list|,
+name|string
+argument_list|,
+name|portPtr
+argument_list|)
+operator|!=
+name|TCL_OK
+condition|)
+block|{
+name|sp
+operator|=
 name|getservbyname
 argument_list|(
 name|string
 argument_list|,
 name|proto
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|sp
@@ -87,8 +104,18 @@ operator|->
 name|s_port
 argument_list|)
 expr_stmt|;
+name|Tcl_ResetResult
+argument_list|(
+name|interp
+argument_list|)
+expr_stmt|;
+comment|/* clear error message */
 return|return
 name|TCL_OK
+return|;
+block|}
+return|return
+name|TCL_ERROR
 return|;
 block|}
 if|if
@@ -169,12 +196,14 @@ name|current
 decl_stmt|;
 name|int
 name|len
-init|=
+decl_stmt|;
+name|len
+operator|=
 sizeof|sizeof
 argument_list|(
 name|int
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|getsockopt
 argument_list|(
 name|sock

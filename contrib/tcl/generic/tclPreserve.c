@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclPreserve.c --  *  *	This file contains a collection of procedures that are used  *	to make sure that widget records and other data structures  *	aren't reallocated when there are nested procedures that  *	depend on their existence.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclPreserve.c 1.17 96/07/23 16:15:34  */
+comment|/*   * tclPreserve.c --  *  *	This file contains a collection of procedures that are used  *	to make sure that widget records and other data structures  *	aren't reallocated when there are nested procedures that  *	depend on their existence.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclPreserve.c 1.18 96/08/05 13:15:08  */
 end_comment
 
 begin_include

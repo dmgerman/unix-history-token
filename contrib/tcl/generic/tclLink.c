@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclLink.c --  *  *	This file implements linked variables (a C variable that is  *	tied to a Tcl variable).  The idea of linked variables was  *	first suggested by Andreas Stolcke and this implementation is  *	based heavily on a prototype implementation provided by  *	him.  *  * Copyright (c) 1993 The Regents of the University of California.  * Copyright (c) 1994 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclLink.c 1.12 96/02/15 11:50:26  */
+comment|/*   * tclLink.c --  *  *	This file implements linked variables (a C variable that is  *	tied to a Tcl variable).  The idea of linked variables was  *	first suggested by Andreas Stolcke and this implementation is  *	based heavily on a prototype implementation provided by  *	him.  *  * Copyright (c) 1993 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclLink.c 1.15 97/01/21 21:51:42  */
 end_comment
 
 begin_include
@@ -37,10 +37,6 @@ name|int
 name|type
 decl_stmt|;
 comment|/* Type of link (TCL_LINK_INT, etc.). */
-name|int
-name|writable
-decl_stmt|;
-comment|/* Zero means Tcl variable is read-only. */
 union|union
 block|{
 name|int
@@ -53,10 +49,32 @@ block|}
 name|lastValue
 union|;
 comment|/* Last known value of C variable;  used to 				 * avoid string conversions. */
+name|int
+name|flags
+decl_stmt|;
+comment|/* Miscellaneous one-bit values;  see below 				 * for definitions. */
 block|}
 name|Link
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * Definitions for flag bits:  * LINK_READ_ONLY -		1 means errors should be generated if Tcl  *				script attempts to write variable.  * LINK_BEING_UPDATED -		1 means that a call to Tcl_UpdateLinkedVar  *				is in progress for this variable, so  *				trace callbacks on the variable should  *				be ignored.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINK_READ_ONLY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_BEING_UPDATED
+value|2
+end_define
 
 begin_comment
 comment|/*  * Forward references to procedures defined later in this file:  */
@@ -231,18 +249,29 @@ operator|&
 operator|~
 name|TCL_LINK_READ_ONLY
 expr_stmt|;
-name|linkPtr
-operator|->
-name|writable
-operator|=
-operator|(
+if|if
+condition|(
 name|type
 operator|&
 name|TCL_LINK_READ_ONLY
-operator|)
-operator|==
+condition|)
+block|{
+name|linkPtr
+operator|->
+name|flags
+operator|=
+name|LINK_READ_ONLY
+expr_stmt|;
+block|}
+else|else
+block|{
+name|linkPtr
+operator|->
+name|flags
+operator|=
 literal|0
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|Tcl_SetVar
@@ -478,6 +507,9 @@ index|[
 name|TCL_DOUBLE_SPACE
 index|]
 decl_stmt|;
+name|int
+name|savedFlag
+decl_stmt|;
 name|linkPtr
 operator|=
 operator|(
@@ -509,6 +541,20 @@ condition|)
 block|{
 return|return;
 block|}
+name|savedFlag
+operator|=
+name|linkPtr
+operator|->
+name|flags
+operator|&
+name|LINK_BEING_UPDATED
+expr_stmt|;
+name|linkPtr
+operator|->
+name|flags
+operator||=
+name|LINK_BEING_UPDATED
+expr_stmt|;
 name|Tcl_SetVar
 argument_list|(
 name|interp
@@ -526,6 +572,21 @@ argument_list|)
 argument_list|,
 name|TCL_GLOBAL_ONLY
 argument_list|)
+expr_stmt|;
+name|linkPtr
+operator|->
+name|flags
+operator|=
+operator|(
+name|linkPtr
+operator|->
+name|flags
+operator|&
+operator|~
+name|LINK_BEING_UPDATED
+operator|)
+operator||
+name|savedFlag
 expr_stmt|;
 block|}
 end_function
@@ -694,6 +755,20 @@ return|return
 name|NULL
 return|;
 block|}
+comment|/*      * If we were invoked because of a call to Tcl_UpdateLinkedVar, then      * don't do anything at all.  In particular, we don't want to get      * upset that the variable is being modified, even if it is      * supposed to be read-only.      */
+if|if
+condition|(
+name|linkPtr
+operator|->
+name|flags
+operator|&
+name|LINK_BEING_UPDATED
+condition|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
 comment|/*      * For read accesses, update the Tcl variable if the C variable      * has changed since the last time we updated the Tcl variable.      */
 if|if
 condition|(
@@ -802,10 +877,11 @@ block|}
 comment|/*      * For writes, first make sure that the variable is writable.  Then      * convert the Tcl value to C if possible.  If the variable isn't      * writable or can't be converted, then restore the varaible's old      * value and return an error.  Another tricky thing: we have to save      * and restore the interpreter's result, since the variable access      * could occur when the result has been partially set.      */
 if|if
 condition|(
-operator|!
 name|linkPtr
 operator|->
-name|writable
+name|flags
+operator|&
+name|LINK_READ_ONLY
 condition|)
 block|{
 name|Tcl_SetVar
@@ -1236,11 +1312,9 @@ operator|->
 name|addr
 operator|)
 expr_stmt|;
-name|sprintf
+name|TclFormatInt
 argument_list|(
 name|buffer
-argument_list|,
-literal|"%d"
 argument_list|,
 name|linkPtr
 operator|->
@@ -1274,9 +1348,11 @@ operator|)
 expr_stmt|;
 name|Tcl_PrintDouble
 argument_list|(
-name|linkPtr
-operator|->
-name|interp
+operator|(
+name|Tcl_Interp
+operator|*
+operator|)
+name|NULL
 argument_list|,
 name|linkPtr
 operator|->

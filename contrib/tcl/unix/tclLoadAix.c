@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclLoadAix.c --  *  *	This file implements the dlopen and dlsym APIs under the  *	AIX operating system, to enable the Tcl "load" command to  *	work.  This code was provided by Jens-Uwe Mager.  *  *	This file is subject to the following copyright notice, which is  *	different from the notice used elsewhere in Tcl.  The file has  *	been modified to incorporate the file dlfcn.h in-line.  *  *	Copyright (c) 1992,1993,1995,1996, Jens-Uwe Mager, Helios Software GmbH  *	Not derived from licensed software.   *	Permission is granted to freely use, copy, modify, and redistribute  *	this software, provided that the author is not construed to be liable  *	for any results of using the software, alterations are clearly marked  *	as such, and this notice is not modified.  *  * SCCS: @(#) tclLoadAix.c 1.10 96/03/26 13:18:21  *  * Note:  this file has been altered from the original in a few  * ways in order to work properly with Tcl.  */
+comment|/*   * tclLoadAix.c --  *  *	This file implements the dlopen and dlsym APIs under the  *	AIX operating system, to enable the Tcl "load" command to  *	work.  This code was provided by Jens-Uwe Mager.  *  *	This file is subject to the following copyright notice, which is  *	different from the notice used elsewhere in Tcl.  The file has  *	been modified to incorporate the file dlfcn.h in-line.  *  *	Copyright (c) 1992,1993,1995,1996, Jens-Uwe Mager, Helios Software GmbH  *	Not derived from licensed software.   *	Permission is granted to freely use, copy, modify, and redistribute  *	this software, provided that the author is not construed to be liable  *	for any results of using the software, alterations are clearly marked  *	as such, and this notice is not modified.  *  * SCCS: @(#) tclLoadAix.c 1.11 96/10/07 10:41:24  *  * Note:  this file has been altered from the original in a few  * ways in order to work properly with Tcl.  */
 end_comment
 
 begin_comment
@@ -252,7 +252,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|void
+name|VOID
 modifier|*
 name|dlopen
 parameter_list|(
@@ -336,6 +336,10 @@ name|refCnt
 operator|++
 expr_stmt|;
 return|return
+operator|(
+name|VOID
+operator|*
+operator|)
 name|mp
 return|;
 block|}
@@ -383,6 +387,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|VOID
+operator|*
+operator|)
 name|NULL
 return|;
 block|}
@@ -566,6 +574,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|VOID
+operator|*
+operator|)
 name|NULL
 return|;
 block|}
@@ -628,6 +640,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|VOID
+operator|*
+operator|)
 name|NULL
 return|;
 block|}
@@ -704,6 +720,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|VOID
+operator|*
+operator|)
 name|NULL
 return|;
 block|}
@@ -725,6 +745,10 @@ name|mp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|VOID
+operator|*
+operator|)
 name|NULL
 return|;
 block|}
@@ -822,6 +846,10 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
+name|VOID
+operator|*
+operator|)
 name|mp
 return|;
 block|}
@@ -986,7 +1014,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|VOID
 modifier|*
 name|dlsym
 parameter_list|(

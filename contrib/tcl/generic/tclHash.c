@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclHash.c --  *  *	Implementation of in-memory hash tables for Tcl and Tcl-based  *	applications.  *  * Copyright (c) 1991-1993 The Regents of the University of California.  * Copyright (c) 1994 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclHash.c 1.15 96/02/15 11:50:23  */
+comment|/*   * tclHash.c --  *  *	Implementation of in-memory hash tables for Tcl and Tcl-based  *	applications.  *  * Copyright (c) 1991-1993 The Regents of the University of California.  * Copyright (c) 1994 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclHash.c 1.16 96/04/29 10:30:49  */
 end_comment
 
 begin_include
@@ -53,6 +53,7 @@ name|Tcl_HashTable
 operator|*
 name|tablePtr
 operator|,
+name|CONST
 name|char
 operator|*
 name|key
@@ -73,6 +74,7 @@ name|Tcl_HashTable
 operator|*
 name|tablePtr
 operator|,
+name|CONST
 name|char
 operator|*
 name|key
@@ -97,6 +99,7 @@ name|Tcl_HashTable
 operator|*
 name|tablePtr
 operator|,
+name|CONST
 name|char
 operator|*
 name|key
@@ -117,6 +120,7 @@ name|Tcl_HashTable
 operator|*
 name|tablePtr
 operator|,
+name|CONST
 name|char
 operator|*
 name|key
@@ -137,6 +141,7 @@ name|HashString
 name|_ANSI_ARGS_
 argument_list|(
 operator|(
+name|CONST
 name|char
 operator|*
 name|string
@@ -172,6 +177,7 @@ name|Tcl_HashTable
 operator|*
 name|tablePtr
 operator|,
+name|CONST
 name|char
 operator|*
 name|key
@@ -192,6 +198,7 @@ name|Tcl_HashTable
 operator|*
 name|tablePtr
 operator|,
+name|CONST
 name|char
 operator|*
 name|key
@@ -216,6 +223,7 @@ name|Tcl_HashTable
 operator|*
 name|tablePtr
 operator|,
+name|CONST
 name|char
 operator|*
 name|key
@@ -236,6 +244,7 @@ name|Tcl_HashTable
 operator|*
 name|tablePtr
 operator|,
+name|CONST
 name|char
 operator|*
 name|key
@@ -1103,6 +1112,7 @@ parameter_list|(
 name|string
 parameter_list|)
 specifier|register
+name|CONST
 name|char
 modifier|*
 name|string
@@ -1184,6 +1194,7 @@ modifier|*
 name|tablePtr
 decl_stmt|;
 comment|/* Table in which to lookup entry. */
+name|CONST
 name|char
 modifier|*
 name|key
@@ -1196,6 +1207,7 @@ modifier|*
 name|hPtr
 decl_stmt|;
 specifier|register
+name|CONST
 name|char
 modifier|*
 name|p1
@@ -1317,6 +1329,7 @@ modifier|*
 name|tablePtr
 decl_stmt|;
 comment|/* Table in which to lookup entry. */
+name|CONST
 name|char
 modifier|*
 name|key
@@ -1334,6 +1347,7 @@ modifier|*
 name|hPtr
 decl_stmt|;
 specifier|register
+name|CONST
 name|char
 modifier|*
 name|p1
@@ -1576,6 +1590,7 @@ name|tablePtr
 decl_stmt|;
 comment|/* Table in which to lookup entry. */
 specifier|register
+name|CONST
 name|char
 modifier|*
 name|key
@@ -1669,6 +1684,7 @@ name|tablePtr
 decl_stmt|;
 comment|/* Table in which to lookup entry. */
 specifier|register
+name|CONST
 name|char
 modifier|*
 name|key
@@ -1802,8 +1818,13 @@ name|key
 operator|.
 name|oneWordValue
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|key
 expr_stmt|;
+comment|/* CONST XXXX */
 operator|*
 name|hPtr
 operator|->
@@ -1862,6 +1883,7 @@ modifier|*
 name|tablePtr
 decl_stmt|;
 comment|/* Table in which to lookup entry. */
+name|CONST
 name|char
 modifier|*
 name|key
@@ -2047,6 +2069,7 @@ name|tablePtr
 decl_stmt|;
 comment|/* Table in which to lookup entry. */
 specifier|register
+name|CONST
 name|char
 modifier|*
 name|key
@@ -2387,6 +2410,7 @@ modifier|*
 name|tablePtr
 decl_stmt|;
 comment|/* Table in which to lookup entry. */
+name|CONST
 name|char
 modifier|*
 name|key
@@ -2432,6 +2456,7 @@ modifier|*
 name|tablePtr
 decl_stmt|;
 comment|/* Table in which to lookup entry. */
+name|CONST
 name|char
 modifier|*
 name|key

@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclCkalloc.c --  *  *    Interface to malloc and free that provides support for debugging problems  *    involving overwritten, double freeing memory and loss of memory.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * This code contributed by Karl Lehenbauer and Mark Diekhans  *  *  * SCCS: @(#) tclCkalloc.c 1.20 96/06/06 13:48:27  */
+comment|/*   * tclCkalloc.c --  *  *    Interface to malloc and free that provides support for debugging problems  *    involving overwritten, double freeing memory and loss of memory.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * This code contributed by Karl Lehenbauer and Mark Diekhans  *  * SCCS: @(#) tclCkalloc.c 1.28 97/04/30 12:09:04  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"tclInt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tclPort.h"
 end_include
 
 begin_define
@@ -28,23 +34,6 @@ ifdef|#
 directive|ifdef
 name|TCL_MEM_DEBUG
 end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TCL_GENERIC_ONLY
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"tclPort.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * One of the following structures is allocated each time the  * "memory tag" command is invoked, to hold the current tag.  */
@@ -353,17 +342,42 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|ValidateMemory
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+expr|struct
+name|mem_header
+operator|*
+name|memHeaderP
+operator|,
+name|char
+operator|*
+name|file
+operator|,
+name|int
+name|line
+operator|,
+name|int
+name|nukeGuards
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * dump_memory_info --  *     Display the global memory management statistics.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * TclDumpMemoryInfo --  *     Display the global memory management statistics.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|dump_memory_info
+name|TclDumpMemoryInfo
 parameter_list|(
 name|outFile
 parameter_list|)
@@ -558,7 +572,7 @@ condition|(
 name|guard_failed
 condition|)
 block|{
-name|dump_memory_info
+name|TclDumpMemoryInfo
 argument_list|(
 name|stderr
 argument_list|)
@@ -704,7 +718,7 @@ condition|(
 name|guard_failed
 condition|)
 block|{
-name|dump_memory_info
+name|TclDumpMemoryInfo
 argument_list|(
 name|stderr
 argument_list|)
@@ -1061,7 +1075,7 @@ expr|struct
 name|mem_header
 operator|*
 operator|)
-name|malloc
+name|TclpAlloc
 argument_list|(
 operator|(
 name|unsigned
@@ -1089,7 +1103,7 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-name|dump_memory_info
+name|TclDumpMemoryInfo
 argument_list|(
 name|stderr
 argument_list|)
@@ -1562,7 +1576,7 @@ name|tagPtr
 operator|)
 condition|)
 block|{
-name|free
+name|TclpFree
 argument_list|(
 operator|(
 name|char
@@ -1624,7 +1638,7 @@ name|memp
 operator|->
 name|flink
 expr_stmt|;
-name|free
+name|TclpFree
 argument_list|(
 operator|(
 name|char
@@ -1714,6 +1728,10 @@ if|if
 condition|(
 name|copySize
 operator|>
+operator|(
+name|unsigned
+name|int
+operator|)
 name|memp
 operator|->
 name|length
@@ -2100,9 +2118,11 @@ name|argc
 operator|!=
 literal|3
 condition|)
+block|{
 goto|goto
 name|argError
 goto|;
+block|}
 if|if
 condition|(
 name|Tcl_GetInt
@@ -2120,9 +2140,11 @@ argument_list|)
 operator|!=
 name|TCL_OK
 condition|)
+block|{
 return|return
 name|TCL_ERROR
 return|;
+block|}
 return|return
 name|TCL_OK
 return|;
@@ -2142,7 +2164,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|dump_memory_info
+name|TclDumpMemoryInfo
 argument_list|(
 name|stdout
 argument_list|)
@@ -2172,9 +2194,11 @@ name|argc
 operator|!=
 literal|3
 condition|)
+block|{
 goto|goto
 name|bad_suboption
 goto|;
+block|}
 name|init_malloced_bodies
 operator|=
 operator|(
@@ -2258,7 +2282,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|free
+name|TclpFree
 argument_list|(
 operator|(
 name|char
@@ -2274,7 +2298,7 @@ operator|(
 name|MemTag
 operator|*
 operator|)
-name|malloc
+name|TclpAlloc
 argument_list|(
 name|TAG_SIZE
 argument_list|(
@@ -2331,9 +2355,11 @@ name|argc
 operator|!=
 literal|3
 condition|)
+block|{
 goto|goto
 name|bad_suboption
 goto|;
+block|}
 name|alloc_tracing
 operator|=
 operator|(
@@ -2375,9 +2401,11 @@ name|argc
 operator|!=
 literal|3
 condition|)
+block|{
 goto|goto
 name|argError
 goto|;
+block|}
 if|if
 condition|(
 name|Tcl_GetInt
@@ -2395,9 +2423,11 @@ argument_list|)
 operator|!=
 name|TCL_OK
 condition|)
+block|{
 return|return
 name|TCL_ERROR
 return|;
+block|}
 return|return
 name|TCL_OK
 return|;
@@ -2423,9 +2453,11 @@ name|argc
 operator|!=
 literal|3
 condition|)
+block|{
 goto|goto
 name|bad_suboption
 goto|;
+block|}
 name|validate_memory
 operator|=
 operator|(
@@ -2588,7 +2620,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * Tcl_Alloc --  *     Interface to malloc when TCL_MEM_DEBUG is disabled.  It does check  *     that memory was actually allocated.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * Tcl_Alloc --  *     Interface to TclpAlloc when TCL_MEM_DEBUG is disabled.  It does check  *     that memory was actually allocated.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2609,7 +2641,7 @@ name|result
 decl_stmt|;
 name|result
 operator|=
-name|malloc
+name|TclpAlloc
 argument_list|(
 name|size
 argument_list|)
@@ -2666,7 +2698,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|TclpAlloc
 argument_list|(
 name|size
 argument_list|)
@@ -2705,7 +2737,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * Tcl_Realloc --  *     Interface to realloc when TCL_MEM_DEBUG is disabled.  It does check  *     that memory was actually allocated.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * Tcl_Realloc --  *     Interface to TclpRealloc when TCL_MEM_DEBUG is disabled.  It does   *     check that memory was actually allocated.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2732,7 +2764,7 @@ name|result
 decl_stmt|;
 name|result
 operator|=
-name|realloc
+name|TclpRealloc
 argument_list|(
 name|ptr
 argument_list|,
@@ -2797,7 +2829,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|realloc
+name|TclpRealloc
 argument_list|(
 name|ptr
 argument_list|,
@@ -2838,7 +2870,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * Tcl_Free --  *     Interface to free when TCL_MEM_DEBUG is disabled.  Done here rather  *     in the macro to keep some modules from being compiled with   *     TCL_MEM_DEBUG enabled and some with it disabled.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * Tcl_Free --  *     Interface to TclpFree when TCL_MEM_DEBUG is disabled.  Done here  *     rather in the macro to keep some modules from being compiled with   *     TCL_MEM_DEBUG enabled and some with it disabled.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2852,7 +2884,7 @@ modifier|*
 name|ptr
 decl_stmt|;
 block|{
-name|free
+name|TclpFree
 argument_list|(
 name|ptr
 argument_list|)
@@ -2882,7 +2914,7 @@ name|int
 name|line
 decl_stmt|;
 block|{
-name|free
+name|TclpFree
 argument_list|(
 name|ptr
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclMatherr.c --  *  *	This function provides a default implementation of the  *	"matherr" function, for SYS-V systems where it's needed.  *  * Copyright (c) 1993-1994 The Regents of the University of California.  * Copyright (c) 1994 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclMtherr.c 1.11 96/02/15 11:58:36  */
+comment|/*   * tclMatherr.c --  *  *	This function provides a default implementation of the  *	"matherr" function, for SYS-V systems where it's needed.  *  * Copyright (c) 1993-1994 The Regents of the University of California.  * Copyright (c) 1994 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclMtherr.c 1.12 96/06/22 16:36:57  */
 end_comment
 
 begin_include
@@ -57,7 +57,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Use errno from tclExpr.c. */
+comment|/* Use errno from tclExecute.c. */
 end_comment
 
 begin_define
