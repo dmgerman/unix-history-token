@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gmon.c	5.1 (Berkeley) %G%"
+literal|"@(#)gmon.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -766,24 +766,6 @@ name|long
 name|toindex
 decl_stmt|;
 comment|/* r7  => r1 */
-ifdef|#
-directive|ifdef
-name|lint
-name|selfpc
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-expr_stmt|;
-name|frompcindex
-operator|=
-literal|0
-expr_stmt|;
-else|#
-directive|else
-else|not lint
 comment|/* 	 *	find the return address for mcount, 	 *	and the return address for mcount's caller. 	 */
 asm|asm("	.text");
 comment|/* make sure we're in text space */
@@ -791,9 +773,6 @@ asm|asm("	movl (sp), r11");
 comment|/* selfpc = ... (jsb frame) */
 asm|asm("	movl 16(fp), r10");
 comment|/* frompcindex =     (calls frame) */
-endif|#
-directive|endif
-endif|not lint
 comment|/* 	 *	check that we are profiling 	 *	and that we aren't recursively invoked. 	 */
 if|if
 condition|(
