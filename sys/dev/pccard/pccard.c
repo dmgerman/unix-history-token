@@ -259,18 +259,14 @@ begin_function
 name|int
 name|pccard_ccr_read
 parameter_list|(
-name|pf
-parameter_list|,
-name|ccr
-parameter_list|)
 name|struct
 name|pccard_function
 modifier|*
 name|pf
-decl_stmt|;
+parameter_list|,
 name|int
 name|ccr
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -299,23 +295,17 @@ begin_function
 name|void
 name|pccard_ccr_write
 parameter_list|(
-name|pf
-parameter_list|,
-name|ccr
-parameter_list|,
-name|val
-parameter_list|)
 name|struct
 name|pccard_function
 modifier|*
 name|pf
-decl_stmt|;
+parameter_list|,
 name|int
 name|ccr
-decl_stmt|;
+parameter_list|,
 name|int
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -769,7 +759,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -847,7 +839,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1272,7 +1266,9 @@ operator|=
 name|PCCARD_IFTYPE_IO
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1887,7 +1883,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 comment|/* 	 * Increase the reference count on the socket, enabling power, if 	 * necessary. 	 */
@@ -3016,7 +3014,9 @@ parameter_list|)
 block|{
 comment|/* Call parent to scan for any current children */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3038,6 +3038,7 @@ literal|"16-bit PCCard bus"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|pccard_add_children
 argument_list|(
 name|dev
@@ -3047,6 +3048,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3083,10 +3085,12 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|bus_generic_attach
 argument_list|(
 name|dev
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3458,7 +3462,9 @@ operator|!=
 name|SYS_RES_DRQ
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -3467,7 +3473,9 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -3480,7 +3488,9 @@ operator|>=
 name|PCCARD_NPORT
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -3493,7 +3503,9 @@ operator|>=
 name|PCCARD_NMEM
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -3506,7 +3518,9 @@ operator|>=
 name|PCCARD_NIRQ
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -3519,7 +3533,9 @@ operator|>=
 name|PCCARD_NDRQ
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|resource_list_add
 argument_list|(
@@ -3541,7 +3557,9 @@ name|count
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3614,7 +3632,9 @@ operator|!
 name|rle
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 if|if
 condition|(
@@ -3639,7 +3659,9 @@ operator|->
 name|count
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3716,6 +3738,7 @@ name|flags
 parameter_list|)
 block|{
 return|return
+operator|(
 name|CARD_SET_RES_FLAGS
 argument_list|(
 name|device_get_parent
@@ -3731,6 +3754,7 @@ name|rid
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3758,6 +3782,7 @@ name|deltap
 parameter_list|)
 block|{
 return|return
+operator|(
 name|CARD_SET_MEMORY_OFFSET
 argument_list|(
 name|device_get_parent
@@ -3773,6 +3798,7 @@ name|offset
 argument_list|,
 name|deltap
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -4244,6 +4270,7 @@ name|NULL
 condition|)
 block|{
 return|return
+operator|(
 name|bus_deactivate_resource
 argument_list|(
 name|dev
@@ -4258,9 +4285,11 @@ name|rle
 operator|->
 name|res
 argument_list|)
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|bus_generic_release_resource
 argument_list|(
 name|dev
@@ -4273,6 +4302,7 @@ name|rid
 argument_list|,
 name|r
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -4855,7 +4885,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5016,7 +5048,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
