@@ -1697,7 +1697,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-01234567Ab:BcC:df:F:g:GhiIjkK:lL:mMnN:oOpPrRsStT:uUvV:wWxX:yzZ"
+literal|"-01234567Ab:BcC:df:F:g:GhiI:jkK:lL:mMnN:oOpPrRsStT:uUvV:wWxX:yzZ"
 argument_list|,
 name|long_options
 argument_list|,
