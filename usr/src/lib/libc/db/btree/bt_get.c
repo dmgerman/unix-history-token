@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_get.c	5.3 (Berkeley) %G%"
+literal|"@(#)bt_get.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,22 +94,18 @@ name|DB
 modifier|*
 name|dbp
 decl_stmt|;
+specifier|const
 name|DBT
 modifier|*
 name|key
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|DBT
+modifier|*
 name|data
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|u_int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|BTREE
 modifier|*
@@ -193,7 +189,7 @@ name|RET_SPECIAL
 operator|)
 return|;
 block|}
-comment|/* 	 * A special case is if we found the record but it's flagged for 	 * deletion.  In this case, we want to find another record with the 	 * same key, if it exists.  Rather than look around the tree we call 	 * __bt_first and have it redo the search as __bt_first will not 	 * return keys marked for deletion.  Slow, but should never happen. 	 */
+comment|/* 	 * A special case is if we found the record but it's flagged for 	 * deletion.  In this case, we want to find another record with the 	 * same key, if it exists.  Rather than look around the tree we call 	 * __bt_first and have it redo the search, as __bt_first will not 	 * return keys marked for deletion.  Slow, but should never happen. 	 */
 if|if
 condition|(
 name|ISSET
@@ -281,9 +277,9 @@ name|t
 argument_list|,
 name|e
 argument_list|,
-name|data
+name|NULL
 argument_list|,
-name|key
+name|data
 argument_list|)
 expr_stmt|;
 name|mpool_put
@@ -305,10 +301,10 @@ name|status
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * __BT_FIRST -- Find the first record in the tree matching the key.  *  * Parameters:  *	t:	the tree  *	key:	the key  *  * Returns:  *	The first matching record.  */
+comment|/*  * __BT_FIRST -- Find the first entry.  *  * Parameters:  *	t:	the tree  *	key:	the key  *  * Returns:  *	The first entry in the tree greater than or equal to key.  */
 end_comment
 
 begin_function
@@ -326,6 +322,7 @@ name|BTREE
 modifier|*
 name|t
 decl_stmt|;
+specifier|const
 name|DBT
 modifier|*
 name|key
@@ -359,7 +356,7 @@ decl_stmt|;
 name|int
 name|found
 decl_stmt|;
-comment|/* 	 * Find any matching record; __bt_search pins the page.  Only exact 	 * matches are interesting. 	 */
+comment|/* 	 * Find any matching record; __bt_search pins the page.  Only exact 	 * matches are tricky, otherwise just return the location of the key 	 * if it were to be inserted into the tree. 	 */
 if|if
 condition|(
 operator|(
@@ -388,26 +385,11 @@ operator|!
 operator|*
 name|exactp
 condition|)
-block|{
-name|mpool_put
-argument_list|(
-name|t
-operator|->
-name|bt_mp
-argument_list|,
-name|e
-operator|->
-name|page
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|e
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|ISSET
