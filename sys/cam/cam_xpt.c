@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of the Common Access Method Transport (XPT) layer.  *  * Copyright (c) 1997, 1998, 1999 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_xpt.c,v 1.36 1999/01/14 06:03:59 gibbs Exp $  */
+comment|/*  * Implementation of the Common Access Method Transport (XPT) layer.  *  * Copyright (c) 1997, 1998, 1999 Justin T. Gibbs.  * Copyright (c) 1997, 1998, 1999 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_xpt.c,v 1.37 1999/01/19 00:13:05 peter Exp $  */
 end_comment
 
 begin_include
@@ -975,7 +975,7 @@ name|SIP_MEDIA_FIXED
 block|,
 literal|"CONNER"
 block|,
-literal|"CFP2107*"
+literal|"CFP*"
 block|,
 literal|"*"
 block|}
@@ -4013,6 +4013,11 @@ name|struct
 name|cam_periph_map_info
 name|mapinfo
 decl_stmt|;
+name|struct
+name|cam_path
+modifier|*
+name|old_path
+decl_stmt|;
 comment|/* 			 * We can't deal with physical addresses for this 			 * type of transaction. 			 */
 if|if
 condition|(
@@ -4031,6 +4036,26 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+comment|/* 			 * Save this in case the caller had it set to 			 * something in particular. 			 */
+name|old_path
+operator|=
+name|inccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+expr_stmt|;
+comment|/* 			 * We really don't need a path for the matching 			 * code.  The path is needed because of the 			 * debugging statements in xpt_action().  They 			 * assume that the CCB has a valid path. 			 */
+name|inccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+operator|=
+name|xpt_periph
+operator|->
+name|path
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -4057,7 +4082,17 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|inccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+operator|=
+name|old_path
+expr_stmt|;
 break|break;
+block|}
 comment|/* 			 * This is an immediate CCB, we can send it on directly. 			 */
 name|xpt_action
 argument_list|(
@@ -4072,6 +4107,14 @@ argument_list|,
 operator|&
 name|mapinfo
 argument_list|)
+expr_stmt|;
+name|inccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+operator|=
+name|old_path
 expr_stmt|;
 name|error
 operator|=
