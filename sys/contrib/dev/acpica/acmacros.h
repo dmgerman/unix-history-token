@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 150 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 151 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -61,6 +61,30 @@ parameter_list|(
 name|l
 parameter_list|)
 value|((UINT8)((((UINT16)(l))>> 8)& 0xFF))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SET_BIT
+parameter_list|(
+name|target
+parameter_list|,
+name|bit
+parameter_list|)
+value|((target) |= (bit))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_CLEAR_BIT
+parameter_list|(
+name|target
+parameter_list|,
+name|bit
+parameter_list|)
+value|((target)&= ~(bit))
 end_define
 
 begin_if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 72 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 73 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -978,7 +978,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbFindRsdp  *  * PARAMETERS:  *TableInfo              - Where the table info is returned  *              Flags                   - Current memory mode (logical vs.  *                                        physical addressing)  *  * RETURN:      Status  *  * DESCRIPTION: Search lower 1Mbyte of memory for the root system descriptor  *              pointer structure.  If it is found, set *RSDP to point to it.  *  *              NOTE: The RSDP must be either in the first 1K of the Extended  *              BIOS Data Area or between E0000 and FFFFF (ACPI 1.0 section  *              5.2.2; assertion #421).  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbFindRsdp  *  * PARAMETERS:  *TableInfo              - Where the table info is returned  *              Flags                   - Current memory mode (logical vs.  *                                        physical addressing)  *  * RETURN:      Status, RSDP physical address  *  * DESCRIPTION: Search lower 1Mbyte of memory for the root system descriptor  *              pointer structure.  If it is found, set *RSDP to point to it.  *  *              NOTE1: The RSDP must be either in the first 1K of the Extended  *              BIOS Data Area or between E0000 and FFFFF (From ACPI Spec.)  *              Only a 32-bit physical address is necessary.  *  *              NOTE2: This function is always available, regardless of the  *              initialization state of the rest of ACPI.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1001,13 +1001,11 @@ name|UINT8
 modifier|*
 name|MemRover
 decl_stmt|;
-name|UINT64
-name|PhysAddr
+name|UINT32
+name|PhysicalAddress
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
-init|=
-name|AE_OK
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -1026,17 +1024,17 @@ operator|==
 name|ACPI_LOGICAL_ADDRESSING
 condition|)
 block|{
-comment|/*          * 1) Search EBDA (low memory) paragraphs          */
+comment|/*          * 1a) Get the location of the EBDA          */
 name|Status
 operator|=
 name|AcpiOsMapMemory
 argument_list|(
 operator|(
-name|UINT64
+name|ACPI_PHYSICAL_ADDRESS
 operator|)
-name|ACPI_LO_RSDP_WINDOW_BASE
+name|ACPI_EBDA_PTR_LOCATION
 argument_list|,
-name|ACPI_LO_RSDP_WINDOW_SIZE
+name|ACPI_EBDA_PTR_LENGTH
 argument_list|,
 operator|(
 name|void
@@ -1059,11 +1057,86 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Could not map memory at %X for length %X\n"
+literal|"Could not map memory at %8.8X for length %X\n"
 operator|,
-name|ACPI_LO_RSDP_WINDOW_BASE
+name|ACPI_EBDA_PTR_LOCATION
 operator|,
-name|ACPI_LO_RSDP_WINDOW_SIZE
+name|ACPI_EBDA_PTR_LENGTH
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|ACPI_MOVE_16_TO_32
+argument_list|(
+operator|&
+name|PhysicalAddress
+argument_list|,
+name|TablePtr
+argument_list|)
+expr_stmt|;
+name|PhysicalAddress
+operator|<<=
+literal|4
+expr_stmt|;
+comment|/* Convert segment to physical address */
+name|AcpiOsUnmapMemory
+argument_list|(
+name|TablePtr
+argument_list|,
+name|ACPI_EBDA_PTR_LENGTH
+argument_list|)
+expr_stmt|;
+comment|/* EBDA present? */
+if|if
+condition|(
+name|PhysicalAddress
+operator|>
+literal|0x400
+condition|)
+block|{
+comment|/*              * 1b) Search EBDA paragraphs (EBDA is required to be a minimum of 1K length)              */
+name|Status
+operator|=
+name|AcpiOsMapMemory
+argument_list|(
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
+name|PhysicalAddress
+argument_list|,
+name|ACPI_EBDA_WINDOW_SIZE
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|TablePtr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Could not map memory at %8.8X for length %X\n"
+operator|,
+name|PhysicalAddress
+operator|,
+name|ACPI_EBDA_WINDOW_SIZE
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1079,14 +1152,14 @@ name|AcpiTbScanMemoryForRsdp
 argument_list|(
 name|TablePtr
 argument_list|,
-name|ACPI_LO_RSDP_WINDOW_SIZE
+name|ACPI_EBDA_WINDOW_SIZE
 argument_list|)
 expr_stmt|;
 name|AcpiOsUnmapMemory
 argument_list|(
 name|TablePtr
 argument_list|,
-name|ACPI_LO_RSDP_WINDOW_SIZE
+name|ACPI_EBDA_WINDOW_SIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1095,11 +1168,7 @@ name|MemRover
 condition|)
 block|{
 comment|/* Found it, return the physical address */
-name|PhysAddr
-operator|=
-name|ACPI_LO_RSDP_WINDOW_BASE
-expr_stmt|;
-name|PhysAddr
+name|PhysicalAddress
 operator|+=
 name|ACPI_PTR_DIFF
 argument_list|(
@@ -1112,7 +1181,10 @@ name|TableInfo
 operator|->
 name|PhysicalAddress
 operator|=
-name|PhysAddr
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
+name|PhysicalAddress
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
@@ -1120,13 +1192,14 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * 2) Search upper memory: 16-byte boundaries in E0000h-F0000h          */
+block|}
+comment|/*          * 2) Search upper memory: 16-byte boundaries in E0000h-FFFFFh          */
 name|Status
 operator|=
 name|AcpiOsMapMemory
 argument_list|(
 operator|(
-name|UINT64
+name|ACPI_PHYSICAL_ADDRESS
 operator|)
 name|ACPI_HI_RSDP_WINDOW_BASE
 argument_list|,
@@ -1153,7 +1226,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Could not map memory at %X for length %X\n"
+literal|"Could not map memory at %8.8X for length %X\n"
 operator|,
 name|ACPI_HI_RSDP_WINDOW_BASE
 operator|,
@@ -1189,12 +1262,10 @@ name|MemRover
 condition|)
 block|{
 comment|/* Found it, return the physical address */
-name|PhysAddr
+name|PhysicalAddress
 operator|=
 name|ACPI_HI_RSDP_WINDOW_BASE
-expr_stmt|;
-name|PhysAddr
-operator|+=
+operator|+
 name|ACPI_PTR_DIFF
 argument_list|(
 name|MemRover
@@ -1206,7 +1277,10 @@ name|TableInfo
 operator|->
 name|PhysicalAddress
 operator|=
-name|PhysAddr
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
+name|PhysicalAddress
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
@@ -1218,17 +1292,39 @@ block|}
 comment|/*      * Physical addressing      */
 else|else
 block|{
-comment|/*          * 1) Search EBDA (low memory) paragraphs          */
+comment|/*          * 1a) Get the location of the EBDA          */
+name|ACPI_MOVE_16_TO_32
+argument_list|(
+operator|&
+name|PhysicalAddress
+argument_list|,
+name|ACPI_EBDA_PTR_LOCATION
+argument_list|)
+expr_stmt|;
+name|PhysicalAddress
+operator|<<=
+literal|4
+expr_stmt|;
+comment|/* Convert segment to physical address */
+comment|/* EBDA present? */
+if|if
+condition|(
+name|PhysicalAddress
+operator|>
+literal|0x400
+condition|)
+block|{
+comment|/*              * 1b) Search EBDA paragraphs (EBDA is required to be a minimum of 1K length)              */
 name|MemRover
 operator|=
 name|AcpiTbScanMemoryForRsdp
 argument_list|(
 name|ACPI_PHYSADDR_TO_PTR
 argument_list|(
-name|ACPI_LO_RSDP_WINDOW_BASE
+name|PhysicalAddress
 argument_list|)
 argument_list|,
-name|ACPI_LO_RSDP_WINDOW_SIZE
+name|ACPI_EBDA_WINDOW_SIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1252,7 +1348,8 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * 2) Search upper memory: 16-byte boundaries in E0000h-F0000h          */
+block|}
+comment|/*          * 2) Search upper memory: 16-byte boundaries in E0000h-FFFFFh          */
 name|MemRover
 operator|=
 name|AcpiTbScanMemoryForRsdp

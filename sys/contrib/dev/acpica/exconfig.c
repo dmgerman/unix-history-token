@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 77 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 78 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -840,12 +840,14 @@ name|ObjDesc
 argument_list|,
 name|ACPI_READ
 argument_list|,
-operator|(
+call|(
 name|ACPI_PHYSICAL_ADDRESS
-operator|)
+call|)
+argument_list|(
 name|i
 operator|+
 name|Address
+argument_list|)
 argument_list|,
 literal|8
 argument_list|,
@@ -942,12 +944,14 @@ name|ObjDesc
 argument_list|,
 name|ACPI_READ
 argument_list|,
-operator|(
+call|(
 name|ACPI_PHYSICAL_ADDRESS
-operator|)
+call|)
+argument_list|(
 name|i
 operator|+
 name|Address
+argument_list|)
 argument_list|,
 literal|8
 argument_list|,

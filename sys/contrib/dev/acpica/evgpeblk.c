@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evgpeblk - GPE block creation and initialization.  *              $Revision: 34 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evgpeblk - GPE block creation and initialization.  *              $Revision: 36 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2520,8 +2520,11 @@ argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"GPE %02d to %02d [%4.4s] %d regs at %8.8X%8.8X on int %d\n"
+literal|"GPE %02X to %02X [%4.4s] %u regs at %8.8X%8.8X on int 0x%X\n"
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|GpeBlock
 operator|->
 name|BlockBaseNumber
