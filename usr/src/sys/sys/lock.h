@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.2 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -88,7 +88,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Lock request types.  *  * These are flags that are passed to the lockmgr routine.  */
+comment|/*  * Lock request types:  *   LK_SHARED - get one of many possible shared locks. If a process  *	holding an exclusive lock requests a shared lock, the exclusive  *	lock(s) will be downgraded to shared locks.  *   LK_EXCLUSIVE - stop further shared locks, when they are cleared,  *	grant a pending upgrade if it exists, then grant an exclusive  *	lock. Only one exclusive lock may exist at a time, except that  *	a process holding an exclusive lock may get additional exclusive  *	locks if it explicitly sets the LK_CANRECURSE flag in the lock  *	request, or if the LK_CANRECUSE flag was set when the lock was  *	initialized.  *   LK_UPGRADE - the process must hold a shared lock that it wants to  *	have upgraded to an exclusive lock. Other processes may get  *	exclusive access to the resource between the time that the upgrade  *	is requested and the time that it is granted.  *   LK_EXCLUPGRADE - the process must hold a shared lock that it wants to  *	have upgraded to an exclusive lock. If the request succeeds, no  *	other processes will have gotten exclusive access to the resource  *	between the time that the upgrade is requested and the time that  *	it is granted. However, if another process has already requested  *	an upgrade, the request will fail (see error returns below).  *   LK_DOWNGRADE - the process must hold an exclusive lock that it wants  *	to have downgraded to a shared lock. If the process holds multiple  *	(recursive) exclusive locks, they will all be downgraded to shared  *	locks.  *   LK_RELEASE - release one instance of a lock.  *  * These are flags that are passed to the lockmgr routine.  */
 end_comment
 
 begin_define
@@ -138,8 +138,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LK_DOWNGRADE
+name|LK_EXCLUPGRADE
 value|0x00000004
+end_define
+
+begin_comment
+comment|/* first shared-to-exclusive upgrade */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_DOWNGRADE
+value|0x00000005
 end_define
 
 begin_comment
@@ -150,7 +161,7 @@ begin_define
 define|#
 directive|define
 name|LK_RELEASE
-value|0x00000005
+value|0x00000006
 end_define
 
 begin_comment
@@ -254,18 +265,7 @@ comment|/* exclusive lock obtained */
 end_comment
 
 begin_comment
-comment|/*  * Lock return status.  *  * Successfully obtained locks return 0. Locks will always succeed  * unless one of the following is true:  *	LK_WAIT is set and a sleep would be required (returns EBUSY).  *	LK_SLEEPFAIL is set and a sleep was done (returns ENOLCK).  *	PCATCH is set in lock priority and a signal arrives (returns  *	    either EINTR or ERESTART if system calls is to be restarted).  *	Non-null lock timeout and timeout expires (returns EWOULDBLOCK).  * A failed lock attempt always returns a non-zero error value.  * If the lock acquisition caused the process to sleep, the LK_SLEPT  * flag is set otherwise it is cleared.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LK_SLEPT
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* process slept while acquiring lock */
+comment|/*  * Lock return status.  *  * Successfully obtained locks return 0. Locks will always succeed  * unless one of the following is true:  *	LK_FORCEUPGRADE is requested and some other process has already  *	    requested a lock upgrade (returns EBUSY).  *	LK_WAIT is set and a sleep would be required (returns EBUSY).  *	LK_SLEEPFAIL is set and a sleep was done (returns ENOLCK).  *	PCATCH is set in lock priority and a signal arrives (returns  *	    either EINTR or ERESTART if system calls is to be restarted).  *	Non-null lock timeout and timeout expires (returns EWOULDBLOCK).  * A failed lock attempt always returns a non-zero error value. No lock  * is held after an error return (in particular, a failed LK_UPGRADE  * or LK_FORCEUPGRADE will have released its shared access lock).  */
 end_comment
 
 begin_comment
@@ -312,6 +312,7 @@ name|lockmgr
 name|__P
 argument_list|(
 operator|(
+specifier|volatile
 expr|struct
 name|lock
 operator|*
@@ -368,6 +369,7 @@ name|atomic_lock
 parameter_list|(
 name|lkp
 parameter_list|)
+specifier|volatile
 name|struct
 name|atomic_lk
 modifier|*
@@ -454,6 +456,7 @@ name|atomic_lock
 parameter_list|(
 name|alp
 parameter_list|)
+specifier|volatile
 name|struct
 name|atomic_lk
 modifier|*

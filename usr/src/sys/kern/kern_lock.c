@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.2 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -109,7 +109,7 @@ parameter_list|,
 name|wanted
 parameter_list|)
 define|\
-value|PAUSE(lkp, wanted);						\ 	for (error = 0; wanted; ) {					\ 		(lkp)->lk_flags |= LK_WAITING;				\ 		atomic_unlock(&(lkp)->lk_interlock);			\ 		error = tsleep(lkp, (lkp)->lk_prio, (lkp)->lk_wmesg,	\ 		    (lkp)->lk_timo);					\ 		atomic_lock(&(lkp)->lk_interlock);			\ 		(lkp)->lk_flags |= LK_SLEPT;				\ 		if (error)						\ 			break;						\ 		if ((extflags)& LK_SLEEPFAIL) {			\ 			error = ENOLCK;					\ 			break;						\ 		}							\ 	}
+value|PAUSE(lkp, wanted);						\ 	for (error = 0; wanted; ) {					\ 		(lkp)->lk_flags |= LK_WAITING;				\ 		atomic_unlock(&(lkp)->lk_interlock);			\ 		error = tsleep((void *)lkp, (lkp)->lk_prio,		\ 		    (lkp)->lk_wmesg, (lkp)->lk_timo);			\ 		atomic_lock(&(lkp)->lk_interlock);			\ 		if (error)						\ 			break;						\ 		if ((extflags)& LK_SLEEPFAIL) {			\ 			error = ENOLCK;					\ 			break;						\ 		}							\ 	}
 end_define
 
 begin_comment
@@ -207,24 +207,22 @@ begin_comment
 comment|/*  * Set, change, or release a lock.  *  * Shared requests increment the shared count. Exclusive requests set the  * LK_WANT_EXCL flag (preventing further shared locks), and wait for already  * accepted shared locks and shared-to-exclusive upgrades to go away.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|lockmgr
 argument_list|(
-argument|lkp
-argument_list|,
-argument|p
-argument_list|,
-argument|flags
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|lock
-modifier|*
 name|lkp
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|p
+argument_list|,
+name|flags
+argument_list|)
+specifier|volatile
+expr|struct
+name|lock
+operator|*
+name|lkp
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -235,19 +233,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|u_int
 name|flags
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|error
+decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
+specifier|volatile
 name|int
-name|error
-decl_stmt|,
 name|extflags
 decl_stmt|;
 name|pid
@@ -275,13 +275,6 @@ name|lk_flags
 operator|)
 operator|&
 name|LK_EXTFLG_MASK
-expr_stmt|;
-name|lkp
-operator|->
-name|lk_flags
-operator|&=
-operator|~
-name|LK_SLEPT
 expr_stmt|;
 switch|switch
 condition|(
@@ -474,6 +467,10 @@ name|LK_WAITING
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|lkp
 argument_list|)
 expr_stmt|;
@@ -491,6 +488,39 @@ operator|(
 literal|0
 operator|)
 return|;
+case|case
+name|LK_EXCLUPGRADE
+case|:
+comment|/* 		 * If another process is ahead of us to get an upgrade, 		 * then we want to fail rather than have an intervening 		 * exclusive access. 		 */
+if|if
+condition|(
+name|lkp
+operator|->
+name|lk_flags
+operator|&
+name|LK_WANT_UPGRADE
+condition|)
+block|{
+name|lkp
+operator|->
+name|lk_sharecount
+operator|--
+expr_stmt|;
+name|atomic_unlock
+argument_list|(
+operator|&
+name|lkp
+operator|->
+name|lk_interlock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
+block|}
+comment|/* fall into normal upgrade */
 case|case
 name|LK_UPGRADE
 case|:
@@ -690,6 +720,10 @@ name|LK_WAITING
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|lkp
 argument_list|)
 expr_stmt|;
@@ -1000,6 +1034,10 @@ name|LK_WAITING
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|lkp
 argument_list|)
 expr_stmt|;
