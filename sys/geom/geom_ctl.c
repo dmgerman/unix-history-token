@@ -1342,6 +1342,10 @@ operator|<
 name|ap
 operator|->
 name|len
+operator|&&
+name|j
+operator|<
+literal|512
 condition|;
 name|j
 operator|++
@@ -2425,6 +2429,9 @@ name|req
 argument_list|)
 expr_stmt|;
 block|}
+name|g_waitidle
+argument_list|()
+expr_stmt|;
 name|gctl_free
 argument_list|(
 name|req
