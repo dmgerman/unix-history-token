@@ -1171,7 +1171,6 @@ name|tf_rbx
 operator|=
 name|ps_strings
 expr_stmt|;
-comment|/* 	 * Arrange to trap the next npx or `fwait' instruction (see npx.c 	 * for why fwait must be trapped at least if there is an npx or an 	 * emulator).  This is mainly to handle the case where npx0 is not 	 * configured, since the npx routines normally set up the trap 	 * otherwise.  It should be done only at boot time, but doing it 	 * here allows modifying `npx_exists' for testing the emulator on 	 * systems with an npx. 	 */
 name|load_cr0
 argument_list|(
 name|rcr0
