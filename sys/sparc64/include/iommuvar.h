@@ -242,6 +242,8 @@ name|iommu_dvmamap_create
 parameter_list|(
 name|bus_dma_tag_t
 parameter_list|,
+name|bus_dma_tag_t
+parameter_list|,
 name|struct
 name|iommu_state
 modifier|*
@@ -260,6 +262,8 @@ name|iommu_dvmamap_destroy
 parameter_list|(
 name|bus_dma_tag_t
 parameter_list|,
+name|bus_dma_tag_t
+parameter_list|,
 name|struct
 name|iommu_state
 modifier|*
@@ -273,6 +277,8 @@ begin_function_decl
 name|int
 name|iommu_dvmamap_load
 parameter_list|(
+name|bus_dma_tag_t
+parameter_list|,
 name|bus_dma_tag_t
 parameter_list|,
 name|struct
@@ -303,6 +309,8 @@ name|iommu_dvmamap_unload
 parameter_list|(
 name|bus_dma_tag_t
 parameter_list|,
+name|bus_dma_tag_t
+parameter_list|,
 name|struct
 name|iommu_state
 modifier|*
@@ -316,6 +324,8 @@ begin_function_decl
 name|void
 name|iommu_dvmamap_sync
 parameter_list|(
+name|bus_dma_tag_t
+parameter_list|,
 name|bus_dma_tag_t
 parameter_list|,
 name|struct
@@ -333,6 +343,8 @@ begin_function_decl
 name|int
 name|iommu_dvmamem_alloc
 parameter_list|(
+name|bus_dma_tag_t
+parameter_list|,
 name|bus_dma_tag_t
 parameter_list|,
 name|struct
@@ -355,6 +367,8 @@ begin_function_decl
 name|void
 name|iommu_dvmamem_free
 parameter_list|(
+name|bus_dma_tag_t
+parameter_list|,
 name|bus_dma_tag_t
 parameter_list|,
 name|struct
