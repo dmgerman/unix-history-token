@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)device_pager.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)device_pager.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -62,7 +62,8 @@ file|<vm/device_pager.h>
 end_include
 
 begin_decl_stmt
-name|queue_head_t
+name|struct
+name|pagerlst
 name|dev_pager_list
 decl_stmt|;
 end_decl_stmt
@@ -72,7 +73,8 @@ comment|/* list of managed devices */
 end_comment
 
 begin_decl_stmt
-name|queue_head_t
+name|struct
+name|pglist
 name|dev_pager_fakelist
 decl_stmt|;
 end_decl_stmt
@@ -291,13 +293,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|queue_init
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|dev_pager_list
 argument_list|)
 expr_stmt|;
-name|queue_init
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|dev_pager_fakelist
@@ -609,7 +611,7 @@ name|pg_data
 operator|=
 name|devp
 expr_stmt|;
-name|queue_init
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|devp
@@ -686,14 +688,12 @@ goto|goto
 name|top
 goto|;
 block|}
-name|queue_enter
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|dev_pager_list
 argument_list|,
 name|pager
-argument_list|,
-name|vm_pager_t
 argument_list|,
 name|pg_list
 argument_list|)
@@ -814,14 +814,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|queue_remove
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|dev_pager_list
 argument_list|,
 name|pager
-argument_list|,
-name|vm_pager_t
 argument_list|,
 name|pg_list
 argument_list|)
@@ -865,17 +863,20 @@ directive|endif
 comment|/* 	 * Free up our fake pages. 	 */
 while|while
 condition|(
-operator|!
-name|queue_empty
-argument_list|(
-operator|&
+operator|(
+name|m
+operator|=
 name|devp
 operator|->
 name|devp_pglist
-argument_list|)
+operator|.
+name|tqh_first
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
-name|queue_remove_first
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|devp
@@ -883,8 +884,6 @@ operator|->
 name|devp_pglist
 argument_list|,
 name|m
-argument_list|,
-name|vm_page_t
 argument_list|,
 name|pageq
 argument_list|)
@@ -1094,7 +1093,7 @@ argument_list|(
 name|paddr
 argument_list|)
 expr_stmt|;
-name|queue_enter
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 operator|(
@@ -1109,8 +1108,6 @@ operator|->
 name|devp_pglist
 argument_list|,
 name|page
-argument_list|,
-name|vm_page_t
 argument_list|,
 name|pageq
 argument_list|)
@@ -1296,11 +1293,11 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|queue_empty
-argument_list|(
-operator|&
 name|dev_pager_fakelist
-argument_list|)
+operator|.
+name|tqh_first
+operator|==
+name|NULL
 condition|)
 block|{
 name|m
@@ -1337,14 +1334,12 @@ name|i
 operator|--
 control|)
 block|{
-name|queue_enter
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|dev_pager_fakelist
 argument_list|,
 name|m
-argument_list|,
-name|vm_page_t
 argument_list|,
 name|pageq
 argument_list|)
@@ -1354,14 +1349,18 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|queue_remove_first
+name|m
+operator|=
+name|dev_pager_fakelist
+operator|.
+name|tqh_first
+expr_stmt|;
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|dev_pager_fakelist
 argument_list|,
 name|m
-argument_list|,
-name|vm_page_t
 argument_list|,
 name|pageq
 argument_list|)
@@ -1430,14 +1429,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|queue_enter
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|dev_pager_fakelist
 argument_list|,
 name|m
-argument_list|,
-name|vm_page_t
 argument_list|,
 name|pageq
 argument_list|)
