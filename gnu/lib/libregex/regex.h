@@ -41,12 +41,32 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* The following two types have to be signed and unsigned integer type    wide enough to hold a value of a pointer.  For most ANSI compilers    ptrdiff_t and size_t should be likely OK.  Still size of these two    types is 2 for Microsoft C.  Ugh... */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|long
+name|s_reg_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|active_reg_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* The following bits are used to determine the regexp syntax we    recognize.  The set/not-set meanings are chosen so that Emacs syntax    remains the value 0.  The bits are given in alphabetical order, and    the definitions shifted by one from the previous bit; thus, when we    add or remove a bit, only one other definition need change.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 name|unsigned
+name|long
 name|reg_syntax_t
 typedef|;
 end_typedef
@@ -59,7 +79,7 @@ begin_define
 define|#
 directive|define
 name|RE_BACKSLASH_ESCAPE_IN_LISTS
-value|(1)
+value|(1L)
 end_define
 
 begin_comment
@@ -250,6 +270,17 @@ value|(RE_NO_EMPTY_RANGES<< 1)
 end_define
 
 begin_comment
+comment|/* If this bit is set, do not process the GNU regex operators.    IF not set, then the GNU regex operators are recognized. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RE_NO_GNU_OPS
+value|(RE_UNMATCHED_RIGHT_PAREN_ORD<< 1)
+end_define
+
+begin_comment
 comment|/* This global variable defines the particular regexp syntax to use (for    some interfaces).  When a regexp is compiled, the syntax used is    stored in the pattern buffer, so changing this does not affect    already-compiled regexps.  */
 end_comment
 
@@ -283,7 +314,15 @@ define|#
 directive|define
 name|RE_SYNTAX_AWK
 define|\
-value|(RE_BACKSLASH_ESCAPE_IN_LISTS | RE_DOT_NOT_NULL			\    | RE_NO_BK_PARENS            | RE_NO_BK_REFS				\    | RE_NO_BK_VBAR               | RE_NO_EMPTY_RANGES			\    | RE_UNMATCHED_RIGHT_PAREN_ORD)
+value|(RE_BACKSLASH_ESCAPE_IN_LISTS | RE_DOT_NOT_NULL			\    | RE_NO_BK_PARENS            | RE_NO_BK_REFS				\    | RE_NO_BK_VBAR               | RE_NO_EMPTY_RANGES			\    | RE_UNMATCHED_RIGHT_PAREN_ORD | RE_NO_GNU_OPS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RE_SYNTAX_GNU_AWK
+define|\
+value|(RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS)
 end_define
 
 begin_define
@@ -291,7 +330,7 @@ define|#
 directive|define
 name|RE_SYNTAX_POSIX_AWK
 define|\
-value|(RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS)
+value|(RE_SYNTAX_GNU_AWK | RE_NO_GNU_OPS)
 end_define
 
 begin_define
@@ -416,11 +455,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* if sizeof(int) == 2, then ((1<< 15) - 1) overflows  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RE_DUP_MAX
-value|((1<< 15) - 1)
+value|(0x7fff)
 end_define
 
 begin_comment
@@ -779,11 +822,11 @@ begin_comment
 comment|/* To avoid duplicating every routine declaration -- once with a    prototype (if we are ANSI), and once without (if we aren't) -- we    use the following macro to declare argument types.  This    unfortunately clutters up the declarations a bit, but I think it's    worth it.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -859,7 +902,7 @@ name|char
 operator|*
 name|pattern
 operator|,
-name|int
+name|size_t
 name|length
 operator|,
 expr|struct
