@@ -26,6 +26,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"crtbrand.c"
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|Struct_Obj_Entry
