@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mt.c	5.6 (Berkeley) %G%"
+literal|"@(#)mt.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -606,25 +606,25 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<vaxmba/mtreg.h>
+file|<vax/mba/mtreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vaxmba/htreg.h>
+file|<vax/mba/htreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vaxuba/utreg.h>
+file|<vax/uba/utreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vaxuba/tmreg.h>
+file|<vax/uba/tmreg.h>
 end_include
 
 begin_undef
@@ -640,7 +640,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<vaxuba/tsreg.h>
+file|<vax/uba/tsreg.h>
 end_include
 
 begin_endif
