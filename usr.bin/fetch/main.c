@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.1.1.1.2.1 1996/06/23 01:44:07 jkh Exp $ */
+comment|/* $Id: main.c,v 1.1.1.1.2.2 1996/06/24 02:29:29 jkh Exp $ */
 end_comment
 
 begin_include
@@ -2263,7 +2263,7 @@ name|sprintf
 argument_list|(
 name|str
 argument_list|,
-literal|"GET /%s\n"
+literal|"GET /%s HTTP/1.0\n\n"
 argument_list|,
 name|file_to_get
 argument_list|)
@@ -2575,7 +2575,7 @@ block|{
 define|#
 directive|define
 name|S
-value|250
+value|512
 specifier|static
 name|unsigned
 name|char
@@ -2659,7 +2659,7 @@ if|if
 condition|(
 name|match
 argument_list|(
-literal|".*200.*success"
+literal|"^HTTP/[0-9]+\\.[0-9]+[ \t]+200[^0-9]"
 argument_list|,
 name|s
 argument_list|)
@@ -2672,7 +2672,7 @@ if|if
 condition|(
 name|match
 argument_list|(
-literal|".*404.*not found"
+literal|"^HTTP/[0-9]+\\.[0-9]+[ \t]+[0-9]+"
 argument_list|,
 name|s
 argument_list|)
@@ -2682,7 +2682,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s not found\n%s\n"
+literal|"%s fetching failed, header so far:\n%s\n"
 argument_list|,
 name|file_to_get
 argument_list|,
@@ -2797,7 +2797,7 @@ name|i
 operator|=
 name|match
 argument_list|(
-literal|"content-length: *([0-9]+)"
+literal|"content-length:[ \t]*([0-9]+)"
 argument_list|,
 name|s
 argument_list|)
