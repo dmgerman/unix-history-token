@@ -2347,6 +2347,7 @@ name|extract
 operator|->
 name|st
 expr_stmt|;
+comment|/* If dir already exists, don't reset permissions. */
 if|if
 condition|(
 name|S_ISDIR
