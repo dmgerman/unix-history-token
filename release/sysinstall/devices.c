@@ -2762,7 +2762,7 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"Unable to open disk %s"
+literal|"Unable to open disk %s\n"
 argument_list|,
 name|names
 index|[

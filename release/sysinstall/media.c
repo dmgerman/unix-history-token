@@ -2093,7 +2093,7 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"VAR_FTP_PATH : %s"
+literal|"VAR_FTP_PATH : %s\n"
 argument_list|,
 name|variable_get
 argument_list|(
@@ -2103,7 +2103,7 @@ argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"VAR_HTTP_HOST, _PORT: %s:%s"
+literal|"VAR_HTTP_HOST, _PORT: %s:%s\n"
 argument_list|,
 name|variable_get
 argument_list|(
@@ -2503,7 +2503,7 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"Found DNS entry for %s successfully.."
+literal|"Found DNS entry for %s successfully..\n"
 argument_list|,
 name|hostname
 argument_list|)
