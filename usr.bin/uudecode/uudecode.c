@@ -1112,13 +1112,11 @@ name|IS_DEC
 parameter_list|(
 name|c
 parameter_list|)
-value|( (((c) - ' ')>= 0)&&  (((c) - ' ')<= 077 + 1) )
-comment|/* #define IS_DEC(c) (1) */
+value|( (((c) - ' ')>= 0)&& (((c) - ' ')<= 077 + 1) )
 define|#
 directive|define
 name|OUT_OF_RANGE
-define|\
-value|{	\     warnx( \ "\n\tinput file: %s\n\tencoded file: %s\n\tcharacter out of range: [%d-%d]", \  	filename, buffn, 1 + ' ', 077 + ' ' + 1); \         return (1); \ }
+value|do {						\ 	warnx("%s: %s: character out of range: [%d-%d]",		\ 	    filename, buffn, 1 + ' ', 077 + ' ' + 1);			\         return (1);							\ } while (0)
 comment|/* 		 * `n' is used to avoid writing out all the characters 		 * at the end of the file. 		 */
 if|if
 condition|(
