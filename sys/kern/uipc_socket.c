@@ -1763,6 +1763,22 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_NOFDREF
+operator|)
+argument_list|,
+operator|(
+literal|"soclose: SS_NOFDREF on enter"
+operator|)
+argument_list|)
+expr_stmt|;
 name|funsetown
 argument_list|(
 operator|&
