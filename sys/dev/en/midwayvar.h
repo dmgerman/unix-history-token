@@ -584,6 +584,15 @@ comment|/* memory zones */
 name|uma_zone_t
 name|map_zone
 decl_stmt|;
+comment|/* media and phy */
+name|struct
+name|ifmedia
+name|media
+decl_stmt|;
+name|struct
+name|utopia
+name|utopia
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|EN_DEBUG

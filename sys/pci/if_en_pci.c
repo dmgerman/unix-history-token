@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_media.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pci/pcivar.h>
 end_include
 
@@ -107,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|<pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/utopia/utopia.h>
 end_include
 
 begin_include
@@ -143,6 +155,22 @@ argument_list|(
 name|en
 argument_list|,
 name|atm
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|en
+argument_list|,
+name|utopia
 argument_list|,
 literal|1
 argument_list|,
