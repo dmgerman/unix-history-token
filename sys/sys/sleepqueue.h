@@ -210,11 +210,6 @@ begin_function_decl
 name|void
 name|sleepq_set_timeout
 parameter_list|(
-name|struct
-name|sleepqueue
-modifier|*
-name|sq
-parameter_list|,
 name|void
 modifier|*
 name|wchan

@@ -806,8 +806,6 @@ argument_list|)
 expr_stmt|;
 name|sleepq_set_timeout
 argument_list|(
-name|sq
-argument_list|,
 name|cvp
 argument_list|,
 name|timo
@@ -1033,8 +1031,6 @@ argument_list|)
 expr_stmt|;
 name|sleepq_set_timeout
 argument_list|(
-name|sq
-argument_list|,
 name|cvp
 argument_list|,
 name|timo
