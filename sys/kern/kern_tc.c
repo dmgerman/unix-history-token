@@ -2640,9 +2640,6 @@ decl_stmt|,
 modifier|*
 name|osp
 decl_stmt|;
-name|u_int64_t
-name|scale
-decl_stmt|;
 name|u_int
 name|tcount
 decl_stmt|,
@@ -2993,6 +2990,9 @@ condition|(
 name|fhard
 condition|)
 block|{
+name|u_int64_t
+name|scale
+decl_stmt|;
 comment|/* 		 * Feed the NTP PLL/FLL. 		 * The FLL wants to know how many (hardware) nanoseconds 		 * elapsed since the previous event. 		 */
 name|tcount
 operator|=
