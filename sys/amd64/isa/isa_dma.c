@@ -40,6 +40,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
 end_include
 
@@ -929,6 +941,13 @@ name|newaddr
 expr_stmt|;
 block|}
 comment|/* translate to physical */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
+comment|/* 				 * XXX: need to hold for longer period to 				 * ensure that mappings don't change 				 */
 name|phys
 operator|=
 name|pmap_extract
@@ -940,6 +959,12 @@ operator|(
 name|vm_offset_t
 operator|)
 name|addr
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -1560,6 +1585,12 @@ operator|+=
 name|PAGE_SIZE
 control|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|phys
 operator|=
 name|trunc_page
@@ -1574,6 +1605,12 @@ name|vm_offset_t
 operator|)
 name|va
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 define|#
