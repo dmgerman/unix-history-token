@@ -1083,6 +1083,21 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* yech... */
+name|bzero
+argument_list|(
+operator|&
+name|sin
+operator|->
+name|sin_zero
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+operator|->
+name|sin_zero
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifa_ifwithaddr
