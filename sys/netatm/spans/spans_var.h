@@ -769,6 +769,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|spansarp_start
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|spansarp_stop
 parameter_list|(
 name|void
