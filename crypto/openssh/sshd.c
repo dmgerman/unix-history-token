@@ -4393,6 +4393,13 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Set socket options for the connection.  We want the socket to 	 * close as fast as possible without waiting for anything.  If the 	 * connection is not a socket, these will do nothing. 	 */
 comment|/* setsockopt(sock_in, SOL_SOCKET, SO_REUSEADDR, (void *)&on, sizeof(on)); */
 name|linger
