@@ -91,11 +91,11 @@ begin_comment
 comment|/* UWX_TRACE=L: lookupip callback */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DISABLE_TRACE
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|UWX_TRACE_ENABLE
+end_ifndef
 
 begin_define
 define|#
@@ -614,7 +614,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* not TRACE_DISABLED */
+comment|/* !UWX_TRACE_ENABLE */
 end_comment
 
 begin_function_decl
@@ -1281,7 +1281,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* TRACE_DISABLED */
+comment|/* !UWX_TRACE_ENABLE */
 end_comment
 
 end_unit
