@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stty.c	4.8 (Berkeley) %G%"
+literal|"@(#)stty.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,7 +104,15 @@ literal|"exta"
 block|,
 name|EXTA
 block|,
+literal|"19200"
+block|,
+name|EXTA
+block|,
 literal|"extb"
+block|,
+name|EXTB
+block|,
+literal|"38400"
 block|,
 name|EXTB
 block|,
@@ -3598,9 +3606,9 @@ literal|4800
 block|,
 literal|9600
 block|,
-literal|0
+literal|19200
 block|,
-literal|0
+literal|38400
 block|}
 decl_stmt|;
 end_decl_stmt
