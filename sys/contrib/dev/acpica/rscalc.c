@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscalc - Calculate stream and list lengths  *              $Revision: 50 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscalc - Calculate stream and list lengths  *              $Revision: 52 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -76,12 +76,6 @@ decl_stmt|;
 name|ACPI_SIZE
 name|SegmentSize
 decl_stmt|;
-name|ACPI_RESOURCE_EXT_IRQ
-modifier|*
-name|ExIrq
-init|=
-name|NULL
-decl_stmt|;
 name|BOOLEAN
 name|Done
 init|=
@@ -113,7 +107,7 @@ block|{
 case|case
 name|ACPI_RSTYPE_IRQ
 case|:
-comment|/*              * IRQ Resource              * For an IRQ Resource, Byte 3, although optional, will              * always be created - it holds IRQ information.              */
+comment|/*              * IRQ Resource              * For an IRQ Resource, Byte 3, although optional, will always be              * created - it holds IRQ information.              */
 name|SegmentSize
 operator|=
 literal|4
@@ -131,7 +125,7 @@ break|break;
 case|case
 name|ACPI_RSTYPE_START_DPF
 case|:
-comment|/*              * Start Dependent Functions Resource              * For a StartDependentFunctions Resource, Byte 1,              * although optional, will always be created.              */
+comment|/*              * Start Dependent Functions Resource              * For a StartDependentFunctions Resource, Byte 1, although              * optional, will always be created.              */
 name|SegmentSize
 operator|=
 literal|2
@@ -167,7 +161,7 @@ break|break;
 case|case
 name|ACPI_RSTYPE_VENDOR
 case|:
-comment|/*              * Vendor Defined Resource              * For a Vendor Specific resource, if the Length is              * between 1 and 7 it will be created as a Small              * Resource data type, otherwise it is a Large              * Resource data type.              */
+comment|/*              * Vendor Defined Resource              * For a Vendor Specific resource, if the Length is between 1 and 7              * it will be created as a Small Resource data type, otherwise it              * is a Large Resource data type.              */
 if|if
 condition|(
 name|LinkedList
@@ -247,7 +241,7 @@ break|break;
 case|case
 name|ACPI_RSTYPE_ADDRESS16
 case|:
-comment|/*              * 16-Bit Address Resource              * The base size of this byte stream is 16. If a              * Resource Source string is not NULL, add 1 for              * the Index + the length of the null terminated              * string Resource Source + 1 for the null.              */
+comment|/*              * 16-Bit Address Resource              * The base size of this byte stream is 16. If a Resource Source              * string is not NULL, add 1 for the Index + the length of the null              * terminated string Resource Source + 1 for the null.              */
 name|SegmentSize
 operator|=
 literal|16
@@ -323,7 +317,7 @@ break|break;
 case|case
 name|ACPI_RSTYPE_ADDRESS64
 case|:
-comment|/*              * 64-Bit Address Resource              * The base size of this byte stream is 46. If a Resource              * Source string is not NULL, add 1 for the Index + the              * length of the null terminated string Resource Source +              * 1 for the null.              */
+comment|/*              * 64-Bit Address Resource              * The base size of this byte stream is 46. If a ResourceSource              * string is not NULL, add 1 for the Index + the length of the null              * terminated string Resource Source + 1 for the null.              */
 name|SegmentSize
 operator|=
 literal|46
@@ -361,7 +355,7 @@ break|break;
 case|case
 name|ACPI_RSTYPE_EXT_IRQ
 case|:
-comment|/*              * Extended IRQ Resource              * The base size of this byte stream is 9. This is for an              * Interrupt table length of 1.  For each additional              * interrupt, add 4.              * If a Resource Source string is not NULL, add 1 for the              * Index + the length of the null terminated string              * Resource Source + 1 for the null.              */
+comment|/*              * Extended IRQ Resource              * The base size of this byte stream is 9. This is for an Interrupt              * table length of 1.  For each additional interrupt, add 4.              * If a Resource Source string is not NULL, add 1 for the              * Index + the length of the null terminated string              * Resource Source + 1 for the null.              */
 name|SegmentSize
 operator|=
 literal|9
@@ -387,10 +381,12 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|ExIrq
-operator|&&
-name|ExIrq
+name|LinkedList
 operator|->
+name|Data
+operator|.
+name|ExtendedIrq
+operator|.
 name|ResourceSource
 operator|.
 name|StringPtr
@@ -414,7 +410,7 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-comment|/*              * If we get here, everything is out of sync,              * so exit with an error              */
+comment|/*              * If we get here, everything is out of sync, exit with error              */
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_AML_INVALID_RESOURCE_TYPE
@@ -673,7 +669,7 @@ name|Temp16
 operator|+
 literal|3
 expr_stmt|;
-comment|/*              * Resource Source Index and Resource Source are              * optional elements.  Check the length of the              * Bytestream.  If it is greater than 43, that              * means that an Index exists and is followed by              * a null termininated string.  Therefore, set              * the temp variable to the length minus the minimum              * byte stream length plus the byte for the Index to              * determine the size of the NULL terminiated string.              */
+comment|/*              * Resource Source Index and Resource Source are optional elements.              * Check the length of the Bytestream.  If it is greater than 43,              * that means that an Index exists and is followed by a null              * terminated string.  Therefore, set the temp variable to the              * length minus the minimum byte stream length plus the byte for              * the Index to determine the size of the NULL terminated string.              */
 if|if
 condition|(
 literal|43
@@ -753,7 +749,7 @@ name|Temp16
 operator|+
 literal|3
 expr_stmt|;
-comment|/*              * Resource Source Index and Resource Source are              * optional elements.  Check the length of the              * Bytestream.  If it is greater than 23, that              * means that an Index exists and is followed by              * a null termininated string.  Therefore, set              * the temp variable to the length minus the minimum              * byte stream length plus the byte for the Index to              * determine the size of the NULL terminiated string.              */
+comment|/*              * Resource Source Index and Resource Source are optional elements.              * Check the length of the Bytestream.  If it is greater than 23,              * that means that an Index exists and is followed by a null              * terminated string.  Therefore, set the temp variable to the              * length minus the minimum byte stream length plus the byte for              * the Index to determine the size of the NULL terminated string.              */
 if|if
 condition|(
 literal|23
@@ -833,7 +829,7 @@ name|Temp16
 operator|+
 literal|3
 expr_stmt|;
-comment|/*              * Resource Source Index and Resource Source are              * optional elements.  Check the length of the              * Bytestream.  If it is greater than 13, that              * means that an Index exists and is followed by              * a null termininated string.  Therefore, set              * the temp variable to the length minus the minimum              * byte stream length plus the byte for the Index to              * determine the size of the NULL terminiated string.              */
+comment|/*              * Resource Source Index and Resource Source are optional elements.              * Check the length of the Bytestream.  If it is greater than 13,              * that means that an Index exists and is followed by a null              * terminated string.  Therefore, set the temp variable to the              * length minus the minimum byte stream length plus the byte for              * the Index to determine the size of the NULL terminated string.              */
 if|if
 condition|(
 literal|13
@@ -913,7 +909,7 @@ name|Temp16
 operator|+
 literal|3
 expr_stmt|;
-comment|/*              * Point past the length field and the              * Interrupt vector flags to save off the              * Interrupt table length to the Temp8 variable.              */
+comment|/*              * Point past the length field and the Interrupt vector flags to              * save off the Interrupt table length to the Temp8 variable.              */
 name|Buffer
 operator|+=
 literal|3
@@ -939,7 +935,7 @@ operator|*
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/*              * Resource Source Index and Resource Source are              * optional elements.  Check the length of the              * Bytestream.  If it is greater than 9, that              * means that an Index exists and is followed by              * a null termininated string.  Therefore, set              * the temp variable to the length minus the minimum              * byte stream length plus the byte for the Index to              * determine the size of the NULL terminiated string.              */
+comment|/*              * Resource Source Index and Resource Source are optional elements.              * Check the length of the Bytestream.  If it is greater than 9,              * that means that an Index exists and is followed by a null              * terminated string.  Therefore, set the temp variable to the              * length minus the minimum byte stream length plus the byte for              * the Index to determine the size of the NULL terminated string.              */
 if|if
 condition|(
 literal|9
@@ -1041,7 +1037,7 @@ operator|=
 literal|3
 expr_stmt|;
 block|}
-comment|/*              * Point past the descriptor              */
+comment|/* Point past the descriptor */
 operator|++
 name|Buffer
 expr_stmt|;
@@ -1113,7 +1109,7 @@ name|BytesConsumed
 operator|=
 literal|3
 expr_stmt|;
-comment|/*              * Point past the descriptor              */
+comment|/* Point past the descriptor */
 operator|++
 name|Buffer
 expr_stmt|;

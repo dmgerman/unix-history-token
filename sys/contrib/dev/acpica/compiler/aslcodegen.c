@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: aslcodegen - AML code generation  *              $Revision: 50 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: aslcodegen - AML code generation  *              $Revision: 51 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -916,6 +916,19 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
+comment|/* Command-line Revision override */
+if|if
+condition|(
+name|Gbl_RevisionOverride
+condition|)
+block|{
+name|TableHeader
+operator|.
+name|Revision
+operator|=
+name|Gbl_RevisionOverride
+expr_stmt|;
+block|}
 comment|/* OEMID */
 name|Child
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 182 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 184 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -356,7 +356,7 @@ name|defined
 argument_list|(
 name|_ACPI_DUMP_APP
 argument_list|)
-comment|/* iASL Compiler cheats by putting parameter count in the OwnerID */
+comment|/*                  * iASL Compiler cheats by putting parameter count                  * in the OwnerID                  */
 name|NewNode
 operator|->
 name|OwnerId
@@ -514,6 +514,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|AcpiUtRemoveReference
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
 goto|goto
 name|UnlockAndExit
 goto|;
@@ -555,6 +560,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|AcpiUtRemoveReference
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
 goto|goto
 name|UnlockAndExit
 goto|;

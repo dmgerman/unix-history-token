@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 60 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 62 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -751,8 +751,6 @@ block|}
 comment|/*      * Allow any handlers in separate threads to complete.      * (Such as Notify handlers invoked from AML executed above).      */
 name|AcpiOsSleep
 argument_list|(
-literal|0
-argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
@@ -781,7 +779,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Outstanding: %u allocations after execution\n"
+literal|"Outstanding: 0x%X allocations after execution\n"
 argument_list|,
 name|Allocations
 argument_list|)

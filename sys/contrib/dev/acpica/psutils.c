@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psutils - Parser miscellaneous utilities (Parser only)  *              $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psutils - Parser miscellaneous utilities (Parser only)  *              $Revision: 58 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -180,19 +180,16 @@ block|{
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
-init|=
-name|NULL
-decl_stmt|;
-name|UINT32
-name|Size
-decl_stmt|;
-name|UINT8
-name|Flags
 decl_stmt|;
 specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo
+decl_stmt|;
+name|UINT8
+name|Flags
+init|=
+name|ACPI_PARSEOP_GENERIC
 decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
@@ -204,7 +201,7 @@ argument_list|(
 name|Opcode
 argument_list|)
 expr_stmt|;
-comment|/* Allocate the minimum required size object */
+comment|/* Determine type of ParseOp required */
 if|if
 condition|(
 name|OpInfo
@@ -214,13 +211,6 @@ operator|&
 name|AML_DEFER
 condition|)
 block|{
-name|Size
-operator|=
-sizeof|sizeof
-argument_list|(
-name|ACPI_PARSE_OBJ_NAMED
-argument_list|)
-expr_stmt|;
 name|Flags
 operator|=
 name|ACPI_PARSEOP_DEFERRED
@@ -236,13 +226,6 @@ operator|&
 name|AML_NAMED
 condition|)
 block|{
-name|Size
-operator|=
-sizeof|sizeof
-argument_list|(
-name|ACPI_PARSE_OBJ_NAMED
-argument_list|)
-expr_stmt|;
 name|Flags
 operator|=
 name|ACPI_PARSEOP_NAMED
@@ -256,43 +239,20 @@ operator|==
 name|AML_INT_BYTELIST_OP
 condition|)
 block|{
-name|Size
-operator|=
-sizeof|sizeof
-argument_list|(
-name|ACPI_PARSE_OBJ_NAMED
-argument_list|)
-expr_stmt|;
 name|Flags
 operator|=
 name|ACPI_PARSEOP_BYTELIST
 expr_stmt|;
 block|}
-else|else
-block|{
-name|Size
-operator|=
-sizeof|sizeof
-argument_list|(
-name|ACPI_PARSE_OBJ_COMMON
-argument_list|)
-expr_stmt|;
-name|Flags
-operator|=
-name|ACPI_PARSEOP_GENERIC
-expr_stmt|;
-block|}
+comment|/* Allocate the minimum required size object */
 if|if
 condition|(
-name|Size
+name|Flags
 operator|==
-sizeof|sizeof
-argument_list|(
-name|ACPI_PARSE_OBJ_COMMON
-argument_list|)
+name|ACPI_PARSEOP_GENERIC
 condition|)
 block|{
-comment|/*          * The generic op is by far the most common (16 to 1)          */
+comment|/* The generic op (default) is by far the most common (16 to 1) */
 name|Op
 operator|=
 name|AcpiUtAcquireFromCache
@@ -303,6 +263,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Extended parseop */
 name|Op
 operator|=
 name|AcpiUtAcquireFromCache

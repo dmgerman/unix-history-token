@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 84 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 86 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -364,6 +364,18 @@ name|NextNode
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|Size
+condition|)
+block|{
+name|Size
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Root node case */
+block|}
 return|return
 operator|(
 name|Size
@@ -371,6 +383,7 @@ operator|+
 literal|1
 operator|)
 return|;
+comment|/* +1 for null string terminator */
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: adisasm - Application-level disassembler routines  *              $Revision: 67 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: adisasm - Application-level disassembler routines  *              $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1967,6 +1967,12 @@ decl_stmt|;
 name|UINT32
 name|PointerSize
 decl_stmt|;
+name|char
+modifier|*
+name|FacsSuffix
+init|=
+literal|""
+decl_stmt|;
 if|if
 condition|(
 name|GetAllTables
@@ -2125,6 +2131,13 @@ operator|->
 name|OemTableId
 argument_list|)
 expr_stmt|;
+comment|/* Use the FADT tableID for the FACS, since FACS has no ID */
+name|FacsSuffix
+operator|=
+name|AcpiGbl_FADT
+operator|->
+name|OemTableId
+expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
@@ -2175,9 +2188,7 @@ name|Length
 argument_list|,
 name|FACS_SIG
 argument_list|,
-name|AcpiGbl_FADT
-operator|->
-name|OemTableId
+name|FacsSuffix
 argument_list|)
 expr_stmt|;
 block|}

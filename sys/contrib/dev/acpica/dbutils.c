@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 66 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 68 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|"acdispat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acdisasm.h"
 end_include
 
 begin_ifdef
@@ -306,13 +312,24 @@ name|ACPI_TYPE_ANY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Object Reference] = %p\n"
+literal|"[Object Reference] = "
 argument_list|,
 name|ObjDesc
 operator|->
 name|Reference
 operator|.
 name|Handle
+argument_list|)
+expr_stmt|;
+name|AcpiDmDisplayInternalObject
+argument_list|(
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Handle
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -493,13 +510,24 @@ name|ACPI_TYPE_LOCAL_REFERENCE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Object Reference] = %p\n"
+literal|"[Object Reference] = "
 argument_list|,
 name|ObjDesc
 operator|->
 name|Reference
 operator|.
 name|Handle
+argument_list|)
+expr_stmt|;
+name|AcpiDmDisplayInternalObject
+argument_list|(
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Handle
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 100 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 101 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -60,6 +60,8 @@ block|,
 name|CMD_CLOSE
 block|,
 name|CMD_DEBUG
+block|,
+name|CMD_DISASSEMBLE
 block|,
 name|CMD_DUMP
 block|,
@@ -215,6 +217,12 @@ block|}
 block|,
 block|{
 literal|"DEBUG"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"DISASSEMBLE"
 block|,
 literal|1
 block|}
@@ -538,6 +546,11 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
+literal|"    [STATISTICS]    Statistical Information\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
 literal|"    [FILE]          File I/O Commands\n"
 argument_list|)
 expr_stmt|;
@@ -612,7 +625,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"       |Objects|Tables]             Display namespace and memory statistics\n"
+literal|"      |Objects|Sizes|Stack|Tables]  Display namespace and memory statistics\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -637,11 +650,60 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
+literal|'S'
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"\nStats Subcommands\n\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Allocations                         Display list of current memory allocations\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Memory                              Dump internal memory lists\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Misc                                Namespace search and mutex stats\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Objects                             Summary of namespace objects\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Sizes                               Sizes for each of the internal objects\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Stack                               Display CPU stack usage\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Tables                              Info about current ACPI table(s)\n"
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
 literal|'N'
 case|:
 name|AcpiOsPrintf
 argument_list|(
 literal|"\nNamespace Access Commands\n\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Disassemble<Method>                Disassemble a control method\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -652,6 +714,21 @@ expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"Find<Name>   (? is wildcard)       Find ACPI name(s) with wildcards\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Gpe<GpeNum><GpeBlock>             Simulate a GPE\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Gpes                                Display info on all GPEs\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Integrity                           Validate namespace integrity\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -696,12 +773,22 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
+literal|"Sleep<SleepState>                  Simulate sleep/wake sequence\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
 literal|"Terminate                           Delete namespace and all internal objects\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"Thread<Threads><Loops><NamePath>   Spawn threads to execute method(s)\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Type<Object>                       Display object type\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1402,6 +1489,18 @@ literal|2
 index|]
 argument_list|,
 name|EX_SINGLE_STEP
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_DISASSEMBLE
+case|:
+name|AcpiDbDisassembleMethod
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 break|break;

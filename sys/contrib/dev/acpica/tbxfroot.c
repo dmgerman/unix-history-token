@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 73 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 79 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -124,6 +124,39 @@ name|AE_AML_STRING_LIMIT
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|ACPI_STRNCMP
+argument_list|(
+name|Signature
+argument_list|,
+name|DSDT_SIG
+argument_list|,
+name|ACPI_NAME_SIZE
+argument_list|)
+condition|)
+block|{
+comment|/*          * The DSDT pointer is contained in the FADT, not the RSDT.          * This code should suffice, because the only code that would perform          * a "find" on the DSDT is the DataTableRegion() AML opcode -- in          * which case, the DSDT is guaranteed to be already loaded.          * If this becomes insufficient, the FADT will have to be found first.          */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_DSDT
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_ACPI_TABLES
+argument_list|)
+expr_stmt|;
+block|}
+name|Table
+operator|=
+name|AcpiGbl_DSDT
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Find the table */
 name|Status
 operator|=
@@ -152,6 +185,7 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Check OemId and OemTableId */
 if|if
@@ -195,6 +229,19 @@ name|AE_AML_NAME_NOT_FOUND
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_TABLES
+operator|,
+literal|"Found table [%4.4s]\n"
+operator|,
+name|Table
+operator|->
+name|Signature
+operator|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|TablePtr
 operator|=
@@ -209,7 +256,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetFirmwareTable  *  * PARAMETERS:  Signature       - Any ACPI table signature  *              Instance        - the non zero instance of the table, allows  *                                support for multiple tables of the same type  *              Flags           - Physical/Virtual support  *              RetBuffer       - pointer to a structure containing a buffer to  *                                receive the table  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get an ACPI table.  The caller  *              supplies an OutBuffer large enough to contain the entire ACPI  *              table.  Upon completion  *              the OutBuffer->Length field will indicate the number of bytes  *              copied into the OutBuffer->BufPtr buffer.  This table will be  *              a complete table including the header.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetFirmwareTable  *  * PARAMETERS:  Signature       - Any ACPI table signature  *              Instance        - the non zero instance of the table, allows  *                                support for multiple tables of the same type  *              Flags           - Physical/Virtual support  *              TablePointer    - Where a buffer containing the table is  *                                returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get an ACPI table. A buffer is  *              allocated for the table and returned in TablePointer.  *              This table will be a complete table including the header.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -231,22 +278,26 @@ modifier|*
 name|TablePointer
 parameter_list|)
 block|{
-name|ACPI_POINTER
-name|RsdpAddress
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 name|ACPI_POINTER
 name|Address
 decl_stmt|;
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
 name|ACPI_TABLE_HEADER
+modifier|*
 name|Header
+init|=
+name|NULL
 decl_stmt|;
 name|ACPI_TABLE_DESC
+modifier|*
 name|TableInfo
+init|=
+name|NULL
 decl_stmt|;
 name|ACPI_TABLE_DESC
+modifier|*
 name|RsdtInfo
 decl_stmt|;
 name|UINT32
@@ -263,8 +314,7 @@ argument_list|(
 literal|"AcpiGetFirmwareTable"
 argument_list|)
 expr_stmt|;
-comment|/*      * Ensure that at least the table manager is initialized.  We don't      * require that the entire ACPI subsystem is up for this interface      */
-comment|/*      *  If we have a buffer, we must have a length too      */
+comment|/*      * Ensure that at least the table manager is initialized.  We don't      * require that the entire ACPI subsystem is up for this interface.      * If we have a buffer, we must have a length too      */
 if|if
 condition|(
 operator|(
@@ -290,12 +340,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-name|RsdtInfo
-operator|.
-name|Pointer
-operator|=
-name|NULL
-expr_stmt|;
+comment|/* Ensure that we have a RSDP */
 if|if
 condition|(
 operator|!
@@ -310,7 +355,7 @@ argument_list|(
 name|Flags
 argument_list|,
 operator|&
-name|RsdpAddress
+name|Address
 argument_list|)
 expr_stmt|;
 if|if
@@ -326,7 +371,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"RSDP  not found\n"
+literal|"RSDP not found\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -352,7 +397,7 @@ name|Status
 operator|=
 name|AcpiOsMapMemory
 argument_list|(
-name|RsdpAddress
+name|Address
 operator|.
 name|Pointer
 operator|.
@@ -390,14 +435,14 @@ else|else
 block|{
 name|AcpiGbl_RSDP
 operator|=
-name|RsdpAddress
+name|Address
 operator|.
 name|Pointer
 operator|.
 name|Logical
 expr_stmt|;
 block|}
-comment|/*          *  The signature and checksum must both be correct          */
+comment|/* The signature and checksum must both be correct */
 if|if
 condition|(
 name|ACPI_STRNCMP
@@ -448,7 +493,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Get the RSDT and validate it */
+comment|/* Get the RSDT address via the RSDP */
 name|AcpiTbGetRsdtAddress
 argument_list|(
 operator|&
@@ -482,6 +527,29 @@ name|PointerType
 operator||=
 name|Flags
 expr_stmt|;
+comment|/* Get and validate the RSDT */
+name|RsdtInfo
+operator|=
+name|ACPI_MEM_CALLOCATE
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_DESC
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|RsdtInfo
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
+expr_stmt|;
+block|}
 name|Status
 operator|=
 name|AcpiTbGetTable
@@ -489,7 +557,6 @@ argument_list|(
 operator|&
 name|Address
 argument_list|,
-operator|&
 name|RsdtInfo
 argument_list|)
 expr_stmt|;
@@ -501,18 +568,16 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 name|Status
 operator|=
 name|AcpiTbValidateRsdt
 argument_list|(
 name|RsdtInfo
-operator|.
+operator|->
 name|Pointer
 argument_list|)
 expr_stmt|;
@@ -528,6 +593,55 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
+comment|/* Allocate a scratch table header and table descriptor */
+name|Header
+operator|=
+name|ACPI_MEM_ALLOCATE
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Header
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_NO_MEMORY
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+name|TableInfo
+operator|=
+name|ACPI_MEM_ALLOCATE
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_DESC
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|TableInfo
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_NO_MEMORY
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
 comment|/* Get the number of table pointers within the RSDT */
 name|TableCount
 operator|=
@@ -536,7 +650,7 @@ argument_list|(
 name|AcpiGbl_RSDP
 argument_list|,
 name|RsdtInfo
-operator|.
+operator|->
 name|Pointer
 argument_list|)
 expr_stmt|;
@@ -589,7 +703,7 @@ argument_list|(
 name|RSDT_DESCRIPTOR
 argument_list|,
 name|RsdtInfo
-operator|.
+operator|->
 name|Pointer
 argument_list|)
 operator|)
@@ -616,7 +730,7 @@ argument_list|(
 name|XSDT_DESCRIPTOR
 argument_list|,
 name|RsdtInfo
-operator|.
+operator|->
 name|Pointer
 argument_list|)
 operator|)
@@ -636,7 +750,6 @@ argument_list|(
 operator|&
 name|Address
 argument_list|,
-operator|&
 name|Header
 argument_list|)
 expr_stmt|;
@@ -659,7 +772,7 @@ operator|!
 name|ACPI_STRNCMP
 argument_list|(
 name|Header
-operator|.
+operator|->
 name|Signature
 argument_list|,
 name|Signature
@@ -687,10 +800,8 @@ argument_list|(
 operator|&
 name|Address
 argument_list|,
-operator|&
 name|Header
 argument_list|,
-operator|&
 name|TableInfo
 argument_list|)
 expr_stmt|;
@@ -710,7 +821,7 @@ operator|*
 name|TablePointer
 operator|=
 name|TableInfo
-operator|.
+operator|->
 name|Pointer
 expr_stmt|;
 goto|goto
@@ -729,19 +840,46 @@ label|:
 name|AcpiOsUnmapMemory
 argument_list|(
 name|RsdtInfo
-operator|.
+operator|->
 name|Pointer
 argument_list|,
 operator|(
 name|ACPI_SIZE
 operator|)
 name|RsdtInfo
-operator|.
+operator|->
 name|Pointer
 operator|->
 name|Length
 argument_list|)
 expr_stmt|;
+name|ACPI_MEM_FREE
+argument_list|(
+name|RsdtInfo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Header
+condition|)
+block|{
+name|ACPI_MEM_FREE
+argument_list|(
+name|Header
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|TableInfo
+condition|)
+block|{
+name|ACPI_MEM_FREE
+argument_list|(
+name|TableInfo
+argument_list|)
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -871,37 +1009,39 @@ name|UINT32
 name|Length
 parameter_list|)
 block|{
-name|UINT32
-name|Offset
-decl_stmt|;
 name|UINT8
 modifier|*
 name|MemRover
+decl_stmt|;
+name|UINT8
+modifier|*
+name|EndAddress
+decl_stmt|;
+name|UINT8
+name|Checksum
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"TbScanMemoryForRsdp"
 argument_list|)
 expr_stmt|;
-comment|/* Search from given start addr for the requested length  */
+name|EndAddress
+operator|=
+name|StartAddress
+operator|+
+name|Length
+expr_stmt|;
+comment|/* Search from given start address for the requested length */
 for|for
 control|(
-name|Offset
-operator|=
-literal|0
-operator|,
 name|MemRover
 operator|=
 name|StartAddress
 init|;
-name|Offset
+name|MemRover
 operator|<
-name|Length
+name|EndAddress
 condition|;
-name|Offset
-operator|+=
-name|ACPI_RSDP_SCAN_STEP
-operator|,
 name|MemRover
 operator|+=
 name|ACPI_RSDP_SCAN_STEP
@@ -927,20 +1067,61 @@ argument_list|)
 operator|-
 literal|1
 argument_list|)
-operator|==
+operator|!=
 literal|0
-operator|&&
+condition|)
+block|{
+comment|/* No signature match, keep looking */
+continue|continue;
+block|}
+comment|/* Signature matches, check the appropriate checksum */
+if|if
+condition|(
+operator|(
+operator|(
+name|RSDP_DESCRIPTOR
+operator|*
+operator|)
+name|MemRover
+operator|)
+operator|->
+name|Revision
+operator|<
+literal|2
+condition|)
+block|{
+comment|/* ACPI version 1.0 */
+name|Checksum
+operator|=
 name|AcpiTbChecksum
 argument_list|(
 name|MemRover
 argument_list|,
 name|ACPI_RSDP_CHECKSUM_LENGTH
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Post ACPI 1.0, use ExtendedChecksum */
+name|Checksum
+operator|=
+name|AcpiTbChecksum
+argument_list|(
+name|MemRover
+argument_list|,
+name|ACPI_RSDP_XCHECKSUM_LENGTH
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Checksum
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* If so, we have found the RSDP */
+comment|/* Checksum valid, we have found a valid RSDP */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -958,6 +1139,17 @@ name|MemRover
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"Found an RSDP at physical address %p, but it has a bad checksum\n"
+operator|,
+name|MemRover
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Searched entire block, no RSDP was found */
 name|ACPI_DEBUG_PRINT
@@ -965,7 +1157,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Searched entire block, no RSDP was found.\n"
+literal|"Searched entire block, no valid RSDP was found.\n"
 operator|)
 argument_list|)
 expr_stmt|;

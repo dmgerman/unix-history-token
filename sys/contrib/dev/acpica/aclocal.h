@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 201 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 202 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|AML_NUM_OPCODES
-value|0x7E
+value|0x7F
 end_define
 
 begin_comment
@@ -2670,7 +2670,7 @@ define|#
 directive|define
 name|ACPI_COMMON_DEBUG_MEM_HEADER
 define|\
-value|struct acpi_debug_mem_block *Previous; \     struct acpi_debug_mem_block *Next; \     UINT32                      Size; \     UINT32                      Component; \     UINT32                      Line; \     char                        Module[ACPI_MAX_MODULE_NAME]; \     UINT8                       AllocType; \     UINT8                       Padding[3];
+value|struct acpi_debug_mem_block *Previous; \     struct acpi_debug_mem_block *Next; \     UINT32                      Size; \     UINT32                      Component; \     UINT32                      Line; \     char                        Module[ACPI_MAX_MODULE_NAME]; \     UINT8                       AllocType;
 end_define
 
 begin_typedef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 127 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 129 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsEvaluateRelative  *  * PARAMETERS:  Handle              - The relative containing object  *              Pathname            - Name of method to execute, If NULL, the  *                                    handle is the object to execute  *              Params              - List of parameters to pass to the method,  *                                    terminated by NULL.  Params itself may be  *                                    NULL if no parameters are being passed.  *              ReturnObject        - Where to put method's return value (if  *                                    any).  If NULL, no value is returned.  *  * RETURN:      Status  *  * DESCRIPTION: Find and execute the requested method using the handle as a  *              scope  *  * MUTEX:       Locks Namespace  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsEvaluateRelative  *  * PARAMETERS:  Pathname            - Name of method to execute, If NULL, the  *                                    handle is the object to execute  *              Info                - Method info block  *  * RETURN:      Status  *  * DESCRIPTION: Find and execute the requested method using the handle as a  *              scope  *  * MUTEX:       Locks Namespace  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -272,7 +272,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * Now that we have a handle to the object, we can attempt      * to evaluate it.      */
+comment|/*      * Now that we have a handle to the object, we can attempt to evaluate it.      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -338,7 +338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsEvaluateByName  *  * PARAMETERS:  Pathname            - Fully qualified pathname to the object  *              Info                - Contains:  *              ReturnObject        - Where to put method's return value (if  *                                    any).  If NULL, no value is returned.  *              Params              - List of parameters to pass to the method,  *                                    terminated by NULL.  Params itself may be  *                                    NULL if no parameters are being passed.  *  * RETURN:      Status  *  * DESCRIPTION: Find and execute the requested method passing the given  *              parameters  *  * MUTEX:       Locks Namespace  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsEvaluateByName  *  * PARAMETERS:  Pathname            - Fully qualified pathname to the object  *              Info                - Contains:  *                  ReturnObject    - Where to put method's return value (if  *                                    any).  If NULL, no value is returned.  *                  Params          - List of parameters to pass to the method,  *                                    terminated by NULL.  Params itself may be  *                                    NULL if no parameters are being passed.  *  * RETURN:      Status  *  * DESCRIPTION: Find and execute the requested method passing the given  *              parameters  *  * MUTEX:       Locks Namespace  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -468,7 +468,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * Now that we have a handle to the object, we can attempt      * to evaluate it.      */
+comment|/*      * Now that we have a handle to the object, we can attempt to evaluate it.      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -640,7 +640,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * For a method alias, we must grab the actual method node      * so that proper scoping context will be established      * before execution.      */
+comment|/*      * For a method alias, we must grab the actual method node so that proper      * scoping context will be established before execution.      */
 if|if
 condition|(
 name|AcpiNsGetType
@@ -669,7 +669,7 @@ name|Object
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Two major cases here:      * 1) The object is an actual control method -- execute it.      * 2) The object is not a method -- just return it's current      *      value      *      * In both cases, the namespace is unlocked by the      *  AcpiNs* procedure      */
+comment|/*      * Two major cases here:      * 1) The object is an actual control method -- execute it.      * 2) The object is not a method -- just return it's current value      *      * In both cases, the namespace is unlocked by the AcpiNs* procedure      */
 if|if
 condition|(
 name|AcpiNsGetType
@@ -693,7 +693,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*          * Case 2) Object is NOT a method, just return its          * current value          */
+comment|/*          * Case 2) Object is NOT a method, just return its current value          */
 name|Status
 operator|=
 name|AcpiNsGetObjectValue
@@ -702,7 +702,7 @@ name|Info
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Check if there is a return value on the stack that must      * be dealt with      */
+comment|/*      * Check if there is a return value on the stack that must be dealt with      */
 if|if
 condition|(
 name|Status
@@ -716,7 +716,7 @@ operator|=
 name|AE_OK
 expr_stmt|;
 block|}
-comment|/*      * Namespace was unlocked by the handling AcpiNs* function,      * so we just return      */
+comment|/*      * Namespace was unlocked by the handling AcpiNs* function, so we      * just return      */
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -726,7 +726,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsExecuteControlMethod  *  * PARAMETERS:  MethodNode          - The method to execute  *              Params              - List of parameters to pass to the method,  *                                    terminated by NULL.  Params itself may be  *                                    NULL if no parameters are being passed.  *              ReturnObjDesc       - List of result objects to be returned  *                                    from the method.  *  * RETURN:      Status  *  * DESCRIPTION: Execute the requested method passing the given parameters  *  * MUTEX:       Assumes namespace is locked  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsExecuteControlMethod  *  * PARAMETERS:  Info            - Method info block (w/params)  *  * RETURN:      Status  *  * DESCRIPTION: Execute the requested method passing the given parameters  *  * MUTEX:       Assumes namespace is locked  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -888,7 +888,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetObjectValue  *  * PARAMETERS:  Node                - The object  *              ReturnObjDesc       - Where the objects value is returned  *  * RETURN:      Status  *  * DESCRIPTION: Return the current value of the object  *  * MUTEX:       Assumes namespace is locked, leaves namespace unlocked  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetObjectValue  *  * PARAMETERS:  Info            - Method info block (w/params)  *  * RETURN:      Status  *  * DESCRIPTION: Return the current value of the object  *  * MUTEX:       Assumes namespace is locked, leaves namespace unlocked  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -918,8 +918,8 @@ argument_list|(
 literal|"NsGetObjectValue"
 argument_list|)
 expr_stmt|;
-comment|/*      * Objects require additional resolution steps (e.g., the      * Node may be a field that must be read, etc.) -- we can't just grab      * the object out of the node.      */
-comment|/*      * Use ResolveNodeToValue() to get the associated value.  This call      * always deletes ObjDesc (allocated above).      *      * NOTE: we can get away with passing in NULL for a walk state      * because ObjDesc is guaranteed to not be a reference to either      * a method local or a method argument (because this interface can only be      * called from the AcpiEvaluate external interface, never called from      * a running control method.)      *      * Even though we do not directly invoke the interpreter      * for this, we must enter it because we could access an opregion.      * The opregion access code assumes that the interpreter      * is locked.      *      * We must release the namespace lock before entering the      * intepreter.      */
+comment|/*      * Objects require additional resolution steps (e.g., the Node may be a      * field that must be read, etc.) -- we can't just grab the object out of      * the node.      */
+comment|/*      * Use ResolveNodeToValue() to get the associated value.  This call always      * deletes ObjDesc (allocated above).      *      * NOTE: we can get away with passing in NULL for a walk state because      * ObjDesc is guaranteed to not be a reference to either a method local or      * a method argument (because this interface can only be called from the      * AcpiEvaluate external interface, never called from a running method.)      *      * Even though we do not directly invoke the interpreter for this, we must      * enter it because we could access an opregion. The opregion access code      * assumes that the interpreter is locked.      *      * We must release the namespace lock before entering the intepreter.      */
 name|Status
 operator|=
 name|AcpiUtReleaseMutex
@@ -964,7 +964,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/*          * If AcpiExResolveNodeToValue() succeeded, the return value was          * placed in ResolvedNode.          */
+comment|/*          * If AcpiExResolveNodeToValue() succeeded, the return value was placed          * in ResolvedNode.          */
 name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;

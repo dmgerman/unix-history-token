@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 57 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -449,13 +449,67 @@ name|CstCnt
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Since there isn't any equivalence in 1.0 and since it highly likely      * that a 1.0 system has legacy support.      */
+comment|/*      * FADT Rev 2 was an interim FADT released between ACPI 1.0 and ACPI 2.0.      * It primarily adds the FADT reset mechanism.      */
+if|if
+condition|(
+operator|(
+name|OriginalFadt
+operator|->
+name|Revision
+operator|==
+literal|2
+operator|)
+operator|&&
+operator|(
+name|OriginalFadt
+operator|->
+name|Length
+operator|==
+sizeof|sizeof
+argument_list|(
+name|FADT_DESCRIPTOR_REV2_MINUS
+argument_list|)
+operator|)
+condition|)
+block|{
+comment|/*          * Grab the entire generic address struct, plus the 1-byte reset value          * that immediately follows.          */
+name|ACPI_MEMCPY
+argument_list|(
+operator|&
+name|LocalFadt
+operator|->
+name|ResetRegister
+argument_list|,
+operator|&
+operator|(
+operator|(
+name|FADT_DESCRIPTOR_REV2_MINUS
+operator|*
+operator|)
+name|OriginalFadt
+operator|)
+operator|->
+name|ResetRegister
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_GENERIC_ADDRESS
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/*          * Since there isn't any equivalence in 1.0 and since it is highly          * likely that a 1.0 system has legacy support.          */
 name|LocalFadt
 operator|->
 name|IapcBootArch
 operator|=
 name|BAF_LEGACY_DEVICES
 expr_stmt|;
+block|}
 comment|/*      * Convert the V1.0 block addresses to V2.0 GAS structures      */
 name|AcpiTbInitGenericAddress
 argument_list|(
@@ -1191,31 +1245,7 @@ argument_list|(
 literal|"TbConvertTableFadt"
 argument_list|)
 expr_stmt|;
-comment|/*      * AcpiGbl_FADT is valid      * Allocate and zero the 2.0 FADT buffer      */
-name|LocalFadt
-operator|=
-name|ACPI_MEM_CALLOCATE
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|FADT_DESCRIPTOR_REV2
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|LocalFadt
-operator|==
-name|NULL
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_MEMORY
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * FADT length and version validation.  The table must be at least as      * long as the version 1.0 FADT      */
+comment|/*      * AcpiGbl_FADT is valid. Validate the FADT length. The table must be      * at least as long as the version 1.0 FADT      */
 if|if
 condition|(
 name|AcpiGbl_FADT
@@ -1231,7 +1261,7 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Invalid FADT table length: 0x%X\n"
+literal|"FADT is invalid, too short: 0x%X\n"
 operator|,
 name|AcpiGbl_FADT
 operator|->
@@ -1242,6 +1272,29 @@ expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_INVALID_TABLE_LENGTH
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Allocate buffer for the ACPI 2.0(+) FADT */
+name|LocalFadt
+operator|=
+name|ACPI_MEM_CALLOCATE
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|FADT_DESCRIPTOR_REV2
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|LocalFadt
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}

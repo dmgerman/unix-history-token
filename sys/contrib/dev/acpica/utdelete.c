@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 99 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 100 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1354,6 +1354,23 @@ block|{
 name|return_VOID
 expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ALLOCATIONS
+operator|,
+literal|"Obj %p Current Refs=%X [To Be Incremented]\n"
+operator|,
+name|Object
+operator|,
+name|Object
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Increment the reference count */
 operator|(
 name|void
@@ -1427,7 +1444,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ALLOCATIONS
 operator|,
-literal|"Obj %p Refs=%X\n"
+literal|"Obj %p Current Refs=%X [To Be Decremented]\n"
 operator|,
 name|Object
 operator|,

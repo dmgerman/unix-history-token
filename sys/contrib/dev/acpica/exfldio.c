@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 106 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 111 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -249,6 +249,56 @@ name|AccessByteWidth
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|AcpiGbl_EnableInterpreterSlack
+condition|)
+block|{
+comment|/*              * Slack mode only:  We will go ahead and allow access to this              * field if it is within the region length rounded up to the next              * access width boundary.              */
+if|if
+condition|(
+name|ACPI_ROUND_UP
+argument_list|(
+name|RgnDesc
+operator|->
+name|Region
+operator|.
+name|Length
+argument_list|,
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
+argument_list|)
+operator|>=
+operator|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|BaseByteOffset
+operator|+
+operator|(
+name|ACPI_NATIVE_UINT
+operator|)
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
+operator|+
+name|FieldDatumByteOffset
+operator|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|RgnDesc
@@ -1836,7 +1886,7 @@ name|AE_BUFFER_OVERFLOW
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*       * Create "actual" field byte count (minimum number of bytes that      * must be read), then convert to datum count (minimum number      * of datum-sized units that must be read)      */
+comment|/*      * Create "actual" field byte count (minimum number of bytes that      * must be read), then convert to datum count (minimum number      * of datum-sized units that must be read)      */
 name|ActualByteFieldLength
 operator|=
 name|ACPI_ROUND_BITS_UP_TO_BYTES

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evgpeblk - GPE block creation and initialization.  *              $Revision: 36 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evgpeblk - GPE block creation and initialization.  *              $Revision: 39 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -151,7 +151,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvWalkGpeList  *  * PARAMETERS:  GpeWalkCallback     - Routine called for each GPE block  *  * RETURN:      Status  *  * DESCRIPTION: Walk the GPE lists.  *              FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvWalkGpeList  *  * PARAMETERS:  GpeWalkCallback     - Routine called for each GPE block  *              Flags               - ACPI_NOT_ISR or ACPI_ISR  *  * RETURN:      Status  *  * DESCRIPTION: Walk the GPE lists.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -160,6 +160,9 @@ name|AcpiEvWalkGpeList
 parameter_list|(
 name|ACPI_GPE_CALLBACK
 name|GpeWalkCallback
+parameter_list|,
+name|UINT32
+name|Flags
 parameter_list|)
 block|{
 name|ACPI_GPE_BLOCK_INFO
@@ -184,7 +187,7 @@ name|AcpiOsAcquireLock
 argument_list|(
 name|AcpiGbl_GpeLock
 argument_list|,
-name|ACPI_ISR
+name|Flags
 argument_list|)
 expr_stmt|;
 comment|/* Walk the interrupt level descriptor list */
@@ -251,7 +254,7 @@ name|AcpiOsReleaseLock
 argument_list|(
 name|AcpiGbl_GpeLock
 argument_list|,
-name|ACPI_ISR
+name|Flags
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -673,7 +676,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvMatchPrwAndGpe  *  * PARAMETERS:  Callback from WalkNamespace  *  * RETURN:      Status  *  * DESCRIPTION: Called from AcpiWalkNamespace.  Expects each object to be a  *              Device.  Run the _PRW method.  If present, extract the GPE  *              number and mark the GPE as a WAKE GPE.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvMatchPrwAndGpe  *  * PARAMETERS:  Callback from WalkNamespace  *  * RETURN:      Status.  NOTE: We ignore errors so that the _PRW walk is  *              not aborted on a single _PRW failure.  *  * DESCRIPTION: Called from AcpiWalkNamespace.  Expects each object to be a  *              Device.  Run the _PRW method.  If present, extract the GPE  *              number and mark the GPE as a WAKE GPE.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2520,7 +2523,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"GPE %02X to %02X [%4.4s] %u regs at %8.8X%8.8X on int 0x%X\n"
+literal|"GPE %02X to %02X [%4.4s] %u regs on int 0x%X\n"
 operator|,
 operator|(
 name|UINT32
@@ -2559,18 +2562,6 @@ operator|,
 name|GpeBlock
 operator|->
 name|RegisterCount
-operator|,
-name|ACPI_FORMAT_UINT64
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
-name|GpeBlock
-operator|->
-name|BlockAddress
-operator|.
-name|Address
-argument_list|)
-argument_list|)
 operator|,
 name|InterruptLevel
 operator|)

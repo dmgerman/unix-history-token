@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 144 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 146 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -243,21 +243,24 @@ name|ParseFlags
 operator|&
 name|ACPI_PARSE_TREE_MASK
 operator|)
-operator|==
+operator|!=
 name|ACPI_PARSE_DELETE_TREE
 operator|)
-operator|&&
+operator|||
 operator|(
 name|WalkState
 operator|->
 name|OpInfo
 operator|->
 name|Class
-operator|!=
+operator|==
 name|AML_CLASS_ARGUMENT
 operator|)
 condition|)
 block|{
+name|return_VOID
+expr_stmt|;
+block|}
 comment|/* Make sure that we only delete this subtree */
 if|if
 condition|(
@@ -268,7 +271,7 @@ operator|.
 name|Parent
 condition|)
 block|{
-comment|/*              * Check if we need to replace the operator and its subtree              * with a return value op (placeholder op)              */
+comment|/*          * Check if we need to replace the operator and its subtree          * with a return value op (placeholder op)          */
 name|ParentInfo
 operator|=
 name|AcpiPsGetOpcodeInfo
@@ -298,7 +301,7 @@ break|break;
 case|case
 name|AML_CLASS_CREATE
 case|:
-comment|/*                  * These opcodes contain TermArg operands.  The current                  * op must be replaced by a placeholder return op                  */
+comment|/*              * These opcodes contain TermArg operands.  The current              * op must be replaced by a placeholder return op              */
 name|ReplacementOp
 operator|=
 name|AcpiPsAllocOp
@@ -312,14 +315,15 @@ operator|!
 name|ReplacementOp
 condition|)
 block|{
-name|return_VOID
-expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 break|break;
 case|case
 name|AML_CLASS_NAMED_OBJECT
 case|:
-comment|/*                  * These opcodes contain TermArg operands.  The current                  * op must be replaced by a placeholder return op                  */
+comment|/*              * These opcodes contain TermArg operands.  The current              * op must be replaced by a placeholder return op              */
 if|if
 condition|(
 operator|(
@@ -406,8 +410,9 @@ operator|!
 name|ReplacementOp
 condition|)
 block|{
-name|return_VOID
-expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 block|}
 if|if
@@ -485,8 +490,9 @@ operator|!
 name|ReplacementOp
 condition|)
 block|{
-name|return_VOID
-expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 name|ReplacementOp
 operator|->
@@ -529,8 +535,9 @@ operator|!
 name|ReplacementOp
 condition|)
 block|{
-name|return_VOID
-expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 block|}
 comment|/* We must unlink this op from the parent tree */
@@ -757,15 +764,14 @@ name|Next
 expr_stmt|;
 block|}
 block|}
+name|Cleanup
+label|:
 comment|/* Now we can actually delete the subtree rooted at op */
 name|AcpiPsDeleteParseTree
 argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
-name|return_VOID
-expr_stmt|;
-block|}
 name|return_VOID
 expr_stmt|;
 block|}
@@ -1550,11 +1556,13 @@ operator|!
 name|PreOp
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_NO_MEMORY
-argument_list|)
 expr_stmt|;
+goto|goto
+name|CloseThisOp
+goto|;
 block|}
 block|}
 name|PreOp
@@ -1657,11 +1665,13 @@ name|ArgTypes
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_AML_NO_OPERAND
-argument_list|)
 expr_stmt|;
+goto|goto
+name|CloseThisOp
+goto|;
 block|}
 comment|/* We know that this arg is a name, move to next arg */
 name|INCREMENT_ARG_LIST
@@ -1838,11 +1848,13 @@ operator|!
 name|Op
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_NO_MEMORY
-argument_list|)
 expr_stmt|;
+goto|goto
+name|CloseThisOp
+goto|;
 block|}
 if|if
 condition|(
@@ -2411,11 +2423,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|CloseThisOp
+goto|;
 block|}
 name|Op
 operator|=
@@ -3435,9 +3445,17 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|Status
 operator|!=
 name|AE_OK
+operator|)
+operator|&&
+operator|(
+name|WalkState
+operator|->
+name|MethodDesc
+operator|)
 condition|)
 block|{
 name|ACPI_REPORT_METHOD_ERROR

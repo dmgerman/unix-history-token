@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 10 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 12 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -241,7 +241,7 @@ name|Status
 operator|=
 name|AcpiGetHandle
 argument_list|(
-literal|0
+name|NULL
 argument_list|,
 name|ACPI_NS_SYSTEM_BUS
 argument_list|,

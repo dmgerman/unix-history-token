@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psopcode - Parser/Interpreter opcode information table  *              $Revision: 78 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psopcode - Parser/Interpreter opcode information table  *              $Revision: 83 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -876,6 +876,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGP_TIMER_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGP_TO_BCD_OP
 value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TARGET)
 end_define
@@ -1210,7 +1217,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_DATA_REGION_OP
-value|ARGI_LIST3 (ARGI_STRING,     ARGI_STRING,       ARGI_STRING)
+value|ARGI_LIST3 (ARGI_STRING,     ARGI_STRING,        ARGI_STRING)
 end_define
 
 begin_define
@@ -1343,14 +1350,14 @@ begin_define
 define|#
 directive|define
 name|ARGI_LEQUAL_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
+value|ARGI_LIST2 (ARGI_COMPUTEDATA,ARGI_COMPUTEDATA)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_LGREATER_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
+value|ARGI_LIST2 (ARGI_COMPUTEDATA,ARGI_COMPUTEDATA)
 end_define
 
 begin_define
@@ -1364,7 +1371,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_LLESS_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
+value|ARGI_LIST2 (ARGI_COMPUTEDATA,ARGI_COMPUTEDATA)
 end_define
 
 begin_define
@@ -1672,8 +1679,12 @@ begin_define
 define|#
 directive|define
 name|ARGI_SIZE_OF_OP
-value|ARGI_LIST1 (ARGI_DATAOBJECT)
+value|ARGI_LIST1 (ARGI_REFERENCE)
 end_define
+
+begin_comment
+comment|/* Force delay of operand resolution */
+end_comment
 
 begin_define
 define|#
@@ -1727,6 +1738,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGI_TIMER_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGI_TO_BCD_OP
 value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_FIXED_TARGET)
 end_define
@@ -1770,8 +1788,12 @@ begin_define
 define|#
 directive|define
 name|ARGI_TYPE_OP
-value|ARGI_LIST1 (ARGI_ANYTYPE)
+value|ARGI_LIST1 (ARGI_REFERENCE)
 end_define
+
+begin_comment
+comment|/* Force delay of operand resolution */
+end_comment
 
 begin_define
 define|#
@@ -2995,7 +3017,7 @@ name|AML_TYPE_EXEC_2A_0T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_2A_0T_1R
 operator||
-name|AML_LOGICAL
+name|AML_LOGICAL_NUMERIC
 operator||
 name|AML_CONSTANT
 argument_list|)
@@ -3017,7 +3039,7 @@ name|AML_TYPE_EXEC_2A_0T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_2A_0T_1R
 operator||
-name|AML_LOGICAL
+name|AML_LOGICAL_NUMERIC
 operator||
 name|AML_CONSTANT
 argument_list|)
@@ -4392,17 +4414,42 @@ name|ACPI_OP
 argument_list|(
 literal|"[EvalSubTree]"
 argument_list|,
-argument|ARGP_SCOPE_OP
+name|ARGP_SCOPE_OP
 argument_list|,
-argument|ARGI_SCOPE_OP
+name|ARGI_SCOPE_OP
+argument_list|,
+name|ACPI_TYPE_ANY
+argument_list|,
+name|AML_CLASS_NAMED_OBJECT
+argument_list|,
+name|AML_TYPE_NAMED_NO_OBJ
+argument_list|,
+name|AML_HAS_ARGS
+operator||
+name|AML_NSOBJECT
+operator||
+name|AML_NSOPCODE
+operator||
+name|AML_NSNODE
+argument_list|)
+block|,
+comment|/* ACPI 3.0 opcodes */
+comment|/* 7E */
+name|ACPI_OP
+argument_list|(
+literal|"Timer"
+argument_list|,
+argument|ARGP_TIMER_OP
+argument_list|,
+argument|ARGI_TIMER_OP
 argument_list|,
 argument|ACPI_TYPE_ANY
 argument_list|,
-argument|AML_CLASS_NAMED_OBJECT
+argument|AML_CLASS_EXECUTE
 argument_list|,
-argument|AML_TYPE_NAMED_NO_OBJ
+argument|AML_TYPE_EXEC_0A_0T_1R
 argument_list|,
-argument|AML_HAS_ARGS | AML_NSOBJECT | AML_NSOPCODE | AML_NSNODE
+argument|AML_FLAGS_EXEC_0A_0T_1R
 argument_list|)
 comment|/*! [End] no source code translation !*/
 block|}
@@ -4972,6 +5019,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * This table is indexed by the second opcode of the extended opcode  * pair.  It returns an index into the opcode table (AcpiGbl_AmlOpInfo)  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -5093,7 +5144,7 @@ literal|0x56
 block|,
 literal|0x57
 block|,
-name|_UNK
+literal|0x7e
 block|,
 name|_UNK
 block|,
@@ -5370,7 +5421,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Unknown extended opcode [%X]\n"
+literal|"Unknown AML opcode [%4.4X]\n"
 operator|,
 name|Opcode
 operator|)

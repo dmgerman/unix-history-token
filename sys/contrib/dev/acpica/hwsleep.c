@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 69 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 70 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -662,7 +662,9 @@ comment|/*      * 1) Disable/Clear all GPEs      * 2) Enable all wakeup GPEs    
 name|Status
 operator|=
 name|AcpiHwDisableAllGpes
-argument_list|()
+argument_list|(
+name|ACPI_ISR
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -685,7 +687,9 @@ expr_stmt|;
 name|Status
 operator|=
 name|AcpiHwEnableAllWakeupGpes
-argument_list|()
+argument_list|(
+name|ACPI_ISR
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1055,7 +1059,9 @@ comment|/*      * 1) Disable/Clear all GPEs      * 2) Enable all wakeup GPEs    
 name|Status
 operator|=
 name|AcpiHwDisableAllGpes
-argument_list|()
+argument_list|(
+name|ACPI_ISR
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1078,7 +1084,9 @@ expr_stmt|;
 name|Status
 operator|=
 name|AcpiHwEnableAllWakeupGpes
-argument_list|()
+argument_list|(
+name|ACPI_ISR
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1164,7 +1172,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiLeaveSleepState  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *  * RETURN:      Status  *  * DESCRIPTION: Perform OS-independent ACPI cleanup after a sleep  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiLeaveSleepState  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *  * RETURN:      Status  *  * DESCRIPTION: Perform OS-independent ACPI cleanup after a sleep  *              Called with interrupts ENABLED.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1490,7 +1498,9 @@ comment|/*      * Restore the GPEs:      * 1) Disable/Clear all GPEs      * 2) E
 name|Status
 operator|=
 name|AcpiHwDisableAllGpes
-argument_list|()
+argument_list|(
+name|ACPI_NOT_ISR
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1513,7 +1523,9 @@ expr_stmt|;
 name|Status
 operator|=
 name|AcpiHwEnableAllRuntimeGpes
-argument_list|()
+argument_list|(
+name|ACPI_NOT_ISR
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

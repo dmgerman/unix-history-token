@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 111 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 112 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -384,22 +384,15 @@ decl_stmt|;
 name|ACPI_INTEGER
 name|CurrentValue
 decl_stmt|;
-name|ACPI_INTEGER
-name|Quotient
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"ExDigitsNeeded"
 argument_list|)
 expr_stmt|;
-comment|/*      * ACPI_INTEGER is unsigned, so we don't worry about a '-'      */
+comment|/* ACPI_INTEGER is unsigned, so we don't worry about a '-' prefix */
 if|if
 condition|(
-operator|(
-name|CurrentValue
-operator|=
 name|Value
-operator|)
 operator|==
 literal|0
 condition|)
@@ -410,10 +403,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|CurrentValue
+operator|=
+name|Value
+expr_stmt|;
 name|NumDigits
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Count the digits in the requested base */
 while|while
 condition|(
 name|CurrentValue
@@ -424,23 +422,18 @@ name|void
 operator|)
 name|AcpiUtShortDivide
 argument_list|(
-operator|&
 name|CurrentValue
 argument_list|,
 name|Base
 argument_list|,
 operator|&
-name|Quotient
+name|CurrentValue
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
 name|NumDigits
 operator|++
-expr_stmt|;
-name|CurrentValue
-operator|=
-name|Quotient
 expr_stmt|;
 block|}
 name|return_VALUE
@@ -646,9 +639,6 @@ decl_stmt|;
 name|UINT32
 name|Remainder
 decl_stmt|;
-name|ACPI_INTEGER
-name|Quotient
-decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
@@ -687,13 +677,12 @@ name|void
 operator|)
 name|AcpiUtShortDivide
 argument_list|(
-operator|&
 name|Value
 argument_list|,
 literal|10
 argument_list|,
 operator|&
-name|Quotient
+name|Value
 argument_list|,
 operator|&
 name|Remainder
@@ -715,12 +704,7 @@ operator|+
 name|Remainder
 argument_list|)
 expr_stmt|;
-block|\
-name|Value
-operator|=
-name|Quotient
-expr_stmt|;
-block|}
+block|\     }
 block|}
 end_function
 

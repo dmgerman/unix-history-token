@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 156 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 162 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwClearAcpiStatus  *  * PARAMETERS:  Flags           - Lock the hardware or not  *  * RETURN:      none  *  * DESCRIPTION: Clears all fixed and general purpose status bits  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwClearAcpiStatus  *  * PARAMETERS:  Flags           - Lock the hardware or not  *  * RETURN:      none  *  * DESCRIPTION: Clears all fixed and general purpose status bits  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -186,6 +186,8 @@ operator|=
 name|AcpiEvWalkGpeList
 argument_list|(
 name|AcpiHwClearGpeBlock
+argument_list|,
+name|ACPI_ISR
 argument_list|)
 expr_stmt|;
 name|UnlockAndExit
@@ -635,7 +637,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetRegister  *  * PARAMETERS:  RegisterId      - ID of ACPI BitRegister to access  *              ReturnValue     - Value that was read from the register  *              Flags           - Lock the hardware or not  *  * RETURN:      Value is read from specified Register.  Value returned is  *              normalized to bit0 (is shifted all the way right)  *  * DESCRIPTION: ACPI BitRegister read function.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetRegister  *  * PARAMETERS:  RegisterId      - ID of ACPI BitRegister to access  *              ReturnValue     - Value that was read from the register  *              Flags           - Lock the hardware or not  *  * RETURN:      Status and the value read from specified Register.  Value  *              returned is normalized to bit0 (is shifted all the way right)  *  * DESCRIPTION: ACPI BitRegister read function.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -719,6 +721,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Read from the register */
 name|Status
 operator|=
 name|AcpiHwRegisterRead
@@ -804,7 +807,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetRegister  *  * PARAMETERS:  RegisterId      - ID of ACPI BitRegister to access  *              Value           - (only used on write) value to write to the  *                                Register, NOT pre-normalized to the bit pos.  *              Flags           - Lock the hardware or not  *  * RETURN:      None  *  * DESCRIPTION: ACPI Bit Register write function.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetRegister  *  * PARAMETERS:  RegisterId      - ID of ACPI BitRegister to access  *              Value           - (only used on write) value to write to the  *                                Register, NOT pre-normalized to the bit pos  *              Flags           - Lock the hardware or not  *  * RETURN:      Status  *  * DESCRIPTION: ACPI Bit Register write function.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1227,7 +1230,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwRegisterRead  *  * PARAMETERS:  UseLock                - Mutex hw access.  *              RegisterId             - RegisterID + Offset.  *  * RETURN:      Value read or written.  *  * DESCRIPTION: Acpi register read function.  Registers are read at the  *              given offset.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwRegisterRead  *  * PARAMETERS:  UseLock             - Mutex hw access  *              RegisterId          - RegisterID + Offset  *              ReturnValue         - Value that was read from the register  *  * RETURN:      Status and the value read.  *  * DESCRIPTION: Acpi register read function.  Registers are read at the  *              given offset.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1566,7 +1569,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwRegisterWrite  *  * PARAMETERS:  UseLock                - Mutex hw access.  *              RegisterId             - RegisterID + Offset.  *  * RETURN:      Value read or written.  *  * DESCRIPTION: Acpi register Write function.  Registers are written at the  *              given offset.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwRegisterWrite  *  * PARAMETERS:  UseLock             - Mutex hw access  *              RegisterId          - RegisterID + Offset  *              Value               - The value to write  *  * RETURN:      Status  *  * DESCRIPTION: Acpi register Write function.  Registers are written at the  *              given offset.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1887,7 +1890,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwLowLevelRead  *  * PARAMETERS:  Width               - 8, 16, or 32  *              Value               - Where the value is returned  *              Register            - GAS register structure  *  * RETURN:      Status  *  * DESCRIPTION: Read from either memory, IO, or PCI config space.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwLowLevelRead  *  * PARAMETERS:  Width               - 8, 16, or 32  *              Value               - Where the value is returned  *              Reg                 - GAS register structure  *  * RETURN:      Status  *  * DESCRIPTION: Read from either memory or IO space.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1906,11 +1909,8 @@ modifier|*
 name|Reg
 parameter_list|)
 block|{
-name|ACPI_PCI_ID
-name|PciId
-decl_stmt|;
-name|UINT16
-name|PciRegister
+name|UINT64
+name|Address
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -1923,20 +1923,35 @@ expr_stmt|;
 comment|/*      * Must have a valid pointer to a GAS structure, and      * a non-zero address within. However, don't return an error      * because the PM1A/B code must not fail if B isn't present.      */
 if|if
 condition|(
-operator|(
 operator|!
 name|Reg
-operator|)
-operator|||
+condition|)
+block|{
+return|return
 operator|(
-operator|!
-name|ACPI_VALID_ADDRESS
+name|AE_OK
+operator|)
+return|;
+block|}
+comment|/* Get a local copy of the address.  Handles possible alignment issues */
+name|ACPI_MOVE_64_TO_64
 argument_list|(
+operator|&
+name|Address
+argument_list|,
+operator|&
 name|Reg
 operator|->
 name|Address
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ACPI_VALID_ADDRESS
+argument_list|(
+name|Address
+argument_list|)
 condition|)
 block|{
 return|return
@@ -1950,7 +1965,7 @@ name|Value
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Three address spaces supported:      * Memory, IO, or PCI_Config.      */
+comment|/*      * Two address spaces supported: Memory or IO.      * PCI_Config is not supported here because the GAS struct is insufficient      */
 switch|switch
 condition|(
 name|Reg
@@ -1970,8 +1985,6 @@ name|ACPI_PHYSICAL_ADDRESS
 operator|)
 name|ACPI_GET_ADDRESS
 argument_list|(
-name|Reg
-operator|->
 name|Address
 argument_list|)
 argument_list|,
@@ -1993,83 +2006,8 @@ name|ACPI_IO_ADDRESS
 operator|)
 name|ACPI_GET_ADDRESS
 argument_list|(
-name|Reg
-operator|->
 name|Address
 argument_list|)
-argument_list|,
-name|Value
-argument_list|,
-name|Width
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_ADR_SPACE_PCI_CONFIG
-case|:
-name|PciId
-operator|.
-name|Segment
-operator|=
-literal|0
-expr_stmt|;
-name|PciId
-operator|.
-name|Bus
-operator|=
-literal|0
-expr_stmt|;
-name|PciId
-operator|.
-name|Device
-operator|=
-name|ACPI_PCI_DEVICE
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
-name|Reg
-operator|->
-name|Address
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|PciId
-operator|.
-name|Function
-operator|=
-name|ACPI_PCI_FUNCTION
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
-name|Reg
-operator|->
-name|Address
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|PciRegister
-operator|=
-operator|(
-name|UINT16
-operator|)
-name|ACPI_PCI_REGISTER
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
-name|Reg
-operator|->
-name|Address
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiOsReadPciConfiguration
-argument_list|(
-operator|&
-name|PciId
-argument_list|,
-name|PciRegister
 argument_list|,
 name|Value
 argument_list|,
@@ -2113,8 +2051,6 @@ name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ACPI_GET_ADDRESS
 argument_list|(
-name|Reg
-operator|->
 name|Address
 argument_list|)
 argument_list|)
@@ -2137,7 +2073,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwLowLevelWrite  *  * PARAMETERS:  Width               - 8, 16, or 32  *              Value               - To be written  *              Register            - GAS register structure  *  * RETURN:      Status  *  * DESCRIPTION: Write to either memory, IO, or PCI config space.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwLowLevelWrite  *  * PARAMETERS:  Width               - 8, 16, or 32  *              Value               - To be written  *              Reg                 - GAS register structure  *  * RETURN:      Status  *  * DESCRIPTION: Write to either memory or IO space.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2155,11 +2091,8 @@ modifier|*
 name|Reg
 parameter_list|)
 block|{
-name|ACPI_PCI_ID
-name|PciId
-decl_stmt|;
-name|UINT16
-name|PciRegister
+name|UINT64
+name|Address
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -2172,20 +2105,8 @@ expr_stmt|;
 comment|/*      * Must have a valid pointer to a GAS structure, and      * a non-zero address within. However, don't return an error      * because the PM1A/B code must not fail if B isn't present.      */
 if|if
 condition|(
-operator|(
 operator|!
 name|Reg
-operator|)
-operator|||
-operator|(
-operator|!
-name|ACPI_VALID_ADDRESS
-argument_list|(
-name|Reg
-operator|->
-name|Address
-argument_list|)
-operator|)
 condition|)
 block|{
 return|return
@@ -2194,7 +2115,34 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/*      * Three address spaces supported:      * Memory, IO, or PCI_Config.      */
+comment|/* Get a local copy of the address.  Handles possible alignment issues */
+name|ACPI_MOVE_64_TO_64
+argument_list|(
+operator|&
+name|Address
+argument_list|,
+operator|&
+name|Reg
+operator|->
+name|Address
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ACPI_VALID_ADDRESS
+argument_list|(
+name|Address
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+comment|/*      * Two address spaces supported: Memory or IO.      * PCI_Config is not supported here because the GAS struct is insufficient      */
 switch|switch
 condition|(
 name|Reg
@@ -2214,8 +2162,6 @@ name|ACPI_PHYSICAL_ADDRESS
 operator|)
 name|ACPI_GET_ADDRESS
 argument_list|(
-name|Reg
-operator|->
 name|Address
 argument_list|)
 argument_list|,
@@ -2237,87 +2183,9 @@ name|ACPI_IO_ADDRESS
 operator|)
 name|ACPI_GET_ADDRESS
 argument_list|(
-name|Reg
-operator|->
 name|Address
 argument_list|)
 argument_list|,
-name|Value
-argument_list|,
-name|Width
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_ADR_SPACE_PCI_CONFIG
-case|:
-name|PciId
-operator|.
-name|Segment
-operator|=
-literal|0
-expr_stmt|;
-name|PciId
-operator|.
-name|Bus
-operator|=
-literal|0
-expr_stmt|;
-name|PciId
-operator|.
-name|Device
-operator|=
-name|ACPI_PCI_DEVICE
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
-name|Reg
-operator|->
-name|Address
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|PciId
-operator|.
-name|Function
-operator|=
-name|ACPI_PCI_FUNCTION
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
-name|Reg
-operator|->
-name|Address
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|PciRegister
-operator|=
-operator|(
-name|UINT16
-operator|)
-name|ACPI_PCI_REGISTER
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
-name|Reg
-operator|->
-name|Address
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiOsWritePciConfiguration
-argument_list|(
-operator|&
-name|PciId
-argument_list|,
-name|PciRegister
-argument_list|,
-operator|(
-name|ACPI_INTEGER
-operator|)
 name|Value
 argument_list|,
 name|Width
@@ -2359,8 +2227,6 @@ name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ACPI_GET_ADDRESS
 argument_list|(
-name|Reg
-operator|->
 name|Address
 argument_list|)
 argument_list|)

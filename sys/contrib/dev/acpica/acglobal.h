@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 154 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 159 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -132,7 +132,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Create the predefined _OSI method in the namespace? Default is TRUE  * because ACPI CA is fully compatible with other ACPI implementations.  * Changing this will revert ACPI CA (and machine ASL) to pre-OSI behavior.  */
+comment|/*  * Enable "slack" in the AML interpreter?  Default is FALSE, and the  * interpreter strictly follows the ACPI specification.  Setting to TRUE  * allows the interpreter to forgive certain bad AML constructs.  Currently:  * 1) Allow "implicit return" of last value in a control method  * 2) Allow access beyond end of operation region  * 3) Allow access to uninitialized locals/args (auto-init to integer 0)  */
 end_comment
 
 begin_function_decl
@@ -140,9 +140,9 @@ name|ACPI_EXTERN
 name|UINT8
 name|ACPI_INIT_GLOBAL
 parameter_list|(
-name|AcpiGbl_CreateOsiMethod
+name|AcpiGbl_EnableInterpreterSlack
 parameter_list|,
-name|TRUE
+name|FALSE
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -159,6 +159,22 @@ parameter_list|(
 name|AcpiGbl_AllMethodsSerialized
 parameter_list|,
 name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Create the predefined _OSI method in the namespace? Default is TRUE  * because ACPI CA is fully compatible with other ACPI implementations.  * Changing this will revert ACPI CA (and machine ASL) to pre-OSI behavior.  */
+end_comment
+
+begin_function_decl
+name|ACPI_EXTERN
+name|UINT8
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|AcpiGbl_CreateOsiMethod
+parameter_list|,
+name|TRUE
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -340,6 +356,13 @@ begin_decl_stmt
 name|ACPI_EXTERN
 name|ACPI_OBJECT_NOTIFY_HANDLER
 name|AcpiGbl_SystemNotify
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_EXCEPTION_HANDLER
+name|AcpiGbl_ExceptionHandler
 decl_stmt|;
 end_decl_stmt
 

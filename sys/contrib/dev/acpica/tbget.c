@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 88 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 90 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -312,6 +312,19 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_TABLES
+operator|,
+literal|"Table Signature: [%4.4s]\n"
+operator|,
+name|ReturnHeader
+operator|->
+name|Signature
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 134 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 136 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -329,7 +329,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Convert handle to a full pathname and print it (with supplied message) */
+comment|/* Convert handle to full pathname and print it (with supplied message) */
 name|Buffer
 operator|.
 name|Length
@@ -600,7 +600,7 @@ name|FullyQualified
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/*      * For the internal name, the required length is 4 bytes      * per segment, plus 1 each for RootPrefix, MultiNamePrefixOp,      * segment count, trailing null (which is not really needed,      * but no there's harm in putting it there)      *      * strlen() + 1 covers the first NameSeg, which has no      * path separator      */
+comment|/*      * For the internal name, the required length is 4 bytes per segment, plus      * 1 each for RootPrefix, MultiNamePrefixOp, segment count, trailing null      * (which is not really needed, but no there's harm in putting it there)      *      * strlen() + 1 covers the first NameSeg, which has no path separator      */
 if|if
 condition|(
 name|AcpiNsValidRootPrefix
@@ -643,7 +643,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Determine the number of ACPI name "segments" by counting      * the number of path separators within the string.  Start      * with one segment since the segment count is (# separators)      * + 1, and zero separators is ok.      */
+comment|/*      * Determine the number of ACPI name "segments" by counting the number of      * path separators within the string. Start with one segment since the      * segment count is [(# separators) + 1], and zero separators is ok.      */
 if|if
 condition|(
 operator|*
@@ -1565,7 +1565,7 @@ name|AE_BAD_PATHNAME
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Build ConvertedName...      */
+comment|/*      * Build ConvertedName      */
 operator|*
 name|ConvertedName
 operator|=
@@ -1818,7 +1818,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsConvertEntryToHandle  *  * PARAMETERS:  Node          - Node to be converted to a Handle  *  * RETURN:      An USER ACPI_HANDLE  *  * DESCRIPTION: Convert a real Node to a namespace handle  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsConvertEntryToHandle  *  * PARAMETERS:  Node          - Node to be converted to a Handle  *  * RETURN:      A user handle  *  * DESCRIPTION: Convert a real Node to a namespace handle  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2255,7 +2255,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"unable to find parent of %p (%4.4s)\n"
+literal|"Unable to find parent of %p (%4.4s)\n"
 operator|,
 name|ChildNode
 operator|,
@@ -2304,7 +2304,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/*      * Walk to the end of this peer list.      * The last entry is marked with a flag and the peer      * pointer is really a pointer back to the parent.      * This saves putting a parent back pointer in each and      * every named object!      */
+comment|/*      * Walk to the end of this peer list. The last entry is marked with a flag      * and the peer pointer is really a pointer back to the parent. This saves      * putting a parent back pointer in each and every named object!      */
 while|while
 condition|(
 operator|!
@@ -2335,7 +2335,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetNextValidNode  *  * PARAMETERS:  Node       - Current table entry  *  * RETURN:      Next valid Node in the linked node list.  NULL if no more valid  *              nodess  *  * DESCRIPTION: Find the next valid node within a name table.  *              Useful for implementing NULL-end-of-list loops.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetNextValidNode  *  * PARAMETERS:  Node       - Current table entry  *  * RETURN:      Next valid Node in the linked node list. NULL if no more valid  *              nodes.  *  * DESCRIPTION: Find the next valid node within a name table.  *              Useful for implementing NULL-end-of-list loops.  *  ******************************************************************************/
 end_comment
 
 begin_function
