@@ -1559,8 +1559,8 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
+elseif|else
 if|if
 condition|(
 name|platform
@@ -1711,6 +1711,7 @@ operator|-=
 name|offset
 expr_stmt|;
 block|}
+break|break;
 comment|/* PLATFORM POLICY END ------------------------------------- */
 block|}
 if|if

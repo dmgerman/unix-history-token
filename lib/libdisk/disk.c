@@ -1454,10 +1454,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|platform
-operator|==
-name|p_i386
-operator|&&
 operator|!
 name|strcmp
 argument_list|(
@@ -1468,7 +1464,7 @@ argument_list|)
 operator|&&
 name|i
 operator|==
-literal|2
+name|RAW_PART
 condition|)
 continue|continue;
 comment|/* PLATFORM POLICY END --------------------------------------- */
