@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)wait.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)wait.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|<machine/machparam.h>
+file|<machine/endian.h>
 end_include
 
 begin_endif
@@ -41,9 +41,9 @@ struct|struct
 block|{
 if|#
 directive|if
-name|ENDIAN
+name|BYTE_ORDER
 operator|==
-name|LITTLE
+name|LITTLE_ENDIAN
 name|unsigned
 name|short
 name|w_Termsig
@@ -69,9 +69,9 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|ENDIAN
+name|BYTE_ORDER
 operator|==
-name|BIG
+name|BIG_ENDIAN
 name|unsigned
 name|short
 name|w_Filler
@@ -106,9 +106,9 @@ struct|struct
 block|{
 if|#
 directive|if
-name|ENDIAN
+name|BYTE_ORDER
 operator|==
-name|LITTLE
+name|LITTLE_ENDIAN
 name|unsigned
 name|short
 name|w_Stopval
