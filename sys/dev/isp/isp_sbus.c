@@ -1184,17 +1184,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGALL
-argument_list|,
-literal|"HERE %d"
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
 name|tval
 operator|=
 literal|0
@@ -1296,17 +1285,6 @@ operator|&
 name|isp_debug
 argument_list|)
 expr_stmt|;
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGALL
-argument_list|,
-literal|"HERE %d"
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
 comment|/* Make sure the lock is set up. */
 name|mtx_init
 argument_list|(
@@ -1326,17 +1304,6 @@ argument_list|)
 expr_stmt|;
 name|locksetup
 operator|++
-expr_stmt|;
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGALL
-argument_list|,
-literal|"HERE %d"
-argument_list|,
-name|__LINE__
-argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1387,17 +1354,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGALL
-argument_list|,
-literal|"HERE %d"
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Set up logging levels. 	 */
 if|if
 condition|(
@@ -1433,17 +1389,6 @@ operator||=
 name|ISP_LOGCONFIG
 operator||
 name|ISP_LOGINFO
-expr_stmt|;
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGALL
-argument_list|,
-literal|"HERE %d"
-argument_list|,
-name|__LINE__
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure we're in reset state. 	 */
 name|ISP_LOCK
