@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ldconfig.c,v 1.24 1998/08/02 16:06:33 bde Exp $"
+literal|"$Id: ldconfig.c,v 1.25 1998/09/05 03:30:54 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1652,6 +1652,13 @@ operator|+
 literal|4
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ndewey
+operator|<
+literal|2
+condition|)
+continue|continue;
 name|enter
 argument_list|(
 name|dir
