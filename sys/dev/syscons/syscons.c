@@ -13373,13 +13373,6 @@ operator|*
 name|MAXCONS
 argument_list|)
 expr_stmt|;
-name|main_tty
-operator|.
-name|t_timeout
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|sc
 operator|->
 name|dev
