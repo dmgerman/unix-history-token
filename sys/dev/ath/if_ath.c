@@ -2345,6 +2345,16 @@ return|return;
 block|}
 if|if
 condition|(
+operator|!
+name|ath_hal_intrpend
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+comment|/* shared irq, not for us */
+return|return;
+if|if
+condition|(
 operator|(
 name|ifp
 operator|->
