@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	5.4 (Berkeley) %G%"
+literal|"@(#)map.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -260,9 +260,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|bitset
 argument_list|(
-name|MF_FOLDCASE
+name|MF_NOFOLDCASE
 argument_list|,
 name|map
 operator|->
@@ -720,9 +721,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|bitset
 argument_list|(
-name|MF_FOLDCASE
+name|MF_NOFOLDCASE
 argument_list|,
 name|map
 operator|->
@@ -960,7 +962,7 @@ name|map
 operator|->
 name|map_flags
 operator||=
-name|MF_FOLDCASE
+name|MF_NOFOLDCASE
 expr_stmt|;
 break|break;
 case|case
