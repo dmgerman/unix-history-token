@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.22 1996/09/07 03:24:44 dyson Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.24 1996/09/10 22:35:25 dyson Exp $ */
 end_comment
 
 begin_comment
@@ -15,6 +15,12 @@ begin_include
 include|#
 directive|include
 file|"opt_sysvipc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_rlimit.h"
 end_include
 
 begin_include
