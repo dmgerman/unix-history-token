@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.127 (Berkeley) %G%"
+literal|"@(#)conf.c	8.128 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1300,8 +1300,8 @@ if|#
 directive|if
 literal|0
 block|nmaps = switch_map_find("hosts", maptype, mapreturn); 	for (i = 0; i< nmaps; i++) 	{ 		if (strcmp(maptype[i], "files") == 0&& 		    stab("hosts.files", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "hosts.files text -k 0 -v 1 /etc/hosts"); 			makemapentry(buf); 		}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 block|else if (strcmp(maptype[i], "dns") == 0&& 		    stab("hosts.dns", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "hosts.dns dns A"); 			makemapentry(buf); 		}
 endif|#
