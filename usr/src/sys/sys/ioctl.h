@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.6	81/02/25	*/
+comment|/*	ioctl.h	4.7	81/03/17	*/
 end_comment
 
 begin_comment
@@ -91,7 +91,7 @@ begin_define
 define|#
 directive|define
 name|LCRTBS
-value|01
+value|0000001
 end_define
 
 begin_comment
@@ -102,7 +102,7 @@ begin_define
 define|#
 directive|define
 name|LPRTERA
-value|02
+value|0000002
 end_define
 
 begin_comment
@@ -113,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|LCRTERA
-value|04
+value|0000004
 end_define
 
 begin_comment
@@ -124,7 +124,7 @@ begin_define
 define|#
 directive|define
 name|LTILDE
-value|010
+value|0000010
 end_define
 
 begin_comment
@@ -135,7 +135,7 @@ begin_define
 define|#
 directive|define
 name|LMDMBUF
-value|020
+value|0000020
 end_define
 
 begin_comment
@@ -146,7 +146,7 @@ begin_define
 define|#
 directive|define
 name|LLITOUT
-value|040
+value|0000040
 end_define
 
 begin_comment
@@ -157,7 +157,7 @@ begin_define
 define|#
 directive|define
 name|LTOSTOP
-value|0100
+value|0000100
 end_define
 
 begin_comment
@@ -168,7 +168,7 @@ begin_define
 define|#
 directive|define
 name|LFLUSHO
-value|0200
+value|0000200
 end_define
 
 begin_comment
@@ -179,7 +179,7 @@ begin_define
 define|#
 directive|define
 name|LNOHANG
-value|0400
+value|0000400
 end_define
 
 begin_comment
@@ -190,7 +190,7 @@ begin_define
 define|#
 directive|define
 name|LETXACK
-value|01000
+value|0001000
 end_define
 
 begin_comment
@@ -201,7 +201,7 @@ begin_define
 define|#
 directive|define
 name|LCRTKIL
-value|02000
+value|0002000
 end_define
 
 begin_comment
@@ -212,7 +212,7 @@ begin_define
 define|#
 directive|define
 name|LINTRUP
-value|04000
+value|0004000
 end_define
 
 begin_comment
@@ -223,7 +223,7 @@ begin_define
 define|#
 directive|define
 name|LCTLECH
-value|010000
+value|0010000
 end_define
 
 begin_comment
@@ -234,11 +234,22 @@ begin_define
 define|#
 directive|define
 name|LPENDIN
-value|020000
+value|0020000
 end_define
 
 begin_comment
 comment|/* tp->t_rawq is waiting to be reread */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LDECCTQ
+value|0040000
+end_define
+
+begin_comment
+comment|/* only ^Q starts after ^S */
 end_comment
 
 begin_comment
