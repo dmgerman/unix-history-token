@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.11.2.6 1997/05/14 08:19:21 dfr Exp $"
+literal|"$Id: mountd.c,v 1.11.2.7 1997/08/29 19:23:39 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4325,8 +4325,10 @@ literal|1
 argument|; 			    if (ep == (struct exportlist *)NULL) { 				getexp_err(ep, tgrp); 				goto nextline; 			    }
 comment|/* 			     * Get the host or netgroup. 			     */
 argument|setnetgrent(cp); 			    netgrp = getnetgrent(&hst,&usr,&dom); 			    do { 				if (has_host) { 				    grp->gr_next = get_grp(); 				    grp = grp->gr_next; 				} 				if (netgrp) { 				    if (get_host(hst, grp, tgrp)) { 					syslog(LOG_ERR,
-literal|"Bad netgroup %s"
-argument|, cp); 					getexp_err(ep, tgrp); 					endnetgrent(); 					goto nextline; 				    } 				} else if (get_host(cp, grp, tgrp)) { 				    getexp_err(ep, tgrp); 				    goto nextline; 				} 				has_host = TRUE; 			    } while (netgrp&& getnetgrent(&hst,&usr,&dom)); 			    endnetgrent(); 			    *endcp = savedc; 			} 			cp = endcp; 			nextfield(&cp,&endcp); 			len = endcp - cp; 		} 		if (check_options(dirhead)) { 			getexp_err(ep, tgrp); 			goto nextline; 		} 		if (!has_host) { 			grp->gr_type = GT_HOST; 			if (debug) 				fprintf(stderr,
+literal|"Bad host %s in netgroup %s, skipping"
+argument|, hst, cp); 					grp->gr_type = GT_IGNORE; 				    } 				} else if (get_host(cp, grp, tgrp)) { 				    syslog(LOG_ERR,
+literal|"Bad host %s, skipping"
+argument|, cp); 				    grp->gr_type = GT_IGNORE; 				} 				has_host = TRUE; 			    } while (netgrp&& getnetgrent(&hst,&usr,&dom)); 			    endnetgrent(); 			    *endcp = savedc; 			} 			cp = endcp; 			nextfield(&cp,&endcp); 			len = endcp - cp; 		} 		if (check_options(dirhead)) { 			getexp_err(ep, tgrp); 			goto nextline; 		} 		if (!has_host) { 			grp->gr_type = GT_HOST; 			if (debug) 				fprintf(stderr,
 literal|"Adding a default entry\n"
 argument|);
 comment|/* add a default group and make the grp list NULL */
@@ -4334,7 +4336,9 @@ argument|hpe = (struct hostent *)malloc(sizeof(struct hostent)); 			if (hpe == (
 literal|"Default"
 argument|); 			hpe->h_addrtype = AF_INET; 			hpe->h_length = sizeof (u_long); 			hpe->h_addr_list = (char **)NULL; 			grp->gr_ptr.gt_hostent = hpe;
 comment|/* 		 * Don't allow a network export coincide with a list of 		 * host(s) on the same line. 		 */
-argument|} else if ((opt_flags& OP_NET)&& tgrp->gr_next) { 			getexp_err(ep, tgrp); 			goto nextline; 		}
+argument|} else if ((opt_flags& OP_NET)&& tgrp->gr_next) { 			getexp_err(ep, tgrp); 			goto nextline;
+comment|/* 	         * If an export list was specified on this line, make sure 		 * that we have at least one valid entry, otherwise skip it. 		 */
+argument|} else { 			grp = tgrp;         		while (grp&& grp->gr_type == GT_IGNORE) 				grp = grp->gr_next; 			if (! grp) { 			    getexp_err(ep, tgrp); 			    goto nextline; 			} 		}
 comment|/* 		 * Loop through hosts, pushing the exports into the kernel. 		 * After loop, tgrp points to the start of the list and 		 * grp points to the last entry in the list. 		 */
 argument|grp = tgrp; 		do { 		    if (do_mount(ep, grp, exflags,&anon, dirp, 			dirplen,&fsb)) { 			getexp_err(ep, tgrp); 			goto nextline; 		    } 		} while (grp->gr_next&& (grp = grp->gr_next));
 comment|/* 		 * Success. Update the data structures. 		 */
