@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -1216,6 +1216,13 @@ argument_list|(
 literal|"#define\tEFAULT %d\n"
 argument_list|,
 name|EFAULT
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tENAMETOOLONG %d\n"
+argument_list|,
+name|ENAMETOOLONG
 argument_list|)
 expr_stmt|;
 name|printf
