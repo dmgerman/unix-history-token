@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.16 (Berkeley) %G%"
+literal|"@(#)print.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -557,6 +557,24 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|termwidth
+operator|<
+literal|2
+operator|*
+name|colwidth
+condition|)
+block|{
+name|printscol
+argument_list|(
+name|stats
+argument_list|,
+name|num
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|numcols
 operator|=
 name|termwidth
