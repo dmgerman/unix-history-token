@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)enpload.c	5.3 (Berkeley) %G%"
+literal|"@(#)enpload.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,18 +55,6 @@ end_comment
 begin_comment
 comment|/*  * CMC Ethernet ``Microcode'' Loader.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<a.out.h>
-end_include
 
 begin_include
 include|#
@@ -89,7 +77,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tahoeif/if_enpreg.h>
+file|<tahoe/if/if_enpreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<a.out.h>
 end_include
 
 begin_decl_stmt
