@@ -33,6 +33,12 @@ directive|include
 file|<sys/disklabel.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SLICES
+end_ifdef
+
 begin_enum
 enum|enum
 name|size_units_t
@@ -1274,6 +1280,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* WITH_SLICES */
 name|int
 name|diskGetSelectCount
 parameter_list|(
@@ -1370,6 +1379,9 @@ return|return
 name|enabled
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|WITH_SLICES
 name|void
 name|diskPartition
 parameter_list|(
@@ -1681,17 +1693,9 @@ case|case
 literal|'F'
 case|:
 comment|/* Undocumented magic Dangerously Dedicated mode */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
+ifndef|#
+directive|ifndef
+name|__i386__
 name|rv
 operator|=
 literal|1
@@ -2074,42 +2078,6 @@ name|partitiontype
 operator|=
 name|unknown
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-if|if
-condition|(
-name|partitiontype
-operator|==
-name|freebsd
-operator|&&
-name|size
-operator|==
-name|chunk_info
-index|[
-name|current_chunk
-index|]
-operator|->
-name|size
-condition|)
-name|All_FreeBSD
-argument_list|(
-name|d
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-else|else
-endif|#
-directive|endif
 name|Create_Chunk
 argument_list|(
 name|d
@@ -3107,6 +3075,9 @@ name|w
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* WITH_SLICES */
 specifier|static
 name|u_char
 modifier|*
@@ -3278,6 +3249,9 @@ return|return
 name|NULL
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|WITH_SLICES
 specifier|static
 name|int
 name|partitionHook
@@ -3656,6 +3630,9 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* WITH_SLICES */
 name|int
 name|diskPartitionWrite
 parameter_list|(
@@ -3913,6 +3890,9 @@ operator||
 name|DITEM_RESTORE
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|WITH_SLICES
 comment|/* Partition a disk based wholly on which variables are set */
 specifier|static
 name|void
@@ -4542,6 +4522,15 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_SLICES */
+end_comment
 
 end_unit
 
