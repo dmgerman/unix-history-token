@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/****************************************************************************  *  * Copyright (c) 1996-2000 Distributed Processing Technology Corporation  * Copyright (c) 2000 Adaptec Corporation.  * All rights reserved.  *  * Copyright (c) 1998 I2O Special Interest Group (I2O SIG)  * All rights reserved  *  * Redistribution and use in source form, with or without modification, are  * permitted provided that redistributions of source code must retain the  * above copyright notice, this list of conditions and the following disclaimer.  *  * This software is provided `as is' by Distributed Processing Technology and  * any express or implied warranties, including, but not limited to, the  * implied warranties of merchantability and fitness for a particular purpose,  * are disclaimed. In no event shall Distributed Processing Technology be  * liable for any direct, indirect, incidental, special, exemplary or  * consequential damages (including, but not limited to, procurement of  * substitute goods or services; loss of use, data, or profits; or business  * interruptions) however caused and on any theory of liability, whether in  * contract, strict liability, or tort (including negligence or otherwise)  * arising in any way out of the use of this driver software, even if advised  * of the possibility of such damage.  *  * This information is provided on an as-is basis without warranty of any  * kind, either express or implied, including but not limited to, implied  * warranties or merchantability and fitness for a particular purpose. I2O SIG  * does not warrant that this program will meet the user's requirements or  * that the operation of these programs will be uninterrupted or error-free.  * The I2O SIG disclaims all liability, including liability for infringement  * of any proprietary rights, relating to implementation of information in  * this specification. The I2O SIG does not warrant or represent that such  * implementations(s) will not infringe such rights. Acceptance and use of  * this program constitutes the user's understanding that he will have no  * recourse to I2O SIG for any actual or consequential damages including, but  * not limited to, loss profits arising out of use or inability to use this  * program.  *  * This information is provided for the purpose of recompilation of the  * driver code provided by Distributed Processing Technology only. It is  * NOT to be used for any other purpose.  *  * To develop other products based upon I2O definitions, it is necessary to  * become a "Registered Developer" of the I2O SIG. This can be done by calling  * 415-750-8352 in the US, or via http://www.i2osig.org.  *  **************************************************************************/
+comment|/****************************************************************************  *  * Copyright (c) 1996-2000 Distributed Processing Technology Corporation  * Copyright (c) 2000 Adaptec Corporation.  * All rights reserved.  *  * Copyright (c) 1998 I2O Special Interest Group (I2O SIG)  * All rights reserved  *  * Redistribution and use in source form, with or without modification, are  * permitted provided that redistributions of source code must retain the  * above copyright notice, this list of conditions and the following disclaimer.  *  * This software is provided `as is' by Distributed Processing Technology and  * any express or implied warranties, including, but not limited to, the  * implied warranties of merchantability and fitness for a particular purpose,  * are disclaimed. In no event shall Distributed Processing Technology be  * liable for any direct, indirect, incidental, special, exemplary or  * consequential damages (including, but not limited to, procurement of  * substitute goods or services; loss of use, data, or profits; or business  * interruptions) however caused and on any theory of liability, whether in  * contract, strict liability, or tort (including negligence or otherwise)  * arising in any way out of the use of this driver software, even if advised  * of the possibility of such damage.  *  * This information is provided on an as-is basis without warranty of any  * kind, either express or implied, including but not limited to, implied  * warranties or merchantability and fitness for a particular purpose. I2O SIG  * does not warrant that this program will meet the user's requirements or  * that the operation of these programs will be uninterrupted or error-free.  * The I2O SIG disclaims all liability, including liability for infringement  * of any proprietary rights, relating to implementation of information in  * this specification. The I2O SIG does not warrant or represent that such  * implementations(s) will not infringe such rights. Acceptance and use of  * this program constitutes the user's understanding that he will have no  * recourse to I2O SIG for any actual or consequential damages including, but  * not limited to, loss profits arising out of use or inability to use this  * program.  *  * This information is provided for the purpose of recompilation of the  * driver code provided by Distributed Processing Technology only. It is  * NOT to be used for any other purpose.  *  * To develop other products based upon I2O definitions, it is necessary to  * become a "Registered Developer" of the I2O SIG. This can be done by calling  * 415-750-8352 in the US, or via http://www.i2osig.org.  *  * $FreeBSD$  *  **************************************************************************/
 end_comment
 
 begin_comment
@@ -441,11 +437,11 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//typedef SCSI_REQUEST_BLOCK     OS_REQUEST_T;
+comment|/* typedef SCSI_REQUEST_BLOCK     OS_REQUEST_T; */
 end_comment
 
 begin_comment
-comment|//typedef PSCSI_REQUEST_BLOCK    pOS_REQUEST_T;
+comment|/* typedef PSCSI_REQUEST_BLOCK    pOS_REQUEST_T; */
 end_comment
 
 begin_define
@@ -4787,7 +4783,11 @@ value|setLU4((&(x)->Identifier),0,y)
 end_define
 
 begin_comment
-comment|/*     U8          LunInfo[8]; // SCSI-2 8-bit scalar LUN goes into offset 1 */
+comment|/*     U8         LunInfo[8]; */
+end_comment
+
+begin_comment
+comment|/* SCSI-2 8-bit scalar LUN goes into offset 1 */
 end_comment
 
 begin_define
@@ -4966,9 +4966,31 @@ define|\
 value|setLU2((&(x)->OrganizationID),0,y)
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
-comment|/* typedef struct _PRIVATE_SCSI_SCB_EXECUTE_MESSAGE {  *     I2O_PRIVATE_MESSAGE_FRAME PRIVATE_SCSI_SCB_EXECUTE_MESSAGE;  *     BF                        TID:16; // Upper four bits currently are zero  *     // Command is interpreted by the host  *     BF                        Interpret:1;  *     // if TRUE, deal with Physical Firmware Array information  *     BF                        Physical:1;  *     BF                        Reserved1:14;  *     U8                        CDBLength;  *     U8                        Reserved;  *     I2O_SCB_FLAGS             SCBFlags;  *     U8                        CDB[  I2O_SCSI_CDB_LENGTH=16  ];  *     U32                       ByteCount;  *     I2O_SG_ELEMENT            SGL;  * } PRIVATE_SCSI_SCB_EXECUTE_MESSAGE, * PPRIVATE_SCSI_SCB_EXECUTE_MESSAGE;  */
+unit|typedef struct _PRIVATE_SCSI_SCB_EXECUTE_MESSAGE { 	I2O_PRIVATE_MESSAGE_FRAME PRIVATE_SCSI_SCB_EXECUTE_MESSAGE; 	BF                        TID:16;
+comment|/* Upper four bits currently are zero */
 end_comment
+
+begin_comment
+comment|/* Command is interpreted by the host */
+end_comment
+
+begin_comment
+unit|BF                        Interpret:1;
+comment|/* if TRUE, deal with Physical Firmware Array information */
+end_comment
+
+begin_endif
+unit|BF                        Physical:1; 	BF                        Reserved1:14; 	U8                        CDBLength; 	U8                        Reserved; 	I2O_SCB_FLAGS             SCBFlags; 	U8                        CDB[  I2O_SCSI_CDB_LENGTH=16  ]; 	U32                       ByteCount; 	I2O_SG_ELEMENT            SGL; } PRIVATE_SCSI_SCB_EXECUTE_MESSAGE, * PPRIVATE_SCSI_SCB_EXECUTE_MESSAGE;
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *       PRIVATE_SCSI_SCB_EXECUTE_MESSAGE  */

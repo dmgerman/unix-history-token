@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1996-1999 Distributed Processing Technology Corporation  * All rights reserved.  *  * Redistribution and use in source form, with or without modification, are  * permitted provided that redistributions of source code must retain the  * above copyright notice, this list of conditions and the following disclaimer.  *  * This software is provided `as is' by Distributed Processing Technology and  * any express or implied warranties, including, but not limited to, the  * implied warranties of merchantability and fitness for a particular purpose,  * are disclaimed. In no event shall Distributed Processing Technology be  * liable for any direct, indirect, incidental, special, exemplary or  * consequential damages (including, but not limited to, procurement of  * substitute goods or services; loss of use, data, or profits; or business  * interruptions) however caused and on any theory of liability, whether in  * contract, strict liability, or tort (including negligence or otherwise)  * arising in any way out of the use of this driver software, even if advised  * of the possibility of such damage.  *  */
+comment|/*  * Copyright (c) 1996-1999 Distributed Processing Technology Corporation  * All rights reserved.  *  * Redistribution and use in source form, with or without modification, are  * permitted provided that redistributions of source code must retain the  * above copyright notice, this list of conditions and the following disclaimer.  *  * This software is provided `as is' by Distributed Processing Technology and  * any express or implied warranties, including, but not limited to, the  * implied warranties of merchantability and fitness for a particular purpose,  * are disclaimed. In no event shall Distributed Processing Technology be  * liable for any direct, indirect, incidental, special, exemplary or  * consequential damages (including, but not limited to, procurement of  * substitute goods or services; loss of use, data, or profits; or business  * interruptions) however caused and on any theory of liability, whether in  * contract, strict liability, or tort (including negligence or otherwise)  * arising in any way out of the use of this driver software, even if advised  * of the possibility of such damage.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -593,7 +589,7 @@ file|<sys/scsi/scsi.h>
 end_include
 
 begin_comment
-comment|//#define _KERNEL
+comment|/*#define _KERNEL */
 end_comment
 
 begin_include
@@ -615,7 +611,7 @@ file|<sys/scsi/impl/transport.h>
 end_include
 
 begin_comment
-comment|//#undef _KERNEL
+comment|/* #undef _KERNEL */
 end_comment
 
 begin_undef
@@ -681,11 +677,19 @@ value|7
 end_define
 
 begin_comment
-comment|//#define I2ORESCANCMD 8	/* Use DPT_IO_ACCESS instead */
+comment|/* #define I2ORESCANCMD 8 */
 end_comment
 
 begin_comment
-comment|//#define I2ORESETCMD  9	/* Use DPT_IO_ACCESS instead */
+comment|/* Use DPT_IO_ACCESS instead */
+end_comment
+
+begin_comment
+comment|/* #define I2ORESETCMD  9 */
+end_comment
+
+begin_comment
+comment|/* Use DPT_IO_ACCESS instead */
 end_comment
 
 begin_define
