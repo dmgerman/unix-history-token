@@ -1354,7 +1354,7 @@ argument_list|(
 name|csc
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"icard"
@@ -1448,7 +1448,7 @@ operator|.
 name|last
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"con1"
@@ -1517,7 +1517,7 @@ argument_list|(
 name|sc
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"ds8370"
@@ -1752,7 +1752,7 @@ operator|->
 name|last
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"con1"
@@ -1780,7 +1780,7 @@ operator|->
 name|last
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"con1"
@@ -4808,7 +4808,7 @@ operator|->
 name|state
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"crun"
@@ -5559,7 +5559,7 @@ operator|->
 name|state
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"crun"
@@ -6417,7 +6417,7 @@ operator|->
 name|state
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"crun"
@@ -6590,7 +6590,7 @@ operator|->
 name|last
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"con1"
@@ -6618,7 +6618,7 @@ operator|->
 name|last
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"con2"
@@ -6763,7 +6763,7 @@ operator|->
 name|last
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"con3"
@@ -6793,7 +6793,7 @@ operator|->
 name|last
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"con4"
@@ -7377,7 +7377,7 @@ operator|->
 name|last
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"con4"
@@ -7407,7 +7407,7 @@ operator|->
 name|last
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"con3"
@@ -7559,7 +7559,7 @@ operator|->
 name|state
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"crun"
@@ -7594,7 +7594,7 @@ operator|->
 name|last
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"con3"
@@ -7626,7 +7626,7 @@ operator|->
 name|last
 argument_list|,
 name|PZERO
-operator|+
+operator||
 name|PCATCH
 argument_list|,
 literal|"con4"
