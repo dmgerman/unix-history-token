@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.10 (Berkeley) %G%"
+literal|"@(#)main.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,7 +153,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"p"
+literal|"gp"
 argument_list|)
 operator|)
 operator|!=
@@ -167,6 +167,13 @@ operator|)
 name|ch
 condition|)
 block|{
+case|case
+literal|'g'
+case|:
+name|debugging
+operator|++
+expr_stmt|;
+break|break;
 case|case
 literal|'p'
 case|:
@@ -201,7 +208,7 @@ name|usage
 label|:
 name|fputs
 argument_list|(
-literal|"usage: config [-p] sysname\n"
+literal|"usage: config [-gp] sysname\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -266,7 +273,7 @@ name|mkdir
 argument_list|(
 name|p
 argument_list|,
-literal|0755
+literal|0777
 argument_list|)
 condition|)
 block|{
@@ -354,6 +361,16 @@ name|tahoe_ioconf
 argument_list|()
 expr_stmt|;
 name|vbglue
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|MACHINE_HP300
+case|:
+name|hp300_ioconf
+argument_list|()
+expr_stmt|;
+name|hpglue
 argument_list|()
 expr_stmt|;
 break|break;

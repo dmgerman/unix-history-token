@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkglue.c	5.6 (Berkeley) %G%"
+literal|"@(#)mkglue.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1168,6 +1168,19 @@ literal|"\trei\n\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_comment
+comment|/*  * HP9000/300 interrupts are auto-vectored.  * Code is hardwired in locore.s  */
+end_comment
+
+begin_macro
+name|hpglue
+argument_list|()
+end_macro
+
+begin_block
+block|{}
 end_block
 
 begin_decl_stmt
