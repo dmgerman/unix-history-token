@@ -1959,6 +1959,10 @@ argument_list|,
 literal|"WinChip C6"
 argument_list|)
 expr_stmt|;
+name|tsc_is_broken
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|0x580
