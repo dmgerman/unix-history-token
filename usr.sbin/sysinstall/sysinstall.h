@@ -963,6 +963,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_SENDMAIL_ENABLE
+value|"sendmail_enable"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_SERIAL_SPEED
 value|"serialSpeed"
 end_define
@@ -2564,12 +2571,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|DMenu
-name|MenuSendmail
+name|MenuMTA
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Sendmail configuration menu			*/
+comment|/* MTA selection menu				*/
 end_comment
 
 begin_decl_stmt
@@ -3219,6 +3226,30 @@ begin_function_decl
 specifier|extern
 name|int
 name|configNFSServer
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|configMTAPostfix
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|configMTAExim
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -6833,6 +6864,18 @@ begin_function_decl
 specifier|extern
 name|int
 name|variable_check
+parameter_list|(
+name|char
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|variable_check2
 parameter_list|(
 name|char
 modifier|*
