@@ -327,7 +327,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Synchronization: read carefully, this is non-trivial.  *  * Crypto requests are submitted via crypto_dispatch.  Typically  * these come in from network protocols at spl0 (output path) or  * splnet (input path).  *  * Requests are queued for processing by a software interrupt thread,  * cryptointr, that runs at splsoftcrypto.  This thread dispatches   * the requests to crypto drivers (h/w or s/w) who call crypto_done  * when a request is complete.  Hardware crypto drivers are assumed  * to register their IRQ's as network devices so their interrupt handlers  * and subsequent "done callbacks" happen at splimp.  *  * Completed crypto ops are queued for a separate kernel thread that  * handles the callbacks at spl0.  This decoupling insures the crypto  * driver interrupt service routine is not delayed while the callback  * takes place and that callbacks are delivered after a context switch  * (as opposed to a software interrupt that clients must block).  *  * This scheme is not intended for SMP machines.  */
+comment|/*  * Synchronization: read carefully, this is non-trivial.  *  * Crypto requests are submitted via crypto_dispatch.  Typically  * these come in from network protocols at spl0 (output path) or  * splnet (input path).  *  * Requests are typically passed on the driver directly, but they  * may also be queued for processing by a software interrupt thread,  * cryptointr, that runs at splsoftcrypto.  This thread dispatches   * the requests to crypto drivers (h/w or s/w) who call crypto_done  * when a request is complete.  Hardware crypto drivers are assumed  * to register their IRQ's as network devices so their interrupt handlers  * and subsequent "done callbacks" happen at splimp.  *  * Completed crypto ops are queued for a separate kernel thread that  * handles the callbacks at spl0.  This decoupling insures the crypto  * driver interrupt service routine is not delayed while the callback  * takes place and that callbacks are delivered after a context switch  * (as opposed to a software interrupt that clients must block).  *  * This scheme is not intended for SMP machines.  */
 end_comment
 
 begin_function_decl
@@ -2284,7 +2284,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add a crypto request to a queue, to be processed by the kernel thread.  */
+comment|/*  * Dispatch a crypto request to a driver or queue  * it, to be processed by the kernel thread.  */
 end_comment
 
 begin_function
@@ -2306,11 +2306,6 @@ name|crp
 operator|->
 name|crp_sid
 argument_list|)
-decl_stmt|;
-name|struct
-name|cryptocap
-modifier|*
-name|cap
 decl_stmt|;
 name|int
 name|s
@@ -2344,6 +2339,25 @@ operator|=
 name|splcrypto
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|crp
+operator|->
+name|crp_flags
+operator|&
+name|CRYPTO_F_BATCH
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|struct
+name|cryptocap
+modifier|*
+name|cap
+decl_stmt|;
+comment|/* 		 * Caller marked the request to be processed 		 * immediately; dispatch it directly to the 		 * driver unless the driver is currently blocked. 		 */
 name|cap
 operator|=
 name|crypto_checkdriver
@@ -2377,7 +2391,7 @@ operator|==
 name|ERESTART
 condition|)
 block|{
-comment|/* 			 * The driver ran out of resources, mark the 			 * driver ``blocked'' for cryptop's and put 			 * the op on the queue. 			 */
+comment|/* 				 * The driver ran out of resources, mark the 				 * driver ``blocked'' for cryptop's and put 				 * the op on the queue. 				 */
 name|crypto_drivers
 index|[
 name|hid
@@ -2406,7 +2420,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * The driver is blocked, just queue the op until 		 * it unblocks and the swi thread gets kicked. 		 */
+comment|/* 			 * The driver is blocked, just queue the op until 			 * it unblocks and the swi thread gets kicked. 			 */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -2416,6 +2430,41 @@ name|crp
 argument_list|,
 name|crp_next
 argument_list|)
+expr_stmt|;
+name|result
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|int
+name|wasempty
+init|=
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|crp_q
+argument_list|)
+decl_stmt|;
+comment|/* 		 * Caller marked the request as ``ok to delay''; 		 * queue it for the swi thread.  This is desirable 		 * when the operation is low priority and/or suitable 		 * for batching. 		 */
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|crp_q
+argument_list|,
+name|crp
+argument_list|,
+name|crp_next
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wasempty
+condition|)
+name|setsoftcrypto
+argument_list|()
 expr_stmt|;
 name|result
 operator|=
@@ -3362,11 +3411,6 @@ modifier|*
 name|crp
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|,
-name|wasempty
-decl_stmt|;
 if|if
 condition|(
 name|crp
@@ -3402,7 +3446,82 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * The return queue is manipulated by the swi thread 	 * and, potentially, by crypto device drivers calling 	 * back to mark operations completed.  Thus we need 	 * to mask both while manipulating the return queue. 	 */
+if|if
+condition|(
+name|crp
+operator|->
+name|crp_flags
+operator|&
+name|CRYPTO_F_CBIMM
+condition|)
+block|{
+comment|/* 		 * Do the callback directly.  This is ok when the 		 * callback routine does very little (e.g. the 		 * /dev/crypto callback method just does a wakeup). 		 */
+ifdef|#
+directive|ifdef
+name|CRYPTO_TIMING
+if|if
+condition|(
+name|crypto_timing
+condition|)
+block|{
+comment|/* 			 * NB: We must copy the timestamp before 			 * doing the callback as the cryptop is 			 * likely to be reclaimed. 			 */
+name|struct
+name|timespec
+name|t
+init|=
+name|crp
+operator|->
+name|crp_tstamp
+decl_stmt|;
+name|crypto_tstat
+argument_list|(
+operator|&
+name|cryptostats
+operator|.
+name|cs_cb
+argument_list|,
+operator|&
+name|t
+argument_list|)
+expr_stmt|;
+name|crp
+operator|->
+name|crp_callback
+argument_list|(
+name|crp
+argument_list|)
+expr_stmt|;
+name|crypto_tstat
+argument_list|(
+operator|&
+name|cryptostats
+operator|.
+name|cs_finis
+argument_list|,
+operator|&
+name|t
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+name|crp
+operator|->
+name|crp_callback
+argument_list|(
+name|crp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|int
+name|s
+decl_stmt|,
+name|wasempty
+decl_stmt|;
+comment|/* 		 * Normal case; queue the callback for the thread. 		 * 		 * The return queue is manipulated by the swi thread 		 * and, potentially, by crypto device drivers calling 		 * back to mark operations completed.  Thus we need 		 * to mask both while manipulating the return queue. 		 */
 name|s
 operator|=
 name|splcrypto
@@ -3441,6 +3560,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3804,11 +3924,15 @@ name|crp
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|submit
 operator|->
 name|crp_flags
 operator|&
-name|CRYPTO_F_NODELAY
+name|CRYPTO_F_BATCH
+operator|)
+operator|==
+literal|0
 condition|)
 break|break;
 comment|/* keep scanning for more are q'd */

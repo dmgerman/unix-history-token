@@ -1388,6 +1388,8 @@ name|int
 name|i
 decl_stmt|,
 name|error
+decl_stmt|,
+name|s
 decl_stmt|;
 if|if
 condition|(
@@ -1834,6 +1836,16 @@ operator|->
 name|crp_flags
 operator|=
 name|CRYPTO_F_IOV
+operator||
+name|CRYPTO_F_CBIMM
+operator||
+operator|(
+name|cop
+operator|->
+name|flags
+operator|&
+name|COP_F_BATCH
+operator|)
 expr_stmt|;
 name|crp
 operator|->
@@ -2062,6 +2074,12 @@ operator|->
 name|tmp_mac
 expr_stmt|;
 block|}
+name|s
+operator|=
+name|splcrypto
+argument_list|()
+expr_stmt|;
+comment|/* NB: only needed with CRYPTO_F_CBIMM */
 name|error
 operator|=
 name|crypto_dispatch
@@ -2079,13 +2097,18 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-name|cse
+name|crp
 argument_list|,
 name|PSOCK
 argument_list|,
 literal|"crydev"
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -2304,7 +2327,7 @@ argument_list|)
 return|;
 name|wakeup_one
 argument_list|(
-name|cse
+name|crp
 argument_list|)
 expr_stmt|;
 return|return
