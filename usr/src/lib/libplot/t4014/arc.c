@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arc.c	4.1 (Berkeley) %G%"
+literal|"@(#)arc.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -742,35 +742,6 @@ else|else
 return|return
 operator|(
 literal|4
-operator|)
-return|;
-block|}
-end_block
-
-begin_macro
-name|abs
-argument_list|(
-argument|a
-argument_list|)
-end_macro
-
-begin_block
-block|{
-if|if
-condition|(
-name|a
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-operator|-
-name|a
-operator|)
-return|;
-return|return
-operator|(
-name|a
 operator|)
 return|;
 block|}
