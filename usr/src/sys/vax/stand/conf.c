@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.16	83/02/16	*/
+comment|/*	conf.c	4.17	83/02/16	*/
 end_comment
 
 begin_include
@@ -439,13 +439,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|udstrategy
+name|rastrategy
 argument_list|()
 decl_stmt|,
-name|udopen
+name|raopen
 argument_list|()
 decl_stmt|,
-name|udioctl
+name|raioctl
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -459,6 +459,19 @@ name|idcopen
 argument_list|()
 decl_stmt|,
 name|idcioctl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rlstrategy
+argument_list|()
+decl_stmt|,
+name|rlopen
+argument_list|()
+decl_stmt|,
+name|rlioctl
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -617,13 +630,13 @@ block|,
 block|{
 literal|"ra"
 block|,
-name|udstrategy
+name|rastrategy
 block|,
-name|udopen
+name|raopen
 block|,
 name|nullsys
 block|,
-name|udioctl
+name|raioctl
 block|}
 block|,
 if|#
@@ -646,6 +659,18 @@ block|}
 block|,
 endif|#
 directive|endif
+block|{
+literal|"rl"
+block|,
+name|rlstrategy
+block|,
+name|rlopen
+block|,
+name|nullsys
+block|,
+name|rlioctl
+block|}
+block|,
 ifndef|#
 directive|ifndef
 name|BOOT

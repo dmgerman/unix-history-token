@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	bootxx.c	4.1	82/07/19	*/
+comment|/*	bootxx.c	4.2	83/02/16	*/
 end_comment
 
 begin_include
@@ -97,6 +97,46 @@ name|bootprog
 index|[]
 init|=
 literal|"up(0,0)boot"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BOOTRA
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|bootprog
+index|[]
+init|=
+literal|"ra(0,0)boot"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BOOTRL
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|bootprog
+index|[]
+init|=
+literal|"rl(0,0)boot"
 decl_stmt|;
 end_decl_stmt
 

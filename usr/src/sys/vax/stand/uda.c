@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.6	83/02/16	*/
+comment|/*	uda.c	4.7	83/02/16	*/
 end_comment
 
 begin_comment
@@ -192,7 +192,7 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
-name|udopen
+name|raopen
 argument_list|(
 name|io
 argument_list|)
@@ -695,7 +695,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|udstrategy
+name|rastrategy
 argument_list|(
 name|io
 argument_list|,
@@ -847,7 +847,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|udioctl
+name|raioctl
 argument_list|(
 argument|io
 argument_list|,
