@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ray.c,v 1.42 2000/07/07 19:13:11 dmlb Exp $  *  */
+comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_comment
@@ -12,11 +12,11 @@ comment|/*   * Copyright (c) 2000 Christian E. Hopps  * All rights reserved.  * 
 end_comment
 
 begin_comment
-comment|/*  * Card configuration  * ==================  *  * This card is unusual in that it uses both common and attribute  * memory whilst working. It should use common memory and an IO port.  *  * The 3.x branch of FreeBSD has a real problem managing and setting  * up the correct memory maps. However, this driver should reset the  * memory maps correctly - it works around for the brain deadness of  * pccardd (where it reads the CIS for common memory, sets it all up  * and then throws it all away assuming the card is an ed driver...).  * Note that this could be dangerous (because it doesn't interact with  * pccardd) if you use other memory mapped cards at the same time.  *  * There is no support for running this driver on 4.0.  *  * For>4.1 and -cuurent things are a lot better.  *  * Ad-hoc and infra-structure modes  * ================================  *   * At present only the ad-hoc mode is being worked on.  *  * I hope to start work on support for infrastructure when an AP arrives  * from FreeBSD Labs.  *  * The Linux driver also seems to have the capability to act as an AP.  * I wonder what facilities the "AP" can provide within a driver? We can  * probably use the BRIDGE code to form an ESS but I don't think  * power saving etc. is easy.  *  *  * Packet framing/encapsulation  * ================================  *   * Currently we only support the Webgear encapsulation  *	802.11	header<net/if_ieee80211.h>struct ieee80211_header  *	802.3	header<net/ethernet.h>struct ether_header  *	802.2	LLC header  *	802.2	SNAP header  *  * We should support whatever packet types the following drivers have  *   	if_wi.c		FreeBSD, RFC1042  *	if_ray.c	NetBSD	Webgear, RFC1042  *	rayctl.c	Linux Webgear, RFC1042  * also whatever we can divine from the NDC Access points and Kanda's boxes.  *  * Most drivers appear to have a RFC1042 framing. The incoming packet is  *	802.11	header<net/if_ieee80211.h>struct ieee80211_header  *	802.2	LLC header  *	802.2	SNAP header  *  * This is translated to  *	802.3	header<net/ethernet.h>struct ether_header  *	802.2	LLC header  *	802.2	SNAP header  *  * Linux seems to look at the SNAP org_code and do some framings  * for IPX and APPLEARP on that. This just may be how Linux does IPX  * and NETATALK. Need to see how FreeBSD does these.  *  * Translation should be selected via if_media stuff or link types.  *  *  * Authentication  * ==============  *  * 802.11 provides two authentication mechanisms. The first is a very  * simple host based mechanism (like xhost) called Open System and the  * second is a more complex challenge/response called Shared Key built  * ontop of WEP.  *  * This driver only supports Open System and does not implement any  * host based control lists. In otherwords authentication is always  * granted to hosts wanting to authenticate with this station. This is  * the only sensible behaviour as the Open System mechanism uses MAC  * addresses to identify hosts. Send me patches if you need it!  */
+comment|/*  * Card configuration  * ==================  *  * This card is unusual in that it uses both common and attribute  * memory whilst working. It should use common memory and an IO port.  *  * The 3.x branch of FreeBSD has a real problem managing and setting  * up the correct memory maps. However, this driver should reset the  * memory maps correctly - it works around for the brain deadness of  * pccardd (where it reads the CIS for common memory, sets it all up  * and then throws it all away assuming the card is an ed driver...).  * Note that this could be dangerous (because it doesn't interact with  * pccardd) if you use other memory mapped cards at the same time.  *  * There is no support for running this driver on 4.0.  *  * For>4.1 and -cuurent things are a lot better.  *  * Ad-hoc and infra-structure modes  * ================================  *   * At present only the ad-hoc mode is being worked on.  *  * I hope to start work on support for infrastructure when an AP arrives  * from FreeBSD Labs.  *  * The Linux driver also seems to have the capability to act as an AP.  * I wonder what facilities the "AP" can provide within a driver? We can  * probably use the BRIDGE code to form an ESS but I don't think  * power saving etc. is easy.  *  *  * Packet framing/encapsulation  * ================================  *   * Currently we only support the Webgear encapsulation  *	802.11	header<net/if_ieee80211.h>struct ieee80211_frame  *	802.3	header<net/ethernet.h>struct ether_header  *	802.2	LLC header  *	802.2	SNAP header  *  * We should support whatever packet types the following drivers have  *   	if_wi.c		FreeBSD, RFC1042  *	if_ray.c	NetBSD	Webgear, RFC1042  *	rayctl.c	Linux Webgear, RFC1042  * also whatever we can divine from the NDC Access points and Kanda's boxes.  *  * Most drivers appear to have a RFC1042 framing. The incoming packet is  *	802.11	header<net/if_ieee80211.h>struct ieee80211_frame  *	802.2	LLC header  *	802.2	SNAP header  *  * This is translated to  *	802.3	header<net/ethernet.h>struct ether_header  *	802.2	LLC header  *	802.2	SNAP header  *  * Linux seems to look at the SNAP org_code and do some framings  * for IPX and APPLEARP on that. This just may be how Linux does IPX  * and NETATALK. Need to see how FreeBSD does these.  *  * Translation should be selected via if_media stuff or link types.  *  *  * Authentication  * ==============  *  * 802.11 provides two authentication mechanisms. The first is a very  * simple host based mechanism (like xhost) called Open System and the  * second is a more complex challenge/response called Shared Key built  * ontop of WEP.  *  * This driver only supports Open System and does not implement any  * host based control lists. In otherwords authentication is always  * granted to hosts wanting to authenticate with this station. This is  * the only sensible behaviour as the Open System mechanism uses MAC  * addresses to identify hosts. Send me patches if you need it!  */
 end_comment
 
 begin_comment
-comment|/*  * ***watchdog to catch screwed up removals?  * ***error handling of RAY_COM_RUNQ  * ***error handling of ECF command completions  * ***can't seem to create a n/w that Win95 wants to see.  * ***need decent association code  * use /sys/net/if_ieee80211.h and update it  * write up driver structure in comments above  * UPDATE_PARAMS seems to return via an interrupt - maybe the timeout  *	is needed for wrong values?  * havenet needs checking again  * proper setting of mib_hop_seq_len with country code for v4 firmware  *	best done with raycontrol?  * more translations  *	might be able to autodetect them  * spinning in ray_com_ecf  * countrycode setting is broken I think  *	userupdate should trap and do via startjoin etc.  * fragmentation when rx level drops?  *  * infra mode stuff  * 	proper handling of the basic rate set - see the manual  *	all ray_sj, ray_assoc sequencues need a "nicer" solution as we  *		remember association and authentication  *	need to consider WEP  *	acting as ap - should be able to get working from the manual  *	need to finish RAY_ECMD_REJOIN_DONE  *  * ray_nw_param  *	promisc in here too? - done  *	should be able to update the parameters before we download to the  *		device. This means we must attach a desired struct to the  *		runq entry and maybe have another big case statement to  *		move these desired into current when not running.  *		init must then use the current settings (pre-loaded  *		in attach now!) and pass to download. But we can't access  *		current nw params outside of the runq - ahhh  * 	differeniate between parameters set in attach and init  * 	sc_station_addr in here too (for changing mac address)  * 	move desired into the command structure?  *	take downloaded MIB from a complete nw_param?  *	longer term need to attach a desired nw params to the runq entry  *  *  * RAY_COM_RUNQ errors  *  * if sleeping in ccs_alloc with eintr/erestart/enxio/enodev  *	erestart	try again from the top  *			XXX do not malloc more comqs  *			XXX ccs allocation hard  *	eintr		clean up and return  *	enxio		clean up and return - done in macro  *  * if sleeping in runq_arr itself with eintr/erestart/enxio/enodev  *	erestart	try again from the top  *			XXX do not malloc more comqs  *			XXX ccs allocation hard  *			XXX reinsert comqs at head of list  *	eintr		clean up and return  *	enxio		clean up and return - done in macro  */
+comment|/*  * ***watchdog to catch screwed up removals?  * ***error handling of RAY_COM_RUNQ  * ***error handling of ECF command completions  * ***can't seem to create a n/w that Win95 wants to see.  * ***need decent association code  * write up driver structure in comments above  * UPDATE_PARAMS seems to return via an interrupt - maybe the timeout  *	is needed for wrong values?  * havenet needs checking again  * proper setting of mib_hop_seq_len with country code for v4 firmware  *	best done with raycontrol?  * more translations  *	might be able to autodetect them  * spinning in ray_com_ecf  * countrycode setting is broken I think  *	userupdate should trap and do via startjoin etc.  * fragmentation when rx level drops?  *  * infra mode stuff  * 	proper handling of the basic rate set - see the manual  *	all ray_sj, ray_assoc sequencues need a "nicer" solution as we  *		remember association and authentication  *	need to consider WEP  *	acting as ap - should be able to get working from the manual  *	need to finish RAY_ECMD_REJOIN_DONE  *  * ray_nw_param  *	promisc in here too? - done  *	should be able to update the parameters before we download to the  *		device. This means we must attach a desired struct to the  *		runq entry and maybe have another big case statement to  *		move these desired into current when not running.  *		init must then use the current settings (pre-loaded  *		in attach now!) and pass to download. But we can't access  *		current nw params outside of the runq - ahhh  * 	differeniate between parameters set in attach and init  * 	sc_station_addr in here too (for changing mac address)  * 	move desired into the command structure?  *	take downloaded MIB from a complete nw_param?  *	longer term need to attach a desired nw params to the runq entry  *  *  * RAY_COM_RUNQ errors  *  * if sleeping in ccs_alloc with eintr/erestart/enxio/enodev  *	erestart	try again from the top  *			XXX do not malloc more comqs  *			XXX ccs allocation hard  *	eintr		clean up and return  *	enxio		clean up and return - done in macro  *  * if sleeping in runq_arr itself with eintr/erestart/enxio/enodev  *	erestart	try again from the top  *			XXX do not malloc more comqs  *			XXX ccs allocation hard  *			XXX reinsert comqs at head of list  *	eintr		clean up and return  *	enxio		clean up and return - done in macro  */
 end_comment
 
 begin_define
@@ -46,7 +46,9 @@ directive|define
 name|RAY_DEBUG
 value|(				\
 comment|/* RAY_DBG_SUBR		| */
-value|\ 			   RAY_DBG_BOOTPARAM	|    	\
+value|\
+comment|/* RAY_DBG_BOOTPARAM	| */
+value|\
 comment|/* RAY_DBG_STARTJOIN	| */
 value|\
 comment|/* RAY_DBG_CCS		| */
@@ -135,26 +137,6 @@ end_endif
 begin_comment
 comment|/* RAY_DEBUG */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"ray.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_inet.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NRAY
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -252,39 +234,6 @@ directive|include
 file|<net/if_dl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -306,7 +255,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ray/if_ieee80211.h>
+file|<net/if_ieee80211.h>
 end_include
 
 begin_include
@@ -2141,7 +2090,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ieee80211_header
+name|ieee80211_frame
 argument_list|)
 operator|+
 sizeof|sizeof
@@ -2183,20 +2132,23 @@ name|ray_watchdog
 expr_stmt|;
 name|ifp
 operator|->
+name|if_init
+operator|=
+name|ray_init_user
+expr_stmt|;
+name|ifp
+operator|->
 name|if_snd
 operator|.
 name|ifq_maxlen
 operator|=
 name|IFQ_MAXLEN
 expr_stmt|;
-name|if_attach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|ether_ifattach
 argument_list|(
 name|ifp
+argument_list|,
+name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 block|}
@@ -2748,18 +2700,6 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-name|struct
-name|ifaddr
-modifier|*
-name|ifa
-init|=
-operator|(
-expr|struct
-name|ifaddr
-operator|*
-operator|)
-name|data
-decl_stmt|;
 name|int
 name|s
 decl_stmt|,
@@ -2819,6 +2759,9 @@ case|:
 case|case
 name|SIOCSIFMTU
 case|:
+case|case
+name|SIOCSIFADDR
+case|:
 name|RAY_DPRINTF
 argument_list|(
 name|sc
@@ -2839,57 +2782,8 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
+comment|/* XXX SIFADDR used to fall through to SIOCSIFFLAGS */
 break|break;
-case|case
-name|SIOCSIFADDR
-case|:
-name|RAY_DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|RAY_DBG_IOCTL
-argument_list|,
-literal|"SIFADDR"
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_flags
-operator||=
-name|IFF_UP
-expr_stmt|;
-switch|switch
-condition|(
-name|ifa
-operator|->
-name|ifa_addr
-operator|->
-name|sa_family
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|INET
-case|case
-name|AF_INET
-case|:
-name|arp_ifinit
-argument_list|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
-name|ifp
-argument_list|,
-name|ifa
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-block|}
-comment|/* FALLTHROUGH */
 case|case
 name|SIOCSIFFLAGS
 case|:
@@ -6026,7 +5920,7 @@ name|bufp
 argument_list|,
 name|IEEE80211_FC0_TYPE_DATA
 argument_list|,
-name|IEEE80211_FC1_STA_TO_STA
+name|IEEE80211_FC1_DIR_NODS
 argument_list|,
 name|eh
 operator|->
@@ -6064,7 +5958,7 @@ name|bufp
 argument_list|,
 name|IEEE80211_FC0_TYPE_DATA
 argument_list|,
-name|IEEE80211_FC1_STA_TO_AP
+name|IEEE80211_FC1_DIR_TODS
 argument_list|,
 name|sc
 operator|->
@@ -6092,7 +5986,7 @@ name|bufp
 argument_list|,
 name|IEEE80211_FC0_TYPE_DATA
 argument_list|,
-name|IEEE80211_FC1_AP_TO_STA
+name|IEEE80211_FC1_DIR_FROMDS
 argument_list|,
 name|eh
 operator|->
@@ -6240,7 +6134,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ieee80211_header
+name|ieee80211_frame
 argument_list|)
 expr_stmt|;
 for|for
@@ -6493,7 +6387,7 @@ name|addr3
 parameter_list|)
 block|{
 name|struct
-name|ieee80211_header
+name|ieee80211_frame
 name|header
 decl_stmt|;
 name|RAY_DPRINTF
@@ -6520,7 +6414,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ieee80211_header
+name|ieee80211_frame
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6595,7 +6489,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ieee80211_header
+name|ieee80211_frame
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6606,7 +6500,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ieee80211_header
+name|ieee80211_frame
 argument_list|)
 operator|)
 return|;
@@ -7037,7 +6931,7 @@ name|rcs
 parameter_list|)
 block|{
 name|struct
-name|ieee80211_header
+name|ieee80211_frame
 modifier|*
 name|header
 decl_stmt|;
@@ -7182,7 +7076,7 @@ operator|<
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ieee80211_header
+name|ieee80211_frame
 argument_list|)
 operator|)
 condition|)
@@ -7623,7 +7517,7 @@ argument_list|(
 name|m0
 argument_list|,
 expr|struct
-name|ieee80211_header
+name|ieee80211_frame
 operator|*
 argument_list|)
 expr_stmt|;
@@ -7786,7 +7680,7 @@ operator|.
 name|ac_if
 decl_stmt|;
 name|struct
-name|ieee80211_header
+name|ieee80211_frame
 modifier|*
 name|header
 init|=
@@ -7795,7 +7689,7 @@ argument_list|(
 name|m0
 argument_list|,
 expr|struct
-name|ieee80211_header
+name|ieee80211_frame
 operator|*
 argument_list|)
 decl_stmt|;
@@ -7842,16 +7736,16 @@ name|IEEE80211_FC0_SUBTYPE_MASK
 condition|)
 block|{
 case|case
-name|IEEE80211_FC0_SUBTYPE_DATA_DATA
+name|IEEE80211_FC0_SUBTYPE_DATA
 case|:
 case|case
-name|IEEE80211_FC0_SUBTYPE_DATA_DATA_CFACK
+name|IEEE80211_FC0_SUBTYPE_CF_ACK
 case|:
 case|case
-name|IEEE80211_FC0_SUBTYPE_DATA_DATA_CFPOLL
+name|IEEE80211_FC0_SUBTYPE_CF_POLL
 case|:
 case|case
-name|IEEE80211_FC0_SUBTYPE_DATA_DATA_CFACPL
+name|IEEE80211_FC0_SUBTYPE_CF_ACPL
 case|:
 name|RAY_DPRINTF
 argument_list|(
@@ -7864,16 +7758,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IEEE80211_FC0_SUBTYPE_DATA_NULL
+name|IEEE80211_FC0_SUBTYPE_NODATA
 case|:
 case|case
-name|IEEE80211_FC0_SUBTYPE_DATA_CFACK
+name|IEEE80211_FC0_SUBTYPE_CFACK
 case|:
 case|case
-name|IEEE80211_FC0_SUBTYPE_DATA_CFPOLL
+name|IEEE80211_FC0_SUBTYPE_CFPOLL
 case|:
 case|case
-name|IEEE80211_FC0_SUBTYPE_DATA_CFACK_CFACK
+name|IEEE80211_FC0_SUBTYPE_CF_ACK_CF_ACK
 case|:
 name|RAY_DPRINTF
 argument_list|(
@@ -7930,11 +7824,11 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_DS_MASK
+name|IEEE80211_FC1_DIR_MASK
 condition|)
 block|{
 case|case
-name|IEEE80211_FC1_STA_TO_STA
+name|IEEE80211_FC1_DIR_NODS
 case|:
 name|da
 operator|=
@@ -7973,7 +7867,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IEEE80211_FC1_AP_TO_STA
+name|IEEE80211_FC1_DIR_FROMDS
 case|:
 name|da
 operator|=
@@ -8020,7 +7914,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IEEE80211_FC1_STA_TO_AP
+name|IEEE80211_FC1_DIR_TODS
 case|:
 name|ra
 operator|=
@@ -8067,7 +7961,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IEEE80211_FC1_AP_TO_AP
+name|IEEE80211_FC1_DIR_DSTODS
 case|:
 name|ra
 operator|=
@@ -8154,7 +8048,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ieee80211_header
+name|ieee80211_frame
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8269,7 +8163,7 @@ operator|.
 name|ac_if
 decl_stmt|;
 name|struct
-name|ieee80211_header
+name|ieee80211_frame
 modifier|*
 name|header
 init|=
@@ -8278,7 +8172,7 @@ argument_list|(
 name|m0
 argument_list|,
 expr|struct
-name|ieee80211_header
+name|ieee80211_frame
 operator|*
 argument_list|)
 decl_stmt|;
@@ -8303,10 +8197,10 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_DS_MASK
+name|IEEE80211_FC1_DIR_MASK
 operator|)
 operator|!=
-name|IEEE80211_FC1_STA_TO_STA
+name|IEEE80211_FC1_DIR_NODS
 condition|)
 block|{
 name|RAY_RECERR
@@ -8322,7 +8216,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_DS_MASK
+name|IEEE80211_FC1_DIR_MASK
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -8337,7 +8231,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Check the the mgt packet subtype, some packets should be 	 * dropped depending on the mode the station is in. See pg 	 * 52(60) of docs 	 * 	 * P - proccess, J - Junk, E - ECF deals with, I - Illegal  	 * ECF Proccesses   	 *  AHDOC procces or junk    	 *   INFRA STA process or junk     	 *    INFRA AP process or jumk 	 *   	 * +PPP	IEEE80211_FC0_SUBTYPE_MGT_BEACON  	 * +EEE	IEEE80211_FC0_SUBTYPE_MGT_PROBE_REQ  	 * +EEE	IEEE80211_FC0_SUBTYPE_MGT_PROBE_RESP  	 *  PPP	IEEE80211_FC0_SUBTYPE_MGT_AUTH  	 *  PPP	IEEE80211_FC0_SUBTYPE_MGT_DEAUTH  	 *  JJP	IEEE80211_FC0_SUBTYPE_MGT_ASSOC_REQ  	 *  JPJ	IEEE80211_FC0_SUBTYPE_MGT_ASSOC_RESP  	 *  JPP	IEEE80211_FC0_SUBTYPE_MGT_DISASSOC  	 *  JJP	IEEE80211_FC0_SUBTYPE_MGT_REASSOC_REQ  	 *  JPJ	IEEE80211_FC0_SUBTYPE_MGT_REASSOC_RESP  	 * +EEE	IEEE80211_FC0_SUBTYPE_MGT_ATIM 	 */
+comment|/* 	 * Check the the mgt packet subtype, some packets should be 	 * dropped depending on the mode the station is in. See pg 	 * 52(60) of docs 	 * 	 * P - proccess, J - Junk, E - ECF deals with, I - Illegal  	 * ECF Proccesses   	 *  AHDOC procces or junk    	 *   INFRA STA process or junk     	 *    INFRA AP process or jumk 	 *   	 * +PPP	IEEE80211_FC0_SUBTYPE_BEACON  	 * +EEE	IEEE80211_FC0_SUBTYPE_PROBE_REQ  	 * +EEE	IEEE80211_FC0_SUBTYPE_PROBE_RESP  	 *  PPP	IEEE80211_FC0_SUBTYPE_AUTH  	 *  PPP	IEEE80211_FC0_SUBTYPE_DEAUTH  	 *  JJP	IEEE80211_FC0_SUBTYPE_ASSOC_REQ  	 *  JPJ	IEEE80211_FC0_SUBTYPE_ASSOC_RESP  	 *  JPP	IEEE80211_FC0_SUBTYPE_DISASSOC  	 *  JJP	IEEE80211_FC0_SUBTYPE_REASSOC_REQ  	 *  JPJ	IEEE80211_FC0_SUBTYPE_REASSOC_RESP  	 * +EEE	IEEE80211_FC0_SUBTYPE_ATIM 	 */
 name|RAY_MBUF_DUMP
 argument_list|(
 name|sc
@@ -8362,7 +8256,7 @@ name|IEEE80211_FC0_SUBTYPE_MASK
 condition|)
 block|{
 case|case
-name|IEEE80211_FC0_SUBTYPE_MGT_BEACON
+name|IEEE80211_FC0_SUBTYPE_BEACON
 case|:
 name|RAY_DPRINTF
 argument_list|(
@@ -8377,7 +8271,7 @@ comment|/* XXX furtle anything interesting out */
 comment|/* XXX Note that there are rules governing what beacons to 		   read, see 8802 S7.2.3, S11.1.2.3 */
 break|break;
 case|case
-name|IEEE80211_FC0_SUBTYPE_MGT_AUTH
+name|IEEE80211_FC0_SUBTYPE_AUTH
 case|:
 name|RAY_DPRINTF
 argument_list|(
@@ -8397,7 +8291,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IEEE80211_FC0_SUBTYPE_MGT_DEAUTH
+name|IEEE80211_FC0_SUBTYPE_DEAUTH
 case|:
 name|RAY_DPRINTF
 argument_list|(
@@ -8411,10 +8305,10 @@ expr_stmt|;
 comment|/* XXX ray_rx_mgt_deauth(sc, m0); */
 break|break;
 case|case
-name|IEEE80211_FC0_SUBTYPE_MGT_ASSOC_REQ
+name|IEEE80211_FC0_SUBTYPE_ASSOC_REQ
 case|:
 case|case
-name|IEEE80211_FC0_SUBTYPE_MGT_REASSOC_REQ
+name|IEEE80211_FC0_SUBTYPE_REASSOC_REQ
 case|:
 name|RAY_DPRINTF
 argument_list|(
@@ -8457,10 +8351,10 @@ expr_stmt|;
 comment|/* XXX_ACTING_AP */
 break|break;
 case|case
-name|IEEE80211_FC0_SUBTYPE_MGT_ASSOC_RESP
+name|IEEE80211_FC0_SUBTYPE_ASSOC_RESP
 case|:
 case|case
-name|IEEE80211_FC0_SUBTYPE_MGT_REASSOC_RESP
+name|IEEE80211_FC0_SUBTYPE_REASSOC_RESP
 case|:
 name|RAY_DPRINTF
 argument_list|(
@@ -8503,7 +8397,7 @@ expr_stmt|;
 comment|/* XXX_INFRA */
 break|break;
 case|case
-name|IEEE80211_FC0_SUBTYPE_MGT_DISASSOC
+name|IEEE80211_FC0_SUBTYPE_DISASSOC
 case|:
 name|RAY_DPRINTF
 argument_list|(
@@ -8534,13 +8428,13 @@ expr_stmt|;
 comment|/* XXX_INFRA */
 break|break;
 case|case
-name|IEEE80211_FC0_SUBTYPE_MGT_PROBE_REQ
+name|IEEE80211_FC0_SUBTYPE_PROBE_REQ
 case|:
 case|case
-name|IEEE80211_FC0_SUBTYPE_MGT_PROBE_RESP
+name|IEEE80211_FC0_SUBTYPE_PROBE_RESP
 case|:
 case|case
-name|IEEE80211_FC0_SUBTYPE_MGT_ATIM
+name|IEEE80211_FC0_SUBTYPE_ATIM
 case|:
 name|RAY_RECERR
 argument_list|(
@@ -8616,7 +8510,7 @@ name|m0
 parameter_list|)
 block|{
 name|struct
-name|ieee80211_header
+name|ieee80211_frame
 modifier|*
 name|header
 init|=
@@ -8625,7 +8519,7 @@ argument_list|(
 name|m0
 argument_list|,
 expr|struct
-name|ieee80211_header
+name|ieee80211_frame
 operator|*
 argument_list|)
 decl_stmt|;
@@ -8675,7 +8569,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|IEEE80211_AUTH_OPENSYSTEM
+name|IEEE80211_AUTH_ALG_OPEN
 case|:
 name|RAY_RECERR
 argument_list|(
@@ -8733,9 +8627,9 @@ name|bufp
 argument_list|,
 name|IEEE80211_FC0_TYPE_MGT
 operator||
-name|IEEE80211_FC0_SUBTYPE_MGT_AUTH
+name|IEEE80211_FC0_SUBTYPE_AUTH
 argument_list|,
-name|IEEE80211_FC1_STA_TO_STA
+name|IEEE80211_FC1_DIR_NODS
 argument_list|,
 name|header
 operator|->
@@ -8779,7 +8673,7 @@ operator|+=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ieee80211_header
+name|ieee80211_frame
 argument_list|)
 expr_stmt|;
 name|SRAM_WRITE_1
@@ -8878,7 +8772,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|IEEE80211_AUTH_SHAREDKEYS
+name|IEEE80211_AUTH_ALG_SHARED
 case|:
 name|RAY_RECERR
 argument_list|(
@@ -8939,7 +8833,7 @@ operator|.
 name|ac_if
 decl_stmt|;
 name|struct
-name|ieee80211_header
+name|ieee80211_frame
 modifier|*
 name|header
 init|=
@@ -8948,7 +8842,7 @@ argument_list|(
 name|m0
 argument_list|,
 expr|struct
-name|ieee80211_header
+name|ieee80211_frame
 operator|*
 argument_list|)
 decl_stmt|;
@@ -8973,10 +8867,10 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_DS_MASK
+name|IEEE80211_FC1_DIR_MASK
 operator|)
 operator|!=
-name|IEEE80211_FC1_STA_TO_STA
+name|IEEE80211_FC1_DIR_NODS
 condition|)
 block|{
 name|RAY_RECERR
@@ -8992,7 +8886,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_DS_MASK
+name|IEEE80211_FC1_DIR_MASK
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -9032,7 +8926,7 @@ name|IEEE80211_FC0_SUBTYPE_MASK
 condition|)
 block|{
 case|case
-name|IEEE80211_FC0_SUBTYPE_CTL_PS_POLL
+name|IEEE80211_FC0_SUBTYPE_PS_POLL
 case|:
 name|RAY_DPRINTF
 argument_list|(
@@ -9075,19 +8969,19 @@ expr_stmt|;
 comment|/* XXX_ACTING_AP */
 break|break;
 case|case
-name|IEEE80211_FC0_SUBTYPE_CTL_RTS
+name|IEEE80211_FC0_SUBTYPE_RTS
 case|:
 case|case
-name|IEEE80211_FC0_SUBTYPE_CTL_CTS
+name|IEEE80211_FC0_SUBTYPE_CTS
 case|:
 case|case
-name|IEEE80211_FC0_SUBTYPE_CTL_ACK
+name|IEEE80211_FC0_SUBTYPE_ACK
 case|:
 case|case
-name|IEEE80211_FC0_SUBTYPE_CTL_CFEND
+name|IEEE80211_FC0_SUBTYPE_CF_END
 case|:
 case|case
-name|IEEE80211_FC0_SUBTYPE_CTL_CFEND_CFACK
+name|IEEE80211_FC0_SUBTYPE_CF_END_ACK
 case|:
 name|RAY_RECERR
 argument_list|(
@@ -16210,15 +16104,6 @@ end_endif
 
 begin_comment
 comment|/* RAY_DEBUG& RAY_DBG_MBUF */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NRAY */
 end_comment
 
 end_unit
