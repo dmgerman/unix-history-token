@@ -56,41 +56,50 @@ name|reg
 range|:
 literal|8
 decl_stmt|;
+comment|/* register index		*/
+comment|/* reg< 0 if inverted polarity	*/
 name|unsigned
 name|bits
 range|:
 literal|4
 decl_stmt|;
+comment|/* width of control field	*/
 name|unsigned
 name|ofs
 range|:
 literal|4
 decl_stmt|;
+comment|/* offset (only if stereo=0)	*/
 name|unsigned
 name|stereo
 range|:
 literal|1
 decl_stmt|;
+comment|/* set for stereo controls	*/
 name|unsigned
 name|mute
 range|:
 literal|1
 decl_stmt|;
+comment|/* bit15 is MUTE		*/
 name|unsigned
 name|recidx
 range|:
 literal|4
 decl_stmt|;
+comment|/* index in rec mux		*/
 name|unsigned
 name|mask
 range|:
 literal|1
 decl_stmt|;
+comment|/* use only masked bits		*/
 name|unsigned
 name|enable
 range|:
 literal|1
 decl_stmt|;
+comment|/* entry is enabled		*/
 block|}
 struct|;
 end_struct
@@ -214,6 +223,7 @@ literal|32
 index|]
 init|=
 block|{
+comment|/*	[offset]			reg	     bits of st mu re mk en */
 index|[
 name|SOUND_MIXER_VOLUME
 index|]
@@ -429,7 +439,31 @@ literal|1
 block|,
 literal|1
 block|,
+literal|1
+block|,
+literal|1
+block|}
+block|,
+comment|/* use igain for the mic 20dB boost */
+index|[
+name|SOUND_MIXER_IGAIN
+index|]
+operator|=
+block|{
+operator|-
+name|AC97_MIX_MIC
+block|,
+literal|1
+block|,
+literal|6
+block|,
 literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -2198,12 +2232,16 @@ name|bits
 condition|)
 block|{
 name|int
+name|mask
+decl_stmt|,
 name|max
 decl_stmt|,
 name|val
 decl_stmt|,
 name|reg
-init|=
+decl_stmt|;
+name|reg
+operator|=
 operator|(
 name|e
 operator|->
@@ -2220,7 +2258,32 @@ operator|-
 name|e
 operator|->
 name|reg
-decl_stmt|;
+expr_stmt|;
+comment|/* AC97 register    */
+name|max
+operator|=
+operator|(
+literal|1
+operator|<<
+name|e
+operator|->
+name|bits
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+comment|/* actual range	    */
+name|mask
+operator|=
+operator|(
+name|max
+operator|<<
+literal|8
+operator|)
+operator||
+name|max
+expr_stmt|;
+comment|/* bits of interest */
 if|if
 condition|(
 operator|!
@@ -2232,6 +2295,7 @@ name|right
 operator|=
 name|left
 expr_stmt|;
+comment|/* 		 * Invert the range if the polarity requires so, 		 * then scale to 0..max-1 to compute the value to 		 * write into the codec, and scale back to 0..100 		 * for the return value. 		 */
 if|if
 condition|(
 name|e
@@ -2254,18 +2318,6 @@ operator|-
 name|right
 expr_stmt|;
 block|}
-name|max
-operator|=
-operator|(
-literal|1
-operator|<<
-name|e
-operator|->
-name|bits
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 name|left
 operator|=
 operator|(
@@ -2338,12 +2390,12 @@ operator|-
 name|right
 expr_stmt|;
 block|}
+comment|/* 		 * For mono controls, trim val and mask, also taking 		 * care of e->ofs (offset of control field).   		 */
 if|if
 condition|(
-operator|!
 name|e
 operator|->
-name|stereo
+name|ofs
 condition|)
 block|{
 name|val
@@ -2355,6 +2407,54 @@ operator|<<=
 name|e
 operator|->
 name|ofs
+expr_stmt|;
+name|mask
+operator|=
+operator|(
+name|max
+operator|<<
+name|e
+operator|->
+name|ofs
+operator|)
+expr_stmt|;
+block|}
+comment|/* 		 * If we have a mute bit, add it to the mask and 		 * update val and set mute if both channels require a 		 * zero volume. 		 */
+if|if
+condition|(
+name|e
+operator|->
+name|mute
+operator|==
+literal|1
+condition|)
+block|{
+name|mask
+operator||=
+name|AC97_MUTE
+expr_stmt|;
+if|if
+condition|(
+name|left
+operator|==
+literal|0
+operator|&&
+name|right
+operator|==
+literal|0
+condition|)
+name|val
+operator|=
+name|AC97_MUTE
+expr_stmt|;
+block|}
+comment|/* 		 * If the mask bit is set, do not alter the other bits. 		 */
+name|snd_mtxlock
+argument_list|(
+name|codec
+operator|->
+name|lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2381,42 +2481,10 @@ name|cur
 operator|&
 operator|~
 operator|(
-name|max
-operator|<<
-name|e
-operator|->
-name|ofs
+name|mask
 operator|)
 expr_stmt|;
 block|}
-block|}
-if|if
-condition|(
-name|left
-operator|==
-literal|0
-operator|&&
-name|right
-operator|==
-literal|0
-operator|&&
-name|e
-operator|->
-name|mute
-operator|==
-literal|1
-condition|)
-name|val
-operator|=
-name|AC97_MUTE
-expr_stmt|;
-name|snd_mtxlock
-argument_list|(
-name|codec
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 name|ac97_wrcd
 argument_list|(
 name|codec
