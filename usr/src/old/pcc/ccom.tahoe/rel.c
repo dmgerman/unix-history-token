@@ -4,7 +4,7 @@ name|char
 modifier|*
 name|release
 init|=
-literal|"PCC/364r1 tahoe 1.1"
+literal|"PCC/1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
