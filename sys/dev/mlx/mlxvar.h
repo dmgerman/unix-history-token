@@ -263,6 +263,12 @@ modifier|*
 name|mlx_mem
 decl_stmt|;
 comment|/* mailbox interface window */
+name|int
+name|mlx_mem_rid
+decl_stmt|;
+name|int
+name|mlx_mem_type
+decl_stmt|;
 name|bus_space_handle_t
 name|mlx_bhandle
 decl_stmt|;
