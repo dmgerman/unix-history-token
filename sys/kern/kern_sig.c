@@ -4754,6 +4754,7 @@ name|error
 operator|=
 name|msleep
 argument_list|(
+operator|&
 name|ps
 argument_list|,
 operator|&
@@ -5836,6 +5837,7 @@ while|while
 condition|(
 name|msleep
 argument_list|(
+operator|&
 name|p
 operator|->
 name|p_sigacts
@@ -5998,6 +6000,7 @@ while|while
 condition|(
 name|msleep
 argument_list|(
+operator|&
 name|p
 operator|->
 name|p_sigacts
