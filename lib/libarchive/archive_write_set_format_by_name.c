@@ -89,6 +89,12 @@ name|archive_write_set_format_pax
 block|}
 block|,
 block|{
+literal|"posix"
+block|,
+name|archive_write_set_format_pax
+block|}
+block|,
+block|{
 literal|"shar"
 block|,
 name|archive_write_set_format_shar
