@@ -54,13 +54,14 @@ name|P
 argument_list|(
 operator|(
 name|unsigned
+name|long
 name|seed
 operator|,
 name|char
 operator|*
 name|state
 operator|,
-name|int
+name|long
 name|n
 operator|)
 argument_list|)
