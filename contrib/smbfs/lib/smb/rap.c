@@ -697,7 +697,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|NULL
+literal|0
 return|;
 name|bzero
 argument_list|(
