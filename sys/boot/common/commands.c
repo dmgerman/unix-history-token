@@ -2087,7 +2087,7 @@ name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"%s @ %p\n"
+literal|"%s devices:\n"
 argument_list|,
 name|devsw
 index|[
@@ -2095,13 +2095,6 @@ name|i
 index|]
 operator|->
 name|dv_name
-argument_list|,
-name|devsw
-index|[
-name|i
-index|]
-operator|->
-name|dv_print
 argument_list|)
 expr_stmt|;
 if|if
