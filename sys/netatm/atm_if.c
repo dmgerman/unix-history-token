@@ -1586,7 +1586,7 @@ name|ifp
 operator|->
 name|if_type
 operator|=
-name|IFT_ATM
+name|IFT_IPOVERATM
 expr_stmt|;
 switch|switch
 condition|(
