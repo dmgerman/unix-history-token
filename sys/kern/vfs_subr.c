@@ -3873,14 +3873,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|mp_fixme("This code does not lock access to numvnodes&& freevnodes."); 	vnodeallocs++; 	if (vnodeallocs % vnoderecycleperiod == 0&& 	    freevnodes< vnoderecycleminfreevn&& 	    vnoderecyclemintotalvn< numvnodes) {
-comment|/* Recycle vnodes. */
-block|cache_purgeleafdirs(vnoderecyclenumber); 	}
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -9174,9 +9166,15 @@ operator|&
 name|mntvnode_mtx
 argument_list|)
 expr_stmt|;
-name|VI_LOCK
+name|vn_lock
 argument_list|(
 name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Skip over a vnodes marked VV_SYSTEM. 		 */
@@ -9197,9 +9195,13 @@ name|VV_SYSTEM
 operator|)
 condition|)
 block|{
-name|VI_UNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -9211,9 +9213,25 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * If WRITECLOSE is set, flush out unlinked but still open 		 * files (even if open only for reading) and regular file 		 * vnodes open for writing. 		 */
-name|mp_fixme
+name|error
+operator|=
+name|VOP_GETATTR
 argument_list|(
-literal|"Getattr called with interlock held!"
+name|vp
+argument_list|,
+operator|&
+name|vattr
+argument_list|,
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|VI_LOCK
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -9232,19 +9250,7 @@ operator|==
 name|VNON
 operator|||
 operator|(
-name|VOP_GETATTR
-argument_list|(
-name|vp
-argument_list|,
-operator|&
-name|vattr
-argument_list|,
-name|td
-operator|->
-name|td_ucred
-argument_list|,
-name|td
-argument_list|)
+name|error
 operator|==
 literal|0
 operator|&&
@@ -9271,12 +9277,13 @@ name|VREG
 operator|)
 condition|)
 block|{
-name|mtx_unlock
+name|VOP_UNLOCK
 argument_list|(
-operator|&
 name|vp
-operator|->
-name|v_interlock
+argument_list|,
+name|LK_INTERLOCK
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -9287,6 +9294,15 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* 		 * With v_usecount == 0, all we need to do is clear out the 		 * vnode data structures and we are done. 		 */
 if|if
 condition|(
