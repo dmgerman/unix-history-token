@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_extern.h	7.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_extern.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -608,20 +608,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|ufs_ilock
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|inode
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|ufs_inactive
 name|__P
@@ -662,20 +648,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|ufs_iput
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|inode
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|ufs_islocked
 name|__P
@@ -683,20 +655,6 @@ argument_list|(
 operator|(
 expr|struct
 name|vop_islocked_args
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ufs_iunlock
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|inode
 operator|*
 operator|)
 argument_list|)
