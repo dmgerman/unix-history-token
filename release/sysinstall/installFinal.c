@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installFinal.c,v 1.12 1995/10/26 08:55:47 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard& Coranth Gryphon.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the authors listed above  *	for the FreeBSD Project.  * 4. The names of the authors or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE FREEBSD PROJECT ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR THEIR PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installFinal.c,v 1.13 1995/10/27 03:59:36 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard& Coranth Gryphon.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the authors listed above  *	for the FreeBSD Project.  * 4. The names of the authors or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE FREEBSD PROJECT ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR THEIR PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -62,6 +62,10 @@ include|#
 directive|include
 file|<sys/mount.h>
 end_include
+
+begin_comment
+comment|/* This file contains all the final configuration thingies */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -178,22 +182,47 @@ value|"./smb.conf"
 end_define
 
 begin_comment
-comment|/* Do any final network configuration hackery */
+comment|/* Load gated package and maybe even seek to configure or explain it a little */
 end_comment
 
 begin_function
 name|int
-name|installNetworking
+name|configGated
 parameter_list|(
 name|char
 modifier|*
 name|unused
 parameter_list|)
 block|{
+name|variable_set2
+argument_list|(
+literal|"gated"
+argument_list|,
+literal|"YES"
+argument_list|)
+expr_stmt|;
+return|return
+name|RET_SUCCESS
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Configure this machine as an anonymous FTP server */
+end_comment
+
+begin_function
 name|int
-name|i
-decl_stmt|,
-name|tval
+name|configAnonFTP
+parameter_list|(
+name|char
+modifier|*
+name|unused
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|tptr
 decl_stmt|;
 name|char
 name|tbuf
@@ -201,45 +230,18 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|tptr
-decl_stmt|;
-name|FILE
-modifier|*
-name|fptr
-decl_stmt|;
+name|int
 name|i
-operator|=
+init|=
 name|RET_SUCCESS
-expr_stmt|;
-comment|/* Do we want to install and set up gated? */
-if|if
-condition|(
-name|variable_get
-argument_list|(
-literal|"gated"
-argument_list|)
-condition|)
-block|{
-comment|/* Load gated package and maybe even seek to configure or explain it a little */
-block|}
-comment|/* Set up anonymous FTP access to this machine? */
-if|if
-condition|(
-name|variable_get
-argument_list|(
-literal|"anon_ftp"
-argument_list|)
-condition|)
-block|{
+decl_stmt|;
 name|tptr
 operator|=
 name|msgGetInput
 argument_list|(
 literal|"/u"
 argument_list|,
-literal|"What directory should the anonymous ftp's home be under?"
+literal|"What directory should the anonymous ftp account point to?"
 argument_list|)
 expr_stmt|;
 if|if
@@ -329,29 +331,74 @@ else|else
 block|{
 name|vsystem
 argument_list|(
-literal|"mkdir %s/%s/pub"
+literal|"mkdir -p %s; chmod 555 %s; chown root %s"
 argument_list|,
 name|tbuf
 argument_list|,
-name|FTP_NAME
+name|tbuf
+argument_list|,
+name|tbuf
 argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"mkdir %s/%s/upload"
+literal|"mkdir %s/bin&& chmod 555 %s/bin"
 argument_list|,
 name|tbuf
 argument_list|,
-name|FTP_NAME
+name|tbuf
 argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"chmod 0777 %s/%s/upload"
+literal|"cp /bin/ls %s/bin&& chmod 111 %s/bin/ls"
 argument_list|,
 name|tbuf
 argument_list|,
+name|tbuf
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"mkdir %s/etc&& chmod 555 %s/etc"
+argument_list|,
+name|tbuf
+argument_list|,
+name|tbuf
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"cp /etc/pwd.db /etc/group %s/etc&& chmod 444 %s/etc/pwd.db %s/etc/group"
+argument_list|,
+name|tbuf
+argument_list|,
+name|tbuf
+argument_list|,
+name|tbuf
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"mkdir -p %s/pub/incoming"
+argument_list|,
+name|tbuf
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"chmod 1777 %s/pub/incoming"
+argument_list|,
+name|tbuf
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"chown -R %s %s/pub"
+argument_list|,
 name|FTP_NAME
+argument_list|,
+name|tbuf
 argument_list|)
 expr_stmt|;
 block|}
@@ -366,34 +413,31 @@ argument_list|(
 literal|"Invalid Directory. Anonymous FTP will not be set up."
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-comment|/* Set this machine up as a web server? */
-if|if
-condition|(
-name|variable_get
-argument_list|(
-literal|"apache_httpd"
-argument_list|)
-condition|)
-block|{
 name|i
 operator|=
-name|installApache
-argument_list|(
-name|NULL
-argument_list|)
+name|RET_FAIL
 expr_stmt|;
 block|}
-comment|/* Set this machine up as a Samba server? */
-if|if
-condition|(
-name|variable_get
-argument_list|(
-literal|"samba"
-argument_list|)
-condition|)
+return|return
+name|i
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|configSamba
+parameter_list|(
+name|char
+modifier|*
+name|unused
+parameter_list|)
 block|{
+name|int
+name|i
+init|=
+name|RET_SUCCESS
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -409,6 +453,22 @@ name|RET_FAIL
 expr_stmt|;
 else|else
 block|{
+name|FILE
+modifier|*
+name|fptr
+decl_stmt|;
+name|char
+name|tbuf
+index|[
+literal|256
+index|]
+decl_stmt|,
+modifier|*
+name|tptr
+decl_stmt|;
+name|int
+name|tval
+decl_stmt|;
 name|fptr
 operator|=
 name|fopen
@@ -887,31 +947,30 @@ argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Unable to open temporary smb.conf file.\nSamba must be configured by hand."
+literal|"Unable to open temporary smb.conf file.\n"
+literal|"Samba will have to be configured by hand."
 argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return
+name|i
+return|;
 block|}
-comment|/* Set this machine up with a PC-NFS authentication server? */
-if|if
-condition|(
-name|variable_get
-argument_list|(
-literal|"pcnfsd"
-argument_list|)
-condition|)
+end_function
+
+begin_function
+name|int
+name|configNFSServer
+parameter_list|(
+name|char
+modifier|*
+name|unused
+parameter_list|)
 block|{
-comment|/* Load and configure pcnfsd */
-block|}
 comment|/* If we're an NFS server, we need an exports file */
 if|if
 condition|(
-name|variable_get
-argument_list|(
-literal|"nfs_server"
-argument_list|)
-operator|&&
 operator|!
 name|file_readable
 argument_list|(
@@ -932,12 +991,32 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"echo '#The following example exports /usr to 3 machines named after ducks:'> /etc/exports"
+literal|"echo '#The following examples export /usr to 3 machines named after ducks,'> /etc/exports"
 argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"echo '#/usr	huey louie dewie'>> /etc/exports"
+literal|"echo '#/home and all directories under it to machines named after dead rock stars,'>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"echo '#and, finally, /a to 2 privileged machines allowed to write on it as root.'>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"echo '#/usr                huey louie dewie'>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"echo '#/home   -alldirs    janice jimmy frank'>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"echo '#/a      -maproot=0  bill albert'>> /etc/exports"
 argument_list|)
 expr_stmt|;
 name|vsystem
@@ -961,14 +1040,15 @@ literal|"ee /etc/exports"
 argument_list|)
 expr_stmt|;
 block|}
-name|configResolv
-argument_list|()
-expr_stmt|;
-name|configSysconfig
-argument_list|()
+name|variable_set2
+argument_list|(
+literal|"nfs_server"
+argument_list|,
+literal|"YES"
+argument_list|)
 expr_stmt|;
 return|return
-name|i
+name|RET_SUCCESS
 return|;
 block|}
 end_function
