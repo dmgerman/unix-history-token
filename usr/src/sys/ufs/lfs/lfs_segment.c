@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1049,6 +1049,14 @@ decl_stmt|;
 comment|/* Do a checkpoint. */
 block|{
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|buf
 modifier|*
 name|bp
@@ -1333,10 +1341,12 @@ name|vget
 argument_list|(
 name|vp
 argument_list|,
-literal|1
+name|LK_EXCLUSIVE
+argument_list|,
+name|p
 argument_list|)
 condition|)
-empty_stmt|;
+continue|continue;
 name|ip
 operator|=
 name|VTOI
@@ -5691,6 +5701,14 @@ end_expr_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|vp
@@ -5699,6 +5717,7 @@ name|v_flag
 operator|&
 name|VXLOCK
 condition|)
+comment|/* XXX */
 return|return
 operator|(
 literal|1
@@ -5711,6 +5730,8 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;

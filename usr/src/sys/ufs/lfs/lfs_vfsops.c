@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -590,11 +590,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|ump
 operator|->
 name|um_devvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -624,6 +630,10 @@ argument_list|(
 name|ump
 operator|->
 name|um_devvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -637,6 +647,10 @@ argument_list|(
 name|ump
 operator|->
 name|um_devvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -790,9 +804,15 @@ name|accessmode
 operator||=
 name|VWRITE
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|devvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -827,6 +847,10 @@ block|}
 name|VOP_UNLOCK
 argument_list|(
 name|devvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
