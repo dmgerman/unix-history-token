@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: kgdb_stub.c,v 1.9 91/03/08 07:03:13 van Locked $"
+literal|"$Header: kgdb_stub.c,v 1.13 91/03/23 13:55:57 mccanne Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,31 +49,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"machine/trap.h"
+file|"../include/trap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/psl.h"
+file|"../include/psl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/reg.h"
+file|"../include/reg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"frame.h"
+file|"../include/frame.h"
 end_include
 
 begin_include
@@ -529,7 +529,7 @@ condition|(
 operator|++
 name|len
 operator|>
-name|SL_MAXMSG
+name|SL_BUFSIZE
 condition|)
 block|{
 while|while
@@ -718,7 +718,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Trap into kgdb to Wait for debugger to connect,   * noting on the console why nothing else is going on.  */
+comment|/*  * Trap into kgdb to wait for debugger to connect,   * noting on the console why nothing else is going on.  */
 end_comment
 
 begin_macro
@@ -916,9 +916,7 @@ specifier|static
 name|u_char
 name|inbuffer
 index|[
-name|SL_MAXMSG
-operator|+
-literal|1
+name|SL_BUFSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -928,7 +926,7 @@ specifier|static
 name|u_char
 name|outbuffer
 index|[
-name|SL_MAXMSG
+name|SL_BUFSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1090,10 +1088,18 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 		 * If the packet that woke us up isn't a signal packet, 		 * ignore it since there is no active debugger.  Also, 		 * we check that it's not an ack to be sure that the  		 * remote side doesn't send back a response after the 		 * local gdb has exited.  Otherwise, the local host 		 * could trap into gdb if it's running a gdb kernel too. 		 */
-ifdef|#
-directive|ifdef
-name|notdef
+comment|/* 		 * If the packet that woke us up isn't an exec packet, 		 * ignore it since there is no active debugger.  Also, 		 * we check that it's not an ack to be sure that the  		 * remote side doesn't send back a response after the 		 * local gdb has exited.  Otherwise, the local host 		 * could trap into gdb if it's running a gdb kernel too. 		 */
+name|in
+operator|=
+name|GETC
+expr_stmt|;
+comment|/* 		 * If we came in asynchronously through the serial line, 		 * the framing character is eaten by the receive interrupt, 		 * but if we come in through a synchronous trap (i.e., via 		 * kgdb_connect()), we will see the extra character. 		 */
+if|if
+condition|(
+name|in
+operator|==
+name|FRAME_END
+condition|)
 name|in
 operator|=
 name|GETC
@@ -1105,7 +1111,7 @@ argument_list|(
 name|in
 argument_list|)
 operator|!=
-name|KGDB_SIGNAL
+name|KGDB_EXEC
 operator|||
 operator|(
 name|in
@@ -1120,8 +1126,6 @@ operator|(
 literal|0
 operator|)
 return|;
-endif|#
-directive|endif
 while|while
 condition|(
 name|GETC
@@ -1129,6 +1133,29 @@ operator|!=
 name|FRAME_END
 condition|)
 empty_stmt|;
+comment|/* 		 * Do the printf *before* we ack the message.  This way 		 * we won't drop any inbound characters while we're  		 * doing the polling printf. 		 */
+name|printf
+argument_list|(
+literal|"kgdb started from device %x\n"
+argument_list|,
+name|kgdb_dev
+argument_list|)
+expr_stmt|;
+name|kgdb_send
+argument_list|(
+name|in
+operator||
+name|KGDB_ACK
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|kgdb_active
 operator|=
 literal|1
@@ -1142,6 +1169,14 @@ argument_list|,
 name|gdb_regs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|!=
+name|T_TRAP15
+condition|)
+block|{
+comment|/* 		 * Only send an asynchronous SIGNAL message when we hit 		 * a breakpoint.  Otherwise, we will drop the incoming 		 * packet while we output this one (and on entry the other  		 * side isn't interested in the SIGNAL type -- if it is, 		 * it will have used a signal packet.) 		 */
 name|outbuffer
 index|[
 literal|0
@@ -1161,6 +1196,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 while|while
 condition|(
 literal|1
@@ -1637,6 +1673,11 @@ name|kgdb_active
 operator|=
 literal|0
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"kgdb detached\n"
+argument_list|)
+expr_stmt|;
 comment|/* fall through */
 case|case
 name|KGDB_CONT
@@ -1685,6 +1726,9 @@ operator|(
 literal|1
 operator|)
 return|;
+case|case
+name|KGDB_EXEC
+case|:
 default|default:
 comment|/* Unknown command.  Ack with a null message. */
 name|outlen
