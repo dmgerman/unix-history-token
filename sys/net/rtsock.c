@@ -5353,6 +5353,17 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|af
+operator|>
+name|AF_MAX
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|Bzero
 argument_list|(
 operator|&
