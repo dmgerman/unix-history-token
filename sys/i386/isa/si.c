@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.7 1995/09/13 08:45:28 peter Exp $  */
+comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.8 1995/09/22 18:28:21 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -591,8 +591,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|si_Nports
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -600,8 +598,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|si_Nmodules
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -611,6 +607,19 @@ name|int
 name|si_debug
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* data, not bss, so it's patchable */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|tty
+modifier|*
+name|si_tty
 decl_stmt|;
 end_decl_stmt
 
@@ -3020,6 +3029,10 @@ operator|*
 name|nport
 argument_list|)
 expr_stmt|;
+name|si_tty
+operator|=
+name|tp
+expr_stmt|;
 comment|/* mark the device state as attached */
 name|si_kdc
 index|[
@@ -3247,7 +3260,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"si%d: %s, ports: %d, modules: %d\n"
+literal|"si%d: card: %s, ports: %d, modules: %d\n"
 argument_list|,
 name|unit
 argument_list|,
