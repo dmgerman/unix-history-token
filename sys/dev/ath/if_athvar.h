@@ -248,11 +248,6 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* disable hardware accesses */
-name|sc_have11g
-range|:
-literal|1
-decl_stmt|,
-comment|/* have 11g support */
 name|sc_doani
 range|:
 literal|1
