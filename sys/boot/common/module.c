@@ -343,9 +343,11 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|argc
 operator|!=
 literal|2
+operator|)
 operator|||
 operator|(
 name|typestr
