@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cut.c	8.1 (Berkeley) %G%"
+literal|"@(#)cut.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -926,10 +926,6 @@ control|(
 name|sep
 operator|=
 name|dchar
-operator|,
-name|output
-operator|=
-literal|0
 init|;
 name|fgets
 argument_list|(
@@ -945,6 +941,10 @@ argument_list|)
 condition|;
 control|)
 block|{
+name|output
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|isdelim
