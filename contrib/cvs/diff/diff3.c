@@ -5899,6 +5899,11 @@ argument_list|(
 name|diffout
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|diffout
+argument_list|)
+expr_stmt|;
 return|return
 name|diff_result
 operator|+

@@ -117,6 +117,31 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|WCOREDUMP
+end_ifndef
+
+begin_comment
+comment|/* not POSIX, but common and useful */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WCOREDUMP
+parameter_list|(
+name|w
+parameter_list|)
+value|(((w)& 0x80) != 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|WSTOPSIG
 end_ifndef
 

@@ -282,7 +282,7 @@ literal|0
 argument_list|,
 literal|"-q or -Q must be specified before \"%s\""
 argument_list|,
-name|command_name
+name|cvs_cmd_name
 argument_list|)
 expr_stmt|;
 break|break;
@@ -314,7 +314,7 @@ operator|+=
 name|optind
 expr_stmt|;
 comment|/* We're going to run "cvs -n -q update" and check its output; if      * the output is sufficiently unalarming, then we release with no      * questions asked.  Else we prompt, then maybe release.      * (Well, actually we ask no matter what.  Our notion of "sufficiently      * unalarming" doesn't take into account "? foo.c" files, so it is      * up to the user to take note of them, at least currently      * (ignore-193 in testsuite)).      */
-comment|/* Construct the update command. */
+comment|/* Construct the update command.  Be sure to add authentication and        encryption if we are using them currently, else our child process may        not be able to communicate with the server.  */
 name|update_cmd
 operator|=
 name|xmalloc
@@ -331,16 +331,36 @@ operator|->
 name|original
 argument_list|)
 operator|+
-literal|20
+literal|1
+operator|+
+literal|3
+operator|+
+literal|3
+operator|+
+literal|16
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|sprintf
 argument_list|(
 name|update_cmd
 argument_list|,
-literal|"%s -n -q -d %s update"
+literal|"%s %s%s-n -q -d %s update"
 argument_list|,
 name|program_path
+argument_list|,
+name|cvsauthenticate
+condition|?
+literal|"-a "
+else|:
+literal|""
+argument_list|,
+name|cvsencrypt
+condition|?
+literal|"-x "
+else|:
+literal|""
 argument_list|,
 name|current_parsed_root
 operator|->
@@ -709,7 +729,7 @@ name|stderr
 argument_list|,
 literal|"** `%s' aborted by user choice.\n"
 argument_list|,
-name|command_name
+name|cvs_cmd_name
 argument_list|)
 expr_stmt|;
 name|free
@@ -733,6 +753,27 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+comment|/* Note:  client.c doesn't like to have other code            changing the current directory on it.  So a fair amount            of effort is needed to make sure it doesn't get confused            about the directory and (for example) overwrite            CVS/Entries file in the wrong directory.  See release-17            through release-23. */
+name|free
+argument_list|(
+name|repository
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|restore_cwd
+argument_list|(
+operator|&
+name|cwd
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 literal|1
@@ -764,11 +805,10 @@ endif|#
 directive|endif
 condition|)
 block|{
-comment|/* We are chdir'ed into the directory in question.   	       So don't pass args to unedit.  */
 name|int
 name|argc
 init|=
-literal|1
+literal|2
 decl_stmt|;
 name|char
 modifier|*
@@ -789,6 +829,13 @@ index|[
 literal|1
 index|]
 operator|=
+name|thisarg
+expr_stmt|;
+name|argv
+index|[
+literal|2
+index|]
+operator|=
 name|NULL
 expr_stmt|;
 name|err
@@ -798,6 +845,21 @@ argument_list|(
 name|argc
 argument_list|,
 name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|restore_cwd
+argument_list|(
+operator|&
+name|cwd
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
@@ -860,24 +922,6 @@ argument_list|)
 expr_stmt|;
 comment|/* F == Free */
 block|}
-name|free
-argument_list|(
-name|repository
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|restore_cwd
-argument_list|(
-operator|&
-name|cwd
-argument_list|,
-name|NULL
-argument_list|)
-condition|)
-name|error_exit
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|delete_flag
@@ -914,11 +958,29 @@ name|current_parsed_root
 operator|->
 name|isremote
 condition|)
+block|{
+comment|/* FIXME: 	     * Is there a good reason why get_server_responses() isn't 	     * responsible for restoring its initial directory itself when 	     * finished? 	     */
 name|err
 operator|+=
 name|get_server_responses
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|restore_cwd
+argument_list|(
+operator|&
+name|cwd
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* CLIENT_SUPPORT */

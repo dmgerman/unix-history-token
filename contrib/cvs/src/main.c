@@ -46,6 +46,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|program_name
@@ -53,6 +54,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|program_path
@@ -60,9 +62,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
-name|command_name
+name|cvs_cmd_name
 decl_stmt|;
 end_decl_stmt
 
@@ -930,8 +933,6 @@ literal|"    -r           Make checked-out files read-only.\n"
 block|,
 literal|"    -w           Make checked-out files read-write (default).\n"
 block|,
-literal|"    -l           Turn history logging off.\n"
-block|,
 literal|"    -n           Do not execute anything that will change the disk.\n"
 block|,
 literal|"    -t           Show trace of program execution -- try with -n.\n"
@@ -1533,7 +1534,7 @@ name|char
 name|short_options
 index|[]
 init|=
-literal|"+Qqrwtnlvb:T:e:d:Hfz:s:xa"
+literal|"+Qqrwtnvb:T:e:d:Hfz:s:xa"
 decl_stmt|;
 specifier|static
 name|struct
@@ -1985,10 +1986,6 @@ name|noexec
 operator|=
 literal|1
 expr_stmt|;
-case|case
-literal|'l'
-case|:
-comment|/* Fall through */
 name|logoff
 operator|=
 literal|1
@@ -2034,7 +2031,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"\ Copyright (c) 1989-2002 Brian Berliner, david d `zoo' zuhn, \n\                         Jeff Polk, and other authors\n"
+literal|"\ Copyright (c) 1989-2004 Brian Berliner, david d `zoo' zuhn, \n\                         Jeff Polk, and other authors\n"
 argument_list|,
 name|stdout
 argument_list|)
@@ -2207,13 +2204,23 @@ directive|ifdef
 name|CLIENT_SUPPORT
 name|gzip_level
 operator|=
-name|atoi
+name|strtol
 argument_list|(
 name|optarg
+argument_list|,
+operator|&
+name|end
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|end
+operator|!=
+literal|'\0'
+operator|||
 name|gzip_level
 operator|<
 literal|0
@@ -2233,7 +2240,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* If no CLIENT_SUPPORT, we just silently ignore the gzip 		   level, so that users can have it in their .cvsrc and not 		   cause any trouble.  */
+comment|/* CLIENT_SUPPORT */
+comment|/* If no CLIENT_SUPPORT, we just silently ignore the gzip 		 * level, so that users can have it in their .cvsrc and not 		 * cause any trouble. 		 * 		 * We still parse the argument to -z for correctness since 		 * one user complained of being bitten by a run of 		 * `cvs -z -n up' which read -n as the argument to -z without 		 * complaining.  */
 break|break;
 case|case
 literal|'s'
@@ -2304,7 +2312,7 @@ name|usg
 argument_list|)
 expr_stmt|;
 comment|/* Look up the command name. */
-name|command_name
+name|cvs_cmd_name
 operator|=
 name|argv
 index|[
@@ -2334,7 +2342,7 @@ operator|&&
 operator|!
 name|strcmp
 argument_list|(
-name|command_name
+name|cvs_cmd_name
 argument_list|,
 name|cm
 operator|->
@@ -2351,7 +2359,7 @@ operator|&&
 operator|!
 name|strcmp
 argument_list|(
-name|command_name
+name|cvs_cmd_name
 argument_list|,
 name|cm
 operator|->
@@ -2364,7 +2372,7 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|command_name
+name|cvs_cmd_name
 argument_list|,
 name|cm
 operator|->
@@ -2387,7 +2395,7 @@ name|stderr
 argument_list|,
 literal|"Unknown command: `%s'\n\n"
 argument_list|,
-name|command_name
+name|cvs_cmd_name
 argument_list|)
 expr_stmt|;
 name|usage
@@ -2397,7 +2405,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|command_name
+name|cvs_cmd_name
 operator|=
 name|cm
 operator|->
@@ -2497,7 +2505,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|command_name
+name|cvs_cmd_name
 argument_list|,
 literal|"kserver"
 argument_list|)
@@ -2509,7 +2517,7 @@ name|kserver_authenticate_connection
 argument_list|()
 expr_stmt|;
 comment|/* Pretend we were invoked as a plain server.  */
-name|command_name
+name|cvs_cmd_name
 operator|=
 literal|"server"
 expr_stmt|;
@@ -2532,7 +2540,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|command_name
+name|cvs_cmd_name
 argument_list|,
 literal|"pserver"
 argument_list|)
@@ -2546,7 +2554,7 @@ name|pserver_authenticate_connection
 argument_list|()
 expr_stmt|;
 comment|/* Pretend we were invoked as a plain server.  */
-name|command_name
+name|cvs_cmd_name
 operator|=
 literal|"server"
 expr_stmt|;
@@ -2558,7 +2566,7 @@ name|server_active
 operator|=
 name|strcmp
 argument_list|(
-name|command_name
+name|cvs_cmd_name
 argument_list|,
 literal|"server"
 argument_list|)
@@ -2844,7 +2852,7 @@ argument_list|,
 operator|&
 name|argv
 argument_list|,
-name|command_name
+name|cvs_cmd_name
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3251,7 +3259,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|command_name
+name|cvs_cmd_name
 argument_list|,
 literal|"init"
 argument_list|)
@@ -3515,8 +3523,13 @@ comment|/* end of stuff that gets done if the user DOESN'T ask for help */
 name|Lock_Cleanup
 argument_list|()
 expr_stmt|;
+comment|/* It's okay to cast out the const below since we know we allocated this in      * this function.  The const was to keep other functions from messing with      * this.      */
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|program_path
 argument_list|)
 expr_stmt|;
@@ -4041,7 +4054,7 @@ operator|++
 argument_list|,
 name|program_name
 argument_list|,
-name|command_name
+name|cvs_cmd_name
 argument_list|)
 expr_stmt|;
 for|for

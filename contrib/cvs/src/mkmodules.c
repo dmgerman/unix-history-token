@@ -12,13 +12,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"savecwd.h"
+file|"getline.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"getline.h"
+file|"history.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"savecwd.h"
 end_include
 
 begin_ifndef
@@ -522,7 +528,7 @@ literal|"# File format:\n"
 block|,
 literal|"#\n"
 block|,
-literal|"#	[<whitespace>]<filename><whitespace><error message><end-of-line>\n"
+literal|"#	[<whitespace>]<filename>[<whitespace><error message>]<end-of-line>\n"
 block|,
 literal|"#\n"
 block|,
@@ -744,11 +750,15 @@ literal|"#TopLevelAdmin=no\n"
 block|,
 literal|"\n"
 block|,
-literal|"# Set `LogHistory' to `all' or `TOFEWGCMAR' to log all transactions to the\n"
+literal|"# Set `LogHistory' to `all' or `"
+name|ALL_HISTORY_REC_TYPES
+literal|"' to log all transactions to the\n"
 block|,
 literal|"# history file, or a subset as needed (ie `TMAR' logs all write operations)\n"
 block|,
-literal|"#LogHistory=TOFEWGCMAR\n"
+literal|"#LogHistory="
+name|ALL_HISTORY_REC_TYPES
+literal|"\n"
 block|,
 literal|"\n"
 block|,
@@ -1230,7 +1240,7 @@ condition|(
 name|fp
 condition|)
 block|{
-comment|/* 	 * File format: 	 *  [<whitespace>]<filename><whitespace><error message><end-of-line> 	 * 	 * comment lines begin with '#' 	 */
+comment|/* 	 * File format: 	 *  [<whitespace>]<filename>[<whitespace><error message>]<end-of-line> 	 * 	 * comment lines begin with '#' 	 */
 while|while
 condition|(
 name|getline
@@ -1360,6 +1370,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Skip leading white space before the error message.  */
 for|for
 control|(
 name|cp
@@ -1370,7 +1381,7 @@ operator|<
 name|last
 operator|&&
 operator|*
-name|last
+name|cp
 operator|&&
 name|isspace
 argument_list|(
@@ -1379,7 +1390,7 @@ name|unsigned
 name|char
 operator|)
 operator|*
-name|last
+name|cp
 argument_list|)
 condition|;
 name|cp
@@ -1401,9 +1412,9 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|cp
+literal|"%s"
 argument_list|,
-name|fname
+name|cp
 argument_list|)
 expr_stmt|;
 block|}
@@ -3319,6 +3330,8 @@ decl_stmt|;
 comment|/* Exit status.  */
 name|int
 name|err
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|struct
@@ -3849,7 +3862,7 @@ name|adm
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|err
 return|;
 block|}
 end_function

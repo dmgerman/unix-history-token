@@ -34,6 +34,7 @@ name|fileattr_startdir
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|repos

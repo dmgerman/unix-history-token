@@ -1199,6 +1199,8 @@ directive|ifdef
 name|PR_PROGRAM
 name|int
 name|wstatus
+decl_stmt|,
+name|w
 decl_stmt|;
 if|if
 condition|(
@@ -1240,8 +1242,11 @@ argument_list|(
 literal|"write error"
 argument_list|)
 expr_stmt|;
-if|if
+while|while
 condition|(
+operator|(
+name|w
+operator|=
 name|waitpid
 argument_list|(
 name|pr_pid
@@ -1251,6 +1256,18 @@ name|wstatus
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|==
+name|EINTR
+condition|)
+empty_stmt|;
+if|if
+condition|(
+name|w
 operator|<
 literal|0
 condition|)

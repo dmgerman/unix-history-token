@@ -27,6 +27,12 @@ directive|include
 file|"edit.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -209,6 +215,11 @@ decl_stmt|;
 name|int
 name|dosrcs
 decl_stmt|;
+name|char
+modifier|*
+name|repository
+decl_stmt|;
+comment|/* Keep track of repository for rtag */
 block|}
 struct|;
 end_struct
@@ -305,6 +316,8 @@ parameter_list|,
 name|update_preload
 parameter_list|,
 name|dosrcs
+parameter_list|,
+name|repository_in
 parameter_list|)
 name|FILEPROC
 name|fileproc
@@ -349,6 +362,11 @@ name|update_preload
 decl_stmt|;
 name|int
 name|dosrcs
+decl_stmt|;
+comment|/* Keep track of the repository string.  This is only for the remote mode,      * specifically, r* commands (rtag, rdiff, co, ...) where xgetwd() was      * used to locate the repository.  Things would break when xgetwd() was      * used with a symlinked repository because xgetwd() would return the true      * path and in some cases this would cause the path to be printed as other      * than the user specified in error messages and in other cases some of      * CVS's security assertions would fail.      */
+name|char
+modifier|*
+name|repository_in
 decl_stmt|;
 block|{
 name|int
@@ -442,6 +460,12 @@ operator|.
 name|dosrcs
 operator|=
 name|dosrcs
+expr_stmt|;
+name|frame
+operator|.
+name|repository
+operator|=
+name|repository_in
 expr_stmt|;
 name|expand_wild
 argument_list|(
@@ -839,8 +863,13 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* Its okay to discard the const below - we know we just allocated 	     * dir ourselves. 	     */
 name|comp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|last_component
 argument_list|(
 name|dir
@@ -1479,6 +1508,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|srepository
+init|=
+name|NULL
 decl_stmt|;
 name|List
 modifier|*
@@ -1678,6 +1709,7 @@ argument_list|(
 name|CVSADM
 argument_list|)
 condition|)
+block|{
 name|repository
 operator|=
 name|Name_Repository
@@ -1691,6 +1723,12 @@ argument_list|,
 name|update_dir
 argument_list|)
 expr_stmt|;
+name|srepository
+operator|=
+name|repository
+expr_stmt|;
+comment|/* remember what to free */
+block|}
 else|else
 name|repository
 operator|=
@@ -1701,30 +1739,30 @@ else|else
 block|{
 name|repository
 operator|=
-name|xgetwd
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
+name|frame
+operator|->
 name|repository
+expr_stmt|;
+name|assert
+argument_list|(
+name|repository
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|strstr
+argument_list|(
+name|repository
+argument_list|,
+literal|"/./"
+argument_list|)
 operator|==
 name|NULL
-condition|)
-name|error
-argument_list|(
-literal|1
-argument_list|,
-name|errno
-argument_list|,
-literal|"could not get working directory"
 argument_list|)
 expr_stmt|;
 block|}
-name|srepository
-operator|=
-name|repository
-expr_stmt|;
-comment|/* remember what to free */
 name|fileattr_startdir
 argument_list|(
 name|repository
@@ -1809,8 +1847,7 @@ name|repository
 operator|==
 name|NULL
 condition|)
-name|repository
-operator|=
+block|{
 name|Name_Repository
 argument_list|(
 operator|(
@@ -1822,6 +1859,13 @@ argument_list|,
 name|update_dir
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+operator|!
+literal|"Not reached.  Please report this problem to<bug-cvs@gnu.org>"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* find the files and fill in entries if appropriate */
 if|if
 condition|(
@@ -2069,6 +2113,10 @@ expr_stmt|;
 comment|/* unlock it */
 if|if
 condition|(
+comment|/* We only lock the repository above when repository is set */
+name|repository
+comment|/* and when asked for a read or write lock. */
+operator|&&
 name|locktype
 operator|!=
 name|CVS_LOCK_NONE
@@ -2210,6 +2258,7 @@ argument_list|(
 name|srepository
 argument_list|)
 expr_stmt|;
+block|}
 name|repository
 operator|=
 operator|(
@@ -2218,11 +2267,8 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
-block|}
 return|return
-operator|(
 name|err
-operator|)
 return|;
 block|}
 end_function
@@ -2273,6 +2319,10 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|char
+modifier|*
+name|tmp
+decl_stmt|;
 name|finfo
 operator|->
 name|file
@@ -2281,9 +2331,7 @@ name|p
 operator|->
 name|key
 expr_stmt|;
-name|finfo
-operator|->
-name|fullname
+name|tmp
 operator|=
 name|xmalloc
 argument_list|(
@@ -2304,9 +2352,7 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-name|finfo
-operator|->
-name|fullname
+name|tmp
 index|[
 literal|0
 index|]
@@ -2327,9 +2373,7 @@ condition|)
 block|{
 name|strcat
 argument_list|(
-name|finfo
-operator|->
-name|fullname
+name|tmp
 argument_list|,
 name|finfo
 operator|->
@@ -2338,9 +2382,7 @@ argument_list|)
 expr_stmt|;
 name|strcat
 argument_list|(
-name|finfo
-operator|->
-name|fullname
+name|tmp
 argument_list|,
 literal|"/"
 argument_list|)
@@ -2348,9 +2390,7 @@ expr_stmt|;
 block|}
 name|strcat
 argument_list|(
-name|finfo
-operator|->
-name|fullname
+name|tmp
 argument_list|,
 name|finfo
 operator|->
@@ -2410,16 +2450,12 @@ literal|0
 argument_list|,
 literal|"could not read RCS file for %s"
 argument_list|,
-name|finfo
-operator|->
-name|fullname
+name|tmp
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|finfo
-operator|->
-name|fullname
+name|tmp
 argument_list|)
 expr_stmt|;
 name|cvs_flushout
@@ -2440,6 +2476,12 @@ name|RCSNode
 operator|*
 operator|)
 name|NULL
+expr_stmt|;
+name|finfo
+operator|->
+name|fullname
+operator|=
+name|tmp
 expr_stmt|;
 name|ret
 operator|=
@@ -2468,9 +2510,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|finfo
-operator|->
-name|fullname
+name|tmp
 argument_list|)
 expr_stmt|;
 comment|/* Allow the user to monitor progress with tail -f.  Doing this once        per file should be no big deal, but we don't want the performance        hit of flushing on every line like previous versions of CVS.  */
@@ -2478,9 +2518,7 @@ name|cvs_flushout
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 block|}
 end_function
@@ -3285,6 +3323,75 @@ name|flags
 operator|=
 name|dir_return
 expr_stmt|;
+comment|/* Keep track of repository, really just for r* commands (rtag, rdiff, 	 * co, ...) to tag_check_valid, since all the other commands use 	 * CVS/Repository to figure it out per directory. 	 */
+if|if
+condition|(
+name|repository
+condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|dir
+argument_list|,
+literal|"."
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|xframe
+operator|.
+name|repository
+operator|=
+name|xstrdup
+argument_list|(
+name|repository
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|xframe
+operator|.
+name|repository
+operator|=
+name|xmalloc
+argument_list|(
+name|strlen
+argument_list|(
+name|repository
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|dir
+argument_list|)
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|xframe
+operator|.
+name|repository
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|repository
+argument_list|,
+name|dir
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+name|xframe
+operator|.
+name|repository
+operator|=
+name|NULL
+expr_stmt|;
 name|err
 operator|+=
 name|do_recursion
@@ -3293,6 +3400,27 @@ operator|&
 name|xframe
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|xframe
+operator|.
+name|repository
+condition|)
+block|{
+name|free
+argument_list|(
+name|xframe
+operator|.
+name|repository
+argument_list|)
+expr_stmt|;
+name|xframe
+operator|.
+name|repository
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* put the `.' back if necessary */
 if|if
 condition|(
@@ -3379,9 +3507,7 @@ operator|=
 name|saved_update_dir
 expr_stmt|;
 return|return
-operator|(
 name|err
-operator|)
 return|;
 block|}
 end_function
@@ -3544,10 +3670,6 @@ name|DIRS
 expr_stmt|;
 name|fl
 operator|=
-operator|(
-name|List
-operator|*
-operator|)
 name|n
 operator|->
 name|data
@@ -3564,10 +3686,6 @@ name|n
 operator|->
 name|data
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|fl
 expr_stmt|;
 return|return;
@@ -3653,10 +3771,6 @@ return|;
 comment|/* otherwise, call dorecusion for this list of files. */
 name|filelist
 operator|=
-operator|(
-name|List
-operator|*
-operator|)
 name|p
 operator|->
 name|data

@@ -20,10 +20,13 @@ comment|/* Printable names for things in the current_parsed_root->method enum va
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
-modifier|*
 name|method_names
 index|[]
+index|[
+literal|16
+index|]
 init|=
 block|{
 literal|"undefined"
@@ -102,6 +105,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 if|if
 condition|(
@@ -246,6 +252,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|len
+operator|=
 name|getline
 argument_list|(
 operator|&
@@ -256,10 +265,16 @@ name|root_allocated
 argument_list|,
 name|fpin
 argument_list|)
+operator|)
 operator|<
 literal|0
 condition|)
 block|{
+name|int
+name|saved_errno
+init|=
+name|errno
+decl_stmt|;
 comment|/* FIXME: should be checking for end of file separately; errno 	   is not set in that case.  */
 name|error
 argument_list|(
@@ -276,7 +291,7 @@ name|error
 argument_list|(
 literal|0
 argument_list|,
-name|errno
+name|saved_errno
 argument_list|,
 literal|"cannot read %s"
 argument_list|,
@@ -300,28 +315,27 @@ goto|goto
 name|out
 goto|;
 block|}
-operator|(
-name|void
-operator|)
 name|fclose
 argument_list|(
 name|fpin
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|cp
 operator|=
-name|strrchr
-argument_list|(
 name|root
-argument_list|,
-literal|'\n'
-argument_list|)
+operator|+
+operator|(
+name|len
+operator|-
+literal|1
 operator|)
-operator|!=
-name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'\n'
 condition|)
 operator|*
 name|cp
@@ -510,10 +524,12 @@ name|dir
 parameter_list|,
 name|rootdir
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|dir
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|rootdir
@@ -979,6 +995,9 @@ name|method
 operator|=
 name|null_method
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
 name|newroot
 operator|->
 name|username
@@ -1009,9 +1028,18 @@ name|directory
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
+name|newroot
+operator|->
+name|proxy_hostname
+operator|=
+name|NULL
+expr_stmt|;
+name|newroot
+operator|->
+name|proxy_port
+operator|=
+literal|0
+expr_stmt|;
 name|newroot
 operator|->
 name|isremote
@@ -1057,6 +1085,24 @@ operator|->
 name|original
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|root
+operator|->
+name|directory
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|root
+operator|->
+name|directory
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
 if|if
 condition|(
 name|root
@@ -1125,7 +1171,7 @@ if|if
 condition|(
 name|root
 operator|->
-name|directory
+name|proxy_hostname
 operator|!=
 name|NULL
 condition|)
@@ -1133,9 +1179,12 @@ name|free
 argument_list|(
 name|root
 operator|->
-name|directory
+name|proxy_hostname
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* CLIENT_SUPPORT */
 name|free
 argument_list|(
 name|root
@@ -1155,6 +1204,7 @@ name|parse_cvsroot
 parameter_list|(
 name|root_in
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|root_in
@@ -1186,6 +1236,9 @@ modifier|*
 name|q
 decl_stmt|;
 comment|/* temporary pointers for parsing */
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
 name|int
 name|check_hostname
 decl_stmt|,
@@ -1193,6 +1246,9 @@ name|no_port
 decl_stmt|,
 name|no_password
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* CLIENT_SUPPORT */
 comment|/* allocate some space */
 name|newroot
 operator|=
@@ -1273,6 +1329,59 @@ operator|=
 operator|++
 name|p
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+comment|/* Look for method options, for instance, proxy, proxyport. 	 * We don't handle these, but we like to try and warn the user that 	 * they are being ignored. 	 */
+if|if
+condition|(
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|method
+argument_list|,
+literal|';'
+argument_list|)
+condition|)
+block|{
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|really_quiet
+condition|)
+block|{
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"WARNING: Ignoring method options found in CVSROOT: `%s'."
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"Use CVS version 1.12.7 or later to handle method options."
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* CLIENT_SUPPORT */
 comment|/* Now we have an access method -- see if it's valid. */
 if|if
 condition|(
@@ -1540,6 +1649,10 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* Don't parse username, password, hostname, or port without client          * support.          */
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
 comment|/* Check to see if there is a username[:password] in the string. */
 if|if
 condition|(
@@ -1778,8 +1891,17 @@ name|cvsroot_copy
 operator|=
 literal|'/'
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* CLIENT_SUPPORT */
 block|}
-comment|/* parse the path for all methods */
+comment|/*      * Parse the path for all methods.      */
+comment|/* Here& local_cvsroot() should be the only places this needs to be      * called on a CVSROOT now.  cvsroot->original is saved for error messages      * and, otherwise, we want no trailing slashes.      */
+name|Sanitize_Repository_Name
+argument_list|(
+name|cvsroot_copy
+argument_list|)
+expr_stmt|;
 name|newroot
 operator|->
 name|directory
@@ -1882,6 +2004,9 @@ goto|;
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
 if|if
 condition|(
 name|newroot
@@ -1913,12 +2038,15 @@ literal|0
 expr_stmt|;
 name|no_password
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|no_port
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* CLIENT_SUPPORT */
 switch|switch
 condition|(
 name|newroot
@@ -1929,6 +2057,9 @@ block|{
 case|case
 name|local_method
 case|:
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
 if|if
 condition|(
 name|newroot
@@ -1962,6 +2093,14 @@ goto|goto
 name|error_exit
 goto|;
 block|}
+name|no_port
+operator|=
+literal|1
+expr_stmt|;
+comment|/* no_password already set */
+endif|#
+directive|endif
+comment|/* CLIENT_SUPPORT */
 comment|/* cvs.texinfo has always told people that CVSROOT must be an 	   absolute pathname.  Furthermore, attempts to use a relative 	   pathname produced various errors (I couldn't get it to work), 	   so there would seem to be little risk in making this a fatal 	   error.  */
 if|if
 condition|(
@@ -2000,15 +2139,10 @@ goto|goto
 name|error_exit
 goto|;
 block|}
-name|no_port
-operator|=
-literal|1
-expr_stmt|;
-name|no_password
-operator|=
-literal|1
-expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
 case|case
 name|fork_method
 case|:
@@ -2046,6 +2180,16 @@ goto|goto
 name|error_exit
 goto|;
 block|}
+name|newroot
+operator|->
+name|hostname
+operator|=
+name|xstrdup
+argument_list|(
+literal|"server"
+argument_list|)
+expr_stmt|;
+comment|/* for error messages */
 if|if
 condition|(
 operator|!
@@ -2087,10 +2231,7 @@ name|no_port
 operator|=
 literal|1
 expr_stmt|;
-name|no_password
-operator|=
-literal|1
-expr_stmt|;
+comment|/* no_password already set */
 break|break;
 case|case
 name|kserver_method
@@ -2125,6 +2266,7 @@ name|check_hostname
 operator|=
 literal|1
 expr_stmt|;
+comment|/* no_password already set */
 break|break;
 endif|#
 directive|endif
@@ -2161,6 +2303,7 @@ name|check_hostname
 operator|=
 literal|1
 expr_stmt|;
+comment|/* no_password already set */
 break|break;
 endif|#
 directive|endif
@@ -2174,10 +2317,7 @@ name|no_port
 operator|=
 literal|1
 expr_stmt|;
-name|no_password
-operator|=
-literal|1
-expr_stmt|;
+comment|/* no_password already set */
 name|check_hostname
 operator|=
 literal|1
@@ -2186,11 +2326,18 @@ break|break;
 case|case
 name|pserver_method
 case|:
+name|no_password
+operator|=
+literal|0
+expr_stmt|;
 name|check_hostname
 operator|=
 literal|1
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* CLIENT_SUPPORT */
 default|default:
 name|error
 argument_list|(
@@ -2202,6 +2349,9 @@ literal|"Invalid method found in parse_cvsroot"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
 if|if
 condition|(
 name|no_password
@@ -2287,6 +2437,9 @@ goto|goto
 name|error_exit
 goto|;
 block|}
+endif|#
+directive|endif
+comment|/* CLIENT_SUPPORT */
 if|if
 condition|(
 operator|*
@@ -2516,6 +2669,7 @@ name|local_cvsroot
 parameter_list|(
 name|dir
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|dir
@@ -2552,6 +2706,14 @@ argument_list|(
 name|dir
 argument_list|)
 expr_stmt|;
+comment|/* Here and parse_cvsroot() should be the only places this needs to be      * called on a CVSROOT now.  cvsroot->original is saved for error messages      * and, otherwise, we want no trailing slashes.      */
+name|Sanitize_Repository_Name
+argument_list|(
+name|newroot
+operator|->
+name|directory
+argument_list|)
+expr_stmt|;
 return|return
 name|newroot
 return|;
@@ -2586,7 +2748,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|command_name
+name|cvs_cmd_name
 init|=
 literal|"parse_cvsroot"
 decl_stmt|;
@@ -2797,10 +2959,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* vim:tabstop=8:shiftwidth=4  */
-end_comment
 
 end_unit
 

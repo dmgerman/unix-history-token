@@ -483,9 +483,7 @@ operator|==
 literal|0
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 comment|/* make sure that we are null terminated, since we didn't calloc */
 name|run_add_arg
@@ -693,15 +691,11 @@ goto|;
 block|}
 block|}
 comment|/* Make sure we don't flush this twice, once in the subprocess.  */
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
+name|cvs_flushout
+argument_list|()
 expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
-argument_list|)
+name|cvs_flusherr
+argument_list|()
 expr_stmt|;
 comment|/* The output files, if any, are now created.  Do the fork and dups.         We use vfork not so much for a performance boost (the        performance boost, if any, is modest on most modern unices),        but for the sake of systems without a memory management unit,        which find it difficult or impossible to implement fork at all        (e.g. Amiga).  The other solution is spawn (see        windows-NT/run.c).  */
 ifdef|#
@@ -1491,9 +1485,7 @@ operator|=
 name|rerrno
 expr_stmt|;
 return|return
-operator|(
 name|rc
-operator|)
 return|;
 block|}
 end_function
@@ -1710,6 +1702,7 @@ name|tofdp
 parameter_list|,
 name|fromfdp
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1947,13 +1940,23 @@ argument_list|,
 literal|"cannot dup2 pipe"
 argument_list|)
 expr_stmt|;
+comment|/* Okay to cast out const below - execvp don't return anyhow.  */
 name|execvp
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|command
 index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|command
 argument_list|)
 expr_stmt|;
@@ -2059,6 +2062,9 @@ name|F_SETFD
 argument_list|,
 literal|1
 argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 name|error
 argument_list|(
