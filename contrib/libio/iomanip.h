@@ -283,13 +283,31 @@ directive|ifdef
 name|__GNUG__
 end_ifdef
 
-begin_extern
-extern|extern template class smanip<int>;
-end_extern
+begin_expr_stmt
+name|__extension__
+specifier|extern
+name|template
+name|class
+name|smanip
+operator|<
+name|int
+operator|>
+expr_stmt|;
+end_expr_stmt
 
-begin_extern
-extern|extern template class smanip<ios::fmtflags>;
-end_extern
+begin_expr_stmt
+name|__extension__
+specifier|extern
+name|template
+name|class
+name|smanip
+operator|<
+name|ios
+operator|::
+name|fmtflags
+operator|>
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -392,49 +410,97 @@ directive|ifdef
 name|__GNUG__
 end_ifdef
 
-begin_extern
-extern|extern template istream& operator>>(istream&
+begin_expr_stmt
+name|__extension__
+specifier|extern
+name|template
+name|istream
+operator|&
+name|operator
+operator|>>
+operator|(
+name|istream
+operator|&
 operator|,
-extern|const smanip<int>&
-end_extern
+specifier|const
+name|smanip
+operator|<
+name|int
+operator|>
+operator|&
+operator|)
+expr_stmt|;
+end_expr_stmt
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_extern
-extern|extern template istream& operator>>(istream&
+begin_expr_stmt
+name|__extension__
+specifier|extern
+name|template
+name|istream
+operator|&
+name|operator
+operator|>>
+operator|(
+name|istream
+operator|&
 operator|,
-extern|const smanip<ios::fmtflags>&
-end_extern
+specifier|const
+name|smanip
+operator|<
+name|ios
+operator|::
+name|fmtflags
+operator|>
+operator|&
+operator|)
+expr_stmt|;
+end_expr_stmt
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_extern
-extern|extern template ostream& operator<<(ostream&
+begin_expr_stmt
+name|__extension__
+specifier|extern
+name|template
+name|ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|ostream
+operator|&
 operator|,
-extern|const smanip<int>&
-end_extern
+specifier|const
+name|smanip
+operator|<
+name|int
+operator|>
+operator|&
+operator|)
+expr_stmt|;
+end_expr_stmt
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_extern
-extern|extern template ostream& operator<<(ostream&
+begin_expr_stmt
+name|__extension__
+specifier|extern
+name|template
+name|ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|ostream
+operator|&
 operator|,
-extern|const smanip<ios::fmtflags>&
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+specifier|const
+name|smanip
+operator|<
+name|ios
+operator|::
+name|fmtflags
+operator|>
+operator|&
+operator|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

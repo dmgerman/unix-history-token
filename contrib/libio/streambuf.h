@@ -435,7 +435,7 @@ name|int
 name|openmode
 typedef|;
 typedef|typedef
-name|int
+name|_IO_ssize_t
 name|streamsize
 typedef|;
 enum|enum
@@ -2985,23 +2985,18 @@ name|delete
 name|rdbuf
 parameter_list|()
 function_decl|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
-if|if
-condition|(
-name|_arrays
-condition|)
+comment|// It is safe to use naked operator delete[] as we know elements have no
+comment|// dtor, and g++ does not add a new[] cookie for such cases.
+name|operator
 name|delete
 index|[]
+operator|(
 name|_arrays
-decl_stmt|;
-end_if
+operator|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|} }
