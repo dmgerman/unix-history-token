@@ -48,7 +48,7 @@ file|<whoami.h>
 end_include
 
 begin_comment
-comment|/* **  SCCS.C -- human-oriented front end to the SCCS system. ** **	Without trying to add any functionality to speak of, this **	program tries to make SCCS a little more accessible to human **	types.  The main thing it does is automatically put the **	string "SCCS/s." on the front of names.  Also, it has a **	couple of things that are designed to shorten frequent **	combinations, e.g., "delget" which expands to a "delta" **	and a "get". ** **	This program can also function as a setuid front end. **	To do this, you should copy the source, renaming it to **	whatever you want, e.g., "syssccs".  Change any defaults **	in the program (e.g., syssccs might default -d to **	"/usr/src/sys").  Then recompile and put the result **	as setuid to whomever you want.  In this mode, sccs **	knows to not run setuid for certain programs in order **	to preserve security, and so forth. ** **	Usage: **		sccs [flags] command [args] ** **	Flags: **		-d<dir><dir> represents a directory to search **				out of.  It should be a full pathname **				for general usage.  E.g., if<dir> is **				"/usr/src/sys", then a reference to the **				file "dev/bio.c" becomes a reference to **				"/usr/src/sys/dev/bio.c". **		-p<path>	prepends<path> to the final component **				of the pathname.  By default, this is **				"SCCS".  For example, in the -d example **				above, the path then gets modified to **				"/usr/src/sys/dev/SCCS/s.bio.c".  In **				more common usage (without the -d flag), **				"prog.c" would get modified to **				"SCCS/s.prog.c".  In both cases, the **				"s." gets automatically prepended. **		-r		run as the real user. ** **	Commands: **		admin, **		get, **		delta, **		rmdel, **		chghist, **		etc.		Straight out of SCCS; only difference **				is that pathnames get modified as **				described above. **		edit		Macro for "get -e". **		unedit		Removes a file being edited, knowing **				about p-files, etc. **		delget		Macro for "delta" followed by "get". **		deledit		Macro for "delta" followed by "get -e". **		info		Tell what files being edited. **		clean		Remove all files that can be **				regenerated from SCCS files. **		check		Like info, but return exit status, for **				use in makefiles. **		fix		Remove a top delta& reedit, but save **				the previous changes in that delta. ** **	Compilation Flags: **		UIDUSER -- determine who the user is by looking at the **			uid rather than the login name -- for machines **			where SCCS gets the user in this way. **		SCCSDIR -- if defined, forces the -d flag to take on **			this value.  This is so that the setuid **			aspects of this program cannot be abused. **			This flag also disables the -p flag. **		SCCSPATH -- the default for the -p flag. ** **	Compilation Instructions: **		cc -O -n -s sccs.c ** **	Author: **		Eric Allman, UCB/INGRES **		Copyright 1980 Regents of the University of California */
+comment|/* **  SCCS.C -- human-oriented front end to the SCCS system. ** **	Without trying to add any functionality to speak of, this **	program tries to make SCCS a little more accessible to human **	types.  The main thing it does is automatically put the **	string "SCCS/s." on the front of names.  Also, it has a **	couple of things that are designed to shorten frequent **	combinations, e.g., "delget" which expands to a "delta" **	and a "get". ** **	This program can also function as a setuid front end. **	To do this, you should copy the source, renaming it to **	whatever you want, e.g., "syssccs".  Change any defaults **	in the program (e.g., syssccs might default -d to **	"/usr/src/sys").  Then recompile and put the result **	as setuid to whomever you want.  In this mode, sccs **	knows to not run setuid for certain programs in order **	to preserve security, and so forth. ** **	Usage: **		sccs [flags] command [args] ** **	Flags: **		-d<dir><dir> represents a directory to search **				out of.  It should be a full pathname **				for general usage.  E.g., if<dir> is **				"/usr/src/sys", then a reference to the **				file "dev/bio.c" becomes a reference to **				"/usr/src/sys/dev/bio.c". **		-p<path>	prepends<path> to the final component **				of the pathname.  By default, this is **				"SCCS".  For example, in the -d example **				above, the path then gets modified to **				"/usr/src/sys/dev/SCCS/s.bio.c".  In **				more common usage (without the -d flag), **				"prog.c" would get modified to **				"SCCS/s.prog.c".  In both cases, the **				"s." gets automatically prepended. **		-r		run as the real user. ** **	Commands: **		admin, **		get, **		delta, **		rmdel, **		chghist, **		etc.		Straight out of SCCS; only difference **				is that pathnames get modified as **				described above. **		edit		Macro for "get -e". **		unedit		Removes a file being edited, knowing **				about p-files, etc. **		delget		Macro for "delta" followed by "get". **		deledit		Macro for "delta" followed by "get -e". **		info		Tell what files being edited. **		clean		Remove all files that can be **				regenerated from SCCS files. **		check		Like info, but return exit status, for **				use in makefiles. **		fix		Remove a top delta& reedit, but save **				the previous changes in that delta. ** **	Compilation Flags: **		UIDUSER -- determine who the user is by looking at the **			uid rather than the login name -- for machines **			where SCCS gets the user in this way. **		SCCSDIR -- if defined, forces the -d flag to take on **			this value.  This is so that the setuid **			aspects of this program cannot be abused. **			This flag also disables the -p flag. **		SCCSPATH -- the default for the -p flag. **		MYNAME -- the title this program should print when it **			gives error messages. ** **	Compilation Instructions: **		cc -O -n -s sccs.c **		The flags listed above can be -D defined to simplify **			recompilation for variant versions. ** **	Author: **		Eric Allman, UCB/INGRES **		Copyright 1980 Regents of the University of California */
 end_comment
 
 begin_decl_stmt
@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.37 %G%"
+literal|"@(#)sccs.c	1.38 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,16 @@ end_escape
 begin_comment
 comment|/*******************  Configuration Information  ********************/
 end_comment
+
+begin_comment
+comment|/* special defines for local berkeley systems */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<whoami.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -96,6 +106,16 @@ directive|endif
 endif|CSVAX
 end_endif
 
+begin_comment
+comment|/* end of berkeley systems defines */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SCCSPATH
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -107,22 +127,34 @@ begin_comment
 comment|/* pathname in which to find s-files */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+endif|NOT SCCSPATH
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MYNAME
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MYNAME
+value|"sccs"
+end_define
+
 begin_comment
-comment|/* put #define SCCSDIR here */
+comment|/* name used for printing errors */
 end_comment
 
-begin_decl_stmt
-name|char
-name|MyName
-index|[]
-init|=
-literal|"sccs"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name used in messages */
-end_comment
+begin_endif
+endif|#
+directive|endif
+endif|NOT MYNAME
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -729,6 +761,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|char
+name|MyName
+index|[]
+init|=
+name|MYNAME
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name used in messages */
+end_comment
 
 begin_decl_stmt
 name|int
