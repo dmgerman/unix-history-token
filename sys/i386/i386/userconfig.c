@@ -7451,6 +7451,12 @@ literal|0
 decl_stmt|;
 comment|/* where we are in the text */
 name|int
+name|line
+init|=
+literal|0
+decl_stmt|;
+comment|/* last line we displayed */
+name|int
 name|c
 decl_stmt|,
 name|delta
@@ -7470,11 +7476,6 @@ condition|;
 control|)
 comment|/* loop until user quits */
 block|{
-name|int
-name|line
-init|=
-literal|0
-decl_stmt|;
 comment|/* display help text */
 if|if
 condition|(
