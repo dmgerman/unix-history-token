@@ -383,6 +383,10 @@ parameter_list|)
 value|{ \ 	if (*cp == 0) {\ 		(f) = htons((cp[1]<< 8) | cp[2]); \ 		cp += 3; \ 	} else { \ 		(f) = htons((u_int32_t)*cp++); \ 	} \ }
 end_define
 
+begin_comment
+comment|/*  * Attempt to compress a TCP packet.  This function assumes that the  * complete IP+TCP headers have been pulled up into the first mbuf.  */
+end_comment
+
 begin_function
 name|u_int
 name|sl_compress_tcp
