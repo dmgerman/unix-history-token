@@ -222,17 +222,6 @@ struct|;
 end_struct
 
 begin_function_decl
-name|bus_addr_t
-name|uart_cpu_busaddr
-parameter_list|(
-name|struct
-name|uart_bas
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|uart_cpu_eqres
 parameter_list|(

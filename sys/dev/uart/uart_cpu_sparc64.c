@@ -194,26 +194,6 @@ block|}
 end_function
 
 begin_function
-name|bus_addr_t
-name|uart_cpu_busaddr
-parameter_list|(
-name|struct
-name|uart_bas
-modifier|*
-name|bas
-parameter_list|)
-block|{
-return|return
-operator|(
-name|bas
-operator|->
-name|bsh
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 name|int
 name|uart_cpu_eqres
 parameter_list|(
@@ -713,6 +693,14 @@ name|ENXIO
 operator|)
 return|;
 comment|/* Fill in the device info. */
+name|di
+operator|->
+name|bas
+operator|.
+name|iobase
+operator|=
+name|addr
+expr_stmt|;
 name|di
 operator|->
 name|bas

@@ -23,6 +23,9 @@ begin_struct
 struct|struct
 name|uart_bas
 block|{
+name|bus_addr_t
+name|iobase
+decl_stmt|;
 name|bus_space_tag_t
 name|bst
 decl_stmt|;
