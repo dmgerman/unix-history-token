@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	6.11	84/12/20	*/
+comment|/*	uipc_usrreq.c	6.12	85/05/27	*/
 end_comment
 
 begin_include
@@ -95,6 +95,16 @@ name|AF_UNIX
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|ino_t
+name|unp_ino
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* fake inode numbers */
+end_comment
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -653,6 +663,19 @@ break|break;
 block|}
 if|if
 condition|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_CANTSENDMORE
+condition|)
+return|return
+operator|(
+name|EPIPE
+operator|)
+return|;
+if|if
+condition|(
 name|unp
 operator|->
 name|unp_conn
@@ -826,6 +849,33 @@ operator|.
 name|sb_cc
 expr_stmt|;
 block|}
+operator|(
+operator|(
+expr|struct
+name|stat
+operator|*
+operator|)
+name|m
+operator|)
+operator|->
+name|st_dev
+operator|=
+name|NODEV
+expr_stmt|;
+operator|(
+operator|(
+expr|struct
+name|stat
+operator|*
+operator|)
+name|m
+operator|)
+operator|->
+name|st_ino
+operator|=
+name|unp_ino
+operator|++
+expr_stmt|;
 return|return
 operator|(
 literal|0
