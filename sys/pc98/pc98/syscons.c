@@ -9144,6 +9144,16 @@ name|CURSOR_ENABLED
 operator|)
 operator|&&
 operator|(
+name|scp
+operator|->
+name|cursor_pos
+operator|!=
+name|scp
+operator|->
+name|cursor_oldpos
+operator|)
+operator|&&
+operator|(
 name|and_region
 argument_list|(
 operator|&
