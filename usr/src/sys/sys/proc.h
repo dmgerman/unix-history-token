@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.23	83/06/02	*/
+comment|/*	proc.h	4.24	83/07/01	*/
 end_comment
 
 begin_comment
@@ -211,17 +211,6 @@ modifier|*
 name|p_quota
 decl_stmt|;
 comment|/* quotas for this process */
-ifdef|#
-directive|ifdef
-name|sun
-name|struct
-name|context
-modifier|*
-name|p_ctx
-decl_stmt|;
-comment|/* pointer to current context */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ttychars.h	4.5	83/06/20	*/
+comment|/*	ttychars.h	4.6	83/07/01	*/
 end_comment
 
 begin_comment
@@ -101,26 +101,22 @@ begin_define
 define|#
 directive|define
 name|CERASE
-value|'#'
+value|0177
 end_define
 
 begin_define
 define|#
 directive|define
 name|CKILL
-value|'@'
+value|CTRL(u)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CINTR
-value|0177
+value|CTRL(c)
 end_define
-
-begin_comment
-comment|/* DEL, ^? */
-end_comment
 
 begin_define
 define|#

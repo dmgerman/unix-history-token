@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.21	83/05/18	*/
+comment|/*	buf.h	4.22	83/07/01	*/
 end_comment
 
 begin_comment
@@ -163,23 +163,6 @@ name|int
 name|b_pfcent
 decl_stmt|;
 comment|/* center page when swapping cluster */
-ifdef|#
-directive|ifdef
-name|sun
-name|caddr_t
-name|b_saddr
-decl_stmt|;
-comment|/* saved address */
-name|short
-name|b_kmx
-decl_stmt|;
-comment|/* saved kernelmap index */
-name|short
-name|b_npte
-decl_stmt|;
-comment|/* number of pte's mapped */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -815,58 +798,6 @@ name|bp
 parameter_list|)
 value|{ \ 	blkclr(bp->b_un.b_addr, bp->b_bcount); \ 	bp->b_resid = 0; \ }
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
-
-begin_comment
-comment|/*  * Declarations for buffer space rmaps  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|map
-modifier|*
-name|buffermap
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|BUFMAPSIZE
-value|256
-end_define
-
-begin_comment
-comment|/*  * "Average" size of a buffer  * nbuf*AVGBSIZE is total amount of buffer data  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AVGBSIZE
-value|2048
-end_define
-
-begin_comment
-comment|/*  * Unit of buffer space allocation  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUFALLOCSIZE
-value|1024
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inode.h	4.23	83/05/21	*/
+comment|/*	inode.h	4.24	83/07/01	*/
 end_comment
 
 begin_comment
@@ -262,24 +262,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|i_size
-value|i_ic.ic_size.val[1]
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -417,24 +399,6 @@ define|#
 directive|define
 name|di_size
 value|di_ic.ic_size.val[0]
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|di_size
-value|di_ic.ic_size.val[1]
 end_define
 
 begin_endif
