@@ -62,6 +62,14 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pthread
@@ -72,11 +80,21 @@ name|flags
 operator|&
 name|PTHREAD_DETACHED
 condition|)
+block|{
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|pthread
 operator|->
 name|attr
@@ -84,12 +102,6 @@ operator|.
 name|flags
 operator||=
 name|PTHREAD_DETACHED
-expr_stmt|;
-comment|/* 	 * Defer signals to protect the scheduling queues from 	 * access by the signal handler: 	 */
-name|GIANT_LOCK
-argument_list|(
-name|curthread
-argument_list|)
 expr_stmt|;
 comment|/* Check if there is a joiner: */
 if|if
@@ -110,6 +122,11 @@ name|pthread
 operator|->
 name|joiner
 decl_stmt|;
+name|_thread_critical_enter
+argument_list|(
+name|joiner
+argument_list|)
+expr_stmt|;
 comment|/* Make the thread runnable: */
 name|PTHREAD_NEW_STATE
 argument_list|(
@@ -150,10 +167,18 @@ name|joiner
 operator|=
 name|NULL
 expr_stmt|;
-block|}
-name|GIANT_UNLOCK
+name|_thread_critical_exit
 argument_list|(
-name|curthread
+name|joiner
+argument_list|)
+expr_stmt|;
+block|}
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 return|return
