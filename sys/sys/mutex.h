@@ -745,6 +745,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|DROP_GIANT_NOSWITCH
+parameter_list|()
+define|\
+value|do {									\ 	int _giantcnt;							\ 	WITNESS_SAVE_DECL(Giant);					\ 									\ 	if (mtx_owned(&Giant))						\ 		WITNESS_SAVE(&Giant, Giant);				\ 	for (_giantcnt = 0; mtx_owned(&Giant); _giantcnt++)		\ 		mtx_exit(&Giant, MTX_DEF | MTX_NOSWITCH)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DROP_GIANT
 parameter_list|()
 define|\
@@ -796,13 +805,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|MA_RECURSED
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MA_NOTRECURSED
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|mtx_assert
 parameter_list|(
 name|m
 parameter_list|,
 name|what
 parameter_list|)
-value|do {					\ 	switch ((what)) {						\ 	case MA_OWNED:							\ 		if (!mtx_owned((m)))					\ 			panic("mutex %s not owned at %s:%d",		\ 			    (m)->mtx_description, __FILE__, __LINE__);	\ 		break;							\ 	case MA_NOTOWNED:						\ 		if (mtx_owned((m)))					\ 			panic("mutex %s owned at %s:%d",		\ 			    (m)->mtx_description, __FILE__, __LINE__);	\ 		break;							\ 	default:							\ 		panic("unknown mtx_assert at %s:%d", __FILE__, __LINE__); \ 	}								\ } while(0)
+value|do {					\ 	switch ((what)) {						\ 	case MA_OWNED:							\ 	case MA_OWNED | MA_RECURSED:					\ 	case MA_OWNED | MA_NOTRECURSED:					\ 		if (!mtx_owned((m)))					\ 			panic("mutex %s not owned at %s:%d",		\ 			    (m)->mtx_description, __FILE__, __LINE__);	\ 		if (mtx_recursed((m))) {				\ 			if (((what)& MA_NOTRECURSED) != 0)		\ 				panic("mutex %s recursed at %s:%d",	\ 				    (m)->mtx_description, __FILE__, __LINE__); \ 		} else if (((what)& MA_RECURSED) != 0)			\ 				panic("mutex %s unrecursed at %s:%d",	\ 				    (m)->mtx_description, __FILE__, __LINE__); \ 		break;							\ 	case MA_NOTOWNED:						\ 		if (mtx_owned((m)))					\ 			panic("mutex %s owned at %s:%d",		\ 			    (m)->mtx_description, __FILE__, __LINE__);	\ 		break;							\ 	default:							\ 		panic("unknown mtx_assert at %s:%d", __FILE__, __LINE__); \ 	}								\ } while(0)
 end_define
 
 begin_else
@@ -1627,6 +1650,20 @@ value|(((m)->mtx_lock& MTX_FLAGMASK) == (uintptr_t)CURTHD)
 end_define
 
 begin_comment
+comment|/*  * Return non-zero if a mutex has been recursively acquired.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mtx_recursed
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->mtx_recurse != 0)
+end_define
+
+begin_comment
 comment|/* Common strings */
 end_comment
 
@@ -1651,7 +1688,7 @@ name|char
 name|STR_mtx_enter_fmt
 index|[]
 init|=
-literal|"GOT %s [%x] r=%d"
+literal|"GOT %s [%p] r=%d"
 decl_stmt|;
 end_decl_stmt
 
@@ -1660,7 +1697,7 @@ name|char
 name|STR_mtx_exit_fmt
 index|[]
 init|=
-literal|"REL %s [%x] r=%d"
+literal|"REL %s [%p] r=%d"
 decl_stmt|;
 end_decl_stmt
 
@@ -1669,7 +1706,7 @@ name|char
 name|STR_mtx_try_enter_fmt
 index|[]
 init|=
-literal|"TRY_ENTER %s [%x] result=%d"
+literal|"TRY_ENTER %s [%p] result=%d"
 decl_stmt|;
 end_decl_stmt
 
@@ -1683,7 +1720,7 @@ name|char
 name|STR_mtx_enter_fmt
 index|[]
 init|=
-literal|"GOT %s [%x] at %s:%d r=%d"
+literal|"GOT %s [%p] at %s:%d r=%d"
 decl_stmt|;
 end_decl_stmt
 
@@ -1692,7 +1729,7 @@ name|char
 name|STR_mtx_exit_fmt
 index|[]
 init|=
-literal|"REL %s [%x] at %s:%d r=%d"
+literal|"REL %s [%p] at %s:%d r=%d"
 decl_stmt|;
 end_decl_stmt
 
@@ -1701,7 +1738,7 @@ name|char
 name|STR_mtx_try_enter_fmt
 index|[]
 init|=
-literal|"TRY_ENTER %s [%x] at %s:%d result=%d"
+literal|"TRY_ENTER %s [%p] at %s:%d result=%d"
 decl_stmt|;
 end_decl_stmt
 
