@@ -9775,7 +9775,7 @@ index|[
 name|i
 index|]
 operator|.
-name|command
+name|status
 operator|)
 condition|)
 return|return
