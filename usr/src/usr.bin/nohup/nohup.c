@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nohup.c	5.4 (Berkeley) %G%"
+literal|"@(#)nohup.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,19 +61,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -82,14 +88,50 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_decl_stmt
-specifier|extern
-name|int
-name|errno
+name|void
+name|dofile
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -101,15 +143,10 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|strerror
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|argc
@@ -231,12 +268,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|dofile
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|fd
@@ -249,27 +284,6 @@ name|path
 index|[
 name|MAXPATHLEN
 index|]
-decl_stmt|;
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
-name|char
-modifier|*
-name|getenv
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strcat
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strerror
-argument_list|()
 decl_stmt|;
 define|#
 directive|define
@@ -292,7 +306,9 @@ name|O_RDWR
 operator||
 name|O_CREAT
 argument_list|,
-literal|0600
+name|S_IRUSR
+operator||
+name|S_IWUSR
 argument_list|)
 operator|)
 operator|>=
@@ -356,7 +372,9 @@ name|O_RDWR
 operator||
 name|O_CREAT
 argument_list|,
-literal|0600
+name|S_IRUSR
+operator||
+name|S_IWUSR
 argument_list|)
 operator|)
 operator|>=
@@ -390,7 +408,10 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 name|SEEK_END
 argument_list|)
@@ -442,14 +463,12 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -467,7 +486,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
