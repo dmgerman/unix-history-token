@@ -516,11 +516,13 @@ name|sp
 operator|->
 name|s_ttyvp
 condition|)
-name|vgoneall
+name|VOP_REVOKE
 argument_list|(
 name|sp
 operator|->
 name|s_ttyvp
+argument_list|,
+name|REVOKEALL
 argument_list|)
 expr_stmt|;
 block|}
