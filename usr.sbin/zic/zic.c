@@ -52,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: zic.c,v 1.8 1999/01/21 17:46:19 wollman Exp $"
+literal|"$Id: zic.c,v 1.9 1999/01/21 21:09:56 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3578,7 +3578,7 @@ name|EXIT_FAILURE
 argument_list|,
 name|_
 argument_list|(
-literal|"%s: Can't link from %s to %s"
+literal|"can't link from %s to %s"
 argument_list|)
 argument_list|,
 name|fromname
