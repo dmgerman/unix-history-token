@@ -1401,7 +1401,7 @@ name|fprintf
 argument_list|(
 name|fo
 argument_list|,
-literal|"static const char config[] = \"\\\n"
+literal|"const char config[] = \"\\\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
