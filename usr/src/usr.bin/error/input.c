@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)input.c	1.9 (Berkeley) 84/05/08"
+literal|"@(#)input.c	1.10 (Berkeley) 84/09/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -2051,6 +2051,24 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|F77_no_ass
+index|[
+literal|3
+index|]
+init|=
+block|{
+literal|"Error."
+block|,
+literal|"No"
+block|,
+literal|"assembly."
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|f77
 argument_list|()
@@ -2063,7 +2081,37 @@ modifier|*
 modifier|*
 name|nwordv
 decl_stmt|;
-comment|/* 	 *	look for f77 errors: 	 *	Error messages from /usr/src/cmd/f77/error.c, with 	 *	these printf formats: 	 * 	 *		Compiler error line %d of %s: %s 	 *		Error on line %d of %s: %s 	 *		Warning on line %d of %s: %s 	 */
+comment|/* 	 *	look for f77 errors: 	 *	Error messages from /usr/src/cmd/f77/error.c, with 	 *	these printf formats: 	 * 	 *		Compiler error line %d of %s: %s 	 *		Error on line %d of %s: %s 	 *		Warning on line %d of %s: %s 	 *		Error.  No assembly. 	 */
+if|if
+condition|(
+name|wordc
+operator|==
+literal|3
+operator|&&
+name|wordvcmp
+argument_list|(
+name|wordv
+operator|+
+literal|1
+argument_list|,
+literal|3
+argument_list|,
+name|F77_no_ass
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|wordc
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+name|C_SYNC
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|wordc
