@@ -3233,7 +3233,7 @@ name|ENDPARSE
 expr_stmt|;
 name|settog
 argument_list|(
-literal|"_stat"
+literal|"_statprompt"
 argument_list|,
 literal|1
 argument_list|,
@@ -4683,7 +4683,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * stat<<on|off>>  *  * Display the detailed statistics as part of the prompt.  The toggle option  * variable is called _stat (giving ${_stat_s} and ${_stat_n}).  */
+comment|/*  * stat<<on|off>>  *  * Display the detailed statistics as part of the prompt.  The toggle option  * variable is called _statprompt (giving ${_statprompt_s} and  * ${_statprompt_n}).  */
 end_comment
 
 begin_function
@@ -4730,7 +4730,7 @@ argument_list|)
 expr_stmt|;
 name|settog
 argument_list|(
-literal|"_stat"
+literal|"_statprompt"
 argument_list|,
 name|onoff
 argument_list|,
