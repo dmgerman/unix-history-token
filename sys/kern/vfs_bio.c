@@ -1442,6 +1442,17 @@ name|int
 name|physmem_est
 parameter_list|)
 block|{
+comment|/* 	 * physmem_est is in pages.  Convert it to kilobytes (assumes 	 * PAGE_SIZE is>= 1K) 	 */
+name|physmem_est
+operator|=
+name|physmem_est
+operator|*
+operator|(
+name|PAGE_SIZE
+operator|/
+literal|1024
+operator|)
+expr_stmt|;
 comment|/* 	 * The nominal buffer size (and minimum KVA allocation) is BKVASIZE. 	 * For the first 64MB of ram nominally allocate sufficient buffers to 	 * cover 1/4 of our ram.  Beyond the first 64MB allocate additional 	 * buffers to cover 1/20 of our ram over 64MB.  When auto-sizing 	 * the buffer cache we limit the eventual kva reservation to 	 * maxbcache bytes. 	 * 	 * factor represents the 1/4 x ram conversion. 	 */
 if|if
 condition|(
@@ -1457,7 +1468,7 @@ literal|4
 operator|*
 name|BKVASIZE
 operator|/
-name|PAGE_SIZE
+literal|1024
 decl_stmt|;
 name|nbuf
 operator|=
@@ -1467,7 +1478,7 @@ if|if
 condition|(
 name|physmem_est
 operator|>
-literal|1024
+literal|4096
 condition|)
 name|nbuf
 operator|+=
@@ -1476,12 +1487,12 @@ argument_list|(
 operator|(
 name|physmem_est
 operator|-
-literal|1024
+literal|4096
 operator|)
 operator|/
 name|factor
 argument_list|,
-literal|16384
+literal|65536
 operator|/
 name|factor
 argument_list|)
@@ -1490,14 +1501,14 @@ if|if
 condition|(
 name|physmem_est
 operator|>
-literal|16384
+literal|65536
 condition|)
 name|nbuf
 operator|+=
 operator|(
 name|physmem_est
 operator|-
-literal|16384
+literal|65536
 operator|)
 operator|*
 literal|2
