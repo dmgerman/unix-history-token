@@ -328,6 +328,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"ex"
+block|,
+literal|"Intel EtherExpress Pro/10 ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"fe"
 block|,
 literal|"Fujitsu MB86960A/MB86965A ethernet card"
