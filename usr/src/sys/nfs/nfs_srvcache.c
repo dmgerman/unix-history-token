@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_srvcache.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_srvcache.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1541,6 +1541,15 @@ name|void
 operator|*
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|nfsrvlruhead
+operator|=
+name|NULL
+expr_stmt|;
+name|nfsrvlrutail
+operator|=
+operator|&
+name|nfsrvlruhead
 expr_stmt|;
 name|numnfsrvcache
 operator|=
