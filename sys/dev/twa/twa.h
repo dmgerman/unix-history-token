@@ -17,13 +17,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TWA_CDEV_MAJOR
-value|MAJOR_AUTO
-end_define
-
-begin_define
-define|#
-directive|define
 name|TWA_REQUEST_TIMEOUT_PERIOD
 value|60
 end_define

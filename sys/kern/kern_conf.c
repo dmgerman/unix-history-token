@@ -1343,7 +1343,7 @@ name|devsw
 operator|->
 name|d_maj
 operator|!=
-name|MAJOR_AUTO
+literal|0
 condition|)
 block|{
 name|printf
@@ -1361,7 +1361,7 @@ name|devsw
 operator|->
 name|d_maj
 operator|=
-name|MAJOR_AUTO
+literal|0
 expr_stmt|;
 block|}
 for|for
@@ -1459,7 +1459,7 @@ name|devsw
 operator|->
 name|d_maj
 operator|=
-name|MAJOR_AUTO
+literal|0
 expr_stmt|;
 name|devsw
 operator|->
