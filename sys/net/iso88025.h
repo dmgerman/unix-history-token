@@ -20,7 +20,7 @@ name|_NET_ISO88025_H_
 end_define
 
 begin_comment
-comment|/*  * The number of bytes in an iso 802.5 (MAC) address.  */
+comment|/*  * General ISO 802.5 definitions  */
 end_comment
 
 begin_define
@@ -30,15 +30,11 @@ name|ISO88025_ADDR_LEN
 value|6
 end_define
 
-begin_comment
-comment|/*  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ISO88025_HDR_LEN
-value|(ISO88025_CF_LEN + ISO88025_ADDR_LEN*2)
+value|(ISO88025_CF_LEN + (ISO88025_ADDR_LEN * 2))
 end_define
 
 begin_define
@@ -58,12 +54,103 @@ end_define
 begin_define
 define|#
 directive|define
-name|RIF_LEN
+name|RIF_MAX_RD
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|RIF_MAX_LEN
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|TR_AC
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|TR_LLC_FRAME
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|TR_4MBPS
+value|4000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TR_16MBPS
+value|16000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TR_100MBPS
+value|100000000
+end_define
+
 begin_comment
-comment|/*  * The minimum packet length.  */
+comment|/*  * Source routing   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TR_RII
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|TR_RCF_BCST_MASK
+value|0xe000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TR_RCF_LEN_MASK
+value|0x1f00
+end_define
+
+begin_define
+define|#
+directive|define
+name|TR_RCF_DIR
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|TR_RCF_LF_MASK
+value|0x0070
+end_define
+
+begin_define
+define|#
+directive|define
+name|TR_RCF_RIFLEN
+parameter_list|(
+name|x
+parameter_list|)
+value|((ntohs(x)& TR_RCF_LEN_MASK)>> 8)
+end_define
+
+begin_comment
+comment|/*  * Minimum and maximum packet payload lengths.  */
 end_comment
 
 begin_define
@@ -72,14 +159,6 @@ directive|define
 name|ISO88025_MIN_LEN
 value|0
 end_define
-
-begin_comment
-comment|/* This offends my morality */
-end_comment
-
-begin_comment
-comment|/*  * The maximum packet length.  */
-end_comment
 
 begin_define
 define|#
@@ -104,7 +183,7 @@ value|((foo)>= ISO88025_MIN_LEN&& (foo)<= ISO88025_MAX_LEN)
 end_define
 
 begin_comment
-comment|/*  * ISO 802.5 physical header   */
+comment|/*  * ISO 802.5 physical header  */
 end_comment
 
 begin_struct
@@ -138,12 +217,12 @@ name|rcf
 decl_stmt|;
 comment|/* route control field */
 name|u_short
-name|rseg
+name|rd
 index|[
-name|RIF_LEN
+name|RIF_MAX_RD
 index|]
 decl_stmt|;
-comment|/* routing registers */
+comment|/* routing designators */
 block|}
 struct|;
 end_struct
@@ -195,7 +274,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|ISO88025MTU
+name|ISO88025_MAX_MTU
 value|18000
 end_define
 
