@@ -2269,6 +2269,12 @@ operator|.
 name|action
 operator|==
 name|USING
+operator|||
+name|curfile
+operator|.
+name|action
+operator|==
+name|SKIP
 condition|)
 block|{
 if|if
