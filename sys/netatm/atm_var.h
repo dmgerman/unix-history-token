@@ -660,6 +660,8 @@ parameter_list|(
 name|struct
 name|atm_pif
 modifier|*
+parameter_list|,
+name|uma_zone_t
 parameter_list|)
 function_decl|;
 end_function_decl

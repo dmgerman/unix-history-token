@@ -757,7 +757,7 @@ comment|/* 	 * Start initializing it 	 */
 end_comment
 
 begin_comment
-unit|eup->eu_unit = unit; 	eup->eu_mtu = ENI_IFF_MTU; 	eup->eu_pcitag = config_id; 	eup->eu_ioctl = eni_atm_ioctl; 	eup->eu_instvcc = eni_instvcc; 	eup->eu_openvcc = eni_openvcc; 	eup->eu_closevcc = eni_closevcc; 	eup->eu_output = eni_output; 	eup->eu_vcc_pool =&eni_vcc_pool; 	eup->eu_nif_pool =&eni_nif_pool;
+unit|eup->eu_unit = unit; 	eup->eu_mtu = ENI_IFF_MTU; 	eup->eu_pcitag = config_id; 	eup->eu_ioctl = eni_atm_ioctl; 	eup->eu_instvcc = eni_instvcc; 	eup->eu_openvcc = eni_openvcc; 	eup->eu_closevcc = eni_closevcc; 	eup->eu_output = eni_output; 	eup->eu_vcc_zone = eni_vcc_zone; 	eup->eu_nif_zone = eni_nif_zone;
 comment|/* 	 * Enable Memory Mapping / Bus Mastering  	 */
 end_comment
 

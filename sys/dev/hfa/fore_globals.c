@@ -133,6 +133,12 @@ directive|include
 file|<dev/hfa/fore_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -272,51 +278,14 @@ comment|/*  * Storage pools  */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|sp_info
-name|fore_nif_pool
-init|=
-block|{
-literal|"fore nif pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|atm_nif
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|5
-block|,
-comment|/* si_blkcnt */
-literal|52
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|fore_nif_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|sp_info
-name|fore_vcc_pool
-init|=
-block|{
-literal|"fore vcc pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-name|Fore_vcc
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|10
-block|,
-comment|/* si_blkcnt */
-literal|100
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|fore_vcc_zone
 decl_stmt|;
 end_decl_stmt
 

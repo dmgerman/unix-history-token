@@ -409,17 +409,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|sp_info
-name|fore_nif_pool
+name|uma_zone_t
+name|fore_nif_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|sp_info
-name|fore_vcc_pool
+name|uma_zone_t
+name|fore_vcc_zone
 decl_stmt|;
 end_decl_stmt
 

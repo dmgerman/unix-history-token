@@ -297,17 +297,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|sp_info
-name|eni_nif_pool
+name|uma_zone_t
+name|eni_nif_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|sp_info
-name|eni_vcc_pool
+name|uma_zone_t
+name|eni_vcc_zone
 decl_stmt|;
 end_decl_stmt
 

@@ -1946,15 +1946,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|eu_vcc_pool
-value|eu_cmn.cu_vcc_pool
+name|eu_vcc_zone
+value|eu_cmn.cu_vcc_zone
 end_define
 
 begin_define
 define|#
 directive|define
-name|eu_nif_pool
-value|eu_cmn.cu_nif_pool
+name|eu_nif_zone
+value|eu_cmn.cu_nif_zone
 end_define
 
 begin_define

@@ -736,15 +736,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|fu_vcc_pool
-value|fu_cmn.cu_vcc_pool
+name|fu_vcc_zone
+value|fu_cmn.cu_vcc_zone
 end_define
 
 begin_define
 define|#
 directive|define
-name|fu_nif_pool
-value|fu_cmn.cu_nif_pool
+name|fu_nif_zone
+value|fu_cmn.cu_nif_zone
 end_define
 
 begin_define

@@ -369,6 +369,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_comment
 comment|/*  * Common structure used to define each physical ATM device interface.  * This structure will (normally) be embedded at the top of each driver's   * device-specific interface structure.    */
 end_comment
@@ -759,18 +765,14 @@ name|int
 name|cu_savepri
 decl_stmt|;
 comment|/* Saved priority for locking device */
-name|struct
-name|sp_info
-modifier|*
-name|cu_vcc_pool
+name|uma_zone_t
+name|cu_vcc_zone
 decl_stmt|;
-comment|/* Device VCC pool */
-name|struct
-name|sp_info
-modifier|*
-name|cu_nif_pool
+comment|/* Device VCC zone */
+name|uma_zone_t
+name|cu_nif_zone
 decl_stmt|;
-comment|/* Device NIF pool */
+comment|/* Device NIF zone */
 name|int
 function_decl|(
 modifier|*

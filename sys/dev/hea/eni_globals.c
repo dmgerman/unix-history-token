@@ -103,6 +103,12 @@ directive|include
 file|<dev/hea/eni.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -221,51 +227,14 @@ comment|/*  * Storage pools  */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|sp_info
-name|eni_nif_pool
-init|=
-block|{
-literal|"eni nif pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|atm_nif
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|5
-block|,
-comment|/* si_blkcnt */
-literal|52
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|eni_nif_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|sp_info
-name|eni_vcc_pool
-init|=
-block|{
-literal|"eni vcc pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-name|Eni_vcc
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|10
-block|,
-comment|/* si_blkcnt */
-literal|100
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|eni_vcc_zone
 decl_stmt|;
 end_decl_stmt
 
