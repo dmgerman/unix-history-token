@@ -1317,7 +1317,7 @@ operator|.
 name|fl_unit
 operator|=
 operator|(
-name|u_char
+name|u_int
 operator|)
 name|ifp
 operator|->
@@ -1426,7 +1426,7 @@ operator|.
 name|fl_unit
 operator|=
 operator|(
-name|u_char
+name|u_int
 operator|)
 name|ifp
 operator|->
