@@ -2773,7 +2773,7 @@ operator|*
 operator|)
 name|args
 operator|->
-name|scp
+name|sfp
 argument_list|)
 expr_stmt|;
 endif|#
