@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ls.c,v 1.26 1999/08/19 11:36:12 sheldonh Exp $"
+literal|"$Id: ls.c,v 1.27 1999/08/19 13:04:08 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -937,6 +937,16 @@ case|:
 name|f_numericonly
 operator|=
 literal|1
+expr_stmt|;
+name|f_longform
+operator|=
+literal|1
+expr_stmt|;
+name|f_column
+operator|=
+name|f_singlecol
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
