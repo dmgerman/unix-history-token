@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) UNIX System Laboratories, Inc.  All or some portions
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.103 1995/10/28 16:57:52 markm Exp $  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.104 1995/11/04 13:23:09 bde Exp $  */
 end_comment
 
 begin_include
@@ -56,56 +56,14 @@ file|<sys/conf.h>
 end_include
 
 begin_comment
-comment|/* Lots of bogus defines for shorthand purposes */
+comment|/* Bogus defines for compatibility. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|noopen
-value|(d_open_t *)enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|noclose
-value|(d_close_t *)enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|noread
-value|(d_rdwr_t *)enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|nowrite
-value|noread
-end_define
-
-begin_define
-define|#
-directive|define
 name|noioc
-value|(d_ioctl_t *)enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|nostop
-value|(d_stop_t *)enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|noselect
-value|(d_select_t *)enodev
+value|noioctl
 end_define
 
 begin_define
@@ -118,111 +76,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|nodump
-value|(d_dump_t *)enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|nodevtotty
-value|(d_ttycv_t *)nullop
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxopen
-value|(d_open_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxclose
-value|(d_close_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxread
-value|(d_rdwr_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxwrite
-value|nxread
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxstrategy
-value|(d_strategy_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxioctl
-value|(d_ioctl_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxdump
-value|(d_dump_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxstop
-value|(d_stop_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxreset
-value|(d_reset_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxselect
-value|(d_select_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxmmap
-value|nommap
+name|zerosize
+value|nopsize
 end_define
 
 begin_comment
-comment|/* must return -1, not ENXIO */
+comment|/* Lots of bogus defines for shorthand purposes */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|nxdevtotty
-value|(d_ttycv_t *)nullop
-end_define
-
-begin_define
-define|#
-directive|define
-name|zerosize
-value|(d_psize_t *)0
-end_define
 
 begin_function_decl
 name|int
@@ -1596,7 +1456,7 @@ begin_define
 define|#
 directive|define
 name|swsize
-value|(d_psize_t *)enodev
+value|zerosize
 end_define
 
 begin_decl_stmt

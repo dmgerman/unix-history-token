@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* su: SCSI Universal. This is a universal SCSI device that  * has a fixed minor number format.  This allows you to refer  * to your devices by BUS, ID, LUN instead of st0, st1, ...  *  * This code looks up the underlying device for a given SCSI  * target and uses that driver.  *  *Begin copyright  *  * Copyright (C) 1993, 1994, 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *End copyright  *  *      $Id: su.c,v 1.4 1995/03/04 20:51:07 dufault Exp $  *  * Tabstops 4  */
+comment|/* su: SCSI Universal. This is a universal SCSI device that  * has a fixed minor number format.  This allows you to refer  * to your devices by BUS, ID, LUN instead of st0, st1, ...  *  * This code looks up the underlying device for a given SCSI  * target and uses that driver.  *  *Begin copyright  *  * Copyright (C) 1993, 1994, 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *End copyright  *  *      $Id: su.c,v 1.5 1995/05/03 18:09:20 dufault Exp $  *  * Tabstops 4  */
 end_comment
 
 begin_include
@@ -68,101 +68,6 @@ value|((OLDDEV) | ((NEWDEV)& 0x080000FF))
 end_define
 
 begin_comment
-comment|/* XXX: These are taken from, and perhaps belong in, conf.c  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|nxopen
-value|(d_open_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxclose
-value|(d_close_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxread
-value|(d_rdwr_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxwrite
-value|nxread
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxstrategy
-value|(d_strategy_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxioctl
-value|(d_ioctl_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxdump
-value|(d_dump_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxstop
-value|(d_stop_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxreset
-value|(d_reset_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxselect
-value|(d_select_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxmmap
-value|(d_mmap_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|nxdevtotty
-value|(d_ttycv_t *)nullop
-end_define
-
-begin_define
-define|#
-directive|define
-name|zerosize
-value|(d_psize_t *)0
-end_define
-
-begin_comment
 comment|/* bnxio, cnxio: non existent device entries  */
 end_comment
 
@@ -183,7 +88,7 @@ name|nxioctl
 block|,
 name|nxdump
 block|,
-name|zerosize
+name|nxpsize
 block|,
 literal|0
 block|}
