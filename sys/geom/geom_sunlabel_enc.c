@@ -121,20 +121,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SL_LENGTH
-value|0x200
-end_define
-
-begin_define
-define|#
-directive|define
-name|SL_NPART
-value|0x8
-end_define
-
-begin_define
-define|#
-directive|define
 name|SDKP_CYLOFFSET
 value|0
 end_define
@@ -315,7 +301,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SL_NPART
+name|SUN_NPART
 condition|;
 name|i
 operator|++
@@ -391,7 +377,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SL_LENGTH
+name|SUN_SIZE
 condition|;
 name|i
 operator|+=
@@ -587,7 +573,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SL_NPART
+name|SUN_NPART
 condition|;
 name|i
 operator|++
@@ -663,7 +649,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SL_LENGTH
+name|SUN_SIZE
 condition|;
 name|i
 operator|+=
