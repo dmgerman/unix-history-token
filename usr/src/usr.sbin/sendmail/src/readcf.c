@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	3.8	%G%"
+literal|"@(#)readcf.c	3.9	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1164,6 +1164,10 @@ block|,
 literal|'A'
 block|,
 name|M_ARPAFMT
+block|,
+literal|'L'
+block|,
+name|M_FINAL
 block|,
 literal|0
 block|,

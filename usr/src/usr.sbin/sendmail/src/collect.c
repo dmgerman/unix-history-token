@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.12	%G%"
+literal|"@(#)collect.c	3.13	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -614,6 +614,19 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* date message originated */
+name|p
+operator|=
+name|hvalue
+argument_list|(
+literal|"posted-date"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
 name|p
 operator|=
 name|hvalue

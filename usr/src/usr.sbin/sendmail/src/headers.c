@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	3.1	%G%"
+literal|"@(#)headers.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,6 +215,16 @@ operator|&&
 name|bitset
 argument_list|(
 name|H_DEFAULT
+argument_list|,
+name|h
+operator|->
+name|h_flags
+argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|H_FORCE
 argument_list|,
 name|h
 operator|->

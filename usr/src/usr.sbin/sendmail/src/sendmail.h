@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.23	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.24	%G% */
 end_comment
 
 begin_include
@@ -143,7 +143,7 @@ name|short
 name|q_rmailer
 decl_stmt|;
 comment|/* real mailer (before mapping) */
-name|short
+name|u_short
 name|q_flags
 decl_stmt|;
 comment|/* status flags, see below */
@@ -210,7 +210,7 @@ modifier|*
 name|m_mailer
 decl_stmt|;
 comment|/* pathname of the mailer to use */
-name|short
+name|u_long
 name|m_flags
 decl_stmt|;
 comment|/* status flags, see below */
@@ -370,6 +370,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_FINAL
+value|004000
+end_define
+
+begin_comment
+comment|/* mailing will effect final delivery */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_USR_UPPER
 value|010000
 end_define
@@ -470,11 +481,11 @@ modifier|*
 name|h_link
 decl_stmt|;
 comment|/* the next header */
-name|short
+name|u_short
 name|h_flags
 decl_stmt|;
 comment|/* status bits, see below */
-name|short
+name|u_long
 name|h_mflags
 decl_stmt|;
 comment|/* m_flags bits needed */
@@ -515,11 +526,11 @@ modifier|*
 name|hi_field
 decl_stmt|;
 comment|/* the name of the field */
-name|short
+name|u_short
 name|hi_flags
 decl_stmt|;
 comment|/* status bits, see below */
-name|short
+name|u_short
 name|hi_mflags
 decl_stmt|;
 comment|/* m_flags needed for this field */
@@ -604,6 +615,17 @@ end_define
 
 begin_comment
 comment|/* ditto, but always (not just default) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_FORCE
+value|00100
+end_define
+
+begin_comment
+comment|/* force this field, even if default */
 end_comment
 
 begin_comment
