@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.136 2001/07/11 14:11:00 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.138 2001/10/02 17:59:38 pooka Exp $	*/
 end_comment
 
 begin_comment
@@ -5948,6 +5948,34 @@ operator|(
 literal|0
 operator|)
 return|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_suspend
+operator|!=
+name|PWR_RESUME
+condition|)
+name|printf
+argument_list|(
+literal|"uhci_intr: suspended sts=0x%x\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
@@ -5987,34 +6015,6 @@ literal|0
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DIAGNOSTIC
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_suspend
-operator|!=
-name|PWR_RESUME
-condition|)
-name|printf
-argument_list|(
-literal|"uhci_intr: suspended sts=0x%x\n"
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ack
 operator|=
 literal|0
