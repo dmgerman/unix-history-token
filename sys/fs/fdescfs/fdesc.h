@@ -74,11 +74,6 @@ name|unsigned
 name|fd_fd
 decl_stmt|;
 comment|/* Fd to be dup'ed */
-name|char
-modifier|*
-name|fd_link
-decl_stmt|;
-comment|/* Link to fd/n */
 name|int
 name|fd_ix
 decl_stmt|;
