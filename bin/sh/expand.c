@@ -1514,10 +1514,6 @@ if|if
 condition|(
 name|quotes
 operator|&&
-name|c
-operator|>=
-literal|0
-operator|&&
 name|SQSYNTAX
 index|[
 operator|(
@@ -2260,10 +2256,6 @@ block|{
 if|if
 condition|(
 name|quotes
-operator|&&
-name|lastc
-operator|>=
-literal|0
 operator|&&
 name|syntax
 index|[
@@ -3365,11 +3357,6 @@ if|if
 condition|(
 name|quotes
 operator|&&
-operator|*
-name|val
-operator|>=
-literal|0
-operator|&&
 name|syntax
 index|[
 operator|(
@@ -4007,7 +3994,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|do {\ 	if (allow_split) { \ 		syntax = quoted? DQSYNTAX : BASESYNTAX; \ 		while (*p) { \ 			if (*p>= 0&& syntax[(int)*p] == CCTL) \ 				STPUTC(CTLESC, expdest); \ 			STPUTC(*p++, expdest); \ 		} \ 	} else \ 		while (*p) \ 			STPUTC(*p++, expdest); \ 	} while (0)
+value|do {\ 	if (allow_split) { \ 		syntax = quoted? DQSYNTAX : BASESYNTAX; \ 		while (*p) { \ 			if (syntax[(int)*p] == CCTL) \ 				STPUTC(CTLESC, expdest); \ 			STPUTC(*p++, expdest); \ 		} \ 	} else \ 		while (*p) \ 			STPUTC(*p++, expdest); \ 	} while (0)
 switch|switch
 condition|(
 operator|*
