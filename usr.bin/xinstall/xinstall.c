@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.30 1998/01/13 02:12:43 alex Exp $"
+literal|"$Id: xinstall.c,v 1.31 1998/01/20 13:52:32 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1933,6 +1933,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|verbose
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"install: %s -> %s\n"
+argument_list|,
+name|from_name
+argument_list|,
+name|old_to_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|dopreserve
 operator|&&
 name|stat
@@ -1976,21 +1991,6 @@ expr_stmt|;
 block|}
 name|moveit
 label|:
-if|if
-condition|(
-name|verbose
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"install: %s -> %s\n"
-argument_list|,
-name|from_name
-argument_list|,
-name|old_to_name
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|rename
@@ -2251,7 +2251,7 @@ name|to_name
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If provided a set of flags, set them, otherwise, preserve the 	 * flags, except for the dump flag. 	 */
+comment|/* 	 * If provided a set of flags, set them, otherwise, preserve the 	 * flags, except for the dump flag. 	 * NFS does not support flags.  Ignore EOPNOTSUPP flags if we're just 	 * trying to turn off UF_NODUMP.  If we're trying to set real flags, 	 * then warn if the the fs doesn't support it, otherwise fail. 	 */
 if|if
 condition|(
 name|fchflags
@@ -2272,6 +2272,28 @@ operator|~
 name|UF_NODUMP
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|SETFLAGS
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EOPNOTSUPP
+condition|)
+name|warn
+argument_list|(
+literal|"%s: chflags"
+argument_list|,
+name|to_name
+argument_list|)
+expr_stmt|;
+else|else
 block|{
 name|serrno
 operator|=
@@ -2298,6 +2320,8 @@ argument_list|,
 name|to_name
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 operator|(
 name|void
