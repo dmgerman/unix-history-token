@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -40,12 +40,6 @@ begin_include
 include|#
 directive|include
 file|"sys/socket.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/user.h"
 end_include
 
 begin_include
@@ -199,7 +193,7 @@ end_define
 
 begin_decl_stmt
 name|int
-name|nproc
+name|maxproc
 init|=
 name|NPROC
 decl_stmt|;
@@ -381,17 +375,6 @@ end_decl_stmt
 begin_comment
 comment|/*  * These have to be allocated somewhere; allocating  * them here forces loader errors if this file is omitted  * (if they've been externed everywhere else; hah!).  */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|proc
-decl_stmt|,
-modifier|*
-name|procNPROC
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
