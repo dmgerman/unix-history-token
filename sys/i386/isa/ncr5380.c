@@ -808,12 +808,6 @@ parameter_list|)
 value|{\ 	register u_long cnt = count; char *msg = message;\ 	while (cnt--&& ! (condition)) continue;\ 	if (cnt == -1&& msg)\ 		printf ("nca: %s timeout\n", msg); }
 end_define
 
-begin_decl_stmt
-name|inthand2_t
-name|ncaintr
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int

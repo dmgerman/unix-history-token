@@ -1624,20 +1624,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|void
-name|gusintr
-argument_list|(
-name|INT_HANDLER_PARMS
-argument_list|(
-name|irq
-argument_list|,
-name|dummy
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|long
 name|attach_gus_db16

@@ -655,19 +655,6 @@ value|( ( struct fe_softc * )(P) )
 end_define
 
 begin_comment
-comment|/* Public entry point.  This is the only functoin which must be external.  */
-end_comment
-
-begin_function_decl
-name|void
-name|feintr
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Standard driver entry points.  These can be static.  */
 end_comment
 

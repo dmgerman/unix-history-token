@@ -1,4 +1,47 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MACHINE_CONF_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_MACHINE_CONF_H_
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACTUALLY_LKM_NOT_KERNEL
+end_ifndef
+
+begin_comment
+comment|/*  * XXX instead of this, the per-driver declarations should probably be  * put in the "driver.h" headers.  Then ioconf.h could include all the  * "driver.h" headers and drivers would automatically include their  * own "driver.h" header, so we wouldn't need to include ioconf.h here.  * Interrupt handlers should probably be static.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"ioconf.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following was copied from the bogusly non-machine-generated  * file<i386/i386/conf.c>.  Eventually the routines should be static.  */
+end_comment
+
 begin_decl_stmt
 name|d_rdwr_t
 name|rawread
@@ -1814,6 +1857,24 @@ name|d_ioctl_t
 name|labpcioctl
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_MACHINE_CONF_H_ */
+end_comment
 
 end_unit
 

@@ -172,20 +172,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*-  * This space intentionally left blank to stop __LINE__ from screwing up  * regression tests :-(.  *  *  */
+comment|/*-  * This space intentionally left blank to stop __LINE__ from screwing up  * regression tests :-(.  *  *  *  */
 end_comment
-
-begin_decl_stmt
-name|void
-name|rcintr
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|void
