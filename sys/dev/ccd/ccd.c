@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.51 1999/07/18 14:30:57 phk Exp $ */
+comment|/* $Id: ccd.c,v 1.52 1999/08/14 11:40:34 phk Exp $ */
 end_comment
 
 begin_comment
@@ -2724,6 +2724,24 @@ literal|1
 operator|<<
 name|part
 operator|)
+expr_stmt|;
+name|dev
+operator|->
+name|si_bsize_phys
+operator|=
+name|DEV_BSIZE
+expr_stmt|;
+name|dev
+operator|->
+name|si_bsize_best
+operator|=
+name|BLKDEV_IOSIZE
+expr_stmt|;
+name|dev
+operator|->
+name|si_bsize_max
+operator|=
+name|MAXBSIZE
 expr_stmt|;
 comment|/* 	 * If we're initialized, check to see if there are any other 	 * open partitions.  If not, then it's safe to update 	 * the in-core disklabel. 	 */
 if|if
