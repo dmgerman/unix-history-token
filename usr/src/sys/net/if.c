@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"socket.h"
 end_include
 
@@ -37,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|"protosw.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"proc.h"
 end_include
 
 begin_include
