@@ -1439,7 +1439,7 @@ operator|==
 name|NULL
 operator|)
 expr_stmt|;
-comment|/* Don't use the tty code after a panic. */
+comment|/* Don't use the tty code after a panic or while in ddb. */
 if|if
 condition|(
 name|panicstr
@@ -1448,6 +1448,19 @@ name|consdirect
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+if|if
+condition|(
+name|db_active
+condition|)
+name|consdirect
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|consdirect
