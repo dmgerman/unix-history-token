@@ -21,6 +21,23 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -83,7 +100,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: apprentice.c,v 1.42 2001/07/22 21:04:15 christos Exp $"
+literal|"@(#)$Id: apprentice.c,v 1.44 2001/08/01 14:03:19 christos Exp $"
 argument_list|)
 end_macro
 
@@ -1588,9 +1605,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|t
-decl_stmt|,
-modifier|*
-name|s
 decl_stmt|;
 define|#
 directive|define

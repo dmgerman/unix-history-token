@@ -50,6 +50,26 @@ name|HAVE_LONG_LONG
 end_undef
 
 begin_comment
+comment|/* Define if we have "tm_isdst" in "struct tm".  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_TM_ISDST
+end_undef
+
+begin_comment
+comment|/* Define if we have a global "int" variable "daylight".  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_DAYLIGHT
+end_undef
+
+begin_comment
 comment|/* Define to `unsigned char' if standard headers don't define.  */
 end_comment
 

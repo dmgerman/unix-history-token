@@ -75,7 +75,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: ascmagic.c,v 1.29 2000/08/05 19:00:11 christos Exp $"
+literal|"@(#)$Id: ascmagic.c,v 1.30 2001/07/26 13:15:49 christos Exp $"
 argument_list|)
 end_macro
 
@@ -445,12 +445,12 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* Undo the NUL-termination kindly provided by process() */
+comment|/* 	 * Undo the NUL-termination kindly provided by process() 	 * but leave at least one byte to look at 	 */
 while|while
 condition|(
 name|nbytes
 operator|>
-literal|0
+literal|1
 operator|&&
 name|buf
 index|[
