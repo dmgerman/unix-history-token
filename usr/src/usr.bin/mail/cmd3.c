@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.9 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1834,22 +1834,6 @@ operator|(
 literal|1
 operator|)
 return|;
-if|if
-condition|(
-name|Tflag
-operator|!=
-name|NOSTR
-condition|)
-name|close
-argument_list|(
-name|creat
-argument_list|(
-name|Tflag
-argument_list|,
-literal|0600
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
 name|e
