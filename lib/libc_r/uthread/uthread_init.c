@@ -1776,6 +1776,20 @@ argument_list|(
 name|_thread_initial
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|_atfork_list
+argument_list|)
+expr_stmt|;
+name|_pthread_mutex_init
+argument_list|(
+operator|&
+name|_atfork_mutex
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* Initialise the global signal action structure: */
 name|sigfillset
 argument_list|(
