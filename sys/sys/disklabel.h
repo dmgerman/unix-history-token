@@ -469,6 +469,22 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|static
+name|u_int16_t
+name|dkcksum
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|disklabel
+operator|*
+name|lp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|__inline
