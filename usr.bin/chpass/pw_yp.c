@@ -240,6 +240,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|yp_in_pw_file
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|yp_domain
@@ -1364,9 +1372,8 @@ name|size
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-operator|(
+name|yp_in_pw_file
+operator|=
 operator|!
 call|(
 name|dbp
@@ -1384,12 +1391,13 @@ name|data
 argument_list|,
 literal|0
 argument_list|)
-operator|&&
+expr_stmt|;
+if|if
+condition|(
 name|_yp_check
 argument_list|(
 name|NULL
 argument_list|)
-operator|)
 operator|||
 operator|(
 name|yp_domain
