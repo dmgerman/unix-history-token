@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	4.14 (Berkeley) %G%"
+literal|"@(#)af.c	4.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -477,6 +477,8 @@ argument_list|(
 name|sin
 operator|->
 name|sin_addr
+operator|.
+name|s_addr
 argument_list|)
 decl_stmt|;
 define|#
