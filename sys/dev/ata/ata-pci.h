@@ -100,10 +100,6 @@ name|allocate
 function_decl|)
 parameter_list|(
 name|device_t
-parameter_list|,
-name|struct
-name|ata_channel
-modifier|*
 parameter_list|)
 function_decl|;
 name|int
@@ -325,6 +321,27 @@ define|#
 directive|define
 name|ATA_ALI_5229
 value|0x522910b9
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_ALI_5281
+value|0x528110b9
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_ALI_5287
+value|0x528710b9
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_ALI_5289
+value|0x528910b9
 end_define
 
 begin_define
@@ -1554,6 +1571,13 @@ define|#
 directive|define
 name|ALINEW
 value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALISATA
+value|0x04
 end_define
 
 begin_define
