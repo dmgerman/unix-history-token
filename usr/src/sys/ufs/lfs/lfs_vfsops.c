@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.79 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.80 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1179,6 +1179,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|fs
+operator|=
 name|ump
 operator|->
 name|um_lfs
@@ -1207,9 +1209,7 @@ name|b_un
 operator|.
 name|b_addr
 argument_list|,
-name|ump
-operator|->
-name|um_lfs
+name|fs
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1269,7 +1269,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Set up the ifile flags */
+comment|/* Set up the ifile and lock aflags */
 end_comment
 
 begin_expr_stmt
@@ -1299,18 +1299,18 @@ literal|0
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|fs
+operator|->
+name|lfs_seglock
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Set the file system readonly/modify bits. */
 end_comment
-
-begin_expr_stmt
-name|fs
-operator|=
-name|ump
-operator|->
-name|um_lfs
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|fs
@@ -1658,7 +1658,6 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-comment|/* LFS */
 name|int
 name|i
 decl_stmt|,
@@ -1827,6 +1826,12 @@ operator|(
 name|error
 operator|)
 return|;
+name|fs
+operator|->
+name|lfs_clean
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|error
