@@ -13954,11 +13954,17 @@ operator|->
 name|fin_p
 operator|)
 operator|)
-operator|||
+condition|)
+continue|continue;
+if|if
+condition|(
 operator|(
 name|np
 operator|->
 name|in_flags
+operator|&
+name|IPN_RF
+operator|)
 operator|&&
 operator|!
 operator|(
@@ -13967,7 +13973,6 @@ operator|&
 name|np
 operator|->
 name|in_flags
-operator|)
 operator|)
 condition|)
 continue|continue;
