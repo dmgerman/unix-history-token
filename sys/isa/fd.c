@@ -230,6 +230,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|FDC_NO_FIFO
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* do not enable FIFO  */
+end_comment
+
 begin_comment
 comment|/* internally used only, not really from CMOS: */
 end_comment
@@ -3469,9 +3480,12 @@ name|FDC_YE
 comment|/* 	 * don't succeed on probe; wait 	 * for PCCARD subsystem to do it 	 */
 if|if
 condition|(
-name|dev
+name|device_get_flags
+argument_list|(
+name|fdc
 operator|->
-name|id_flags
+name|fdc_dev
+argument_list|)
 operator|&
 name|FDC_IS_PCMCIA
 condition|)
@@ -4359,6 +4373,19 @@ operator|->
 name|fdct
 operator|!=
 name|FDC_UNKNOWN
+operator|&&
+operator|(
+name|device_get_flags
+argument_list|(
+name|fdc
+operator|->
+name|fdc_dev
+argument_list|)
+operator|&
+name|FDC_NO_FIFO
+operator|)
+operator|==
+literal|0
 operator|&&
 name|enable_fifo
 argument_list|(
