@@ -2473,6 +2473,16 @@ index|]
 operator|=
 name|ux
 expr_stmt|;
+name|io_apic_set_id
+argument_list|(
+name|apic
+argument_list|,
+name|IO_TO_ID
+argument_list|(
+name|apic
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* program each IO APIC in the system */
 for|for
@@ -7054,62 +7064,11 @@ block|{
 endif|#
 directive|endif
 comment|/* REALLY_ANAL_IOAPICID_VALUE */
-name|ux
-operator|=
-name|io_apic_read
+name|io_apic_set_id
 argument_list|(
 literal|0
 argument_list|,
-name|IOAPIC_ID
-argument_list|)
-expr_stmt|;
-comment|/* get current contents */
-name|ux
-operator|&=
-operator|~
-name|APIC_ID_MASK
-expr_stmt|;
-comment|/* clear the ID field */
-name|ux
-operator||=
-literal|0x02000000
-expr_stmt|;
-comment|/* set it to '2' */
-name|io_apic_write
-argument_list|(
-literal|0
-argument_list|,
-name|IOAPIC_ID
-argument_list|,
-name|ux
-argument_list|)
-expr_stmt|;
-comment|/* write new value */
-name|ux
-operator|=
-name|io_apic_read
-argument_list|(
-literal|0
-argument_list|,
-name|IOAPIC_ID
-argument_list|)
-expr_stmt|;
-comment|/* re-read&& test */
-if|if
-condition|(
-operator|(
-name|ux
-operator|&
-name|APIC_ID_MASK
-operator|)
-operator|!=
-literal|0x02000000
-condition|)
-name|panic
-argument_list|(
-literal|"can't control IO APIC ID, reg: 0x%08x"
-argument_list|,
-name|ux
+literal|2
 argument_list|)
 expr_stmt|;
 name|io_apic_id
