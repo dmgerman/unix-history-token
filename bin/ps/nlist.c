@@ -9,15 +9,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)nlist.c	8.4 (Berkeley) 4/2/94"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)nlist.c	8.4 (Berkeley) 4/2/94";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
