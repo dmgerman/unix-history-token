@@ -70,11 +70,22 @@ begin_comment
 comment|/* Single threaded */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|ACPI_APPLICATION
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Asm macros */
@@ -119,36 +130,6 @@ end_define
 
 begin_comment
 comment|/*! [Begin] no source code translation */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<asm/pal.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|halt
-parameter_list|()
-value|ia64_pal_halt_light()
-end_define
-
-begin_comment
-comment|/* PAL_HALT[_LIGHT] */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|safe_halt
-parameter_list|()
-value|ia64_pal_halt(1)
-end_define
-
-begin_comment
-comment|/* PAL_HALT */
 end_comment
 
 begin_define
