@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smptests.h>
 end_include
 
@@ -1905,7 +1911,9 @@ operator|=
 name|read_eflags
 argument_list|()
 expr_stmt|;
-asm|__asm __volatile("cli" : : : "memory");
+name|disable_intr
+argument_list|()
+expr_stmt|;
 name|icr_hi
 operator|=
 name|lapic
