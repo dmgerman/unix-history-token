@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pk.h	5.4	86/01/06	*/
+comment|/*	@(#)pk.h	5.5	%G%	*/
 end_comment
 
 begin_struct
@@ -53,14 +53,14 @@ begin_define
 define|#
 directive|define
 name|WINDOWS
-value|3
+value|7
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAILSIZE
-value|2
+value|0
 end_define
 
 begin_comment
@@ -102,9 +102,6 @@ modifier|*
 name|p_rptr
 decl_stmt|;
 name|char
-name|p_mode
-decl_stmt|;
-name|char
 modifier|*
 modifier|*
 name|p_ipool
@@ -117,20 +114,13 @@ name|char
 name|p_rcount
 decl_stmt|;
 name|char
-name|p_nout
-decl_stmt|,
-name|p_tout
-decl_stmt|;
-name|char
 name|p_lpsize
 decl_stmt|;
 comment|/* log(psize/32) */
 name|char
-name|p_timer
-decl_stmt|;
-name|char
 name|p_obusy
 decl_stmt|;
+comment|/* output busy? for reentrant pkoutput() */
 name|char
 name|p_srxmit
 decl_stmt|;
