@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -324,58 +324,6 @@ comment|/********************************************************************** 
 end_comment
 
 begin_comment
-comment|/* general "standard C" defines */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HASSETVBUF
-value|1
-end_define
-
-begin_comment
-comment|/* yes, we have setvbuf in libc */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* general POSIX defines */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_POSIX_VERSION
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HASSETSID
-value|1
-end_define
-
-begin_comment
-comment|/* has setsid(2) call */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* **  Per-Operating System defines */
 end_comment
 
@@ -433,28 +381,6 @@ name|e
 parameter_list|)
 value|setresuid(r, e, -1)
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|HASSETVBUF
-value|1
-end_define
-
-begin_comment
-comment|/* we have setvbuf in libc (but not __STDC__) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -625,64 +551,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LOCKF
+name|SYSTEM5
 value|1
 end_define
 
 begin_comment
-comment|/* use System V lockf instead of flock */
+comment|/* use System V definitions */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|HASUSTAT
-value|1
-end_define
-
-begin_comment
-comment|/* has the ustat(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|bcopy
-parameter_list|(
-name|s
-parameter_list|,
-name|d
-parameter_list|,
-name|l
-parameter_list|)
-value|(memmove((d), (s), (l)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|bzero
-parameter_list|(
-name|d
-parameter_list|,
-name|l
-parameter_list|)
-value|(memset((d), '\0', (l)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|bcmp
-parameter_list|(
-name|s
-parameter_list|,
-name|d
-parameter_list|,
-name|l
-parameter_list|)
-value|(memcmp((s), (d), (l)))
-end_define
 
 begin_include
 include|#
@@ -967,6 +842,10 @@ comment|/********************************************************************** 
 end_comment
 
 begin_comment
+comment|/********************************************************************** **  More general defines **********************************************************************/
+end_comment
+
+begin_comment
 comment|/* general System V defines */
 end_comment
 
@@ -984,7 +863,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* use System V lockf instead of flock */
+comment|/* use System V locking instead of flock */
 end_comment
 
 begin_define
@@ -1006,18 +885,118 @@ value|1
 end_define
 
 begin_comment
-comment|/* use System V uname system call */
+comment|/* use System V uname(2) system call */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NEEDGETDTABLESIZE
+name|HASUSTAT
 value|1
 end_define
 
 begin_comment
-comment|/* needs a replacement getdtablesize */
+comment|/* use System V ustat(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bcopy
+parameter_list|(
+name|s
+parameter_list|,
+name|d
+parameter_list|,
+name|l
+parameter_list|)
+value|(memmove((d), (s), (l)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bzero
+parameter_list|(
+name|d
+parameter_list|,
+name|l
+parameter_list|)
+value|(memset((d), '\0', (l)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bcmp
+parameter_list|(
+name|s
+parameter_list|,
+name|d
+parameter_list|,
+name|l
+parameter_list|)
+value|(memcmp((s), (d), (l)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* general "standard C" defines */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYSTEM5
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASSETVBUF
+value|1
+end_define
+
+begin_comment
+comment|/* we have setvbuf(3) in libc */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* general POSIX defines */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_POSIX_VERSION
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASSETSID
+value|1
+end_define
+
+begin_comment
+comment|/* has setsid(2) call */
 end_comment
 
 begin_endif
