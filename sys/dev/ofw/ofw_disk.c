@@ -36,13 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disk.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<geom/geom_disk.h>
 end_include
 
 begin_include
