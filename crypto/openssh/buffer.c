@@ -207,6 +207,9 @@ name|u_int
 name|len
 parameter_list|)
 block|{
+name|u_int
+name|newlen
+decl_stmt|;
 name|void
 modifier|*
 name|p
@@ -341,19 +344,19 @@ name|restart
 goto|;
 block|}
 comment|/* Increase the size of the buffer and retry. */
+name|newlen
+operator|=
 name|buffer
 operator|->
 name|alloc
-operator|+=
+operator|+
 name|len
 operator|+
 literal|32768
 expr_stmt|;
 if|if
 condition|(
-name|buffer
-operator|->
-name|alloc
+name|newlen
 operator|>
 literal|0xa00000
 condition|)
@@ -361,9 +364,7 @@ name|fatal
 argument_list|(
 literal|"buffer_append_space: alloc %u not supported"
 argument_list|,
-name|buffer
-operator|->
-name|alloc
+name|newlen
 argument_list|)
 expr_stmt|;
 name|buffer
@@ -376,10 +377,14 @@ name|buffer
 operator|->
 name|buf
 argument_list|,
+name|newlen
+argument_list|)
+expr_stmt|;
 name|buffer
 operator|->
 name|alloc
-argument_list|)
+operator|=
+name|newlen
 expr_stmt|;
 goto|goto
 name|restart
