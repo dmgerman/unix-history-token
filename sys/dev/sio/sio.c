@@ -8629,6 +8629,27 @@ expr_stmt|;
 block|}
 name|cont
 label|:
+if|if
+condition|(
+name|line_status
+operator|&
+name|LSR_TXRDY
+operator|&&
+name|com
+operator|->
+name|state
+operator|>=
+operator|(
+name|CS_BUSY
+operator||
+name|CS_TTGO
+operator||
+name|CS_ODEVREADY
+operator|)
+condition|)
+goto|goto
+name|txrdy
+goto|;
 comment|/* 			 * "& 0x7F" is to avoid the gcc-1.40 generating a slow 			 * jump from the top of the loop to here 			 */
 name|line_status
 operator|=
@@ -8757,6 +8778,8 @@ name|CS_ODEVREADY
 expr_stmt|;
 block|}
 block|}
+name|txrdy
+label|:
 comment|/* output queued and everything ready? */
 if|if
 condition|(
