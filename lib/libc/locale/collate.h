@@ -54,6 +54,13 @@ name|COLLATE_VERSION
 value|"1.0\n"
 end_define
 
+begin_define
+define|#
+directive|define
+name|COLLATE_VERSION1_1
+value|"1.1\n"
+end_define
+
 begin_struct
 struct|struct
 name|__collate_st_char_pri
@@ -142,21 +149,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|__collate_chain_pri_table
-value|(*__collate_chain_pri_table_ptr)
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|struct
 name|__collate_st_chain_pri
+modifier|*
 name|__collate_chain_pri_table
-index|[
-name|TABLE_SIZE
-index|]
 decl_stmt|;
 end_decl_stmt
 
