@@ -6117,6 +6117,9 @@ argument_list|,
 name|M_NETGRAPH_BTSOCKET_HCI_RAW
 argument_list|)
 expr_stmt|;
+name|ACCEPT_LOCK
+argument_list|()
+expr_stmt|;
 name|SOCK_LOCK
 argument_list|(
 name|so
