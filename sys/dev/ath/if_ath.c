@@ -1817,10 +1817,7 @@ comment|/* monitor mode */
 operator||
 name|IEEE80211_C_SHPREAMBLE
 comment|/* short preamble supported */
-operator||
-name|IEEE80211_C_RCVMGT
 expr_stmt|;
-comment|/* recv management frames */
 comment|/* get mac address from hardware */
 name|ath_hal_getmac
 argument_list|(
