@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.6 1998/04/14 17:51:32 mjacob Exp $ */
+comment|/* $Id: ispvar.h,v 1.1 1998/04/22 17:54:58 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -618,7 +618,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline
 name|char
 modifier|*
 name|fw_statename
@@ -629,6 +629,21 @@ name|u_int8_t
 name|x
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|__inline
+name|char
+modifier|*
+name|fw_statename
+parameter_list|(
+name|x
+parameter_list|)
+name|u_int8_t
+name|x
+decl_stmt|;
 block|{
 switch|switch
 condition|(
@@ -689,7 +704,7 @@ literal|"eh?"
 return|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * Soft Structure per host adapter  */
