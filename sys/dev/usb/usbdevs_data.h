@@ -12,6 +12,7 @@ comment|/*  * Copyright (c) 1998, 1999, 2000 The NetBSD Foundation, Inc.  * All 
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|usb_knowndev
 name|usb_knowndevs
