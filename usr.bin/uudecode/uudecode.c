@@ -1026,18 +1026,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|q
-argument_list|,
-literal|"/dev/stdout"
-argument_list|)
-operator|!=
-literal|0
-condition|)
+else|else
 block|{
 comment|/* strip down to leaf name */
 name|p
