@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dumprestore.h	5.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dumprestore.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -283,11 +283,22 @@ begin_define
 define|#
 directive|define
 name|DR_NEWHEADER
-value|1
+value|0x0001
 end_define
 
 begin_comment
 comment|/* new format tape header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DR_NEWINODEFMT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* new format inodes on tape */
 end_comment
 
 begin_define
