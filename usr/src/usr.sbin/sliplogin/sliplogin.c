@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sliplogin.c	5.2 (Berkeley) %G%"
+literal|"@(#)sliplogin.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,12 +55,6 @@ end_comment
 begin_comment
 comment|/*  * sliplogin.c  * [MUST BE RUN SUID, SLOPEN DOES A SUSER()!]  *  * This program initializes its own tty port to be an async TCP/IP interface.  * It sets the line discipline to slip, invokes a shell script to initialize  * the network interface, then pauses forever waiting for hangup.  *  * It is a remote descendant of several similar programs with incestuous ties:  * - Kirk Smith's slipconf, modified by Richard Johnsson @ DEC WRL.  * - slattach, probably by Rick Adams but touched by countless hordes.  * - the original sliplogin for 4.2bsd, Doug Kingston the mover behind it.  *  * There are two forms of usage:  *  * "sliplogin"  * Invoked simply as "sliplogin" and a realuid != 0, the program looks up  * the uid in /etc/passwd, and then the username in the file /etc/hosts.slip.  * If and entry is found, the line on fd0 is configured for SLIP operation  * as specified in the file.  *  * "sliplogin IPhost1</dev/ttyb"  * Invoked by root with a username, the name is looked up in the  * /etc/hosts.slip file and if found fd0 is configured as in case 1.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -83,6 +77,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/file.h>
 end_include
 
@@ -95,37 +95,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_if
@@ -189,48 +159,35 @@ directive|include
 file|<net/if_slvar.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ACCESSFILE
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
-begin_define
-define|#
-directive|define
-name|ACCESSFILE
-value|"/etc/slip.hosts"
-end_define
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOGINFILE
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
-begin_define
-define|#
-directive|define
-name|LOGINFILE
-value|"/etc/slip.login"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOGOUTFILE
-value|"/etc/slip.logout"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_decl_stmt
 name|int
@@ -397,7 +354,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|ACCESSFILE
+name|_PATH_ACCESS
 argument_list|,
 literal|"r"
 argument_list|)
@@ -406,9 +363,21 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-name|ACCESSFILE
+name|stderr
+argument_list|,
+literal|"sliplogin: %s: %s\n"
+argument_list|,
+name|_PATH_ACCESS
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|syslog
@@ -417,12 +386,12 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %m\n"
 argument_list|,
-name|ACCESSFILE
+name|_PATH_ACCESS
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|3
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -609,7 +578,7 @@ name|loginfile
 argument_list|,
 literal|"%s.%s"
 argument_list|,
-name|LOGINFILE
+name|_PATH_LOGIN
 argument_list|,
 name|name
 argument_list|)
@@ -633,7 +602,7 @@ name|strcpy
 argument_list|(
 name|loginfile
 argument_list|,
-name|LOGINFILE
+name|_PATH_LOGIN
 argument_list|)
 expr_stmt|;
 operator|(
@@ -643,7 +612,7 @@ name|strcpy
 argument_list|(
 name|logoutfile
 argument_list|,
-name|LOGOUTFILE
+name|_PATH_LOGOUT
 argument_list|)
 expr_stmt|;
 if|if
@@ -673,7 +642,7 @@ literal|"access denied for %s - no %s\n"
 argument_list|,
 name|name
 argument_list|,
-name|LOGINFILE
+name|_PATH_LOGIN
 argument_list|)
 expr_stmt|;
 name|exit
@@ -693,7 +662,7 @@ name|logoutfile
 argument_list|,
 literal|"%s.%s"
 argument_list|,
-name|LOGOUTFILE
+name|_PATH_LOGOUT
 argument_list|,
 name|name
 argument_list|)
