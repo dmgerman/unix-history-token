@@ -271,27 +271,20 @@ name|size
 argument_list|)
 expr_stmt|;
 comment|/* Get a buffer */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bp
 operator|==
 name|NULL
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|ENOMEM
 return|;
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 comment|/*      * Amount to transfer: block size, unless it      * would overlap the end      */
 name|bp
 operator|->
@@ -507,6 +500,11 @@ operator|->
 name|stripesize
 expr_stmt|;
 comment|/* one stripe less */
+if|if
+condition|(
+operator|!
+name|isparity
+condition|)
 name|lock
 operator|=
 name|lockrange
@@ -673,16 +671,6 @@ expr_stmt|;
 else|else
 comment|/* Now write to the subdisk */
 block|{
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|b_dev
@@ -1006,9 +994,6 @@ block|{
 name|int
 name|plexno
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|plex
 modifier|*
@@ -1322,16 +1307,6 @@ block|}
 else|else
 block|{
 comment|/* rebuildparity */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|pbp
 operator|->
 name|b_flags
@@ -1701,11 +1676,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|sdno
@@ -1734,6 +1704,11 @@ argument_list|)
 expr_stmt|;
 comment|/* give back our resources */
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"vinum: can't allocate buffer space\n"
@@ -2366,27 +2341,20 @@ name|size
 argument_list|)
 expr_stmt|;
 comment|/* Get a buffer */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bp
 operator|==
 name|NULL
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|ENOMEM
 return|;
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|b_bcount
@@ -2546,11 +2514,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|b_bcount
@@ -2593,6 +2556,11 @@ operator||=
 name|B_READ
 expr_stmt|;
 comment|/* read it back */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|BUF_LOCKINIT
 argument_list|(
 name|bp
