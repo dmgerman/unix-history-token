@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.2 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,10 +163,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Print the contents of a query.  * This is intended to be primarily a debugging routine.  */
-end_comment
-
 begin_macro
 name|p_query
 argument_list|(
@@ -178,6 +174,45 @@ begin_decl_stmt
 name|char
 modifier|*
 name|msg
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|fp_query
+argument_list|(
+name|msg
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Print the contents of a query.  * This is intended to be primarily a debugging routine.  */
+end_comment
+
+begin_macro
+name|fp_query
+argument_list|(
+argument|msg
+argument_list|,
+argument|file
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|msg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|file
 decl_stmt|;
 end_decl_stmt
 
@@ -215,13 +250,17 @@ argument_list|(
 name|HEADER
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"HEADER:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\topcode = %s"
 argument_list|,
 name|opcodes
@@ -232,8 +271,10 @@ name|opcode
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", id = %d"
 argument_list|,
 name|ntohs
@@ -244,8 +285,10 @@ name|id
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", rcode = %s\n"
 argument_list|,
 name|rcodes
@@ -256,8 +299,10 @@ name|rcode
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\theader flags: "
 argument_list|)
 expr_stmt|;
@@ -267,8 +312,10 @@ name|hp
 operator|->
 name|qr
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|" qr"
 argument_list|)
 expr_stmt|;
@@ -278,8 +325,10 @@ name|hp
 operator|->
 name|aa
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|" aa"
 argument_list|)
 expr_stmt|;
@@ -289,8 +338,10 @@ name|hp
 operator|->
 name|tc
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|" tc"
 argument_list|)
 expr_stmt|;
@@ -300,8 +351,10 @@ name|hp
 operator|->
 name|rd
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|" rd"
 argument_list|)
 expr_stmt|;
@@ -311,8 +364,10 @@ name|hp
 operator|->
 name|ra
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|" ra"
 argument_list|)
 expr_stmt|;
@@ -322,13 +377,17 @@ name|hp
 operator|->
 name|pr
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|" pr"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\n\tqdcount = %d"
 argument_list|,
 name|ntohs
@@ -339,8 +398,10 @@ name|qdcount
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", ancount = %d"
 argument_list|,
 name|ntohs
@@ -351,8 +412,10 @@ name|ancount
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", nscount = %d"
 argument_list|,
 name|ntohs
@@ -363,8 +426,10 @@ name|nscount
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", arcount = %d\n\n"
 argument_list|,
 name|ntohs
@@ -388,8 +453,10 @@ name|qdcount
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"QUESTIONS:\n"
 argument_list|)
 expr_stmt|;
@@ -401,8 +468,10 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\t"
 argument_list|)
 expr_stmt|;
@@ -413,6 +482,8 @@ argument_list|(
 name|cp
 argument_list|,
 name|msg
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 if|if
@@ -422,8 +493,10 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", type = %s"
 argument_list|,
 name|p_type
@@ -442,8 +515,10 @@ argument_list|(
 name|u_short
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", class = %s\n\n"
 argument_list|,
 name|p_class
@@ -477,8 +552,10 @@ name|ancount
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"ANSWERS:\n"
 argument_list|)
 expr_stmt|;
@@ -490,8 +567,10 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\t"
 argument_list|)
 expr_stmt|;
@@ -502,6 +581,8 @@ argument_list|(
 name|cp
 argument_list|,
 name|msg
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 if|if
@@ -526,8 +607,10 @@ name|nscount
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"NAME SERVERS:\n"
 argument_list|)
 expr_stmt|;
@@ -539,8 +622,10 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\t"
 argument_list|)
 expr_stmt|;
@@ -551,6 +636,8 @@ argument_list|(
 name|cp
 argument_list|,
 name|msg
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 if|if
@@ -575,8 +662,10 @@ name|arcount
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"ADDITIONAL RECORDS:\n"
 argument_list|)
 expr_stmt|;
@@ -588,8 +677,10 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\t"
 argument_list|)
 expr_stmt|;
@@ -600,6 +691,8 @@ argument_list|(
 name|cp
 argument_list|,
 name|msg
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 if|if
@@ -622,6 +715,8 @@ parameter_list|(
 name|cp
 parameter_list|,
 name|msg
+parameter_list|,
+name|file
 parameter_list|)
 name|char
 modifier|*
@@ -631,6 +726,13 @@ decl|*
 name|msg
 decl_stmt|;
 end_function
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|file
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -699,7 +801,7 @@ name|fputs
 argument_list|(
 name|name
 argument_list|,
-name|stdout
+name|file
 argument_list|)
 expr_stmt|;
 return|return
@@ -724,6 +826,8 @@ parameter_list|(
 name|cp
 parameter_list|,
 name|msg
+parameter_list|,
+name|file
 parameter_list|)
 name|char
 modifier|*
@@ -733,6 +837,13 @@ decl|*
 name|msg
 decl_stmt|;
 end_function
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|file
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -765,6 +876,8 @@ argument_list|(
 name|cp
 argument_list|,
 name|msg
+argument_list|,
+name|file
 argument_list|)
 operator|)
 operator|==
@@ -776,8 +889,10 @@ name|NULL
 operator|)
 return|;
 comment|/* compression error */
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\n\ttype = %s"
 argument_list|,
 name|p_type
@@ -798,8 +913,10 @@ argument_list|(
 name|u_short
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", class = %s"
 argument_list|,
 name|p_class
@@ -820,8 +937,10 @@ argument_list|(
 name|u_short
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", ttl = %ld"
 argument_list|,
 name|getlong
@@ -837,8 +956,10 @@ argument_list|(
 name|u_long
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", dlen = %d\n"
 argument_list|,
 name|dlen
@@ -901,8 +1022,10 @@ operator|==
 literal|4
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\tinternet address = %s\n"
 argument_list|,
 name|inet_ntoa
@@ -924,8 +1047,10 @@ operator|==
 literal|7
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\tinternet address = %s"
 argument_list|,
 name|inet_ntoa
@@ -934,8 +1059,10 @@ name|inaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", protocol = %d"
 argument_list|,
 name|cp
@@ -944,8 +1071,10 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", port = %d\n"
 argument_list|,
 operator|(
@@ -995,8 +1124,10 @@ case|:
 case|case
 name|T_PTR
 case|:
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\tdomain name = "
 argument_list|)
 expr_stmt|;
@@ -1007,10 +1138,14 @@ argument_list|(
 name|cp
 argument_list|,
 name|msg
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -1027,8 +1162,10 @@ name|cp
 operator|++
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\tCPU=%.*s\n"
 argument_list|,
 name|n
@@ -1050,8 +1187,10 @@ name|cp
 operator|++
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\tOS=%.*s\n"
 argument_list|,
 name|n
@@ -1068,8 +1207,10 @@ break|break;
 case|case
 name|T_SOA
 case|:
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\torigin = "
 argument_list|)
 expr_stmt|;
@@ -1080,10 +1221,14 @@ argument_list|(
 name|cp
 argument_list|,
 name|msg
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\n\tmail addr = "
 argument_list|)
 expr_stmt|;
@@ -1094,10 +1239,14 @@ argument_list|(
 name|cp
 argument_list|,
 name|msg
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\n\tserial=%ld"
 argument_list|,
 name|getlong
@@ -1113,8 +1262,10 @@ argument_list|(
 name|u_long
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", refresh=%ld"
 argument_list|,
 name|getlong
@@ -1130,8 +1281,10 @@ argument_list|(
 name|u_long
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", retry=%ld"
 argument_list|,
 name|getlong
@@ -1147,8 +1300,10 @@ argument_list|(
 name|u_long
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", expire=%ld"
 argument_list|,
 name|getlong
@@ -1164,8 +1319,10 @@ argument_list|(
 name|u_long
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|", min=%ld\n"
 argument_list|,
 name|getlong
@@ -1185,8 +1342,10 @@ break|break;
 case|case
 name|T_MINFO
 case|:
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\trequests = "
 argument_list|)
 expr_stmt|;
@@ -1197,10 +1356,14 @@ argument_list|(
 name|cp
 argument_list|,
 name|msg
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\n\terrors = "
 argument_list|)
 expr_stmt|;
@@ -1211,14 +1374,18 @@ argument_list|(
 name|cp
 argument_list|,
 name|msg
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|T_UINFO
 case|:
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\t%s\n"
 argument_list|,
 name|cp
@@ -1242,8 +1409,10 @@ operator|==
 literal|4
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\t%ld\n"
 argument_list|,
 name|getlong
@@ -1300,8 +1469,10 @@ argument_list|(
 name|u_long
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\tinternet address = %s, protocol = %d\n\t"
 argument_list|,
 name|inet_ntoa
@@ -1341,8 +1512,10 @@ name|c
 operator|&
 literal|1
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|" %d"
 argument_list|,
 name|n
@@ -1362,15 +1535,19 @@ literal|07
 condition|)
 do|;
 block|}
-name|putchar
+name|putc
 argument_list|(
 literal|'\n'
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\t???\n"
 argument_list|)
 expr_stmt|;
@@ -1387,8 +1564,10 @@ name|cp1
 operator|+
 name|dlen
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"packet size error (%#x != %#x)\n"
 argument_list|,
 name|cp
@@ -1398,8 +1577,10 @@ operator|+
 name|dlen
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|file
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
