@@ -3894,7 +3894,7 @@ name|BFE_LAZY_FC_MASK
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*  	 * We don't want lazy interrupts, so just send them at the end of a frame, 	 * please  	 */
+comment|/*  	 * We don't want lazy interrupts, so just send them at 	 * the end of a frame, please  	 */
 name|BFE_OR
 argument_list|(
 name|sc
@@ -3937,7 +3937,7 @@ argument_list|,
 literal|56
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Initialise DMA channels - not forgetting dma addresses need to be added 	 * to BFE_PCI_DMA  	 */
+comment|/*  	 * Initialise DMA channels 	 * - not forgetting dma addresses need to be added to BFE_PCI_DMA  	 */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -4031,7 +4031,7 @@ operator|&
 name|BFE_RESET
 condition|)
 return|return;
-comment|/*  	 * Set reject, wait for it set, then wait for the core to stop being busy 	 * Then set reset and reject and enable the clocks 	 */
+comment|/*  	 * Set reject, wait for it set, then wait for the core to stop 	 * being busy, then set reset and reject and enable the clocks. 	 */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -6557,7 +6557,7 @@ name|BFE_TX_LIST_CNT
 operator|-
 literal|1
 condition|)
-comment|/* Tell the chip to wrap to the start of the descriptor list */
+comment|/* 				 * Tell the chip to wrap to the start of 				 * the descriptor list 				 */
 name|d
 operator|->
 name|bfe_ctrl
@@ -6734,7 +6734,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*  	 * not much point trying to send if the link is down or we have nothing to 	 * send 	 */
+comment|/*  	 * Not much point trying to send if the link is down 	 * or we have nothing to send. 	 */
 if|if
 condition|(
 operator|!
@@ -6805,7 +6805,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/*  		 * Pack the data into the tx ring.  If we dont have enough room, let 		 * the chip drain the ring 		 */
+comment|/*  		 * Pack the data into the tx ring.  If we dont have 		 * enough room, let the chip drain the ring. 		 */
 if|if
 condition|(
 name|bfe_encap
@@ -6975,7 +6975,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bfe%d: bfe_init failed. Not enough memory for list buffers\n"
+literal|"bfe%d: bfe_init: Not enough memory for list buffers\n"
 argument_list|,
 name|sc
 operator|->
