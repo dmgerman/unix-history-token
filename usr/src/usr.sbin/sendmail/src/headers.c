@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	5.28 (Berkeley) %G%"
+literal|"@(#)headers.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1142,6 +1142,16 @@ name|hopcnt
 init|=
 literal|0
 decl_stmt|;
+name|char
+modifier|*
+name|msgid
+decl_stmt|;
+name|char
+name|msgidbuf
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -1155,6 +1165,10 @@ name|printf
 argument_list|(
 literal|"----- collected header -----\n"
 argument_list|)
+expr_stmt|;
+name|msgid
+operator|=
+literal|"<none>"
 expr_stmt|;
 for|for
 control|(
@@ -1288,18 +1302,11 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* log the message-id */
-ifdef|#
-directive|ifdef
-name|LOG
+comment|/* save the message-id for logging */
 if|if
 condition|(
 operator|!
 name|QueueRun
-operator|&&
-name|LogLevel
-operator|>
-literal|8
 operator|&&
 name|h
 operator|->
@@ -1319,13 +1326,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|char
-name|buf
-index|[
-name|MAXNAME
-index|]
-decl_stmt|;
-name|p
+name|msgid
 operator|=
 name|h
 operator|->
@@ -1345,42 +1346,26 @@ condition|)
 block|{
 name|expand
 argument_list|(
-name|p
+name|msgid
 argument_list|,
-name|buf
+name|msgidbuf
 argument_list|,
 operator|&
-name|buf
+name|msgidbuf
 index|[
 sizeof|sizeof
-name|buf
+name|msgidbuf
 index|]
 argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|p
+name|msgid
 operator|=
-name|buf
+name|msgidbuf
 expr_stmt|;
 block|}
-name|syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"%s: message-id=%s"
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* LOG */
 block|}
 if|if
 condition|(
@@ -1665,7 +1650,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: from=%s, size=%ld, class=%d, received from %s\n"
+literal|"%s: from=%s, size=%ld, class=%d, msgid=%s, received from %s\n"
 argument_list|,
 name|e
 operator|->
@@ -1684,6 +1669,8 @@ argument_list|,
 name|e
 operator|->
 name|e_class
+argument_list|,
+name|msgid
 argument_list|,
 name|name
 argument_list|)

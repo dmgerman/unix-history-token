@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.47 (Berkeley) %G%"
+literal|"@(#)conf.c	5.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -666,6 +666,52 @@ operator|.
 name|map_lookup
 operator|=
 name|db_map_lookup
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NIS_MAP
+comment|/* NIS map access */
+block|{
+specifier|extern
+name|bool
+name|nis_map_init
+parameter_list|()
+function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|nis_map_lookup
+parameter_list|()
+function_decl|;
+name|s
+operator|=
+name|stab
+argument_list|(
+literal|"nis"
+argument_list|,
+name|ST_MAPCLASS
+argument_list|,
+name|ST_ENTER
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|s_mapclass
+operator|.
+name|map_init
+operator|=
+name|nis_map_init
+expr_stmt|;
+name|s
+operator|->
+name|s_mapclass
+operator|.
+name|map_lookup
+operator|=
+name|nis_map_lookup
 expr_stmt|;
 block|}
 endif|#
