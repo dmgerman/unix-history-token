@@ -211,19 +211,31 @@ name|PASS_MAX
 value|128
 end_define
 
+begin_comment
+comment|/* _PASSWORD_LEN from<pwd.h> */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NL_ARGMAX
-value|9
+value|99
 end_define
+
+begin_comment
+comment|/* max # of position args for printf */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NL_LANGMAX
-value|14
+value|31
 end_define
+
+begin_comment
+comment|/* max LANG name length */
+end_comment
 
 begin_define
 define|#
@@ -250,7 +262,7 @@ begin_define
 define|#
 directive|define
 name|NL_TEXTMAX
-value|255
+value|2048
 end_define
 
 begin_endif
