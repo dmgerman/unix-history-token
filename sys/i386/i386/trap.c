@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ddb.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_isa.h"
 end_include
 
@@ -97,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ptrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
 end_include
 
 begin_include
@@ -299,12 +299,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<ddb/ddb.h>
-end_include
 
 begin_function_decl
 specifier|extern
@@ -537,13 +531,13 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 end_ifdef
 
 begin_decl_stmt
 specifier|static
 name|int
-name|ddb_on_nmi
+name|kdb_on_nmi
 init|=
 literal|1
 decl_stmt|;
@@ -556,16 +550,16 @@ name|_machdep
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|ddb_on_nmi
+name|kdb_on_nmi
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|ddb_on_nmi
+name|kdb_on_nmi
 argument_list|,
 literal|0
 argument_list|,
-literal|"Go to DDB on NMI"
+literal|"Go to KDB on NMI"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -739,32 +733,14 @@ name|tf_trapno
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 if|if
 condition|(
-name|db_active
+name|kdb_active
 condition|)
 block|{
-name|eva
-operator|=
-operator|(
-name|type
-operator|==
-name|T_PAGEFLT
-condition|?
-name|rcr2
+name|kdb_reenter
 argument_list|()
-else|:
-literal|0
-operator|)
-expr_stmt|;
-name|trap_fatal
-argument_list|(
-operator|&
-name|frame
-argument_list|,
-name|eva
-argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -1327,11 +1303,11 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 comment|/* 				 * NMI can be hooked up to a pushbutton 				 * for debugging. 				 */
 if|if
 condition|(
-name|ddb_on_nmi
+name|kdb_on_nmi
 condition|)
 block|{
 name|printf
@@ -1352,7 +1328,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* DDB */
+comment|/* KDB */
 goto|goto
 name|userout
 goto|;
@@ -1881,10 +1857,10 @@ comment|/* 			 * FALLTHROUGH (TRCTRAP kernel mode, kernel address) 			 */
 case|case
 name|T_BPTFLT
 case|:
-comment|/* 			 * If DDB is enabled, let it handle the debugger trap. 			 * Otherwise, debugger traps "can't happen". 			 */
+comment|/* 			 * If KDB is enabled, let it handle the debugger trap. 			 * Otherwise, debugger traps "can't happen". 			 */
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 comment|/* XXX Giant */
 if|if
 condition|(
@@ -1975,11 +1951,11 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 comment|/* 				 * NMI can be hooked up to a pushbutton 				 * for debugging. 				 */
 if|if
 condition|(
-name|ddb_on_nmi
+name|kdb_on_nmi
 condition|)
 block|{
 name|printf
@@ -2000,7 +1976,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* DDB */
+comment|/* KDB */
 goto|goto
 name|out
 goto|;
@@ -2939,15 +2915,9 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 if|if
 condition|(
-operator|(
-name|debugger_on_panic
-operator|||
-name|db_active
-operator|)
-operator|&&
 name|kdb_trap
 argument_list|(
 name|type

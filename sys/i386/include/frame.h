@@ -321,20 +321,15 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
-name|int
-name|kdb_trap
+begin_define
+define|#
+directive|define
+name|CLOCK_TO_TRAPFRAME
 parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|trapframe
-modifier|*
+name|frame
 parameter_list|)
-function_decl|;
-end_function_decl
+value|((struct trapframe *)&(frame)->cf_fs)
+end_define
 
 begin_define
 define|#
