@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.32 (Berkeley) %G%"
+literal|"@(#)headers.c	6.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1426,6 +1426,23 @@ operator|=
 name|h
 operator|->
 name|h_value
+expr_stmt|;
+while|while
+condition|(
+name|isascii
+argument_list|(
+operator|*
+name|msgid
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|msgid
+argument_list|)
+condition|)
+name|msgid
+operator|++
 expr_stmt|;
 block|}
 comment|/* see if this is a return-receipt header */
