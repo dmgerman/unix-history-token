@@ -512,7 +512,7 @@ name|fd
 parameter_list|,
 name|mask
 parameter_list|)
-value|{	\ 	mutex_lock(&clnt_fd_lock);	\ 	if (__isthreaded)		\ 		vc_fd_locks[fd] = 0;	\ 	mutex_unlock(&clnt_fd_lock);	\ 	thr_sigsetmask(SIG_SETMASK,&(mask), (sigset_t *) NULL);	\ 	cond_signal(&vc_cv[fd]);	\ }
+value|{	\ 	mutex_lock(&clnt_fd_lock);	\ 	vc_fd_locks[fd] = 0;		\ 	mutex_unlock(&clnt_fd_lock);	\ 	thr_sigsetmask(SIG_SETMASK,&(mask), (sigset_t *) NULL);	\ 	cond_signal(&vc_cv[fd]);	\ }
 end_define
 
 begin_decl_stmt
