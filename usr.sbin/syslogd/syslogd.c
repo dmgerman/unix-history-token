@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.13 1996/11/18 21:48:29 peter Exp $"
+literal|"$Id: syslogd.c,v 1.14 1996/11/26 02:24:42 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3960,30 +3960,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|int
-name|e
-init|=
-name|errno
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|f
-operator|->
-name|f_file
-argument_list|)
-expr_stmt|;
 name|f
 operator|->
 name|f_type
 operator|=
 name|F_UNUSED
-expr_stmt|;
-name|errno
-operator|=
-name|e
 expr_stmt|;
 name|logerror
 argument_list|(
