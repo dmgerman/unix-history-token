@@ -856,9 +856,6 @@ decl_stmt|;
 name|u_int
 name|packets
 decl_stmt|;
-name|u_int
-name|error
-decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -874,9 +871,6 @@ name|bnchunk
 decl_stmt|;
 name|u_int
 name|bnpacket
-decl_stmt|;
-name|u_int
-name|btpacket
 decl_stmt|;
 name|struct
 name|fw_bulkxfer
