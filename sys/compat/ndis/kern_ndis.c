@@ -500,6 +500,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|ndis_devs
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|ndisproc
 name|ndis_tproc
@@ -608,10 +617,41 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-name|MOD_UNLOAD
-case|:
-case|case
 name|MOD_SHUTDOWN
+case|:
+comment|/* stop kthreads */
+name|ndis_destroy_kthreads
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ndis_devs
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Shut down subsystems */
+name|ndis_libfini
+argument_list|()
+expr_stmt|;
+name|ntoskrnl_libfini
+argument_list|()
+expr_stmt|;
+comment|/* Remove zones */
+name|uma_zdestroy
+argument_list|(
+name|ndis_packet_zone
+argument_list|)
+expr_stmt|;
+name|uma_zdestroy
+argument_list|(
+name|ndis_buffer_zone
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|MOD_UNLOAD
 case|:
 comment|/* stop kthreads */
 name|ndis_destroy_kthreads
@@ -4968,6 +5008,14 @@ operator|.
 name|nmc_rsvd0
 argument_list|)
 expr_stmt|;
+name|ndis_shrink_thrqueue
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
+name|ndis_devs
+operator|--
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5712,6 +5760,9 @@ argument_list|(
 literal|8
 argument_list|)
 expr_stmt|;
+name|ndis_devs
+operator|--
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -6132,6 +6183,9 @@ name|ndis_enlarge_thrqueue
 argument_list|(
 literal|8
 argument_list|)
+expr_stmt|;
+name|ndis_devs
+operator|++
 expr_stmt|;
 return|return
 operator|(
