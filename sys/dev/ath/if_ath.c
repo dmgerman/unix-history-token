@@ -6208,8 +6208,7 @@ name|sc_bhalq
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
-comment|/* busy, XXX is this right? */
+comment|/* NB: the HAL still stops DMA, so proceed */
 block|}
 name|bus_dmamap_sync
 argument_list|(
