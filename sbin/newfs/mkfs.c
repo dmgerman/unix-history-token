@@ -831,7 +831,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fragment size %d is too small, minimum is %d\n"
+literal|"increasing fragment size from %d to sectorsize (%d)\n"
 argument_list|,
 name|sblock
 operator|.
@@ -840,10 +840,11 @@ argument_list|,
 name|sectorsize
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|18
-argument_list|)
+name|sblock
+operator|.
+name|fs_fsize
+operator|=
+name|sectorsize
 expr_stmt|;
 block|}
 if|if
@@ -857,7 +858,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block size %d is too small, minimum is %d\n"
+literal|"increasing block size from %d to minimum (%d)\n"
 argument_list|,
 name|sblock
 operator|.
@@ -866,10 +867,11 @@ argument_list|,
 name|MINBSIZE
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|19
-argument_list|)
+name|sblock
+operator|.
+name|fs_bsize
+operator|=
+name|MINBSIZE
 expr_stmt|;
 block|}
 if|if
@@ -885,7 +887,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block size (%d) cannot be smaller than fragment size (%d)\n"
+literal|"increasing block size from %d to fragsize (%d)\n"
 argument_list|,
 name|sblock
 operator|.
@@ -896,10 +898,54 @@ operator|.
 name|fs_fsize
 argument_list|)
 expr_stmt|;
-name|exit
+name|sblock
+operator|.
+name|fs_bsize
+operator|=
+name|sblock
+operator|.
+name|fs_fsize
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_fsize
+operator|*
+name|MAXFRAG
+operator|<
+name|sblock
+operator|.
+name|fs_bsize
+condition|)
+block|{
+name|printf
 argument_list|(
-literal|20
+literal|"increasing fragsize from %d to block size / %d (%d)\n"
+argument_list|,
+name|sblock
+operator|.
+name|fs_fsize
+argument_list|,
+name|MAXFRAG
+argument_list|,
+name|sblock
+operator|.
+name|fs_bsize
+operator|/
+name|MAXFRAG
 argument_list|)
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_fsize
+operator|=
+name|sblock
+operator|.
+name|fs_bsize
+operator|/
+name|MAXFRAG
 expr_stmt|;
 block|}
 name|sblock
@@ -1004,15 +1050,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fragment size %d is too small, minimum with block size %d is %d\n"
-argument_list|,
-name|sblock
-operator|.
-name|fs_fsize
-argument_list|,
-name|sblock
-operator|.
-name|fs_bsize
+literal|"SYSERR: fragsize too small %d (block/frag ratio)\n"
 argument_list|,
 name|sblock
 operator|.
@@ -6240,6 +6278,7 @@ comment|/*  * Flush dirty write behind buffer.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|wtfsflush
 parameter_list|()
@@ -6338,6 +6377,7 @@ comment|/*  * write a block to the file system  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|wtfs
 parameter_list|(
@@ -6547,6 +6587,7 @@ comment|/*  * check if a block is available  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|isblock
 parameter_list|(
@@ -6709,6 +6750,7 @@ comment|/*  * take a block out of the map  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|clrblock
 parameter_list|(
@@ -6842,6 +6884,7 @@ comment|/*  * put a block into the map  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|setblock
 parameter_list|(
