@@ -1252,7 +1252,7 @@ block|,
 block|{
 literal|"fe"
 block|,
-literal|"Fujitsu MD86960A/MB869685A Ethernet adapters"
+literal|"Fujitsu MB86960A/MB86965A Ethernet adapters"
 block|,
 literal|0
 block|,
