@@ -511,12 +511,67 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AER_SK_BLANK_CHECK
+value|0x80
+end_define
+
+begin_comment
+comment|/* blank check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AER_SK_VENDOR_SPECIFIC
+value|0x90
+end_define
+
+begin_comment
+comment|/* vendor specific skey */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AER_SK_COPY_ABORTED
+value|0xa0
+end_define
+
+begin_comment
+comment|/* copy aborted */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AER_SK_ABORTED_COMMAND
 value|0xb0
 end_define
 
 begin_comment
 comment|/* command aborted, try again */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AER_SK_EQUAL
+value|0xc0
+end_define
+
+begin_comment
+comment|/* equal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AER_SK_VOLUME_OVERFLOW
+value|0xd0
+end_define
+
+begin_comment
+comment|/* volume overflow */
 end_comment
 
 begin_define
@@ -529,6 +584,13 @@ end_define
 begin_comment
 comment|/* data did not match the medium */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AER_SK_RESERVED
+value|0xf0
+end_define
 
 begin_define
 define|#
@@ -861,6 +923,13 @@ end_define
 begin_comment
 comment|/* play by logical block address */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DSC_POLL_INTERVAL
+value|10
+end_define
 
 begin_comment
 comment|/*  * Drive parameter information  */
@@ -1344,6 +1413,20 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* slow reaction device */
+name|u_char
+name|use_dsc
+range|:
+literal|1
+decl_stmt|;
+comment|/* use DSC completition handeling */
+name|u_char
+name|wait_for_dsc
+range|:
+literal|1
+decl_stmt|;
+name|u_int
+name|dsc_timeout
+decl_stmt|;
 name|u_char
 name|attached
 index|[

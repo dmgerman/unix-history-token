@@ -43,9 +43,11 @@ directive|include
 file|"wfd.h"
 end_include
 
-begin_comment
-comment|/* # include "wmt.h" -- add your driver here */
-end_comment
+begin_include
+include|#
+directive|include
+file|"wst.h"
+end_include
 
 begin_comment
 comment|/* # include "wmd.h" -- add your driver here */
@@ -423,12 +425,45 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|void
+name|atapi_poll_dsc
+parameter_list|(
+name|struct
+name|atapi
+modifier|*
+name|ata
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|int
 name|wdstart
 parameter_list|(
 name|int
 name|ctrlr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|wcdattach
+parameter_list|(
+name|struct
+name|atapi
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|atapi_params
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -456,7 +491,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|wcdattach
+name|wstattach
 parameter_list|(
 name|struct
 name|atapi
@@ -1096,18 +1131,51 @@ directive|endif
 case|case
 name|AT_TYPE_TAPE
 case|:
-comment|/* streaming tape (QIC-121 model) */
+comment|/* streaming tape */
 if|#
 directive|if
-name|NWMT
+name|NWST
 operator|>
 literal|0
-comment|/* Add your driver here */
+comment|/* ATAPI Streaming Tape */
+if|if
+condition|(
+name|wstattach
+argument_list|(
+name|ata
+argument_list|,
+name|unit
+argument_list|,
+name|ap
+argument_list|,
+name|ata
+operator|->
+name|debug
+argument_list|)
+operator|<
+literal|0
+condition|)
+break|break;
+comment|/* Device attached successfully. */
+name|ata
+operator|->
+name|attached
+index|[
+name|unit
+index|]
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 else|#
 directive|else
 name|printf
 argument_list|(
-literal|"wdc%d: ATAPI streaming tapes not supported yet\n"
+literal|"wdc%d: ATAPI streaming tapes not configured\n"
 argument_list|,
 name|ctlr
 argument_list|)
