@@ -2299,6 +2299,11 @@ block|{
 ifndef|#
 directive|ifndef
 name|SMP
+name|size_t
+name|olen
+decl_stmt|,
+name|plen
+decl_stmt|;
 name|int
 name|name
 index|[
@@ -2306,11 +2311,7 @@ literal|2
 index|]
 decl_stmt|;
 name|int
-name|olen
-decl_stmt|,
 name|ncpu
-decl_stmt|,
-name|plen
 decl_stmt|,
 name|error
 decl_stmt|;
@@ -2327,6 +2328,13 @@ literal|1
 index|]
 operator|=
 name|HW_NCPU
+expr_stmt|;
+name|olen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ncpu
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
