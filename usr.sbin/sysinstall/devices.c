@@ -298,6 +298,22 @@ block|,
 block|{
 name|DEVICE_TYPE_DISK
 block|,
+literal|"ar%d"
+block|,
+literal|"ATA/IDE RAID device"
+block|,
+literal|157
+block|,
+literal|65538
+block|,
+literal|8
+block|,
+literal|16
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_DISK
+block|,
 literal|"fla%d"
 block|,
 literal|"M-Systems DiskOnChip Flash devicee"
