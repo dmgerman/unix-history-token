@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	4.3 (Berkeley) %G%"
+literal|"@(#)tables.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -740,6 +740,7 @@ argument_list|,
 name|rt
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If the ioctl fails because the gateway is unreachable 	 * from this host, discard the entry.  This should only 	 * occur because of an incorrect entry in /etc/gateways. 	 */
 if|if
 condition|(
 name|install
@@ -762,11 +763,42 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|perror
 argument_list|(
 literal|"SIOCADDRT"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ENETUNREACH
+condition|)
+block|{
+name|TRACE_ACTION
+argument_list|(
+name|DELETE
+argument_list|,
+name|rt
+argument_list|)
+expr_stmt|;
+name|remque
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|rt
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_block
 
