@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: devfs_vfsops.c,v 1.30 1998/05/06 05:29:32 msmith Exp $  *  */
+comment|/*-  * Copyright 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: devfs_vfsops.c,v 1.31 1998/08/16 01:21:51 bde Exp $  *  */
 end_comment
 
 begin_include
@@ -352,7 +352,11 @@ name|mnt_stat
 operator|.
 name|f_type
 operator|=
-name|MOUNT_DEVFS
+name|mp
+operator|->
+name|mnt_vfc
+operator|->
+name|vfc_typenum
 expr_stmt|;
 name|mp
 operator|->
@@ -385,7 +389,11 @@ index|[
 literal|1
 index|]
 operator|=
-name|MOUNT_DEVFS
+name|mp
+operator|->
+name|mnt_vfc
+operator|->
+name|vfc_typenum
 expr_stmt|;
 name|mp
 operator|->
@@ -846,7 +854,11 @@ name|sbp
 operator|->
 name|f_type
 operator|=
-name|MOUNT_DEVFS
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_type
 expr_stmt|;
 name|sbp
 operator|->
@@ -926,7 +938,11 @@ index|[
 literal|1
 index|]
 operator|=
-name|MOUNT_DEVFS
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_type
 expr_stmt|;
 comment|/*-  *  Copy the mounted on and mounted from names into  *  the passed in stat block, if it is not the one  *  in the mount structure.  */
 if|if
@@ -1357,8 +1373,6 @@ argument_list|(
 name|devfs_vfsops
 argument_list|,
 name|devfs
-argument_list|,
-name|MOUNT_DEVFS
 argument_list|,
 literal|0
 argument_list|)

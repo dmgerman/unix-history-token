@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.34 1998/04/29 12:55:51 dt Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.35 1998/05/06 05:29:38 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -5170,8 +5170,6 @@ argument_list|(
 name|msdosfs_vfsops
 argument_list|,
 name|msdos
-argument_list|,
-name|MOUNT_MSDOS
 argument_list|,
 literal|0
 argument_list|)

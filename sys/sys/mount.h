@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mount.h	8.21 (Berkeley) 5/20/95  *	$Id: mount.h,v 1.65 1998/09/02 17:25:51 bde Exp $  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mount.h	8.21 (Berkeley) 5/20/95  *	$Id: mount.h,v 1.66 1998/09/05 15:17:34 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -197,282 +197,6 @@ comment|/* mounted filesystem */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * File system types (for backwards compat with 4.4Lite.)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_NONE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOUNT_UFS
-value|1
-end_define
-
-begin_comment
-comment|/* Fast Filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_NFS
-value|2
-end_define
-
-begin_comment
-comment|/* Sun-compatible Network Filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_MFS
-value|3
-end_define
-
-begin_comment
-comment|/* Memory-based Filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_MSDOS
-value|4
-end_define
-
-begin_comment
-comment|/* MS/DOS Filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_LFS
-value|5
-end_define
-
-begin_comment
-comment|/* Log-based Filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_LOFS
-value|6
-end_define
-
-begin_comment
-comment|/* Loopback Filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_FDESC
-value|7
-end_define
-
-begin_comment
-comment|/* File Descriptor Filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_PORTAL
-value|8
-end_define
-
-begin_comment
-comment|/* Portal Filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_NULL
-value|9
-end_define
-
-begin_comment
-comment|/* Minimal Filesystem Layer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_UMAP
-value|10
-end_define
-
-begin_comment
-comment|/* User/Group Identifier Remapping Filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_KERNFS
-value|11
-end_define
-
-begin_comment
-comment|/* Kernel Information Filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_PROCFS
-value|12
-end_define
-
-begin_comment
-comment|/* /proc Filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_AFS
-value|13
-end_define
-
-begin_comment
-comment|/* Andrew Filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_CD9660
-value|14
-end_define
-
-begin_comment
-comment|/* ISO9660 (aka CDROM) Filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_UNION
-value|15
-end_define
-
-begin_comment
-comment|/* Union (translucent) Filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_DEVFS
-value|16
-end_define
-
-begin_comment
-comment|/* existing device Filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_EXT2FS
-value|17
-end_define
-
-begin_comment
-comment|/* Linux EXT2FS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_TFS
-value|18
-end_define
-
-begin_comment
-comment|/* Netcon Novell filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_CFS
-value|19
-end_define
-
-begin_comment
-comment|/* Coda filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_MAXTYPE
-value|19
-end_define
-
-begin_define
-define|#
-directive|define
-name|INITMOUNTNAMES
-value|{ \ 	"none",
-comment|/*  0 MOUNT_NONE */
-value|\ 	"ufs",
-comment|/*  1 MOUNT_UFS */
-value|\ 	"nfs",
-comment|/*  2 MOUNT_NFS */
-value|\ 	"mfs",
-comment|/*  3 MOUNT_MFS */
-value|\ 	"msdos",
-comment|/*  4 MOUNT_MSDOS */
-value|\ 	"lfs",
-comment|/*  5 MOUNT_LFS */
-value|\ 	"lofs",
-comment|/*  6 MOUNT_LOFS */
-value|\ 	"fdesc",
-comment|/*  7 MOUNT_FDESC */
-value|\ 	"portal",
-comment|/*  8 MOUNT_PORTAL */
-value|\ 	"null",
-comment|/*  9 MOUNT_NULL */
-value|\ 	"umap",
-comment|/* 10 MOUNT_UMAP */
-value|\ 	"kernfs",
-comment|/* 11 MOUNT_KERNFS */
-value|\ 	"procfs",
-comment|/* 12 MOUNT_PROCFS */
-value|\ 	"afs",
-comment|/* 13 MOUNT_AFS */
-value|\ 	"cd9660",
-comment|/* 14 MOUNT_CD9660 */
-value|\ 	"union",
-comment|/* 15 MOUNT_UNION */
-value|\ 	"devfs",
-comment|/* 16 MOUNT_DEVFS */
-value|\ 	"ext2fs",
-comment|/* 17 MOUNT_EXT2FS */
-value|\ 	"tfs",
-comment|/* 18 MOUNT_TFS */
-value|\ 	"cfs",
-comment|/* 19 MOUNT_CFS */
-value|\ 	0,
-comment|/* 20 MOUNT_SPARE */
-value|\ }
-end_define
 
 begin_comment
 comment|/*  * Structure per mounted file system.  Each mounted file system has an  * array of operations and an instance record.  The file systems are  * put on a doubly linked list.  */
@@ -1846,12 +1570,10 @@ name|vfsops
 parameter_list|,
 name|fsname
 parameter_list|,
-name|index
-parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|static struct vfsconf _fs_vfsconf = { \&vfsops, \ 		#fsname, \ 		index, \ 		0, \ 		flags, \ 	}; \ 	extern struct linker_set MODVNOPS; \ 	MOD_VFS(fsname,&MODVNOPS,&_fs_vfsconf); \ 	extern int \ 	fsname ## _mod __P((struct lkm_table *, int, int)); \ 	int \ 	fsname ## _mod(struct lkm_table *lkmtp, int cmd, int ver) { \ 		MOD_DISPATCH(fsname, \ 		lkmtp, cmd, ver, lkm_nullcmd, lkm_nullcmd, lkm_nullcmd); }
+value|static struct vfsconf _fs_vfsconf = { \&vfsops, \ 		#fsname, \ 		-1, \ 		0, \ 		flags, \ 	}; \ 	extern struct linker_set MODVNOPS; \ 	MOD_VFS(fsname,&MODVNOPS,&_fs_vfsconf); \ 	extern int \ 	fsname ## _mod __P((struct lkm_table *, int, int)); \ 	int \ 	fsname ## _mod(struct lkm_table *lkmtp, int cmd, int ver) { \ 		MOD_DISPATCH(fsname, \ 		lkmtp, cmd, ver, lkm_nullcmd, lkm_nullcmd, lkm_nullcmd); }
 end_define
 
 begin_else
@@ -1868,12 +1590,10 @@ name|vfsops
 parameter_list|,
 name|fsname
 parameter_list|,
-name|index
-parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|static struct vfsconf _fs_vfsconf = { \&vfsops, \ 		#fsname, \ 		index, \ 		0, \ 		flags | VFCF_STATIC, \ 	}; \ 	DATA_SET(vfs_set,_fs_vfsconf)
+value|static struct vfsconf _fs_vfsconf = { \&vfsops, \ 		#fsname, \ 		-1, \ 		0, \ 		flags | VFCF_STATIC, \ 	}; \ 	DATA_SET(vfs_set,_fs_vfsconf)
 end_define
 
 begin_endif
