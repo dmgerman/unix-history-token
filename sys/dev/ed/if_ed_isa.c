@@ -178,6 +178,13 @@ block|}
 block|,
 comment|/* KTC2000 */
 block|{
+literal|0x4cf48906
+block|,
+name|NULL
+block|}
+block|,
+comment|/* ATIf44c */
+block|{
 literal|0
 block|,
 name|NULL
