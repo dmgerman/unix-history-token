@@ -8177,14 +8177,6 @@ operator|==
 name|kmem_object
 condition|)
 block|{
-if|if
-condition|(
-name|object
-operator|==
-name|kernel_object
-condition|)
-name|GIANT_REQUIRED
-expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
 name|object
