@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.19 1997/03/02 20:01:13 imp Exp $"
+literal|"$Id: ping.c,v 1.20 1997/03/03 09:50:21 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2187,7 +2187,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"sigsction"
+literal|"sigaction"
 argument_list|)
 expr_stmt|;
 block|}
