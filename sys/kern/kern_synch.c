@@ -1328,30 +1328,54 @@ argument_list|)
 expr_stmt|;
 name|CTR4
 argument_list|(
-name|KTR_PROC
+argument|KTR_PROC
 argument_list|,
 literal|"mi_switch: new thread %p (kse %p, pid %ld, %s)"
 argument_list|,
+if|#
+directive|if
 operator|(
-name|void
-operator|*
+name|KTR_COMPILE
+operator|&
+name|KTR_SCHED
 operator|)
+operator|!=
+literal|0
+argument|if (td == PCPU_GET(idlethread)) 		CTR3(KTR_SCHED,
+literal|"mi_switch: %p(%s) prio %d idle"
+argument|, 		    td, td->td_proc->p_comm, td->td_priority); 	else if (newtd != NULL) 		CTR5(KTR_SCHED,
+literal|"mi_switch: %p(%s) prio %d preempted by %p(%s)"
+argument|, 		    td, td->td_proc->p_comm, td->td_priority, newtd, 		    newtd->td_proc->p_comm); 	else 		CTR6(KTR_SCHED,
+literal|"mi_switch: %p(%s) prio %d inhibit %d wmesg %s lock %s"
+argument|, 		    td, td->td_proc->p_comm, td->td_priority, 		    td->td_inhibitors, td->td_wmesg, td->td_lockname);
+endif|#
+directive|endif
+argument|(void *)td
+argument_list|,
+argument|td->td_sched
+argument_list|,
+argument|(long)p->p_pid
+argument_list|,
+argument|p->p_comm
+argument_list|)
+empty_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_SCHED
+argument_list|,
+literal|"mi_switch: running %p(%s) prio %d"
+argument_list|,
 name|td
 argument_list|,
 name|td
 operator|->
-name|td_sched
-argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
-argument_list|,
-name|p
+name|td_proc
 operator|->
 name|p_comm
+argument_list|,
+name|td
+operator|->
+name|td_priority
 argument_list|)
 expr_stmt|;
 comment|/*  	 * If the last thread was exiting, finish cleaning it up. 	 */
