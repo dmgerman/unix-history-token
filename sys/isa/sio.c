@@ -2654,15 +2654,7 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|COM_MULTIPORT
-name|Port_t
-name|xiobase
-decl_stmt|;
-endif|#
-directive|endif
-name|int
+name|u_long
 name|xirq
 decl_stmt|;
 name|u_int
@@ -2773,6 +2765,12 @@ name|flags
 argument_list|)
 condition|)
 block|{
+name|Port_t
+name|xiobase
+decl_stmt|;
+name|u_long
+name|io
+decl_stmt|;
 name|idev
 operator|=
 name|devclass_get_device
@@ -2823,7 +2821,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|&
-name|xiobase
+name|io
 argument_list|,
 name|NULL
 argument_list|)
@@ -2831,6 +2829,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|xiobase
+operator|=
+name|io
+expr_stmt|;
 if|if
 condition|(
 name|bus_get_resource
@@ -3469,7 +3471,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"sio%d: configured irq %d not in bitmap of probed irqs %#x\n"
+literal|"sio%d: configured irq %ld not in bitmap of probed irqs %#x\n"
 argument_list|,
 name|device_get_unit
 argument_list|(
