@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c 1.9 %G%"
+literal|"@(#)eval.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -484,12 +484,14 @@ case|case
 name|O_INDEX
 case|:
 block|{
-name|int
+name|long
 name|n
 decl_stmt|;
+comment|/* base address for array */
 name|long
 name|i
 decl_stmt|;
+comment|/* index - lower bound */
 name|n
 operator|=
 name|pop
@@ -507,14 +509,9 @@ name|left
 operator|->
 name|nodetype
 argument_list|,
-name|popsmall
-argument_list|(
 name|p
 operator|->
 name|right
-operator|->
-name|nodetype
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|push
