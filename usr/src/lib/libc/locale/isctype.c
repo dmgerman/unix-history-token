@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)isctype.c	8.2 (Berkeley) %G%"
+literal|"@(#)isctype.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -506,14 +506,14 @@ operator|&
 name|_CRMASK
 operator|)
 condition|?
-name|___toupper
+name|___tolower
 argument_list|(
 name|c
 argument_list|)
 else|:
 name|_CurrentRuneLocale
 operator|->
-name|mapupper
+name|maplower
 index|[
 name|c
 index|]
@@ -546,14 +546,14 @@ operator|&
 name|_CRMASK
 operator|)
 condition|?
-name|___tolower
+name|___toupper
 argument_list|(
 name|c
 argument_list|)
 else|:
 name|_CurrentRuneLocale
 operator|->
-name|maplower
+name|mapupper
 index|[
 name|c
 index|]
