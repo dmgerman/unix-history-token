@@ -4127,7 +4127,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * DOS filesystems don't know what links are. But since we already called  * msdosfs_lookup() with create and lockparent, the parent is locked so we  * have to free it before we return the error.  */
+comment|/*  * DOS filesystems don't know what links are.  */
 end_comment
 
 begin_function
