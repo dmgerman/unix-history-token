@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termcap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -121,12 +127,6 @@ name|delaystr
 index|[
 literal|10
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|short
-name|ospeed
 decl_stmt|;
 end_decl_stmt
 
