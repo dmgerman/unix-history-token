@@ -1809,23 +1809,13 @@ goto|goto
 name|retn
 goto|;
 block|}
-comment|/* 		 * Dereference the reference we just created.  This assumes 		 * that the object is associated with the vp. 		 * 		 * We don't need to vrele because the caller must hold a ref. 		 */
+comment|/* 		 * Dereference the reference we just created.  This assumes 		 * that the object is associated with the vp. 		 */
 name|object
 operator|->
 name|ref_count
 operator|--
 expr_stmt|;
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|vp
-operator|->
-name|v_usecount
-operator|--
-expr_stmt|;
-name|VI_UNLOCK
+name|vrele
 argument_list|(
 name|vp
 argument_list|)
