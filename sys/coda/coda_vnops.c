@@ -562,14 +562,6 @@ block|,
 comment|/* bmap */
 block|{
 operator|&
-name|vop_strategy_desc
-block|,
-name|coda_strategy
-block|}
-block|,
-comment|/* strategy */
-block|{
-operator|&
 name|vop_print_desc
 block|,
 name|coda_vop_error
@@ -7602,73 +7594,6 @@ name|EOPNOTSUPP
 operator|)
 return|;
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  * I don't think the following two things are used anywhere, so I've  * commented them out   *   * struct buf *async_bufhead;   * int async_daemon_count;  */
-end_comment
-
-begin_function
-name|int
-name|coda_strategy
-parameter_list|(
-name|v
-parameter_list|)
-name|void
-modifier|*
-name|v
-decl_stmt|;
-block|{
-comment|/* true args */
-name|struct
-name|vop_strategy_args
-modifier|*
-name|ap
-init|=
-name|v
-decl_stmt|;
-specifier|register
-name|struct
-name|buf
-modifier|*
-name|bp
-name|__attribute__
-argument_list|(
-operator|(
-name|unused
-operator|)
-argument_list|)
-init|=
-name|ap
-operator|->
-name|a_bp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-name|__attribute__
-argument_list|(
-operator|(
-name|unused
-operator|)
-argument_list|)
-init|=
-name|curthread
-decl_stmt|;
-comment|/* upcall decl */
-comment|/* locals */
-name|printf
-argument_list|(
-literal|"coda_strategy: called ???\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
 block|}
 end_function
 
