@@ -68,7 +68,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Inetd - Internet super-server  *  * This program invokes all internet services as needed.  Connection-oriented  * services are invoked each time a connection is made, by creating a process.  * This process is passed the connection as file descriptor 0 and is expected  * to do a getpeername to find out the source host and port.  *  * Datagram oriented services are invoked when a datagram  * arrives; a process is created and passed a pending message  * on file descriptor 0.  Datagram servers may either connect  * to their peer, freeing up the original socket for inetd  * to receive further messages on, or ``take over the socket'',  * processing all arriving datagrams and, eventually, timing  * out.	 The first type of server is said to be ``multi-threaded'';  * the second type of server ``single-threaded''.  *  * Inetd uses a configuration file which is read at startup  * and, possibly, at some later time in response to a hangup signal.  * The configuration file is ``free format'' with fields given in the  * order shown below.  Continuation lines for an entry must begin with  * a space or tab.  All fields must be present in each entry.  *  *	service name			must be in /etc/services or must  *					name a tcpmux service  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			must be in /etc/protocols  *	wait/nowait			single-threaded/multi-threaded  *	user				user to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS (20)  *  * TCP services without official port numbers are handled with the  * RFC1078-based tcpmux internal service. Tcpmux listens on port 1 for  * requests. When a connection is made from a foreign host, the service  * requested is passed to tcpmux, which looks it up in the servtab list  * and returns the proper entry for the service. Tcpmux returns a  * negative reply if the service doesn't exist, otherwise the invoked  * server is expected to return the positive reply if the service type in  * inetd.conf file has the prefix "tcpmux/". If the service type has the  * prefix "tcpmux/+", tcpmux will return the positive reply for the  * process; this is for compatibility with older server code, and also  * allows you to invoke programs that use stdin/stdout without putting any  * special server code in them. Services that use tcpmux are "nowait"  * because they do not have a well-known port and hence cannot listen  * for new requests.  *  * For RPC services  *	service name/version		must be in /etc/rpc  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			must be in /etc/protocols  *	wait/nowait			single-threaded/multi-threaded  *	user				user to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS  *  * Comment lines are indicated by a `#' in column 1.  *  * #ifdef IPSEC  * Comment lines that start with "#@" denote IPsec policy string, as described  * in ipsec_set_policy(3).  This will affect all the following items in  * inetd.conf(8).  To reset the policy, just use "#@" line.  By default,  * there's no IPsec policy.  * #endif  */
+comment|/*  * Inetd - Internet super-server  *  * This program invokes all internet services as needed.  Connection-oriented  * services are invoked each time a connection is made, by creating a process.  * This process is passed the connection as file descriptor 0 and is expected  * to do a getpeername to find out the source host and port.  *  * Datagram oriented services are invoked when a datagram  * arrives; a process is created and passed a pending message  * on file descriptor 0.  Datagram servers may either connect  * to their peer, freeing up the original socket for inetd  * to receive further messages on, or ``take over the socket'',  * processing all arriving datagrams and, eventually, timing  * out.	 The first type of server is said to be ``multi-threaded'';  * the second type of server ``single-threaded''.  *  * Inetd uses a configuration file which is read at startup  * and, possibly, at some later time in response to a hangup signal.  * The configuration file is ``free format'' with fields given in the  * order shown below.  Continuation lines for an entry must begin with  * a space or tab.  All fields must be present in each entry.  *  *	service name			must be in /etc/services or must  *					name a tcpmux service  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			tcp[4][6][/faith,ttcp], udp[4][6]  *	wait/nowait			single-threaded/multi-threaded  *	user				user to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS (20)  *  * TCP services without official port numbers are handled with the  * RFC1078-based tcpmux internal service. Tcpmux listens on port 1 for  * requests. When a connection is made from a foreign host, the service  * requested is passed to tcpmux, which looks it up in the servtab list  * and returns the proper entry for the service. Tcpmux returns a  * negative reply if the service doesn't exist, otherwise the invoked  * server is expected to return the positive reply if the service type in  * inetd.conf file has the prefix "tcpmux/". If the service type has the  * prefix "tcpmux/+", tcpmux will return the positive reply for the  * process; this is for compatibility with older server code, and also  * allows you to invoke programs that use stdin/stdout without putting any  * special server code in them. Services that use tcpmux are "nowait"  * because they do not have a well-known port and hence cannot listen  * for new requests.  *  * For RPC services  *	service name/version		must be in /etc/rpc  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			rpc/tcp, rpc/udp  *	wait/nowait			single-threaded/multi-threaded  *	user				user to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS  *  * Comment lines are indicated by a `#' in column 1.  *  * #ifdef IPSEC  * Comment lines that start with "#@" denote IPsec policy string, as described  * in ipsec_set_policy(3).  This will affect all the following items in  * inetd.conf(8).  To reset the policy, just use "#@" line.  By default,  * there's no IPsec policy.  * #endif  */
 end_comment
 
 begin_include
@@ -952,10 +952,6 @@ modifier|*
 name|service
 init|=
 name|NULL
-decl_stmt|;
-name|char
-modifier|*
-name|pnm
 decl_stmt|;
 union|union
 block|{
@@ -1955,7 +1951,7 @@ argument_list|)
 condition|)
 block|{
 name|int
-name|n
+name|nsig
 decl_stmt|;
 if|if
 condition|(
@@ -1969,7 +1965,7 @@ argument_list|,
 name|FIONREAD
 argument_list|,
 operator|&
-name|n
+name|nsig
 argument_list|)
 operator|!=
 literal|0
@@ -1991,7 +1987,7 @@ block|}
 while|while
 condition|(
 operator|--
-name|n
+name|nsig
 operator|>=
 literal|0
 condition|)
@@ -2181,7 +2177,7 @@ operator|)
 literal|0
 argument_list|,
 operator|(
-name|int
+name|socklen_t
 operator|*
 operator|)
 literal|0
@@ -2332,12 +2328,13 @@ name|pname
 index|[
 name|INET6_ADDRSTRLEN
 index|]
-decl_stmt|;
-name|pnm
-operator|=
+init|=
 literal|"unknown"
-expr_stmt|;
-name|i
+decl_stmt|;
+name|socklen_t
+name|sl
+decl_stmt|;
+name|sl
 operator|=
 sizeof|sizeof
 name|peermax
@@ -2357,11 +2354,11 @@ operator|&
 name|peermax
 argument_list|,
 operator|&
-name|i
+name|sl
 argument_list|)
 condition|)
 block|{
-name|i
+name|sl
 operator|=
 sizeof|sizeof
 name|peermax
@@ -2390,7 +2387,7 @@ operator|&
 name|peermax
 argument_list|,
 operator|&
-name|i
+name|sl
 argument_list|)
 operator|>=
 literal|0
@@ -2426,10 +2423,6 @@ operator||
 name|NI_WITHSCOPEID
 argument_list|)
 expr_stmt|;
-name|pnm
-operator|=
-name|pname
-expr_stmt|;
 block|}
 block|}
 else|else
@@ -2464,10 +2457,6 @@ operator||
 name|NI_WITHSCOPEID
 argument_list|)
 expr_stmt|;
-name|pnm
-operator|=
-name|pname
-expr_stmt|;
 block|}
 name|syslog
 argument_list|(
@@ -2479,7 +2468,7 @@ name|sep
 operator|->
 name|se_service
 argument_list|,
-name|pnm
+name|pname
 argument_list|)
 expr_stmt|;
 block|}
@@ -3614,10 +3603,15 @@ name|flag_signal
 parameter_list|(
 name|c
 parameter_list|)
-name|char
+name|int
 name|c
 decl_stmt|;
 block|{
+name|char
+name|ch
+init|=
+name|c
+decl_stmt|;
 if|if
 condition|(
 name|write
@@ -3628,7 +3622,7 @@ literal|1
 index|]
 argument_list|,
 operator|&
-name|c
+name|ch
 argument_list|,
 literal|1
 argument_list|)
@@ -5109,10 +5103,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|sep
 argument_list|)
 expr_stmt|;
@@ -5845,7 +5835,8 @@ condition|)
 block|{
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|socklen_t
 name|len
 init|=
 name|sep
@@ -6718,11 +6709,13 @@ begin_function
 name|void
 name|enable
 parameter_list|(
+name|sep
+parameter_list|)
 name|struct
 name|servtab
 modifier|*
 name|sep
-parameter_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -6867,11 +6860,13 @@ begin_function
 name|void
 name|disable
 parameter_list|(
+name|sep
+parameter_list|)
 name|struct
 name|servtab
 modifier|*
 name|sep
-parameter_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -7368,9 +7363,6 @@ return|;
 comment|/* 	 * clear the static buffer, since some fields (se_ctrladdr, 	 * for example) don't get initialized here. 	 */
 name|memset
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sep
 argument_list|,
 literal|0
@@ -9667,7 +9659,7 @@ name|int
 name|s
 decl_stmt|;
 block|{
-name|int
+name|socklen_t
 name|size
 decl_stmt|;
 name|struct
@@ -10207,7 +10199,7 @@ name|struct
 name|sockaddr_storage
 name|rss
 decl_stmt|;
-name|int
+name|socklen_t
 name|rssLen
 init|=
 sizeof|sizeof
