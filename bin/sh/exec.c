@@ -1495,6 +1495,14 @@ operator|->
 name|next
 control|)
 block|{
+if|if
+condition|(
+name|cmdp
+operator|->
+name|cmdtype
+operator|==
+name|CMDNORMAL
+condition|)
 name|printentry
 argument_list|(
 name|cmdp
