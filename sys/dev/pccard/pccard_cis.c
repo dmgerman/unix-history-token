@@ -4967,9 +4967,11 @@ name|cfe
 operator|->
 name|num_memspace
 operator|=
+operator|(
 name|reg
 operator|&
 name|PCCARD_TPCE_MS_COUNT
+operator|)
 operator|+
 literal|1
 expr_stmt|;

@@ -340,7 +340,7 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|pcmcia_chipset_handle_t
+name|pccard_chipset_handle_t
 operator|)
 argument_list|)
 expr_stmt|;
