@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -66,6 +72,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/pfil.h>
+end_include
+
+begin_comment
+comment|/* for ipfilter */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -73,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -246,6 +268,31 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|protosw
+name|inetsw
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* from netinet/ip_input.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|ip_protox
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* from netinet/ip_input.c */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|n_clusters
@@ -414,6 +461,19 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bdg_ipf
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* IPFilter enabled in bridge */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1852,6 +1912,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link_ether
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bridge_ipf
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|bdg_ipf
+argument_list|,
+literal|0
+argument_list|,
+literal|"Pass bridged pkts through IPFilter"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * The follow macro declares a variable, and maps it to  * a SYSCTL_INT entry with the same name.  */
 end_comment
@@ -2929,6 +3010,20 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* did we match a firewall rule ? */
+ifdef|#
+directive|ifdef
+name|PFIL_HOOKS
+name|struct
+name|packet_filter_hook
+modifier|*
+name|pfh
+decl_stmt|;
+name|int
+name|rv
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* PFIL_HOOKS */
 comment|/*      * XXX eh is usually a pointer within the mbuf (some ethernet drivers      * do that), so we better copy it before doing anything with the mbuf,      * or we might corrupt the header.      */
 name|struct
 name|ether_header
@@ -3124,15 +3219,52 @@ expr_stmt|;
 comment|/*      * Do filtering in a very similar way to what is done in ip_output.      * Only if firewall is loaded, enabled, and the packet is not      * from ether_output() (src==NULL, or we would filter it twice).      * Additional restrictions may apply e.g. non-IP, short packets,      * and pkts already gone through a pipe.      */
 if|if
 condition|(
+name|src
+operator|!=
+name|NULL
+operator|&&
+operator|(
+ifdef|#
+directive|ifdef
+name|PFIL_HOOKS
+operator|(
+operator|(
+name|pfh
+operator|=
+name|pfil_hook_get
+argument_list|(
+name|PFIL_IN
+argument_list|,
+operator|&
+name|inetsw
+index|[
+name|ip_protox
+index|[
+name|IPPROTO_IP
+index|]
+index|]
+operator|.
+name|pr_pfh
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|&&
+name|bdg_ipf
+operator|!=
+literal|0
+operator|)
+operator|||
+endif|#
+directive|endif
+operator|(
 name|IPFW_LOADED
 operator|&&
 name|bdg_ipfw
 operator|!=
 literal|0
-operator|&&
-name|src
-operator|!=
-name|NULL
+operator|)
+operator|)
 condition|)
 block|{
 name|struct
@@ -3272,7 +3404,91 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
+comment|/* 	 * NetBSD-style generic packet filter, pfil(9), hooks. 	 * Enables ipf(8) in bridging. 	 */
+ifdef|#
+directive|ifdef
+name|PFIL_HOOKS
+for|for
+control|(
+init|;
+name|pfh
+condition|;
+name|pfh
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|pfh
+argument_list|,
+name|pfil_link
+argument_list|)
+control|)
+if|if
+condition|(
+name|pfh
+operator|->
+name|pfil_func
+condition|)
+block|{
+name|rv
+operator|=
+name|pfh
+operator|->
+name|pfil_func
+argument_list|(
+name|ip
+argument_list|,
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+argument_list|,
+name|src
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|m0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
+operator|!=
+literal|0
+operator|||
+name|m0
+operator|==
+name|NULL
+condition|)
+return|return
+name|m0
+return|;
+name|ip
+operator|=
+name|mtod
+argument_list|(
+name|m0
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* PFIL_HOOKS */
 comment|/* 	 * The third parameter to the firewall code is the dst. interface. 	 * Since we apply checks only on input pkts we use NULL. 	 * The firewall knows this is a bridged packet as the cookie ptr 	 * is NULL. 	 */
+if|if
+condition|(
+name|IPFW_LOADED
+operator|&&
+name|bdg_ipfw
+operator|!=
+literal|0
+condition|)
+block|{
 name|i
 operator|=
 name|ip_fw_chk_ptr
@@ -3312,6 +3528,13 @@ comment|/* drop */
 return|return
 name|m0
 return|;
+block|}
+else|else
+name|i
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Treat it as a "pass" when not using ipfw. */
 comment|/* 	 * If we get here, the firewall has passed the pkt, but the mbuf 	 * pointer might have changed. Restore ip and the fields ntohs()'d. 	 */
 name|ip
 operator|=
