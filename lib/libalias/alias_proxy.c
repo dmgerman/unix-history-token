@@ -2696,9 +2696,6 @@ block|}
 else|else
 block|{
 name|int
-name|n
-decl_stmt|;
-name|int
 name|nbits
 decl_stmt|;
 name|char

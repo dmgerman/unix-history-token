@@ -8,19 +8,19 @@ comment|/*-  * Copyright (c) 2001 Charles Mott<cmott@scientech.com>  * All right
 end_comment
 
 begin_comment
-comment|/*     Alias_local.h contains the function prototypes for alias.c,     alias_db.c, alias_util.c and alias_ftp.c, alias_irc.c (as well     as any future add-ons).  It also includes macros, globals and     struct definitions shared by more than one alias*.c file.      This include file is intended to be used only within the aliasing     software.  Outside world interfaces are defined in alias.h      This software is placed into the public domain with no restrictions     on its distribution.      Initial version:  August, 1996  (cjm)<updated several times by original author and Eivind Eklund> */
+comment|/*  * Alias_local.h contains the function prototypes for alias.c,  * alias_db.c, alias_util.c and alias_ftp.c, alias_irc.c (as well  * as any future add-ons).  It also includes macros, globals and  * struct definitions shared by more than one alias*.c file.  *  * This include file is intended to be used only within the aliasing  * software.  Outside world interfaces are defined in alias.h  *  * This software is placed into the public domain with no restrictions  * on its distribution.  *  * Initial version:  August, 1996  (cjm)      *  *<updated several times by original author and Eivind Eklund>  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ALIAS_LOCAL_H
+name|_ALIAS_LOCAL_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ALIAS_LOCAL_H
+name|_ALIAS_LOCAL_H_
 end_define
 
 begin_ifndef
@@ -42,11 +42,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*     Macros  */
+comment|/* Macros */
 end_comment
 
 begin_comment
-comment|/*    The following macro is used to update an    internet checksum.  "delta" is a 32-bit    accumulation of all the changes to the    checksum (adding in new 16-bit words and    subtracting out old words), and "cksum"    is the checksum value to be updated. */
+comment|/*  * The following macro is used to update an  * internet checksum.  "delta" is a 32-bit  * accumulation of all the changes to the  * checksum (adding in new 16-bit words and  * subtracting out old words), and "cksum"  * is the checksum value to be updated.  */
 end_comment
 
 begin_define
@@ -58,11 +58,12 @@ name|acc
 parameter_list|,
 name|cksum
 parameter_list|)
-value|{ \     acc += cksum; \     if (acc< 0) \     { \         acc = -acc; \         acc = (acc>> 16) + (acc& 0xffff); \         acc += acc>> 16; \         cksum = (u_short) ~acc; \     } \     else \     { \         acc = (acc>> 16) + (acc& 0xffff); \         acc += acc>> 16; \         cksum = (u_short) acc; \     } \ }
+define|\
+value|do { \ 		acc += cksum; \ 		if (acc< 0) { \ 			acc = -acc; \ 			acc = (acc>> 16) + (acc& 0xffff); \ 			acc += acc>> 16; \ 			cksum = (u_short) ~acc; \ 		} else { \ 			acc = (acc>> 16) + (acc& 0xffff); \ 			acc += acc>> 16; \ 			cksum = (u_short) acc; \ 		} \ 	} while (0)
 end_define
 
 begin_comment
-comment|/*     Globals */
+comment|/* Globals */
 end_comment
 
 begin_decl_stmt
@@ -73,7 +74,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*     Structs */
+comment|/* Structs */
 end_comment
 
 begin_struct_decl
@@ -87,7 +88,7 @@ comment|/* Incomplete structure */
 end_comment
 
 begin_comment
-comment|/*     Prototypes */
+comment|/* Prototypes */
 end_comment
 
 begin_comment
@@ -1151,7 +1152,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(ALIAS_LOCAL_H) */
+comment|/* !_ALIAS_LOCAL_H_ */
 end_comment
 
 end_unit
