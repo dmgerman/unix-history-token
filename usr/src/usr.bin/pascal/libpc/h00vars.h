@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccsid[] = "@(#)h00vars.h 1.3 %G%"; */
+comment|/* sccsid[] = "@(#)h00vars.h 1.4 %G%"; */
 end_comment
 
 begin_include
@@ -474,8 +474,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPEOLN
+value|0x100
+end_define
+
+begin_comment
+comment|/* 1 => pseudo EOLN char read at EOF */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FDEF
-value|0x80
+value|0x080
 end_define
 
 begin_comment
@@ -486,7 +497,7 @@ begin_define
 define|#
 directive|define
 name|FTEXT
-value|0x40
+value|0x040
 end_define
 
 begin_comment
@@ -497,7 +508,7 @@ begin_define
 define|#
 directive|define
 name|FWRITE
-value|0x20
+value|0x020
 end_define
 
 begin_comment
@@ -508,7 +519,7 @@ begin_define
 define|#
 directive|define
 name|FREAD
-value|0x10
+value|0x010
 end_define
 
 begin_comment
@@ -519,7 +530,7 @@ begin_define
 define|#
 directive|define
 name|TEMP
-value|0x08
+value|0x008
 end_define
 
 begin_comment
@@ -530,7 +541,7 @@ begin_define
 define|#
 directive|define
 name|SYNC
-value|0x04
+value|0x004
 end_define
 
 begin_comment
@@ -541,7 +552,7 @@ begin_define
 define|#
 directive|define
 name|EOLN
-value|0x02
+value|0x002
 end_define
 
 begin_comment
@@ -552,7 +563,7 @@ begin_define
 define|#
 directive|define
 name|EOFF
-value|0x01
+value|0x001
 end_define
 
 begin_comment
