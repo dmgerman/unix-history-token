@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strings.c	8.1 (Berkeley) %G%"
+literal|"@(#)strings.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,7 +62,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<a.out.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -74,25 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<a.out.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_define
@@ -283,7 +283,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-0123456789anof"
+literal|"-0123456789an:of"
 argument_list|)
 operator|)
 operator|!=
@@ -291,9 +291,6 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -455,6 +452,24 @@ name|minlen
 operator|=
 name|DEF_LEN
 expr_stmt|;
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"strings: length less than 1\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
