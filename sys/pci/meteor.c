@@ -3232,6 +3232,103 @@ argument_list|)
 expr_stmt|;
 return|return ;
 block|}
+comment|/* 	 * Check for Meteor/PPB (PCI-PCI Bridge) 	 * Reprogram IBM Bridge if detected. 	 * New Meteor cards have an IBM PCI-PCI bridge, creating a secondary 	 * PCI bus. The SAA chip is connected to this secondary bus. 	 */
+comment|/* If we are not on PCI Bus 0, check for the Bridge */
+if|if
+condition|(
+name|pci_get_bus_from_tag
+argument_list|(
+name|tag
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|pcici_t
+name|bridge_tag
+decl_stmt|;
+comment|/* get tag of parent bridge */
+name|bridge_tag
+operator|=
+name|pci_get_parent_from_tag
+argument_list|(
+name|tag
+argument_list|)
+expr_stmt|;
+comment|/* Look for IBM 82351, 82352 or 82353 */
+if|if
+condition|(
+name|pci_conf_read
+argument_list|(
+name|bridge_tag
+argument_list|,
+name|PCI_ID_REG
+argument_list|)
+operator|==
+literal|0x00221014
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"meteor%d: PPB device detected, reprogramming IBM bridge.\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+comment|/* disable SERR */
+name|pci_cfgwrite
+argument_list|(
+name|bridge_tag
+argument_list|,
+literal|0x05
+argument_list|,
+literal|0x00
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* set LATENCY */
+name|pci_cfgwrite
+argument_list|(
+name|bridge_tag
+argument_list|,
+literal|0x0d
+argument_list|,
+literal|0x20
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* write posting enable, prefetch enabled --> GRAB direction */
+name|pci_cfgwrite
+argument_list|(
+name|bridge_tag
+argument_list|,
+literal|0x42
+argument_list|,
+literal|0x14
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* set PRTR Primary retry timer register */
+name|pci_cfgwrite
+argument_list|(
+name|bridge_tag
+argument_list|,
+literal|0x4c
+argument_list|,
+literal|0x10
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|mtr
 operator|=
 operator|&
