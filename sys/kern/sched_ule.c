@@ -6671,6 +6671,7 @@ name|td_kse
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ke
 operator|->
 name|ke_state
@@ -6682,6 +6683,13 @@ operator|->
 name|ke_state
 operator|!=
 name|KES_THREAD
+operator|)
+operator|||
+name|ke
+operator|->
+name|ke_runq
+operator|==
+name|NULL
 condition|)
 continue|continue;
 name|kseq
