@@ -958,6 +958,13 @@ operator|)
 name|sched_attach
 argument_list|()
 expr_stmt|;
+name|p31b_setcfg
+argument_list|(
+name|CTL_P1003_1B_PAGESIZE
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
