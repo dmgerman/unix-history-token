@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.14 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1210,6 +1210,9 @@ specifier|register
 name|BUFAREA
 modifier|*
 name|bp
+decl_stmt|,
+modifier|*
+name|nbp
 decl_stmt|;
 name|int
 name|cnt
@@ -1276,6 +1279,15 @@ operator|&
 name|cgblk
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|cgblk
+operator|.
+name|b_un
+operator|.
+name|b_buf
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|bp
@@ -1291,9 +1303,7 @@ name|bufhead
 condition|;
 name|bp
 operator|=
-name|bp
-operator|->
-name|b_prev
+name|nbp
 control|)
 block|{
 name|cnt
@@ -1304,6 +1314,30 @@ argument_list|(
 operator|&
 name|dfile
 argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+name|nbp
+operator|=
+name|bp
+operator|->
+name|b_prev
+expr_stmt|;
+name|free
+argument_list|(
+name|bp
+operator|->
+name|b_un
+operator|.
+name|b_buf
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|bp
 argument_list|)
 expr_stmt|;
