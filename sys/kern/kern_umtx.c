@@ -3402,6 +3402,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|error
+operator|!=
+name|ETIMEDOUT
+operator|||
 operator|!
 operator|(
 name|td
