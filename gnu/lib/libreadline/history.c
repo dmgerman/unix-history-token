@@ -176,7 +176,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"history.h"
+file|<readline/history.h>
 end_include
 
 begin_if

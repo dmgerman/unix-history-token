@@ -22,13 +22,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"readline.h"
+file|<readline/readline.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"history.h"
+file|<readline/history.h>
 end_include
 
 begin_define
