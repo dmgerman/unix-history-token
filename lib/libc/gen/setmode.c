@@ -828,7 +828,7 @@ decl_stmt|,
 name|setlen
 decl_stmt|;
 specifier|static
-name|int
+name|void
 name|compress_mode
 parameter_list|()
 function_decl|;
@@ -1257,6 +1257,10 @@ comment|/* 				 * When ever we hit 'u', 'g', or 'o', we have 				 * to flush out
 if|if
 condition|(
 name|perm
+operator|||
+name|op
+operator|==
+literal|'='
 condition|)
 block|{
 name|ADDCMD
@@ -1318,6 +1322,10 @@ comment|/* 				 * Add any permissions that we haven't already 				 * done. 				 
 if|if
 condition|(
 name|perm
+operator|||
+name|op
+operator|==
+literal|'='
 condition|)
 block|{
 name|ADDCMD
@@ -1561,21 +1569,19 @@ begin_comment
 comment|/*  * Given an array of bitcmd structures, compress by compacting consecutive  * '+', '-' and 'X' commands into at most 3 commands, one of each.  The 'u',  * 'g' and 'o' commands continue to be separate.  They could probably be   * compacted, but it's not worth the effort.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|compress_mode
-argument_list|(
+parameter_list|(
 name|set
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|bitcmd
-operator|*
+modifier|*
 name|set
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1819,7 +1825,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
