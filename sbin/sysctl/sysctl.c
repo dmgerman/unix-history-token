@@ -802,6 +802,7 @@ operator|&
 name|CTLFLAG_WR
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|kind
@@ -809,21 +810,18 @@ operator|&
 name|CTLFLAG_TUN
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"oid '%s' is a read only tunable"
 argument_list|,
-literal|"Tunable values are set in"
-literal|" /boot/loader.conf and require a reboot to take effect.\n"
+name|bufp
 argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"oid '%s' is a tunable."
-argument_list|,
-name|bufp
+literal|"Tunable values are set in /boot/loader.conf"
 argument_list|)
 expr_stmt|;
 block|}
@@ -838,6 +836,7 @@ argument_list|,
 name|bufp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
