@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)main.c	2.6 %G%"
+literal|"@(#)main.c	2.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -757,9 +757,14 @@ expr_stmt|;
 block|}
 name|editfile
 operator|=
-name|mailname
-operator|=
 name|ef
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|mailname
+argument_list|,
+name|ef
+argument_list|)
 expr_stmt|;
 block|}
 if|if
