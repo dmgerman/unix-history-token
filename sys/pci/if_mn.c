@@ -195,18 +195,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_sync.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netgraph/ng_message.h>
 end_include
 
@@ -1215,10 +1203,6 @@ name|sc
 decl_stmt|;
 name|int
 name|chan
-decl_stmt|;
-name|struct
-name|if_sync
-name|sif
 decl_stmt|;
 name|u_int32_t
 name|ts
