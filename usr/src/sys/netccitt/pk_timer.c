@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) Computing Centre, University of British Columbia, 1984  * Copyright (C) Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1990, 1992  * Copyright (c) 1990, 1992   Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by the  * Laboratory for Computation Vision and the Computer Science Department  * of the the University of British Columbia and the Computer Science  * Department (IV) of the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)pk_timer.c	7.7 (Berkeley) %G%  */
+comment|/*   * Copyright (c) Computing Centre, University of British Columbia, 1984  * Copyright (C) Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1990, 1992  * Copyright (c) 1990, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *   * This code is derived from software contributed to Berkeley by the  * Laboratory for Computation Vision and the Computer Science Department  * of the the University of British Columbia and the Computer Science  * Department (IV) of the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)pk_timer.c	8.1 (Berkeley) %G%  */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	8.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
