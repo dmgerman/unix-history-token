@@ -57,12 +57,10 @@ begin_comment
 comment|/*  * getguess:  *	Get another guess  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|getguess
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|i
@@ -160,7 +158,9 @@ literal|'D'
 argument_list|)
 condition|)
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 else|else
 name|mvprintw
@@ -255,23 +255,19 @@ name|Errors
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * readch;  *	Read a character from the input  */
 end_comment
 
-begin_macro
+begin_function
+name|char
 name|readch
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|cnt
-decl_stmt|,
-name|r
 decl_stmt|;
 specifier|auto
 name|char
@@ -311,7 +307,9 @@ operator|>
 literal|100
 condition|)
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -352,7 +350,7 @@ name|ch
 return|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -51,12 +51,10 @@ begin_comment
 comment|/*  * playgame:  *	play a game  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|playgame
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|bool
 modifier|*
@@ -122,7 +120,7 @@ name|endgame
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

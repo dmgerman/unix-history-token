@@ -57,12 +57,10 @@ begin_comment
 comment|/*  * getword:  *	Get a valid word out of the dictionary file  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|getword
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|FILE
 modifier|*
@@ -225,7 +223,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

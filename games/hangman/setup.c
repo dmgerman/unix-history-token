@@ -57,12 +57,10 @@ begin_comment
 comment|/*  * setup:  *	Set up the strings on the screen.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|setup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 modifier|*
@@ -218,7 +216,7 @@ operator|.
 name|st_size
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

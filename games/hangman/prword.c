@@ -51,12 +51,10 @@ begin_comment
 comment|/*  * prword:  *	Print out the current state of the word  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|prword
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|move
 argument_list|(
@@ -77,7 +75,7 @@ name|clrtoeol
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

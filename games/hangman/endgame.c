@@ -51,12 +51,10 @@ begin_comment
 comment|/*  * endgame:  *	Do what's necessary at the end of the game  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|endgame
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 name|ch
@@ -147,7 +145,9 @@ operator|==
 literal|'n'
 condition|)
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -193,7 +193,7 @@ name|deleteln
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

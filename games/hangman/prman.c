@@ -51,12 +51,10 @@ begin_comment
 comment|/*  * prman:  *	Print out the man appropriately for the give number  *	of incorrect guesses.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|prman
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|i
@@ -129,7 +127,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

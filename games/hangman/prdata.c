@@ -51,12 +51,10 @@ begin_comment
 comment|/*  * prdata:  *	Print out the current guesses  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|prdata
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|bool
 modifier|*
@@ -165,7 +163,7 @@ name|Average
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

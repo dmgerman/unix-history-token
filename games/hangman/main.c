@@ -78,13 +78,10 @@ comment|/*  * This game written by Ken Arnold.  */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|()
 block|{
-name|void
-name|die
-parameter_list|()
-function_decl|;
 comment|/* revoke */
 name|setgid
 argument_list|(
@@ -135,6 +132,11 @@ name|Wordnum
 expr_stmt|;
 block|}
 comment|/* NOTREACHED */
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -145,7 +147,12 @@ end_comment
 begin_function
 name|void
 name|die
-parameter_list|()
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
 block|{
 name|mvcur
 argument_list|(
