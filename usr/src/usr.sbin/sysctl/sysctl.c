@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysctl.c	8.3 (Berkeley) %G%"
+literal|"@(#)sysctl.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2177,11 +2177,12 @@ index|[
 literal|3
 index|]
 decl_stmt|,
-name|size
-decl_stmt|,
 name|loc
 decl_stmt|,
 name|i
+decl_stmt|;
+name|size_t
+name|size
 decl_stmt|;
 if|if
 condition|(
