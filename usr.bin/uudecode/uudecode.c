@@ -1118,8 +1118,6 @@ argument_list|)
 expr_stmt|;
 comment|/* store file name from header line */
 comment|/* for each input line */
-name|next
-label|:
 for|for
 control|(
 init|;
@@ -1185,9 +1183,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-goto|goto
-name|next
-goto|;
+continue|continue;
 block|}
 define|#
 directive|define
