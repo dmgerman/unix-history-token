@@ -69,11 +69,13 @@ name|vnode
 modifier|*
 name|um_uppervp
 decl_stmt|;
+comment|/* UN_ULOCK holds locking state */
 name|struct
 name|vnode
 modifier|*
 name|um_lowervp
 decl_stmt|;
+comment|/* Left unlocked */
 name|struct
 name|ucred
 modifier|*
@@ -97,6 +99,23 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DIAGNOSTIC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DIAGNOSTIC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * DEFDIRMODE is the mode bits used to create a shadow directory.  */
@@ -131,13 +150,17 @@ value|((VRWMODE)|(VRWMODE>>3)|(VRWMODE>>6))
 end_define
 
 begin_comment
-comment|/*  * A cache of vnode references  */
+comment|/*  * A cache of vnode references	(hangs off v_data)  *  * Placing un_lock as the first elements theoretically allows us to  * use the vop_stdlock functions.  However, we need to make sure of  * certain side effects so we will still punch in our own code.  */
 end_comment
 
 begin_struct
 struct|struct
 name|union_node
 block|{
+name|struct
+name|lock
+name|un_lock
+decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|union_node
@@ -188,6 +211,10 @@ name|int
 name|un_openl
 decl_stmt|;
 comment|/* # of opens on lowervp */
+name|int
+name|un_exclcnt
+decl_stmt|;
+comment|/* exclusive count */
 name|unsigned
 name|int
 name|un_flags
@@ -219,40 +246,16 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|UN_WANT
-value|0x01
-end_define
+begin_comment
+comment|/*  * XXX UN_ULOCK -	indicates that the uppervp is locked  *  * UN_CACHED -	node is in the union cache  */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|UN_LOCKED
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|UN_ULOCK
-value|0x04
-end_define
+begin_comment
+comment|/*#define UN_ULOCK	0x04*/
+end_comment
 
 begin_comment
 comment|/* Upper node is locked */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UN_KLOCK
-value|0x08
-end_define
-
-begin_comment
-comment|/* Keep upper node locked on vput */
 end_comment
 
 begin_define
@@ -265,6 +268,24 @@ end_define
 begin_comment
 comment|/* In union cache */
 end_comment
+
+begin_comment
+comment|/*  * Hash table locking flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNVP_WANT
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNVP_LOCKED
+value|0x02
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -523,6 +544,27 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|union_vm_coherency
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|,
+expr|struct
+name|uio
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_extern
 extern|extern int (*union_dircheckp
 end_extern
@@ -609,6 +651,23 @@ parameter_list|)
 value|(UPPERVP(vp) ? UPPERVP(vp) : LOWERVP(vp))
 end_define
 
+begin_define
+define|#
+directive|define
+name|UDEBUG
+parameter_list|(
+name|x
+parameter_list|)
+value|if (uniondebug) printf x
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDEBUG_ENABLED
+value|1
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|vop_t
@@ -623,6 +682,13 @@ specifier|extern
 name|struct
 name|vfsops
 name|union_vfsops
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|uniondebug
 decl_stmt|;
 end_decl_stmt
 
