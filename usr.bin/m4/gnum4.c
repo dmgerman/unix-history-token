@@ -22,7 +22,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*   * functions needed to support gnu-m4 extensions, including a fake freezing  */
+comment|/*  * functions needed to support gnu-m4 extensions, including a fake freezing  */
 end_comment
 
 begin_include
@@ -1566,7 +1566,7 @@ operator|=
 name|REG_NOTBOL
 expr_stmt|;
 block|}
-comment|/* NULL length matches are special... We use the `vi-mode'  		 * rule: don't allow a NULL-match at the last match 		 * position.  		 */
+comment|/* NULL length matches are special... We use the `vi-mode' 		 * rule: don't allow a NULL-match at the last match 		 * position. 		 */
 if|if
 condition|(
 name|pm

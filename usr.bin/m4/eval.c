@@ -953,7 +953,7 @@ break|break;
 case|case
 name|SYSVTYPE
 case|:
-comment|/* 	 * dosysval - return value of the last 	 * system call. 	 *  	 */
+comment|/* 	 * dosysval - return value of the last 	 * system call. 	 * 	 */
 name|pbnum
 argument_list|(
 name|sysval
@@ -1148,7 +1148,7 @@ break|break;
 case|case
 name|SUBSTYPE
 case|:
-comment|/* 	 * dosub - select substring 	 *  	 */
+comment|/* 	 * dosub - select substring 	 * 	 */
 if|if
 condition|(
 name|argc

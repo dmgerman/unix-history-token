@@ -1312,7 +1312,7 @@ name|c
 operator|=
 name|EOF
 expr_stmt|;
-comment|/* 	 * XXX can't free filename, as there might still be  	 * error information pointing to it. 	 */
+comment|/* 	 * XXX can't free filename, as there might still be 	 * error information pointing to it. 	 */
 block|}
 end_function
 
@@ -1367,7 +1367,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * buffer_mark/dump_buffer: allows one to save a mark in a buffer,  * and later dump everything that was added since then to a file.  */
+comment|/*  * buffer_mark/dump_buffer: allows one to save a mark in a buffer,  * and later dump everything that was added since then to a file.  */
 end_comment
 
 begin_function
