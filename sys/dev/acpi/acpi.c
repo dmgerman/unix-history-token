@@ -5503,13 +5503,14 @@ name|BUS_ADD_CHILD
 argument_list|(
 name|parent
 argument_list|,
-literal|0
+literal|101
 argument_list|,
 literal|"acpi"
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* after pcib(100) */
 if|if
 condition|(
 name|child
