@@ -1554,11 +1554,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"malloc"
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 name|nuids
@@ -1717,11 +1717,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 end_if
@@ -2240,11 +2240,11 @@ argument_list|(
 name|uids
 argument_list|)
 expr_stmt|;
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"realloc"
+literal|"realloc failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2636,19 +2636,6 @@ argument_list|,
 name|comm
 argument_list|,
 name|maxlen
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|==
-name|NULL
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -3065,11 +3052,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * options begin with '-' 	 */

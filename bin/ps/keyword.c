@@ -2636,11 +2636,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 name|vent
@@ -2666,11 +2666,11 @@ name|var
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 name|memcpy
