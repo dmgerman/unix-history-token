@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Driver for the 27/284X series adaptec SCSI controllers written by   * Justin T. Gibbs.  Much of this driver was taken from Julian Elischer's  * 1742 driver, so it bears his copyright.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7770.c,v 1.5 1994/11/18 20:34:30 gibbs Exp $  */
+comment|/*  * Driver for the 27/284X series adaptec SCSI controllers written by   * Justin T. Gibbs.  Much of this driver was taken from Julian Elischer's  * 1742 driver, so it bears his copyright.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7770.c,v 1.6 1994/11/25 22:25:15 ats Exp $  */
 end_comment
 
 begin_comment
@@ -5232,7 +5232,7 @@ operator|->
 name|our_id
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Load the Sequencer program and Enable the adapter          */
+comment|/* 	 * Load the Sequencer program and Enable the adapter. 	 * Place the aic7770 in fastmode which makes a big 	 * difference when doing many small block transfers.          */
 name|printf
 argument_list|(
 literal|"ahc%d: Downloading Sequencer Program\n"
@@ -5243,6 +5243,15 @@ expr_stmt|;
 name|ahc_loadseq
 argument_list|(
 name|port
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|SEQCTL
+operator|+
+name|port
+argument_list|,
+name|FASTMODE
 argument_list|)
 expr_stmt|;
 name|outb
@@ -6550,7 +6559,7 @@ init|=
 block|{
 include|#
 directive|include
-file|"../../sys/gnu/misc/aic7770/aic7770_seq.h"
+file|<gnu/misc/aic7770/aic7770_seq.h>
 block|}
 decl_stmt|;
 name|outb
