@@ -300,7 +300,7 @@ literal|"AMD 8151 AGP graphics tunnel"
 operator|)
 return|;
 case|case
-literal|0x10221039
+literal|0x07551039
 case|:
 return|return
 operator|(
