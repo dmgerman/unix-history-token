@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tset.c	1.7 (Berkeley) %G%"
+literal|"@(#)tset.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3243,6 +3243,38 @@ if|if
 condition|(
 name|Mapped
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|Alias
+index|[
+literal|0
+index|]
+operator|&&
+name|isalias
+argument_list|(
+name|TtyType
+argument_list|)
+operator|)
+condition|)
+if|if
+condition|(
+name|tgetent
+argument_list|(
+name|Capbuf
+argument_list|,
+name|TtyType
+argument_list|)
+operator|>
+literal|0
+condition|)
+name|makealias
+argument_list|(
+name|Capbuf
+argument_list|)
+expr_stmt|;
 name|TtyType
 operator|=
 name|mapped
@@ -3250,6 +3282,7 @@ argument_list|(
 name|TtyType
 argument_list|)
 expr_stmt|;
+block|}
 end_if
 
 begin_comment
