@@ -43,6 +43,46 @@ name|int
 name|error
 decl_stmt|;
 comment|/* XXX get rid of     drive->flags |= VF_LOCKING; */
+if|if
+condition|(
+operator|(
+name|drive
+operator|->
+name|flags
+operator|&
+name|VF_LOCKED
+operator|)
+comment|/* it's locked */
+operator|&&
+operator|(
+name|drive
+operator|->
+name|pid
+operator|==
+name|curproc
+operator|->
+name|p_pid
+operator|)
+condition|)
+block|{
+comment|/* by us! */
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"vinum lockdrive: already locking %s\n"
+argument_list|,
+name|drive
+operator|->
+name|label
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 while|while
 condition|(
 operator|(
