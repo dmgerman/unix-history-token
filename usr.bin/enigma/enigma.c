@@ -139,6 +139,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+name|int
+name|main
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|shuffle
 parameter_list|(
@@ -280,6 +293,10 @@ literal|"makekey"
 argument_list|,
 literal|"-"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -289,6 +306,10 @@ literal|"/usr/libexec/makekey"
 argument_list|,
 literal|"-"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -299,6 +320,10 @@ literal|"/usr/lib/makekey"
 argument_list|,
 literal|"-"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -308,6 +333,10 @@ literal|"/usr/bin/makekey"
 argument_list|,
 literal|"-"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -318,6 +347,10 @@ literal|"/lib/makekey"
 argument_list|,
 literal|"-"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
