@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sccsid:  @(#)gprof.h	1.3 (Berkeley) %G% */
+comment|/* sccsid:  @(#)gprof.h	1.4 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -372,6 +372,28 @@ end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
+name|long
+name|s_lowpc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* lowpc from the profile file */
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|long
+name|s_highpc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* highpc from the profile file */
+end_comment
+
+begin_decl_stmt
+name|unsigned
 name|lowpc
 decl_stmt|,
 name|highpc
@@ -379,7 +401,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* range profiled */
+comment|/* range profiled, in UNIT's */
 end_comment
 
 begin_decl_stmt
