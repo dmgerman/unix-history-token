@@ -6495,7 +6495,7 @@ value|ptr = \ 	(base) + (((ptr) - (base) + sizeof(int) - 1)& ~(sizeof(int) - 1))
 end_define
 
 begin_comment
-comment|/*  * Lookup KLD which contains requested module in the "linker.hints" file.  * If version specification is available, then try to find the best KLD.  * Otherwise just find the latest one.  */
+comment|/*  * Lookup KLD which contains requested module in the "linker.hints" file.  * If version specification is available, then try to find the best KLD.  * Otherwise just find the latest one.  *  * XXX: Vnode locking here is hosed; lock should be held for calls to  * VOP_GETATTR() and vn_rdwr().  */
 end_comment
 
 begin_function
