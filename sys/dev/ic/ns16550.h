@@ -4,7 +4,11 @@ comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  * NS16550 UART registers  */
+comment|/*  * NS8250... UART registers.  */
+end_comment
+
+begin_comment
+comment|/* 8250 registers #[0-6]. */
 end_comment
 
 begin_define
@@ -21,126 +25,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|com_dlbl
-value|0
-end_define
-
-begin_comment
-comment|/* divisor latch low (W) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|com_dlbh
-value|1
-end_define
-
-begin_comment
-comment|/* divisor latch high (W) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|com_ier
 value|1
 end_define
 
 begin_comment
-comment|/* interrupt enable (W) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|com_iir
-value|2
-end_define
-
-begin_comment
-comment|/* interrupt identification (R) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|com_fifo
-value|2
-end_define
-
-begin_comment
-comment|/* FIFO control (W) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|com_lctl
-value|3
-end_define
-
-begin_comment
-comment|/* line control register (R/W) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|com_cfcr
-value|3
-end_define
-
-begin_comment
-comment|/* line control register (R/W) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|com_mcr
-value|4
-end_define
-
-begin_comment
-comment|/* modem control register (R/W) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|com_lsr
-value|5
-end_define
-
-begin_comment
-comment|/* line status register (R/W) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|com_msr
-value|6
-end_define
-
-begin_comment
-comment|/* modem status register (R/W) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|com_scr
-value|7
-end_define
-
-begin_comment
-comment|/* scratch register for 16450 up (R/W) */
-end_comment
-
-begin_comment
-comment|/* interrupt enable register */
+comment|/* interrupt enable register (W) */
 end_comment
 
 begin_define
@@ -171,8 +61,15 @@ name|IER_EMSC
 value|0x8
 end_define
 
+begin_define
+define|#
+directive|define
+name|com_iir
+value|2
+end_define
+
 begin_comment
-comment|/* interrupt identification register */
+comment|/* interrupt identification register (R) */
 end_comment
 
 begin_define
@@ -235,68 +132,26 @@ begin_comment
 comment|/* set if FIFOs are enabled */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|com_lctl
+value|3
+end_define
+
 begin_comment
-comment|/* fifo control register */
+comment|/* line control register (R/W) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FIFO_ENABLE
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIFO_RCV_RST
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIFO_XMT_RST
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIFO_DMA_MODE
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIFO_RX_LOW
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIFO_RX_MEDL
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIFO_RX_MEDH
-value|0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIFO_RX_HIGH
-value|0xc0
+name|com_cfcr
+value|3
 end_define
 
 begin_comment
-comment|/* character format control register (aka line control register) */
+comment|/* character format control register (R/W) */
 end_comment
 
 begin_define
@@ -394,8 +249,15 @@ begin_comment
 comment|/* magic to enable EFR on 16650 up */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|com_mcr
+value|4
+end_define
+
 begin_comment
-comment|/* modem control register */
+comment|/* modem control register (R/W) */
 end_comment
 
 begin_define
@@ -444,8 +306,15 @@ name|MCR_DTR
 value|0x01
 end_define
 
+begin_define
+define|#
+directive|define
+name|com_lsr
+value|5
+end_define
+
 begin_comment
-comment|/* line status register */
+comment|/* line status register (R/W) */
 end_comment
 
 begin_define
@@ -511,8 +380,15 @@ name|LSR_RCV_MASK
 value|0x1f
 end_define
 
+begin_define
+define|#
+directive|define
+name|com_msr
+value|6
+end_define
+
 begin_comment
-comment|/* modem status register */
+comment|/* modem status register (R/W) */
 end_comment
 
 begin_define
@@ -572,7 +448,119 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* enhanced feature register (only available on 16650 up) */
+comment|/* 8250 multiplexed registers #[0-1].  Access enabled by LCR[7]. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_dlbl
+value|0
+end_define
+
+begin_comment
+comment|/* divisor latch low (W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_dlbh
+value|1
+end_define
+
+begin_comment
+comment|/* divisor latch high (W) */
+end_comment
+
+begin_comment
+comment|/* 16450 register #7.  Not multiplexed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_scr
+value|7
+end_define
+
+begin_comment
+comment|/* scratch register (R/W) */
+end_comment
+
+begin_comment
+comment|/* 16550 register #2.  Not multiplexed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_fifo
+value|2
+end_define
+
+begin_comment
+comment|/* FIFO control register (W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIFO_ENABLE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RCV_RST
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_XMT_RST
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_DMA_MODE
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_LOW
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MEDL
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MEDH
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_HIGH
+value|0xc0
+end_define
+
+begin_comment
+comment|/* 16650 registers #2,[4-7].  Access enabled by LCR_EFR_ENABLE. */
 end_comment
 
 begin_define
@@ -581,6 +569,10 @@ directive|define
 name|com_efr
 value|com_fifo
 end_define
+
+begin_comment
+comment|/* enhanced feature register (R/W) */
+end_comment
 
 begin_define
 define|#
