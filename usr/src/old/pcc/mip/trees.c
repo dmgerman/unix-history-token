@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.30 (Berkeley) %G%"
+literal|"@(#)trees.c	4.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2538,7 +2538,7 @@ argument|);  	case MUL: 	case DIV: 		if( mt12& MDBI ) return( TYMATCH ); 		break
 literal|"%s is not a permitted struct/union operation"
 argument|, opst[o] ); 	else 		uerror(
 literal|"operands of %s have incompatible types"
-argument|, opst[o] ); 	return( NCVT ); 	}  moditype( ty ) TWORD ty; {  	switch( ty ){  	case TVOID: 		return( MPTR ); 	case UNDEF: 		return( MVOID ); 	case ENUMTY: 	case MOETY: 		return( MENU|MINT|MDBI|MPTI );
+argument|, opst[o] ); 	return( NCVT ); 	}  moditype( ty ) TWORD ty; {  	switch( ty ){  	case UNDEF: 		return( MVOID ); 	case ENUMTY: 	case MOETY: 		return( MENU|MINT|MDBI|MPTI );
 comment|/* enums are ints */
 argument|case STRTY: 	case UNIONTY: 		return( MSTR );  	case CHAR: 	case SHORT: 	case UCHAR: 	case USHORT: 		return( MINT|MPTI|MDBI ); 	case UNSIGNED: 	case ULONG: 	case INT: 	case LONG: 		return( MINT|MDBI|MPTI ); 	case FLOAT: 	case DOUBLE: 		return( MDBI ); 	default: 		return( MPTR|MPTI );  		} 	}  NODE * doszof( p )  register NODE *p; {
 comment|/* do sizeof p */
