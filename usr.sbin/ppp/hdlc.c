@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.22 1997/11/22 03:37:32 brian Exp $  *  *	TODO:  */
+comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.23 1997/12/03 10:23:47 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -1561,6 +1561,938 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Check out the latest ``Assigned numbers'' rfc (rfc1700.txt) */
+end_comment
+
+begin_struct
+specifier|static
+struct|struct
+block|{
+name|u_short
+name|from
+decl_stmt|;
+name|u_short
+name|to
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+name|protocols
+index|[]
+init|=
+block|{
+block|{
+literal|0x0001
+block|,
+literal|0x0001
+block|,
+literal|"Padding Protocol"
+block|}
+block|,
+block|{
+literal|0x0003
+block|,
+literal|0x001f
+block|,
+literal|"reserved (transparency inefficient)"
+block|}
+block|,
+block|{
+literal|0x0021
+block|,
+literal|0x0021
+block|,
+literal|"Internet Protocol"
+block|}
+block|,
+block|{
+literal|0x0023
+block|,
+literal|0x0023
+block|,
+literal|"OSI Network Layer"
+block|}
+block|,
+block|{
+literal|0x0025
+block|,
+literal|0x0025
+block|,
+literal|"Xerox NS IDP"
+block|}
+block|,
+block|{
+literal|0x0027
+block|,
+literal|0x0027
+block|,
+literal|"DECnet Phase IV"
+block|}
+block|,
+block|{
+literal|0x0029
+block|,
+literal|0x0029
+block|,
+literal|"Appletalk"
+block|}
+block|,
+block|{
+literal|0x002b
+block|,
+literal|0x002b
+block|,
+literal|"Novell IPX"
+block|}
+block|,
+block|{
+literal|0x002d
+block|,
+literal|0x002d
+block|,
+literal|"Van Jacobson Compressed TCP/IP"
+block|}
+block|,
+block|{
+literal|0x002f
+block|,
+literal|0x002f
+block|,
+literal|"Van Jacobson Uncompressed TCP/IP"
+block|}
+block|,
+block|{
+literal|0x0031
+block|,
+literal|0x0031
+block|,
+literal|"Bridging PDU"
+block|}
+block|,
+block|{
+literal|0x0033
+block|,
+literal|0x0033
+block|,
+literal|"Stream Protocol (ST-II)"
+block|}
+block|,
+block|{
+literal|0x0035
+block|,
+literal|0x0035
+block|,
+literal|"Banyan Vines"
+block|}
+block|,
+block|{
+literal|0x0037
+block|,
+literal|0x0037
+block|,
+literal|"reserved (until 1993)"
+block|}
+block|,
+block|{
+literal|0x0039
+block|,
+literal|0x0039
+block|,
+literal|"AppleTalk EDDP"
+block|}
+block|,
+block|{
+literal|0x003b
+block|,
+literal|0x003b
+block|,
+literal|"AppleTalk SmartBuffered"
+block|}
+block|,
+block|{
+literal|0x003d
+block|,
+literal|0x003d
+block|,
+literal|"Multi-Link"
+block|}
+block|,
+block|{
+literal|0x003f
+block|,
+literal|0x003f
+block|,
+literal|"NETBIOS Framing"
+block|}
+block|,
+block|{
+literal|0x0041
+block|,
+literal|0x0041
+block|,
+literal|"Cisco Systems"
+block|}
+block|,
+block|{
+literal|0x0043
+block|,
+literal|0x0043
+block|,
+literal|"Ascom Timeplex"
+block|}
+block|,
+block|{
+literal|0x0045
+block|,
+literal|0x0045
+block|,
+literal|"Fujitsu Link Backup and Load Balancing (LBLB)"
+block|}
+block|,
+block|{
+literal|0x0047
+block|,
+literal|0x0047
+block|,
+literal|"DCA Remote Lan"
+block|}
+block|,
+block|{
+literal|0x0049
+block|,
+literal|0x0049
+block|,
+literal|"Serial Data Transport Protocol (PPP-SDTP)"
+block|}
+block|,
+block|{
+literal|0x004b
+block|,
+literal|0x004b
+block|,
+literal|"SNA over 802.2"
+block|}
+block|,
+block|{
+literal|0x004d
+block|,
+literal|0x004d
+block|,
+literal|"SNA"
+block|}
+block|,
+block|{
+literal|0x004f
+block|,
+literal|0x004f
+block|,
+literal|"IP6 Header Compression"
+block|}
+block|,
+block|{
+literal|0x0051
+block|,
+literal|0x0051
+block|,
+literal|"KNX Bridging Data"
+block|}
+block|,
+block|{
+literal|0x0053
+block|,
+literal|0x0053
+block|,
+literal|"Encryption"
+block|}
+block|,
+block|{
+literal|0x0055
+block|,
+literal|0x0055
+block|,
+literal|"Individual Link Encryption"
+block|}
+block|,
+block|{
+literal|0x006f
+block|,
+literal|0x006f
+block|,
+literal|"Stampede Bridging"
+block|}
+block|,
+block|{
+literal|0x0071
+block|,
+literal|0x0071
+block|,
+literal|"BAP Bandwidth Allocation Protocol"
+block|}
+block|,
+block|{
+literal|0x0073
+block|,
+literal|0x0073
+block|,
+literal|"MP+ Protocol"
+block|}
+block|,
+block|{
+literal|0x007d
+block|,
+literal|0x007d
+block|,
+literal|"reserved (Control Escape)"
+block|}
+block|,
+block|{
+literal|0x007f
+block|,
+literal|0x007f
+block|,
+literal|"reserved (compression inefficient)"
+block|}
+block|,
+block|{
+literal|0x00cf
+block|,
+literal|0x00cf
+block|,
+literal|"reserved (PPP NLPID)"
+block|}
+block|,
+block|{
+literal|0x00fb
+block|,
+literal|0x00fb
+block|,
+literal|"compression on single link in multilink group"
+block|}
+block|,
+block|{
+literal|0x00fd
+block|,
+literal|0x00fd
+block|,
+literal|"1st choice compression"
+block|}
+block|,
+block|{
+literal|0x00ff
+block|,
+literal|0x00ff
+block|,
+literal|"reserved (compression inefficient)"
+block|}
+block|,
+block|{
+literal|0x0200
+block|,
+literal|0x02ff
+block|,
+literal|"(compression inefficient)"
+block|}
+block|,
+block|{
+literal|0x0201
+block|,
+literal|0x0201
+block|,
+literal|"802.1d Hello Packets"
+block|}
+block|,
+block|{
+literal|0x0203
+block|,
+literal|0x0203
+block|,
+literal|"IBM Source Routing BPDU"
+block|}
+block|,
+block|{
+literal|0x0205
+block|,
+literal|0x0205
+block|,
+literal|"DEC LANBridge100 Spanning Tree"
+block|}
+block|,
+block|{
+literal|0x0207
+block|,
+literal|0x0207
+block|,
+literal|"Cisco Discovery Protocol"
+block|}
+block|,
+block|{
+literal|0x0209
+block|,
+literal|0x0209
+block|,
+literal|"Netcs Twin Routing"
+block|}
+block|,
+block|{
+literal|0x0231
+block|,
+literal|0x0231
+block|,
+literal|"Luxcom"
+block|}
+block|,
+block|{
+literal|0x0233
+block|,
+literal|0x0233
+block|,
+literal|"Sigma Network Systems"
+block|}
+block|,
+block|{
+literal|0x0235
+block|,
+literal|0x0235
+block|,
+literal|"Apple Client Server Protocol"
+block|}
+block|,
+block|{
+literal|0x1e00
+block|,
+literal|0x1eff
+block|,
+literal|"(compression inefficient)"
+block|}
+block|,
+block|{
+literal|0x4001
+block|,
+literal|0x4001
+block|,
+literal|"Cray Communications Control Protocol"
+block|}
+block|,
+block|{
+literal|0x4003
+block|,
+literal|0x4003
+block|,
+literal|"CDPD Mobile Network Registration Protocol"
+block|}
+block|,
+block|{
+literal|0x4021
+block|,
+literal|0x4021
+block|,
+literal|"Stacker LZS"
+block|}
+block|,
+block|{
+literal|0x8001
+block|,
+literal|0x801f
+block|,
+literal|"Not Used - reserved"
+block|}
+block|,
+block|{
+literal|0x8021
+block|,
+literal|0x8021
+block|,
+literal|"Internet Protocol Control Protocol"
+block|}
+block|,
+block|{
+literal|0x8023
+block|,
+literal|0x8023
+block|,
+literal|"OSI Network Layer Control Protocol"
+block|}
+block|,
+block|{
+literal|0x8025
+block|,
+literal|0x8025
+block|,
+literal|"Xerox NS IDP Control Protocol"
+block|}
+block|,
+block|{
+literal|0x8027
+block|,
+literal|0x8027
+block|,
+literal|"DECnet Phase IV Control Protocol"
+block|}
+block|,
+block|{
+literal|0x8029
+block|,
+literal|0x8029
+block|,
+literal|"Appletalk Control Protocol"
+block|}
+block|,
+block|{
+literal|0x802b
+block|,
+literal|0x802b
+block|,
+literal|"Novell IPX Control Protocol"
+block|}
+block|,
+block|{
+literal|0x802d
+block|,
+literal|0x802d
+block|,
+literal|"reserved"
+block|}
+block|,
+block|{
+literal|0x802f
+block|,
+literal|0x802f
+block|,
+literal|"reserved"
+block|}
+block|,
+block|{
+literal|0x8031
+block|,
+literal|0x8031
+block|,
+literal|"Bridging NCP"
+block|}
+block|,
+block|{
+literal|0x8033
+block|,
+literal|0x8033
+block|,
+literal|"Stream Protocol Control Protocol"
+block|}
+block|,
+block|{
+literal|0x8035
+block|,
+literal|0x8035
+block|,
+literal|"Banyan Vines Control Protocol"
+block|}
+block|,
+block|{
+literal|0x8037
+block|,
+literal|0x8037
+block|,
+literal|"reserved till 1993"
+block|}
+block|,
+block|{
+literal|0x8039
+block|,
+literal|0x8039
+block|,
+literal|"reserved"
+block|}
+block|,
+block|{
+literal|0x803b
+block|,
+literal|0x803b
+block|,
+literal|"reserved"
+block|}
+block|,
+block|{
+literal|0x803d
+block|,
+literal|0x803d
+block|,
+literal|"Multi-Link Control Protocol"
+block|}
+block|,
+block|{
+literal|0x803f
+block|,
+literal|0x803f
+block|,
+literal|"NETBIOS Framing Control Protocol"
+block|}
+block|,
+block|{
+literal|0x8041
+block|,
+literal|0x8041
+block|,
+literal|"Cisco Systems Control Protocol"
+block|}
+block|,
+block|{
+literal|0x8043
+block|,
+literal|0x8043
+block|,
+literal|"Ascom Timeplex"
+block|}
+block|,
+block|{
+literal|0x8045
+block|,
+literal|0x8045
+block|,
+literal|"Fujitsu LBLB Control Protocol"
+block|}
+block|,
+block|{
+literal|0x8047
+block|,
+literal|0x8047
+block|,
+literal|"DCA Remote Lan Network Control Protocol (RLNCP)"
+block|}
+block|,
+block|{
+literal|0x8049
+block|,
+literal|0x8049
+block|,
+literal|"Serial Data Control Protocol (PPP-SDCP)"
+block|}
+block|,
+block|{
+literal|0x804b
+block|,
+literal|0x804b
+block|,
+literal|"SNA over 802.2 Control Protocol"
+block|}
+block|,
+block|{
+literal|0x804d
+block|,
+literal|0x804d
+block|,
+literal|"SNA Control Protocol"
+block|}
+block|,
+block|{
+literal|0x804f
+block|,
+literal|0x804f
+block|,
+literal|"IP6 Header Compression Control Protocol"
+block|}
+block|,
+block|{
+literal|0x8051
+block|,
+literal|0x8051
+block|,
+literal|"KNX Bridging Control Protocol"
+block|}
+block|,
+block|{
+literal|0x8053
+block|,
+literal|0x8053
+block|,
+literal|"Encryption Control Protocol"
+block|}
+block|,
+block|{
+literal|0x8055
+block|,
+literal|0x8055
+block|,
+literal|"Individual Link Encryption Control Protocol"
+block|}
+block|,
+block|{
+literal|0x806f
+block|,
+literal|0x806f
+block|,
+literal|"Stampede Bridging Control Protocol"
+block|}
+block|,
+block|{
+literal|0x8073
+block|,
+literal|0x8073
+block|,
+literal|"MP+ Control Protocol"
+block|}
+block|,
+block|{
+literal|0x8071
+block|,
+literal|0x8071
+block|,
+literal|"BACP Bandwidth Allocation Control Protocol"
+block|}
+block|,
+block|{
+literal|0x807d
+block|,
+literal|0x807d
+block|,
+literal|"Not Used - reserved"
+block|}
+block|,
+block|{
+literal|0x80cf
+block|,
+literal|0x80cf
+block|,
+literal|"Not Used - reserved"
+block|}
+block|,
+block|{
+literal|0x80fb
+block|,
+literal|0x80fb
+block|,
+literal|"compression on single link in multilink group control"
+block|}
+block|,
+block|{
+literal|0x80fd
+block|,
+literal|0x80fd
+block|,
+literal|"Compression Control Protocol"
+block|}
+block|,
+block|{
+literal|0x80ff
+block|,
+literal|0x80ff
+block|,
+literal|"Not Used - reserved"
+block|}
+block|,
+block|{
+literal|0x8207
+block|,
+literal|0x8207
+block|,
+literal|"Cisco Discovery Protocol Control"
+block|}
+block|,
+block|{
+literal|0x8209
+block|,
+literal|0x8209
+block|,
+literal|"Netcs Twin Routing"
+block|}
+block|,
+block|{
+literal|0x8235
+block|,
+literal|0x8235
+block|,
+literal|"Apple Client Server Protocol Control"
+block|}
+block|,
+block|{
+literal|0xc021
+block|,
+literal|0xc021
+block|,
+literal|"Link Control Protocol"
+block|}
+block|,
+block|{
+literal|0xc023
+block|,
+literal|0xc023
+block|,
+literal|"Password Authentication Protocol"
+block|}
+block|,
+block|{
+literal|0xc025
+block|,
+literal|0xc025
+block|,
+literal|"Link Quality Report"
+block|}
+block|,
+block|{
+literal|0xc027
+block|,
+literal|0xc027
+block|,
+literal|"Shiva Password Authentication Protocol"
+block|}
+block|,
+block|{
+literal|0xc029
+block|,
+literal|0xc029
+block|,
+literal|"CallBack Control Protocol (CBCP)"
+block|}
+block|,
+block|{
+literal|0xc081
+block|,
+literal|0xc081
+block|,
+literal|"Container Control Protocol"
+block|}
+block|,
+block|{
+literal|0xc223
+block|,
+literal|0xc223
+block|,
+literal|"Challenge Handshake Authentication Protocol"
+block|}
+block|,
+block|{
+literal|0xc225
+block|,
+literal|0xc225
+block|,
+literal|"RSA Authentication Protocol"
+block|}
+block|,
+block|{
+literal|0xc227
+block|,
+literal|0xc227
+block|,
+literal|"Extensible Authentication Protocol"
+block|}
+block|,
+block|{
+literal|0xc26f
+block|,
+literal|0xc26f
+block|,
+literal|"Stampede Bridging Authorization Protocol"
+block|}
+block|,
+block|{
+literal|0xc281
+block|,
+literal|0xc281
+block|,
+literal|"Proprietary Authentication Protocol"
+block|}
+block|,
+block|{
+literal|0xc283
+block|,
+literal|0xc283
+block|,
+literal|"Proprietary Authentication Protocol"
+block|}
+block|,
+block|{
+literal|0xc481
+block|,
+literal|0xc481
+block|,
+literal|"Proprietary Node ID Authentication Protocol"
+block|}
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NPROTOCOLS
+value|(sizeof(protocols)/sizeof(protocols[0]))
+end_define
+
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|Protocol2Nam
+parameter_list|(
+name|u_short
+name|proto
+parameter_list|)
+block|{
+name|int
+name|f
+decl_stmt|;
+for|for
+control|(
+name|f
+operator|=
+literal|0
+init|;
+name|f
+operator|<
+name|NPROTOCOLS
+condition|;
+name|f
+operator|++
+control|)
+if|if
+condition|(
+name|proto
+operator|>=
+name|protocols
+index|[
+name|f
+index|]
+operator|.
+name|from
+operator|&&
+name|proto
+operator|<=
+name|protocols
+index|[
+name|f
+index|]
+operator|.
+name|to
+condition|)
+return|return
+name|protocols
+index|[
+name|f
+index|]
+operator|.
+name|name
+return|;
+elseif|else
+if|if
+condition|(
+name|proto
+operator|<
+name|protocols
+index|[
+name|f
+index|]
+operator|.
+name|from
+condition|)
+break|break;
+return|return
+literal|"unrecognised protocol"
+return|;
+block|}
+end_function
+
 begin_function
 name|void
 name|DecodePacket
@@ -1743,9 +2675,14 @@ name|LogPrintf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"Unknown protocol 0x%04x\n"
+literal|"Unknown protocol 0x%04x (%s)\n"
 argument_list|,
 name|proto
+argument_list|,
+name|Protocol2Nam
+argument_list|(
+name|proto
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bp
