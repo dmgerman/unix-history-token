@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -936,6 +936,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|simple_unlock
+argument_list|(
+operator|&
+name|vm_object_list_lock
+argument_list|)
+expr_stmt|;
 name|totalp
 operator|->
 name|t_free
