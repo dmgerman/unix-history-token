@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.118 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.119 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2241,6 +2241,9 @@ name|char
 modifier|*
 name|curhost
 decl_stmt|;
+name|time_t
+name|xstart
+decl_stmt|;
 name|int
 name|mpvect
 index|[
@@ -2502,6 +2505,8 @@ argument_list|,
 literal|"queued"
 argument_list|,
 name|NULL
+argument_list|,
+name|xstart
 argument_list|,
 name|e
 argument_list|)
@@ -2857,6 +2862,11 @@ name|ctladdr
 operator|=
 name|NULL
 expr_stmt|;
+name|xstart
+operator|=
+name|curtime
+argument_list|()
+expr_stmt|;
 name|firstsig
 operator|=
 name|hostsignature
@@ -3128,6 +3138,8 @@ name|NULL
 argument_list|,
 name|ctladdr
 argument_list|,
+name|xstart
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -3178,6 +3190,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|ctladdr
+argument_list|,
+name|xstart
 argument_list|,
 name|e
 argument_list|)
@@ -3274,6 +3288,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|ctladdr
+argument_list|,
+name|xstart
 argument_list|,
 name|e
 argument_list|)
@@ -6115,6 +6131,8 @@ name|mci
 argument_list|,
 name|ctladdr
 argument_list|,
+name|xstart
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -6355,6 +6373,8 @@ argument_list|,
 name|mci
 argument_list|,
 name|ctladdr
+argument_list|,
+name|xstart
 argument_list|,
 name|e
 argument_list|)
@@ -7087,7 +7107,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  GIVERESPONSE -- Interpret an error response from a mailer ** **	Parameters: **		stat -- the status code from the mailer (high byte **			only; core dumps must have been taken care of **			already). **		m -- the mailer info for this mailer. **		mci -- the mailer connection info -- can be NULL if the **			response is given before the connection is made. **		ctladdr -- the controlling address for the recipient **			address(es). **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Errors may be incremented. **		ExitStat may be set. */
+comment|/* **  GIVERESPONSE -- Interpret an error response from a mailer ** **	Parameters: **		stat -- the status code from the mailer (high byte **			only; core dumps must have been taken care of **			already). **		m -- the mailer info for this mailer. **		mci -- the mailer connection info -- can be NULL if the **			response is given before the connection is made. **		ctladdr -- the controlling address for the recipient **			address(es). **		xstart -- the transaction start time, for computing **			transaction delays. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Errors may be incremented. **		ExitStat may be set. */
 end_comment
 
 begin_macro
@@ -7100,6 +7120,8 @@ argument_list|,
 argument|mci
 argument_list|,
 argument|ctladdr
+argument_list|,
+argument|xstart
 argument_list|,
 argument|e
 argument_list|)
@@ -7131,6 +7153,12 @@ begin_decl_stmt
 name|ADDRESS
 modifier|*
 name|ctladdr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|time_t
+name|xstart
 decl_stmt|;
 end_decl_stmt
 
@@ -7588,6 +7616,8 @@ index|]
 argument_list|,
 name|ctladdr
 argument_list|,
+name|xstart
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -7698,7 +7728,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  LOGDELIVERY -- log the delivery in the system log ** **	Care is taken to avoid logging lines that are too long, because **	some versions of syslog have an unfortunate proclivity for core **	dumping.  This is a hack, to be sure, that is at best empirical. ** **	Parameters: **		m -- the mailer info.  Can be NULL for initial queue. **		mci -- the mailer connection info -- can be NULL if the **			log is occuring when no connection is active. **		stat -- the message to print for the status. **		ctladdr -- the controlling address for the to list. **		e -- the current envelope. ** **	Returns: **		none ** **	Side Effects: **		none */
+comment|/* **  LOGDELIVERY -- log the delivery in the system log ** **	Care is taken to avoid logging lines that are too long, because **	some versions of syslog have an unfortunate proclivity for core **	dumping.  This is a hack, to be sure, that is at best empirical. ** **	Parameters: **		m -- the mailer info.  Can be NULL for initial queue. **		mci -- the mailer connection info -- can be NULL if the **			log is occuring when no connection is active. **		stat -- the message to print for the status. **		ctladdr -- the controlling address for the to list. **		xstart -- the transaction start time, used for **			computing transaction delay. **		e -- the current envelope. ** **	Returns: **		none ** **	Side Effects: **		none */
 end_comment
 
 begin_macro
@@ -7711,6 +7741,8 @@ argument_list|,
 argument|stat
 argument_list|,
 argument|ctladdr
+argument_list|,
+argument|xstart
 argument_list|,
 argument|e
 argument_list|)
@@ -7742,6 +7774,12 @@ begin_decl_stmt
 name|ADDRESS
 modifier|*
 name|ctladdr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|time_t
+name|xstart
 decl_stmt|;
 end_decl_stmt
 
@@ -7862,9 +7900,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|bp
@@ -7891,6 +7926,41 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|xstart
+operator|!=
+operator|(
+name|time_t
+operator|)
+literal|0
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|bp
+argument_list|,
+literal|", xdelay=%s"
+argument_list|,
+name|pintvl
+argument_list|(
+name|curtime
+argument_list|()
+operator|-
+name|xstart
+argument_list|,
+name|TRUE
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|m
@@ -8497,6 +8567,41 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|xstart
+operator|!=
+operator|(
+name|time_t
+operator|)
+literal|0
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|bp
+argument_list|,
+literal|", xdelay=%s"
+argument_list|,
+name|pintvl
+argument_list|(
+name|curtime
+argument_list|()
+operator|-
+name|xstart
+argument_list|,
+name|TRUE
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|m
