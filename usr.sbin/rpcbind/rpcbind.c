@@ -1269,8 +1269,27 @@ operator|<
 literal|0
 condition|)
 block|{
+name|int
+name|non_fatal
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|EPROTONOSUPPORT
+condition|)
+name|non_fatal
+operator|=
+literal|1
+expr_stmt|;
 name|syslog
 argument_list|(
+name|non_fatal
+condition|?
+name|LOG_DEBUG
+else|:
 name|LOG_ERR
 argument_list|,
 literal|"cannot create socket for %s"
