@@ -2337,7 +2337,7 @@ name|char
 name|fmt
 index|[]
 init|=
-literal|"%l:% %P on %A, %d %B %Y"
+literal|"%l:% %p on %A, %d %B %Y"
 decl_stmt|;
 name|fmt
 index|[
