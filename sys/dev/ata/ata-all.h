@@ -866,6 +866,34 @@ parameter_list|)
 value|(scp->dev_param[ATA_DEV(device)])
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATA_IOADDR_RID
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_ALTADDR_RID
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_BMADDR_RID
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IRQ_RID
+value|0
+end_define
+
 begin_comment
 comment|/* busmaster DMA related defines */
 end_comment
@@ -1548,6 +1576,18 @@ modifier|*
 name|ih
 decl_stmt|;
 comment|/* interrupt handle */
+name|int
+function_decl|(
+modifier|*
+name|intr_func
+function_decl|)
+parameter_list|(
+name|struct
+name|ata_softc
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* interrupt function */
 name|u_int32_t
 name|chiptype
 decl_stmt|;
@@ -1757,6 +1797,42 @@ comment|/* public prototypes */
 end_comment
 
 begin_function_decl
+name|int
+name|ata_probe
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ata_attach
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ata_detach
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ata_resume
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ata_start
 parameter_list|(
@@ -1948,14 +2024,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|NPCI
-operator|>
-literal|0
-end_if
-
 begin_function_decl
 name|int
 name|ata_find_dev
@@ -1968,11 +2036,6 @@ name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
