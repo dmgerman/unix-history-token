@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	stdio.h	1.9	84/11/21	*/
+comment|/*	stdio.h	1.10	84/11/29	*/
 end_comment
 
 begin_define
@@ -193,7 +193,7 @@ name|x
 parameter_list|,
 name|p
 parameter_list|)
-value|(--(p)->_cnt>= 0 || ((p)->_flag& _IOLBF)&&\ 		-(p)->_cnt<= (p)->_bufsiz&& (x) != '\n' ?\ 		(int)(*(unsigned char *)(p)->_ptr++ = (x)) :\ 		_flsbuf((unsigned char)(x), p))
+value|(--(p)->_cnt>= 0 ?\ 	(int)(*(unsigned char *)(p)->_ptr++ = (x)) :\ 	(((p)->_flag& _IOLBF)&& -(p)->_cnt< (p)->_bufsiz ?\ 		((*(p)->_ptr = (x)) != '\n' ?\ 			(int)(*(unsigned char *)(p)->_ptr++) :\ 			_flsbuf(*(unsigned char *)(p)->_ptr, p)) :\ 		_flsbuf((unsigned char)(x), p)))
 end_define
 
 begin_define
