@@ -46,6 +46,22 @@ name|char
 modifier|*
 name|e
 decl_stmt|;
+if|if
+condition|(
+operator|*
+name|s
+operator|==
+literal|'\0'
+condition|)
+return|return
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+operator|)
+return|;
 comment|/* 	 * Make one pass to see how big a buffer we  	 * need to allocate for the expanded string. 	 */
 name|n
 operator|=
