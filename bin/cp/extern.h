@@ -20,9 +20,7 @@ comment|/* pointer to end of target base */
 name|char
 name|p_path
 index|[
-name|MAXPATHLEN
-operator|+
-literal|1
+name|PATH_MAX
 index|]
 decl_stmt|;
 comment|/* pointer to the start of a path */
