@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strfile.c	5.9 (Berkeley) %G%"
+literal|"@(#)strfile.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1900,6 +1900,26 @@ name|time_t
 name|time
 parameter_list|()
 function_decl|;
+name|srandom
+argument_list|(
+call|(
+name|int
+call|)
+argument_list|(
+name|time
+argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
+name|NULL
+argument_list|)
+operator|+
+name|getpid
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|Tbl
 operator|.
 name|str_flags
