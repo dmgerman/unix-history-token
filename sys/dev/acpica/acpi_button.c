@@ -275,7 +275,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Control Method Power Button Device"
+literal|"Power Button"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -304,7 +304,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Control Method Sleep Button Device"
+literal|"Sleep Button"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -486,6 +486,19 @@ block|{
 case|case
 name|ACPI_POWER_BUTTON
 case|:
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|button_dev
+argument_list|,
+literal|"power button pressed\n"
+argument_list|,
+name|sc
+operator|->
+name|button_type
+argument_list|)
+expr_stmt|;
 name|acpi_eventhandler_power_button_for_sleep
 argument_list|(
 operator|(
@@ -499,6 +512,19 @@ break|break;
 case|case
 name|ACPI_SLEEP_BUTTON
 case|:
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|button_dev
+argument_list|,
+literal|"sleep button pressed\n"
+argument_list|,
+name|sc
+operator|->
+name|button_type
+argument_list|)
+expr_stmt|;
 name|acpi_eventhandler_sleep_button_for_sleep
 argument_list|(
 operator|(
@@ -581,6 +607,19 @@ block|{
 case|case
 name|ACPI_POWER_BUTTON
 case|:
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|button_dev
+argument_list|,
+literal|"wakeup by power button\n"
+argument_list|,
+name|sc
+operator|->
+name|button_type
+argument_list|)
+expr_stmt|;
 name|acpi_eventhandler_power_button_for_wakeup
 argument_list|(
 operator|(
@@ -594,6 +633,19 @@ break|break;
 case|case
 name|ACPI_SLEEP_BUTTON
 case|:
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|button_dev
+argument_list|,
+literal|"wakeup by sleep button\n"
+argument_list|,
+name|sc
+operator|->
+name|button_type
+argument_list|)
+expr_stmt|;
 name|acpi_eventhandler_sleep_button_for_wakeup
 argument_list|(
 operator|(
@@ -683,19 +735,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|button_dev
-argument_list|,
-literal|"pressed for sleep, button type: %d\n"
-argument_list|,
-name|sc
-operator|->
-name|button_type
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|ACPI_NOTIFY_BUTTON_PRESSED_FOR_WAKEUP
@@ -707,19 +746,6 @@ argument_list|,
 name|acpi_button_notify_pressed_for_wakeup
 argument_list|,
 name|sc
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|button_dev
-argument_list|,
-literal|"pressed for wakeup, button type: %d\n"
-argument_list|,
-name|sc
-operator|->
-name|button_type
 argument_list|)
 expr_stmt|;
 break|break;
