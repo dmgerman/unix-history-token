@@ -2308,8 +2308,11 @@ name|p
 init|=
 name|ptr
 decl_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"%d.%d.%d.%d"
@@ -2396,8 +2399,11 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"%d"

@@ -2185,7 +2185,7 @@ comment|/* feed screen contents to PRNG */
 end_comment
 
 begin_comment
-comment|/*****************************************************************************  *  * Created 960901 by Gertjan van Oosten, gertjan@West.NL, West Consulting B.V.  *  * Code adapted from  *<URL:http://www.microsoft.com/kb/developr/win_dk/q97193.htm>;  * the original copyright message is:  *  *   (C) Copyright Microsoft Corp. 1993.  All rights reserved.  *  *   You have a royalty-free right to use, modify, reproduce and  *   distribute the Sample Files (and/or any modified version) in  *   any way you find useful, provided that you agree that  *   Microsoft has no warranty obligations or liability for any  *   Sample Application Files which are modified.  */
+comment|/*****************************************************************************  *  * Created 960901 by Gertjan van Oosten, gertjan@West.NL, West Consulting B.V.  *  * Code adapted from  *<URL:http://support.microsoft.com/default.aspx?scid=kb;[LN];97193>;  * the original copyright message is:  *  *   (C) Copyright Microsoft Corp. 1993.  All rights reserved.  *  *   You have a royalty-free right to use, modify, reproduce and  *   distribute the Sample Files (and/or any modified version) in  *   any way you find useful, provided that you agree that  *   Microsoft has no warranty obligations or liability for any  *   Sample Application Files which are modified.  */
 end_comment
 
 begin_function

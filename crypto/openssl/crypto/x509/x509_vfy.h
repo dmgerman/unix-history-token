@@ -1083,37 +1083,50 @@ define|#
 directive|define
 name|X509_V_ERR_UNHANDLED_CRITICAL_EXTENSION
 value|34
+define|#
+directive|define
+name|X509_V_ERR_KEYUSAGE_NO_CRL_SIGN
+value|35
+define|#
+directive|define
+name|X509_V_ERR_UNHANDLED_CRITICAL_CRL_EXTENSION
+value|36
 comment|/* The application is not happy */
 define|#
 directive|define
 name|X509_V_ERR_APPLICATION_VERIFICATION
 value|50
 comment|/* Certificate verify flags */
+comment|/* Send issuer+subject checks to verify_cb */
 define|#
 directive|define
 name|X509_V_FLAG_CB_ISSUER_CHECK
 value|0x1
-comment|/* Send issuer+subject checks to verify_cb */
+comment|/* Use check time instead of current time */
 define|#
 directive|define
 name|X509_V_FLAG_USE_CHECK_TIME
 value|0x2
-comment|/* Use check time instead of current time */
+comment|/* Lookup CRLs */
 define|#
 directive|define
 name|X509_V_FLAG_CRL_CHECK
 value|0x4
-comment|/* Lookup CRLs */
+comment|/* Lookup CRLs for whole chain */
 define|#
 directive|define
 name|X509_V_FLAG_CRL_CHECK_ALL
 value|0x8
-comment|/* Lookup CRLs for whole chain */
+comment|/* Ignore unhandled critical extensions */
 define|#
 directive|define
 name|X509_V_FLAG_IGNORE_CRITICAL
 value|0x10
-comment|/* Ignore unhandled critical extensions */
+comment|/* Disable workarounds for broken certificates */
+define|#
+directive|define
+name|X509_V_FLAG_X509_STRICT
+value|0x20
 name|int
 name|X509_OBJECT_idx_by_subject
 argument_list|(

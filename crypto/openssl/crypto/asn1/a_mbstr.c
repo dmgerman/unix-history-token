@@ -507,8 +507,11 @@ argument_list|,
 name|ASN1_R_STRING_TOO_SHORT
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|strbuf
+argument_list|,
+sizeof|sizeof
 name|strbuf
 argument_list|,
 literal|"%ld"
@@ -552,8 +555,11 @@ argument_list|,
 name|ASN1_R_STRING_TOO_LONG
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|strbuf
+argument_list|,
+sizeof|sizeof
 name|strbuf
 argument_list|,
 literal|"%ld"

@@ -1462,7 +1462,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|list
+name|def_list
 parameter_list|)
 function_decl|;
 comment|/* Same for the other "methods" */
@@ -1783,7 +1783,7 @@ parameter_list|(
 name|fn
 parameter_list|)
 define|\
-value|int bind_engine(ENGINE *e, const char *id, const dynamic_fns *fns) { \ 		if(!CRYPTO_set_mem_functions(fns->mem_fns.malloc_cb, \ 			fns->mem_fns.realloc_cb, fns->mem_fns.free_cb)) \ 			return 0; \ 		CRYPTO_set_locking_callback(fns->lock_fns.lock_locking_cb); \ 		CRYPTO_set_add_lock_callback(fns->lock_fns.lock_add_lock_cb); \ 		CRYPTO_set_dynlock_create_callback(fns->lock_fns.dynlock_create_cb); \ 		CRYPTO_set_dynlock_lock_callback(fns->lock_fns.dynlock_lock_cb); \ 		CRYPTO_set_dynlock_destroy_callback(fns->lock_fns.dynlock_destroy_cb); \ 		if(!CRYPTO_set_ex_data_implementation(fns->ex_data_fns)) \ 			return 0; \ 		if(!ERR_set_implementation(fns->err_fns)) return 0; \ 		if(!fn(e,id)) return 0; \ 		return 1; }
+value|int bind_engine(ENGINE *e, const char *id, const dynamic_fns *fns) { \ 		if (ERR_get_implementation() != fns->err_fns) \ 			{ \ 			if(!CRYPTO_set_mem_functions(fns->mem_fns.malloc_cb, \ 				fns->mem_fns.realloc_cb, fns->mem_fns.free_cb)) \ 				return 0; \ 			CRYPTO_set_locking_callback(fns->lock_fns.lock_locking_cb); \ 			CRYPTO_set_add_lock_callback(fns->lock_fns.lock_add_lock_cb); \ 			CRYPTO_set_dynlock_create_callback(fns->lock_fns.dynlock_create_cb); \ 			CRYPTO_set_dynlock_lock_callback(fns->lock_fns.dynlock_lock_cb); \ 			CRYPTO_set_dynlock_destroy_callback(fns->lock_fns.dynlock_destroy_cb); \ 			if(!CRYPTO_set_ex_data_implementation(fns->ex_data_fns)) \ 				return 0; \ 			if(!ERR_set_implementation(fns->err_fns)) return 0; \ 			} \ 		if(!fn(e,id)) return 0; \ 		return 1; }
 if|#
 directive|if
 name|defined

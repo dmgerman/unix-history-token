@@ -265,6 +265,8 @@ name|desc
 block|;
 name|int
 name|i
+block|,
+name|nlen
 block|;
 name|char
 name|objtmp
@@ -345,10 +347,8 @@ operator|->
 name|method
 argument_list|)
 expr_stmt|;
-name|ntmp
+name|nlen
 operator|=
-name|OPENSSL_malloc
-argument_list|(
 name|strlen
 argument_list|(
 name|objtmp
@@ -362,6 +362,12 @@ name|name
 argument_list|)
 operator|+
 literal|5
+expr_stmt|;
+name|ntmp
+operator|=
+name|OPENSSL_malloc
+argument_list|(
+name|nlen
 argument_list|)
 expr_stmt|;
 if|if
@@ -381,33 +387,39 @@ return|return
 name|NULL
 return|;
 block|}
-name|strcpy
+name|BUF_strlcpy
 argument_list|(
 name|ntmp
 argument_list|,
 name|objtmp
+argument_list|,
+name|nlen
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|strcat
+name|BUF_strlcat
 argument_list|(
 name|ntmp
 argument_list|,
 literal|" - "
+argument_list|,
+name|nlen
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|strcat
+name|BUF_strlcat
 argument_list|(
 name|ntmp
 argument_list|,
 name|vtmp
 operator|->
 name|name
+argument_list|,
+name|nlen
 argument_list|)
 expr_stmt|;
 end_expr_stmt

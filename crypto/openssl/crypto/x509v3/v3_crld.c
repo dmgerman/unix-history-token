@@ -665,7 +665,7 @@ argument|ASN1_TFLG_SEQUENCE_OF
 argument_list|,
 literal|0
 argument_list|,
-argument|DIST_POINT
+argument|CRLDistributionPoints
 argument_list|,
 argument|DIST_POINT
 argument_list|)

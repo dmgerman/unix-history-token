@@ -689,7 +689,7 @@ name|EVP_MD_CTX
 name|md
 decl_stmt|;
 name|int
-name|exp
+name|is_exp
 decl_stmt|,
 name|n
 decl_stmt|,
@@ -706,7 +706,7 @@ name|reuse_dd
 init|=
 literal|0
 decl_stmt|;
-name|exp
+name|is_exp
 operator|=
 name|SSL_C_IS_EXPORT
 argument_list|(
@@ -1154,7 +1154,7 @@ argument_list|)
 expr_stmt|;
 name|j
 operator|=
-name|exp
+name|is_exp
 condition|?
 operator|(
 name|cl
@@ -1186,7 +1186,7 @@ operator|)
 else|:
 name|cl
 expr_stmt|;
-comment|/* Was j=(exp)?5:EVP_CIPHER_key_length(c); */
+comment|/* Was j=(is_exp)?5:EVP_CIPHER_key_length(c); */
 name|k
 operator|=
 name|EVP_CIPHER_iv_length
@@ -1408,7 +1408,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|exp
+name|is_exp
 condition|)
 block|{
 comment|/* In here I set both the read and write key/iv to the 		 * same value since only the correct one will be used :-). 		 */

@@ -285,15 +285,21 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* start with empty string */
-name|strcpy
+name|BUF_strlcpy
 argument_list|(
 name|buf
 argument_list|,
 name|str
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|tmp
+argument_list|,
+sizeof|sizeof
 name|tmp
 argument_list|,
 literal|"%04x - "
@@ -303,11 +309,14 @@ operator|*
 name|dump_width
 argument_list|)
 expr_stmt|;
-name|strcat
+name|BUF_strlcat
 argument_list|(
 name|buf
 argument_list|,
 name|tmp
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 for|for
@@ -339,11 +348,14 @@ operator|>=
 name|len
 condition|)
 block|{
-name|strcat
+name|BUF_strlcat
 argument_list|(
 name|buf
 argument_list|,
 literal|"   "
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
@@ -370,8 +382,11 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|tmp
+argument_list|,
+sizeof|sizeof
 name|tmp
 argument_list|,
 literal|"%02x%c"
@@ -387,20 +402,26 @@ else|:
 literal|' '
 argument_list|)
 expr_stmt|;
-name|strcat
+name|BUF_strlcat
 argument_list|(
 name|buf
 argument_list|,
 name|tmp
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|strcat
+name|BUF_strlcat
 argument_list|(
 name|buf
 argument_list|,
 literal|"  "
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 for|for
@@ -456,8 +477,11 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|CHARSET_EBCDIC
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|tmp
+argument_list|,
+sizeof|sizeof
 name|tmp
 argument_list|,
 literal|"%c"
@@ -483,8 +507,11 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|tmp
+argument_list|,
+sizeof|sizeof
 name|tmp
 argument_list|,
 literal|"%c"
@@ -519,19 +546,25 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|strcat
+name|BUF_strlcat
 argument_list|(
 name|buf
 argument_list|,
 name|tmp
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
-name|strcat
+name|BUF_strlcat
 argument_list|(
 name|buf
 argument_list|,
 literal|"\n"
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 comment|/* if this is the last call then update the ddt_dump thing so that 		 * we will move the selection point in the debug window  		 */
@@ -564,8 +597,11 @@ operator|>
 literal|0
 condition|)
 block|{
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"%s%04x -<SPACES/NULS>\n"

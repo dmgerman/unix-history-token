@@ -184,11 +184,11 @@ argument_list|(
 name|pk
 argument_list|)
 operator|<=
-literal|512
+literal|1024
 operator|/
 literal|8
 condition|)
-comment|/* /8 because it's 512 bits we look 					   for, not bytes */
+comment|/* /8 because it's 1024 bits we look 					   for, not bytes */
 name|ret
 operator||=
 name|EVP_PKT_EXP

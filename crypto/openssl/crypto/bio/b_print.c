@@ -2503,7 +2503,7 @@ name|LDOUBLE
 name|pow10
 parameter_list|(
 name|int
-name|exp
+name|in_exp
 parameter_list|)
 block|{
 name|LDOUBLE
@@ -2513,14 +2513,14 @@ literal|1
 decl_stmt|;
 while|while
 condition|(
-name|exp
+name|in_exp
 condition|)
 block|{
 name|result
 operator|*=
 literal|10
 expr_stmt|;
-name|exp
+name|in_exp
 operator|--
 expr_stmt|;
 block|}
@@ -2806,7 +2806,7 @@ operator|(
 name|iplace
 operator|<
 sizeof|sizeof
-name|iplace
+name|iconvert
 operator|)
 condition|)
 do|;
@@ -2815,7 +2815,7 @@ condition|(
 name|iplace
 operator|==
 sizeof|sizeof
-name|iplace
+name|iconvert
 condition|)
 name|iplace
 operator|--
@@ -2870,7 +2870,7 @@ condition|(
 name|fplace
 operator|==
 sizeof|sizeof
-name|fplace
+name|fconvert
 condition|)
 name|fplace
 operator|--

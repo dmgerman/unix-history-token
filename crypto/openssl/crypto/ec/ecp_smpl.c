@@ -4324,7 +4324,7 @@ operator|=
 name|form
 operator|&
 operator|~
-literal|1
+literal|1U
 expr_stmt|;
 if|if
 condition|(

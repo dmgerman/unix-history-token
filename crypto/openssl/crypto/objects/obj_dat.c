@@ -2451,8 +2451,11 @@ operator|*
 literal|40
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|tbuf
+argument_list|,
+sizeof|sizeof
 name|tbuf
 argument_list|,
 literal|"%d.%lu"
@@ -2527,8 +2530,11 @@ literal|0x80
 operator|)
 condition|)
 block|{
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|tbuf
+argument_list|,
+sizeof|sizeof
 name|tbuf
 argument_list|,
 literal|".%lu"

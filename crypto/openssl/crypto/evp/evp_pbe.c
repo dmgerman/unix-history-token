@@ -177,11 +177,14 @@ condition|(
 operator|!
 name|pbe_obj
 condition|)
-name|strcpy
+name|BUF_strlcpy
 argument_list|(
 name|obj_tmp
 argument_list|,
 literal|"NULL"
+argument_list|,
+sizeof|sizeof
+name|obj_tmp
 argument_list|)
 expr_stmt|;
 else|else

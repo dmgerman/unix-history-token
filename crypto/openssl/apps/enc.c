@@ -1927,8 +1927,11 @@ index|[
 literal|200
 index|]
 decl_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"enter %s %s password:"

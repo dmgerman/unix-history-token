@@ -917,6 +917,15 @@ name|err
 label|:
 if|if
 condition|(
+name|buf
+condition|)
+name|OPENSSL_free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|*
 name|ppath
 condition|)

@@ -560,8 +560,11 @@ name|d
 operator|==
 name|NULL
 condition|)
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|str
+argument_list|,
+sizeof|sizeof
 name|str
 argument_list|,
 literal|"Modulus (%d bit):"
@@ -575,11 +578,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|strcpy
+name|BUF_strlcpy
 argument_list|(
 name|str
 argument_list|,
 literal|"modulus:"
+argument_list|,
+sizeof|sizeof
+name|str
 argument_list|)
 expr_stmt|;
 if|if

@@ -744,6 +744,9 @@ block|,
 literal|0
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_IDEA
 block|{
 literal|0
 block|,
@@ -766,6 +769,8 @@ block|,
 literal|0
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|,
@@ -1302,6 +1307,9 @@ argument_list|(
 name|SN_rc2_cbc
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_IDEA
 name|ssl_cipher_methods
 index|[
 name|SSL_ENC_IDEA_IDX
@@ -1312,6 +1320,17 @@ argument_list|(
 name|SN_idea_cbc
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|ssl_cipher_methods
+index|[
+name|SSL_ENC_IDEA_IDX
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 name|ssl_cipher_methods
 index|[
 name|SSL_ENC_AES128_IDX
@@ -2094,7 +2113,7 @@ name|mask
 parameter_list|,
 name|CIPHER_ORDER
 modifier|*
-name|list
+name|co_list
 parameter_list|,
 name|CIPHER_ORDER
 modifier|*
@@ -2110,7 +2129,7 @@ block|{
 name|int
 name|i
 decl_stmt|,
-name|list_num
+name|co_list_num
 decl_stmt|;
 name|SSL_CIPHER
 modifier|*
@@ -2118,7 +2137,7 @@ name|c
 decl_stmt|;
 comment|/* 	 * We have num_of_ciphers descriptions compiled in, depending on the 	 * method selected (SSLv2 and/or SSLv3, TLSv1 etc). 	 * These will later be sorted in a linked list with at most num 	 * entries. 	 */
 comment|/* Get the initial list of ciphers */
-name|list_num
+name|co_list_num
 operator|=
 literal|0
 expr_stmt|;
@@ -2169,43 +2188,43 @@ name|mask
 operator|)
 condition|)
 block|{
-name|list
+name|co_list
 index|[
-name|list_num
+name|co_list_num
 index|]
 operator|.
 name|cipher
 operator|=
 name|c
 expr_stmt|;
-name|list
+name|co_list
 index|[
-name|list_num
+name|co_list_num
 index|]
 operator|.
 name|next
 operator|=
 name|NULL
 expr_stmt|;
-name|list
+name|co_list
 index|[
-name|list_num
+name|co_list_num
 index|]
 operator|.
 name|prev
 operator|=
 name|NULL
 expr_stmt|;
-name|list
+name|co_list
 index|[
-name|list_num
+name|co_list_num
 index|]
 operator|.
 name|active
 operator|=
 literal|0
 expr_stmt|;
-name|list_num
+name|co_list_num
 operator|++
 expr_stmt|;
 ifdef|#
@@ -2245,7 +2264,7 @@ literal|1
 init|;
 name|i
 operator|<
-name|list_num
+name|co_list_num
 operator|-
 literal|1
 condition|;
@@ -2253,7 +2272,7 @@ name|i
 operator|++
 control|)
 block|{
-name|list
+name|co_list
 index|[
 name|i
 index|]
@@ -2262,7 +2281,7 @@ name|prev
 operator|=
 operator|&
 operator|(
-name|list
+name|co_list
 index|[
 name|i
 operator|-
@@ -2270,7 +2289,7 @@ literal|1
 index|]
 operator|)
 expr_stmt|;
-name|list
+name|co_list
 index|[
 name|i
 index|]
@@ -2279,7 +2298,7 @@ name|next
 operator|=
 operator|&
 operator|(
-name|list
+name|co_list
 index|[
 name|i
 operator|+
@@ -2290,7 +2309,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|list_num
+name|co_list_num
 operator|>
 literal|0
 condition|)
@@ -2302,7 +2321,7 @@ operator|)
 operator|=
 operator|&
 operator|(
-name|list
+name|co_list
 index|[
 literal|0
 index|]
@@ -2326,7 +2345,7 @@ name|next
 operator|=
 operator|&
 operator|(
-name|list
+name|co_list
 index|[
 literal|1
 index|]
@@ -2339,9 +2358,9 @@ operator|)
 operator|=
 operator|&
 operator|(
-name|list
+name|co_list
 index|[
-name|list_num
+name|co_list_num
 operator|-
 literal|1
 index|]
@@ -2356,9 +2375,9 @@ name|prev
 operator|=
 operator|&
 operator|(
-name|list
+name|co_list
 index|[
-name|list_num
+name|co_list_num
 operator|-
 literal|2
 index|]
@@ -2537,7 +2556,7 @@ name|strength_bits
 parameter_list|,
 name|CIPHER_ORDER
 modifier|*
-name|list
+name|co_list
 parameter_list|,
 name|CIPHER_ORDER
 modifier|*
@@ -2980,7 +2999,7 @@ name|ssl_cipher_strength_sort
 parameter_list|(
 name|CIPHER_ORDER
 modifier|*
-name|list
+name|co_list
 parameter_list|,
 name|CIPHER_ORDER
 modifier|*
@@ -3179,7 +3198,7 @@ name|CIPHER_ORD
 argument_list|,
 name|i
 argument_list|,
-name|list
+name|co_list
 argument_list|,
 name|head_p
 argument_list|,
@@ -3211,7 +3230,7 @@ name|rule_str
 parameter_list|,
 name|CIPHER_ORDER
 modifier|*
-name|list
+name|co_list
 parameter_list|,
 name|CIPHER_ORDER
 modifier|*
@@ -3699,7 +3718,7 @@ name|ok
 operator|=
 name|ssl_cipher_strength_sort
 argument_list|(
-name|list
+name|co_list
 argument_list|,
 name|head_p
 argument_list|,
@@ -3765,7 +3784,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-name|list
+name|co_list
 argument_list|,
 name|head_p
 argument_list|,
@@ -3856,7 +3875,7 @@ name|rule_p
 block|;
 name|CIPHER_ORDER
 operator|*
-name|list
+name|co_list
 operator|=
 name|NULL
 block|,
@@ -3972,7 +3991,7 @@ comment|/* KSSL_DEBUG */
 end_comment
 
 begin_expr_stmt
-name|list
+name|co_list
 operator|=
 operator|(
 name|CIPHER_ORDER
@@ -3993,7 +4012,7 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|list
+name|co_list
 operator|==
 name|NULL
 condition|)
@@ -4023,7 +4042,7 @@ name|num_of_ciphers
 argument_list|,
 name|disabled_mask
 argument_list|,
-name|list
+name|co_list
 argument_list|,
 operator|&
 name|head
@@ -4095,7 +4114,7 @@ condition|)
 block|{
 name|OPENSSL_free
 argument_list|(
-name|list
+name|co_list
 argument_list|)
 expr_stmt|;
 name|SSLerr
@@ -4167,7 +4186,7 @@ name|ssl_cipher_process_rulestr
 argument_list|(
 name|SSL_DEFAULT_CIPHER_LIST
 argument_list|,
-name|list
+name|co_list
 argument_list|,
 operator|&
 name|head
@@ -4215,7 +4234,7 @@ name|ssl_cipher_process_rulestr
 argument_list|(
 name|rule_p
 argument_list|,
-name|list
+name|co_list
 argument_list|,
 operator|&
 name|head
@@ -4250,7 +4269,7 @@ block|{
 comment|/* Rule processing failure */
 name|OPENSSL_free
 argument_list|(
-name|list
+name|co_list
 argument_list|)
 expr_stmt|;
 return|return
@@ -4280,7 +4299,7 @@ condition|)
 block|{
 name|OPENSSL_free
 argument_list|(
-name|list
+name|co_list
 argument_list|)
 expr_stmt|;
 return|return
@@ -4352,7 +4371,7 @@ end_for
 begin_expr_stmt
 name|OPENSSL_free
 argument_list|(
-name|list
+name|co_list
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4516,7 +4535,7 @@ operator|*
 name|ver
 block|,
 operator|*
-name|exp
+name|exp_str
 block|;
 name|char
 operator|*
@@ -4600,7 +4619,7 @@ argument_list|(
 name|cipher
 argument_list|)
 block|;
-name|exp
+name|exp_str
 operator|=
 name|is_export
 condition|?
@@ -5062,7 +5081,7 @@ name|enc
 argument_list|,
 name|mac
 argument_list|,
-name|exp
+name|exp_str
 argument_list|,
 name|alg
 argument_list|)
@@ -5097,7 +5116,7 @@ name|enc
 argument_list|,
 name|mac
 argument_list|,
-name|exp
+name|exp_str
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5553,7 +5572,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -5564,7 +5583,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
