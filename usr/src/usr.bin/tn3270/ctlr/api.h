@@ -46,6 +46,34 @@ name|GATE_OIAM
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|NAME_SESSMGR
+value|"SESSMGR"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAME_KEYBOARD
+value|"KEYBOARD"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAME_COPY
+value|"COPY"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAME_OIAM
+value|"OIAM"
+end_define
+
 begin_comment
 comment|/*  * Name Resolution is specified in AH.  */
 end_comment
