@@ -10,7 +10,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.3.2.3 1996/03/31 09:59:42 joerg Exp $"
+literal|"$Id: main.c,v 1.8 1996/07/03 01:17:34 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -875,35 +875,7 @@ argument_list|,
 sizeof|sizeof
 name|msg
 argument_list|,
-literal|"Does %02d:%02d:%02d %d.%d.%04d %s look reasonable?"
-argument_list|,
-name|tm
-operator|->
-name|tm_hour
-argument_list|,
-name|tm
-operator|->
-name|tm_min
-argument_list|,
-name|tm
-operator|->
-name|tm_sec
-argument_list|,
-name|tm
-operator|->
-name|tm_mday
-argument_list|,
-name|tm
-operator|->
-name|tm_mon
-operator|+
-literal|1
-argument_list|,
-name|tm
-operator|->
-name|tm_year
-operator|+
-literal|1900
+literal|"Does %s look reasonable?"
 argument_list|,
 name|tm
 operator|->
