@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.18 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.19 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.18 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.19 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,7 +111,7 @@ end_typedef
 begin_decl_stmt
 specifier|static
 name|char
-name|hostbuf
+name|MXHostBuf
 index|[
 name|MAXMXHOSTS
 operator|*
@@ -215,11 +215,19 @@ begin_decl_stmt
 name|char
 modifier|*
 name|host
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 modifier|*
 modifier|*
 name|mxhosts
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 modifier|*
 name|localhost
 decl_stmt|;
@@ -578,14 +586,14 @@ name|buflen
 operator|=
 sizeof|sizeof
 argument_list|(
-name|hostbuf
+name|MXHostBuf
 argument_list|)
 operator|-
 literal|1
 expr_stmt|;
 name|bp
 operator|=
-name|hostbuf
+name|MXHostBuf
 expr_stmt|;
 name|ancount
 operator|=
@@ -865,7 +873,7 @@ index|]
 operator|=
 name|strcpy
 argument_list|(
-name|hostbuf
+name|MXHostBuf
 argument_list|,
 name|host
 argument_list|)
@@ -873,11 +881,11 @@ expr_stmt|;
 name|bp
 operator|=
 operator|&
-name|hostbuf
+name|MXHostBuf
 index|[
 name|strlen
 argument_list|(
-name|hostbuf
+name|MXHostBuf
 argument_list|)
 index|]
 expr_stmt|;
