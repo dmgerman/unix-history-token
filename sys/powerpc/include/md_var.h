@@ -70,6 +70,13 @@ name|kstack0_phys
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|ns_per_tick
+decl_stmt|;
+end_decl_stmt
+
 begin_struct_decl
 struct_decl|struct
 name|fpreg

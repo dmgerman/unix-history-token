@@ -143,20 +143,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|u_long
-name|ticks_per_sec
+name|ns_per_tick
 init|=
-literal|12500000
+literal|80
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|u_long
-name|ns_per_tick
+name|ticks_per_sec
 init|=
-literal|80
+literal|12500000
 decl_stmt|;
 end_decl_stmt
 

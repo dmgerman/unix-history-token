@@ -61,13 +61,6 @@ directive|include
 file|<machine/spr.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|ns_per_tick
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|cputab
