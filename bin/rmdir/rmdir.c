@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rmdir.c,v 1.9 1993/09/10 19:29:13 jtc Exp $"
+literal|"$Id: rmdir.c,v 1.3 1993/11/23 00:13:55 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -354,6 +354,17 @@ condition|)
 name|slash
 operator|--
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|slash
+operator|==
+literal|'/'
+condition|)
+comment|/* don't attempt to remove root */
+return|return
+literal|0
+return|;
 operator|*
 operator|++
 name|slash
