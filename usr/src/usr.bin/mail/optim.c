@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optim.c	2.9 (Berkeley) %G%"
+literal|"@(#)optim.c	2.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -464,7 +464,7 @@ decl_stmt|;
 name|char
 name|nbuf
 index|[
-literal|20
+literal|100
 index|]
 decl_stmt|;
 comment|/* 	 * Make into lower case. 	 */
@@ -492,7 +492,22 @@ name|cp
 operator|++
 argument_list|)
 control|)
-empty_stmt|;
+if|if
+condition|(
+name|cp2
+operator|>=
+operator|&
+name|nbuf
+index|[
+sizeof|sizeof
+argument_list|(
+name|nbuf
+argument_list|)
+operator|-
+literal|1
+index|]
+condition|)
+break|break;
 operator|*
 name|cp2
 operator|=
