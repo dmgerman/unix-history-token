@@ -322,6 +322,10 @@ name|PPTP_TIME_SCALE
 value|1000
 end_define
 
+begin_comment
+comment|/* milliseconds */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|u_int32_t
@@ -337,7 +341,7 @@ begin_define
 define|#
 directive|define
 name|PPTP_XMIT_WIN
-value|8
+value|16
 end_define
 
 begin_comment
@@ -352,7 +356,18 @@ value|(PPTP_TIME_SCALE / 10)
 end_define
 
 begin_comment
-comment|/* 1/10 second */
+comment|/* 100 milliseconds */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPTP_MIN_TIMEOUT
+value|(PPTP_TIME_SCALE / 100)
+end_define
+
+begin_comment
+comment|/* 10 milliseconds */
 end_comment
 
 begin_define
@@ -364,6 +379,10 @@ end_define
 
 begin_comment
 comment|/* 10 seconds */
+end_comment
+
+begin_comment
+comment|/* See RFC 2637 section 4.4 */
 end_comment
 
 begin_define
@@ -458,18 +477,6 @@ name|u_int16_t
 name|xmitWin
 decl_stmt|;
 comment|/* size of xmit window */
-name|u_char
-name|sackTimerRunning
-decl_stmt|;
-comment|/* send ack timer is running */
-name|u_char
-name|rackTimerRunning
-decl_stmt|;
-comment|/* recv ack timer is running */
-name|u_int32_t
-name|winAck
-decl_stmt|;
-comment|/* seq when xmitWin will grow */
 name|struct
 name|callout_handle
 name|sackTimer
@@ -480,6 +487,20 @@ name|callout_handle
 name|rackTimer
 decl_stmt|;
 comment|/* recv ack timer */
+name|node_p
+modifier|*
+name|sackTimerPtr
+decl_stmt|;
+comment|/* send ack timer pointer */
+name|node_p
+modifier|*
+name|rackTimerPtr
+decl_stmt|;
+comment|/* recv ack timer pointer */
+name|u_int32_t
+name|winAck
+decl_stmt|;
+comment|/* seq when xmitWin will grow */
 name|pptptime_t
 name|timeSent
 index|[
@@ -672,28 +693,6 @@ begin_function_decl
 specifier|static
 name|void
 name|ng_pptpgre_start_recv_ack_timer
-parameter_list|(
-name|node_p
-name|node
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ng_pptpgre_stop_send_ack_timer
-parameter_list|(
-name|node_p
-name|node
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ng_pptpgre_stop_recv_ack_timer
 parameter_list|(
 name|node_p
 name|node
@@ -1643,7 +1642,7 @@ name|node
 operator|->
 name|private
 decl_stmt|;
-comment|/* Cancel timers */
+comment|/* Reset node */
 name|ng_pptpgre_reset
 argument_list|(
 name|node
@@ -2136,10 +2135,11 @@ operator|->
 name|xmitAck
 argument_list|)
 expr_stmt|;
-name|ng_pptpgre_stop_send_ack_timer
-argument_list|(
-name|node
-argument_list|)
+name|a
+operator|->
+name|sackTimerPtr
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 comment|/* Prepend GRE header to outgoing frame */
@@ -2978,16 +2978,11 @@ name|a
 operator|->
 name|rtt
 operator|+
-call|(
-name|u_int
-call|)
-argument_list|(
 name|PPTP_ACK_CHI
 argument_list|(
 name|a
 operator|->
 name|dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3004,6 +2999,21 @@ name|ato
 operator|=
 name|PPTP_MAX_TIMEOUT
 expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|ato
+operator|<
+name|PPTP_MIN_TIMEOUT
+condition|)
+name|a
+operator|->
+name|ato
+operator|=
+name|PPTP_MIN_TIMEOUT
+expr_stmt|;
+comment|/* Shift packet transmit times in our transmit window */
 name|ovbcopy
 argument_list|(
 name|a
@@ -3037,6 +3047,7 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* If we sent an entire window, increase window size by one */
 if|if
 condition|(
 name|PPTP_SEQ_DIFF
@@ -3167,17 +3178,18 @@ expr_stmt|;
 comment|/* We need to acknowledge this packet; do it soon... */
 if|if
 condition|(
-operator|!
 name|a
 operator|->
-name|sackTimerRunning
+name|sackTimerPtr
+operator|==
+name|NULL
 condition|)
 block|{
 name|long
-name|ackTimeout
+name|maxWait
 decl_stmt|;
 comment|/* Take half of the estimated round trip time */
-name|ackTimeout
+name|maxWait
 operator|=
 operator|(
 name|a
@@ -3211,11 +3223,11 @@ block|{
 comment|/* send the ack later */
 if|if
 condition|(
-name|ackTimeout
+name|maxWait
 operator|>
 name|PPTP_MAX_ACK_DELAY
 condition|)
-name|ackTimeout
+name|maxWait
 operator|=
 name|PPTP_MAX_ACK_DELAY
 expr_stmt|;
@@ -3223,7 +3235,7 @@ name|ng_pptpgre_start_send_ack_timer
 argument_list|(
 name|node
 argument_list|,
-name|ackTimeout
+name|maxWait
 argument_list|)
 expr_stmt|;
 block|}
@@ -3332,17 +3344,12 @@ decl_stmt|;
 name|int
 name|remain
 decl_stmt|;
-comment|/* Stop current recv ack timer, if any */
-if|if
-condition|(
+comment|/* "Stop" current recv ack timer, if any */
 name|a
 operator|->
-name|rackTimerRunning
-condition|)
-name|ng_pptpgre_stop_recv_ack_timer
-argument_list|(
-name|node
-argument_list|)
+name|rackTimerPtr
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Are we waiting for an acknowlegement? */
 if|if
@@ -3387,7 +3394,49 @@ name|remain
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Start timer */
+comment|/* Start new timer */
+name|MALLOC
+argument_list|(
+name|a
+operator|->
+name|rackTimerPtr
+argument_list|,
+name|node_p
+operator|*
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|node_p
+argument_list|)
+argument_list|,
+name|M_NETGRAPH
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|rackTimerPtr
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* XXX potential hang here */
+operator|*
+name|a
+operator|->
+name|rackTimerPtr
+operator|=
+name|node
+expr_stmt|;
+comment|/* insures the correct timeout event */
+name|node
+operator|->
+name|refs
+operator|++
+expr_stmt|;
 name|a
 operator|->
 name|rackTimer
@@ -3396,7 +3445,9 @@ name|timeout
 argument_list|(
 name|ng_pptpgre_recv_ack_timeout
 argument_list|,
-name|node
+name|a
+operator|->
+name|rackTimerPtr
 argument_list|,
 name|remain
 operator|*
@@ -3405,97 +3456,6 @@ operator|/
 name|PPTP_TIME_SCALE
 argument_list|)
 expr_stmt|;
-name|node
-operator|->
-name|refs
-operator|++
-expr_stmt|;
-name|a
-operator|->
-name|rackTimerRunning
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Stop the recv ack timer, if running.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|ng_pptpgre_stop_recv_ack_timer
-parameter_list|(
-name|node_p
-name|node
-parameter_list|)
-block|{
-specifier|const
-name|priv_p
-name|priv
-init|=
-name|node
-operator|->
-name|private
-decl_stmt|;
-name|struct
-name|ng_pptpgre_ackp
-modifier|*
-specifier|const
-name|a
-init|=
-operator|&
-name|priv
-operator|->
-name|ackp
-decl_stmt|;
-if|if
-condition|(
-name|a
-operator|->
-name|rackTimerRunning
-condition|)
-block|{
-name|untimeout
-argument_list|(
-name|ng_pptpgre_recv_ack_timeout
-argument_list|,
-name|node
-argument_list|,
-name|a
-operator|->
-name|rackTimer
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|node
-operator|->
-name|refs
-operator|>
-literal|1
-argument_list|,
-operator|(
-literal|"%s: no refs"
-operator|,
-name|__FUNCTION__
-operator|)
-argument_list|)
-expr_stmt|;
-name|ng_unref
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
-name|a
-operator|->
-name|rackTimerRunning
-operator|=
-literal|0
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -3523,7 +3483,14 @@ specifier|const
 name|node_p
 name|node
 init|=
+operator|*
+operator|(
+operator|(
+name|node_p
+operator|*
+operator|)
 name|arg
+operator|)
 decl_stmt|;
 specifier|const
 name|priv_p
@@ -3544,7 +3511,29 @@ name|priv
 operator|->
 name|ackp
 decl_stmt|;
-comment|/* Avoid shutdown race condition */
+comment|/* This complicated stuff is needed to avoid race conditions */
+name|FREE
+argument_list|(
+name|arg
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|node
+operator|->
+name|refs
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"%s: no refs"
+operator|,
+name|__FUNCTION__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3558,6 +3547,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* shutdown race condition */
 name|ng_unref
 argument_list|(
 name|node
@@ -3570,45 +3560,33 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Release timer reference */
-name|KASSERT
-argument_list|(
-name|a
-operator|->
-name|rackTimerRunning
-argument_list|,
-operator|(
-literal|"%s: !rackTimer"
-operator|,
-name|__FUNCTION__
-operator|)
-argument_list|)
-expr_stmt|;
-name|a
-operator|->
-name|rackTimerRunning
-operator|=
-literal|0
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|node
-operator|->
-name|refs
-operator|>
-literal|1
-argument_list|,
-operator|(
-literal|"%s: no refs"
-operator|,
-name|__FUNCTION__
-operator|)
-argument_list|)
-expr_stmt|;
 name|ng_unref
 argument_list|(
 name|node
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|arg
+operator|!=
+name|a
+operator|->
+name|rackTimerPtr
+condition|)
+block|{
+comment|/* timer stopped race condition */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|a
+operator|->
+name|rackTimerPtr
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Update adaptive timeout stuff */
 name|priv
@@ -3658,53 +3636,30 @@ name|ato
 operator|=
 name|PPTP_MAX_TIMEOUT
 expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|ato
+operator|<
+name|PPTP_MIN_TIMEOUT
+condition|)
+name|a
+operator|->
+name|ato
+operator|=
+name|PPTP_MIN_TIMEOUT
+expr_stmt|;
+comment|/* Reset ack and sliding window */
 name|priv
 operator|->
 name|recvAck
-operator|++
-expr_stmt|;
-comment|/* assume packet was lost */
-name|a
-operator|->
-name|winAck
 operator|=
 name|priv
 operator|->
-name|recvAck
-operator|+
-name|a
-operator|->
-name|xmitWin
+name|xmitSeq
 expr_stmt|;
-comment|/* reset win expand time */
-name|ovbcopy
-argument_list|(
-name|a
-operator|->
-name|timeSent
-operator|+
-literal|1
-argument_list|,
-name|a
-operator|->
-name|timeSent
-argument_list|,
-comment|/* shift xmit window times */
-sizeof|sizeof
-argument_list|(
-operator|*
-name|a
-operator|->
-name|timeSent
-argument_list|)
-operator|*
-operator|(
-name|PPTP_XMIT_WIN
-operator|-
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* pretend we got the ack */
 name|a
 operator|->
 name|xmitWin
@@ -3720,22 +3675,19 @@ operator|/
 literal|2
 expr_stmt|;
 comment|/* shrink transmit window */
-comment|/* Restart timer if there are any more outstanding frames */
-if|if
-condition|(
+name|a
+operator|->
+name|winAck
+operator|=
 name|priv
 operator|->
 name|recvAck
-operator|!=
-name|priv
+operator|+
+name|a
 operator|->
-name|xmitSeq
-condition|)
-name|ng_pptpgre_start_recv_ack_timer
-argument_list|(
-name|node
-argument_list|)
+name|xmitWin
 expr_stmt|;
+comment|/* reset win expand time */
 name|splx
 argument_list|(
 name|s
@@ -3779,12 +3731,14 @@ name|priv
 operator|->
 name|ackp
 decl_stmt|;
+comment|/* Start new timer */
 name|KASSERT
 argument_list|(
-operator|!
 name|a
 operator|->
-name|sackTimerRunning
+name|sackTimerPtr
+operator|==
+name|NULL
 argument_list|,
 operator|(
 literal|"%s: sackTimer"
@@ -3792,6 +3746,47 @@ operator|,
 name|__FUNCTION__
 operator|)
 argument_list|)
+expr_stmt|;
+name|MALLOC
+argument_list|(
+name|a
+operator|->
+name|sackTimerPtr
+argument_list|,
+name|node_p
+operator|*
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|node_p
+argument_list|)
+argument_list|,
+name|M_NETGRAPH
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|sackTimerPtr
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* XXX potential hang here */
+operator|*
+name|a
+operator|->
+name|sackTimerPtr
+operator|=
+name|node
+expr_stmt|;
+name|node
+operator|->
+name|refs
+operator|++
 expr_stmt|;
 name|a
 operator|->
@@ -3801,7 +3796,9 @@ name|timeout
 argument_list|(
 name|ng_pptpgre_send_ack_timeout
 argument_list|,
-name|node
+name|a
+operator|->
+name|sackTimerPtr
 argument_list|,
 name|ackTimeout
 operator|*
@@ -3810,97 +3807,6 @@ operator|/
 name|PPTP_TIME_SCALE
 argument_list|)
 expr_stmt|;
-name|node
-operator|->
-name|refs
-operator|++
-expr_stmt|;
-name|a
-operator|->
-name|sackTimerRunning
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Stop the send ack timer, if running.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|ng_pptpgre_stop_send_ack_timer
-parameter_list|(
-name|node_p
-name|node
-parameter_list|)
-block|{
-specifier|const
-name|priv_p
-name|priv
-init|=
-name|node
-operator|->
-name|private
-decl_stmt|;
-name|struct
-name|ng_pptpgre_ackp
-modifier|*
-specifier|const
-name|a
-init|=
-operator|&
-name|priv
-operator|->
-name|ackp
-decl_stmt|;
-if|if
-condition|(
-name|a
-operator|->
-name|sackTimerRunning
-condition|)
-block|{
-name|untimeout
-argument_list|(
-name|ng_pptpgre_send_ack_timeout
-argument_list|,
-name|node
-argument_list|,
-name|a
-operator|->
-name|sackTimer
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|node
-operator|->
-name|refs
-operator|>
-literal|1
-argument_list|,
-operator|(
-literal|"%s: no refs"
-operator|,
-name|__FUNCTION__
-operator|)
-argument_list|)
-expr_stmt|;
-name|ng_unref
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
-name|a
-operator|->
-name|sackTimerRunning
-operator|=
-literal|0
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -3928,7 +3834,14 @@ specifier|const
 name|node_p
 name|node
 init|=
+operator|*
+operator|(
+operator|(
+name|node_p
+operator|*
+operator|)
 name|arg
+operator|)
 decl_stmt|;
 specifier|const
 name|priv_p
@@ -3949,7 +3862,29 @@ name|priv
 operator|->
 name|ackp
 decl_stmt|;
-comment|/* Avoid shutdown race condition */
+comment|/* This complicated stuff is needed to avoid race conditions */
+name|FREE
+argument_list|(
+name|arg
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|node
+operator|->
+name|refs
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"%s: no refs"
+operator|,
+name|__FUNCTION__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3963,6 +3898,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* shutdown race condition */
 name|ng_unref
 argument_list|(
 name|node
@@ -3975,45 +3911,33 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Release timer reference */
-name|KASSERT
-argument_list|(
-name|a
-operator|->
-name|sackTimerRunning
-argument_list|,
-operator|(
-literal|"%s: !sackTimer"
-operator|,
-name|__FUNCTION__
-operator|)
-argument_list|)
-expr_stmt|;
-name|a
-operator|->
-name|sackTimerRunning
-operator|=
-literal|0
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|node
-operator|->
-name|refs
-operator|>
-literal|1
-argument_list|,
-operator|(
-literal|"%s: no refs"
-operator|,
-name|__FUNCTION__
-operator|)
-argument_list|)
-expr_stmt|;
 name|ng_unref
 argument_list|(
 name|node
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|sackTimerPtr
+operator|!=
+name|arg
+condition|)
+block|{
+comment|/* timer stopped race condition */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|a
+operator|->
+name|sackTimerPtr
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Send a frame with an ack but no payload */
 name|ng_pptpgre_xmit
@@ -4133,14 +4057,16 @@ name|a
 operator|->
 name|xmitWin
 operator|<
-literal|1
+literal|2
 condition|)
+comment|/* often the first packet is lost */
 name|a
 operator|->
 name|xmitWin
 operator|=
-literal|1
+literal|2
 expr_stmt|;
+comment|/*   because the peer isn't ready */
 if|if
 condition|(
 name|a
@@ -4168,24 +4094,28 @@ name|priv
 operator|->
 name|recvSeq
 operator|=
+operator|~
 literal|0
 expr_stmt|;
 name|priv
 operator|->
 name|recvAck
 operator|=
+operator|~
 literal|0
 expr_stmt|;
 name|priv
 operator|->
 name|xmitSeq
 operator|=
+operator|~
 literal|0
 expr_stmt|;
 name|priv
 operator|->
 name|xmitAck
 operator|=
+operator|~
 literal|0
 expr_stmt|;
 comment|/* Reset start time */
@@ -4213,16 +4143,18 @@ name|stats
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Stop timers */
-name|ng_pptpgre_stop_send_ack_timer
-argument_list|(
-name|node
-argument_list|)
+comment|/* "Stop" timers */
+name|a
+operator|->
+name|sackTimerPtr
+operator|=
+name|NULL
 expr_stmt|;
-name|ng_pptpgre_stop_recv_ack_timer
-argument_list|(
-name|node
-argument_list|)
+name|a
+operator|->
+name|rackTimerPtr
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_function
