@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sub2.c	4.1 (Berkeley) %G%"
+literal|"@(#)sub2.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,6 +199,10 @@ operator|)
 expr_stmt|;
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|left
 index|[
 name|v
@@ -319,6 +323,9 @@ index|[
 name|v
 index|]
 operator|=
+operator|(
+name|int
+operator|)
 name|p
 expr_stmt|;
 name|name
@@ -1033,6 +1040,10 @@ literal|1
 expr_stmt|;
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|right
 index|[
 name|v
@@ -1453,6 +1464,10 @@ name|TRUE
 expr_stmt|;
 name|q
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|left
 index|[
 name|curpos
@@ -5592,6 +5607,10 @@ name|fbarr
 decl_stmt|;
 name|fbarr
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|myalloc
 argument_list|(
 literal|2
