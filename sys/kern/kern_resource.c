@@ -287,27 +287,30 @@ name|uap
 decl_stmt|;
 block|{
 name|struct
+name|ksegrp
+modifier|*
+name|kg
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|low
-init|=
+decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|low
+operator|=
 name|PRIO_MAX
 operator|+
 literal|1
-decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
-name|struct
-name|ksegrp
-modifier|*
-name|kg
-decl_stmt|;
+expr_stmt|;
 switch|switch
 condition|(
 name|uap
@@ -725,10 +728,6 @@ name|struct
 name|proc
 modifier|*
 name|curp
-init|=
-name|td
-operator|->
-name|td_proc
 decl_stmt|;
 specifier|register
 name|struct
@@ -745,6 +744,12 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|curp
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
 switch|switch
 condition|(
 name|uap
@@ -1083,7 +1088,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Set "nice" for a process. Doesn't really understand threaded processes well  * but does try. Has the unfortunate side effect of making all the NICE  * values for a process's ksegrps the same.. This suggests that  * NICE valuse should be stored as a process nice and deltas for the ksegrps.  * (but not yet).  */
+comment|/*   * Set "nice" for a process.  Doesn't really understand threaded processes  * well but does try.  Has the unfortunate side effect of making all the NICE  * values for a process's ksegrps the same.. This suggests that  * NICE valuse should be stored as a process nice and deltas for the ksegrps.  * (but not yet).  */
 end_comment
 
 begin_function
@@ -1105,21 +1110,22 @@ name|int
 name|n
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
-name|int
-name|low
-init|=
-name|PRIO_MAX
-operator|+
-literal|1
-decl_stmt|;
 name|struct
 name|ksegrp
 modifier|*
 name|kg
 decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|low
+decl_stmt|;
+name|low
+operator|=
+name|PRIO_MAX
+operator|+
+literal|1
+expr_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
@@ -1165,7 +1171,7 @@ name|n
 operator|=
 name|PRIO_MIN
 expr_stmt|;
-comment|/*  	 * Only allow nicing if to more than the lowest nice. 	 * e.g.  nices of 4,3,2  allow nice to 3 but not 1 	 */
+comment|/*  	 * Only allow nicing if to more than the lowest nice. 	 * E.g., for nices of 4,3,2  allow nice to 3 but not 1 	 */
 name|FOREACH_KSEGRP_IN_PROC
 argument_list|(
 argument|p
@@ -1198,6 +1204,8 @@ name|suser
 argument_list|(
 name|td
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -1274,11 +1282,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Set realtime priority  */
-end_comment
-
-begin_comment
-comment|/*  * MPSAFE  */
+comment|/*  * Set realtime priority  *  * MPSAFE  */
 end_comment
 
 begin_comment
@@ -1309,10 +1313,6 @@ name|struct
 name|proc
 modifier|*
 name|curp
-init|=
-name|td
-operator|->
-name|td_proc
 decl_stmt|;
 specifier|register
 name|struct
@@ -1325,11 +1325,9 @@ name|rtprio
 name|rtp
 decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|cierror
-init|=
-literal|0
+decl_stmt|,
+name|error
 decl_stmt|;
 comment|/* Perform copyin before acquiring locks if needed. */
 if|if
@@ -1357,6 +1355,17 @@ expr|struct
 name|rtprio
 argument_list|)
 argument_list|)
+expr_stmt|;
+else|else
+name|cierror
+operator|=
+literal|0
+expr_stmt|;
+name|curp
+operator|=
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 if|if
 condition|(
@@ -2019,21 +2028,17 @@ name|uap
 decl_stmt|;
 block|{
 name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
-name|struct
 name|orlimit
 name|olim
 decl_stmt|;
 name|struct
 name|rlimit
 name|rl
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 name|int
 name|error
@@ -2051,6 +2056,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -2277,21 +2288,17 @@ name|limp
 decl_stmt|;
 block|{
 name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
-name|struct
 name|plimit
 modifier|*
 name|newlim
 decl_stmt|,
 modifier|*
 name|oldlim
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 specifier|register
 name|struct
@@ -2348,6 +2355,12 @@ expr_stmt|;
 name|oldssiz
 operator|=
 literal|0
+expr_stmt|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 name|newlim
 operator|=
@@ -2877,21 +2890,17 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|td
-operator|->
-name|td_proc
 decl_stmt|;
 name|struct
 name|rlimit
 name|rlim
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -2906,6 +2915,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -2991,6 +3006,14 @@ modifier|*
 name|ip
 decl_stmt|;
 block|{
+name|struct
+name|bintime
+name|bt
+decl_stmt|;
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
 comment|/* {user, system, interrupt, total} {ticks, usec}; previous tu: */
 name|u_int64_t
 name|ut
@@ -3010,14 +3033,6 @@ decl_stmt|,
 name|tu
 decl_stmt|,
 name|ptu
-decl_stmt|;
-name|struct
-name|timeval
-name|tv
-decl_stmt|;
-name|struct
-name|bintime
-name|bt
 decl_stmt|;
 name|mtx_assert
 argument_list|(
@@ -3110,14 +3125,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|bt
 operator|=
 name|p
 operator|->
 name|p_runtime
 expr_stmt|;
-block|}
 name|bintime2timeval
 argument_list|(
 operator|&
@@ -3791,7 +3804,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Allocate a new resource limits structure, initialize it's  * reference count and mutex.  */
+comment|/*  * Allocate a new resource limits structure and initialize its  * reference count and mutex pointer.  */
 end_comment
 
 begin_function
@@ -3799,9 +3812,7 @@ name|struct
 name|plimit
 modifier|*
 name|lim_alloc
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|plimit
@@ -3858,10 +3869,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * NOTE: The caller must own the proc lock this limit is associated with.  */
-end_comment
-
 begin_function
 name|struct
 name|plimit
@@ -3899,10 +3906,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*   * NOTE: The caller must own the proc lock this plimit belongs to.  */
-end_comment
-
 begin_function
 name|void
 name|lim_free
@@ -3929,11 +3932,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"bad plimit refcnt: %d"
-operator|,
-name|limp
-operator|->
-name|pl_refcnt
+literal|"plimit refcnt underflow"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4009,7 +4008,7 @@ operator|==
 literal|1
 argument_list|,
 operator|(
-literal|"lim_copy of shared limit"
+literal|"lim_copy to shared limit"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4035,7 +4034,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Obtain the hard limit for a particular system resource.  * 	which - index into the rlimit array  * Note: callers must hold proc lock.  */
+comment|/*  * Return the hard limit for a particular system resource.  The  * which parameter specifies the index into the rlimit array.  */
 end_comment
 
 begin_function
@@ -4076,7 +4075,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Obtain the current (soft) limit for a particular system resource.  * 	which - index into the rlimit array  * Note: callers must hold proc lock.  */
+comment|/*  * Return the current (soft) limit for a particular system resource.  * The which parameter which specifies the index into the rlimit array  */
 end_comment
 
 begin_function
@@ -4117,7 +4116,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Obtain the entire rlimit structure for a particular system limit.  *	which - index into the rlimit array  *	rlp   - address into which the rlimit structure will be placed  */
+comment|/*  * Return a copy of the entire rlimit structure for the system limit  * specified by 'which' in the rlimit structure pointed to by 'rlp'.  */
 end_comment
 
 begin_function
@@ -4214,7 +4213,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * lookup a uidinfo struct for the parameter uid.  * uihashtbl_mtx must be locked.  */
+comment|/*  * Look up a uidinfo struct for the parameter uid.  * uihashtbl_mtx must be locked.  */
 end_comment
 
 begin_function
@@ -4299,6 +4298,9 @@ block|{
 name|struct
 name|uidinfo
 modifier|*
+name|old_uip
+decl_stmt|,
+modifier|*
 name|uip
 decl_stmt|;
 name|mtx_lock
@@ -4321,11 +4323,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|struct
-name|uidinfo
-modifier|*
-name|old_uip
-decl_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -4355,7 +4352,7 @@ operator|&
 name|uihashtbl_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 		 * There's a chance someone created our uidinfo while we 		 * were in malloc and not holding the lock, so we have to 		 * make sure we don't insert a duplicate uidinfo 		 */
+comment|/* 		 * There's a chance someone created our uidinfo while we 		 * were in malloc and not holding the lock, so we have to 		 * make sure we don't insert a duplicate uidinfo. 		 */
 if|if
 condition|(
 operator|(
@@ -4370,7 +4367,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* someone else beat us to it */
+comment|/* Someone else beat us to it. */
 name|free
 argument_list|(
 name|uip
@@ -4657,7 +4654,7 @@ argument_list|(
 name|uip
 argument_list|)
 expr_stmt|;
-comment|/* don't allow them to exceed max, but allow subtraction */
+comment|/* Don't allow them to exceed max, but allow subtraction. */
 if|if
 condition|(
 name|diff
