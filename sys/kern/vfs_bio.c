@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.143 1998/01/17 09:16:26 dyson Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.144 1998/01/22 17:29:51 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -5074,10 +5074,18 @@ literal|0
 condition|)
 block|{
 name|int
-name|tfree
+name|totfree
 init|=
 literal|0
+decl_stmt|,
+name|freed
 decl_stmt|;
+do|do
+block|{
+name|freed
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|bp1
@@ -5104,6 +5112,7 @@ argument_list|,
 name|b_freelist
 argument_list|)
 control|)
+block|{
 if|if
 condition|(
 name|bp1
@@ -5113,8 +5122,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|tfree
+name|totfree
 operator|+=
+name|bp1
+operator|->
+name|b_kvasize
+expr_stmt|;
+name|freed
+operator|=
 name|bp1
 operator|->
 name|b_kvasize
@@ -5134,16 +5149,23 @@ argument_list|(
 name|bp1
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+do|while
+condition|(
+name|freed
+condition|)
+do|;
+comment|/* 				 * if we found free space, then retry with the same buffer. 				 */
 if|if
 condition|(
-name|tfree
-operator|>=
-name|maxsize
+name|totfree
 condition|)
 goto|goto
 name|findkvaspace
 goto|;
-block|}
 block|}
 name|bp
 operator|->
