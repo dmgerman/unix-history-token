@@ -3522,6 +3522,8 @@ expr_stmt|;
 comment|/* do not zap parent in first pass, record we need a second pass */
 if|if
 condition|(
+name|zap
+operator|&&
 name|q
 operator|->
 name|dyn_type
@@ -3536,11 +3538,6 @@ expr_stmt|;
 comment|/* we need a second pass */
 if|if
 condition|(
-name|zap
-operator|==
-literal|1
-operator|&&
-operator|(
 name|pass
 operator|==
 literal|0
@@ -3550,7 +3547,6 @@ operator|->
 name|count
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 name|zap
@@ -3562,6 +3558,8 @@ condition|(
 name|pass
 operator|==
 literal|1
+operator|&&
+name|force
 condition|)
 comment|/* should not happen */
 name|printf
@@ -4922,6 +4920,33 @@ name|rule
 argument_list|)
 expr_stmt|;
 comment|/* try to expire some */
+comment|/* 	     * The expiry might have removed the parent too. 	     * We lookup again, which will re-create if necessary. 	     */
+name|parent
+operator|=
+name|lookup_dyn_parent
+argument_list|(
+operator|&
+name|id
+argument_list|,
+name|rule
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|parent
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"add parent failed\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|parent
@@ -4931,11 +4956,29 @@ operator|>=
 name|conn_limit
 condition|)
 block|{
-name|printf
+if|if
+condition|(
+name|fw_verbose
+operator|&&
+name|last_log
+operator|!=
+name|time_second
+condition|)
+block|{
+name|last_log
+operator|=
+name|time_second
+expr_stmt|;
+name|log
 argument_list|(
+name|LOG_SECURITY
+operator||
+name|LOG_INFO
+argument_list|,
 literal|"drop session, too many entries\n"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|1
 return|;
