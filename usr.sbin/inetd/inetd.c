@@ -44,7 +44,7 @@ name|char
 name|inetd_c_rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.12 1996/07/17 15:00:28 davidg Exp $"
+literal|"$Id: inetd.c,v 1.13 1996/08/09 22:20:24 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4776,11 +4776,29 @@ operator|==
 literal|0
 condition|)
 block|{
+name|memmove
+argument_list|(
 name|sep
 operator|->
 name|se_proto
-operator|+=
+argument_list|,
+name|sep
+operator|->
+name|se_proto
+operator|+
 literal|4
+argument_list|,
+name|strlen
+argument_list|(
+name|sep
+operator|->
+name|se_proto
+argument_list|)
+operator|+
+literal|1
+operator|-
+literal|4
+argument_list|)
 expr_stmt|;
 name|sep
 operator|->
