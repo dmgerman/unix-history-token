@@ -573,7 +573,8 @@ end_comment
 begin_typedef
 typedef|typedef
 name|unsigned
-name|integer
+name|long
+name|int
 name|Offset
 typedef|;
 end_typedef
@@ -720,7 +721,8 @@ end_define
 begin_typedef
 typedef|typedef
 name|unsigned
-name|integer
+name|long
+name|int
 name|BitVector
 typedef|;
 end_typedef
@@ -877,8 +879,10 @@ decl_stmt|;
 comment|/*font*/
 name|int
 name|fontval
+decl_stmt|;
 block|}
 name|val
+union|;
 block|}
 name|Object
 operator|,
