@@ -207,7 +207,7 @@ value|_IOR('d', 128, u_int)
 end_define
 
 begin_comment
-comment|/* Get sector size in bytes */
+comment|/*- 	 * Get the sectorsize of the device in bytes.  The sectorsize is the 	 * smallest unit of data which can be transfered from this device. 	 * Usually this is a power of two but it may not be. (ie: CDROM audio) 	 */
 end_comment
 
 begin_define
@@ -221,6 +221,10 @@ begin_comment
 comment|/* Get media size in bytes */
 end_comment
 
+begin_comment
+comment|/*- 	 * Get the size of the entire device in bytes.  This should be a 	 * multiple of the sectorsize. 	 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -230,6 +234,10 @@ end_define
 
 begin_comment
 comment|/* Get firmware sectorcount */
+end_comment
+
+begin_comment
+comment|/*- 	 * Get the firmwares notion of number of sectors per track.  This 	 * value is mostly used for compatibility with various ill designed 	 * disk label formats.  Don't use it unless you have to. 	 */
 end_comment
 
 begin_define
@@ -243,6 +251,10 @@ begin_comment
 comment|/* Get firmware headcount */
 end_comment
 
+begin_comment
+comment|/*- 	 * Get the firmwares notion of number of heads per cylinder.  This 	 * value is mostly used for compatibility with various ill designed 	 * disk label formats.  Don't use it unless you have to. 	 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -252,6 +264,10 @@ end_define
 
 begin_comment
 comment|/* Set/Clear kernel dumps */
+end_comment
+
+begin_comment
+comment|/*- 	 * Enable/Disable (the argument is boolean) the device for kernel 	 * core dumps. 	 */
 end_comment
 
 begin_endif
