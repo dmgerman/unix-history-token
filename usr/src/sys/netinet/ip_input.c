@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1304,7 +1304,7 @@ name|t
 operator|=
 name|m_get
 argument_list|(
-name|M_WAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_FTABLE
 argument_list|)
@@ -3429,11 +3429,27 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_WAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_SOOPTS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+literal|0
+operator|)
+return|;
 name|m
 operator|->
 name|m_len
