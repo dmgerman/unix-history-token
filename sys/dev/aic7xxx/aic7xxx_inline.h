@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Inline routines shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx_inline.h#15 $  *  * $FreeBSD$  */
+comment|/*  * Inline routines shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx_inline.h#17 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -23,7 +23,7 @@ begin_function_decl
 specifier|static
 name|__inline
 name|int
-name|sequencer_paused
+name|ahc_is_paused
 parameter_list|(
 name|struct
 name|ahc_softc
@@ -51,7 +51,7 @@ begin_function_decl
 specifier|static
 name|__inline
 name|void
-name|pause_sequencer
+name|ahc_pause
 parameter_list|(
 name|struct
 name|ahc_softc
@@ -65,7 +65,7 @@ begin_function_decl
 specifier|static
 name|__inline
 name|void
-name|unpause_sequencer
+name|ahc_unpause
 parameter_list|(
 name|struct
 name|ahc_softc
@@ -124,7 +124,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|sequencer_paused
+name|ahc_is_paused
 parameter_list|(
 name|struct
 name|ahc_softc
@@ -159,7 +159,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|pause_sequencer
+name|ahc_pause
 parameter_list|(
 name|struct
 name|ahc_softc
@@ -181,7 +181,7 @@ expr_stmt|;
 comment|/* 	 * Since the sequencer can disable pausing in a critical section, we 	 * must loop until it actually stops. 	 */
 while|while
 condition|(
-name|sequencer_paused
+name|ahc_is_paused
 argument_list|(
 name|ahc
 argument_list|)
@@ -205,7 +205,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|unpause_sequencer
+name|ahc_unpause
 parameter_list|(
 name|struct
 name|ahc_softc
@@ -1352,7 +1352,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|pause_sequencer
+name|ahc_pause
 argument_list|(
 name|ahc
 argument_list|)
@@ -1380,7 +1380,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|unpause_sequencer
+name|ahc_unpause
 argument_list|(
 name|ahc
 argument_list|)
@@ -1634,12 +1634,22 @@ name|u_int
 name|queuestat
 decl_stmt|;
 comment|/* 	 * Instead of directly reading the interrupt status register, 	 * infer the cause of the interrupt by checking our in-core 	 * completion queues.  This avoids a costly PCI bus read in 	 * most cases. 	 */
-name|intstat
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
+operator|(
+name|ahc
+operator|->
+name|flags
+operator|&
+operator|(
+name|AHC_ALL_INTERRUPTS
+operator||
+name|AHC_EDGE_INTERRUPT
+operator|)
+operator|)
+operator|==
+literal|0
+operator|&&
 operator|(
 name|queuestat
 operator|=
@@ -1655,26 +1665,7 @@ name|intstat
 operator|=
 name|CMDCMPLT
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|intstat
-operator|&
-name|INT_PEND
-operator|)
-operator|==
-literal|0
-operator|||
-operator|(
-name|ahc
-operator|->
-name|flags
-operator|&
-name|AHC_ALL_INTERRUPTS
-operator|)
-operator|!=
-literal|0
-condition|)
+else|else
 block|{
 name|intstat
 operator|=
@@ -1683,6 +1674,14 @@ argument_list|(
 name|ahc
 argument_list|,
 name|INTSTAT
+argument_list|)
+expr_stmt|;
+comment|/* 		 * We can't generate queuestat once above 		 * or we are exposed to a race when our 		 * interrupt is shared with another device. 		 * if instat showed a command complete interrupt, 		 * but our first generation of queue stat 		 * "just missed" the delivery of this transaction, 		 * we would clear the command complete interrupt 		 * below without ever servicing the completed 		 * command. 		 */
+name|queuestat
+operator|=
+name|ahc_check_cmdcmpltqueues
+argument_list|(
+name|ahc
 argument_list|)
 expr_stmt|;
 if|#

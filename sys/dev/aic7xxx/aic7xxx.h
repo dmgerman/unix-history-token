@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#18 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#22 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -797,16 +797,11 @@ name|AHC_FNONE
 init|=
 literal|0x000
 block|,
-name|AHC_PAGESCBS
+name|AHC_PRIMARY_CHANNEL
 init|=
-literal|0x001
+literal|0x003
 block|,
-comment|/* Enable SCB paging */
-name|AHC_CHANNEL_B_PRIMARY
-init|=
-literal|0x002
-block|,
-comment|/* 					 * On twin channel adapters, probe 					 * channel B first since it is the 					 * primary bus. 					 */
+comment|/* 					 * The channel that should 					 * be probed first. 					 */
 name|AHC_USEDEFAULTS
 init|=
 literal|0x004
@@ -889,6 +884,21 @@ block|,
 name|AHC_ALL_INTERRUPTS
 init|=
 literal|0x100000
+block|,
+name|AHC_ULTRA_DISABLED
+init|=
+literal|0x200000
+block|,
+comment|/* 					   * The precision resistor for 					   * ultra transmission speeds is 					   * missing, so we must limit 					   * ourselves to fast SCSI. 					   */
+name|AHC_PAGESCBS
+init|=
+literal|0x400000
+block|,
+comment|/* Enable SCB paging */
+name|AHC_EDGE_INTERRUPT
+init|=
+literal|0x800000
+comment|/* Device uses edge triggered ints */
 block|}
 name|ahc_flag
 typedef|;
@@ -1743,69 +1753,12 @@ comment|/***************************** Lookup Tables ***************************
 end_comment
 
 begin_comment
-comment|/*  * Textual descriptions of the different chips indexed by chip type.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|ahc_chip_names
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|u_int
-name|num_chip_names
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Hardware error codes.  */
-end_comment
-
-begin_struct
-struct|struct
-name|hard_error_entry
-block|{
-name|uint8_t
-name|errno
-decl_stmt|;
-name|char
-modifier|*
-name|errmesg
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|hard_error_entry
-name|hard_error
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|u_int
-name|num_errors
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Phase -> name and message out response  * to parity errors in each phase table.   */
 end_comment
 
 begin_struct
 struct|struct
-name|phase_table_entry
+name|ahc_phase_table_entry
 block|{
 name|uint8_t
 name|phase
@@ -1821,23 +1774,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|phase_table_entry
-name|phase_table
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|u_int
-name|num_phases
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/************************** Serial EEPROM Format ******************************/
@@ -2024,9 +1960,13 @@ value|0x0080
 comment|/* Cluster Enable */
 define|#
 directive|define
-name|CFCHNLBPRIMARY
-value|0x0100
-comment|/* aic7895 probe B channel first */
+name|CFBOOTCHAN
+value|0x0300
+comment|/* probe this channel first */
+define|#
+directive|define
+name|CFBOOTCHANSHIFT
+value|8
 define|#
 directive|define
 name|CFSEAUTOTERM
@@ -3328,7 +3268,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|restart_sequencer
+name|ahc_restart
 parameter_list|(
 name|struct
 name|ahc_softc
@@ -3341,6 +3281,18 @@ end_function_decl
 begin_comment
 comment|/*************************** Utility Functions ********************************/
 end_comment
+
+begin_function_decl
+name|struct
+name|ahc_phase_table_entry
+modifier|*
+name|ahc_lookup_phase_entry
+parameter_list|(
+name|int
+name|phase
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
