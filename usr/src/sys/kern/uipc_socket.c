@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.61	82/10/23	*/
+comment|/*	uipc_socket.c	4.62	82/10/31	*/
 end_comment
 
 begin_include
@@ -1064,6 +1064,26 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
+name|sb
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+name|copyout
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|sb
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|ub
+argument_list|,
+sizeof|sizeof
+argument_list|(
 name|sb
 argument_list|)
 argument_list|)
