@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.21 1998/02/19 00:45:33 eivind Exp $"
+literal|"$Id: main.c,v 1.22 1998/03/16 11:19:10 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1395,14 +1395,14 @@ name|fprintf
 argument_list|(
 name|fo
 argument_list|,
-literal|"static char *config = \"\n"
+literal|"static char *config = \"\\\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fo
 argument_list|,
-literal|"START CONFIG FILE %s\n___"
+literal|"START CONFIG FILE %s\\n\\\n___"
 argument_list|,
 name|PREFIX
 argument_list|)
@@ -1432,7 +1432,7 @@ name|fprintf
 argument_list|(
 name|fo
 argument_list|,
-literal|"\n___"
+literal|"\\n\\\n___"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1483,7 +1483,7 @@ name|fprintf
 argument_list|(
 name|fo
 argument_list|,
-literal|"\nEND CONFIG FILE %s\n"
+literal|"\\n\\\nEND CONFIG FILE %s\\n\\\n"
 argument_list|,
 name|PREFIX
 argument_list|)
