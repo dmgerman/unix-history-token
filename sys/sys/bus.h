@@ -170,23 +170,10 @@ name|INTR_TYPE_MISC
 init|=
 literal|16
 block|,
-name|INTR_HEAVY
+name|INTR_TYPE_CLK
 init|=
 literal|32
 block|,
-comment|/* heavyweight interrupt process */
-name|INTR_LIGHT
-init|=
-literal|64
-block|,
-comment|/* light weight interrupt thread */
-name|INTR_THREADED
-init|=
-name|INTR_LIGHT
-operator||
-name|INTR_HEAVY
-block|,
-comment|/* any kind of interrupt thread */
 name|INTR_FAST
 init|=
 literal|128
@@ -199,7 +186,12 @@ comment|/* exclusive interrupt */
 name|INTR_MPSAFE
 init|=
 literal|512
+block|,
 comment|/* this interrupt is SMP safe */
+name|INTR_ENTROPY
+init|=
+literal|1024
+comment|/* this interrupt provides entropy */
 block|}
 enum|;
 end_enum
