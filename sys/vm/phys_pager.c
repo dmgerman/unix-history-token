@@ -430,6 +430,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Fill as many pages as vm_fault has allocated for us.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -451,18 +455,17 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|s
 decl_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Fill as many pages as vm_fault has allocated for us. 	 */
 for|for
 control|(
 name|i
@@ -576,11 +579,6 @@ block|}
 block|}
 name|vm_page_unlock_queues
 argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
