@@ -77,17 +77,16 @@ directive|include
 file|"opt_compat.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|COMPAT_LINUX32
-end_if
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<machine/../linux/linux.h>
+file|<machine/../linux32/linux.h>
 end_include
 
 begin_else
@@ -98,7 +97,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<machine/../linux32/linux.h>
+file|<machine/../linux/linux.h>
 end_include
 
 begin_endif

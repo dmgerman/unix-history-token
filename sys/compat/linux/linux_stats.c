@@ -107,29 +107,11 @@ directive|include
 file|"opt_compat.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|COMPAT_LINUX32
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/../linux/linux.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/../linux/linux_proto.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifdef
 
 begin_include
 include|#
@@ -141,6 +123,23 @@ begin_include
 include|#
 directive|include
 file|<machine/../linux32/linux32_proto.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/../linux/linux.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/../linux/linux_proto.h>
 end_include
 
 begin_endif
@@ -2104,7 +2103,10 @@ argument_list|(
 name|__amd64__
 argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|COMPAT_LINUX32
+argument_list|)
 operator|)
 end_if
 
@@ -2864,7 +2866,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __i386__ || __amd64__ */
+comment|/* __i386__ || (__amd64__&& COMPAT_LINUX32) */
 end_comment
 
 end_unit
