@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.22	81/03/06	*/
+comment|/*	hp.c	4.23	81/03/06	*/
 end_comment
 
 begin_include
@@ -2013,7 +2013,7 @@ name|PGOFSET
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"hp%d%c: soft ecc bn%d\n"
+literal|"hp%d%c: soft ecc sn%d\n"
 argument_list|,
 name|dkunit
 argument_list|(
