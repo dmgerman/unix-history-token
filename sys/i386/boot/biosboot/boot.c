@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.46 1995/07/22 22:32:49 joerg Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.47 1996/03/08 06:29:06 bde Exp $  */
 end_comment
 
 begin_comment
@@ -221,10 +221,14 @@ expr_stmt|;
 name|gateA20
 argument_list|()
 expr_stmt|;
-comment|/***************************************************************\ 	* As a default set it to the first partition of the boot	* 	* floppy or hard drive						* 	* Define BOOT_HT to boot sd0 when wd0 is also installed		* 	\***************************************************************/
-name|part
+comment|/* 	 * The default boot device is the first partition in the 	 * compatibility slice on the boot drive. 	 */
+name|dosdev
 operator|=
-literal|0
+name|drive
+expr_stmt|;
+name|maj
+operator|=
+literal|2
 expr_stmt|;
 name|unit
 operator|=
@@ -234,37 +238,47 @@ literal|0x7f
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BOOT_HD
-name|maj
+name|dontneed
+name|slice
 operator|=
-operator|(
-name|drive
-operator|&
-literal|0x80
-condition|?
-literal|1
-else|:
-literal|2
-operator|)
-expr_stmt|;
-comment|/* a good first bet */
-else|#
-directive|else
-name|maj
-operator|=
-operator|(
-name|drive
-operator|&
-literal|0x80
-condition|?
 literal|0
-else|:
-literal|2
-operator|)
 expr_stmt|;
-comment|/* a good first bet */
+name|part
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|drive
+operator|&
+literal|0x80
+condition|)
+block|{
+comment|/* 		 * Hard drive.  Adjust.  Guess that the FreeBSD unit number 		 * is the BIOS drive number biased by BOOT_HD_BIAS, 		 */
+name|maj
+operator|=
+literal|0
+expr_stmt|;
+if|#
+directive|if
+name|BOOT_HD_BIAS
+operator|>
+literal|0
+if|if
+condition|(
+name|BOOT_HD_BIAS
+operator|<=
+name|unit
+condition|)
+name|unit
+operator|-=
+name|BOOT_HD_BIAS
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 name|loadstart
 label|:
 comment|/* print this all each time.. (saves space to do so) */
@@ -272,8 +286,8 @@ comment|/* If we have looped, use the previous entries as defaults */
 name|printf
 argument_list|(
 literal|"\n>> FreeBSD BOOT @ 0x%x: %d/%d k of memory\n"
-literal|"Use hd(1,a)/kernel to boot sd0 when wd0 is also installed.\n"
-literal|"Usage: [[%s(%d,a)]%s][-abcCdhrsv]\n"
+literal|"Usage: [[[%d:][%s](%d,a)]%s][-abcCdhrsv]\n"
+literal|"Use 1:sd(0,a)kernel to boot sd0 if it is BIOS drive 1\n"
 literal|"Use ? for file list or press Enter for defaults\n\nBoot: "
 argument_list|,
 name|ouraddr
@@ -285,6 +299,10 @@ argument_list|,
 name|bootinfo
 operator|.
 name|bi_extmem
+argument_list|,
+name|dosdev
+operator|&
+literal|0x7f
 argument_list|,
 name|devs
 index|[
@@ -433,7 +451,11 @@ name|startaddr
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Booting %s(%d,%c)%s @ 0x%x\n"
+literal|"Booting %d:%s(%d,%c)%s @ 0x%x\n"
+argument_list|,
+name|dosdev
+operator|&
+literal|0x7f
 argument_list|,
 name|devs
 index|[
