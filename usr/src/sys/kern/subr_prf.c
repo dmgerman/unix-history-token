@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.27	83/05/27	*/
+comment|/*	subr_prf.c	4.28	83/07/01	*/
 end_comment
 
 begin_include
@@ -74,6 +74,23 @@ include|#
 directive|include
 file|"../h/tty.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../vax/mtpr.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * In case console is off,  * panicstr contains argument to last  * call to panic.  */
@@ -687,16 +704,6 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|sun
-specifier|register
-name|int
-modifier|*
-name|a5
-decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|bootopt
 init|=
@@ -716,53 +723,6 @@ name|panicstr
 operator|=
 name|s
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|sun
-asm|asm("movl a6, a5");
-name|traceback
-argument_list|(
-name|a5
-argument_list|,
-name|a5
-argument_list|)
-expr_stmt|;
-comment|/* make sure u area has been initialized before doing resume */
-if|if
-condition|(
-name|u
-operator|.
-name|u_procp
-operator|>=
-name|proc
-operator|&&
-name|u
-operator|.
-name|u_procp
-operator|<
-name|procNPROC
-operator|&&
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_addr
-operator|!=
-literal|0
-condition|)
-name|resume
-argument_list|(
-name|pcbb
-argument_list|(
-name|u
-operator|.
-name|u_procp
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* for adb traceback */
-endif|#
-directive|endif
 block|}
 name|printf
 argument_list|(
@@ -810,12 +770,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
 
 begin_comment
 comment|/*  * Hard error is the preface to plaintive error messages  * about failing disk transfers.  */
@@ -878,11 +832,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Print a character on console or users terminal.  * If destination is console then the last MSGBUFS characters  * are saved in msgbuf for inspection later.  */
@@ -980,15 +929,6 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|vax
-include|#
-directive|include
-file|"../vax/mtpr.h"
-comment|/* XXX */
-endif|#
-directive|endif
 if|if
 condition|(
 name|c

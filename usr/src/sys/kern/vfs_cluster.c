@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_cluster.c	4.47	83/06/14	*/
+comment|/*	vfs_cluster.c	4.48	83/07/01	*/
 end_comment
 
 begin_include
@@ -1921,9 +1921,6 @@ operator|=
 name|spl6
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|sun
 for|for
 control|(
 name|dp
@@ -1941,27 +1938,6 @@ condition|;
 name|dp
 operator|--
 control|)
-else|#
-directive|else
-for|for
-control|(
-name|dp
-operator|=
-operator|&
-name|bfreelist
-index|[
-name|BQ_EMPTY
-index|]
-init|;
-name|dp
-operator|>
-name|bfreelist
-condition|;
-name|dp
-operator|--
-control|)
-endif|#
-directive|endif
 if|if
 condition|(
 name|dp

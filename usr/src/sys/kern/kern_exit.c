@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_exit.c	4.5	83/06/16	*/
+comment|/*	kern_exit.c	4.6	83/07/01	*/
 end_comment
 
 begin_include
@@ -444,18 +444,6 @@ directive|ifdef
 name|QUOTA
 name|qclean
 argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|sun
-name|ctxfree
-argument_list|(
-name|u
-operator|.
-name|u_procp
-argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
