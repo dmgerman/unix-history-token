@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.17 (Berkeley) %G%"
+literal|"@(#)mime.c	8.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1883,8 +1883,6 @@ name|c1
 operator|>>
 literal|2
 operator|)
-operator|&
-literal|0x3f
 index|]
 argument_list|,
 name|mci
@@ -1931,8 +1929,6 @@ argument_list|(
 name|Base64Code
 index|[
 name|c1
-operator|&
-literal|0x3f
 index|]
 argument_list|,
 name|mci
@@ -1975,8 +1971,6 @@ argument_list|(
 name|Base64Code
 index|[
 name|c1
-operator|&
-literal|0x3f
 index|]
 argument_list|,
 name|mci
@@ -2023,8 +2017,6 @@ argument_list|(
 name|Base64Code
 index|[
 name|c1
-operator|&
-literal|0x3f
 index|]
 argument_list|,
 name|mci
@@ -2058,8 +2050,6 @@ argument_list|(
 name|Base64Code
 index|[
 name|c1
-operator|&
-literal|0x3f
 index|]
 argument_list|,
 name|mci
@@ -2737,7 +2727,7 @@ name|int
 name|c
 decl_stmt|;
 specifier|static
-name|char
+name|u_char
 modifier|*
 name|bp
 init|=
@@ -2764,7 +2754,7 @@ name|MBT_SYNTAX
 decl_stmt|;
 comment|/* boundary type of next EOF */
 specifier|static
-name|char
+name|u_char
 name|buf
 index|[
 literal|128
