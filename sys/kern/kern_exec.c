@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman  * 4. The name of the developer may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_exec.c,v 1.11 1995/01/09 16:04:49 davidg Exp $  */
+comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman  * 4. The name of the developer may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_exec.c,v 1.12 1995/02/14 19:22:28 sos Exp $  */
 end_comment
 
 begin_include
@@ -310,11 +310,28 @@ operator|&
 name|attr
 expr_stmt|;
 comment|/* 	 * Allocate temporary demand zeroed space for argument and 	 *	environment strings 	 */
-name|error
+name|iparams
+operator|->
+name|stringbase
 operator|=
-name|vm_allocate
+operator|(
+name|char
+operator|*
+operator|)
+name|vm_map_min
 argument_list|(
 name|exec_map
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|vm_map_find
+argument_list|(
+name|exec_map
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -452,7 +469,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|vm_deallocate
+name|vm_map_remove
 argument_list|(
 name|exec_map
 argument_list|,
@@ -463,6 +480,13 @@ name|iparams
 operator|->
 name|stringbase
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|iparams
+operator|->
+name|stringbase
+operator|+
 name|ARG_MAX
 argument_list|)
 expr_stmt|;
@@ -655,7 +679,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vm_deallocate
+name|vm_map_remove
 argument_list|(
 name|kernel_map
 argument_list|,
@@ -664,6 +688,11 @@ name|vm_offset_t
 operator|)
 name|image_header
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|image_header
+operator|+
 name|PAGE_SIZE
 argument_list|)
 condition|)
@@ -1162,7 +1191,7 @@ expr_stmt|;
 comment|/* 	 * free various allocated resources 	 */
 if|if
 condition|(
-name|vm_deallocate
+name|vm_map_remove
 argument_list|(
 name|exec_map
 argument_list|,
@@ -1173,6 +1202,13 @@ name|iparams
 operator|->
 name|stringbase
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|iparams
+operator|->
+name|stringbase
+operator|+
 name|ARG_MAX
 argument_list|)
 condition|)
@@ -1183,7 +1219,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vm_deallocate
+name|vm_map_remove
 argument_list|(
 name|kernel_map
 argument_list|,
@@ -1192,6 +1228,11 @@ name|vm_offset_t
 operator|)
 name|image_header
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|image_header
+operator|+
 name|PAGE_SIZE
 argument_list|)
 condition|)
@@ -1244,7 +1285,7 @@ literal|1
 condition|)
 if|if
 condition|(
-name|vm_deallocate
+name|vm_map_remove
 argument_list|(
 name|exec_map
 argument_list|,
@@ -1255,6 +1296,13 @@ name|iparams
 operator|->
 name|stringbase
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|iparams
+operator|->
+name|stringbase
+operator|+
 name|ARG_MAX
 argument_list|)
 condition|)
@@ -1282,17 +1330,20 @@ literal|1
 condition|)
 if|if
 condition|(
-name|vm_deallocate
+name|vm_map_remove
 argument_list|(
 name|kernel_map
 argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
-name|iparams
-operator|->
 name|image_header
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|image_header
+operator|+
 name|PAGE_SIZE
 argument_list|)
 condition|)
@@ -1329,13 +1380,6 @@ name|vmspace_destroyed
 condition|)
 block|{
 comment|/* sorry, no more process anymore. exit gracefully */
-if|#
-directive|if
-literal|0
-comment|/* XXX */
-block|vm_deallocate(&vs->vm_map, USRSTACK - MAXSSIZ, MAXSSIZ);
-endif|#
-directive|endif
 name|exit1
 argument_list|(
 name|p
@@ -1433,7 +1477,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|vm_deallocate
+name|vm_map_remove
 argument_list|(
 operator|&
 name|vmspace
@@ -1448,12 +1492,16 @@ expr_stmt|;
 comment|/* Allocate a new stack */
 name|error
 operator|=
-name|vm_allocate
+name|vm_map_find
 argument_list|(
 operator|&
 name|vmspace
 operator|->
 name|vm_map
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|,
 operator|(
 name|vm_offset_t

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.10 1994/10/22 11:55:16 phk Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip".  This saves diskspace, but wastes cpu-cycles and VM.  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecesary includes  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.11 1995/02/13 07:40:33 phk Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip".  This saves diskspace, but wastes cpu-cycles and VM.  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecesary includes  */
 end_comment
 
 begin_include
@@ -446,7 +446,7 @@ condition|)
 block|{
 name|error2
 operator|=
-name|vm_deallocate
+name|vm_map_remove
 argument_list|(
 name|kernel_map
 argument_list|,
@@ -457,6 +457,13 @@ name|igz
 operator|.
 name|inbuf
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|igz
+operator|.
+name|inbuf
+operator|+
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
@@ -1022,7 +1029,16 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Allocate demand-zeroed area for uninitialized data "bss" = 'block 	 * started by symbol' - named after the IBM 7090 instruction of the 	 * same name. 	 */
+if|if
+condition|(
+name|gz
+operator|->
+name|bss_size
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * Allocate demand-zeroed area for uninitialized data "bss" = 'block 		 * started by symbol' - named after the IBM 7090 instruction of the 		 * same name. 		 */
 name|vmaddr
 operator|=
 name|gz
@@ -1043,12 +1059,16 @@ name|a_data
 expr_stmt|;
 name|error
 operator|=
-name|vm_allocate
+name|vm_map_find
 argument_list|(
 operator|&
 name|vmspace
 operator|->
 name|vm_map
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|vmaddr
@@ -1076,6 +1096,7 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
 block|}
 comment|/* Fill in process VM information */
 name|vmspace
@@ -1266,7 +1287,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|vm_deallocate
+name|vm_map_remove
 argument_list|(
 name|kernel_map
 argument_list|,
@@ -1277,6 +1298,13 @@ name|igz
 operator|->
 name|inbuf
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|igz
+operator|->
+name|inbuf
+operator|+
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.2 1994/09/16 17:43:22 dfr Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.3 1994/10/02 17:35:28 phk Exp $ */
 end_comment
 
 begin_comment
@@ -475,7 +475,10 @@ operator|&
 operator|~
 name|CLOFSET
 expr_stmt|;
-name|vm_deallocate
+operator|(
+name|void
+operator|)
+name|vm_map_remove
 argument_list|(
 name|sysvshm_map
 argument_list|,
@@ -483,6 +486,10 @@ name|shm_handle
 operator|->
 name|kva
 argument_list|,
+name|shm_handle
+operator|->
+name|kva
+operator|+
 name|size
 argument_list|)
 expr_stmt|;
@@ -588,7 +595,7 @@ name|CLOFSET
 expr_stmt|;
 name|result
 operator|=
-name|vm_deallocate
+name|vm_map_remove
 argument_list|(
 operator|&
 name|p
@@ -601,6 +608,10 @@ name|shmmap_s
 operator|->
 name|va
 argument_list|,
+name|shmmap_s
+operator|->
+name|va
+operator|+
 name|size
 argument_list|)
 expr_stmt|;
