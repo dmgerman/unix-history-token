@@ -195,7 +195,7 @@ name|FREAD
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+name|td
 argument_list|)
 expr_stmt|;
 name|PICKUP_GIANT
