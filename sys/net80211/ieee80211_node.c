@@ -282,7 +282,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_80211_NODE
 argument_list|,
-literal|"node"
+literal|"80211node"
 argument_list|,
 literal|"802.11 node state"
 argument_list|)
