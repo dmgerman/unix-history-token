@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.48 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1143,6 +1143,65 @@ argument_list|,
 name|queueit
 argument_list|)
 expr_stmt|;
+comment|/* 	**  If we had some fatal error, but no addresses are marked as 	**  bad, mark them _all_ as bad. 	*/
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_FATALERRS
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+operator|&&
+operator|!
+name|failure_return
+condition|)
+block|{
+name|failure_return
+operator|=
+name|TRUE
+expr_stmt|;
+for|for
+control|(
+name|q
+operator|=
+name|e
+operator|->
+name|e_sendqueue
+init|;
+name|q
+operator|!=
+name|NULL
+condition|;
+name|q
+operator|=
+name|q
+operator|->
+name|q_next
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QDONTSEND
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+name|q
+operator|->
+name|q_flags
+operator||=
+name|QBADADDR
+expr_stmt|;
+block|}
+block|}
 comment|/* 	**  Send back return receipts as requested. 	*/
 comment|/* 	if (e->e_receiptto != NULL&& bitset(EF_SENDRECEIPT, e->e_flags)&& !bitset(PRIV_NORECEIPTS, PrivacyFlags)) */
 if|if
