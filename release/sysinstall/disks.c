@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.70.2.16 1997/09/04 07:47:32 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.70.2.17 1997/09/07 14:07:47 joerg Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -387,9 +387,9 @@ name|mvprintw
 argument_list|(
 literal|3
 argument_list|,
-literal|1
+literal|0
 argument_list|,
-literal|"%10s %10s %10s %8s %8s %8s %8s %8s"
+literal|"%10s %10s %10s %8s %6s %10s %8s %8s"
 argument_list|,
 literal|"Offset"
 argument_list|,
@@ -445,9 +445,9 @@ name|mvprintw
 argument_list|(
 name|row
 argument_list|,
-literal|2
+literal|0
 argument_list|,
-literal|"%10ld %10lu %10lu %8s %8d %8s %8d\t%-6s"
+literal|"%10ld %10lu %10lu %8s %6d %10s %8d\t%-6s"
 argument_list|,
 name|chunk_info
 index|[
@@ -571,7 +571,7 @@ literal|18
 argument_list|,
 literal|0
 argument_list|,
-literal|"U = Undo All Changes   Q = Finish"
+literal|"T = Change Type        U = Undo All Changes     Q = Finish"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1435,6 +1435,144 @@ expr_stmt|;
 name|record_chunks
 argument_list|(
 name|d
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'T'
+case|:
+if|if
+condition|(
+name|chunk_info
+index|[
+name|current_chunk
+index|]
+operator|->
+name|type
+operator|==
+name|unused
+condition|)
+name|msg
+operator|=
+literal|"Slice is currently unused (use create instead)"
+expr_stmt|;
+else|else
+block|{
+name|char
+modifier|*
+name|val
+decl_stmt|,
+name|tmp
+index|[
+literal|20
+index|]
+decl_stmt|;
+name|int
+name|subtype
+decl_stmt|;
+name|chunk_e
+name|partitiontype
+decl_stmt|;
+name|WINDOW
+modifier|*
+name|save
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
+name|strcpy
+argument_list|(
+name|tmp
+argument_list|,
+literal|"165"
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+name|msgGetInput
+argument_list|(
+name|tmp
+argument_list|,
+literal|"New partition type:\n\n"
+literal|"Pressing Enter will choose the default, a native FreeBSD\n"
+literal|"slice (type 165).  Other popular values are 6 for\n"
+literal|"DOS PAT partition, 131 for a Linux ext2fs partition or\n"
+literal|"130 for a Linux swap partition.\n\n"
+literal|"Note:  If you choose a non-FreeBSD partition type, it will not\n"
+literal|"be formatted or otherwise prepared, it will simply reserve space\n"
+literal|"for you to use another tool, such as DOS format, to later format\n"
+literal|"and actually use the partition."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|val
+operator|&&
+operator|(
+name|subtype
+operator|=
+name|strtol
+argument_list|(
+name|val
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|subtype
+operator|==
+literal|165
+condition|)
+name|partitiontype
+operator|=
+name|freebsd
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|subtype
+operator|==
+literal|6
+condition|)
+name|partitiontype
+operator|=
+name|fat
+expr_stmt|;
+else|else
+name|partitiontype
+operator|=
+name|unknown
+expr_stmt|;
+name|chunk_info
+index|[
+name|current_chunk
+index|]
+operator|->
+name|type
+operator|=
+name|partitiontype
+expr_stmt|;
+name|chunk_info
+index|[
+name|current_chunk
+index|]
+operator|->
+name|subtype
+operator|=
+name|subtype
+expr_stmt|;
+block|}
+name|restorescr
+argument_list|(
+name|save
 argument_list|)
 expr_stmt|;
 block|}
