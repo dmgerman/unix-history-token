@@ -11579,6 +11579,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+specifier|static
 name|char
 name|hostbuf
 index|[
