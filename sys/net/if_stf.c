@@ -314,6 +314,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|ip_stf_ttl
 init|=
