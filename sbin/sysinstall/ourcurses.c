@@ -917,9 +917,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|dialog_textbox
@@ -933,7 +936,7 @@ argument_list|,
 name|COLS
 argument_list|)
 expr_stmt|;
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 block|}

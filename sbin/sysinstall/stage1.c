@@ -1135,7 +1135,7 @@ name|selection
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|sprintf
@@ -1356,7 +1356,7 @@ argument_list|,
 literal|"You did not select a valid partition"
 argument_list|)
 expr_stmt|;
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|AskAbort
@@ -2121,12 +2121,12 @@ literal|0
 end_if
 
 begin_comment
-unit|while (!ready) { 	    ready = 1;  	    inst_disk = select_disk();  	    if (read_mbr(avail_fds[inst_disk], mbr) == -1) { 		sprintf(scratch, "The following error occured while trying\nto read the master boot record:\n\n%s\nIn order to install FreeBSD a new master boot record\nwill have to be written which will mean all current\ndata on the hard disk will be lost.", errmsg); 		ok = 0; 		while (!ok) {	 		    AskAbort(scratch); 		    if (!dialog_yesno(TITLE, 				      "Are you sure you wish to proceed?", 				      -1, -1)) { 			dialog_clear(); 			if (clear_mbr(mbr, boot1) == -1) { 			    sprintf(scratch, "\n\nCouldn't create new master boot record.\n\n%s", errmsg); 			    Fatal(scratch);; 			} 			ok = 1; 		    } 		    dialog_clear(); 		} 	    } 	    if (custom_install)  		if (!dialog_yesno(TITLE, "Do you wish to edit the DOS partition table?", 				  -1, -1)) { 		    dialog_clear(); 		    edit_mbr(mbr,&avail_disklabels[inst_disk]); 		}  	    dialog_clear(); 	    inst_part = select_partition(inst_disk);  	    ok = 0; 	    while (!ok) { 		if (build_mbr(mbr, boot1,&avail_disklabels[inst_disk]) != -1) { 		    ready = 1; 		    ok = 1; 		} else { 		    sprintf(scratch, "The DOS partition table is inconsistent.\n\n%s\nDo you wish to edit it by hand?", errmsg); 		    if (!dialog_yesno(TITLE, scratch, -1, -1)) { 			dialog_clear(); 			edit_mbr(mbr,&avail_disklabels[inst_disk]); 		    } else { 			dialog_clear(); 			AskAbort("Installation cannot proceed without\na valid master boot record\n"); 			ok = 1; 			ready = 0; 		    } 		} 		dialog_clear(); 	    }  	    if (ready) { 		default_disklabel(&avail_disklabels[inst_disk], 				  mbr->dospart[inst_part].dp_size, 				  mbr->dospart[inst_part].dp_start); 		dialog_msgbox(TITLE, "This is an experimental disklabel configuration\nmenu. It doesn't perform any validation of the entries\nas yet so BE SURE YOU TYPE THINGS CORRECTLY.\n\n    Hit escape to quit the editor.\n\nThere may be some delay exiting because of a dialog bug", -1,-1,1); 		dialog_clear(); 		edit_disklabel(&avail_disklabels[inst_disk]);  		build_disklabel(&avail_disklabels[inst_disk]); 		if (build_bootblocks(&avail_disklabels[inst_disk]) == -1) 		    Fatal(errmsg); 	    }
+unit|while (!ready) { 	    ready = 1;  	    inst_disk = select_disk();  	    if (read_mbr(avail_fds[inst_disk], mbr) == -1) { 		sprintf(scratch, "The following error occured while trying\nto read the master boot record:\n\n%s\nIn order to install FreeBSD a new master boot record\nwill have to be written which will mean all current\ndata on the hard disk will be lost.", errmsg); 		ok = 0; 		while (!ok) {	 		    AskAbort(scratch); 		    if (!dialog_yesno(TITLE, 				      "Are you sure you wish to proceed?", 				      -1, -1)) { 			dialog_clear_norefresh(); 			if (clear_mbr(mbr, boot1) == -1) { 			    sprintf(scratch, "\n\nCouldn't create new master boot record.\n\n%s", errmsg); 			    Fatal(scratch);; 			} 			ok = 1; 		    } 		    dialog_clear(); 		} 	    } 	    if (custom_install)  		if (!dialog_yesno(TITLE, "Do you wish to edit the DOS partition table?", 				  -1, -1)) { 		    dialog_clear_norefresh(); 		    edit_mbr(mbr,&avail_disklabels[inst_disk]); 		}  	    dialog_clear_norefresh(); 	    inst_part = select_partition(inst_disk);  	    ok = 0; 	    while (!ok) { 		if (build_mbr(mbr, boot1,&avail_disklabels[inst_disk]) != -1) { 		    ready = 1; 		    ok = 1; 		} else { 		    sprintf(scratch, "The DOS partition table is inconsistent.\n\n%s\nDo you wish to edit it by hand?", errmsg); 		    if (!dialog_yesno(TITLE, scratch, -1, -1)) { 			dialog_clear_norefresh(); 			edit_mbr(mbr,&avail_disklabels[inst_disk]); 		    } else { 			dialog_clear_norefresh(); 			AskAbort("Installation cannot proceed without\na valid master boot record\n"); 			ok = 1; 			ready = 0; 		    } 		} 		dialog_clear(); 	    }  	    if (ready) { 		default_disklabel(&avail_disklabels[inst_disk], 				  mbr->dospart[inst_part].dp_size, 				  mbr->dospart[inst_part].dp_start); 		dialog_msgbox(TITLE, "This is an experimental disklabel configuration\nmenu. It doesn't perform any validation of the entries\nas yet so BE SURE YOU TYPE THINGS CORRECTLY.\n\n    Hit escape to quit the editor.\n\nThere may be some delay exiting because of a dialog bug", -1,-1,1); 		dialog_clear_norefresh(); 		edit_disklabel(&avail_disklabels[inst_disk]);  		build_disklabel(&avail_disklabels[inst_disk]); 		if (build_bootblocks(&avail_disklabels[inst_disk]) == -1) 		    Fatal(errmsg); 	    }
 comment|/* ready could have been reset above */
 end_comment
 
 begin_comment
-unit|if (ready) { 		if (dialog_yesno(TITLE, "We are now ready to format the hard disk for FreeBSD.\n\nSome or all of the disk will be overwritten during this process.\n\nAre you sure you wish to proceed ?", -1, -1)) { 		    dialog_clear(); 		    AskAbort("Do you want to quit?"); 		    ready = 0; 		} 		dialog_clear(); 	    } 	} 	if (getenv("STAGE0")) { 	    Fatal("We stop here"); 	}
+unit|if (ready) { 		if (dialog_yesno(TITLE, "We are now ready to format the hard disk for FreeBSD.\n\nSome or all of the disk will be overwritten during this process.\n\nAre you sure you wish to proceed ?", -1, -1)) { 		    dialog_clear_norefresh(); 		    AskAbort("Do you want to quit?"); 		    ready = 0; 		} 		dialog_clear(); 	    } 	} 	if (getenv("STAGE0")) { 	    Fatal("We stop here"); 	}
 comment|/* Write master boot record and bootblocks */
 end_comment
 
