@@ -137,6 +137,10 @@ comment|/* BIO_GETATTR/BIO_SETATTR */
 name|int
 name|bio_error
 decl_stmt|;
+name|u_int
+name|bio_children
+decl_stmt|;
+comment|/* Number of spawned bios */
 name|struct
 name|bio
 modifier|*
@@ -681,21 +685,12 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|void					\ 	name##_init(void)			\ 	{					\ 		g_add_class(&class);		\ 	}
+value|void name##_init(void);				\ 	void					\ 	name##_init(void)			\ 	{					\ 		g_add_class(&class);		\ 	}
 end_define
 
 begin_function_decl
 name|void
-name|g_pc98_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|g_sunlabel_init
+name|g_aes_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -723,6 +718,24 @@ end_function_decl
 begin_function_decl
 name|void
 name|g_mbrext_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|g_sunlabel_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|g_pc98_init
 parameter_list|(
 name|void
 parameter_list|)
