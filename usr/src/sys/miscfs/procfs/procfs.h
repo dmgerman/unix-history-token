@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 The Regents of the University of California.  * Copyright (c) 1993 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs.h	8.1 (Berkeley) %G%  *  * From:  *	$Id: procfs.h,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 The Regents of the University of California.  * Copyright (c) 1993 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs.h	8.2 (Berkeley) %G%  *  * From:  *	$Id: procfs.h,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -359,6 +359,21 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|procfs_sstep
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|procfs_fix_sstep
 name|__P
 argument_list|(
 operator|(
