@@ -487,6 +487,7 @@ name|NULL
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|next
 operator|=
 name|yanknode
@@ -494,6 +495,7 @@ argument_list|(
 operator|&
 name|plan
 argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* 		 * if we encounter a ( expression ) then look for nots in 		 * the expr subplan. 		 */
