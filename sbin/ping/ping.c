@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.28 1997/08/11 04:33:07 fenner Exp $"
+literal|"$Id: ping.c,v 1.29 1997/12/24 00:59:02 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1285,10 +1285,6 @@ literal|"-l flag"
 argument_list|)
 expr_stmt|;
 block|}
-name|options
-operator||=
-name|F_FLOOD
-expr_stmt|;
 name|preload
 operator|=
 name|ultmp
@@ -3954,6 +3950,13 @@ name|i
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|i
+operator|<
+name|MAXIPOPTLEN
+condition|)
+block|{
 name|old_rrlen
 operator|=
 name|i
@@ -3971,6 +3974,12 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|old_rrlen
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3978,6 +3987,10 @@ name|printf
 argument_list|(
 literal|"\nRR: "
 argument_list|)
+expr_stmt|;
+name|j
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -4074,6 +4087,10 @@ name|i
 operator|-=
 literal|4
 expr_stmt|;
+name|j
+operator|+=
+literal|4
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -4081,6 +4098,23 @@ operator|<=
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+name|j
+operator|>=
+name|MAX_IPOPTLEN
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\t(truncated route)"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 operator|(
 name|void
 operator|)
