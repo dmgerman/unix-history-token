@@ -6469,10 +6469,6 @@ return|;
 comment|/* 	 * Some compat layers use SIGTHR and higher signals for 	 * communication between different kernel threads of the same 	 * process, so that they expect that it's always possible to 	 * deliver them, even for suid applications where cr_cansignal() can 	 * deny such ability for security consideration.  It should be 	 * pretty safe to do since the only way to create two processes 	 * with the same p_leader is via rfork(2). 	 */
 if|if
 condition|(
-name|signum
-operator|>=
-name|SIGTHR
-operator|&&
 name|td
 operator|->
 name|td_proc
@@ -6480,6 +6476,16 @@ operator|->
 name|p_leader
 operator|!=
 name|NULL
+operator|&&
+name|signum
+operator|>=
+name|SIGTHR
+operator|&&
+name|signum
+operator|<
+name|SIGTHR
+operator|+
+literal|4
 operator|&&
 name|td
 operator|->
