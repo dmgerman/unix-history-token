@@ -671,6 +671,9 @@ name|EISA_SLOT_SIZE
 expr_stmt|;
 name|pdq_eisa_subprobe
 argument_list|(
+operator|(
+name|pdq_bus_t
+operator|)
 name|SYS_RES_IOPORT
 argument_list|,
 name|iobase
