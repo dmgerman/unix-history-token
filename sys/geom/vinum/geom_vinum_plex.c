@@ -1945,14 +1945,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|p
-operator|->
-name|worklist_mtx
-argument_list|)
-expr_stmt|;
 comment|/* g_free(sc); */
 name|g_wither_geom
 argument_list|(

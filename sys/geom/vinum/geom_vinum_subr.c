@@ -3426,6 +3426,14 @@ operator|&=
 operator|~
 name|GV_PLEX_THREAD_ACTIVE
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|p
+operator|->
+name|worklist_mtx
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
