@@ -1059,7 +1059,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * npxthread is normally non-null here.  In that case, schedule an 	 * AST to finish the exception handling in the correct context 	 * (this interrupt may occur after the thread has entered the 	 * kernel via a syscall or an interrupt).  Otherwise, the npx 	 * state of the thread that caused this interrupt must have been 	 * pushed to the thread' pcb, and clearing of the busy latch 	 * above has finished the (essentially null) handling of this 	 * interrupt.  Control will eventually return to the instruction 	 * that caused it and it will repeat.  We will eventually (usually 	 * soon) win the race to handle the interrupt properly. 	 */
+comment|/* 	 * npxthread is normally non-null here.  In that case, schedule an 	 * AST to finish the exception handling in the correct context 	 * (this interrupt may occur after the thread has entered the 	 * kernel via a syscall or an interrupt).  Otherwise, the npx 	 * state of the thread that caused this interrupt must have been 	 * pushed to the thread's pcb, and clearing of the busy latch 	 * above has finished the (essentially null) handling of this 	 * interrupt.  Control will eventually return to the instruction 	 * that caused it and it will repeat.  We will eventually (usually 	 * soon) win the race to handle the interrupt properly. 	 */
 name|td
 operator|=
 name|PCPU_GET
