@@ -2598,7 +2598,7 @@ name|word
 index|]
 operator|&
 operator|(
-literal|1
+literal|1ul
 operator|<<
 name|bit
 operator|)
