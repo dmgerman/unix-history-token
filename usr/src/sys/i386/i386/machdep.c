@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1987, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1987, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -771,7 +771,7 @@ name|maxaddr
 argument_list|,
 name|size
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|minaddr
