@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.46 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7523,7 +7523,6 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|*
 name|q
 operator|==
 name|NULL
