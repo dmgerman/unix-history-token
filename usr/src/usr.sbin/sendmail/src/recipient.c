@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.95 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.96 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1650,6 +1650,9 @@ block|}
 comment|/* try aliasing */
 if|if
 condition|(
+operator|!
+name|quoted
+operator|&&
 operator|!
 name|bitset
 argument_list|(
