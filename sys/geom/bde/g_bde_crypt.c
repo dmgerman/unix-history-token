@@ -1021,6 +1021,17 @@ name|zone_cont
 operator|-
 name|zoff
 expr_stmt|;
+comment|/* ... and in general */
+if|if
+condition|(
+name|len
+operator|>
+name|DFLTPHYS
+condition|)
+name|len
+operator|=
+name|DFLTPHYS
+expr_stmt|;
 if|if
 condition|(
 name|len
