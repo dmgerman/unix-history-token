@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1994 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Created: Mon Mar 27 02:26:40 1995 ylo  * Identity and host key generation and maintenance.  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1994 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Identity and host key generation and maintenance.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ssh-keygen.c,v 1.26 2000/05/30 17:32:06 markus Exp $"
+literal|"$OpenBSD: ssh-keygen.c,v 1.31 2000/09/07 20:27:54 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -51,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|"xmalloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"fingerprint.h"
 end_include
 
 begin_include
@@ -599,8 +593,9 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
+literal|"%s\n"
+argument_list|,
 name|SSH_COM_MAGIC_BEGIN
-literal|"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -638,8 +633,9 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
+literal|"%s\n"
+argument_list|,
 name|SSH_COM_MAGIC_END
-literal|"\n"
 argument_list|)
 expr_stmt|;
 name|key_free
@@ -1158,16 +1154,10 @@ modifier|*
 name|pw
 parameter_list|)
 block|{
+comment|/* XXX RSA1 only */
 name|FILE
 modifier|*
 name|f
-decl_stmt|;
-name|BIGNUM
-modifier|*
-name|e
-decl_stmt|,
-modifier|*
-name|n
 decl_stmt|;
 name|Key
 modifier|*
@@ -1303,12 +1293,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|key_free
-argument_list|(
-name|public
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|f
 operator|=
 name|fopen
@@ -1325,16 +1309,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|n
-operator|=
-name|BN_new
-argument_list|()
-expr_stmt|;
-name|e
-operator|=
-name|BN_new
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 name|fgets
@@ -1573,8 +1547,16 @@ argument_list|,
 operator|&
 name|ignore
 argument_list|,
+name|public
+operator|->
+name|rsa
+operator|->
 name|e
 argument_list|,
+name|public
+operator|->
+name|rsa
+operator|->
 name|n
 argument_list|)
 condition|)
@@ -1596,16 +1578,14 @@ name|printf
 argument_list|(
 literal|"%d %s %s\n"
 argument_list|,
-name|BN_num_bits
+name|key_size
 argument_list|(
-name|n
+name|public
 argument_list|)
 argument_list|,
-name|fingerprint
+name|key_fingerprint
 argument_list|(
-name|e
-argument_list|,
-name|n
+name|public
 argument_list|)
 argument_list|,
 name|comment
@@ -1617,22 +1597,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|BN_free
-argument_list|(
-name|e
-argument_list|)
-expr_stmt|;
-name|BN_free
-argument_list|(
-name|n
-argument_list|)
-expr_stmt|;
 name|fclose
 argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
 block|}
+name|key_free
+argument_list|(
+name|public
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|invalid
@@ -3221,7 +3196,7 @@ name|mkdir
 argument_list|(
 name|dotsshdir
 argument_list|,
-literal|0755
+literal|0700
 argument_list|)
 operator|<
 literal|0

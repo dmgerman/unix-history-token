@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * scp - secure remote copy.  This is basically patched BSD rcp which uses ssh  * to do the data transfer (instead of using rcmd).  *  * NOTE: This version should NOT be suid root.  (This uses ssh to do the transfer  * and ssh has the necessary privileges.)  *  * 1995 Timo Rinne<tri@iki.fi>, Tatu Ylonen<ylo@cs.hut.fi>  * */
+comment|/*  * scp - secure remote copy.  This is basically patched BSD rcp which  * uses ssh to do the data transfer (instead of using rcmd).  *  * NOTE: This version should NOT be suid root.  (This uses ssh to  * do the transfer and ssh has the necessary privileges.)  *  * 1995 Timo Rinne<tri@iki.fi>, Tatu Ylonen<ylo@cs.hut.fi>  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1983, 1990, 1992, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1999 Theo de Raadt. All rights reserved.  * Copyright (c) 1999 Aaron Campbell. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * Parts from:  *  * Copyright (c) 1983, 1990, 1992, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -16,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: scp.c,v 1.30 2000/05/02 18:21:48 deraadt Exp $"
+literal|"$OpenBSD: scp.c,v 1.39 2000/09/07 20:53:00 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -79,6 +83,36 @@ name|int
 name|getttywidth
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|do_cmd
+parameter_list|(
+name|char
+modifier|*
+name|host
+parameter_list|,
+name|char
+modifier|*
+name|remuser
+parameter_list|,
+name|char
+modifier|*
+name|cmd
+parameter_list|,
+name|int
+modifier|*
+name|fdin
+parameter_list|,
+name|int
+modifier|*
+name|fdout
+parameter_list|,
+name|int
+name|argc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -242,6 +276,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* This is the program to execute for the secured connection. ("ssh" or -S) */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ssh_program
+init|=
+name|SSH_PROGRAM
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * This function executes the given command as the specified user on the  * given host.  This returns< 0 if execution fails, and>= 0 otherwise. This  * assigns the input and output file descriptors on success.  */
 end_comment
 
@@ -268,6 +315,9 @@ parameter_list|,
 name|int
 modifier|*
 name|fdout
+parameter_list|,
+name|int
+name|argc
 parameter_list|)
 block|{
 name|int
@@ -385,6 +435,7 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+comment|/* XXX careful */
 name|unsigned
 name|int
 name|i
@@ -452,7 +503,7 @@ name|i
 operator|++
 index|]
 operator|=
-name|SSH_PROGRAM
+name|ssh_program
 expr_stmt|;
 name|args
 index|[
@@ -493,14 +544,6 @@ operator|++
 index|]
 operator|=
 literal|"-6"
-expr_stmt|;
-name|args
-index|[
-name|i
-operator|++
-index|]
-operator|=
-literal|"-oFallBackToRsh no"
 expr_stmt|;
 if|if
 condition|(
@@ -660,14 +703,14 @@ name|NULL
 expr_stmt|;
 name|execvp
 argument_list|(
-name|SSH_PROGRAM
+name|ssh_program
 argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-name|SSH_PROGRAM
+name|ssh_program
 argument_list|)
 expr_stmt|;
 name|exit
@@ -779,10 +822,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* This stuff used to be in BSD rcp extern.h. */
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -882,10 +921,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Stuff from BSD rcp.c continues. */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -1084,7 +1119,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dfprtvBCc:i:P:q46"
+literal|"dfprtvBCc:i:P:q46S:"
 argument_list|)
 operator|)
 operator|!=
@@ -1134,6 +1169,14 @@ case|:
 name|iamrecursive
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|ssh_program
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 comment|/* Server options. */
@@ -1731,7 +1774,7 @@ name|len
 operator|=
 name|strlen
 argument_list|(
-name|SSH_PROGRAM
+name|ssh_program
 argument_list|)
 operator|+
 name|strlen
@@ -1836,7 +1879,7 @@ name|bp
 argument_list|,
 literal|"%s%s -x -o'FallBackToRsh no' -n -l %s %s %s %s '%s%s%s:%s'"
 argument_list|,
-name|SSH_PROGRAM
+name|ssh_program
 argument_list|,
 name|verbose_mode
 condition|?
@@ -1891,7 +1934,7 @@ name|bp
 argument_list|,
 literal|"exec %s%s -x -o'FallBackToRsh no' -n %s %s %s '%s%s%s:%s'"
 argument_list|,
-name|SSH_PROGRAM
+name|ssh_program
 argument_list|,
 name|verbose_mode
 condition|?
@@ -2018,6 +2061,8 @@ name|remin
 argument_list|,
 operator|&
 name|remout
+argument_list|,
+name|argc
 argument_list|)
 operator|<
 literal|0
@@ -2374,6 +2419,8 @@ name|remin
 argument_list|,
 operator|&
 name|remout
+argument_list|,
+name|argc
 argument_list|)
 operator|<
 literal|0
@@ -3464,10 +3511,11 @@ name|ofd
 decl_stmt|,
 name|omode
 decl_stmt|;
+name|off_t
+name|size
+decl_stmt|;
 name|int
 name|setimes
-decl_stmt|,
-name|size
 decl_stmt|,
 name|targisdir
 decl_stmt|,
@@ -4732,14 +4780,26 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|close
 argument_list|(
 name|ofd
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|wrerr
+operator|=
+name|YES
 expr_stmt|;
+name|wrerrno
+operator|=
+name|errno
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -5045,7 +5105,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: scp [-pqrvC46] [-P port] [-c cipher] [-i identity] f1 f2; or:\n       scp [options] f1 ... fn directory\n"
+literal|"usage: scp "
+literal|"[-pqrvC46] [-S ssh] [-P port] [-c cipher] [-i identity] f1 f2; or:\n"
+literal|"       scp [options] f1 ... fn directory\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5187,14 +5249,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* Stuff below is from BSD rcp util.c. */
-end_comment
-
-begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scp.c,v 1.30 2000/05/02 18:21:48 deraadt Exp $  */
-end_comment
 
 begin_function
 name|char

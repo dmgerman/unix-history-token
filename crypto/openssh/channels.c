@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * channels.c  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Fri Mar 24 16:35:24 1995 ylo  *  * This file contains functions for generic socket connection forwarding.  * There is also code for initiating connection forwarding for X11 connections,  * arbitrary tcp/ip connections, and the authentication agent connection.  *  * SSH2 support added by Markus Friedl.  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * This file contains functions for generic socket connection forwarding.  * There is also code for initiating connection forwarding for X11 connections,  * arbitrary tcp/ip connections, and the authentication agent connection.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  *  * SSH2 support added by Markus Friedl.  * Copyright (c) 1999,2000 Markus Friedl.  All rights reserved.  * Copyright (c) 1999 Dug Song.  All rights reserved.  * Copyright (c) 1999 Theo de Raadt.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: channels.c,v 1.59 2000/05/30 17:23:36 markus Exp $"
+literal|"$OpenBSD: channels.c,v 1.68 2000/09/07 20:40:29 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -39,12 +39,6 @@ begin_include
 include|#
 directive|include
 file|"buffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"authfd.h"
 end_include
 
 begin_include
@@ -89,6 +83,30 @@ directive|include
 file|"ssh2.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/rsa.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/dsa.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"authfd.h"
+end_include
+
 begin_comment
 comment|/* Maximum number of fake X11 displays to try. */
 end_comment
@@ -109,38 +127,6 @@ define|#
 directive|define
 name|MAX_SOCKET_NAME
 value|100
-end_define
-
-begin_comment
-comment|/* default window/packet sizes for tcp/x11-fwd-channel */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHAN_TCP_WINDOW_DEFAULT
-value|(8*1024)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHAN_TCP_PACKET_DEFAULT
-value|(CHAN_TCP_WINDOW_DEFAULT/2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHAN_X11_WINDOW_DEFAULT
-value|(4*1024)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHAN_X11_PACKET_DEFAULT
-value|(CHAN_X11_WINDOW_DEFAULT/2)
 end_define
 
 begin_comment
@@ -398,7 +384,7 @@ condition|(
 name|id
 operator|<
 literal|0
-operator|&&
+operator|||
 name|id
 operator|>
 name|channels_alloc
@@ -937,6 +923,12 @@ expr_stmt|;
 name|c
 operator|->
 name|dettach_user
+operator|=
+name|NULL
+expr_stmt|;
+name|c
+operator|->
+name|input_filter
 operator|=
 name|NULL
 expr_stmt|;
@@ -3219,6 +3211,50 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|c
+operator|->
+name|input_filter
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|c
+operator|->
+name|input_filter
+argument_list|(
+name|c
+argument_list|,
+name|buf
+argument_list|,
+name|len
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"filter stops channel %d"
+argument_list|,
+name|c
+operator|->
+name|self
+argument_list|)
+expr_stmt|;
+name|chan_read_failed
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 name|buffer_append
 argument_list|(
 operator|&
@@ -3231,6 +3267,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 literal|1
@@ -4717,17 +4754,6 @@ operator|->
 name|remote_window
 operator|-=
 name|len
-expr_stmt|;
-name|debug
-argument_list|(
-literal|"channel %d: send data len %d"
-argument_list|,
-name|c
-operator|->
-name|self
-argument_list|,
-name|len
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -10537,6 +10563,52 @@ end_function
 
 begin_function
 name|void
+name|channel_register_filter
+parameter_list|(
+name|int
+name|id
+parameter_list|,
+name|channel_filter_fn
+modifier|*
+name|fn
+parameter_list|)
+block|{
+name|Channel
+modifier|*
+name|c
+init|=
+name|channel_lookup
+argument_list|(
+name|id
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+name|NULL
+condition|)
+block|{
+name|log
+argument_list|(
+literal|"channel_register_filter: %d: bad id"
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|c
+operator|->
+name|input_filter
+operator|=
+name|fn
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|channel_set_fds
 parameter_list|(
 name|int
@@ -10614,7 +10686,7 @@ operator|=
 name|c
 operator|->
 name|local_maxpacket
-operator|/
+operator|*
 literal|2
 expr_stmt|;
 name|packet_start
