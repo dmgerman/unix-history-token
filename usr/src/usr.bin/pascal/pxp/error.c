@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)error.c	1.1 (Berkeley) %G%"
+literal|"@(#)error.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,7 +199,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|errpfx
+operator|==
+literal|'E'
+expr_stmt|;
 return|return;
+block|}
 ifdef|#
 directive|ifdef
 name|PXP
