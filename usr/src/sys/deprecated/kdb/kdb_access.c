@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_access.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_access.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|put
+name|kdbput
 argument_list|(
 argument|addr
 argument_list|,
@@ -68,7 +68,7 @@ end_comment
 
 begin_function
 name|u_int
-name|get
+name|kdbget
 parameter_list|(
 name|addr
 parameter_list|,
@@ -98,7 +98,7 @@ end_empty_stmt
 
 begin_function
 name|u_int
-name|chkget
+name|kdbchkget
 parameter_list|(
 name|addr
 parameter_list|,
@@ -111,14 +111,14 @@ block|{
 name|u_int
 name|w
 init|=
-name|get
+name|kdbget
 argument_list|(
 name|addr
 argument_list|,
 name|space
 argument_list|)
 decl_stmt|;
-name|chkerr
+name|kdbchkerr
 argument_list|()
 expr_stmt|;
 return|return
@@ -131,7 +131,7 @@ end_function
 
 begin_function
 name|u_int
-name|bchkget
+name|kdbbchkget
 parameter_list|(
 name|addr
 parameter_list|,
@@ -145,7 +145,7 @@ return|return
 operator|(
 name|byte
 argument_list|(
-name|chkget
+name|kdbchkget
 argument_list|(
 name|addr
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defs.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defs.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -59,12 +59,6 @@ end_decl_stmt
 begin_comment
 comment|/* must go before redef.h */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"redef.h"
-end_include
 
 begin_include
 include|#
@@ -375,25 +369,25 @@ end_typedef
 
 begin_decl_stmt
 name|ADDR
-name|maxoff
+name|kdbmaxoff
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|ADDR
-name|localval
+name|kdblocalval
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|mkfault
+name|kdbmkfault
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|long
-name|var
+name|kdbvar
 index|[
 literal|36
 index|]
@@ -403,43 +397,43 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|errflg
+name|kdberrflg
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|long
-name|dot
+name|kdbdot
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|dotinc
+name|kdbdotinc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|long
-name|adrval
+name|kdbadrval
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|adrflg
+name|kdbadrflg
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|long
-name|cntval
+name|kdbcntval
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cntflg
+name|kdbcntflg
 decl_stmt|;
 end_decl_stmt
 
@@ -449,28 +443,28 @@ end_comment
 
 begin_function_decl
 name|long
-name|inkdot
+name|kdbinkdot
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|u_int
-name|get
+name|kdbget
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|u_int
-name|chkget
+name|kdbchkget
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|u_int
-name|bchkget
+name|kdbbchkget
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -478,14 +472,14 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|exform
+name|kdbexform
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|BKPTR
-name|scanbkpt
+name|kdbscanbkpt
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -494,10 +488,10 @@ begin_decl_stmt
 name|struct
 name|nlist
 modifier|*
-name|symtab
+name|kdbsymtab
 decl_stmt|,
 modifier|*
-name|esymtab
+name|kdbesymtab
 decl_stmt|;
 end_decl_stmt
 
@@ -505,7 +499,7 @@ begin_decl_stmt
 name|struct
 name|nlist
 modifier|*
-name|cursym
+name|kdbcursym
 decl_stmt|;
 end_decl_stmt
 
@@ -513,7 +507,7 @@ begin_function_decl
 name|struct
 name|nlist
 modifier|*
-name|lookup
+name|kdblookup
 parameter_list|()
 function_decl|;
 end_function_decl
