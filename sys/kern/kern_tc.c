@@ -3104,7 +3104,7 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|tick
+name|tc_tick
 argument_list|,
 literal|0
 argument_list|,
