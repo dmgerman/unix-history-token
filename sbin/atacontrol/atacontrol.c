@@ -429,7 +429,7 @@ name|version
 argument_list|(
 name|parm
 operator|->
-name|versmajor
+name|version_major
 argument_list|)
 argument_list|)
 expr_stmt|;
