@@ -230,20 +230,6 @@ end_define
 begin_function_decl
 specifier|static
 name|void
-name|pcic_attach_socket
-parameter_list|(
-name|device_t
-parameter_list|,
-name|struct
-name|pcic_handle
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|pcic_init_socket
 parameter_list|(
 name|struct
@@ -300,6 +286,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pcic_chip_do_mem_map
 parameter_list|(
@@ -313,6 +300,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pcic_chip_do_io_map
 parameter_list|(
@@ -671,6 +659,11 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+decl_stmt|;
+name|struct
+name|pcic_handle
+modifier|*
+name|h
 decl_stmt|;
 name|int
 name|vendor
@@ -1743,35 +1736,6 @@ operator|=
 name|vendor
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_function
-name|void
-name|pcic_attach_sockets
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
-name|struct
-name|pcic_softc
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|pcic_softc
-operator|*
-operator|)
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 for|for
 control|(
 name|i
@@ -1785,8 +1749,10 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|handle
@@ -1797,11 +1763,13 @@ operator|.
 name|flags
 operator|&
 name|PCIC_FLAG_SOCKETP
+operator|)
+operator|==
+literal|0
 condition|)
-name|pcic_attach_socket
-argument_list|(
-name|dev
-argument_list|,
+continue|continue;
+name|h
+operator|=
 operator|&
 name|sc
 operator|->
@@ -1809,24 +1777,7 @@ name|handle
 index|[
 name|i
 index|]
-argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|pcic_attach_socket
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|struct
-name|pcic_handle
-modifier|*
-name|h
-parameter_list|)
-block|{
 comment|/* initialize the rest of the handle */
 name|h
 operator|->
@@ -1852,12 +1803,15 @@ name|ih_irq
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  	 * now, config one pccard device per socket 	 * 	 * XXX This should add all devices that can attach to pcic, which 	 * is what we want in the general case. 	 */
+name|h
+operator|->
+name|dev
+operator|=
 name|device_add_child
 argument_list|(
 name|dev
 argument_list|,
-name|NULL
+literal|"pccard"
 argument_list|,
 operator|-
 literal|1
@@ -1865,24 +1819,19 @@ argument_list|)
 expr_stmt|;
 name|device_set_ivars
 argument_list|(
+name|h
+operator|->
 name|dev
 argument_list|,
 name|h
 argument_list|)
 expr_stmt|;
-comment|/* if there's actually a pccard device attached, initialize the slot */
-comment|/* XXX WE SHOULD MOVE THIS TO CHILD ATTACHED */
-if|if
-condition|(
-name|h
-operator|->
-name|pccard
-condition|)
 name|pcic_init_socket
 argument_list|(
 name|h
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3295,6 +3244,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pcic_chip_mem_alloc
 parameter_list|(
@@ -3515,6 +3465,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pcic_chip_mem_free
 parameter_list|(
@@ -3671,6 +3622,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|void
 name|pcic_chip_do_mem_map
 parameter_list|(
@@ -4082,6 +4034,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pcic_chip_mem_map
 parameter_list|(
@@ -4375,6 +4328,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pcic_chip_mem_unmap
 parameter_list|(
@@ -4457,6 +4411,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pcic_chip_io_alloc
 parameter_list|(
@@ -4615,6 +4570,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pcic_chip_io_free
 parameter_list|(
@@ -4734,6 +4690,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|void
 name|pcic_chip_do_io_map
 parameter_list|(
@@ -4997,6 +4954,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pcic_chip_io_map
 parameter_list|(
@@ -5280,6 +5238,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pcic_chip_io_unmap
 parameter_list|(
@@ -5460,6 +5419,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pcic_chip_socket_enable
 parameter_list|(
@@ -5869,6 +5829,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pcic_chip_socket_disable
 parameter_list|(
