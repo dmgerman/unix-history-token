@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)date.c	4.5 (Berkeley) %G%"
+literal|"@(#)date.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -284,6 +284,17 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+name|wtmp
+index|[
+literal|0
+index|]
+operator|.
+name|ut_time
+operator|=
+name|tv
+operator|.
+name|tv_sec
+expr_stmt|;
 if|if
 condition|(
 name|gtime
@@ -347,17 +358,6 @@ block|}
 name|tv
 operator|.
 name|tv_sec
-operator|=
-name|tv
-operator|.
-name|tv_sec
-expr_stmt|;
-name|wtmp
-index|[
-literal|0
-index|]
-operator|.
-name|ut_time
 operator|=
 name|tv
 operator|.
