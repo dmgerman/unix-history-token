@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001  * 	Bosko Milekic<bmilekic@FreeBSD.org>. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001  * 	Bosko Milekic<bmilekic@FreeBSD.org>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -100,7 +100,7 @@ file|<vm/vm_extern.h>
 end_include
 
 begin_comment
-comment|/*  * Maximum number of PCPU containers. If you know what you're doing you could  * explicitly define MBALLOC_NCPU to be exactly the number of CPUs on your  * system during compilation, and thus prevent kernel structure bloat.  *  * SMP and non-SMP kernels clearly have a different number of possible cpus,  * but because we cannot assume a dense array of CPUs, we always allocate  * and traverse PCPU containers up to NCPU amount and merely check for  * CPU availability.  */
+comment|/*  * Maximum number of PCPU containers. If you know what you're doing you could  * explicitly define MBALLOC_NCPU to be exactly the number of CPUs on your  * system during compilation, and thus prevent kernel structure bloat.  *  * SMP and non-SMP kernels clearly have a different number of possible CPUs,  * but because we cannot assume a dense array of CPUs, we always allocate  * and traverse PCPU containers up to NCPU amount and merely check for  * CPU availability.  */
 end_comment
 
 begin_ifdef
@@ -134,7 +134,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The mbuf allocator is heavily based on Alfred Perlstein's  * (alfred@FreeBSD.org) "memcache" allocator which is itself based  * on concepts from several per-CPU memory allocators. The difference  * between this allocator and memcache is that, among other things:  *  * (i) We don't free back to the map from the free() routine - we leave the  *     option of implementing lazy freeing (from a kproc) in the future.   *  * (ii) We allocate from separate sub-maps of kmem_map, thus limiting the  *	maximum number of allocatable objects of a given type. Further,  *	we handle blocking on a cv in the case that the map is starved and  *	we have to rely solely on cached (circulating) objects.  *  * The mbuf allocator keeps all objects that it allocates in mb_buckets.  * The buckets keep a page worth of objects (an object can be an mbuf or an  * mbuf cluster) and facilitate moving larger sets of contiguous objects  * from the per-CPU lists to the main list for the given object. The buckets  * also have an added advantage in that after several moves from a per-CPU  * list to the main list and back to the per-CPU list, contiguous objects  * are kept together, thus trying to put the TLB cache to good use.  *  * The buckets are kept on singly-linked lists called "containers." A container  * is protected by a mutex lock in order to ensure consistency. The mutex lock  * itself is allocated seperately and attached to the container at boot time,  * thus allowing for certain containers to share the same mutex lock. Per-CPU  * containers for mbufs and mbuf clusters all share the same per-CPU  * lock whereas the "general system" containers (i.e. the "main lists") for  * these objects share one global lock.  *  */
+comment|/*-  * The mbuf allocator is heavily based on Alfred Perlstein's  * (alfred@FreeBSD.org) "memcache" allocator which is itself based  * on concepts from several per-CPU memory allocators. The difference  * between this allocator and memcache is that, among other things:  *  * (i) We don't free back to the map from the free() routine - we leave the  *     option of implementing lazy freeing (from a kproc) in the future.   *  * (ii) We allocate from separate sub-maps of kmem_map, thus limiting the  *	maximum number of allocatable objects of a given type. Further,  *	we handle blocking on a cv in the case that the map is starved and  *	we have to rely solely on cached (circulating) objects.  *  * The mbuf allocator keeps all objects that it allocates in mb_buckets.  * The buckets keep a page worth of objects (an object can be an mbuf or an  * mbuf cluster) and facilitate moving larger sets of contiguous objects  * from the per-CPU lists to the main list for the given object. The buckets  * also have an added advantage in that after several moves from a per-CPU  * list to the main list and back to the per-CPU list, contiguous objects  * are kept together, thus trying to put the TLB cache to good use.  *  * The buckets are kept on singly-linked lists called "containers." A container  * is protected by a mutex lock in order to ensure consistency.  The mutex lock  * itself is allocated seperately and attached to the container at boot time,  * thus allowing for certain containers to share the same mutex lock.  Per-CPU  * containers for mbufs and mbuf clusters all share the same per-CPU  * lock whereas the "general system" containers (i.e., the "main lists") for  * these objects share one global lock.  */
 end_comment
 
 begin_struct
@@ -232,7 +232,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Boot-time configurable object counts that will determine the maximum  * number of permitted objects in the mbuf and mcluster cases. In the  * ext counter (nmbcnt) case, it's just an indicator serving to scale  * kmem_map size properly - in other words, we may be allowed to allocate  * more than nmbcnt counters, whereas we will never be allowed to allocate  * more than nmbufs mbufs or nmbclusters mclusters.  * As for nsfbufs, it is used to indicate how many sendfile(2) buffers will be  * allocatable by the sfbuf allocator (found in uipc_syscalls.c)  */
+comment|/*  * Boot-time configurable object counts that will determine the maximum  * number of permitted objects in the mbuf and mcluster cases.  In the  * ext counter (nmbcnt) case, it's just an indicator serving to scale  * kmem_map size properly - in other words, we may be allowed to allocate  * more than nmbcnt counters, whereas we will never be allowed to allocate  * more than nmbufs mbufs or nmbclusters mclusters.  * As for nsfbufs, it is used to indicate how many sendfile(2) buffers will be  * allocatable by the sfbuf allocator (found in uipc_syscalls.c)  */
 end_comment
 
 begin_ifndef
@@ -423,7 +423,6 @@ name|nmbclusters
 operator|+
 name|nsfbufs
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -444,7 +443,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * The freelist structures and mutex locks. The number statically declared  * here depends on the number of CPUs.  *  * We setup in such a way that all the objects (mbufs, clusters)  * share the same mutex lock. It has been established that we do not benefit  * from different locks for different objects, so we use the same lock,  * regardless of object type.  */
+comment|/*  * The freelist structures and mutex locks.  The number statically declared  * here depends on the number of CPUs.  *  * We set up in such a way that all the objects (mbufs, clusters)  * share the same mutex lock.  It has been established that we do not benefit  * from different locks for different objects, so we use the same lock,  * regardless of object type.  */
 end_comment
 
 begin_struct
@@ -494,6 +493,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mb_lstmngr
 name|mb_list_mbuf
@@ -503,6 +503,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mtx
 name|mbuf_gen
@@ -557,18 +558,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|MB_GET_PCPU_LIST_NUM
-parameter_list|(
-name|mb_lst
-parameter_list|,
-name|num
-parameter_list|)
-value|(mb_lst)->ml_cntlst[(num)]
-end_define
-
-begin_define
-define|#
-directive|define
 name|MB_GET_GEN_LIST
 parameter_list|(
 name|mb_lst
@@ -599,6 +588,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|MB_GET_PCPU_LIST_NUM
+parameter_list|(
+name|mb_lst
+parameter_list|,
+name|num
+parameter_list|)
+define|\
+value|(mb_lst)->ml_cntlst[(num)]
+end_define
+
+begin_define
+define|#
+directive|define
 name|MB_BUCKET_INDX
 parameter_list|(
 name|mb_obj
@@ -621,7 +623,7 @@ parameter_list|,
 name|mb_lst
 parameter_list|)
 define|\
-value|{									\ 	struct	mc_buckethd	*_mchd =&((mb_lst)->mb_cont.mc_bhead);	\ 									\ 	(mb_bckt)->mb_numfree--;					\ 	(mb_objp) = (mb_bckt)->mb_free[((mb_bckt)->mb_numfree)];	\ 	(*((mb_lst)->mb_cont.mc_objcount))--;				\ 	if ((mb_bckt)->mb_numfree == 0) {				\ 		SLIST_REMOVE_HEAD(_mchd, mb_blist);			\ 		SLIST_NEXT((mb_bckt), mb_blist) = NULL;			\ 		(mb_bckt)->mb_owner |= MB_BUCKET_FREE;			\ 	}								\ }
+value|{									\ 	struct mc_buckethd *_mchd =&((mb_lst)->mb_cont.mc_bhead);	\ 									\ 	(mb_bckt)->mb_numfree--;					\ 	(mb_objp) = (mb_bckt)->mb_free[((mb_bckt)->mb_numfree)];	\ 	(*((mb_lst)->mb_cont.mc_objcount))--;				\ 	if ((mb_bckt)->mb_numfree == 0) {				\ 		SLIST_REMOVE_HEAD(_mchd, mb_blist);			\ 		SLIST_NEXT((mb_bckt), mb_blist) = NULL;			\ 		(mb_bckt)->mb_owner |= MB_BUCKET_FREE;			\ 	}								\ }
 end_define
 
 begin_define
@@ -670,7 +672,7 @@ value|if ((mb_type) != MT_NOTMBUF)					\ 	    (*((mb_cnt)->mb_cont.mc_types + (m
 end_define
 
 begin_comment
-comment|/*  * Ownership of buckets/containers is represented by integers. The PCPU  * lists range from 0 to NCPU-1. We need a free numerical id for the general  * list (we use NCPU). We also need a non-conflicting free bit to indicate  * that the bucket is free and removed from a container, while not losing  * the bucket's originating container id. We use the highest bit  * for the free marker.  */
+comment|/*  * Ownership of buckets/containers is represented by integers.  The PCPU  * lists range from 0 to NCPU-1.  We need a free numerical id for the general  * list (we use NCPU).  We also need a non-conflicting free bit to indicate  * that the bucket is free and removed from a container, while not losing  * the bucket's originating container id.  We use the highest bit  * for the free marker.  */
 end_comment
 
 begin_define
@@ -688,21 +690,11 @@ value|(1<< (sizeof(int) * 8 - 1))
 end_define
 
 begin_comment
-comment|/*  * sysctl(8) exported objects  */
+comment|/* Statistics structures for allocator (per-CPU and general). */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|mbstat
-name|mbstat
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* General stats + infos. */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|struct
 name|mbpstat
 name|mb_statpcpu
@@ -714,11 +706,19 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mbstat
+name|mbstat
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* PCPU + Gen. container alloc stats */
+comment|/* Sleep time for wait code (in ticks). */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mbuf_wait
 init|=
@@ -726,11 +726,8 @@ literal|64
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Sleep time for wait code (ticks) */
-end_comment
-
 begin_decl_stmt
+specifier|static
 name|u_int
 name|mbuf_limit
 init|=
@@ -739,10 +736,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Upper lim. on # of mbufs per CPU */
+comment|/* Upper limit on # of mbufs per CPU. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|clust_limit
 init|=
@@ -751,7 +749,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Upper lim. on # of clusts per CPU */
+comment|/* Upper limit on # of clusters per CPU. */
+end_comment
+
+begin_comment
+comment|/*  * Objects exported by sysctl(8).  */
 end_comment
 
 begin_expr_stmt
@@ -961,23 +963,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|__inline
-name|void
-modifier|*
-name|mb_alloc
-parameter_list|(
-name|struct
-name|mb_lstmngr
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|short
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|mb_alloc_wait
@@ -993,34 +978,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
-name|void
-name|mb_free
-parameter_list|(
-name|struct
-name|mb_lstmngr
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|short
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|mbuf_init
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|mb_bucket
 modifier|*
@@ -1040,6 +997,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|mb_reclaim
 parameter_list|(
@@ -1048,8 +1006,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|mbuf_init
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * Initial allocation numbers. Each parameter represents the number of buckets  * of each object that will be placed initially in each PCPU container for  * said object.  */
+comment|/*  * Initial allocation numbers.  Each parameter represents the number of buckets  * of each object that will be placed initially in each PCPU container for  * said object.  */
 end_comment
 
 begin_define
@@ -1067,7 +1036,7 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * Initialize the mbuf subsystem.  *  * We sub-divide the kmem_map into several submaps; this way, we don't have  * to worry about artificially limiting the number of mbuf or mbuf cluster  * allocations, due to fear of one type of allocation "stealing" address  * space initially reserved for another.  *  * Setup both the general containers and all the PCPU containers. Populate  * the PCPU containers with initial numbers.  */
+comment|/*  * Initialize the mbuf subsystem.  *  * We sub-divide the kmem_map into several submaps; this way, we don't have  * to worry about artificially limiting the number of mbuf or mbuf cluster  * allocations, due to fear of one type of allocation "stealing" address  * space initially reserved for another.  *  * Set up both the general containers and all the PCPU containers.  Populate  * the PCPU containers with initial numbers.  */
 end_comment
 
 begin_expr_stmt
@@ -1119,7 +1088,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-comment|/* 	 * Setup all the submaps, for each type of object that we deal 	 * with in this allocator. 	 */
+comment|/* 	 * Set up all the submaps, for each type of object that we deal 	 * with in this allocator. 	 */
 name|mb_map_size
 operator|=
 call|(
@@ -1322,7 +1291,7 @@ operator|=
 operator|&
 name|clust_limit
 expr_stmt|;
-comment|/* XXX XXX XXX: mbuf_map->system_map = clust_map->system_map = 1 */
+comment|/* XXX XXX XXX: mbuf_map->system_map = clust_map->system_map = 1. */
 comment|/* 	 * Allocate required general (global) containers for each object type. 	 */
 name|mb_list_mbuf
 operator|.
@@ -1437,7 +1406,7 @@ operator|=
 operator|&
 name|mbuf_gen
 expr_stmt|;
-comment|/* 	 * Setup the general containers for each object. 	 */
+comment|/* 	 * Set up the general containers for each object. 	 */
 name|mb_list_mbuf
 operator|.
 name|ml_genlist
@@ -1605,7 +1574,7 @@ name|mc_bhead
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize general mbuf statistics 	 */
+comment|/* 	 * Initialize general mbuf statistics. 	 */
 name|mbstat
 operator|.
 name|m_msize
@@ -2103,10 +2072,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Populate a given mbuf PCPU container with a bucket full of fresh new  * buffers. Return a pointer to the new bucket (already in the container if  * successful), or return NULL on failure.  *  * LOCKING NOTES:  * PCPU container lock must be held when this is called.  * The lock is dropped here so that we can cleanly call the underlying VM  * code. If we fail, we return with no locks held. If we succeed (i.e. return  * non-NULL), we return with the PCPU lock held, ready for allocation from  * the returned bucket.  */
+comment|/*  * Populate a given mbuf PCPU container with a bucket full of fresh new  * buffers.  Return a pointer to the new bucket (already in the container if  * successful), or return NULL on failure.  *  * LOCKING NOTES:  * PCPU container lock must be held when this is called.  * The lock is dropped here so that we can cleanly call the underlying VM  * code.  If we fail, we return with no locks held. If we succeed (i.e., return  * non-NULL), we return with the PCPU lock held, ready for allocation from  * the returned bucket.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|mb_bucket
 modifier|*
@@ -2142,7 +2112,7 @@ argument_list|(
 name|cnt_lst
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If our object's (finite) map is starved now (i.e. no more address 	 * space), bail out now. 	 */
+comment|/* 	 * If our object's (finite) map is starved now (i.e., no more address 	 * space), bail out now. 	 */
 if|if
 condition|(
 name|mb_list
@@ -2378,7 +2348,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate an mbuf-subsystem type object.  * The general case is very easy. Complications only arise if our PCPU  * container is empty. Things get worse if the PCPU container is empty,  * the general container is empty, and we've run out of address space  * in our map; then we try to block if we're willing to (M_TRYWAIT).  */
+comment|/*  * Allocate an mbuf-subsystem type object.  * The general case is very easy.  Complications only arise if our PCPU  * container is empty.  Things get worse if the PCPU container is empty,  * the general container is empty, and we've run out of address space  * in our map; then we try to block if we're willing to (M_TRYWAIT).  */
 end_comment
 
 begin_function
@@ -2400,6 +2370,10 @@ name|short
 name|type
 parameter_list|)
 block|{
+specifier|static
+name|int
+name|last_report
+decl_stmt|;
 name|struct
 name|mb_pcpu_list
 modifier|*
@@ -2754,7 +2728,7 @@ operator|==
 name|M_TRYWAIT
 condition|)
 block|{
-comment|/* 			 	   * Absolute worst-case scenario. We block if 			 	   * we're willing to, but only after trying to 				   * steal from other lists. 				   */
+comment|/* 				 	 * Absolute worst-case scenario. 					 * We block if we're willing to, but 					 * only after trying to steal from 					 * other lists. 					 */
 name|m
 operator|=
 name|mb_alloc_wait
@@ -2767,11 +2741,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 					 * no way to indent this code decently 					 * with 8-space tabs. 					 */
-specifier|static
-name|int
-name|last_report
-decl_stmt|;
 comment|/* XXX: No consistency. */
 name|mbstat
 operator|.
@@ -2799,7 +2768,7 @@ name|ticks
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"mb_alloc for type %d failed, consider increase mbuf value.\n"
+literal|"mb_alloc for mbuf type %d failed.\n"
 argument_list|,
 name|type
 argument_list|)
@@ -2818,10 +2787,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the worst-case scenario called only if we're allocating with  * M_TRYWAIT. We first drain all the protocols, then try to find an mbuf  * by looking in every PCPU container. If we're still unsuccesful, we  * try the general container one last time and possibly block on our  * starved cv.  */
+comment|/*  * This is the worst-case scenario called only if we're allocating with  * M_TRYWAIT.  We first drain all the protocols, then try to find an mbuf  * by looking in every PCPU container.  If we're still unsuccesful, we  * try the general container one last time and possibly block on our  * starved cv.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 modifier|*
 name|mb_alloc_wait
@@ -3155,7 +3125,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free an object to its rightful container.  * In the very general case, this operation is really very easy.  * Complications arise primarily if:  *	(a) We've hit the high limit on number of free objects allowed in  *	    our PCPU container.  *	(b) We're in a critical situation where our container has been  *	    marked 'starved' and we need to issue wakeups on the starved  *	    condition variable.  *	(c) Minor (odd) cases: our bucket has migrated while we were  *	    waiting for the lock; our bucket is in the general container;  *	    our bucket is empty.  */
+comment|/*-  * Free an object to its rightful container.  * In the very general case, this operation is really very easy.  * Complications arise primarily if:  *	(a) We've hit the high limit on number of free objects allowed in  *	    our PCPU container.  *	(b) We're in a critical situation where our container has been  *	    marked 'starved' and we need to issue wakeups on the starved  *	    condition variable.  *	(c) Minor (odd) cases: our bucket has migrated while we were  *	    waiting for the lock; our bucket is in the general container;  *	    our bucket is empty.  */
 end_comment
 
 begin_function
@@ -3769,15 +3739,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Drain protocols in hopes to free up some resources.  *  * LOCKING NOTES:  * No locks should be held when this is called. The drain routines have to  * presently acquire some locks which raises the possibility of lock order  * violation if we're holding any mutex if that mutex is acquired in reverse  * order relative to one of the locks in the drain routines.  */
+comment|/*  * Drain protocols in hopes to free up some resources.  *  * LOCKING NOTES:  * No locks should be held when this is called.  The drain routines have to  * presently acquire some locks which raises the possibility of lock order  * violation if we're holding any mutex if that mutex is acquired in reverse  * order relative to one of the locks in the drain routines.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|mb_reclaim
 parameter_list|(
@@ -3827,6 +3797,8 @@ operator|=
 name|domains
 init|;
 name|dp
+operator|!=
+name|NULL
 condition|;
 name|dp
 operator|=
@@ -3856,6 +3828,8 @@ condition|(
 name|pr
 operator|->
 name|pr_drain
+operator|!=
+name|NULL
 condition|)
 call|(
 modifier|*
@@ -3873,6 +3847,7 @@ comment|/*  * Local mbuf& cluster alloc macros and routines.  * Local macro and 
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|_mclfree
 parameter_list|(
@@ -3912,7 +3887,7 @@ value|do {					\ 	(m) = (struct mbuf *)mb_alloc(&mb_list_mbuf, (how), (type));	\
 end_define
 
 begin_comment
-comment|/* XXX: Check for M_PKTHDR&& m_pkthdr.aux is bogus... please fix (see KAME) */
+comment|/* XXX: Check for M_PKTHDR&& m_pkthdr.aux is bogus... please fix (see KAME). */
 end_comment
 
 begin_define
@@ -4015,15 +3990,15 @@ argument_list|(
 name|mb
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* We only include this here to avoid making m_clget() excessively large  * due to too much inlined code. */
+comment|/*  * We only include this here to avoid making m_clget() excessively large  * due to too much inlined code.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|_mclfree
 parameter_list|(
@@ -4058,7 +4033,6 @@ name|ext_buf
 operator|=
 name|NULL
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4389,7 +4363,6 @@ name|EXT_CLUSTER
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -4508,7 +4481,6 @@ operator|=
 name|type
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4578,7 +4550,6 @@ name|m_type
 operator|=
 name|new_type
 expr_stmt|;
-return|return;
 block|}
 end_function
 

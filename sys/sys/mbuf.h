@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mbuf.h	8.5 (Berkeley) 2/19/95  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mbuf.h	8.5 (Berkeley) 2/19/95  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|_SYS_MBUF_H_
 end_define
 
 begin_comment
-comment|/*  * Mbufs are of a single size, MSIZE (machine/param.h), which  * includes overhead.  An mbuf may add a single "mbuf cluster" of size  * MCLBYTES (also in machine/param.h), which has no additional overhead  * and is used instead of the internal data area; this is done when  * at least MINCLSIZE of data must be stored. Additionally, it is possible  * to allocate a separate buffer externally and attach it to the mbuf in  * a way similar to that of mbuf clusters.  */
+comment|/*  * Mbufs are of a single size, MSIZE (machine/param.h), which  * includes overhead.  An mbuf may add a single "mbuf cluster" of size  * MCLBYTES (also in machine/param.h), which has no additional overhead  * and is used instead of the internal data area; this is done when  * at least MINCLSIZE of data must be stored.  Additionally, it is possible  * to allocate a separate buffer externally and attach it to the mbuf in  * a way similar to that of mbuf clusters.  */
 end_comment
 
 begin_define
@@ -70,7 +70,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Macros for type conversion  * mtod(m, t)	- convert mbuf pointer to data pointer of correct type  * dtom(x)	- convert data pointer within mbuf to mbuf pointer (XXX)  */
+comment|/*-  * Macros for type conversion:  * mtod(m, t)	-- Convert mbuf pointer to data pointer of correct type.  * dtom(x)	-- Convert data pointer within mbuf to mbuf pointer (XXX).  */
 end_comment
 
 begin_define
@@ -366,7 +366,7 @@ value|M_dat.M_databuf
 end_define
 
 begin_comment
-comment|/*  * mbuf flags  */
+comment|/*  * mbuf flags.  */
 end_comment
 
 begin_define
@@ -469,7 +469,7 @@ comment|/* protocol-specific */
 end_comment
 
 begin_comment
-comment|/*  * mbuf pkthdr flags (also stored in m_flags)  */
+comment|/*  * mbuf pkthdr flags (also stored in m_flags).  */
 end_comment
 
 begin_define
@@ -528,7 +528,7 @@ comment|/* packet is last fragment */
 end_comment
 
 begin_comment
-comment|/*  * External buffer types: identify ext_buf type  */
+comment|/*  * External buffer types: identify ext_buf type.  */
 end_comment
 
 begin_define
@@ -576,7 +576,7 @@ comment|/* custom module's ext_buf type */
 end_comment
 
 begin_comment
-comment|/*  * Flags copied when copying m_pkthdr  */
+comment|/*  * Flags copied when copying m_pkthdr.  */
 end_comment
 
 begin_define
@@ -587,7 +587,7 @@ value|(M_PKTHDR|M_EOR|M_PROTO1|M_PROTO1|M_PROTO2|M_PROTO3 | \ 			    M_PROTO4|M_
 end_define
 
 begin_comment
-comment|/*  * Flags indicating hw checksum support and sw checksum requirements  */
+comment|/*  * Flags indicating hw checksum support and sw checksum requirements.  */
 end_comment
 
 begin_define
@@ -708,7 +708,7 @@ comment|/* XXX add ipv6 here too? */
 end_comment
 
 begin_comment
-comment|/*  * mbuf types  */
+comment|/*  * mbuf types.  */
 end_comment
 
 begin_define
@@ -954,7 +954,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * General mbuf allocator statistics structure.  * XXX: Modifications of these are not protected by any mutex locks nor by  *	any atomic() manipulations. As a result, we may occasionally lose  *	a count or two. Luckily, not all of these fields are modified at all  *	and remain static, and those that are manipulated are only manipulated  *	in failure situations, which do not occur (hopefully) very often.  */
+comment|/*  * General mbuf allocator statistics structure.  * XXX: Modifications of these are not protected by any mutex locks nor by  * any atomic() manipulations.  As a result, we may occasionally lose  * a count or two.  Luckily, not all of these fields are modified at all  * and remain static, and those that are manipulated are only manipulated  * in failure situations, which do not occur (hopefully) very often.  */
 end_comment
 
 begin_struct
@@ -1001,10 +1001,10 @@ name|u_long
 name|m_mhlen
 decl_stmt|;
 comment|/* length of data in a header mbuf */
+comment|/* Number of mbtypes (gives # elems in mbpstat's mb_mbtypes[] array: */
 name|short
 name|m_numtypes
 decl_stmt|;
-comment|/* number of mbtypes (gives # elems in mbpstat's 				   mb_mbtypes[] array. */
 block|}
 struct|;
 end_struct
@@ -1045,7 +1045,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * mbuf external reference count management macros  *  * MEXT_IS_REF(m): true if (m) is not the only mbuf referencing  *     the external buffer ext_buf  *  * MEXT_REM_REF(m): remove reference to m_ext object  *  * MEXT_ADD_REF(m): add reference to m_ext object already  *     referred to by (m)  */
+comment|/*-  * mbuf external reference count management macros.  *  * MEXT_IS_REF(m): true if (m) is not the only mbuf referencing  *     the external buffer ext_buf.  *  * MEXT_REM_REF(m): remove reference to m_ext object.  *  * MEXT_ADD_REF(m): add reference to m_ext object already  *     referred to by (m).  */
 end_comment
 
 begin_define
@@ -1079,8 +1079,15 @@ value|atomic_add_int((m)->m_ext.ref_cnt, 1)
 end_define
 
 begin_comment
-comment|/*  * mbuf, cluster, and external object allocation macros  * (for compatibility purposes)  */
+comment|/*  * mbuf, cluster, and external object allocation macros  * (for compatibility purposes).  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|m_getclr
+value|m_get_clrd
+end_define
 
 begin_define
 define|#
@@ -1093,7 +1100,6 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-define|\
 value|(m) = m_get((how), (type))
 end_define
 
@@ -1108,7 +1114,6 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-define|\
 value|(m) = m_gethdr((how), (type))
 end_define
 
@@ -1121,7 +1126,6 @@ name|m
 parameter_list|,
 name|how
 parameter_list|)
-define|\
 value|m_clget((m), (how))
 end_define
 
@@ -1160,15 +1164,8 @@ parameter_list|)
 value|do {						\ 	(n) = m_free((m));						\ 	(m) = NULL;							\ } while (0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|m_getclr
-value|m_get_clrd
-end_define
-
 begin_comment
-comment|/*  * MEXTFREE(m): disassociate (and possibly free) an external object from `m'  *   * If the atomic_cmpset_int() returns 0, then we effectively do nothing  * in terms of "cleaning up" (freeing the ext buf and ref. counter) as  * this means that either there are still references, or another thread  * is taking care of the clean-up.  */
+comment|/*  * MEXTFREE(m): disassociate (and possibly free) an external object from (m).  *   * If the atomic_cmpset_int() returns 0, then we effectively do nothing  * in terms of "cleaning up" (freeing the ext buf and ref. counter) as  * this means that either there are still references, or another thread  * is taking care of the clean-up.  */
 end_comment
 
 begin_define
@@ -1182,7 +1179,7 @@ value|do {						\ 	struct mbuf *_mb = (m);						\ 									\ 	MEXT_REM_REF(_mb);
 end_define
 
 begin_comment
-comment|/*  * M_WRITABLE(m)  * Evaluate TRUE if it's safe to write to the mbuf m's data region (this  * can be both the local data payload, or an external buffer area,  * depending on whether M_EXT is set).  */
+comment|/*  * Evaluate TRUE if it's safe to write to the mbuf m's data region (this  * can be both the local data payload, or an external buffer area,  * depending on whether M_EXT is set).  */
 end_comment
 
 begin_define
@@ -1196,7 +1193,7 @@ value|(!((m)->m_flags& M_RDONLY)&& (!((m)->m_flags  \& M_EXT) || !MEXT_IS_REF(m)
 end_define
 
 begin_comment
-comment|/*  * Copy mbuf pkthdr from "from" to "to".  * from must have M_PKTHDR set, and to must be empty.  * aux pointer will be moved to `to'.  */
+comment|/*-  * Copy mbuf pkthdr from "from" to "to".  * "from" must have M_PKTHDR set, and "to" must be empty.  * aux pointer will be moved to "to".  */
 end_comment
 
 begin_define
@@ -1208,7 +1205,7 @@ name|to
 parameter_list|,
 name|from
 parameter_list|)
-value|do {					\ 	struct	mbuf *_mfrom = (from);					\ 	struct	mbuf *_mto = (to);					\ 									\ 	_mto->m_data = _mto->m_pktdat;					\ 	_mto->m_flags = _mfrom->m_flags& M_COPYFLAGS;			\ 	_mto->m_pkthdr = _mfrom->m_pkthdr;				\ 	_mfrom->m_pkthdr.aux = NULL;					\ } while (0)
+value|do {					\ 	struct mbuf *_mfrom = (from);					\ 	struct mbuf *_mto = (to);					\ 									\ 	_mto->m_data = _mto->m_pktdat;					\ 	_mto->m_flags = _mfrom->m_flags& M_COPYFLAGS;			\ 	_mto->m_pkthdr = _mfrom->m_pkthdr;				\ 	_mfrom->m_pkthdr.aux = NULL;					\ } while (0)
 end_define
 
 begin_comment
@@ -1288,7 +1285,7 @@ name|plen
 parameter_list|,
 name|how
 parameter_list|)
-value|do {					\ 	struct	mbuf **_mmp =&(m);					\ 	struct	mbuf *_mm = *_mmp;					\ 	int	_mplen = (plen);					\ 	int	__mhow = (how);						\ 									\ 	if (M_LEADINGSPACE(_mm)>= _mplen) {				\ 		_mm->m_data -= _mplen;					\ 		_mm->m_len += _mplen;					\ 	} else								\ 		_mm = m_prepend(_mm, _mplen, __mhow);			\ 	if (_mm != NULL&& _mm->m_flags& M_PKTHDR)			\ 		_mm->m_pkthdr.len += _mplen;				\ 	*_mmp = _mm;							\ } while (0)
+value|do {					\ 	struct mbuf **_mmp =&(m);					\ 	struct mbuf *_mm = *_mmp;					\ 	int _mplen = (plen);						\ 	int __mhow = (how);						\ 									\ 	if (M_LEADINGSPACE(_mm)>= _mplen) {				\ 		_mm->m_data -= _mplen;					\ 		_mm->m_len += _mplen;					\ 	} else								\ 		_mm = m_prepend(_mm, _mplen, __mhow);			\ 	if (_mm != NULL&& _mm->m_flags& M_PKTHDR)			\ 		_mm->m_pkthdr.len += _mplen;				\ 	*_mmp = _mm;							\ } while (0)
 end_define
 
 begin_comment
@@ -1308,7 +1305,7 @@ value|m_chtype((m), (t))
 end_define
 
 begin_comment
-comment|/* length to m_copy to copy all */
+comment|/* Length to m_copy to copy all. */
 end_comment
 
 begin_define
@@ -1319,7 +1316,7 @@ value|1000000000
 end_define
 
 begin_comment
-comment|/* compatibility with 4.3 */
+comment|/* Compatibility with 4.3 */
 end_comment
 
 begin_define
