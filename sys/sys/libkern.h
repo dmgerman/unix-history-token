@@ -557,31 +557,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__UINT_MAX
-operator|==
-name|__ULONG_MAX
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ffsl
-parameter_list|(
-name|x
-parameter_list|)
-value|ffs((x))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -596,11 +571,6 @@ name|long
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -627,31 +597,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__UINT_MAX
-operator|==
-name|__ULONG_MAX
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|flsl
-parameter_list|(
-name|x
-parameter_list|)
-value|fls((x))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -666,11 +611,6 @@ name|long
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
