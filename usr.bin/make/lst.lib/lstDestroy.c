@@ -69,40 +69,27 @@ name|ln
 decl_stmt|;
 name|LstNode
 name|tln
-init|=
-name|NULL
 decl_stmt|;
 if|if
 condition|(
-name|list
-operator|==
-name|NULL
-operator|||
 operator|!
+name|Lst_Valid
+argument_list|(
 name|list
+argument_list|)
 condition|)
 block|{
-comment|/* 	 * Note the check for l == (Lst)0 to catch uninitialized static Lst's. 	 * Gross, but useful. 	 */
+comment|/* 	 * Note the check to catch uninitialized static Lst's. 	 * Gross, but useful. 	 */
 return|return;
 block|}
-comment|/* To ease scanning */
 if|if
 condition|(
 name|list
 operator|->
 name|lastPtr
-operator|!=
+operator|==
 name|NULL
 condition|)
-name|list
-operator|->
-name|lastPtr
-operator|->
-name|nextPtr
-operator|=
-name|NULL
-expr_stmt|;
-else|else
 block|{
 name|free
 argument_list|(
@@ -111,6 +98,15 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* To ease scanning */
+name|list
+operator|->
+name|lastPtr
+operator|->
+name|nextPtr
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|freeProc
