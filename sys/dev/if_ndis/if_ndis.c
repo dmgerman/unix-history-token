@@ -5735,6 +5735,13 @@ break|break;
 block|}
 if|if
 condition|(
+name|pcnt
+operator|==
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
 name|sc
 operator|->
 name|ndis_txpending
