@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.20 (Berkeley) %G%"
+literal|"@(#)table.c	1.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2148,6 +2148,44 @@ block|,
 name|RNULL
 block|,
 literal|"	pushl	UR\n	pushl	AR\n"
+block|,
+name|OREG
+block|,
+name|INTEMP
+block|,
+name|SANY
+block|,
+name|TANY
+block|,
+name|SOREG
+block|,
+name|TDOUBLE
+block|,
+literal|2
+operator|*
+name|NTEMP
+block|,
+name|RESC1
+block|,
+literal|"	movl	UR,U1\n	movl	AR,A1\n"
+block|,
+name|OREG
+block|,
+name|INTEMP
+block|,
+name|SANY
+block|,
+name|TANY
+block|,
+name|SOREG
+block|,
+name|TANY
+block|,
+name|NTEMP
+block|,
+name|RESC1
+block|,
+literal|"	movl	AR,A1\n"
 block|,
 name|OPLEAF
 block|,
