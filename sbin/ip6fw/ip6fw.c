@@ -6889,10 +6889,6 @@ block|{
 name|int
 name|ch
 decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 comment|/* init optind to 1 */
 name|optind
 operator|=
