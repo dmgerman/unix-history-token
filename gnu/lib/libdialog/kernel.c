@@ -1367,6 +1367,11 @@ argument_list|,
 name|screen_attr
 argument_list|)
 expr_stmt|;
+name|touchwin
+argument_list|(
+name|stdscr
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
