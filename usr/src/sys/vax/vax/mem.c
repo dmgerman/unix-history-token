@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.c	4.5	82/10/13	*/
+comment|/*	mem.c	4.6	82/10/17	*/
 end_comment
 
 begin_comment
@@ -519,7 +519,11 @@ name|rw
 operator|==
 name|UIO_READ
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|c
 operator|=
 name|iov
@@ -664,7 +668,7 @@ argument|uniadd
 argument_list|,
 argument|usradd
 argument_list|,
-argument|cnt
+argument|n
 argument_list|,
 argument|rw
 argument_list|)
@@ -679,8 +683,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|register
 name|int
-name|cnt
+name|n
 decl_stmt|;
 end_decl_stmt
 
@@ -700,10 +705,6 @@ name|from
 decl_stmt|,
 modifier|*
 name|to
-decl_stmt|;
-specifier|register
-name|int
-name|i
 decl_stmt|;
 if|if
 condition|(
@@ -750,19 +751,15 @@ expr_stmt|;
 block|}
 for|for
 control|(
-name|i
-operator|=
-operator|(
-name|cnt
-operator|>>
+name|n
+operator|>>=
 literal|1
-operator|)
 init|;
-name|i
+name|n
 operator|>
 literal|0
 condition|;
-name|i
+name|n
 operator|--
 control|)
 operator|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	4.19	82/10/13	*/
+comment|/*	Locore.c	4.20	82/10/17	*/
 end_comment
 
 begin_include
@@ -577,10 +577,10 @@ name|struct
 name|pte
 name|UMEMmap
 index|[
-literal|4
+name|MAXNUBA
 index|]
 index|[
-literal|16
+literal|512
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -589,10 +589,10 @@ begin_decl_stmt
 name|char
 name|umem
 index|[
-literal|4
+name|MAXNUBA
 index|]
 index|[
-literal|16
+literal|512
 operator|*
 name|NBPG
 index|]
@@ -904,39 +904,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_macro
-name|addupc
-argument_list|(
-argument|pc
-argument_list|,
-argument|prof
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|pc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|uprof
-modifier|*
-name|prof
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{ }
 end_block
 
 begin_comment

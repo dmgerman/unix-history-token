@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.18	82/10/13	*/
+comment|/*	trap.c	4.19	82/10/17	*/
 end_comment
 
 begin_include
@@ -787,6 +787,9 @@ name|int
 argument_list|)
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|lint
 asm|asm("prober $3,r9,(r10)");
 comment|/* GROT */
 asm|asm("bnequ ok");
@@ -806,6 +809,21 @@ asm|asm("ok:");
 comment|/* GROT */
 asm|asm("movc3 r9,(r10),_u+U_ARG");
 comment|/* GROT */
+else|#
+directive|else
+name|bcopy
+argument_list|(
+name|params
+argument_list|,
+name|u
+operator|.
+name|u_arg
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|u
 operator|.

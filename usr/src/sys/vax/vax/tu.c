@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tu.c	4.9	82/10/17	*/
+comment|/*	tu.c	4.10	82/10/17	*/
 end_comment
 
 begin_if
@@ -2151,7 +2151,7 @@ condition|(
 name|tudata
 operator|.
 name|pk_mod
-operator|>
+operator|!=
 literal|0
 condition|)
 comment|/* soft error */
@@ -2840,7 +2840,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|notdef
+name|lint
 end_ifdef
 
 begin_expr_stmt
@@ -2921,14 +2921,14 @@ while|while
 condition|(
 name|word
 operator|&
-literal|0xFFFF0000
+literal|0xffff0000
 condition|)
 name|word
 operator|=
 operator|(
 name|word
 operator|&
-literal|0xFFFF
+literal|0xffff
 operator|)
 operator|+
 operator|(
@@ -2938,7 +2938,7 @@ operator|>>
 literal|16
 operator|)
 operator|&
-literal|0xFFFF
+literal|0xffff
 operator|)
 expr_stmt|;
 return|return
