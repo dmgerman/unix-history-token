@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.41.1.2 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.64 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.41.1.2 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.64 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1234,11 +1234,7 @@ literal|"S%s\n"
 argument_list|,
 name|denlstring
 argument_list|(
-name|e
-operator|->
-name|e_from
-operator|.
-name|q_paddr
+name|p
 argument_list|,
 name|FALSE
 argument_list|)
@@ -1404,7 +1400,7 @@ name|fprintf
 argument_list|(
 name|tfp
 argument_list|,
-literal|"R%s\n"
+literal|"%s\n"
 argument_list|,
 name|denlstring
 argument_list|(
