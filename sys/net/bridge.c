@@ -3205,10 +3205,9 @@ expr_stmt|;
 comment|/* original is gone */
 block|}
 else|else
-comment|/* on a P5-90, m_copypacket takes 540 ticks */
 name|m
 operator|=
-name|m_copypacket
+name|m_dup
 argument_list|(
 operator|*
 name|m0
@@ -3216,6 +3215,7 @@ argument_list|,
 name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
+comment|/* XXX m_copypacket should work */
 if|if
 condition|(
 name|m
@@ -3225,7 +3225,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bdg_forward: sorry, m_copy failed!\n"
+literal|"bdg_forward: sorry, m_dup failed!\n"
 argument_list|)
 expr_stmt|;
 return|return
