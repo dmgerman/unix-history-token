@@ -3652,6 +3652,11 @@ condition|)
 block|{
 comment|/* 		 * If substituting a local variable in a non-local context, 		 * assume it's for dynamic source stuff. We have to handle 		 * this specially and return the longhand for the variable 		 * with the dollar sign escaped so it makes it back to the 		 * caller. Only four of the local variables are treated 		 * specially as they are the only four that will be set 		 * when dynamic sources are expanded. 		 */
 comment|/* XXX: It looks like $% and $! are reversed here */
+operator|*
+name|freePtr
+operator|=
+name|FALSE
+expr_stmt|;
 switch|switch
 condition|(
 name|str
