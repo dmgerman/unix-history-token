@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ranlib.c 4.3 %G%"
+literal|"@(#)ranlib.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,12 +205,23 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|char
+comment|/* magbuf must be an int array so it is aligned on an int-ish 	   boundary, so that we may access its first word as an int! */
+name|int
 name|magbuf
 index|[
+operator|(
 name|SARMAG
 operator|+
-literal|1
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 index|]
 decl_stmt|;
 operator|--
@@ -258,6 +269,10 @@ name|SARMAG
 expr_stmt|;
 name|fread
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|magbuf
 argument_list|,
 literal|1
@@ -271,6 +286,10 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|magbuf
 argument_list|,
 name|ARMAG
@@ -281,12 +300,10 @@ condition|)
 block|{
 if|if
 condition|(
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
 name|magbuf
+index|[
+literal|0
+index|]
 operator|==
 name|OARMAG
 condition|)
@@ -492,6 +509,35 @@ argument_list|,
 name|fi
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ssiz
+operator|<
+sizeof|sizeof
+name|ssiz
+condition|)
+block|{
+comment|/* sanity check */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ranlib: %s(%s): mangled string table\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|,
+name|archdr
+operator|.
+name|ar_name
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|strtab
 operator|=
 operator|(
