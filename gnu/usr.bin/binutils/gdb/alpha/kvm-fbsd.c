@@ -408,7 +408,7 @@ name|addr
 operator|=
 name|ksym_lookup
 argument_list|(
-literal|"proc0paddr"
+literal|"thread0"
 argument_list|)
 expr_stmt|;
 if|if
@@ -424,7 +424,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"cannot read proc0paddr pointer at %x\n"
+literal|"cannot read thread0 pointer at %x\n"
 argument_list|,
 name|addr
 argument_list|)
@@ -433,6 +433,48 @@ name|val
 operator|=
 literal|0
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Read the PCB address in proc structure. */
+name|addr
+operator|=
+operator|(
+name|CORE_ADDR
+operator|)
+name|val
+operator|+
+name|offsetof
+argument_list|(
+expr|struct
+name|thread
+argument_list|,
+name|td_pcb
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kvread
+argument_list|(
+name|addr
+argument_list|,
+operator|&
+name|val
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"cannot read thread0->td_pcb pointer at %x\n"
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
