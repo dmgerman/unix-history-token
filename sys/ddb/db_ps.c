@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: db_ps.c,v 1.5 1995/04/04 01:35:33 davidg Exp $  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: db_ps.c,v 1.6 1995/05/30 07:57:07 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -50,9 +50,6 @@ specifier|volatile
 name|struct
 name|proc
 modifier|*
-name|ap
-decl_stmt|,
-modifier|*
 name|p
 decl_stmt|,
 modifier|*
@@ -62,11 +59,21 @@ name|np
 operator|=
 name|nprocs
 expr_stmt|;
+if|if
+condition|(
+name|allproc
+operator|!=
+name|NULL
+condition|)
 name|p
 operator|=
-name|ap
-operator|=
 name|allproc
+expr_stmt|;
+else|else
+name|p
+operator|=
+operator|&
+name|proc0
 expr_stmt|;
 name|db_printf
 argument_list|(
@@ -90,11 +97,16 @@ operator|==
 literal|20
 condition|)
 block|{
+name|int
+name|c
+decl_stmt|;
 name|db_printf
 argument_list|(
 literal|"--More--"
 argument_list|)
 expr_stmt|;
+name|c
+operator|=
 name|cngetc
 argument_list|()
 expr_stmt|;
@@ -103,10 +115,39 @@ argument_list|(
 literal|"\r"
 argument_list|)
 expr_stmt|;
+comment|/* 			 * A whole screenfull or just one line? 			 */
+switch|switch
+condition|(
+name|c
+condition|)
+block|{
+case|case
+literal|'\n'
+case|:
+comment|/* just one line */
+name|nl
+operator|=
+literal|19
+expr_stmt|;
+break|break;
+case|case
+literal|' '
+case|:
 name|nl
 operator|=
 literal|0
 expr_stmt|;
+comment|/* another screenfull */
+break|break;
+default|default:
+comment|/* exit */
+name|db_printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 block|}
 name|pp
 operator|=
@@ -118,19 +159,12 @@ if|if
 condition|(
 name|pp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|pp
 operator|=
 name|p
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|p_stat
-condition|)
-block|{
 name|db_printf
 argument_list|(
 literal|"%5d %06x %06x %4d %5d %5d %06x  %d"
@@ -139,7 +173,7 @@ name|p
 operator|->
 name|p_pid
 argument_list|,
-name|ap
+name|p
 argument_list|,
 name|p
 operator|->
@@ -148,8 +182,14 @@ argument_list|,
 name|p
 operator|->
 name|p_cred
+condition|?
+name|p
+operator|->
+name|p_cred
 operator|->
 name|p_ruid
+else|:
+literal|0
 argument_list|,
 name|pp
 operator|->
@@ -158,8 +198,14 @@ argument_list|,
 name|p
 operator|->
 name|p_pgrp
+condition|?
+name|p
+operator|->
+name|p_pgrp
 operator|->
 name|pg_id
+else|:
+literal|0
 argument_list|,
 name|p
 operator|->
@@ -179,7 +225,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"  %6s %08x %s\n"
+literal|"  %6s %08x"
 argument_list|,
 name|p
 operator|->
@@ -188,10 +234,6 @@ argument_list|,
 name|p
 operator|->
 name|p_wchan
-argument_list|,
-name|p
-operator|->
-name|p_comm
 argument_list|)
 expr_stmt|;
 block|}
@@ -199,16 +241,26 @@ else|else
 block|{
 name|db_printf
 argument_list|(
-literal|"                  %s\n"
+literal|"                 "
+argument_list|)
+expr_stmt|;
+block|}
+name|db_printf
+argument_list|(
+literal|" %s\n"
 argument_list|,
 name|p
 operator|->
 name|p_comm
+condition|?
+name|p
+operator|->
+name|p_comm
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-name|ap
+name|p
 operator|=
 name|p
 operator|->
@@ -216,21 +268,17 @@ name|p_next
 expr_stmt|;
 if|if
 condition|(
-name|ap
+name|p
 operator|==
-literal|0
+name|NULL
 operator|&&
 name|np
 operator|>
 literal|0
 condition|)
-name|ap
-operator|=
-name|zombproc
-expr_stmt|;
 name|p
 operator|=
-name|ap
+name|zombproc
 expr_stmt|;
 block|}
 block|}
