@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_lookup.c,v 8.7 1996/08/05 08:31:30 vixie Exp $"
+literal|"$Id: db_lookup.c,v 8.9 1996/09/22 00:13:10 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -357,10 +357,17 @@ expr_stmt|;
 name|hval
 operator|+=
 operator|(
+operator|(
+name|isascii
+argument_list|(
+name|c
+argument_list|)
+operator|&&
 name|isupper
 argument_list|(
 name|c
 argument_list|)
+operator|)
 condition|?
 name|tolower
 argument_list|(
@@ -431,6 +438,9 @@ operator|==
 name|hval
 operator|&&
 operator|(
+operator|(
+name|size_t
+operator|)
 name|NAMELEN
 argument_list|(
 operator|*

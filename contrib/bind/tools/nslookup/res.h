@@ -4,7 +4,7 @@ comment|/*  * ++Copyright++ 1985, 1989  * -  * Copyright (c) 1985, 1989  *    Th
 end_comment
 
 begin_comment
-comment|/*  *	@(#)res.h	5.10 (Berkeley) 6/1/90  *	$Id: res.h,v 8.1 1994/12/15 06:24:31 vixie Exp $  */
+comment|/*  *	@(#)res.h	5.10 (Berkeley) 6/1/90  *	$Id: res.h,v 8.3 1996/12/02 09:17:24 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -31,6 +31,34 @@ name|int
 name|Boolean
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|MAXALIASES
+value|35
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXADDRS
+value|35
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXDOMAINS
+value|35
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXSERVERS
+value|10
+end_define
 
 begin_comment
 comment|/*  *  Define return statuses in addtion to the ones defined in namserv.h  *   let SUCCESS be a synonym for NOERROR  *  *	TIME_OUT	- a socket connection timed out.  *	NO_INFO		- the server didn't find any info about the host.  *	ERROR		- one of the following types of errors:  *			   dn_expand, res_mkquery failed  *			   bad command line, socket operation failed, etc.  *	NONAUTH		- the server didn't have the desired info but  *			  returned the name(s) of some servers who should.  *	NO_RESPONSE	- the server didn't respond.  *  */
@@ -249,6 +277,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|DecodeType
@@ -262,6 +291,7 @@ end_comment
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|DecodeError

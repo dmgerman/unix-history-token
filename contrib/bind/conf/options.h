@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* options.h - specify the conditionally-compiled features  * vix 28mar92 [moved out of the Makefile because they were getting too big]  *  * $Id: options.h,v 8.9 1996/05/17 09:10:41 vixie Exp $  */
+comment|/* options.h - specify the conditionally-compiled features  * vix 28mar92 [moved out of the Makefile because they were getting too big]  *  * $Id: options.h,v 8.12 1996/11/11 06:36:43 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -155,8 +155,14 @@ begin_comment
 comment|/* if you want to be able to specify dotted serial#s */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SENSIBLE_DOTS
+end_define
+
 begin_comment
-comment|/*#define SENSIBLE_DOTS	/* if you want dotted serial#s to make numeric sense */
+comment|/* if you want dotted serial#s to make numeric sense */
 end_comment
 
 begin_define
@@ -272,16 +278,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DATUMREFCNT
-end_define
-
-begin_comment
-comment|/* use reference counts on datums (mpa) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAME_DELEGATION
 end_define
 
@@ -311,8 +307,14 @@ begin_comment
 comment|/* log errors/timeouts getting serial number */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RETURNSOA
+end_define
+
 begin_comment
-comment|/*#define RETURNSOA	/* good code that the world isn't ready for yet */
+comment|/* good code that the world might be ready for now */
 end_comment
 
 begin_define
@@ -456,38 +458,6 @@ include|#
 directive|include
 file|"dmalloc.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* systems with killall(1M) don't need this  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__sgi
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WANT_PIDFILE
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|WANT_PIDFILE
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_glob.h,v 8.3 1995/12/06 20:34:38 vixie Exp $  */
+comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_glob.h,v 8.4 1996/08/27 08:33:23 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -17,7 +17,7 @@ end_comment
 
 begin_decl_stmt
 name|DECL
-name|int
+name|u_int
 name|max_cache_ttl
 name|INIT
 argument_list|(
@@ -38,7 +38,7 @@ end_comment
 
 begin_decl_stmt
 name|DECL
-name|int
+name|u_int
 name|min_cache_ttl
 name|INIT
 argument_list|(

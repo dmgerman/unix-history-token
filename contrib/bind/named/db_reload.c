@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_reload.c,v 8.2 1996/08/05 08:31:30 vixie Exp $"
+literal|"$Id: db_reload.c,v 8.3 1996/08/27 08:33:23 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,7 +205,7 @@ comment|/* someday we'll need this.. (untested since before 1990) */
 end_comment
 
 begin_endif
-unit|void db_free(htp) 	struct hashbuf *htp; { 	register struct databuf *dp, *nextdp; 	register struct namebuf *np, *nextnp; 	struct namebuf **npp, **nppend;  	npp = htp->h_tab; 	nppend = npp + htp->h_size; 	while (npp< nppend) { 	    for (np = *npp++; np != NULL; np = nextnp) { 		if (np->n_hash != NULL) 			db_free(np->n_hash); 		(void) free((char *)np->n_dname); 		for (dp = np->n_data; dp != NULL; ) { 			nextdp = dp->d_next; 			(void) free((char *)dp); 			dp = nextdp; 		} 		nextnp = np->n_next; 		free((char *)np); 	    } 	} 	(void) free((char *)htp); }
+unit|void ht_free(htp) 	struct hashbuf *htp; { 	register struct databuf *dp, *nextdp; 	register struct namebuf *np, *nextnp; 	struct namebuf **npp, **nppend;  	npp = htp->h_tab; 	nppend = npp + htp->h_size; 	while (npp< nppend) { 	    for (np = *npp++; np != NULL; np = nextnp) { 		if (np->n_hash != NULL) 			db_free(np->n_hash); 		(void) free((char *)np->n_dname); 		for (dp = np->n_data; dp != NULL; ) { 			nextdp = dp->d_next; 			db_free(dp); 			dp = nextdp; 		} 		nextnp = np->n_next; 		free((char *)np); 	    } 	} 	(void) free((char *)htp); }
 endif|#
 directive|endif
 end_endif

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getinfo.c,v 8.3 1995/12/29 07:16:27 vixie Exp $"
+literal|"$Id: getinfo.c,v 8.6 1996/12/02 09:17:24 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,34 +119,6 @@ name|res_skip
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|MAXALIASES
-value|35
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXADDRS
-value|35
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXDOMAINS
-value|35
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXSERVERS
-value|10
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -1128,6 +1100,24 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+block|}
+if|if
+condition|(
+name|numAddresses
+operator|>=
+name|MAXADDRS
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"MAXADDRS exceeded: skipping address\n"
+argument_list|)
+expr_stmt|;
+name|cp
+operator|+=
+name|dlen
+expr_stmt|;
+continue|continue;
 block|}
 name|bcopy
 argument_list|(
@@ -2509,11 +2499,13 @@ decl_stmt|;
 specifier|register
 name|char
 modifier|*
-name|cp
-decl_stmt|,
-modifier|*
 modifier|*
 name|domain
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|cp
 decl_stmt|;
 name|Boolean
 name|got_nodata

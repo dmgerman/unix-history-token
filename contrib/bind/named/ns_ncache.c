@@ -119,9 +119,14 @@ name|type
 decl_stmt|,
 name|class
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VALIDATE
 name|int
 name|Vcode
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|flags
 decl_stmt|;
@@ -283,9 +288,7 @@ if|if
 condition|(
 name|hp
 operator|->
-name|rcode
-operator|==
-name|NXDOMAIN
+name|nscount
 condition|)
 block|{
 name|u_int32_t
@@ -312,36 +315,26 @@ operator|+
 name|MAXDNAME
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|len
 init|=
 sizeof|sizeof
-argument_list|(
 name|data
-argument_list|)
 decl_stmt|;
-comment|/* store ther SOA record */
+comment|/* we store NXDOMAIN as T_SOA regardless of the query type */
 if|if
 condition|(
-operator|!
 name|hp
 operator|->
-name|nscount
+name|rcode
+operator|==
+name|NXDOMAIN
 condition|)
-block|{
-name|dprintf
-argument_list|(
-literal|3
-argument_list|,
-operator|(
-name|ddt
-operator|,
-literal|"ncache: nscount == 0\n"
-operator|)
-argument_list|)
+name|type
+operator|=
+name|T_SOA
 expr_stmt|;
-return|return;
-block|}
+comment|/* store ther SOA record */
 name|n
 operator|=
 name|dn_skipname
@@ -405,14 +398,13 @@ name|atype
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|no_soa
+goto|;
 block|}
 name|tp
 operator|+=
-sizeof|sizeof
-argument_list|(
-name|u_int16_t
-argument_list|)
+name|INT16SZ
 expr_stmt|;
 comment|/* class */
 name|GETLONG
@@ -425,15 +417,10 @@ expr_stmt|;
 comment|/* ttl */
 name|tp
 operator|+=
-sizeof|sizeof
-argument_list|(
-name|u_int16_t
-argument_list|)
+name|INT16SZ
 expr_stmt|;
 comment|/* dlen */
-if|if
-condition|(
-operator|(
+comment|/* origin */
 name|n
 operator|=
 name|dn_expand
@@ -446,11 +433,18 @@ name|msglen
 argument_list|,
 name|tp
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|data
 argument_list|,
 name|len
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|n
 operator|<
 literal|0
 condition|)
@@ -468,33 +462,34 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* origin */
 name|tp
 operator|+=
 name|n
+expr_stmt|;
+name|n
+operator|=
+name|strlen
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|data
+argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 name|cp1
 operator|=
 name|data
 operator|+
-operator|(
 name|n
-operator|=
-name|strlen
-argument_list|(
-name|data
-argument_list|)
-operator|+
-literal|1
-operator|)
 expr_stmt|;
 name|len
 operator|-=
 name|n
 expr_stmt|;
-if|if
-condition|(
-operator|(
+comment|/* mail */
 name|n
 operator|=
 name|dn_expand
@@ -507,11 +502,18 @@ name|msglen
 argument_list|,
 name|tp
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|cp1
 argument_list|,
 name|len
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|n
 operator|<
 literal|0
 condition|)
@@ -529,7 +531,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* mail */
 name|tp
 operator|+=
 name|n
@@ -538,6 +539,10 @@ name|n
 operator|=
 name|strlen
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|cp1
 argument_list|)
 operator|+
@@ -561,10 +566,7 @@ name|n
 operator|=
 literal|5
 operator|*
-sizeof|sizeof
-argument_list|(
-name|u_int32_t
-argument_list|)
+name|INT32SZ
 argument_list|)
 expr_stmt|;
 comment|/* serial, refresh, retry, expire, min */
@@ -577,9 +579,6 @@ operator|-=
 name|n
 expr_stmt|;
 comment|/* store the zone of the soa record */
-if|if
-condition|(
-operator|(
 name|n
 operator|=
 name|dn_expand
@@ -592,11 +591,18 @@ name|msglen
 argument_list|,
 name|cp
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|cp1
 argument_list|,
 name|len
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|n
 operator|<
 literal|0
 condition|)
@@ -618,6 +624,10 @@ name|n
 operator|=
 name|strlen
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|cp1
 argument_list|)
 operator|+
@@ -633,7 +643,7 @@ name|savedata
 argument_list|(
 name|class
 argument_list|,
-name|T_SOA
+name|type
 argument_list|,
 name|MIN
 argument_list|(
@@ -656,6 +666,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|no_soa
+label|:
 endif|#
 directive|endif
 name|dp
@@ -781,12 +793,8 @@ name|n
 operator|)
 argument_list|)
 expr_stmt|;
-name|free
+name|db_free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|dp
 argument_list|)
 expr_stmt|;
