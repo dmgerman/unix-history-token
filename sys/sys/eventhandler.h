@@ -152,11 +152,9 @@ parameter_list|(
 name|name
 parameter_list|,
 name|tag
-parameter_list|,
-name|func
 parameter_list|)
 define|\
-value|eventhandler_deregister(Xeventhandler_list ## name, tag, func)
+value|eventhandler_deregister(Xeventhandler_list ## name, tag)
 end_define
 
 begin_comment
@@ -215,11 +213,9 @@ parameter_list|(
 name|name
 parameter_list|,
 name|tag
-parameter_list|,
-name|func
 parameter_list|)
 define|\
-value|do {							\     struct eventhandler_list *_el;			\ 							\     if ((_el = eventhandler_find_list(#name)) != NULL)	\ 	eventhandler_deregister(_el, tag, func);	\ } while(0);
+value|do {							\     struct eventhandler_list *_el;			\ 							\     if ((_el = eventhandler_find_list(#name)) != NULL)	\ 	eventhandler_deregister(_el, tag);		\ } while(0);
 end_define
 
 begin_function_decl
