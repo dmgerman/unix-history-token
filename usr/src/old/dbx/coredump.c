@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)coredump.c	5.5 (Berkeley) %G%"
+literal|"@(#)coredump.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -546,10 +546,7 @@ name|signo
 operator|=
 name|up
 operator|->
-name|u_arg
-index|[
-literal|0
-index|]
+name|u_sig
 expr_stmt|;
 name|datamap
 operator|.
