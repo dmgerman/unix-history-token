@@ -1896,9 +1896,9 @@ argument_list|)
 expr_stmt|;
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VOBJBUF
+name|VV_OBJBUF
 expr_stmt|;
 name|retn
 label|:

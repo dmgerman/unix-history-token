@@ -1010,9 +1010,9 @@ name|D_TTY
 condition|)
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VISTTY
+name|VV_ISTTY
 expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
@@ -1901,9 +1901,9 @@ condition|(
 operator|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VOBJBUF
+name|VV_OBJBUF
 operator|)
 operator|&&
 operator|(
@@ -1963,6 +1963,11 @@ operator|==
 name|MNT_WAIT
 condition|)
 block|{
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|vp
@@ -1972,14 +1977,11 @@ condition|)
 block|{
 name|vp
 operator|->
-name|v_flag
+name|v_iflag
 operator||=
-name|VBWAIT
+name|VI_BWAIT
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|tsleep
+name|msleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -1988,6 +1990,11 @@ operator|&
 name|vp
 operator|->
 name|v_numoutput
+argument_list|,
+name|VI_MTX
+argument_list|(
+name|vp
+argument_list|)
 argument_list|,
 name|PRIBIO
 operator|+
@@ -1999,6 +2006,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2176,14 +2188,19 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+name|mp_fixme
+argument_list|(
+literal|"This should require the vnode lock."
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VCOPYONWRITE
+name|VV_COPYONWRITE
 operator|)
 operator|&&
 name|vp
@@ -2723,7 +2740,13 @@ name|vp
 operator|->
 name|v_rdev
 decl_stmt|;
+name|mp_fixme
+argument_list|(
+literal|"Use of v_iflags bogusly locked."
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Hack: a tty device that is a controlling terminal 	 * has a reference from the session structure. 	 * We cannot easily tell that a character device is 	 * a controlling terminal, unless it is the closing 	 * process' controlling terminal.  In that case, 	 * if the reference count is 2 (this last descriptor 	 * plus the session), release the reference from the session. 	 */
+comment|/* 	 * This needs to be rewritten to take the vp interlock into 	 * consideration. 	 */
 name|oldvp
 operator|=
 name|NULL
@@ -2748,9 +2771,9 @@ operator|&&
 operator|(
 name|vp
 operator|->
-name|v_flag
+name|v_iflag
 operator|&
-name|VXLOCK
+name|VI_XLOCK
 operator|)
 operator|==
 literal|0
@@ -2821,9 +2844,9 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_flag
+name|v_iflag
 operator|&
-name|VXLOCK
+name|VI_XLOCK
 condition|)
 block|{
 comment|/* Forced close. */

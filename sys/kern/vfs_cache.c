@@ -3625,6 +3625,11 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
+name|mp_fixme
+argument_list|(
+literal|"No vnode locking done!"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|vp
@@ -3649,9 +3654,9 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 condition|)
 block|{
 if|if
@@ -4151,6 +4156,13 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"vn_fullpath"
+argument_list|)
+expr_stmt|;
 name|buf
 operator|=
 name|malloc
@@ -4214,9 +4226,9 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 condition|)
 block|{
 if|if

@@ -3380,7 +3380,15 @@ decl_stmt|;
 if|if
 condition|(
 name|vp
-operator|&&
+condition|)
+block|{
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|VSHOULDFREE
 argument_list|(
 name|vp
@@ -3391,6 +3399,12 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Clear the UNMANAGED flag when freeing an unmanaged page. 	 */
 if|if

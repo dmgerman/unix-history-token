@@ -1126,6 +1126,13 @@ condition|(
 name|dvp
 condition|)
 block|{
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|dvp
+argument_list|,
+literal|"smbfs_node_alloc"
+argument_list|)
+expr_stmt|;
 name|np
 operator|->
 name|n_parent
@@ -1138,9 +1145,9 @@ comment|/*vp->v_type == VDIR&&*/
 operator|(
 name|dvp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 operator|)
 operator|==
 literal|0

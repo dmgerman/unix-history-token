@@ -229,25 +229,44 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  * v_freelist is locked by the global vnode_free_list mutex.  * v_mntvnodes is locked by the global mntvnodes mutex.  * v_flag, v_usecount, v_holdcount and v_writecount are  *    locked by the v_interlock mutex.  * v_pollinfo is locked by the lock contained inside it.  */
+comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  * v_freelist is locked by the global vnode_free_list mutex.  * v_mntvnodes is locked by the global mntvnodes mutex.  * v_iflag, v_usecount, v_holdcount and v_writecount are  *    locked by the v_interlock mutex.  * v_pollinfo is locked by the lock contained inside it.  * V vnode lock  * I inter lock  */
 end_comment
 
 begin_struct
 struct|struct
 name|vnode
 block|{
-name|u_long
-name|v_flag
+name|struct
+name|mtx
+name|v_interlock
 decl_stmt|;
-comment|/* vnode flags (see below) */
+comment|/* lock on usecount and flag */
+name|u_long
+name|v_iflag
+decl_stmt|;
+comment|/* I vnode flags (see below) */
 name|int
 name|v_usecount
 decl_stmt|;
-comment|/* reference count of users */
+comment|/* I ref count of users */
 name|int
 name|v_writecount
 decl_stmt|;
-comment|/* reference count of writers */
+comment|/* I ref count of writers */
+name|long
+name|v_numoutput
+decl_stmt|;
+comment|/* I writes in progress */
+name|struct
+name|thread
+modifier|*
+name|v_vxproc
+decl_stmt|;
+comment|/* I thread owning VXLOCK */
+name|u_long
+name|v_vflag
+decl_stmt|;
+comment|/* V vnode flags */
 name|int
 name|v_holdcnt
 decl_stmt|;
@@ -311,10 +330,6 @@ argument_list|)
 name|v_synclist
 expr_stmt|;
 comment|/* vnodes with dirty buffers */
-name|long
-name|v_numoutput
-decl_stmt|;
-comment|/* num of writes in progress */
 name|enum
 name|vtype
 name|v_type
@@ -383,11 +398,6 @@ name|v_object
 decl_stmt|;
 comment|/* Place to store VM object */
 name|struct
-name|mtx
-name|v_interlock
-decl_stmt|;
-comment|/* lock on usecount and flag */
-name|struct
 name|lock
 name|v_lock
 decl_stmt|;
@@ -439,12 +449,6 @@ name|vpollinfo
 modifier|*
 name|v_pollinfo
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|v_vxproc
-decl_stmt|;
-comment|/* thread owning VXLOCK */
 name|struct
 name|label
 name|v_label
@@ -532,7 +536,7 @@ comment|/* address of real vnode */
 name|u_long
 name|xv_flag
 decl_stmt|;
-comment|/* vnode flags */
+comment|/* vnode vflags */
 name|int
 name|xv_usecount
 decl_stmt|;
@@ -660,69 +664,25 @@ value|do {							\ 		if ((vp)->v_pollinfo != NULL)			\ 			KNOTE(&vp->v_pollinfo-
 end_define
 
 begin_comment
-comment|/*  * Vnode flags.  */
+comment|/*  * Vnode flags.  *	VI flags are protected by interlock and live in v_iflag  *	VV flags are protected by the vnode lock and live in v_vflag  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VROOT
-value|0x00001
+name|VI_XLOCK
+value|0x0001
 end_define
 
 begin_comment
-comment|/* root of its filesystem */
+comment|/* vnode is locked to change vtype */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VTEXT
-value|0x00002
-end_define
-
-begin_comment
-comment|/* vnode is a pure text prototype */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VSYSTEM
-value|0x00004
-end_define
-
-begin_comment
-comment|/* vnode being used by kernel */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VISTTY
-value|0x00008
-end_define
-
-begin_comment
-comment|/* vnode represents a tty */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VXLOCK
-value|0x00100
-end_define
-
-begin_comment
-comment|/* vnode is locked to change underlying type */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VXWANT
-value|0x00200
+name|VI_XWANT
+value|0x0002
 end_define
 
 begin_comment
@@ -732,8 +692,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VBWAIT
-value|0x00400
+name|VI_BWAIT
+value|0x0004
 end_define
 
 begin_comment
@@ -743,56 +703,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VNOSYNC
-value|0x01000
-end_define
-
-begin_comment
-comment|/* unlinked, stop syncing */
-end_comment
-
-begin_comment
-comment|/* open for business    0x01000 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VOBJBUF
-value|0x02000
-end_define
-
-begin_comment
-comment|/* Allocate buffers in VM object */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VCOPYONWRITE
-value|0x04000
-end_define
-
-begin_comment
-comment|/* vnode is doing copy-on-write */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VAGE
-value|0x08000
-end_define
-
-begin_comment
-comment|/* Insert vnode at head of free list */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VOLOCK
-value|0x10000
+name|VI_OLOCK
+value|0x0008
 end_define
 
 begin_comment
@@ -802,8 +714,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VOWANT
-value|0x20000
+name|VI_OWANT
+value|0x0010
 end_define
 
 begin_comment
@@ -813,52 +725,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VDOOMED
-value|0x40000
-end_define
-
-begin_comment
-comment|/* This vnode is being recycled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VFREE
-value|0x80000
-end_define
-
-begin_comment
-comment|/* This vnode is on the freelist */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VCACHEDLABEL
-value|0x100000
-end_define
-
-begin_comment
-comment|/* Vnode has valid cached MAC label */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VONWORKLST
-value|0x200000
-end_define
-
-begin_comment
-comment|/* On syncer work-list */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VMOUNT
-value|0x400000
+name|VI_MOUNT
+value|0x0020
 end_define
 
 begin_comment
@@ -868,12 +736,148 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VOBJDIRTY
-value|0x800000
+name|VI_AGE
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Insert vnode at head of free list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VI_DOOMED
+value|0x0080
+end_define
+
+begin_comment
+comment|/* This vnode is being recycled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VI_FREE
+value|0x0100
+end_define
+
+begin_comment
+comment|/* This vnode is on the freelist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VI_OBJDIRTY
+value|0x0400
 end_define
 
 begin_comment
 comment|/* object might be dirty */
+end_comment
+
+begin_comment
+comment|/*  * XXX VI_ONWORKLST could be replaced with a check for NULL list elements  * in v_synclist.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VI_ONWORKLST
+value|0x0200
+end_define
+
+begin_comment
+comment|/* On syncer work-list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VV_ROOT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* root of its filesystem */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VV_ISTTY
+value|0x0002
+end_define
+
+begin_comment
+comment|/* vnode represents a tty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VV_NOSYNC
+value|0x0004
+end_define
+
+begin_comment
+comment|/* unlinked, stop syncing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VV_OBJBUF
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Allocate buffers in VM object */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VV_CACHEDLABEL
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Vnode has valid cached MAC label */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VV_TEXT
+value|0x0020
+end_define
+
+begin_comment
+comment|/* vnode is a pure text prototype */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VV_COPYONWRITE
+value|0x0040
+end_define
+
+begin_comment
+comment|/* vnode is doing copy-on-write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VV_SYSTEM
+value|0x0080
+end_define
+
+begin_comment
+comment|/* vnode being used by kernel */
 end_comment
 
 begin_comment
@@ -1647,6 +1651,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Requires interlock */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1655,8 +1663,12 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|(!((vp)->v_flag& (VFREE|VDOOMED))&& \ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount&& \ 	 (!(vp)->v_object || \ 	  !((vp)->v_object->ref_count || (vp)->v_object->resident_page_count)))
+value|(!((vp)->v_iflag& (VI_FREE|VI_DOOMED))&& \ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount&& \ 	 (!(vp)->v_object || \ 	  !((vp)->v_object->ref_count || (vp)->v_object->resident_page_count)))
 end_define
+
+begin_comment
+comment|/* Requires interlock */
+end_comment
 
 begin_define
 define|#
@@ -1666,8 +1678,12 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|(!((vp)->v_flag& (VFREE|VDOOMED|VXLOCK))&&	\ 	 LIST_EMPTY(&(vp)->v_cache_src)&& !(vp)->v_usecount)
+value|(!((vp)->v_iflag& (VI_FREE|VI_DOOMED|VI_XLOCK))&&	\ 	 LIST_EMPTY(&(vp)->v_cache_src)&& !(vp)->v_usecount)
 end_define
+
+begin_comment
+comment|/* Requires interlock */
+end_comment
 
 begin_define
 define|#
@@ -1677,7 +1693,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|(((vp)->v_flag& VFREE)&& \ 	 ((vp)->v_holdcnt || (vp)->v_usecount))
+value|(((vp)->v_iflag& VI_FREE)&& \ 	 ((vp)->v_holdcnt || (vp)->v_usecount))
 end_define
 
 begin_define
@@ -1708,6 +1724,16 @@ parameter_list|(
 name|vp
 parameter_list|)
 value|mtx_unlock(&(vp)->v_interlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VI_MTX
+parameter_list|(
+name|vp
+parameter_list|)
+value|(&(vp)->v_interlock)
 end_define
 
 begin_endif

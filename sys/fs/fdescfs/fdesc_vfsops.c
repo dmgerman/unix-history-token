@@ -272,9 +272,9 @@ name|VDIR
 expr_stmt|;
 name|rvp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VROOT
+name|VV_ROOT
 expr_stmt|;
 name|fmp
 operator|->

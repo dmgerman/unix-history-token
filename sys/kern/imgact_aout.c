@@ -878,13 +878,18 @@ operator|&
 name|aout_sysvec
 expr_stmt|;
 comment|/* Indicate that this file should not be modified */
+name|mp_fixme
+argument_list|(
+literal|"Unlocked vflag access."
+argument_list|)
+expr_stmt|;
 name|imgp
 operator|->
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VTEXT
+name|VV_TEXT
 expr_stmt|;
 return|return
 operator|(

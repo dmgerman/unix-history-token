@@ -1728,9 +1728,9 @@ argument_list|,
 operator|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 operator|)
 operator|!=
 literal|0
@@ -4377,9 +4377,9 @@ operator|&&
 operator|(
 name|dvp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 operator|)
 condition|)
 block|{
@@ -4492,7 +4492,7 @@ argument_list|(
 name|dvp
 argument_list|)
 expr_stmt|;
-comment|/* printf("dvp %d:%d:%d\n", (int)mp, (int)dvp->v_flag& VROOT, (int)flags& ISDOTDOT); */
+comment|/* printf("dvp %d:%d:%d\n", (int)mp, (int)dvp->v_vflag& VV_ROOT, (int)flags& ISDOTDOT); */
 name|error
 operator|=
 name|ncp_pathcheck

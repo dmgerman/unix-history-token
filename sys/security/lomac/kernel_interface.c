@@ -1352,12 +1352,12 @@ argument_list|)
 expr_stmt|;
 name|vp
 operator|->
-name|v_flag
+name|v_iflag
 operator|=
 operator|(
 name|vp
 operator|->
-name|v_flag
+name|v_iflag
 operator|&
 operator|~
 operator|(
@@ -1812,7 +1812,7 @@ name|uvnodebits2level
 argument_list|(
 name|vp
 operator|->
-name|v_flag
+name|v_iflag
 argument_list|)
 expr_stmt|;
 name|lattr
@@ -1823,7 +1823,7 @@ name|uvnodebits2attr
 argument_list|(
 name|vp
 operator|->
-name|v_flag
+name|v_iflag
 argument_list|)
 expr_stmt|;
 name|VI_UNLOCK

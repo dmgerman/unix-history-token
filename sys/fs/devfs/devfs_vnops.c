@@ -1519,9 +1519,9 @@ operator|&&
 operator|(
 name|dvp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 operator|)
 condition|)
 return|return

@@ -1769,9 +1769,9 @@ condition|(
 operator|(
 name|dp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 operator|)
 operator|==
 literal|0
@@ -1947,9 +1947,9 @@ operator|&&
 operator|(
 name|dp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 operator|)
 operator|&&
 operator|(

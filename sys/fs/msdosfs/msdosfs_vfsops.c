@@ -3073,11 +3073,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"flag %08lx, usecount %d, writecount %d, holdcnt %ld\n"
+literal|"iflag %08lx, usecount %d, writecount %d, holdcnt %ld\n"
 argument_list|,
 name|vp
 operator|->
-name|v_flag
+name|vi_flag
 argument_list|,
 name|vp
 operator|->

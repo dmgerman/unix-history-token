@@ -954,15 +954,22 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Keep a held reference to the root vnode. 	 * It is vrele'd in umapfs_unmount. 	 */
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"umapfs_mount"
+argument_list|)
+expr_stmt|;
 name|umapm_rootvp
 operator|=
 name|vp
 expr_stmt|;
 name|umapm_rootvp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VROOT
+name|VV_ROOT
 expr_stmt|;
 name|amp
 operator|->

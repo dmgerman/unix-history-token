@@ -1699,9 +1699,9 @@ operator|=
 operator|(
 name|vp
 operator|->
-name|v_flag
+name|v_iflag
 operator|&
-name|VXLOCK
+name|VI_XLOCK
 operator|)
 operator|==
 literal|0
@@ -1831,9 +1831,9 @@ argument_list|,
 operator|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 operator|)
 operator|!=
 literal|0
@@ -5508,9 +5508,9 @@ operator|&&
 operator|(
 name|dvp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 operator|)
 condition|)
 block|{

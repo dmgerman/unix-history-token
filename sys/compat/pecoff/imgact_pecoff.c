@@ -3063,13 +3063,18 @@ name|interpreted
 operator|=
 literal|0
 expr_stmt|;
+name|mp_fixme
+argument_list|(
+literal|"Unlocked vflag access."
+argument_list|)
+expr_stmt|;
 name|imgp
 operator|->
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VTEXT
+name|VV_TEXT
 expr_stmt|;
 if|if
 condition|(

@@ -2543,9 +2543,9 @@ operator|)
 return|;
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VOBJBUF
+name|VV_OBJBUF
 expr_stmt|;
 return|return
 operator|(
@@ -2584,10 +2584,10 @@ name|a_vp
 decl_stmt|;
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&=
 operator|~
-name|VOBJBUF
+name|VV_OBJBUF
 expr_stmt|;
 return|return
 operator|(

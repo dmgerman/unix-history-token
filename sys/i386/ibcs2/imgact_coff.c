@@ -2403,13 +2403,18 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Indicate that this file should not be modified */
+name|mp_fixme
+argument_list|(
+literal|"Unlocked v_flag access"
+argument_list|)
+expr_stmt|;
 name|imgp
 operator|->
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VTEXT
+name|VV_TEXT
 expr_stmt|;
 return|return
 literal|0

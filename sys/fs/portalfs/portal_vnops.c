@@ -885,9 +885,9 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 condition|)
 return|return
 operator|(
@@ -1880,9 +1880,9 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 condition|)
 block|{
 name|vap
@@ -1997,9 +1997,9 @@ name|ap
 operator|->
 name|a_vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 condition|)
 return|return
 operator|(

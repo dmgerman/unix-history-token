@@ -4005,9 +4005,9 @@ name|root_extent
 condition|)
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VROOT
+name|VV_ROOT
 expr_stmt|;
 comment|/* 	 * XXX need generation number? 	 */
 operator|*

@@ -744,6 +744,11 @@ operator|=
 operator|&
 name|osf1_sysvec
 expr_stmt|;
+name|mp_fixme
+argument_list|(
+literal|"Unlocked writecount and v_vflag access."
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -778,13 +783,13 @@ name|imgp
 operator|->
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VTEXT
+name|VV_TEXT
 condition|)
 name|panic
 argument_list|(
-literal|"exec: a VTEXT vnode has writecount != 0\n"
+literal|"exec: a VV_TEXT vnode has writecount != 0\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -797,9 +802,9 @@ name|imgp
 operator|->
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VTEXT
+name|VV_TEXT
 expr_stmt|;
 comment|/* set up text segment */
 if|if

@@ -7625,9 +7625,9 @@ operator|||
 operator|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VOBJBUF
+name|VV_OBJBUF
 operator|)
 operator|==
 literal|0
@@ -8592,9 +8592,9 @@ operator|&&
 operator|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VOBJBUF
+name|VV_OBJBUF
 operator|)
 expr_stmt|;
 name|maxsize
@@ -10415,6 +10415,11 @@ name|defined
 argument_list|(
 name|VFS_BIO_DEBUG
 argument_list|)
+name|mp_fixme
+argument_list|(
+literal|"usecount and vflag accessed without locks."
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -10435,9 +10440,9 @@ condition|(
 operator|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VOBJBUF
+name|VV_OBJBUF
 operator|)
 operator|==
 literal|0

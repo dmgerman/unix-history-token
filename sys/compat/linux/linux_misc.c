@@ -1706,12 +1706,17 @@ goto|goto
 name|cleanup
 goto|;
 block|}
+name|mp_fixme
+argument_list|(
+literal|"Unlocked vflags access."
+argument_list|)
+expr_stmt|;
 comment|/* prevent more writers */
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VTEXT
+name|VV_TEXT
 expr_stmt|;
 comment|/* 	 * Check if file_offset page aligned. Currently we cannot handle 	 * misalinged file offsets, and so we read in the entire image 	 * (what a waste). 	 */
 if|if

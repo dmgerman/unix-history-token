@@ -1010,6 +1010,11 @@ condition|(
 name|wait
 condition|)
 block|{
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|vp
@@ -1019,14 +1024,11 @@ condition|)
 block|{
 name|vp
 operator|->
-name|v_flag
+name|v_iflag
 operator||=
-name|VBWAIT
+name|VI_BWAIT
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|tsleep
+name|msleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -1035,6 +1037,11 @@ operator|&
 name|vp
 operator|->
 name|v_numoutput
+argument_list|,
+name|VI_MTX
+argument_list|(
+name|vp
+argument_list|)
 argument_list|,
 name|PRIBIO
 operator|+
@@ -1046,6 +1053,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 comment|/*  		 * Ensure that any filesystem metatdata associated 		 * with the vnode has been written. 		 */
 name|splx
 argument_list|(

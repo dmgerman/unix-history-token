@@ -1454,9 +1454,9 @@ name|i
 index|]
 index|]
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VSYSTEM
+name|VV_SYSTEM
 expr_stmt|;
 name|VREF
 argument_list|(
@@ -3415,9 +3415,9 @@ name|NTFS_ROOTINO
 condition|)
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VROOT
+name|VV_ROOT
 expr_stmt|;
 name|ntfs_ntput
 argument_list|(

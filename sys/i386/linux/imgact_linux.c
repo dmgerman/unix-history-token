@@ -837,13 +837,18 @@ endif|#
 directive|endif
 block|}
 comment|/* Indicate that this file should not be modified */
+name|mp_fixme
+argument_list|(
+literal|"Unlocked v_flag access"
+argument_list|)
+expr_stmt|;
 name|imgp
 operator|->
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VTEXT
+name|VV_TEXT
 expr_stmt|;
 block|}
 comment|/* Fill in process VM information */

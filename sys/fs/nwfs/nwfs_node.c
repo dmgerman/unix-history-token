@@ -971,6 +971,13 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|dvp
+argument_list|,
+literal|"nwfs_allocvp"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -984,9 +991,9 @@ operator|&&
 operator|(
 name|dvp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 operator|)
 operator|==
 literal|0

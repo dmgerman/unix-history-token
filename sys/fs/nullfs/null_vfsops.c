@@ -746,15 +746,20 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Keep a held reference to the root vnode. 	 * It is vrele'd in nullfs_unmount. 	 */
+name|mp_fixme
+argument_list|(
+literal|"Unlocked vflag access"
+argument_list|)
+expr_stmt|;
 name|nullm_rootvp
 operator|=
 name|vp
 expr_stmt|;
 name|nullm_rootvp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VROOT
+name|VV_ROOT
 expr_stmt|;
 name|xmp
 operator|->

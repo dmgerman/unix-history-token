@@ -3759,6 +3759,11 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|bp
@@ -3826,6 +3831,12 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+comment|/* XXX Could do bawrite */
 operator|(
 name|void
 operator|)
@@ -3847,14 +3858,14 @@ condition|)
 block|{
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VBWAIT
+name|VI_BWAIT
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|tsleep
+name|msleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -3863,6 +3874,11 @@ operator|&
 name|vp
 operator|->
 name|v_numoutput
+argument_list|,
+name|VI_MTX
+argument_list|(
+name|vp
+argument_list|)
 argument_list|,
 name|PRIBIO
 operator|+
@@ -3874,6 +3890,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC

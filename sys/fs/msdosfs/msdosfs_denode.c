@@ -1025,11 +1025,11 @@ block|{
 comment|/* 		 * Directory entry for the root directory. There isn't one, 		 * so we manufacture one. We should probably rummage 		 * through the root directory and find a label entry (if it 		 * exists), and then use the time and date from that entry 		 * as the time and date for the root denode. 		 */
 name|nvp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VROOT
+name|VV_ROOT
 expr_stmt|;
-comment|/* should be further down		XXX */
+comment|/* should be further down XXX */
 name|ldep
 operator|->
 name|de_Attributes
@@ -1633,9 +1633,9 @@ argument_list|(
 name|dep
 argument_list|)
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 operator|)
 operator|&&
 operator|!
@@ -2169,9 +2169,9 @@ argument_list|(
 name|dep
 argument_list|)
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 operator|)
 operator|&&
 operator|!

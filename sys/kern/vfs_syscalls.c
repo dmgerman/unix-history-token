@@ -5983,13 +5983,18 @@ comment|/* POSIX */
 else|else
 block|{
 comment|/* 		 * The root of a mounted filesystem cannot be deleted. 		 * 		 * XXX: can this only be a VDIR case? 		 */
+name|mp_fixme
+argument_list|(
+literal|"Accessing vflags w/o the vn lock."
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 condition|)
 name|error
 operator|=
@@ -14391,9 +14396,9 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 condition|)
 block|{
 name|error
@@ -15316,14 +15321,19 @@ operator|)
 return|;
 block|}
 block|}
+name|mp_fixme
+argument_list|(
+literal|"Accessing vflags w/o vn lock."
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 operator|)
 operator|&&
 operator|(
@@ -15842,14 +15852,19 @@ operator|)
 return|;
 block|}
 block|}
+name|mp_fixme
+argument_list|(
+literal|"Accessing vflag without vn lock."
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 operator|)
 operator|&&
 operator|(

@@ -2993,7 +2993,13 @@ name|VREG
 expr_stmt|;
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
+operator|=
+literal|0
+expr_stmt|;
+name|vp
+operator|->
+name|v_iflag
 operator|=
 literal|0
 expr_stmt|;
@@ -5301,9 +5307,9 @@ name|VDIR
 expr_stmt|;
 name|vp
 operator|->
-name|v_flag
-operator|=
-name|VROOT
+name|v_vflag
+operator||=
+name|VV_ROOT
 expr_stmt|;
 operator|*
 name|vpp

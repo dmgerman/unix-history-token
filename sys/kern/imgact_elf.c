@@ -2138,7 +2138,7 @@ argument_list|(
 name|imgp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Also make certain that the interpreter stays the same, so set 	 * its VTEXT flag, too. 	 */
+comment|/* 	 * Also make certain that the interpreter stays the same, so set 	 * its VV_TEXT flag, too. 	 */
 if|if
 condition|(
 name|error
@@ -2149,9 +2149,9 @@ name|nd
 operator|->
 name|ni_vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VTEXT
+name|VV_TEXT
 expr_stmt|;
 name|VOP_GETVOBJECT
 argument_list|(
@@ -2768,34 +2768,19 @@ name|e_phoff
 operator|)
 expr_stmt|;
 comment|/* 	 * From this point on, we may have resources that need to be freed. 	 */
-comment|/* 	 * Yeah, I'm paranoid.  There is every reason in the world to get 	 * VTEXT now since from here on out, there are places we can have 	 * a context switch.  Better safe than sorry; I really don't want 	 * the file to change while it's being loaded. 	 */
-name|mtx_lock
+comment|/* 	 * Yeah, I'm paranoid.  There is every reason in the world to get 	 * VTEXT now since from here on out, there are places we can have 	 * a context switch.  Better safe than sorry; I really don't want 	 * the file to change while it's being loaded. 	 * 	 * XXX We can't really set this flag safely without the vnode lock. 	 */
+name|mp_fixme
 argument_list|(
-operator|&
-name|imgp
-operator|->
-name|vp
-operator|->
-name|v_interlock
+literal|"This needs the vnode lock to be safe."
 argument_list|)
 expr_stmt|;
 name|imgp
 operator|->
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VTEXT
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|imgp
-operator|->
-name|vp
-operator|->
-name|v_interlock
-argument_list|)
+name|VV_TEXT
 expr_stmt|;
 if|if
 condition|(

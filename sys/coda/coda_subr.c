@@ -1415,6 +1415,16 @@ operator|&=
 operator|~
 name|C_VATTR
 expr_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|CTOV
+argument_list|(
+name|cp
+argument_list|)
+argument_list|,
+literal|"coda HandleDownCall"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|CTOV
@@ -1422,9 +1432,9 @@ argument_list|(
 name|cp
 argument_list|)
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VTEXT
+name|VV_TEXT
 condition|)
 name|error
 operator|=
@@ -1691,6 +1701,16 @@ argument_list|,
 name|IS_DOWNCALL
 argument_list|)
 expr_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|CTOV
+argument_list|(
+name|cp
+argument_list|)
+argument_list|,
+literal|"coda HandleDownCall"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1713,9 +1733,9 @@ argument_list|(
 name|cp
 argument_list|)
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VTEXT
+name|VV_TEXT
 operator|)
 condition|)
 block|{

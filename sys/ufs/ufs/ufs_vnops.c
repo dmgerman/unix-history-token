@@ -4306,9 +4306,9 @@ literal|0
 condition|)
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VNOSYNC
+name|VV_NOSYNC
 expr_stmt|;
 name|VN_KNOTE
 argument_list|(
@@ -10818,6 +10818,13 @@ break|break;
 default|default:
 break|break;
 block|}
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"ufs_vinit"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ip
@@ -10828,9 +10835,9 @@ name|ROOTINO
 condition|)
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator||=
-name|VROOT
+name|VV_ROOT
 expr_stmt|;
 comment|/* 	 * Initialize modrev times 	 */
 name|getmicrouptime

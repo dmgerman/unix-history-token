@@ -11141,9 +11141,9 @@ name|nd
 operator|.
 name|ni_vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 condition|)
 block|{
 name|error
@@ -15503,9 +15503,9 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VROOT
+name|VV_ROOT
 condition|)
 name|error
 operator|=
@@ -21480,9 +21480,9 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_flag
+name|v_vflag
 operator|&
-name|VTEXT
+name|VV_TEXT
 condition|)
 return|return
 operator|(
