@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.26 (Berkeley) %G%"
+literal|"@(#)alias.c	8.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,7 +154,7 @@ literal|"alias(%s)\n"
 argument_list|,
 name|a
 operator|->
-name|q_paddr
+name|q_user
 argument_list|)
 expr_stmt|;
 comment|/* don't realias already aliased names */
