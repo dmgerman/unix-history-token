@@ -2955,6 +2955,13 @@ operator|>
 literal|0
 condition|)
 block|{
+name|VM_OBJECT_LOCK
+argument_list|(
+name|zone
+operator|->
+name|uz_obj
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|vm_page_alloc
@@ -2966,6 +2973,13 @@ argument_list|,
 name|pages
 argument_list|,
 name|VM_ALLOC_INTERRUPT
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|zone
+operator|->
+name|uz_obj
 argument_list|)
 expr_stmt|;
 if|if
