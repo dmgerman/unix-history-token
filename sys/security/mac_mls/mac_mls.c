@@ -1227,7 +1227,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_subject_equal_ok
+name|mac_mls_subject_privileged
 parameter_list|(
 name|struct
 name|mac_mls
@@ -1248,7 +1248,7 @@ operator|==
 name|MAC_MLS_FLAGS_BOTH
 argument_list|,
 operator|(
-literal|"mac_mls_subject_equal_ok: subject doesn't have both labels"
+literal|"mac_mls_subject_privileged: subject doesn't have both labels"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6187,7 +6187,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_mls_subject_equal_ok
+name|mac_mls_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -6362,37 +6362,14 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * If the MLS label is to be changed, authorize as appropriate. 	 */
-if|if
-condition|(
-name|new
-operator|->
-name|mm_flags
-operator|&
-name|MAC_MLS_FLAGS_BOTH
-condition|)
-block|{
-comment|/* 		 * Rely on traditional superuser status for the MLS 		 * interface relabel requirements.  XXX: This will go 		 * away. 		 */
+comment|/* 	 * Relabeling network interfaces requires MLS privilege. 	 */
 name|error
 operator|=
-name|suser_cred
+name|mac_mls_subject_privileged
 argument_list|(
-name|cred
-argument_list|,
-literal|0
+name|subj
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
-comment|/* 		 * XXXMAC: Additional consistency tests regarding the single 		 * and the range of the new label might be performed here. 		 */
-block|}
 return|return
 operator|(
 literal|0
@@ -6902,7 +6879,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_mls_subject_equal_ok
+name|mac_mls_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -7587,7 +7564,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_mls_subject_equal_ok
+name|mac_mls_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -9440,7 +9417,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_mls_subject_equal_ok
+name|mac_mls_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
