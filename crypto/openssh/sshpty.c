@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshpty.c,v 1.7 2002/06/24 17:57:20 deraadt Exp $"
+literal|"$OpenBSD: sshpty.c,v 1.8 2003/02/03 08:56:16 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1981,7 +1981,7 @@ operator|==
 literal|0
 operator|)
 condition|)
-name|error
+name|debug
 argument_list|(
 literal|"chown(%.100s, %u, %u) failed: %.100s"
 argument_list|,
@@ -2083,7 +2083,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|error
+name|debug
 argument_list|(
 literal|"chmod(%.100s, 0%o) failed: %.100s"
 argument_list|,

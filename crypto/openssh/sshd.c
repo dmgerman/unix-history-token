@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshd.c,v 1.260 2002/09/27 10:42:09 mickey Exp $"
+literal|"$OpenBSD: sshd.c,v 1.263 2003/02/16 17:09:57 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -717,18 +717,16 @@ comment|/* variables used for privilege separation */
 end_comment
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|monitor
-modifier|*
-name|pmonitor
+name|int
+name|use_privsep
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|use_privsep
+name|struct
+name|monitor
+modifier|*
+name|pmonitor
 decl_stmt|;
 end_decl_stmt
 
@@ -3406,7 +3404,7 @@ expr_stmt|;
 name|init_rng
 argument_list|()
 expr_stmt|;
-comment|/* Save argv. */
+comment|/* Save argv. Duplicate so setproctitle emulation doesn't clobber it */
 name|saved_argc
 operator|=
 name|ac
@@ -3415,6 +3413,58 @@ name|saved_argv
 operator|=
 name|av
 expr_stmt|;
+name|saved_argv
+operator|=
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|saved_argv
+argument_list|)
+operator|*
+name|ac
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ac
+condition|;
+name|i
+operator|++
+control|)
+name|saved_argv
+index|[
+name|i
+index|]
+operator|=
+name|xstrdup
+argument_list|(
+name|av
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_SETPROCTITLE
+comment|/* Prepare for later setproctitle emulation */
+name|compat_init_setproctitle
+argument_list|(
+name|ac
+argument_list|,
+name|av
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Initialize configuration options to their default values. */
 name|initialize_server_options
 argument_list|(
@@ -3882,6 +3932,8 @@ name|options
 operator|.
 name|log_facility
 argument_list|,
+name|log_stderr
+operator|||
 operator|!
 name|inetd_flag
 argument_list|)
@@ -4455,7 +4507,8 @@ endif|#
 directive|endif
 name|fatal
 argument_list|(
-literal|"Bad owner or mode for %s"
+literal|"%s must be owned by root and not group or "
+literal|"world-writable."
 argument_list|,
 name|_PATH_PRIVSEP_CHROOT_DIR
 argument_list|)
@@ -5837,9 +5890,35 @@ comment|/* This is the child processing a new connection. */
 comment|/* 	 * Create a new session and process group since the 4.4BSD 	 * setlogin() affects the entire process group.  We don't 	 * want the child to be able to affect the parent. 	 */
 if|#
 directive|if
+operator|!
+name|defined
+argument_list|(
+name|STREAMS_PUSH_ACQUIRES_CTTY
+argument_list|)
+comment|/* 	 * If setsid is called on Solaris, sshd will acquire the controlling 	 * terminal while pushing STREAMS modules. This will prevent the 	 * shell from acquiring it later. 	 */
+if|if
+condition|(
+operator|!
+name|debug_flag
+operator|&&
+operator|!
+name|inetd_flag
+operator|&&
+name|setsid
+argument_list|()
+operator|<
 literal|0
-comment|/* XXX: this breaks Solaris */
-block|if (!debug_flag&& !inetd_flag&& setsid()< 0) 		error("setsid: %.100s", strerror(errno));
+condition|)
+name|error
+argument_list|(
+literal|"setsid: %.100s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Disable the key regeneration alarm.  We will not regenerate the 	 * key since we are no longer in a position to give it to anyone. We 	 * will not restart on SIGHUP since it no longer makes sense. 	 */
@@ -7525,6 +7604,24 @@ name|kex_setup
 argument_list|(
 name|myproposal
 argument_list|)
+expr_stmt|;
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GRP1_SHA1
+index|]
+operator|=
+name|kexdh_server
+expr_stmt|;
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GEX_SHA1
+index|]
+operator|=
+name|kexgex_server
 expr_stmt|;
 name|kex
 operator|->

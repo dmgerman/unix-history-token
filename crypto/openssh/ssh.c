@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh.c,v 1.186 2002/09/19 01:58:18 djm Exp $"
+literal|"$OpenBSD: ssh.c,v 1.190 2003/02/06 09:27:29 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1956,7 +1956,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strchr
+name|strrchr
 argument_list|(
 operator|*
 name|av
@@ -1975,7 +1975,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|strchr
+name|strrchr
 argument_list|(
 name|p
 argument_list|,
@@ -2018,23 +2018,15 @@ operator|=
 operator|*
 name|av
 expr_stmt|;
-name|ac
-operator|--
-operator|,
-name|av
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|ac
 operator|>
-literal|0
+literal|1
 condition|)
 block|{
 name|optind
 operator|=
-literal|0
-expr_stmt|;
 name|optreset
 operator|=
 literal|1
@@ -2043,6 +2035,12 @@ goto|goto
 name|again
 goto|;
 block|}
+name|ac
+operator|--
+operator|,
+name|av
+operator|++
+expr_stmt|;
 block|}
 comment|/* Check that we got a host name. */
 if|if
@@ -2498,6 +2496,31 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|options
+operator|.
+name|proxy_command
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|options
+operator|.
+name|proxy_command
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|options
+operator|.
+name|proxy_command
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Disable rhosts authentication if not running as root. */
 ifdef|#
 directive|ifdef
@@ -4413,7 +4436,7 @@ name|struct
 name|termios
 name|tio
 decl_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"ssh_session2_setup: id %d"
 argument_list|,

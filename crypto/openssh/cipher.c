@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: cipher.c,v 1.61 2002/07/12 15:50:17 markus Exp $"
+literal|"$OpenBSD: cipher.c,v 1.62 2002/11/21 22:45:31 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1128,7 +1128,7 @@ operator|!=
 name|klen
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"cipher_init: set keylen (%d -> %d)"
 argument_list|,

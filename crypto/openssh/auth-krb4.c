@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-krb4.c,v 1.28 2002/09/26 11:38:43 markus Exp $"
+literal|"$OpenBSD: auth-krb4.c,v 1.29 2003/02/21 10:34:48 mpech Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1287,7 +1287,6 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|&
 name|adat
 operator|.
 name|session

@@ -8,7 +8,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth2-pam.c,v 1.14 2002/06/28 16:48:12 mouring Exp $"
+literal|"$Id: auth2-pam.c,v 1.15 2003/01/08 01:37:03 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -793,15 +793,7 @@ index|]
 operator|.
 name|resp
 operator|=
-name|xstrdup
-argument_list|(
 name|resp
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|resp
-argument_list|)
 expr_stmt|;
 name|context_pam2
 operator|.

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keyscan.c,v 1.40 2002/07/06 17:47:58 stevesk Exp $"
+literal|"$OpenBSD: ssh-keyscan.c,v 1.41 2003/02/16 17:09:57 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1649,6 +1649,28 @@ name|kex_setup
 argument_list|(
 name|myproposal
 argument_list|)
+expr_stmt|;
+name|c
+operator|->
+name|c_kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GRP1_SHA1
+index|]
+operator|=
+name|kexdh_client
+expr_stmt|;
+name|c
+operator|->
+name|c_kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GEX_SHA1
+index|]
+operator|=
+name|kexgex_client
 expr_stmt|;
 name|c
 operator|->

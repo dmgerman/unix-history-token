@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect2.c,v 1.107 2002/07/01 19:48:46 markus Exp $"
+literal|"$OpenBSD: sshconnect2.c,v 1.114 2003/04/01 10:22:21 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -452,6 +452,24 @@ argument_list|)
 expr_stmt|;
 name|kex
 operator|->
+name|kex
+index|[
+name|KEX_DH_GRP1_SHA1
+index|]
+operator|=
+name|kexdh_client
+expr_stmt|;
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GEX_SHA1
+index|]
+operator|=
+name|kexgex_client
+expr_stmt|;
+name|kex
+operator|->
 name|client_version_string
 operator|=
 name|client_version_string
@@ -519,11 +537,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|debug
-argument_list|(
-literal|"done: ssh_kex2."
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1032,11 +1045,6 @@ name|kbd_interactive_authentication
 operator|=
 literal|1
 expr_stmt|;
-name|debug
-argument_list|(
-literal|"send SSH2_MSG_SERVICE_REQUEST"
-argument_list|)
-expr_stmt|;
 name|packet_start
 argument_list|(
 name|SSH2_MSG_SERVICE_REQUEST
@@ -1049,6 +1057,11 @@ argument_list|)
 expr_stmt|;
 name|packet_send
 argument_list|()
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"SSH2_MSG_SERVICE_REQUEST sent"
+argument_list|)
 expr_stmt|;
 name|packet_write_wait
 argument_list|()
@@ -1064,15 +1077,13 @@ name|type
 operator|!=
 name|SSH2_MSG_SERVICE_ACCEPT
 condition|)
-block|{
 name|fatal
 argument_list|(
-literal|"denied SSH2_MSG_SERVICE_ACCEPT: %d"
+literal|"Server denied authentication request: %d"
 argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|packet_remaining
@@ -1090,7 +1101,7 @@ argument_list|(
 name|NULL
 argument_list|)
 decl_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"service_accept: %s"
 argument_list|,
@@ -1105,7 +1116,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"buggy server: service_accept w/o service"
 argument_list|)
@@ -1116,7 +1127,7 @@ argument_list|()
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"got SSH2_MSG_SERVICE_ACCEPT"
+literal|"SSH2_MSG_SERVICE_ACCEPT received"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1294,7 +1305,7 @@ argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"ssh-userauth2 successful: method %s"
+literal|"Authentication succeeded (%s)."
 argument_list|,
 name|authctxt
 operator|.
@@ -1648,7 +1659,7 @@ argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"authentications that can continue: %s"
+literal|"Authentications that can continue: %s"
 argument_list|,
 name|authlist
 argument_list|)
@@ -1811,7 +1822,7 @@ argument_list|()
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"input_userauth_pk_ok: pkalg %s blen %u lastkey %p hint %d"
+literal|"Server accepts key: pkalg %s blen %u lastkey %p hint %d"
 argument_list|,
 name|pkalg
 argument_list|,
@@ -3844,7 +3855,7 @@ else|else
 block|{
 name|debug
 argument_list|(
-literal|"userauth_pubkey_agent: testing agent key %s"
+literal|"Offering agent key: %s"
 argument_list|,
 name|comment
 argument_list|)
@@ -3998,7 +4009,7 @@ condition|)
 block|{
 name|debug
 argument_list|(
-literal|"try privkey: %s"
+literal|"Trying private key: %s"
 argument_list|,
 name|filename
 argument_list|)
@@ -4047,7 +4058,7 @@ condition|)
 block|{
 name|debug
 argument_list|(
-literal|"try pubkey: %s"
+literal|"Offering public key: %s"
 argument_list|,
 name|filename
 argument_list|)
@@ -4504,7 +4515,7 @@ name|version
 init|=
 literal|2
 decl_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"ssh_keysign called"
 argument_list|)
@@ -5058,7 +5069,7 @@ condition|)
 block|{
 name|debug
 argument_list|(
-literal|"userauth_hostbased: no more client hostkeys"
+literal|"No more client hostkeys for hostbased authentication."
 argument_list|)
 expr_stmt|;
 return|return
@@ -5159,6 +5170,11 @@ argument_list|(
 literal|"userauth_hostbased: chost %s"
 argument_list|,
 name|chost
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|service
@@ -5793,7 +5809,7 @@ condition|)
 block|{
 name|debug
 argument_list|(
-literal|"no more auth methods to try"
+literal|"No more authentication methods to try."
 argument_list|)
 expr_stmt|;
 name|current
@@ -5850,7 +5866,7 @@ argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"next auth method to try is %s"
+literal|"Next authentication method: %s"
 argument_list|,
 name|name
 argument_list|)

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: key.c,v 1.49 2002/09/09 14:54:14 markus Exp $"
+literal|"$OpenBSD: key.c,v 1.51 2003/02/12 09:33:04 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -47,18 +47,6 @@ begin_include
 include|#
 directive|include
 file|"rsa.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ssh-dss.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ssh-rsa.h"
 end_include
 
 begin_include
@@ -2188,7 +2176,7 @@ condition|)
 block|{
 name|debug3
 argument_list|(
-literal|"key_read: no space"
+literal|"key_read: missing whitespace"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2222,7 +2210,7 @@ condition|)
 block|{
 name|debug3
 argument_list|(
-literal|"key_read: no key found"
+literal|"key_read: missing keytype"
 argument_list|)
 expr_stmt|;
 return|return

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect.c,v 1.135 2002/09/19 01:58:18 djm Exp $"
+literal|"$OpenBSD: sshconnect.c,v 1.137 2002/11/21 23:03:51 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1059,7 +1059,7 @@ name|full_failure
 init|=
 literal|1
 decl_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"ssh_connect: needpriv %d"
 argument_list|,

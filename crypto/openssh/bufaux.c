@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: bufaux.c,v 1.27 2002/06/26 08:53:12 markus Exp $"
+literal|"$OpenBSD: bufaux.c,v 1.28 2002/10/23 10:40:16 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -850,7 +850,7 @@ literal|1024
 condition|)
 name|fatal
 argument_list|(
-literal|"buffer_get_string: bad string length %d"
+literal|"buffer_get_string: bad string length %u"
 argument_list|,
 name|len
 argument_list|)

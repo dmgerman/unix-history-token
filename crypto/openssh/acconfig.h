@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: acconfig.h,v 1.145 2002/09/26 00:38:48 tim Exp $ */
+comment|/* $Id: acconfig.h,v 1.149 2003/03/10 00:38:10 djm Exp $ */
 end_comment
 
 begin_comment
@@ -562,6 +562,25 @@ comment|/* Define if your platform needs to skip post auth file descriptor passi
 undef|#
 directive|undef
 name|DISABLE_FD_PASSING
+comment|/* Silly mkstemp() */
+undef|#
+directive|undef
+name|HAVE_STRICT_MKSTEMP
+comment|/* Setproctitle emulation */
+undef|#
+directive|undef
+name|SETPROCTITLE_STRATEGY
+undef|#
+directive|undef
+name|SETPROCTITLE_PS_PADDING
+comment|/* Some systems put this outside of libc */
+undef|#
+directive|undef
+name|HAVE_NANOSLEEP
+comment|/* Pushing STREAMS modules incorrectly acquires a controlling TTY */
+undef|#
+directive|undef
+name|STREAMS_PUSH_ACQUIRES_CTTY
 expr|@
 name|BOTTOM
 expr|@
