@@ -1392,8 +1392,6 @@ name|dev
 decl_stmt|;
 block|{
 name|int
-name|maj
-decl_stmt|,
 name|psize
 decl_stmt|;
 name|long
@@ -1416,13 +1414,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|maj
-operator|=
-name|major
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|devsw
@@ -1480,7 +1471,7 @@ name|ENXIO
 operator|)
 return|;
 comment|/* XXX should be ENODEV ? */
-comment|/* 	 * XXX should clean up checking in dumpsys() to be more like this, 	 * and nuke dodump sysctl (too many knobs). 	 */
+comment|/* 	 * XXX should clean up checking in dumpsys() to be more like this. 	 */
 name|newdumplo
 operator|=
 name|psize
@@ -1688,6 +1679,23 @@ block|{
 name|int
 name|error
 decl_stmt|;
+specifier|static
+name|int
+name|dumping
+decl_stmt|;
+if|if
+condition|(
+name|dumping
+operator|++
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Dump already in progress, bailing...\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|!
@@ -1731,14 +1739,9 @@ name|Maxmem
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\ndumping to dev (%d,%d), offset %ld\n"
+literal|"\ndumping to dev %s, offset %ld\n"
 argument_list|,
-name|major
-argument_list|(
-name|dumpdev
-argument_list|)
-argument_list|,
-name|minor
+name|devtoname
 argument_list|(
 name|dumpdev
 argument_list|)
