@@ -1127,7 +1127,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BGGPHY_MII_DSP_ADDR_REG
+name|BRGPHY_MII_DSP_ADDR_REG
 value|0x17
 end_define
 
