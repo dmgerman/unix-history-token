@@ -2753,16 +2753,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WI_RX_RADIOTAP_PRESENT0
+name|WI_RX_RADIOTAP_PRESENT
 define|\
-value|((1<< IEEE80211_RADIOTAP_FLAGS) | \ 	 (1<< IEEE80211_RADIOTAP_RATE) | \ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) | \ 	 (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL) | \ 	 (1<< IEEE80211_RADIOTAP_DB_ANTNOISE) | \ 	 (1<< IEEE80211_RADIOTAP_EXT))
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_RX_RADIOTAP_PRESENT1
-value|(1<< (IEEE80211_RADIOTAP_TIME - 32))
+value|((1<< IEEE80211_RADIOTAP_FLAGS) | \ 	 (1<< IEEE80211_RADIOTAP_RATE) | \ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) | \ 	 (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL) | \ 	 (1<< IEEE80211_RADIOTAP_DB_ANTNOISE))
 end_define
 
 begin_struct
@@ -2772,9 +2765,6 @@ block|{
 name|struct
 name|ieee80211_radiotap_header
 name|wr_ihdr
-decl_stmt|;
-name|u_int32_t
-name|wr_present1
 decl_stmt|;
 name|u_int8_t
 name|wr_flags
@@ -2794,9 +2784,6 @@ decl_stmt|;
 name|u_int8_t
 name|wr_antnoise
 decl_stmt|;
-name|u_int32_t
-name|wr_time
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2806,7 +2793,7 @@ define|#
 directive|define
 name|WI_TX_RADIOTAP_PRESENT
 define|\
-value|((1<< IEEE80211_RADIOTAP_CHANNEL))
+value|((1<< IEEE80211_RADIOTAP_FLAGS) | \ 	 (1<< IEEE80211_RADIOTAP_RATE) | \ 	 (1<< IEEE80211_RADIOTAP_CHANNEL))
 end_define
 
 begin_struct
@@ -2816,6 +2803,12 @@ block|{
 name|struct
 name|ieee80211_radiotap_header
 name|wt_ihdr
+decl_stmt|;
+name|u_int8_t
+name|wt_flags
+decl_stmt|;
+name|u_int8_t
+name|wt_rate
 decl_stmt|;
 name|u_int16_t
 name|wt_chan_freq
