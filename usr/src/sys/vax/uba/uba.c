@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.28	81/04/03	*/
+comment|/*	uba.c	4.29	81/04/03	*/
 end_comment
 
 begin_include
@@ -2086,13 +2086,15 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"uba%d: uba error sr=%x fmer=%x fubar=%o\n"
+literal|"uba%d: uba error sr=%b fmer=%x fubar=%o\n"
 argument_list|,
 name|uban
 argument_list|,
 name|uba
 operator|->
 name|uba_sr
+argument_list|,
+name|ubasr_bits
 argument_list|,
 name|uba
 operator|->
