@@ -233,6 +233,17 @@ begin_comment
 comment|/* Mutex init'd before malloc works */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MTX_QUIET
+value|0x200
+end_define
+
+begin_comment
+comment|/* Don't log a mutex event */
+end_comment
+
 begin_comment
 comment|/* options that should be passed on to mtx_enter_hard, mtx_exit_hard */
 end_comment
@@ -2068,6 +2079,18 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|type
+operator|)
+operator|&
+name|MTX_QUIET
+operator|)
+operator|==
+literal|0
+condition|)
 name|CTR5
 argument_list|(
 name|KTR_LOCK
@@ -2176,6 +2199,18 @@ block|}
 endif|#
 directive|endif
 comment|/* WITNESS */
+if|if
+condition|(
+operator|(
+operator|(
+name|type
+operator|)
+operator|&
+name|MTX_QUIET
+operator|)
+operator|==
+literal|0
+condition|)
 name|CTR5
 argument_list|(
 name|KTR_LOCK
@@ -2260,6 +2295,18 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|type
+operator|)
+operator|&
+name|MTX_QUIET
+operator|)
+operator|==
+literal|0
+condition|)
 name|CTR5
 argument_list|(
 name|KTR_LOCK
