@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bad144.c	5.16 (Berkeley) %G%"
+literal|"@(#)bad144.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +71,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fs.h>
+file|<ufs/fs.h>
 end_include
 
 begin_include
