@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -47,58 +47,52 @@ block|{
 name|u_short
 name|di_mode
 decl_stmt|;
-comment|/*  0: mode and type of file */
+comment|/*   0: mode and type of file */
 name|short
 name|di_nlink
 decl_stmt|;
-comment|/*  2: number of links to file */
-name|uid_t
-name|di_uid
+comment|/*   2: number of links to file */
+name|u_short
+name|di_ouid
 decl_stmt|;
-comment|/*  4: owner's user id */
-name|gid_t
-name|di_gid
+comment|/*   4: old owner's user id */
+name|u_short
+name|di_ogid
 decl_stmt|;
-comment|/*  6: owner's group id */
+comment|/*   6: old owner's group id */
 name|u_quad_t
 name|di_qsize
 decl_stmt|;
-comment|/*  8: number of bytes in file */
-name|time_t
+comment|/*   8: number of bytes in file */
+name|struct
+name|timeval
 name|di_atime
 decl_stmt|;
-comment|/* 16: time last accessed */
-name|long
-name|di_atspare
-decl_stmt|;
-name|time_t
+comment|/*  16: time last accessed */
+name|struct
+name|timeval
 name|di_mtime
 decl_stmt|;
-comment|/* 24: time last modified */
-name|long
-name|di_mtspare
-decl_stmt|;
-name|time_t
+comment|/*  24: time last modified */
+name|struct
+name|timeval
 name|di_ctime
 decl_stmt|;
-comment|/* 32: last time inode changed */
-name|long
-name|di_ctspare
-decl_stmt|;
+comment|/*  32: last time inode changed */
 name|daddr_t
 name|di_db
 index|[
 name|NDADDR
 index|]
 decl_stmt|;
-comment|/* 40: disk block addresses */
+comment|/*  40: disk block addresses */
 name|daddr_t
 name|di_ib
 index|[
 name|NIADDR
 index|]
 decl_stmt|;
-comment|/* 88: indirect blocks */
+comment|/*  88: indirect blocks */
 name|long
 name|di_flags
 decl_stmt|;
@@ -111,13 +105,21 @@ name|long
 name|di_gen
 decl_stmt|;
 comment|/* 108: generation number */
+name|u_long
+name|di_uid
+decl_stmt|;
+comment|/* 112: owner's user id */
+name|u_long
+name|di_gid
+decl_stmt|;
+comment|/* 116: owner's group id */
 name|long
 name|di_spare
 index|[
-literal|4
+literal|2
 index|]
 decl_stmt|;
-comment|/* 112: reserved, currently unused */
+comment|/* 120: reserved, currently unused */
 block|}
 struct|;
 end_struct
