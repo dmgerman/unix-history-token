@@ -438,6 +438,7 @@ index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|d
@@ -486,6 +487,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|d
+operator|==
+literal|'\0'
+condition|)
+name|d
+operator|=
+literal|"."
+expr_stmt|;
 if|if
 condition|(
 name|snprintf
