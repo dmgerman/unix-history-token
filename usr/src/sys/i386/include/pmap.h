@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.h	7.3 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -458,17 +458,15 @@ begin_comment
 comment|/* last of kernel virtual pde's */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|pt_entry_t
-modifier|*
-name|Sysmap
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Address of current and alternate address space page table maps  * and directories.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -504,10 +502,27 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|pt_entry_t
+modifier|*
+name|Sysmap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|IdlePTD
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* physical address of "Idle" state directory */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * virtual address to page table entry and  * to physical address. Likewise for alternate address space.  * Note: these work recursively, thus vtopte of a pte will give  * the corresponding pde that in turn maps it.  */
@@ -668,12 +683,23 @@ name|pmap_t
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|pmap_t
 name|kernel_pmap
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Macros for speed  */
