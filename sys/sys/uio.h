@@ -185,7 +185,8 @@ begin_function_decl
 name|int
 name|uiomove
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|int
 parameter_list|,
@@ -200,7 +201,8 @@ begin_function_decl
 name|int
 name|uiomoveco
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|int
 parameter_list|,
