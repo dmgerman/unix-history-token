@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_swap.c	4.16	83/02/13	*/
+comment|/*	vm_swap.c	4.17	83/05/10	*/
 end_comment
 
 begin_include
@@ -344,12 +344,21 @@ comment|/*  * System call swapon(name) enables swapping on device name,  * which
 end_comment
 
 begin_macro
-name|oswapon
+name|swapon
 argument_list|()
 end_macro
 
 begin_block
 block|{
+struct|struct
+name|a
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+struct|;
 specifier|register
 name|struct
 name|inode
