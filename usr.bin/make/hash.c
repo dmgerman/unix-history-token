@@ -765,6 +765,7 @@ name|Hash_Entry
 modifier|*
 name|Hash_EnumFirst
 parameter_list|(
+specifier|const
 name|Hash_Table
 modifier|*
 name|t
@@ -821,6 +822,7 @@ name|Hash_Entry
 modifier|*
 name|e
 decl_stmt|;
+specifier|const
 name|Hash_Table
 modifier|*
 name|t

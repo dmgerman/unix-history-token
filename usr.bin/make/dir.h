@@ -77,6 +77,7 @@ begin_function_decl
 name|Boolean
 name|Dir_HasWildcards
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

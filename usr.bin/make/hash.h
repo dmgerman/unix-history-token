@@ -93,6 +93,7 @@ typedef|typedef
 struct|struct
 name|Hash_Search
 block|{
+specifier|const
 name|Hash_Table
 modifier|*
 name|tablePtr
@@ -220,6 +221,7 @@ name|Hash_Entry
 modifier|*
 name|Hash_EnumFirst
 parameter_list|(
+specifier|const
 name|Hash_Table
 modifier|*
 parameter_list|,
