@@ -5933,6 +5933,10 @@ return|return
 literal|0
 return|;
 case|case
+name|KDGETREPEAT
+case|:
+comment|/* get keyboard repeat& delay rates */
+case|case
 name|KDSETREPEAT
 case|:
 comment|/* set keyboard repeat& delay rates (new) */
