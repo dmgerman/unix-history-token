@@ -15,12 +15,6 @@ directive|define
 name|_MACHINE_SMP_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/intr_machdep.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -75,6 +69,12 @@ ifndef|#
 directive|ifndef
 name|LOCORE
 end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<machine/intr_machdep.h>
+end_include
 
 begin_define
 define|#
