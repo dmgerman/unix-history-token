@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.73 1996/06/08 06:55:01 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7880, aic7870 and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.74 1996/06/09 17:29:35 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -3257,7 +3257,9 @@ comment|/* Mark this as an active command */
 name|scb
 operator|->
 name|flags
-operator|=
+operator|^=
+name|SCB_ASSIGNEDQ
+operator||
 name|SCB_ACTIVE
 expr_stmt|;
 name|AHC_OUTB
@@ -3384,7 +3386,7 @@ operator|==
 name|SCB_LIST_NULL
 condition|)
 break|break;
-comment|/* 			 * Advance disc_scb to the next on in the 			 * list. 			 */
+comment|/* 			 * Check the next SCB on in the list. 			 */
 name|AHC_OUTB
 argument_list|(
 name|ahc
@@ -3466,7 +3468,9 @@ comment|/* Mark this as an active command */
 name|scb
 operator|->
 name|flags
-operator|=
+operator|^=
+name|SCB_WAITINGQ
+operator||
 name|SCB_ACTIVE
 expr_stmt|;
 comment|/* Queue the command */
@@ -4198,6 +4202,14 @@ argument_list|,
 name|links
 argument_list|)
 expr_stmt|;
+name|outscb
+operator|->
+name|flags
+operator|^=
+name|SCB_ASSIGNEDQ
+operator||
+name|SCB_WAITINGQ
+expr_stmt|;
 name|scb
 operator|->
 name|position
@@ -4223,12 +4235,6 @@ name|outscb
 argument_list|,
 name|links
 argument_list|)
-expr_stmt|;
-name|outscb
-operator|->
-name|flags
-operator|=
-name|SCB_WAITINGQ
 expr_stmt|;
 name|AHC_OUTB
 argument_list|(
@@ -4741,7 +4747,7 @@ expr_stmt|;
 name|outscb
 operator|->
 name|flags
-operator|=
+operator||=
 name|SCB_WAITINGQ
 expr_stmt|;
 name|ahc_send_scb
@@ -6076,7 +6082,7 @@ expr_stmt|;
 name|scb
 operator|->
 name|flags
-operator|=
+operator||=
 name|SCB_ASSIGNEDQ
 expr_stmt|;
 name|STAILQ_INSERT_TAIL
@@ -9431,7 +9437,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*          * get an scb to use. If the transfer          * is from a buf (possibly from interrupt time)          * then we can't allow it to sleep          */
+comment|/* 	 * get an scb to use. If the transfer 	 * is from a buf (possibly from interrupt time) 	 * then we can't allow it to sleep 	 */
 end_comment
 
 begin_expr_stmt
@@ -9576,7 +9582,7 @@ expr_stmt|;
 end_if
 
 begin_comment
-comment|/*          * Put all the arguments for the xfer in the scb          */
+comment|/* 	 * Put all the arguments for the xfer in the scb 	 */
 end_comment
 
 begin_if
@@ -10303,7 +10309,7 @@ expr_stmt|;
 name|scb
 operator|->
 name|flags
-operator|=
+operator||=
 name|SCB_ACTIVE
 expr_stmt|;
 if|if
@@ -10356,7 +10362,7 @@ block|{
 name|scb
 operator|->
 name|flags
-operator|=
+operator||=
 name|SCB_WAITINGQ
 expr_stmt|;
 name|STAILQ_INSERT_TAIL
@@ -10540,11 +10546,24 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+comment|/* Clean up for the next user */
 name|scb
 operator|->
 name|flags
 operator|=
 name|SCB_FREE
+expr_stmt|;
+name|scb
+operator|->
+name|control
+operator|=
+literal|0
+expr_stmt|;
+name|scb
+operator|->
+name|status
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -10613,14 +10632,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|wscb
-operator|->
-name|position
-operator|=
-name|scb
-operator|->
-name|position
-expr_stmt|;
 name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -10630,6 +10641,14 @@ name|waiting_scbs
 argument_list|,
 name|links
 argument_list|)
+expr_stmt|;
+name|wscb
+operator|->
+name|position
+operator|=
+name|scb
+operator|->
+name|position
 expr_stmt|;
 name|STAILQ_INSERT_HEAD
 argument_list|(
@@ -10646,7 +10665,9 @@ expr_stmt|;
 name|wscb
 operator|->
 name|flags
-operator|=
+operator|^=
+name|SCB_WAITINGQ
+operator||
 name|SCB_ASSIGNEDQ
 expr_stmt|;
 comment|/*  		 * The "freed" SCB will need to be assigned a slot 		 * before being used, so put it in the page_scbs 		 * queue. 		 */
@@ -10711,16 +10732,6 @@ argument_list|,
 name|links
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AHC_DEBUG
-name|ahc
-operator|->
-name|activescbs
-operator|--
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -10750,6 +10761,16 @@ name|free_scbs
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|AHC_DEBUG
+name|ahc
+operator|->
+name|activescbs
+operator|--
+expr_stmt|;
+endif|#
+directive|endif
 name|splx
 argument_list|(
 name|opri
@@ -10997,32 +11018,14 @@ block|}
 block|}
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|AHC_DEBUG
 if|if
 condition|(
 name|scbp
 condition|)
 block|{
-name|scbp
-operator|->
-name|control
-operator|=
-literal|0
-expr_stmt|;
-name|scbp
-operator|->
-name|status
-operator|=
-literal|0
-expr_stmt|;
-name|scbp
-operator|->
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AHC_DEBUG
 name|ahc
 operator|->
 name|activescbs
@@ -11056,9 +11059,9 @@ name|ahc
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
-block|}
 name|splx
 argument_list|(
 name|opri
@@ -11086,8 +11089,7 @@ name|ahc
 decl_stmt|;
 block|{
 specifier|static
-name|unsigned
-name|char
+name|u_char
 name|seqprog
 index|[]
 init|=
