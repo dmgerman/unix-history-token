@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus_pio.h>
 end_include
 
@@ -91,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|<dev/sio/siovar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pci/pcireg.h>
 end_include
 
 begin_include
@@ -188,11 +176,7 @@ name|sio_driver_name
 block|,
 name|sio_pci_methods
 block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|com_s
-argument_list|)
+literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt
