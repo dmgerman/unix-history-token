@@ -103,65 +103,6 @@ directive|define
 name|_I386_ISA_ISA_DEVICE_H_
 end_define
 
-begin_comment
-comment|/*  * Per device structure.  This just happens to resemble the old isa_device  * but that is by accident.  It is NOT the same.  */
-end_comment
-
-begin_struct
-struct|struct
-name|uc_device
-block|{
-name|int
-name|id_id
-decl_stmt|;
-comment|/* device id */
-name|char
-modifier|*
-name|id_name
-decl_stmt|;
-comment|/* device name */
-name|int
-name|id_iobase
-decl_stmt|;
-comment|/* base i/o address */
-name|u_int
-name|id_irq
-decl_stmt|;
-comment|/* interrupt request */
-name|int
-name|id_drq
-decl_stmt|;
-comment|/* DMA request */
-name|caddr_t
-name|id_maddr
-decl_stmt|;
-comment|/* physical i/o memory address on bus (if any)*/
-name|int
-name|id_msize
-decl_stmt|;
-comment|/* size of i/o memory */
-name|int
-name|id_unit
-decl_stmt|;
-comment|/* unit number */
-name|int
-name|id_flags
-decl_stmt|;
-comment|/* flags */
-name|int
-name|id_enabled
-decl_stmt|;
-comment|/* is device enabled */
-name|struct
-name|uc_device
-modifier|*
-name|id_next
-decl_stmt|;
-comment|/* used in uc_devlist in userconfig() */
-block|}
-struct|;
-end_struct
-
 begin_undef
 undef|#
 directive|undef
@@ -206,6 +147,12 @@ literal|"uc_device lists in userconfig()"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<machine/uc_device.h>
+end_include
 
 begin_decl_stmt
 specifier|static
