@@ -82,7 +82,7 @@ comment|/* uncompressed IP */
 end_comment
 
 begin_comment
-comment|/* Minimum and maximum number of channels */
+comment|/* Minimum and maximum number of compression channels */
 end_comment
 
 begin_define
