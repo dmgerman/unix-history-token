@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mfs_vfsops.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mfs_vfsops.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -43,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|"vnode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_include
@@ -621,6 +615,20 @@ return|;
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|mfs_pri
+init|=
+name|PWAIT
+operator||
+name|PCATCH
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX prob. temp */
+end_comment
+
 begin_comment
 comment|/*  * Used to grab the process and keep it in the kernel to service  * memory filesystem I/O requests.  *  * Loop servicing I/O requests.  * Copy the requested data into or out of the memory filesystem  * address space.  */
 end_comment
@@ -688,52 +696,17 @@ specifier|register
 name|caddr_t
 name|base
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 name|base
 operator|=
 name|mfsp
 operator|->
 name|mfs_baseoff
 expr_stmt|;
-if|if
-condition|(
-name|setjmp
-argument_list|(
-operator|&
-name|u
-operator|.
-name|u_qsave
-argument_list|)
-condition|)
-block|{
-comment|/* 		 * We have received a signal, so try to unmount. 		 */
-operator|(
-name|void
-operator|)
-name|dounmount
-argument_list|(
-name|mp
-argument_list|,
-name|MNT_NOFORCE
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|tsleep
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|vp
-argument_list|,
-name|PWAIT
-argument_list|,
-name|SLP_MFS
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 while|while
 condition|(
 name|mfsp
@@ -784,6 +757,10 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -791,17 +768,30 @@ name|caddr_t
 operator|)
 name|vp
 argument_list|,
-name|PWAIT
+name|mfs_pri
 argument_list|,
-name|SLP_MFS
+literal|"mfsidl"
 argument_list|,
 literal|0
 argument_list|)
+condition|)
+block|{
+comment|/* 			 * We have received a signal, so try to unmount. 			 */
+operator|(
+name|void
+operator|)
+name|dounmount
+argument_list|(
+name|mp
+argument_list|,
+name|MNT_NOFORCE
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
