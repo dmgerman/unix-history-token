@@ -903,7 +903,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free all vnodes associated with a defunct process  */
+comment|/*  * Free all vnodes associated with a defunct process  *  * XXXRW: It is unfortunate that pfs_exit() always acquires and releases two  * mutexes (one of which is Giant) for every process exit, even if procfs  * isn't mounted.  */
 end_comment
 
 begin_function
