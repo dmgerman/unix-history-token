@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)code.c	1.5 (Berkeley) %G%"
+literal|"@(#)code.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -430,12 +430,6 @@ return|;
 block|}
 end_block
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|deflab
-end_ifndef
-
 begin_macro
 name|deflab
 argument_list|(
@@ -446,6 +440,11 @@ end_macro
 begin_block
 block|{
 comment|/* output something to define the current position as label n */
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return;
 name|printf
 argument_list|(
 literal|"L%d:\n"
@@ -455,11 +454,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
