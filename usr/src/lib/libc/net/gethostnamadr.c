@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.16 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -724,9 +724,11 @@ name|hap
 operator|=
 name|h_addr_ptrs
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BSD4_3
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|43
 name|host
 operator|.
 name|h_addr_list
@@ -1817,9 +1819,11 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* THIS STUFF IS INTERNET SPECIFIC */
-ifdef|#
-directive|ifdef
-name|BSD4_3
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|43
 name|host
 operator|.
 name|h_addr_list
