@@ -14,7 +14,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)configttys.c	4.2 Berkeley %G%"
+literal|"@(#)configttys.c	4.3 Berkeley %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1272,6 +1272,19 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|exists
+argument_list|(
+name|etc_conf
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* hope user has it together! */
 name|perror
 argument_list|(
 name|etc_ttys
