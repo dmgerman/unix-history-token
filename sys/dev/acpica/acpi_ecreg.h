@@ -149,7 +149,8 @@ name|EC_GET_DATA
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->ec_data_tag, sc->ec_data_handle, 0)
+define|\
+value|bus_space_read_1((sc)->ec_data_tag, (sc)->ec_data_handle, 0)
 end_define
 
 begin_define
@@ -161,7 +162,8 @@ name|sc
 parameter_list|,
 name|v
 parameter_list|)
-value|bus_space_write_1(sc->ec_data_tag, sc->ec_data_handle, 0, v)
+define|\
+value|bus_space_write_1((sc)->ec_data_tag, (sc)->ec_data_handle, 0, (v))
 end_define
 
 begin_define
@@ -171,7 +173,8 @@ name|EC_GET_CSR
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->ec_csr_tag,  sc->ec_csr_handle,  0)
+define|\
+value|bus_space_read_1((sc)->ec_csr_tag, (sc)->ec_csr_handle, 0)
 end_define
 
 begin_define
@@ -183,7 +186,8 @@ name|sc
 parameter_list|,
 name|v
 parameter_list|)
-value|bus_space_write_1(sc->ec_csr_tag,  sc->ec_csr_handle,  0, v)
+define|\
+value|bus_space_write_1((sc)->ec_csr_tag, (sc)->ec_csr_handle, 0, (v))
 end_define
 
 end_unit
