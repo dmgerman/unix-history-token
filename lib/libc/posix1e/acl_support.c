@@ -1191,7 +1191,7 @@ if|if
 condition|(
 name|perm
 operator|&
-name|ACL_PERM_READ
+name|ACL_READ
 condition|)
 name|buf
 index|[
@@ -1212,7 +1212,7 @@ if|if
 condition|(
 name|perm
 operator|&
-name|ACL_PERM_WRITE
+name|ACL_WRITE
 condition|)
 name|buf
 index|[
@@ -1233,7 +1233,7 @@ if|if
 condition|(
 name|perm
 operator|&
-name|ACL_PERM_EXEC
+name|ACL_EXECUTE
 condition|)
 name|buf
 index|[
@@ -1305,7 +1305,7 @@ name|ACL_STRING_PERM_READ
 case|:
 name|myperm
 operator||=
-name|ACL_PERM_READ
+name|ACL_READ
 expr_stmt|;
 break|break;
 case|case
@@ -1313,7 +1313,7 @@ name|ACL_STRING_PERM_WRITE
 case|:
 name|myperm
 operator||=
-name|ACL_PERM_WRITE
+name|ACL_WRITE
 expr_stmt|;
 break|break;
 case|case
@@ -1321,7 +1321,7 @@ name|ACL_STRING_PERM_EXEC
 case|:
 name|myperm
 operator||=
-name|ACL_PERM_EXEC
+name|ACL_EXECUTE
 expr_stmt|;
 break|break;
 case|case

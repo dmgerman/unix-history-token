@@ -163,7 +163,7 @@ index|]
 operator|.
 name|ae_perm
 operator||=
-name|ACL_PERM_READ
+name|ACL_READ
 expr_stmt|;
 if|if
 condition|(
@@ -182,7 +182,7 @@ index|]
 operator|.
 name|ae_perm
 operator||=
-name|ACL_PERM_WRITE
+name|ACL_WRITE
 expr_stmt|;
 if|if
 condition|(
@@ -201,7 +201,7 @@ index|]
 operator|.
 name|ae_perm
 operator||=
-name|ACL_PERM_EXEC
+name|ACL_EXECUTE
 expr_stmt|;
 name|acl
 operator|->
@@ -255,7 +255,7 @@ index|]
 operator|.
 name|ae_perm
 operator||=
-name|ACL_PERM_READ
+name|ACL_READ
 expr_stmt|;
 if|if
 condition|(
@@ -274,7 +274,7 @@ index|]
 operator|.
 name|ae_perm
 operator||=
-name|ACL_PERM_WRITE
+name|ACL_WRITE
 expr_stmt|;
 if|if
 condition|(
@@ -293,7 +293,7 @@ index|]
 operator|.
 name|ae_perm
 operator||=
-name|ACL_PERM_EXEC
+name|ACL_EXECUTE
 expr_stmt|;
 name|acl
 operator|->
@@ -345,7 +345,7 @@ index|]
 operator|.
 name|ae_perm
 operator||=
-name|ACL_PERM_READ
+name|ACL_READ
 expr_stmt|;
 if|if
 condition|(
@@ -364,7 +364,7 @@ index|]
 operator|.
 name|ae_perm
 operator||=
-name|ACL_PERM_WRITE
+name|ACL_WRITE
 expr_stmt|;
 if|if
 condition|(
@@ -383,7 +383,7 @@ index|]
 operator|.
 name|ae_perm
 operator||=
-name|ACL_PERM_EXEC
+name|ACL_EXECUTE
 expr_stmt|;
 name|acl
 operator|->

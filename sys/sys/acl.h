@@ -257,21 +257,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACL_PERM_EXEC
+name|ACL_EXECUTE
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACL_PERM_WRITE
+name|ACL_WRITE
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACL_PERM_READ
+name|ACL_READ
 value|0x0004
 end_define
 
@@ -286,14 +286,14 @@ begin_define
 define|#
 directive|define
 name|ACL_PERM_BITS
-value|(ACL_PERM_EXEC | ACL_PERM_WRITE | ACL_PERM_READ)
+value|(ACL_EXECUTE | ACL_WRITE | ACL_READ)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACL_POSIX1E_BITS
-value|(ACL_PERM_EXEC | ACL_PERM_WRITE | ACL_PERM_READ)
+value|(ACL_EXECUTE | ACL_WRITE | ACL_READ)
 end_define
 
 begin_ifdef
