@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disklabel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -1374,15 +1368,9 @@ name|dev
 operator|->
 name|si_udev
 operator|=
-name|dkmakeminor
-argument_list|(
-name|unit
-argument_list|,
-literal|1
-argument_list|,
-name|RAW_PART
-argument_list|)
+literal|0x10002
 expr_stmt|;
+comment|/* XXX: Needed ? */
 name|sprintf
 argument_list|(
 name|dev
