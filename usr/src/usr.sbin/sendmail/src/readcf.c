@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.99 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.100 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5231,6 +5231,11 @@ name|O_MAXQUEUERUN
 block|,
 name|TRUE
 block|,
+define|#
+directive|define
+name|O_MAXCHILDREN
+value|0x8d
+comment|/* 	"MaxDaemonChildren",	O_MAXCHILDREN,	FALSE, */
 name|NULL
 block|,
 literal|'\0'
@@ -7601,6 +7606,17 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|O_MAXCHILDREN
+case|:
+comment|/* max # of children of daemon */
+name|MaxChildren
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
 default|default:
 if|if
 condition|(
