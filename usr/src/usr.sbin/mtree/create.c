@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)create.c	5.12 (Berkeley) %G%"
+literal|"@(#)create.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,6 +132,13 @@ name|dsort
 argument_list|()
 decl_stmt|;
 name|char
+modifier|*
+name|argv
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|char
 name|curp
 index|[
 name|MAXPATHLEN
@@ -204,6 +211,24 @@ name|clock
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|argv
+index|[
+literal|0
+index|]
+operator|=
+literal|"."
+expr_stmt|;
+name|argv
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -212,7 +237,7 @@ name|t
 operator|=
 name|ftsopen
 argument_list|(
-literal|"."
+name|argv
 argument_list|,
 name|ftsoptions
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)verify.c	5.4 (Berkeley) %G%"
+literal|"@(#)verify.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,6 +149,31 @@ decl_stmt|,
 modifier|*
 name|level
 decl_stmt|;
+name|char
+modifier|*
+name|argv
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|argv
+index|[
+literal|0
+index|]
+operator|=
+literal|"."
+expr_stmt|;
+name|argv
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -157,7 +182,7 @@ name|t
 operator|=
 name|ftsopen
 argument_list|(
-literal|"."
+name|argv
 argument_list|,
 name|ftsoptions
 argument_list|,
