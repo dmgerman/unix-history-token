@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)mailstats.c	3.1	%G%"
+literal|"@(#)mailstats.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,12 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|ctime
+parameter_list|()
+function_decl|;
 name|fd
 operator|=
 name|open
@@ -114,6 +120,19 @@ name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"Statistics from %s"
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|stat
+operator|.
+name|stat_itime
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" M msgsfr bytes_from  msgsto   bytes_to\n"
