@@ -506,7 +506,7 @@ begin_define
 define|#
 directive|define
 name|TTYHOG
-value|1024
+value|8192
 end_define
 
 begin_endif
