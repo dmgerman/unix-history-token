@@ -306,11 +306,8 @@ argument_list|,
 name|USHRT_MAX
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+comment|/*return (0);*/
+comment|/* THIS SHOULD NOT BE FATAL! */
 block|}
 name|pw
 operator|->
@@ -373,11 +370,7 @@ argument_list|,
 name|USHRT_MAX
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+comment|/* return (0); This should not be fatal! */
 block|}
 name|pw
 operator|->
