@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	2.2	%G%	*/
+comment|/*	fs.h	2.3	%G%	*/
 end_comment
 
 begin_comment
@@ -228,17 +228,25 @@ begin_define
 define|#
 directive|define
 name|FS_MAGIC
-value|0x110854
+value|0x011954
 end_define
 
 begin_struct
 struct|struct
 name|fs
 block|{
-name|long
-name|fs_magic
+name|struct
+name|fs
+modifier|*
+name|fs_link
 decl_stmt|;
-comment|/* magic number */
+comment|/* linked list of file systems */
+name|struct
+name|fs
+modifier|*
+name|fs_rlink
+decl_stmt|;
+comment|/*     used for incore super blocks */
 name|daddr_t
 name|fs_sblkno
 decl_stmt|;
@@ -428,6 +436,10 @@ name|NRPOS
 index|]
 decl_stmt|;
 comment|/* head of blocks for each rotation */
+name|long
+name|fs_magic
+decl_stmt|;
+comment|/* magic number */
 name|u_char
 name|fs_rotbl
 index|[
@@ -476,17 +488,25 @@ begin_define
 define|#
 directive|define
 name|CG_MAGIC
-value|0x092752
+value|0x090255
 end_define
 
 begin_struct
 struct|struct
 name|cg
 block|{
-name|long
-name|cg_magic
+name|struct
+name|cg
+modifier|*
+name|cg_link
 decl_stmt|;
-comment|/* magic number */
+comment|/* linked list of cyl groups */
+name|struct
+name|cg
+modifier|*
+name|cg_rlink
+decl_stmt|;
+comment|/*     used for incore cyl groups */
 name|time_t
 name|cg_time
 decl_stmt|;
@@ -557,6 +577,10 @@ name|NBBY
 index|]
 decl_stmt|;
 comment|/* used inode map */
+name|long
+name|cg_magic
+decl_stmt|;
+comment|/* magic number */
 name|char
 name|cg_free
 index|[
