@@ -15,18 +15,6 @@ directive|define
 name|_FTS_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nlist.h>
-end_include
-
 begin_typedef
 typedef|typedef
 struct|struct

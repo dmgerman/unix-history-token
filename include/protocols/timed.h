@@ -15,24 +15,6 @@ directive|define
 name|_PROTOCOLS_TIMED_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
 begin_comment
 comment|/*  * Time Synchronization Protocol  */
 end_comment
