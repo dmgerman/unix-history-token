@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ng_source.c  *  * Copyright 2002 Sandvine Inc.  * All rights reserved.  *  * Subject to the following obligations and disclaimer of warranty, use and  * redistribution of this software, in source or object code forms, with or  * without modifications are expressly permitted by Sandvine Inc.; provided,  * however, that:  * 1. Any and all reproductions of the source or object code must include the  *    copyright notice above and the following disclaimer of warranties; and  * 2. No rights are granted, in any manner or form, to use Sandvine Inc.  *    trademarks, including the mark "SANDVINE" on advertising, endorsements,  *    or otherwise except as such appears in the above copyright notice or in  *    the software.  *  * THIS SOFTWARE IS BEING PROVIDED BY SANDVINE "AS IS", AND TO THE MAXIMUM  * EXTENT PERMITTED BY LAW, SANDVINE MAKES NO REPRESENTATIONS OR WARRANTIES,  * EXPRESS OR IMPLIED, REGARDING THIS SOFTWARE, INCLUDING WITHOUT LIMITATION,  * ANY AND ALL IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR  * PURPOSE, OR NON-INFRINGEMENT.  SANDVINE DOES NOT WARRANT, GUARANTEE, OR  * MAKE ANY REPRESENTATIONS REGARDING THE USE OF, OR THE RESULTS OF THE  * USE OF THIS SOFTWARE IN TERMS OF ITS CORRECTNESS, ACCURACY, RELIABILITY  * OR OTHERWISE.  IN NO EVENT SHALL SANDVINE BE LIABLE FOR ANY DAMAGES  * RESULTING FROM OR ARISING OUT OF ANY USE OF THIS SOFTWARE, INCLUDING  * WITHOUT LIMITATION, ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * PUNITIVE, OR CONSEQUENTIAL DAMAGES, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES, LOSS OF USE, DATA OR PROFITS, HOWEVER CAUSED AND UNDER ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF SANDVINE IS ADVISED OF THE POSSIBILITY OF SUCH  * DAMAGE.  *  * Author: Dave Chapeskie<dchapeskie@sandvine.com>  *  * $FreeBSD$  */
+comment|/*  * ng_source.c  *  * Copyright 2002 Sandvine Inc.  * All rights reserved.  *  * Subject to the following obligations and disclaimer of warranty, use and  * redistribution of this software, in source or object code forms, with or  * without modifications are expressly permitted by Sandvine Inc.; provided,  * however, that:  * 1. Any and all reproductions of the source or object code must include the  *    copyright notice above and the following disclaimer of warranties; and  * 2. No rights are granted, in any manner or form, to use Sandvine Inc.  *    trademarks, including the mark "SANDVINE" on advertising, endorsements,  *    or otherwise except as such appears in the above copyright notice or in  *    the software.  *  * THIS SOFTWARE IS BEING PROVIDED BY SANDVINE "AS IS", AND TO THE MAXIMUM  * EXTENT PERMITTED BY LAW, SANDVINE MAKES NO REPRESENTATIONS OR WARRANTIES,  * EXPRESS OR IMPLIED, REGARDING THIS SOFTWARE, INCLUDING WITHOUT LIMITATION,  * ANY AND ALL IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR  * PURPOSE, OR NON-INFRINGEMENT.  SANDVINE DOES NOT WARRANT, GUARANTEE, OR  * MAKE ANY REPRESENTATIONS REGARDING THE USE OF, OR THE RESULTS OF THE  * USE OF THIS SOFTWARE IN TERMS OF ITS CORRECTNESS, ACCURACY, RELIABILITY  * OR OTHERWISE.  IN NO EVENT SHALL SANDVINE BE LIABLE FOR ANY DAMAGES  * RESULTING FROM OR ARISING OUT OF ANY USE OF THIS SOFTWARE, INCLUDING  * WITHOUT LIMITATION, ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * PUNITIVE, OR CONSEQUENTIAL DAMAGES, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES, LOSS OF USE, DATA OR PROFITS, HOWEVER CAUSED AND UNDER ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF SANDVINE IS ADVISED OF THE POSSIBILITY OF SUCH  * DAMAGE.  *  * Author: Dave Chapeskie<dchapeskie@sandvine.com>  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * This node is used for high speed packet geneneration.  It queues  * all data recieved on it's 'input' hook and when told to start via  * a control message it sends the packets out it's 'output' hook.  In  * this way this node can be preloaded with a packet stream which is  * continuously sent.  *  * Currently it just copies the mbufs as required.  It could do various  * tricks to try and avoid this.  Probably the best performance would  * be achieved by modifying the appropriate drivers to be told to  * self-re-enqueue packets (e.g. the if_bge driver could reuse the same  * transmit descriptors) under control of this node; perhaps via some  * flag in the mbuf or some such.  The node would peak at an appropriate  * ifnet flag to see if such support is available for the connected  * interface.  */
@@ -187,39 +201,6 @@ directive|define
 name|NG_SOURCE_ACTIVE
 value|(NGF_TYPE1)
 end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|KASSERT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|KASSERT
-parameter_list|(
-name|expr
-parameter_list|,
-name|msg
-parameter_list|)
-value|do {			\ 		if (!(expr)) {			\ 			printf msg ;		\ 			panic("Assertion");	\ 		}				\ 	} while(0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Netgraph methods */
@@ -571,6 +552,7 @@ block|,
 comment|/* findhook */
 name|NULL
 block|,
+comment|/* connect */
 name|ng_source_rcvdata
 block|,
 comment|/* rcvdata */
@@ -727,7 +709,7 @@ argument_list|,
 operator|(
 literal|"%s: null node private"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -891,7 +873,7 @@ argument_list|,
 operator|(
 literal|"%s: null node private"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1149,7 +1131,7 @@ name|printf
 argument_list|(
 literal|"%s: start on node with no output hook\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|error
@@ -1203,7 +1185,7 @@ name|printf
 argument_list|(
 literal|"%s: start on node with no output hook\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|error
@@ -1542,7 +1524,7 @@ argument_list|,
 operator|(
 literal|"%s: null node private"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1555,7 +1537,7 @@ argument_list|,
 operator|(
 literal|"%s: null hook info"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1594,7 +1576,7 @@ argument_list|,
 operator|(
 literal|"%s: no hook!"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1615,7 +1597,7 @@ name|printf
 argument_list|(
 literal|"%s: mbuf without PKTHDR\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|NG_FREE_M
@@ -1691,7 +1673,7 @@ argument_list|,
 operator|(
 literal|"%s: null node private"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1723,7 +1705,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|sc
 argument_list|,
@@ -1785,7 +1767,7 @@ argument_list|,
 operator|(
 literal|"%s: null node private"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2006,7 +1988,7 @@ name|printf
 argument_list|(
 literal|"%s: can't find interface %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|if_index
 argument_list|)
@@ -2254,7 +2236,7 @@ argument_list|,
 operator|(
 literal|"%s: output hook unconnected"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2424,7 +2406,7 @@ argument_list|,
 operator|(
 literal|"%s: null node private"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2618,7 +2600,7 @@ argument_list|,
 operator|(
 literal|"%s: null node private"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2631,7 +2613,7 @@ argument_list|,
 operator|(
 literal|"%s: negative tosend param"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2648,7 +2630,7 @@ argument_list|,
 operator|(
 literal|"%s: inactive node"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
