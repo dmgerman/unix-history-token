@@ -1716,7 +1716,7 @@ name|malloc
 argument_list|(
 name|len
 operator|+
-literal|14
+literal|15
 argument_list|)
 expr_stmt|;
 if|if
@@ -1764,10 +1764,19 @@ literal|7
 operator|+
 name|len
 argument_list|,
-literal|7
+literal|8
 argument_list|)
 expr_stmt|;
 comment|/*   and end of word   */
+name|string
+index|[
+name|len
+operator|+
+literal|14
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|error
 operator|=
 name|regcomp
