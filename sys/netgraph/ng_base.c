@@ -3165,8 +3165,9 @@ name|tp
 operator|->
 name|refs
 operator|=
-literal|0
+literal|1
 expr_stmt|;
+comment|/* first ref is linked list */
 return|return
 operator|(
 literal|0
@@ -5820,7 +5821,10 @@ operator|=
 name|type
 operator|->
 name|refs
+operator|-
+literal|1
 expr_stmt|;
+comment|/* don't count list */
 name|tl
 operator|->
 name|numtypes
@@ -7169,9 +7173,14 @@ argument_list|,
 name|data
 argument_list|)
 operator|)
-operator|!=
-literal|0
 condition|)
+block|{
+name|type
+operator|->
+name|refs
+operator|--
+expr_stmt|;
+comment|/* undo it */
 name|LIST_REMOVE
 argument_list|(
 name|type
@@ -7179,6 +7188,7 @@ argument_list|,
 name|types
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -7198,16 +7208,35 @@ condition|(
 name|type
 operator|->
 name|refs
-operator|!=
-literal|0
+operator|>
+literal|1
 condition|)
+block|{
 comment|/* make sure no nodes exist! */
 name|error
 operator|=
 name|EBUSY
 expr_stmt|;
+block|}
 else|else
 block|{
+if|if
+condition|(
+name|type
+operator|->
+name|refs
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* failed load, nothing to undo */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|type
