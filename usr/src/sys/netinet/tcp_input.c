@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.57	82/03/09	*/
+comment|/*	tcp_input.c	1.58	82/03/10	*/
 end_comment
 
 begin_include
@@ -670,6 +670,27 @@ operator|=
 name|ti
 operator|->
 name|ti_flags
+expr_stmt|;
+comment|/* 	 * drop IP header 	 */
+name|off
+operator|+=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_off
+operator|+=
+name|off
+expr_stmt|;
+name|m
+operator|->
+name|m_len
+operator|-=
+name|off
 expr_stmt|;
 if|#
 directive|if
@@ -2573,22 +2594,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|off
-operator|+=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
-expr_stmt|;
-comment|/* drop IP header */
-name|m_drop
-argument_list|(
-name|m
-argument_list|,
-name|off
-argument_list|)
-expr_stmt|;
 name|tiflags
 operator|=
 name|tcp_reass
