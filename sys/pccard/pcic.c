@@ -2296,10 +2296,13 @@ name|slt
 parameter_list|)
 block|{
 name|uint32_t
-name|reg
+name|power
+decl_stmt|;
+name|uint32_t
+name|state
 decl_stmt|;
 comment|/* 	 * Preserve the clock stop bit of the socket power register. 	 */
-name|reg
+name|power
 operator|=
 name|bus_space_read_4
 argument_list|(
@@ -2314,15 +2317,31 @@ argument_list|,
 name|CB_SOCKET_POWER
 argument_list|)
 expr_stmt|;
+name|state
+operator|=
+name|bus_space_read_4
+argument_list|(
+name|sp
+operator|->
+name|bst
+argument_list|,
+name|sp
+operator|->
+name|bsh
+argument_list|,
+name|CB_SOCKET_STATE
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"old value 0x%x\n"
 argument_list|,
-name|reg
+name|power
 argument_list|)
 expr_stmt|;
-name|reg
+name|power
 operator|&=
+operator|~
 name|CB_SP_CLKSTOP
 expr_stmt|;
 switch|switch
@@ -2343,7 +2362,7 @@ return|;
 case|case
 literal|0
 case|:
-name|reg
+name|power
 operator||=
 name|CB_SP_VPP_0V
 expr_stmt|;
@@ -2351,7 +2370,7 @@ break|break;
 case|case
 literal|33
 case|:
-name|reg
+name|power
 operator||=
 name|CB_SP_VPP_3V
 expr_stmt|;
@@ -2359,7 +2378,7 @@ break|break;
 case|case
 literal|50
 case|:
-name|reg
+name|power
 operator||=
 name|CB_SP_VPP_5V
 expr_stmt|;
@@ -2367,7 +2386,7 @@ break|break;
 case|case
 literal|120
 case|:
-name|reg
+name|power
 operator||=
 name|CB_SP_VPP_12V
 expr_stmt|;
@@ -2391,7 +2410,7 @@ return|;
 case|case
 literal|0
 case|:
-name|reg
+name|power
 operator||=
 name|CB_SP_VCC_0V
 expr_stmt|;
@@ -2399,7 +2418,7 @@ break|break;
 case|case
 literal|33
 case|:
-name|reg
+name|power
 operator||=
 name|CB_SP_VCC_3V
 expr_stmt|;
@@ -2407,9 +2426,57 @@ break|break;
 case|case
 literal|50
 case|:
-name|reg
+name|power
 operator||=
 name|CB_SP_VCC_5V
+expr_stmt|;
+break|break;
+case|case
+operator|-
+literal|1
+case|:
+if|if
+condition|(
+name|state
+operator|&
+name|CB_SS_5VCARD
+condition|)
+name|power
+operator||=
+name|CB_SP_VCC_5V
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|state
+operator|&
+name|CB_SS_3VCARD
+condition|)
+name|power
+operator||=
+name|CB_SP_VCC_3V
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|state
+operator|&
+name|CB_SS_XVCARD
+condition|)
+name|power
+operator||=
+name|CB_SP_VCC_XV
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|state
+operator|&
+name|CB_SS_YVCARD
+condition|)
+name|power
+operator||=
+name|CB_SP_VCC_YV
 expr_stmt|;
 break|break;
 block|}
@@ -2417,7 +2484,7 @@ name|printf
 argument_list|(
 literal|"Setting power reg to 0x%x"
 argument_list|,
-name|reg
+name|power
 argument_list|)
 expr_stmt|;
 name|bus_space_write_4
@@ -2432,7 +2499,7 @@ name|bsh
 argument_list|,
 name|CB_SOCKET_POWER
 argument_list|,
-name|reg
+name|power
 argument_list|)
 expr_stmt|;
 return|return
@@ -2512,6 +2579,19 @@ name|slt
 argument_list|)
 operator|)
 return|;
+comment|/* 	 * If we're automatically detecting what voltage to use, then we need 	 * to ask the bridge what type (voltage-wise) the card is. 	 */
+if|if
+condition|(
+name|slt
+operator|->
+name|pwr
+operator|.
+name|vcc
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
 if|if
 condition|(
 name|sc
@@ -2521,7 +2601,7 @@ operator|&
 name|PCIC_DF_POWER
 condition|)
 block|{
-comment|/*  		 * Look at the VS[12]# bits on the card.  If VS1 is clear 		 * then we should apply 3.3 volts. 		 */
+comment|/*  			 * Look at the VS[12]# bits on the card.  If VS1 is 			 * clear then the card needs 3.3V instead of 5.0V. 			 */
 name|c
 operator|=
 name|sp
@@ -2551,6 +2631,15 @@ name|vcc
 operator|=
 literal|33
 expr_stmt|;
+else|else
+name|slt
+operator|->
+name|pwr
+operator|.
+name|vcc
+operator|=
+literal|50
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2561,7 +2650,7 @@ operator|&
 name|PCIC_PD_POWER
 condition|)
 block|{
-comment|/* 		 * The 6710 does it one way, and the '22 and '29 do it 		 * another.  And it appears that the '32 and '33 yet 		 * another way (which I don't know). 		 */
+comment|/* 			 * The 6710 does it one way, and the '22 and '29 do it 			 * another.  And it appears that the '32 and '33 yet 			 * another way (which I don't know). 			 */
 switch|switch
 condition|(
 name|sp
@@ -2601,6 +2690,15 @@ name|vcc
 operator|=
 literal|33
 expr_stmt|;
+else|else
+name|slt
+operator|->
+name|pwr
+operator|.
+name|vcc
+operator|=
+literal|50
+expr_stmt|;
 break|break;
 case|case
 name|PCIC_PD6722
@@ -2608,7 +2706,7 @@ case|:
 case|case
 name|PCIC_PD6729
 case|:
-comment|/* 			 * VS[12] signals are in slot1's extended reg 0xa. 			 */
+comment|/* 				 * VS[12] signals are in slot1's 				 * extended reg 0xa for both slots. 				 */
 name|sp2
 operator|=
 operator|&
@@ -2647,29 +2745,11 @@ name|sp
 operator|==
 name|sp2
 condition|)
-block|{
 comment|/* slot 1 */
-if|if
-condition|(
-operator|(
 name|c
-operator|&
-name|PCIC_VS1B
-operator|)
-operator|==
-literal|0
-condition|)
-name|slt
-operator|->
-name|pwr
-operator|.
-name|vcc
-operator|=
-literal|33
+operator|>>=
+literal|2
 expr_stmt|;
-block|}
-else|else
-block|{
 if|if
 condition|(
 operator|(
@@ -2688,16 +2768,64 @@ name|vcc
 operator|=
 literal|33
 expr_stmt|;
-block|}
+else|else
+name|slt
+operator|->
+name|pwr
+operator|.
+name|vcc
+operator|=
+literal|50
+expr_stmt|;
 break|break;
 default|default:
 comment|/* I have no idea how do do this for others */
 break|break;
 block|}
-comment|/* 		 * Regardless of the above, setting the Auto Power Switch 		 * enable for the CL-PD 6722 seems to help too. 		 */
+comment|/* 			 * Regardless of the above, setting the Auto Power 			 * Switch Enable appears to help. 			 */
 name|reg
 operator||=
 name|PCIC_APSENA
+expr_stmt|;
+block|}
+comment|/* Other bridges here */
+if|if
+condition|(
+name|bootverbose
+operator|&&
+name|slt
+operator|->
+name|pwr
+operator|.
+name|vcc
+operator|!=
+operator|-
+literal|1
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"Autodetected %d.%dV card\n"
+argument_list|,
+name|slt
+operator|->
+name|pwr
+operator|.
+name|vcc
+operator|/
+literal|10
+argument_list|,
+name|slt
+operator|->
+name|pwr
+operator|.
+name|vcc
+operator|%
+literal|10
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * XXX Note: The Vpp controls varies quit a bit between bridge chips 	 * and the following might not be right in all cases.  The Linux 	 * code and wildboar code bases are more complex.  However, most 	 * applications want vpp == vcc and the following code does appear 	 * to do that for all bridge sets. 	 */
@@ -2865,6 +2993,11 @@ name|PCIC_VCC_3V
 expr_stmt|;
 break|break;
 case|case
+operator|-
+literal|1
+case|:
+comment|/* Treat default like 5.0V */
+case|case
 literal|50
 case|:
 if|if
@@ -3006,7 +3139,8 @@ name|pwr
 operator|.
 name|vcc
 operator|==
-literal|50
+operator|-
+literal|1
 condition|)
 block|{
 name|slt

@@ -1275,7 +1275,8 @@ name|pwr
 operator|.
 name|vcc
 operator|=
-literal|50
+operator|-
+literal|1
 expr_stmt|;
 name|slt
 operator|->
