@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -91,24 +97,13 @@ directive|include
 file|"libatm.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_expr_stmt
-name|__RCSID
+name|__FBSDID
 argument_list|(
-literal|"@(#) $FreeBSD$"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Compute an SCSP cache key  *  * Arguments:  *	ap	pointer to an Atm_addr with the ATM address  *	ip	pointer to a struct in_addr with the IP address  *	ol	the required length of the cache key  *	op	pointer to receive cache key  *  * Returns:  *	none  *  */

@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -97,24 +103,13 @@ directive|include
 file|"libatm.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_expr_stmt
-name|__RCSID
+name|__FBSDID
 argument_list|(
-literal|"@(#) $FreeBSD$"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Get IP address  *  * Return an IP address in a socket address structure, given a character  * string with a domain name or a dotted decimal number.  *   * Arguments:  *	p	pointer to a host name or IP address  *  * Returns:  *	null			error was encountered  *	struct sockaddr_in *	a pointer to a socket address with the  *				requested IP address  *  */

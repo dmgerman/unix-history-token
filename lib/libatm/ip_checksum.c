@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -79,24 +85,13 @@ directive|include
 file|"libatm.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_expr_stmt
-name|__RCSID
+name|__FBSDID
 argument_list|(
-literal|"@(#) $FreeBSD$"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Compute an IP checksum  *  * This code was taken from RFC 1071.  *  * "The following "C" code algorithm computes the checksum with an inner  * loop that sums 16 bits at a time in a 32-bit accumulator."  *  * Arguments:  *	addr	pointer to the buffer whose checksum is to be computed  *	count	number of bytes to include in the checksum  *  * Returns:  *	the computed checksum  *  */
