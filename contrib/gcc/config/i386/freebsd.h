@@ -215,19 +215,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|COMMENT_BEGIN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|COMMENT_BEGIN
-value|"#"
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|ASM_APP_ON
 end_undef
 
