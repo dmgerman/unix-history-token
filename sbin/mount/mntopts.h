@@ -274,5 +274,34 @@ name|getmnt_silent
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|build_iovec
+parameter_list|(
+name|struct
+name|iovec
+modifier|*
+modifier|*
+name|iov
+parameter_list|,
+name|int
+modifier|*
+name|iovlen
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|void
+modifier|*
+name|val
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
