@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gettable.c	4.2 (Berkeley) %G%"
+literal|"@(#)gettable.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,7 +198,7 @@ name|sp
 operator|=
 name|getservbyname
 argument_list|(
-literal|"nicname"
+literal|"hostnames"
 argument_list|,
 literal|"tcp"
 argument_list|)
@@ -214,7 +214,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"gettable: nicname/tcp: unknown service\n"
+literal|"gettable: hostnames/tcp: unknown service\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -584,7 +584,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"gettable: nicname error: %s"
+literal|"gettable: hostnames error: %s"
 argument_list|,
 name|buf
 argument_list|)
