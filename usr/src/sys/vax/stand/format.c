@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	format.c	6.1	83/07/29	*/
+comment|/*	format.c	6.2	83/09/18	*/
 end_comment
 
 begin_comment
-comment|/*   * Standalone program to do media checking  * and record bad block information on any   * disk with the appropriate driver.  */
+comment|/*   * Standalone program to do media checking  * and record bad block information on any   * disk with the appropriate driver and RM03-style headers.  */
 end_comment
 
 begin_include
@@ -175,15 +175,15 @@ init|=
 block|{
 define|#
 directive|define
-name|FE_WCE
+name|FE_BSE
 value|0
-literal|"Write check"
+literal|"Bad sector"
 block|,
 define|#
 directive|define
-name|FE_BSE
+name|FE_WCE
 value|1
-literal|"Bad sector"
+literal|"Write check"
 block|,
 define|#
 directive|define
@@ -1277,7 +1277,7 @@ name|btp
 operator|->
 name|bt_trksec
 operator|&
-literal|0x1f
+literal|0xff
 operator|)
 expr_stmt|;
 name|lseek
@@ -1333,7 +1333,7 @@ name|btp
 operator|->
 name|bt_trksec
 operator|&
-literal|0x1f
+literal|0xff
 operator|)
 operator|+
 literal|1
@@ -1469,14 +1469,18 @@ block|}
 if|if
 condition|(
 name|errno
-operator|<=
-name|ECMD
+operator|<
+name|EBSE
 operator|||
 name|errno
 operator|>
 name|EHER
 condition|)
 return|return;
+name|errno
+operator|-=
+name|EBSE
+expr_stmt|;
 name|errors
 index|[
 name|errno
@@ -1606,7 +1610,6 @@ name|errors
 index|[
 name|FE_TOTAL
 index|]
-operator|++
 index|]
 operator|.
 name|bt_cyl
