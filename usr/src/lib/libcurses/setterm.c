@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	5.4 (Berkeley) %G%"
+literal|"@(#)setterm.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -873,6 +873,25 @@ name|aoftspace
 operator|=
 name|_tspace
 expr_stmt|;
+block|{
+comment|/* xtype should be the same size as genbuf for longname(). */
+specifier|static
+name|char
+name|xtype
+index|[
+literal|1024
+index|]
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|xtype
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
 name|strncpy
 argument_list|(
 name|ttytype
@@ -881,7 +900,7 @@ name|longname
 argument_list|(
 name|genbuf
 argument_list|,
-name|type
+name|xtype
 argument_list|)
 argument_list|,
 sizeof|sizeof
@@ -892,6 +911,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|ttytype
 index|[
 sizeof|sizeof
