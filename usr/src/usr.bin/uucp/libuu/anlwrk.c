@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)anlwrk.c	5.6 (Berkeley) %G%"
+literal|"@(#)anlwrk.c	5.7	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -325,16 +325,16 @@ argument_list|,
 name|rqstr
 argument_list|)
 expr_stmt|;
-name|assert
+name|syslog
 argument_list|(
-literal|"CMD FILE UNREADABLE"
+name|LOG_WARNING
+argument_list|,
+literal|"fopen(%s) failed: %m"
 argument_list|,
 name|subfile
 argument_list|(
 name|file
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|unlink
@@ -930,23 +930,22 @@ begin_comment
 comment|/* LOCAL only */
 end_comment
 
-begin_function
-name|int
+begin_expr_stmt
 name|pcompar
-parameter_list|(
+argument_list|(
 name|p1
-parameter_list|,
+argument_list|,
 name|p2
-parameter_list|)
+argument_list|)
 specifier|register
 name|char
-modifier|*
+operator|*
 name|p1
-decl_stmt|,
-decl|*
+operator|,
+operator|*
 name|p2
-decl_stmt|;
-end_function
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -954,7 +953,7 @@ specifier|register
 name|int
 name|rc
 decl_stmt|;
-comment|/* assert: strlen(p1) and strlen(p2) are>= 5 */
+comment|/* strlen(p1) and strlen(p2) are>= 5 */
 name|p1
 operator|+=
 name|strlen

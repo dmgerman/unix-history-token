@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chkpth.c	5.4 (Berkeley) %G%"
+literal|"@(#)chkpth.c	5.5	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,19 +179,26 @@ block|{
 name|rdpth
 argument_list|()
 expr_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|Uhead
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"INIT USERFILE, No entrys!"
-argument_list|,
-name|CNULL
-argument_list|,
-literal|0
+literal|"USERFILE empty!"
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 name|Uptfirst
 operator|=
 literal|0
@@ -835,19 +842,26 @@ block|{
 name|rdpth
 argument_list|()
 expr_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|Uhead
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"INIT USERFILE, No Users!"
-argument_list|,
-name|CNULL
-argument_list|,
-literal|0
+literal|"USERFILE empty!"
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 name|Uptfirst
 operator|=
 literal|0
