@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_1.c	2.3 83/11/02"
+literal|"@(#)dr_1.c	2.4 83/11/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -1751,10 +1751,6 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|thwart
-operator|=
-literal|2
-expr_stmt|;
 for|for
 control|(
 name|sq
@@ -1804,6 +1800,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|thwart
+operator|=
+literal|2
+expr_stmt|;
 name|foreachship
 argument_list|(
 argument|sq
@@ -1842,6 +1842,12 @@ name|thwart
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+operator|!
+name|thwart
+condition|)
+block|{
 name|foreachship
 argument_list|(
 argument|sq
@@ -1890,6 +1896,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|thwart
