@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.73.2.18 1997/02/17 04:56:34 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.73.2.19 1997/03/08 12:56:09 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1355,6 +1355,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|distMaybeSetPorts
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|distReset
@@ -1420,6 +1432,11 @@ name|DIST_SRC_ALL
 expr_stmt|;
 return|return
 name|distMaybeSetDES
+argument_list|(
+name|self
+argument_list|)
+operator||
+name|distMaybeSetPorts
 argument_list|(
 name|self
 argument_list|)
@@ -1489,6 +1506,11 @@ name|distMaybeSetDES
 argument_list|(
 name|self
 argument_list|)
+operator||
+name|distMaybeSetPorts
+argument_list|(
+name|self
+argument_list|)
 return|;
 block|}
 end_function
@@ -1520,6 +1542,11 @@ name|distMaybeSetDES
 argument_list|(
 name|self
 argument_list|)
+operator||
+name|distMaybeSetPorts
+argument_list|(
+name|self
+argument_list|)
 return|;
 block|}
 end_function
@@ -1544,6 +1571,11 @@ name|_DIST_USER
 expr_stmt|;
 return|return
 name|distMaybeSetDES
+argument_list|(
+name|self
+argument_list|)
+operator||
+name|distMaybeSetPorts
 argument_list|(
 name|self
 argument_list|)
@@ -1604,6 +1636,11 @@ name|NULL
 argument_list|)
 operator||
 name|distMaybeSetDES
+argument_list|(
+name|self
+argument_list|)
+operator||
+name|distMaybeSetPorts
 argument_list|(
 name|self
 argument_list|)
@@ -1668,6 +1705,11 @@ name|DIST_XF86_FONTS_ALL
 expr_stmt|;
 return|return
 name|distMaybeSetDES
+argument_list|(
+name|self
+argument_list|)
+operator||
+name|distMaybeSetPorts
 argument_list|(
 name|self
 argument_list|)
@@ -1831,6 +1873,54 @@ return|return
 name|i
 operator||
 name|DITEM_RECREATE
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|distMaybeSetPorts
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Would you like to install the FreeBSD ports collection?\n\n"
+literal|"This will give you ready access to over 800 ported software\n"
+literal|"packages, though at the cost of around 35MB of space when \"clean\"\n"
+literal|"and possibly much more than that if a lot of the distribution tarballs\n"
+literal|"are loaded (unless you have the 2nd CD from a FreeBSD CDROM distribution\n"
+literal|"available and can mount it on /cdrom, of course, in which case this is far\n"
+literal|"less of a problem).\n\n"
+literal|"The ports collection is a very valuable resource and, if you have at least\n"
+literal|"100MB to spare in your /usr partition, well worth having around.\n\n"
+literal|"For more information on the ports collection, see http://www.freebsd.org/ports\n"
+argument_list|)
+condition|)
+name|Dists
+operator||=
+name|DIST_PORTS
+expr_stmt|;
+else|else
+name|Dists
+operator|&=
+operator|~
+name|DIST_PORTS
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
