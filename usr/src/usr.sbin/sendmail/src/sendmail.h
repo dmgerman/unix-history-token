@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.126 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.127 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.126		%G%"
+literal|"@(#)sendmail.h	8.127		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -616,17 +616,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|QREPORT
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* report this addr in return message */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|QBOGUSSHELL
 value|0x00000400
 end_define
@@ -698,18 +687,40 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|/* relayed to non-DSN aware mailer */
+comment|/* DSN: relayed to non-DSN aware sys */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|QEXPLODED
+name|QEXPANDED
 value|0x00020000
 end_define
 
 begin_comment
-comment|/* undergone mailing list explosion */
+comment|/* DSN: undergone list expansion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QDELIVERED
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* DSN: successful final delivery */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QDELAYED
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* DSN: message delayed */
 end_comment
 
 begin_define

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.66 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.67 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8138,10 +8138,6 @@ literal|"QVERIFIED"
 block|,
 name|QVERIFIED
 block|,
-literal|"QREPORT"
-block|,
-name|QREPORT
-block|,
 literal|"QBOGUSSHELL"
 block|,
 name|QBOGUSSHELL
@@ -8170,9 +8166,17 @@ literal|"QRELAYED"
 block|,
 name|QRELAYED
 block|,
-literal|"QEXPLODED"
+literal|"QEXPANDED"
 block|,
-name|QEXPLODED
+name|QEXPANDED
+block|,
+literal|"QDELIVERED"
+block|,
+name|QDELIVERED
+block|,
+literal|"QDELAYED"
+block|,
+name|QDELAYED
 block|,
 literal|"QTHISPASS"
 block|,

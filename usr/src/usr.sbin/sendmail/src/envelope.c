@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.63 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.64 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -588,7 +588,9 @@ name|bitset
 argument_list|(
 name|QRELAYED
 operator||
-name|QEXPLODED
+name|QEXPANDED
+operator||
+name|QDELIVERED
 argument_list|,
 name|q
 operator|->
@@ -866,7 +868,7 @@ name|q
 operator|->
 name|q_flags
 operator||=
-name|QREPORT
+name|QDELAYED
 expr_stmt|;
 name|delay_return
 operator|=

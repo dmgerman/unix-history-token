@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.67 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.68 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2688,12 +2688,6 @@ condition|(
 name|bitset
 argument_list|(
 name|QBADADDR
-operator||
-name|QREPORT
-operator||
-name|QRELAYED
-operator||
-name|QEXPLODED
 argument_list|,
 name|q
 operator|->
@@ -2701,33 +2695,24 @@ name|q_flags
 argument_list|)
 condition|)
 block|{
-name|strcpy
-argument_list|(
-name|buf
-argument_list|,
-name|q
-operator|->
-name|q_paddr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+operator|!
 name|bitset
 argument_list|(
-name|QBADADDR
+name|QPINGONFAILURE
 argument_list|,
 name|q
 operator|->
 name|q_flags
 argument_list|)
 condition|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|"  (unrecoverable error)"
-argument_list|)
+continue|continue;
+name|p
+operator|=
+literal|"unrecoverable error"
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2754,59 +2739,78 @@ operator|->
 name|q_flags
 argument_list|)
 condition|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|"  (relayed to non-DSN-aware mailer)"
-argument_list|)
+name|p
+operator|=
+literal|"relayed to non-DSN-aware mailer"
 expr_stmt|;
 elseif|else
 if|if
 condition|(
 name|bitset
 argument_list|(
-name|QSENT
+name|QDELIVERED
 argument_list|,
 name|q
 operator|->
 name|q_flags
 argument_list|)
 condition|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|"  (successfully delivered)"
-argument_list|)
-expr_stmt|;
-elseif|else
+block|{
 if|if
 condition|(
 name|bitset
 argument_list|(
-name|QEXPLODED
+name|QEXPANDED
 argument_list|,
 name|q
 operator|->
 name|q_flags
 argument_list|)
 condition|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|"  (expanded by mailing list)"
-argument_list|)
+name|p
+operator|=
+literal|"successfully delivered to mailing list"
 expr_stmt|;
 else|else
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|"  (transient failure)"
-argument_list|)
+name|p
+operator|=
+literal|"successfully delivered to mailbox"
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QEXPANDED
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+name|p
+operator|=
+literal|"expanded by alias"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QDELAYED
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+name|p
+operator|=
+literal|"transient failure"
+expr_stmt|;
+else|else
+continue|continue;
 if|if
 condition|(
 name|printheader
@@ -2824,6 +2828,19 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%s  (%s)"
+argument_list|,
+name|q
+operator|->
+name|q_paddr
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|putline
 argument_list|(
 name|buf
@@ -2872,7 +2889,6 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 if|if
@@ -2940,12 +2956,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|putline
-argument_list|(
-literal|"   ----- Transcript of session follows -----\n"
-argument_list|,
-name|mci
-argument_list|)
+name|printheader
+operator|=
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -2979,6 +2992,22 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|printheader
+condition|)
+name|putline
+argument_list|(
+literal|"   ----- Transcript of session follows -----\n"
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+name|printheader
+operator|=
+name|FALSE
+expr_stmt|;
 name|putline
 argument_list|(
 name|buf
@@ -2986,6 +3015,7 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -3046,7 +3076,7 @@ argument_list|)
 expr_stmt|;
 name|putline
 argument_list|(
-literal|"Content-Type: message/X-delivery-status-04 (Draft of 20 January 1995)"
+literal|"Content-Type: message/X-delivery-status-04a (Draft of 04 April 1995)"
 argument_list|,
 name|mci
 argument_list|)
@@ -3099,28 +3129,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Reporting-MTA: is us (required) */
-name|p
-operator|=
-name|e
-operator|->
-name|e_parent
-operator|->
-name|e_from
-operator|.
-name|q_mailer
-operator|->
-name|m_mtatype
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|==
-name|NULL
-condition|)
-name|p
-operator|=
-literal|"dns"
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3128,9 +3136,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"Reporting-MTA: %s; %s"
-argument_list|,
-name|p
+literal|"Reporting-MTA: dns; %s"
 argument_list|,
 name|xtextify
 argument_list|(
@@ -3145,6 +3151,7 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
+comment|/* DSN-Gateway: not relevant since we are not translating */
 comment|/* Received-From-MTA: shows where we got this message from */
 if|if
 condition|(
@@ -3276,7 +3283,7 @@ argument_list|)
 condition|)
 name|action
 operator|=
-literal|"failure"
+literal|"failed"
 expr_stmt|;
 elseif|else
 if|if
@@ -3297,23 +3304,19 @@ if|if
 condition|(
 name|bitset
 argument_list|(
-name|QRELAYED
+name|QDELIVERED
 argument_list|,
 name|q
 operator|->
 name|q_flags
 argument_list|)
 condition|)
-name|action
-operator|=
-literal|"relayed"
-expr_stmt|;
-elseif|else
+block|{
 if|if
 condition|(
 name|bitset
 argument_list|(
-name|QEXPLODED
+name|QEXPANDED
 argument_list|,
 name|q
 operator|->
@@ -3324,39 +3327,50 @@ name|action
 operator|=
 literal|"delivered (to mailing list)"
 expr_stmt|;
+else|else
+name|action
+operator|=
+literal|"delivered (to mailbox)"
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
 name|bitset
 argument_list|(
-name|QSENT
+name|QRELAYED
 argument_list|,
 name|q
 operator|->
 name|q_flags
 argument_list|)
-operator|&&
-name|bitnset
-argument_list|(
-name|M_LOCALMAILER
-argument_list|,
-name|q
-operator|->
-name|q_mailer
-operator|->
-name|m_flags
-argument_list|)
 condition|)
 name|action
 operator|=
-literal|"delivered (final delivery)"
+literal|"relayed (to non-DSN-aware mailer)"
 expr_stmt|;
 elseif|else
 if|if
 condition|(
 name|bitset
 argument_list|(
-name|QREPORT
+name|QEXPANDED
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+name|action
+operator|=
+literal|"expanded (to multi-recipient alias)"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QDELAYED
 argument_list|,
 name|q
 operator|->
@@ -3863,9 +3877,12 @@ literal|"Diagnostic-Code: %s; %s"
 argument_list|,
 name|p
 argument_list|,
+name|xtextify
+argument_list|(
 name|q
 operator|->
 name|q_rstatus
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putline
@@ -3923,7 +3940,7 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
-comment|/* Expiry-Date: -- for delayed messages only */
+comment|/* Will-Retry-Until: -- for delayed messages only */
 if|if
 condition|(
 name|bitset
@@ -3968,7 +3985,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"Expiry-Date: %s"
+literal|"Will-Retry-Until: %s"
 argument_list|,
 name|arpadate
 argument_list|(
@@ -4503,10 +4520,9 @@ decl_stmt|;
 comment|/* ASCII dependence here -- this is the way the spec words it */
 if|if
 condition|(
-operator|(
 name|c
 operator|<
-literal|' '
+literal|'!'
 operator|||
 name|c
 operator|>
@@ -4523,11 +4539,6 @@ operator|||
 name|c
 operator|==
 literal|'('
-operator|)
-operator|&&
-name|c
-operator|!=
-literal|'\t'
 condition|)
 name|nbogus
 operator|++

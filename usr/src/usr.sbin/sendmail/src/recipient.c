@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.81 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.82 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2484,17 +2484,57 @@ name|nrcpts
 operator|==
 literal|1
 condition|)
+block|{
+comment|/* check to see if this actually got a new owner */
+name|q
+operator|=
+name|only
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|q
+operator|=
+name|q
+operator|->
+name|q_alias
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|q
+operator|->
+name|q_owner
+operator|!=
+name|NULL
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|q
+operator|==
+name|NULL
+condition|)
 name|only
 operator|->
 name|q_flags
 operator||=
 name|QPRIMARY
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
 operator|!
 name|initialdontsend
+operator|&&
+name|nrcpts
+operator|>
+literal|0
 condition|)
 block|{
 comment|/* arrange for return receipt */
@@ -2508,7 +2548,7 @@ name|a
 operator|->
 name|q_flags
 operator||=
-name|QEXPLODED
+name|QEXPANDED
 expr_stmt|;
 if|if
 condition|(
