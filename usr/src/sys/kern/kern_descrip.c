@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_descrip.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_descrip.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1893,7 +1893,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|fstat
+name|ofstat
 argument_list|(
 argument|p
 argument_list|,
@@ -2122,7 +2122,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|fqstat
+name|fstat
 argument_list|(
 argument|p
 argument_list|,
