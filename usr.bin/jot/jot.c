@@ -1256,6 +1256,9 @@ operator|=
 name|arc4random
 argument_list|()
 operator|/
+operator|(
+name|double
+operator|)
 name|ULONG_MAX
 expr_stmt|;
 if|if
