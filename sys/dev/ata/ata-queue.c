@@ -1117,6 +1117,13 @@ name|request
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|request
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ATA_R_SKIPSTART
+expr_stmt|;
 name|ata_queue_request
 argument_list|(
 name|request
@@ -1216,7 +1223,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* SOS this could be more precise ? XXX*/
+comment|/* SOS this could be more precise ? XXX */
 name|request
 operator|->
 name|result
