@@ -713,6 +713,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* 				 * EditLine init may call 'cgetset()' to set a 				 * capability-db meant for termcap (eg: to set 				 * terminal type 'xterm').  Reset that now, or 				 * that same db-information will be used for 				 * printcap (giving us an "xterm" printer, with 				 * all kinds of invalid capabilities...). 				 */
+name|cgetset
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
