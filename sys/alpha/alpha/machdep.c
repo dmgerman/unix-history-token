@@ -152,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/netisr.h>
 end_include
 
@@ -4127,6 +4133,10 @@ operator|.
 name|pcb_hw
 operator|.
 name|apcb_ksp
+expr_stmt|;
+comment|/* 	 * Initialise entropy pool. 	 */
+name|rand_initialize
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Look at arguments passed to us and compute boothowto. 	 */
 name|boothowto
@@ -9358,37 +9368,6 @@ name|md_flags
 operator||=
 name|MDP_FPUSED
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * dummy version of read_random() until the random driver is ported.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|read_random
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|int
-name|read_random
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
