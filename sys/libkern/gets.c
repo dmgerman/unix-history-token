@@ -96,6 +96,13 @@ case|:
 case|case
 literal|'\r'
 case|:
+name|printf
+argument_list|(
+literal|"%c"
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
 operator|*
 name|lp
 operator|=
