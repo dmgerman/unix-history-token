@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Make the uba interrupt file ubglue.s  *	mkubglue.c	1.4	81/05/22  */
+comment|/*  * Make the uba interrupt file ubglue.s  *	mkubglue.c	1.5	82/06/16  */
 end_comment
 
 begin_include
@@ -298,7 +298,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\tmovl\t$%d,r0\n\tjbr\t_dzdma\n\n"
+literal|"\tmovl\t$%d,r0\n\tjmp\t_dzdma\n\n"
 argument_list|,
 name|number
 argument_list|)
