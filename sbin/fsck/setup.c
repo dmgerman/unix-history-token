@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /b/source/CVS/src/sbin/fsck/setup.c,v 1.3 1993/03/23 00:28:14 cgd Exp $"
+literal|"$Header: /home/cvs/386BSD/src/sbin/fsck/setup.c,v 1.2 1993/07/22 16:52:00 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2673,6 +2673,21 @@ name|NSPF
 argument_list|(
 name|fs
 argument_list|)
+expr_stmt|;
+comment|/* Make sure, that fs->fs_cpg is not zero to avoid a divide by zero */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_cpg
+operator|==
+literal|0
+condition|)
+name|fs
+operator|->
+name|fs_cpg
+operator|=
+literal|1
 expr_stmt|;
 name|fs
 operator|->
