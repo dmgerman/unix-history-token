@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.24 1998/10/27 21:14:03 msmith Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.25 1999/01/08 00:32:19 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -374,6 +374,29 @@ literal|"X"
 argument_list|)
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|__alpha__
+name|j
+operator|=
+name|c2
+operator|->
+name|name
+index|[
+name|strlen
+argument_list|(
+name|c2
+operator|->
+name|name
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|-
+literal|'a'
+expr_stmt|;
+else|#
+directive|else
 name|j
 operator|=
 name|c2
@@ -392,6 +415,8 @@ index|]
 operator|-
 literal|'a'
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|j
@@ -1124,6 +1149,9 @@ literal|"X"
 argument_list|)
 condition|)
 continue|continue;
+ifndef|#
+directive|ifndef
+name|__alpha__
 name|j
 operator|=
 name|c1
@@ -1170,6 +1198,8 @@ name|j
 index|]
 operator|++
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|c1
@@ -1212,6 +1242,9 @@ argument_list|,
 name|c1
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__alpha__
 name|Write_Int32
 argument_list|(
 operator|&
@@ -1590,7 +1623,12 @@ name|dp_flag
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 block|}
+ifndef|#
+directive|ifndef
+name|__alpha__
 name|j
 operator|=
 literal|0
@@ -1681,9 +1719,6 @@ name|dp_flag
 operator|=
 literal|0x80
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__alpha__
 name|mbr
 operator|=
 name|read_block
