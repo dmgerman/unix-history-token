@@ -2242,7 +2242,7 @@ comment|/* else queue this packet; */
 block|}
 else|else
 block|{
-comment|/*register struct socket *so = cb->s_nspcb->nsp_socket; 			if (so->so_state&& SS_NOFDREF) { 				ns_error(dtom(si), NS_ERR_NOSOCK, 0); 				(void)spp_close(cb); 			} else 				       would crash system*/
+comment|/*register struct socket *so = cb->s_nspcb->nsp_socket; 			if (so->so_state& SS_NOFDREF) { 				ns_error(dtom(si), NS_ERR_NOSOCK, 0); 				(void)spp_close(cb); 			} else 				       would crash system*/
 name|spp_istat
 operator|.
 name|notyet
