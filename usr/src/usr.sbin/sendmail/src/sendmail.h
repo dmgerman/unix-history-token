@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.68 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.69 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.68		%G%"
+literal|"@(#)sendmail.h	8.69		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2776,6 +2776,17 @@ name|MAP
 value|struct _map
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXMAPACTIONS
+value|3
+end_define
+
+begin_comment
+comment|/* size of map_actions array */
+end_comment
+
 begin_comment
 comment|/* **  An actual map. */
 end_comment
@@ -2865,7 +2876,7 @@ comment|/* list for stacked maps */
 name|short
 name|map_return
 index|[
-literal|3
+name|MAXMAPACTIONS
 index|]
 decl_stmt|;
 comment|/* return bitmaps for stacked maps */
@@ -4482,7 +4493,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* use internet domain name server */
+comment|/* using DNS -- interpret h_errno& MX RRs */
 end_comment
 
 begin_decl_stmt
