@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * The game adventure was original written Fortran by Will Crowther  * and Don Woods.  It was later translated to C and enhanced by  * Jim Gillogly.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1991, 1993 The Regents of the University of California.  * All rights reserved.  *  * The game adventure was originally written in Fortran by Will Crowther  * and Don Woods.  It was later translated to C and enhanced by Jim  * Gillogly.  This code is derived from software contributed to Berkeley  * by Jim Gillogly at The Rand Corporation.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wizard.c	5.1 (Berkeley) %G%"
+literal|"@(#)wizard.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,8 +132,10 @@ end_comment
 
 begin_decl_stmt
 name|char
-modifier|*
 name|magic
+index|[
+literal|6
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -144,9 +146,23 @@ end_macro
 
 begin_block
 block|{
+name|strcpy
+argument_list|(
 name|magic
-operator|=
-literal|"dwarf"
+argument_list|,
+name|DECR
+argument_list|(
+name|d
+argument_list|,
+name|w
+argument_list|,
+name|a
+argument_list|,
+name|r
+argument_list|,
+name|f
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|latncy
 operator|=
@@ -196,16 +212,12 @@ operator|-
 name|savet
 operator|)
 expr_stmt|;
-comment|/* good for about a month       */
+comment|/* good for about a month     */
 if|if
 condition|(
 name|delay
 operator|>=
 name|latncy
-operator|||
-name|setup
-operator|>=
-literal|0
 condition|)
 block|{
 name|saved
@@ -221,9 +233,17 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"This adventure was suspended a mere %d minutes ago."
+literal|"This adventure was suspended a mere %d minute%s ago."
 argument_list|,
 name|delay
+argument_list|,
+name|delay
+operator|==
+literal|1
+condition|?
+literal|""
+else|:
+literal|"s"
 argument_list|)
 expr_stmt|;
 if|if
@@ -412,24 +432,6 @@ specifier|extern
 name|unsigned
 name|filesize
 decl_stmt|;
-name|lseek
-argument_list|(
-name|datfd
-argument_list|,
-operator|(
-name|long
-operator|)
-name|filesize
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
 name|printf
 argument_list|(
 literal|"What would you like to call the saved version?\n"
@@ -467,75 +469,23 @@ if|if
 condition|(
 name|save
 argument_list|(
-name|cmdfile
-argument_list|,
 name|fname
 argument_list|)
-operator|>=
+operator|!=
 literal|0
 condition|)
-break|break;
-name|printf
-argument_list|(
-literal|"I can't use that one.\n"
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
-name|outfd
-operator|=
-name|open
+comment|/* Save failed */
+name|printf
 argument_list|(
+literal|"To resume, say \"adventure %s\".\n"
+argument_list|,
 name|fname
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|lseek
-argument_list|(
-name|outfd
-argument_list|,
-literal|0L
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* end of executable file       */
-while|while
-condition|(
-operator|(
-name|size
-operator|=
-name|read
-argument_list|(
-name|datfd
-argument_list|,
-name|buf
-argument_list|,
-literal|512
-argument_list|)
-operator|)
-operator|>
-literal|0
-condition|)
-name|write
-argument_list|(
-name|outfd
-argument_list|,
-name|buf
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-comment|/* copy the message data        */
-name|printf
-argument_list|(
-literal|"                    ^\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"That should do it.  Gis revido.\n"
+literal|"\"With these rooms I might now have been familiarly acquainted.\"\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -553,19 +503,11 @@ argument|range
 argument_list|)
 end_macro
 
-begin_comment
-comment|/* uses unix rng                */
-end_comment
-
 begin_decl_stmt
 name|int
 name|range
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* can't div by 32768 because   */
-end_comment
 
 begin_block
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * The game adventure was original written Fortran by Will Crowther  * and Don Woods.  It was later translated to C and enhanced by  * Jim Gillogly.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1991, 1993 The Regents of the University of California.  * All rights reserved.  *  * The game adventure was originally written in Fortran by Will Crowther  * and Don Woods.  It was later translated to C and enhanced by Jim  * Gillogly.  This code is derived from software contributed to Berkeley  * by Jim Gillogly at The Rand Corporation.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.1 (Berkeley) %G%"
+literal|"@(#)io.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -571,24 +571,19 @@ return|;
 block|}
 end_block
 
-begin_decl_stmt
-name|FILE
-modifier|*
-name|inbuf
-decl_stmt|,
-modifier|*
-name|outbuf
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* FILE *inbuf,*outbuf; */
+end_comment
 
 begin_decl_stmt
-name|int
-name|adrptr
+name|char
+modifier|*
+name|inptr
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* current seek adr ptr         */
+comment|/* Pointer into virtual disk    */
 end_comment
 
 begin_decl_stmt
@@ -608,7 +603,7 @@ name|char
 name|iotape
 index|[]
 init|=
-literal|"Ax3F'tt$8hqer*hnGKrX:!l"
+literal|"Ax3F'\003tt$8h\315qer*h\017nGKrX\207:!l"
 decl_stmt|;
 end_decl_stmt
 
@@ -631,28 +626,27 @@ argument_list|()
 end_macro
 
 begin_comment
-comment|/* next char frm file, bump adr */
+comment|/* next virtual char, bump adr  */
 end_comment
 
 begin_block
 block|{
-specifier|register
-name|char
+name|int
 name|ch
-decl_stmt|,
-name|t
 decl_stmt|;
-name|adrptr
-operator|++
-expr_stmt|;
-comment|/* seek address in file         */
 name|ch
 operator|=
-name|getc
-argument_list|(
-name|inbuf
-argument_list|)
+operator|(
+operator|*
+name|inptr
+operator|^
+name|random
+argument_list|()
+operator|)
+operator|&
+literal|0xFF
 expr_stmt|;
+comment|/* Decrypt input data           */
 if|if
 condition|(
 name|outsw
@@ -670,20 +664,21 @@ name|tape
 operator|=
 name|iotape
 expr_stmt|;
-comment|/* rewind encryption tape    */
-name|putc
-argument_list|(
+comment|/* rewind encryption tape       */
+operator|*
+name|inptr
+operator|=
 name|ch
 operator|^
 operator|*
 name|tape
 operator|++
-argument_list|,
-name|outbuf
-argument_list|)
 expr_stmt|;
-comment|/* encrypt& output char     */
+comment|/* re-encrypt and replace value */
 block|}
+name|inptr
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|ch
@@ -708,7 +703,7 @@ argument_list|()
 end_macro
 
 begin_comment
-comment|/* read all data from orig file */
+comment|/* "read" data from virtual file*/
 end_comment
 
 begin_block
@@ -721,68 +716,17 @@ specifier|register
 name|char
 name|ch
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|inbuf
+name|inptr
 operator|=
-name|fopen
+name|data_file
+expr_stmt|;
+comment|/* Pointer to virtual data file */
+name|srandom
 argument_list|(
-name|DATFILE
-argument_list|,
-literal|"r"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-comment|/* all the data lives in here   */
-block|{
-name|printf
-argument_list|(
-literal|"Cannot open data file %s\n"
-argument_list|,
-name|DATFILE
+name|SEED
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|(
-name|outbuf
-operator|=
-name|fopen
-argument_list|(
-name|TMPFILE
-argument_list|,
-literal|"w"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-comment|/* the text lines will go here  */
-block|{
-name|printf
-argument_list|(
-literal|"Cannot create output file %s\n"
-argument_list|,
-name|TMPFILE
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-name|setup
-operator|=
+comment|/* which is lightly encrypted.  */
 name|clsses
 operator|=
 literal|1
@@ -802,6 +746,9 @@ operator|-
 literal|'0'
 expr_stmt|;
 comment|/* 1st digit of section number  */
+ifdef|#
+directive|ifdef
+name|VERBOSE
 name|printf
 argument_list|(
 literal|"Section %c"
@@ -811,6 +758,8 @@ operator|+
 literal|'0'
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -826,11 +775,16 @@ comment|/* is there a second digit?     */
 block|{
 name|FLUSHLF
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VERBOSE
 name|putchar
 argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sect
 operator|=
 literal|10
@@ -842,11 +796,16 @@ operator|-
 literal|'0'
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|VERBOSE
 name|putchar
 argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|sect
@@ -856,16 +815,6 @@ case|case
 literal|0
 case|:
 comment|/* finished reading database    */
-name|fclose
-argument_list|(
-name|inbuf
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|outbuf
-argument_list|)
-expr_stmt|;
 return|return;
 case|case
 literal|1
@@ -1117,16 +1066,11 @@ block|}
 end_block
 
 begin_decl_stmt
-name|int
+name|char
+modifier|*
 name|seekhere
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* initial seek for output file */
-end_comment
 
 begin_macro
 name|rdesc
@@ -1159,40 +1103,30 @@ specifier|register
 name|int
 name|locc
 decl_stmt|;
-name|int
+name|char
+modifier|*
 name|seekstart
 decl_stmt|,
+modifier|*
 name|maystart
 decl_stmt|,
+modifier|*
 name|adrstart
 decl_stmt|;
 name|char
 modifier|*
 name|entry
 decl_stmt|;
+name|seekhere
+operator|=
+name|inptr
+expr_stmt|;
+comment|/* Where are we in virtual file?*/
 name|outsw
 operator|=
 literal|1
 expr_stmt|;
 comment|/* these msgs go into tmp file  */
-if|if
-condition|(
-name|sect
-operator|==
-literal|1
-condition|)
-name|putc
-argument_list|(
-literal|'X'
-argument_list|,
-name|outbuf
-argument_list|)
-expr_stmt|;
-comment|/* so seekadr> 0               */
-name|adrptr
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|oldloc
@@ -1209,7 +1143,7 @@ control|)
 block|{
 name|maystart
 operator|=
-name|adrptr
+name|inptr
 expr_stmt|;
 comment|/* maybe starting new entry     */
 if|if
@@ -1811,6 +1745,12 @@ block|}
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_macro
 name|twrite
 argument_list|(
@@ -1945,6 +1885,12 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|DEBUG
+end_endif
 
 begin_macro
 name|rvoc
@@ -2378,148 +2324,6 @@ block|}
 end_block
 
 begin_macro
-name|doseek
-argument_list|(
-argument|offset
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* do 2 seeks to get to right place in the file         */
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|offset
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|extern
-name|unsigned
-name|filesize
-decl_stmt|;
-name|lseek
-argument_list|(
-name|datfd
-argument_list|,
-operator|(
-name|long
-operator|)
-name|offset
-operator|+
-operator|(
-name|long
-operator|)
-name|filesize
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-name|blockadr
-operator|=
-name|chadr
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|offset
-operator|<
-literal|0
-condition|)
-comment|/* right place is offset+filesize*/
-block|{
-name|blockadr
-operator|+=
-literal|64
-expr_stmt|;
-comment|/* take off 32768 bytes         */
-name|chadr
-operator|+=
-name|offset
-operator|+
-literal|32768
-expr_stmt|;
-comment|/*& make them into 64 blocks   */
-block|}
-else|else
-name|chadr
-operator|+=
-name|offset
-expr_stmt|;
-if|if
-condition|(
-name|filesize
-operator|<
-literal|0
-condition|)
-comment|/* data starts after file       */
-block|{
-name|blockadr
-operator|+=
-literal|64
-expr_stmt|;
-comment|/* which may also be large      */
-name|chadr
-operator|+=
-name|filesize
-operator|+
-literal|32768
-expr_stmt|;
-block|}
-else|else
-name|chadr
-operator|+=
-name|filesize
-expr_stmt|;
-if|if
-condition|(
-name|chadr
-operator|<
-literal|0
-condition|)
-comment|/* and the leftovers may be lge */
-block|{
-name|blockadr
-operator|+=
-literal|64
-expr_stmt|;
-name|chadr
-operator|+=
-literal|32768
-expr_stmt|;
-block|}
-name|seek
-argument_list|(
-name|datfd
-argument_list|,
-name|blockadr
-argument_list|,
-literal|3
-argument_list|)
-expr_stmt|;
-comment|/* get within 32767             */
-name|seek
-argument_list|(
-name|datfd
-argument_list|,
-name|chadr
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* then the rest of the way     */
-endif|#
-directive|endif
-block|}
-end_block
-
-begin_macro
 name|speak
 argument_list|(
 argument|msg
@@ -2551,58 +2355,11 @@ name|s
 decl_stmt|,
 name|nonfirst
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|tbuf
-decl_stmt|;
-name|doseek
-argument_list|(
+name|s
+operator|=
 name|msg
 operator|->
 name|seekadr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tbuf
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|malloc
-argument_list|(
-name|msg
-operator|->
-name|txtlen
-operator|+
-literal|1
-argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-name|bug
-argument_list|(
-literal|109
-argument_list|)
-expr_stmt|;
-name|read
-argument_list|(
-name|datfd
-argument_list|,
-name|tbuf
-argument_list|,
-name|msg
-operator|->
-name|txtlen
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|tbuf
 expr_stmt|;
 name|nonfirst
 operator|=
@@ -2612,13 +2369,15 @@ while|while
 condition|(
 name|s
 operator|-
-name|tbuf
+name|msg
+operator|->
+name|seekadr
 operator|<
 name|msg
 operator|->
 name|txtlen
 condition|)
-comment|/* read a line at a time        */
+comment|/* read a line at a time */
 block|{
 name|tape
 operator|=
@@ -2746,18 +2505,13 @@ condition|)
 do|;
 comment|/* better end with LF   */
 block|}
-name|free
-argument_list|(
-name|tbuf
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
 begin_macro
 name|pspeak
 argument_list|(
-argument|msg
+argument|m
 argument_list|,
 argument|skip
 argument_list|)
@@ -2769,7 +2523,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|msg
+name|m
 decl_stmt|;
 end_decl_stmt
 
@@ -2796,27 +2550,28 @@ name|s
 decl_stmt|,
 name|nonfirst
 decl_stmt|;
-specifier|register
+name|char
+modifier|*
+name|numst
+decl_stmt|,
+name|save
+decl_stmt|;
+name|struct
+name|text
+modifier|*
+name|msg
+decl_stmt|;
 name|char
 modifier|*
 name|tbuf
 decl_stmt|;
-name|char
-modifier|*
-name|numst
-decl_stmt|;
-name|int
-name|lstr
-decl_stmt|;
-name|doseek
-argument_list|(
+name|msg
+operator|=
+operator|&
 name|ptext
 index|[
-name|msg
+name|m
 index|]
-operator|.
-name|seekadr
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2829,16 +2584,9 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-operator|(
-name|lstr
-operator|=
-name|ptext
-index|[
 name|msg
-index|]
-operator|.
+operator|->
 name|txtlen
-operator|)
 operator|+
 literal|1
 argument_list|)
@@ -2851,15 +2599,22 @@ argument_list|(
 literal|108
 argument_list|)
 expr_stmt|;
-name|read
+name|memcpy
 argument_list|(
-name|datfd
-argument_list|,
 name|tbuf
 argument_list|,
-name|lstr
+name|msg
+operator|->
+name|seekadr
+argument_list|,
+name|msg
+operator|->
+name|txtlen
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Room to null */
 name|s
 operator|=
 name|tbuf
@@ -2874,9 +2629,11 @@ name|s
 operator|-
 name|tbuf
 operator|<
-name|lstr
+name|msg
+operator|->
+name|txtlen
 condition|)
-comment|/* read a line at a time        */
+comment|/* read line at a time */
 block|{
 name|tape
 operator|=
@@ -2905,6 +2662,12 @@ operator|++
 control|)
 empty_stmt|;
 comment|/* get number  */
+name|save
+operator|=
+operator|*
+name|s
+expr_stmt|;
+comment|/* Temporarily trash the string (cringe) */
 operator|*
 name|s
 operator|++

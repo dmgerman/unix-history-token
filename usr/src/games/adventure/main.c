@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * The game adventure was original written Fortran by Will Crowther  * and Don Woods.  It was later translated to C and enhanced by  * Jim Gillogly.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1991, 1993 The Regents of the University of California.  * All rights reserved.  *  * The game adventure was originally written in Fortran by Will Crowther  * and Don Woods.  It was later translated to C and enhanced by Jim  * Gillogly.  This code is derived from software contributed to Berkeley  * by Jim Gillogly at The Rand Corporation.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1991 The Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1991, 1993 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,21 +73,6 @@ include|#
 directive|include
 file|"hdr.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
-end_include
-
-begin_decl_stmt
-name|int
-name|datfd
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|main
@@ -128,119 +113,17 @@ block|)
 function|;
 end_function
 
-begin_function_decl
-name|char
-modifier|*
-name|strerror
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
-specifier|static
-name|reenter
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|reenter
-operator|++
-expr_stmt|;
-end_expr_stmt
-
-begin_switch
-switch|switch
-condition|(
-name|setup
-condition|)
-block|{
-case|case
-literal|0
-case|:
-if|if
-condition|(
-operator|(
-name|datfd
-operator|=
-name|open
-argument_list|(
-operator|*
-name|argv
-argument_list|,
-name|O_RDONLY
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"adventure: can't init\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|init
-argument_list|(
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-case|case
-literal|1
-case|:
-if|if
-condition|(
-operator|(
-name|datfd
-operator|=
-name|open
-argument_list|(
-name|_PATH_ADVENTURE
-argument_list|,
-name|O_RDONLY
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"adventure: %s: %s\n"
-argument_list|,
-name|_PATH_ADVENTURE
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|startup
 argument_list|()
 expr_stmt|;
-comment|/* prepare for a user           */
+end_expr_stmt
+
+begin_comment
+comment|/* Initialize everything */
+end_comment
+
+begin_expr_stmt
 name|signal
 argument_list|(
 literal|2
@@ -248,12 +131,38 @@ argument_list|,
 name|trapdel
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-operator|-
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|argc
+operator|>
 literal|1
+condition|)
+comment|/* Restore file specified */
+block|{
+comment|/* Restart is label 8305 (Fortran) */
+name|i
+operator|=
+name|restore
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* See what we've got */
+switch|switch
+condition|(
+name|i
+condition|)
+block|{
+case|case
+literal|0
 case|:
-comment|/* restarting game : 8305       */
+comment|/* The restore worked fine */
 name|yea
 operator|=
 name|start
@@ -261,38 +170,63 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|setup
-operator|=
-literal|3
-expr_stmt|;
 name|k
 operator|=
 name|null
-expr_stmt|;
-goto|goto
-name|l8
-goto|;
-default|default:
-name|printf
-argument_list|(
-literal|"Your forged file dissappears in a puff of greasy black smoke! (poof)\n"
-argument_list|)
 expr_stmt|;
 name|unlink
 argument_list|(
 name|argv
 index|[
-literal|0
+literal|1
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* Don't re-use the save */
+goto|goto
+name|l8
+goto|;
+comment|/* Get where we're going */
+case|case
+literal|1
+case|:
+comment|/* Couldn't open it */
 name|exit
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* So give up */
+case|case
+literal|2
+case|:
+comment|/* Oops -- file was altered */
+name|rspeak
+argument_list|(
+literal|202
+argument_list|)
+expr_stmt|;
+comment|/* You dissolve */
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* File could be non-adventure */
 block|}
-end_switch
+comment|/* So don't unlink it. */
+block|}
+end_if
+
+begin_expr_stmt
+name|startup
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* prepare for a user           */
+end_comment
 
 begin_for
 for|for
@@ -627,19 +561,14 @@ operator|=
 literal|35
 expr_stmt|;
 block|}
-name|kk
+name|ll
 operator|=
-operator|(
-expr|struct
-name|text
-operator|*
-operator|)
 name|prop
 index|[
 name|obj
 index|]
 expr_stmt|;
-comment|/* 2006		*/
+comment|/* 2006         */
 if|if
 condition|(
 name|obj
@@ -653,20 +582,15 @@ index|[
 name|steps
 index|]
 condition|)
-name|kk
+name|ll
 operator|=
-operator|(
-expr|struct
-name|text
-operator|*
-operator|)
 literal|1
 expr_stmt|;
 name|pspeak
 argument_list|(
 name|obj
 argument_list|,
-name|kk
+name|ll
 argument_list|)
 expr_stmt|;
 block|}
@@ -2308,11 +2232,6 @@ operator|&
 name|savet
 argument_list|)
 expr_stmt|;
-name|setup
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|ciao
 argument_list|(
 name|argv
@@ -2321,7 +2240,9 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* Do we quit? */
 continue|continue;
+comment|/* Maybe not */
 case|case
 literal|31
 case|:

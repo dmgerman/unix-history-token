@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * The game adventure was original written Fortran by Will Crowther  * and Don Woods.  It was later translated to C and enhanced by  * Jim Gillogly.  *  * %sccs.include.redist.c%  *  *	@(#)hdr.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993 The Regents of the University of California.  * All rights reserved.  *  * The game adventure was originally written in Fortran by Will Crowther  * and Don Woods.  It was later translated to C and enhanced by Jim  * Gillogly.  This code is derived from software contributed to Berkeley  * by Jim Gillogly at The Rand Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)hdr.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -9,17 +9,6 @@ end_comment
 
 begin_comment
 comment|/* hdr.h: included by c advent files */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|setup
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* changed by savec& init      */
 end_comment
 
 begin_decl_stmt
@@ -43,6 +32,18 @@ name|int
 name|yea
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|data_file
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Virtual data file            */
+end_comment
 
 begin_define
 define|#
@@ -83,8 +84,6 @@ decl_stmt|,
 name|oldlc2
 decl_stmt|,
 name|wzdark
-decl_stmt|,
-name|SHORT
 decl_stmt|,
 name|gaveup
 decl_stmt|,
@@ -142,6 +141,17 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|SHORT
+value|50
+end_define
+
+begin_comment
+comment|/* How short is a demo game?    */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MAXSTR
 value|20
 end_define
@@ -186,49 +196,44 @@ end_struct
 begin_define
 define|#
 directive|define
-name|DATFILE
-value|"glorkz"
+name|SEED
+value|1815622
 end_define
 
 begin_comment
-comment|/* all the original msgs        */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TMPFILE
-value|"tmp.foo.baz"
-end_define
-
-begin_comment
-comment|/* just the text msgs           */
+comment|/* "Encryption" seed            */
 end_comment
 
 begin_struct
 struct|struct
 name|text
+ifdef|#
+directive|ifdef
+name|OLDSTUFF
 block|{
 name|int
 name|seekadr
 decl_stmt|;
 comment|/* DATFILE must be< 2**16      */
+endif|#
+directive|endif
+endif|OLDSTUFF
+block|{
+name|char
+modifier|*
+name|seekadr
+decl_stmt|;
+comment|/* Msg start in virtual disk    */
 name|int
 name|txtlen
 decl_stmt|;
 comment|/* length of msg starting here  */
 block|}
-struct|;
-end_struct
-
-begin_define
+empty_stmt|;
 define|#
 directive|define
 name|RTXSIZ
 value|205
-end_define
-
-begin_decl_stmt
 name|struct
 name|text
 name|rtext
@@ -236,20 +241,11 @@ index|[
 name|RTXSIZ
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* random text messages         */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|MAGSIZ
 value|35
-end_define
-
-begin_decl_stmt
 name|struct
 name|text
 name|mtext
@@ -257,26 +253,14 @@ index|[
 name|MAGSIZ
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* magic messages               */
-end_comment
-
-begin_decl_stmt
 name|int
 name|clsses
 decl_stmt|;
-end_decl_stmt
-
-begin_define
 define|#
 directive|define
 name|CLSMAX
 value|12
-end_define
-
-begin_decl_stmt
 name|struct
 name|text
 name|ctext
@@ -284,22 +268,13 @@ index|[
 name|CLSMAX
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* classes of adventurer        */
-end_comment
-
-begin_decl_stmt
 name|int
 name|cval
 index|[
 name|CLSMAX
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|text
 name|ptext
@@ -307,24 +282,12 @@ index|[
 literal|101
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* object descriptions          */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|LOCSIZ
 value|141
-end_define
-
-begin_comment
 comment|/* number of locations          */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|text
 name|ltext
@@ -332,13 +295,7 @@ index|[
 name|LOCSIZ
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* long loc description         */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|text
 name|stext
@@ -346,13 +303,7 @@ index|[
 name|LOCSIZ
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* short loc descriptions       */
-end_comment
-
-begin_struct
 struct|struct
 name|travlist
 comment|/* direcs& conditions of travel*/
@@ -385,35 +336,20 @@ struct|,
 modifier|*
 name|tkk
 struct|;
-end_struct
-
-begin_comment
 comment|/* travel is closer to keys(...)*/
-end_comment
-
-begin_decl_stmt
 name|int
 name|atloc
 index|[
 name|LOCSIZ
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|plac
 index|[
 literal|101
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* initial object placement     */
-end_comment
-
-begin_decl_stmt
 name|int
 name|fixd
 index|[
@@ -425,39 +361,21 @@ index|[
 literal|101
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* location fixed?              */
-end_comment
-
-begin_decl_stmt
 name|int
 name|actspk
 index|[
 literal|35
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* rtext msg for verb<n>       */
-end_comment
-
-begin_decl_stmt
 name|int
 name|cond
 index|[
 name|LOCSIZ
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* various condition bits       */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|setbit
@@ -465,19 +383,10 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* bit defn masks 1,2,4,...     */
-end_comment
-
-begin_decl_stmt
 name|int
 name|hntmax
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|hints
 index|[
@@ -487,13 +396,7 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* info on hints                */
-end_comment
-
-begin_decl_stmt
 name|int
 name|hinted
 index|[
@@ -505,9 +408,6 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|place
 index|[
@@ -524,18 +424,12 @@ index|[
 literal|201
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|abb
 index|[
 name|LOCSIZ
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|maxtrs
 decl_stmt|,
@@ -543,27 +437,15 @@ name|tally
 decl_stmt|,
 name|tally2
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* treasure values              */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|FALSE
 value|0
-end_define
-
-begin_define
 define|#
 directive|define
 name|TRUE
 value|1
-end_define
-
-begin_decl_stmt
 name|int
 name|keys
 decl_stmt|,
@@ -670,6 +552,12 @@ name|entrnc
 decl_stmt|,
 name|dprssn
 decl_stmt|,
+name|enter
+decl_stmt|,
+name|stream
+decl_stmt|,
+name|pour
+decl_stmt|,
 name|say
 decl_stmt|,
 name|lock
@@ -680,9 +568,6 @@ name|find
 decl_stmt|,
 name|invent
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|chloc
 decl_stmt|,
@@ -708,9 +593,6 @@ name|dflag
 decl_stmt|,
 name|daltlc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|tk
 index|[
@@ -723,9 +605,6 @@ name|dtotal
 decl_stmt|,
 name|attack
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|turns
 decl_stmt|,
@@ -766,9 +645,6 @@ name|closed
 decl_stmt|,
 name|scorng
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|demo
 decl_stmt|,
@@ -776,15 +652,34 @@ name|newloc
 decl_stmt|,
 name|limit
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
 name|char
 modifier|*
 name|malloc
 parameter_list|()
 function_decl|;
-end_function_decl
+end_struct
+
+begin_comment
+comment|/* We need to get a little tricky to avoid strings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECR
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|)
+value|decr('a'+'+','b'+'-','c'+'#','d'+'&','e'+'%')
+end_define
 
 end_unit
 
