@@ -795,8 +795,11 @@ operator|=
 name|p
 expr_stmt|;
 block|}
-name|PGRPSESS_XLOCK
-argument_list|()
+name|sx_xlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -891,8 +894,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* XXX tp should be locked. */
-name|PGRPSESS_XUNLOCK
-argument_list|()
+name|sx_xunlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -902,8 +908,11 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|PGRPSESS_XLOCK
-argument_list|()
+name|sx_xlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
 expr_stmt|;
 comment|/* 				 * The tty could have been revoked 				 * if we blocked. 				 */
 if|if
@@ -939,8 +948,11 @@ operator|->
 name|p_session
 argument_list|)
 expr_stmt|;
-name|PGRPSESS_XUNLOCK
-argument_list|()
+name|sx_xunlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
 expr_stmt|;
 name|VOP_REVOKE
 argument_list|(
@@ -949,12 +961,15 @@ argument_list|,
 name|REVOKEALL
 argument_list|)
 expr_stmt|;
-name|PGRPSESS_XLOCK
-argument_list|()
-expr_stmt|;
 name|vrele
 argument_list|(
 name|ttyvp
+argument_list|)
+expr_stmt|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1032,8 +1047,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|PGRPSESS_XUNLOCK
-argument_list|()
+name|sx_xunlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -2289,6 +2307,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Finally finished with old proc entry. 			 * Unlink it from its process group and free it. 			 */
+name|sx_xlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 name|leavepgrp
 argument_list|(
 name|p
@@ -2312,12 +2336,6 @@ name|sx_xunlock
 argument_list|(
 operator|&
 name|allproc_lock
-argument_list|)
-expr_stmt|;
-name|sx_xlock
-argument_list|(
-operator|&
-name|proctree_lock
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE

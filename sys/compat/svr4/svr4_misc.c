@@ -6528,6 +6528,12 @@ name|q
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Finally finished with old proc entry. 			 * Unlink it from its process group and free it. 			 */
+name|sx_xlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 name|leavepgrp
 argument_list|(
 name|q
@@ -6551,12 +6557,6 @@ name|sx_xunlock
 argument_list|(
 operator|&
 name|allproc_lock
-argument_list|)
-expr_stmt|;
-name|sx_xlock
-argument_list|(
-operator|&
-name|proctree_lock
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE
