@@ -17850,18 +17850,26 @@ name|host_user_tmp
 init|=
 name|NULL
 decl_stmt|;
-name|strtok
-argument_list|(
+name|char
+modifier|*
+name|linebufp
+init|=
 name|linebuf
+decl_stmt|;
+name|strsep
+argument_list|(
+operator|&
+name|linebufp
 argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
 name|found_password
 operator|=
-name|strtok
+name|strsep
 argument_list|(
-name|NULL
+operator|&
+name|linebufp
 argument_list|,
 literal|": \n"
 argument_list|)
@@ -17872,9 +17880,10 @@ name|found_password
 condition|)
 name|host_user_tmp
 operator|=
-name|strtok
+name|strsep
 argument_list|(
-name|NULL
+operator|&
+name|linebufp
 argument_list|,
 literal|": \n"
 argument_list|)
