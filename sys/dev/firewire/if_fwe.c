@@ -2544,6 +2544,8 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|FWEDEBUG
 argument_list|(
 name|ifp
