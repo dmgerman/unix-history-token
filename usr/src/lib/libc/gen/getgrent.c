@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getgrent.c	5.6 (Berkeley) %G%"
+literal|"@(#)getgrent.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -647,7 +647,9 @@ if|if
 condition|(
 name|search
 operator|&&
-name|gid
+name|name
+operator|==
+name|NULL
 operator|&&
 name|_gr_group
 operator|.
