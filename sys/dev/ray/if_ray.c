@@ -16,7 +16,7 @@ comment|/*  *  * Card configuration  * ==================  *  * This card is unu
 end_comment
 
 begin_comment
-comment|/*  * TODO  *  * _stop - mostly done  *	would be nice to understand shutdown/or power save to prevent RX  * _reset - done  * 	just needs calling in the right places  *	converted panics to resets - when tx packets are the wrong length  *	may be needed in a couple of other places when I do more commands  * havenet - mostly done  *	i think i've got all the places to set it right, but not so sure  *	we reset it in all the right places  * _unload - done  *	recreated most of stop but as card is unplugged don't try and  *	access it to turn it off  * TX bpf - done  * RX bpf - done  *	I would much prefer to have the complete 802.11 packet dropped to  *	the bpf tap and then have a user land program parse the headers  *	as needed. This way, tcpdump -w can be used to grab the raw data. If  *	needed the 802.11 aware program can "translate" the .11 to ethernet  *	for tcpdump -r  * use std timeout code for download - done  *	was mainly moving a call and removing a load of stuff in  *	download_done as it duplicates check_ccs and ccs_done  * promisoius - done  * add the start_join_net - done  *	i needed it anyway  * remove startccs and startcmd - done  *	as those were used for the NetBSD start timeout  * multicast - done but UNTESTED  *	I don't have the ability/facilty to test this  * rxlevel - done  *	stats reported via raycontrol  * getparams ioctl - done  *	reported via raycontrol  * start_join_done needs a restart in download_done - done  *	now use netbsd style start up  * ioctls - done  *	use raycontrol  *	translation, BSS_ID, countrycode, changing mode  * ifp->if_hdr length - done  * rx level and antenna cache - done  *	antenna not used yet  * antenna tx side - done  *	not tested!  * shutdown - done  *	the driver seems to do the right thing for plugging and unplugging  *	cards  * apm/resume - ignore  *	apm+pccard is borken for 3.x - no one knows how to do it anymore  * fix the XXX code in start_join_done - n/a  *	i've removed this as the error handling should be consistent for  *	all ECF commands and none of the other commands bother!  * ray_update_params_done needs work - done  *	as part of scheduler/promisc re-write  * raycontrol to be firmware version aware - done  *	also report and update parameters IOCTLs are version aware  * make RAY_DPRINTFN RAY_DPRINTF - done  * make all printfs RAY_PRINTF - done  * faster TX routine - done  *	see comments but OACTIVE is gone  * __P to die - done  *	the rest is ansi anyway  * macroize the attribute read/write and 3.x driver - done  *	like the SRAM macros?  * rename "translation" to framing for consitency with Webgear - done  * severe breakage with CCS allocation - done  *	ccs are now allocated in a sleepable context with error recovery  * resource allocation should be be in attach and not probe - done  * resources allocated in probe hould be released before probe exits - done  * softc and ifp in variable definition block - done  * callout handles need rationalising. can probably remove sj_timerh - done  * why can't download use sc_promisc? - done  *	still use the specific update in _init to ensure that the state is  *	right until promisc is moved into current/desired parameters  * for ALLMULTI must go into PROMISC and filter unicast packets - done  *	recent changes to ether_input mean I don't need this  * IFF_RUNNING checks are they really needed? - done  *	this whole area is circumspect as RUNNING is reflection of the  *	driver state and is subject to waits etc.  *	- need to return EIO from runq routines that check  *	- now understood and I have to get the runq routines to  *	  check as required  *		init sequence is done  *		stop sequence is done  *		others are done  * mcast code resurrection - done  * remove ray_reset - done  * detach needs to drain comq - done  *	in fact we don't drain the comq just get the hell out asap  * remember to ccs_free on error in _user routines - done  *	not relevant anymore  * macro for gone and check is at head of all externally called routines - done  *	not relevant anymore  * probably function/macro to test unload at top of commands - done  * detach checks in all routines that access the card - done  *	not relevant anymore as they won't be called by runq  * reset in ray_init_user? - done  *	no as I don't want to remove it (people can always cycle power  *	from the command line)  *  * ***PCATCH tsleeps and have something that will clean the runq  * ***priorities for each tsleep   * ***watchdog to catch screwed up removals?  * ***check and rationalise CM mappings  * use /sys/net/if_ieee80211.h and update it  * write up driver structure in comments above  * UPDATE_PARAMS seems to return via an interrupt - maybe the timeout  *	is needed for wrong values?  *	remember it must be serialised as it uses the HCF-ECF area  * check all RECERRs and make sure that some are RAY_PRINTF not RAY_DPRINTF  * could do with selectively calling ray_mcast in ray_init but can't figure  * 	out a way that doesn't violate the runq or introduce a state var.  *	otoh we do have a state var for promisc  *	also we are only doing this to reset the mcast list why not  *	have a mcast_reset runq?  *	or just leave it to the n/w layer to tell us via the ioctls  * havenet needs checking again  * error handling of ECF command completions  * proper setting of mib_hop_seq_len with country code for v4 firmware  * _reset - check where needed  * splimp or splnet?  * tidy #includes - we cant need all of these  * differeniate between parameters set in attach and init  * more translations  * spinning in ray_com_ecf  * make RAY_DEBUG a knob somehow - either sysctl or IFF_DEBUG  * fragmentation when rx level drops?  *  * infra mode stuff  * 	proper handling of the basic rate set - see the manual  *	all ray_sj, ray_assoc sequencues need a "nicer" solution as we  *		remember association and authentication  *	need to consider WEP  * acting as ap - should be able to get working from the manual  *  * ray_nw_param  *	promisc in here too? will need work in download_done and init  * 	sc_station_addr in here too (for changing mac address)  * 	move desired into the command structure?  *	take downloaded MIB from a complete nw_param?  */
+comment|/*  * TODO  *  * _stop - mostly done  *	would be nice to understand shutdown/or power save to prevent RX  * _reset - done  * 	just needs calling in the right places  *	converted panics to resets - when tx packets are the wrong length  *	may be needed in a couple of other places when I do more commands  * havenet - mostly done  *	i think i've got all the places to set it right, but not so sure  *	we reset it in all the right places  * _unload - done  *	recreated most of stop but as card is unplugged don't try and  *	access it to turn it off  * TX bpf - done  * RX bpf - done  *	I would much prefer to have the complete 802.11 packet dropped to  *	the bpf tap and then have a user land program parse the headers  *	as needed. This way, tcpdump -w can be used to grab the raw data. If  *	needed the 802.11 aware program can "translate" the .11 to ethernet  *	for tcpdump -r  * use std timeout code for download - done  *	was mainly moving a call and removing a load of stuff in  *	download_done as it duplicates check_ccs and ccs_done  * promisoius - done  * add the start_join_net - done  *	i needed it anyway  * remove startccs and startcmd - done  *	as those were used for the NetBSD start timeout  * multicast - done but UNTESTED  *	I don't have the ability/facilty to test this  * rxlevel - done  *	stats reported via raycontrol  * getparams ioctl - done  *	reported via raycontrol  * start_join_done needs a restart in download_done - done  *	now use netbsd style start up  * ioctls - done  *	use raycontrol  *	translation, BSS_ID, countrycode, changing mode  * ifp->if_hdr length - done  * rx level and antenna cache - done  *	antenna not used yet  * antenna tx side - done  *	not tested!  * shutdown - done  *	the driver seems to do the right thing for plugging and unplugging  *	cards  * apm/resume - ignore  *	apm+pccard is borken for 3.x - no one knows how to do it anymore  * fix the XXX code in start_join_done - n/a  *	i've removed this as the error handling should be consistent for  *	all ECF commands and none of the other commands bother!  * ray_update_params_done needs work - done  *	as part of scheduler/promisc re-write  * raycontrol to be firmware version aware - done  *	also report and update parameters IOCTLs are version aware  * make RAY_DPRINTFN RAY_DPRINTF - done  * make all printfs RAY_PRINTF - done  * faster TX routine - done  *	see comments but OACTIVE is gone  * __P to die - done  *	the rest is ansi anyway  * macroize the attribute read/write and 3.x driver - done  *	like the SRAM macros?  * rename "translation" to framing for consitency with Webgear - done  * severe breakage with CCS allocation - done  *	ccs are now allocated in a sleepable context with error recovery  * resource allocation should be be in attach and not probe - done  * resources allocated in probe hould be released before probe exits - done  * softc and ifp in variable definition block - done  * callout handles need rationalising. can probably remove sj_timerh - done  * why can't download use sc_promisc? - done  *	still use the specific update in _init to ensure that the state is  *	right until promisc is moved into current/desired parameters  * for ALLMULTI must go into PROMISC and filter unicast packets - done  *	recent changes to ether_input mean I don't need this  * IFF_RUNNING checks are they really needed? - done  *	this whole area is circumspect as RUNNING is reflection of the  *	driver state and is subject to waits etc.  *	- need to return EIO from runq routines that check  *	- now understood and I have to get the runq routines to  *	  check as required  *		init sequence is done  *		stop sequence is done  *		others are done  * mcast code resurrection - done  * remove ray_reset - done  * detach needs to drain comq - done  *	in fact we don't drain the comq just get the hell out asap  * remember to ccs_free on error in _user routines - done  *	not relevant anymore  * macro for gone and check is at head of all externally called routines - done  *	not relevant anymore  * probably function/macro to test unload at top of commands - done  * detach checks in all routines that access the card - done  *	not relevant anymore as they won't be called by runq  * reset in ray_init_user? - done  *	no as I don't want to remove it (people can always cycle power  *	from the command line)  * check RECERRs and make sure that some are RAY_PRINTF not RAY_DPRINTF - done  * _reset - check where needed - done  *  * ***PCATCH tsleeps and have something that will clean the runq  * ***priorities for each tsleep   * ***watchdog to catch screwed up removals?  * ***check and rationalise CM mappings  * use /sys/net/if_ieee80211.h and update it  * write up driver structure in comments above  * UPDATE_PARAMS seems to return via an interrupt - maybe the timeout  *	is needed for wrong values?  * could do with selectively calling ray_mcast in ray_init but can't figure  * 	out a way that doesn't violate the runq or introduce a state var.  *	otoh we do have a state var for promisc  *	also we are only doing this to reset the mcast list why not  *	have a mcast_reset runq?  *	or just leave it to the n/w layer to tell us via the ioctls  * havenet needs checking again  * error handling of ECF command completions  * proper setting of mib_hop_seq_len with country code for v4 firmware  * splimp or splnet?  * tidy #includes - we cant need all of these  * differeniate between parameters set in attach and init  * more translations  * spinning in ray_com_ecf  * make RAY_DEBUG a knob somehow - either sysctl or IFF_DEBUG  *	use IFF_DEBUG for RECERRs?  * fragmentation when rx level drops?  *  * infra mode stuff  * 	proper handling of the basic rate set - see the manual  *	all ray_sj, ray_assoc sequencues need a "nicer" solution as we  *		remember association and authentication  *	need to consider WEP  * acting as ap - should be able to get working from the manual  *  * ray_nw_param  *	promisc in here too? will need work in download_done and init  * 	sc_station_addr in here too (for changing mac address)  * 	move desired into the command structure?  *	take downloaded MIB from a complete nw_param?  */
 end_comment
 
 begin_define
@@ -1911,9 +1911,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|sc
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|sc
 operator|->
 name|gone
+operator|)
 condition|)
 return|return
 operator|(
@@ -2695,9 +2703,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|sc
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|sc
 operator|->
 name|gone
+operator|)
 condition|)
 return|return
 operator|(
@@ -2960,16 +2976,19 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|RAY_MAP_CM
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+operator|(
+name|sc
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|sc
 operator|->
 name|gone
+operator|)
 condition|)
 return|return
 operator|(
@@ -3675,11 +3694,6 @@ operator||
 name|RAY_DBG_STARTJOIN
 argument_list|,
 literal|""
-argument_list|)
-expr_stmt|;
-name|RAY_MAP_CM
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If card already running we don't need to download. 	 */
@@ -5414,11 +5428,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|RAY_MAP_CM
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If card already running we don't need to associate. 	 * 	 * XXX When we cope with errors and re-call this routine we 	 * XXX need better checking 	 */
 if|if
 condition|(
@@ -5736,9 +5745,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|sc
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|sc
 operator|->
 name|gone
+operator|)
 condition|)
 return|return;
 name|RAY_PRINTF
@@ -5822,9 +5839,17 @@ expr_stmt|;
 comment|/* 	 * Some simple checks first - some are overkill 	 */
 if|if
 condition|(
+operator|(
+name|sc
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|sc
 operator|->
 name|gone
+operator|)
 condition|)
 return|return;
 if|if
@@ -6829,11 +6854,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|RAY_MAP_CM
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -6899,7 +6919,7 @@ operator|)
 return|;
 name|found
 label|:
-comment|/* This is a simple thresholding scheme which takes the mean 	 * of the best antenna history. This is okay but as it is a 	 * filter, it adds a bit of lag in situations where the 	 * best antenna swaps from one side to the other slowly. Don't know 	 * how likely this is given the horrible fading though. 	 */
+comment|/* This is a simple thresholding scheme that takes the mean 	 * of the best antenna history. This is okay but as it is a 	 * filter, it adds a bit of lag in situations where the 	 * best antenna swaps from one side to the other slowly. Don't know 	 * how likely this is given the horrible fading though. 	 */
 name|antenna
 operator|=
 literal|0
@@ -9398,9 +9418,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|sc
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|sc
 operator|->
 name|gone
+operator|)
 condition|)
 return|return;
 comment|/* 	 * Check that the interrupt was for us, if so get the rcs/ccs 	 * and vector on the command contained within it. 	 */
@@ -9779,12 +9807,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|RAY_MAP_CM
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* XXX replace this with a jump table? */
 switch|switch
 condition|(
 name|cmd
@@ -10033,12 +10055,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|RAY_MAP_CM
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* XXX replace this with a jump table? */
 switch|switch
 condition|(
 name|cmd
@@ -13467,11 +13483,6 @@ argument_list|,
 name|mesg
 argument_list|)
 expr_stmt|;
-name|RAY_MAP_CM
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|com
 operator|=
 name|TAILQ_FIRST
@@ -13653,17 +13664,25 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* XXX broken: see runq_add */
 if|if
 condition|(
+operator|(
+name|sc
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|sc
 operator|->
 name|gone
+operator|)
 condition|)
-name|error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
+operator|)
+return|;
 name|RAY_DPRINTF
 argument_list|(
 name|sc
