@@ -4447,7 +4447,11 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"cannot execv %s"
+literal|"%s: cannot execv(%s): %m"
+argument_list|,
+name|pp
+operator|->
+name|printer
 argument_list|,
 name|prog
 argument_list|)
@@ -6485,7 +6489,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: cannot execv %s"
+literal|"%s: cannot execv(%s): %m"
 argument_list|,
 name|pp
 operator|->
