@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -5959,6 +5965,7 @@ name|nfiles
 operator|>=
 name|maxuserfiles
 operator|&&
+operator|(
 name|td
 operator|->
 name|td_ucred
@@ -5966,6 +5973,14 @@ operator|->
 name|cr_ruid
 operator|!=
 literal|0
+operator|||
+name|jailed
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|)
+operator|)
 operator|)
 operator|||
 name|nfiles
