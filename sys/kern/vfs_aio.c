@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.28 1998/04/17 22:36:50 des Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.29 1998/06/10 10:31:08 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -4347,7 +4347,7 @@ modifier|*
 name|cdev
 decl_stmt|;
 name|struct
-name|bdevsw
+name|cdevsw
 modifier|*
 name|bdev
 decl_stmt|;
@@ -4525,17 +4525,14 @@ operator|-
 literal|1
 return|;
 block|}
-name|bdev
-operator|=
-name|cdev
-operator|->
-name|d_bdev
-expr_stmt|;
 if|if
 condition|(
-name|bdev
+name|cdev
+operator|->
+name|d_bmaj
 operator|==
-name|NULL
+operator|-
+literal|1
 condition|)
 block|{
 return|return
@@ -4543,6 +4540,10 @@ operator|-
 literal|1
 return|;
 block|}
+name|bdev
+operator|=
+name|cdev
+expr_stmt|;
 name|ki
 operator|=
 name|p
