@@ -583,7 +583,7 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|descr
+name|oid_descr
 decl_stmt|;
 block|}
 struct|;

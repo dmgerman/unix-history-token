@@ -1208,7 +1208,7 @@ if|if
 condition|(
 name|oidp
 operator|->
-name|descr
+name|oid_descr
 condition|)
 name|free
 argument_list|(
@@ -1226,7 +1226,7 @@ operator|*
 operator|)
 name|oidp
 operator|->
-name|descr
+name|oid_descr
 argument_list|,
 name|M_SYSCTLOID
 argument_list|)
@@ -1601,7 +1601,7 @@ literal|1
 decl_stmt|;
 name|oidp
 operator|->
-name|descr
+name|oid_descr
 operator|=
 name|malloc
 argument_list|(
@@ -1616,7 +1616,7 @@ if|if
 condition|(
 name|oidp
 operator|->
-name|descr
+name|oid_descr
 condition|)
 name|strcpy
 argument_list|(
@@ -1634,7 +1634,7 @@ operator|*
 operator|)
 name|oidp
 operator|->
-name|descr
+name|oid_descr
 argument_list|,
 name|descr
 argument_list|)
@@ -3468,7 +3468,7 @@ condition|(
 operator|!
 name|oid
 operator|->
-name|descr
+name|oid_descr
 condition|)
 return|return
 operator|(
@@ -3483,13 +3483,13 @@ name|req
 argument_list|,
 name|oid
 operator|->
-name|descr
+name|oid_descr
 argument_list|,
 name|strlen
 argument_list|(
 name|oid
 operator|->
-name|descr
+name|oid_descr
 argument_list|)
 operator|+
 literal|1
