@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -192,6 +192,13 @@ name|unsigned
 name|int
 name|un_flags
 decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|un_dircache
+decl_stmt|;
+comment|/* cached union stack */
 name|off_t
 name|un_uppersz
 decl_stmt|;
@@ -294,6 +301,8 @@ operator|,
 expr|struct
 name|vnode
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
