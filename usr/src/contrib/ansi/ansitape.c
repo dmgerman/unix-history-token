@@ -2988,11 +2988,13 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"VOL1%-6.6s %26.26sD%%C%10.10s1%28.28s3"
+literal|"VOL1%-6.6s %26.26sD%cC%10.10s1%28.28s3"
 argument_list|,
 name|tapename
 argument_list|,
 literal|" "
+argument_list|,
+literal|'%'
 argument_list|,
 literal|" "
 argument_list|,
