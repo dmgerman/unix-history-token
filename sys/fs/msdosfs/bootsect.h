@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: bootsect.h,v 1.1 1994/09/19 15:41:36 dfr Exp $ */
+comment|/*	$Id: bootsect.h,v 1.2 1995/05/30 08:07:29 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -47,7 +47,7 @@ comment|/* drive number (0x80) */
 name|char
 name|bsBootCode
 index|[
-literal|474
+literal|479
 index|]
 decl_stmt|;
 comment|/* pad so structure is 512 bytes long */
