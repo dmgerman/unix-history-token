@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.40 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.41 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -543,31 +543,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Clear curproc after we've done all operations 	 * that could block, and before tearing down 	 * the rest of the process state. 	 */
-name|curproc
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-operator|--
-name|p
-operator|->
-name|p_limit
-operator|->
-name|p_refcnt
-operator|==
-literal|0
-condition|)
-name|FREE
-argument_list|(
-name|p
-operator|->
-name|p_limit
-argument_list|,
-name|M_SUBPROC
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Remove proc from allproc queue and pidhash chain. 	 * Place onto zombproc.  Unlink from parent's child list. 	 */
 if|if
 condition|(
@@ -899,6 +874,31 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Clear curproc after we've done all operations 	 * that could block, and before tearing down the rest 	 * of the process state that might be used from clock, etc. 	 * Also, can't clear curproc while we're still runnable, 	 * as we're not on a run queue (we are current, just not 	 * a proper proc any longer!). 	 * 	 * Other substructures are freed from wait(). 	 */
+name|curproc
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|--
+name|p
+operator|->
+name|p_limit
+operator|->
+name|p_refcnt
+operator|==
+literal|0
+condition|)
+name|FREE
+argument_list|(
+name|p
+operator|->
+name|p_limit
+argument_list|,
+name|M_SUBPROC
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Finally, call machine-dependent code to release the remaining 	 * resources including address space, the kernel stack and pcb. 	 * The address space is released by "vmspace_free(p->p_vmspace)"; 	 * This is machine-dependent, as we may have to change stacks 	 * or ensure that the current one isn't reallocated before we 	 * finish.  cpu_exit will end with a call to swtch(), finishing 	 * our execution (pun intended). 	 */
 name|cpu_exit
 argument_list|(
