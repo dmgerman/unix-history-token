@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/*  * $Id: vext.h,v 1.14 1999/12/27 03:55:26 grog Exp grog $  * $FreeBSD$  */
+comment|/*  * $Id: vext.h,v 1.15 2000/02/17 05:10:47 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -1120,6 +1120,25 @@ name|char
 modifier|*
 name|argv0
 index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|parityops
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|enum
+name|parityop
+name|op
 parameter_list|)
 function_decl|;
 end_function_decl
