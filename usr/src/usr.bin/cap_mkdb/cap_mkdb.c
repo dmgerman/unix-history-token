@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cap_mkdb.c	8.1 (Berkeley) %G%"
+literal|"@(#)cap_mkdb.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
