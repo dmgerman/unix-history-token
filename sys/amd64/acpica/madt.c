@@ -964,6 +964,9 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|__i386__
 name|KASSERT
 argument_list|(
 name|rsdp_ptr
@@ -979,6 +982,8 @@ literal|"RSDP too high"
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|rsdp
 operator|=
 name|pmap_mapdev
@@ -1490,6 +1495,9 @@ name|printf
 argument_list|(
 literal|"ACPI APIC Table:<%.*s %.*s>\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|madt
@@ -1505,6 +1513,9 @@ name|Header
 operator|.
 name|OemId
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|madt
@@ -1951,6 +1962,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|apic
 operator|->
