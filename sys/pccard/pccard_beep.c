@@ -601,9 +601,11 @@ name|type
 operator|<
 literal|0
 operator|||
-name|type
-operator|>
 name|MAX_TONE_MODE
+operator|-
+literal|1
+operator|<
+name|type
 condition|)
 name|errcode
 operator|=
