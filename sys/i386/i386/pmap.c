@@ -3859,16 +3859,16 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|vm_page_unhold
-argument_list|(
+operator|--
 name|m
-argument_list|)
+operator|->
+name|wire_count
 expr_stmt|;
 if|if
 condition|(
 name|m
 operator|->
-name|hold_count
+name|wire_count
 operator|==
 literal|0
 condition|)
@@ -3965,21 +3965,6 @@ name|pteva
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If the page is finally unwired, simply free it. 	 */
-operator|--
-name|m
-operator|->
-name|wire_count
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|wire_count
-operator|==
-literal|0
-condition|)
-block|{
 name|vm_page_free_zero
 argument_list|(
 name|m
@@ -3995,7 +3980,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|1
 return|;
@@ -4669,12 +4653,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Increment the hold count for the page table page 	 * (denoting a new mapping.) 	 */
-name|m
-operator|->
-name|hold_count
-operator|++
-expr_stmt|;
 comment|/* 	 * Map the pagetable page into the process address space, if 	 * it isn't already there. 	 */
 name|pmap
 operator|->
@@ -4802,7 +4780,7 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|->
-name|hold_count
+name|wire_count
 operator|++
 expr_stmt|;
 block|}
@@ -7719,7 +7697,7 @@ name|mpte
 condition|)
 name|mpte
 operator|->
-name|hold_count
+name|wire_count
 operator|--
 expr_stmt|;
 comment|/* 		 * We might be turning off write access to the page, 		 * so we go ahead and sense modify status. 		 */
@@ -8033,7 +8011,7 @@ condition|)
 block|{
 name|mpte
 operator|->
-name|hold_count
+name|wire_count
 operator|++
 expr_stmt|;
 block|}
@@ -8077,7 +8055,7 @@ argument_list|)
 expr_stmt|;
 name|mpte
 operator|->
-name|hold_count
+name|wire_count
 operator|++
 expr_stmt|;
 block|}
@@ -8966,7 +8944,7 @@ if|if
 condition|(
 name|srcmpte
 operator|->
-name|hold_count
+name|wire_count
 operator|==
 literal|0
 condition|)
@@ -9104,11 +9082,11 @@ if|if
 condition|(
 name|dstmpte
 operator|->
-name|hold_count
+name|wire_count
 operator|>=
 name|srcmpte
 operator|->
-name|hold_count
+name|wire_count
 condition|)
 break|break;
 block|}
