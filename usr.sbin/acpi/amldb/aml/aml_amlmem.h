@@ -22,7 +22,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/acpi/aml/aml_memman.h>
+file|<aml/aml_memman.h>
 end_include
 
 begin_enum

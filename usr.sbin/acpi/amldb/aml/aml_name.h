@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/acpi/aml/aml_obj.h>
+file|<aml/aml_obj.h>
 end_include
 
 begin_struct

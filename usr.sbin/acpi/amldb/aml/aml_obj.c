@@ -12,37 +12,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/acpi/aml/aml_amlmem.h>
+file|<aml/aml_amlmem.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/acpi/aml/aml_env.h>
+file|<aml/aml_env.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/acpi/aml/aml_name.h>
+file|<aml/aml_name.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/acpi/aml/aml_obj.h>
+file|<aml/aml_obj.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/acpi/aml/aml_status.h>
+file|<aml/aml_status.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/acpi/aml/aml_store.h>
+file|<aml/aml_store.h>
 end_include
 
 begin_ifndef
