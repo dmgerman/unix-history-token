@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)arcs.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)arcs.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +40,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -849,13 +868,9 @@ operator|)
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ran out of memory for sorting\n"
-argument_list|,
-name|whoami
+literal|"ran out of memory for sorting"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1490,13 +1505,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: No room for %d bytes of cycle headers\n"
-argument_list|,
-name|whoami
+literal|"no room for %d bytes of cycle headers"
 argument_list|,
 operator|(
 name|ncycle
@@ -2019,13 +2030,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: No room for %d bytes of cycle stack\n"
-argument_list|,
-name|whoami
+literal|"no room for %d bytes of cycle stack"
 argument_list|,
 operator|(
 name|size
@@ -2686,13 +2693,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: No room for %d bytes of subcycle storage\n"
-argument_list|,
-name|whoami
+literal|"no room for %d bytes of subcycle storage"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2917,10 +2920,6 @@ name|maxwithparentcnt
 decl_stmt|;
 name|int
 name|maxnoparentcnt
-decl_stmt|;
-name|char
-modifier|*
-name|type
 decl_stmt|;
 name|maxexitcnt
 operator|=

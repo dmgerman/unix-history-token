@@ -159,17 +159,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*      *	who am i, for error messages.      */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|whoami
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*      * booleans      */
 end_comment
 
