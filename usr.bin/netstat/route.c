@@ -20,7 +20,7 @@ name|char
 name|route_c_rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.6 1993/11/17 20:19:24 wollman Exp $"
+literal|"$Id: route.c,v 1.7 1993/11/17 20:48:56 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1682,13 +1682,13 @@ directive|endif
 default|default:
 block|{
 specifier|register
-name|u_short
+name|u_char
 modifier|*
 name|s
 init|=
 operator|(
 operator|(
-name|u_short
+name|u_char
 operator|*
 operator|)
 name|sa
@@ -1702,30 +1702,14 @@ decl_stmt|;
 name|slim
 operator|=
 operator|(
-name|u_short
+name|u_char
 operator|*
 operator|)
 name|sa
 operator|+
-operator|(
-operator|(
 name|sa
 operator|->
 name|sa_len
-operator|+
-sizeof|sizeof
-argument_list|(
-name|u_short
-argument_list|)
-operator|-
-literal|1
-operator|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|u_short
-argument_list|)
-operator|)
 expr_stmt|;
 name|cp
 operator|=
@@ -1771,12 +1755,22 @@ name|sprintf
 argument_list|(
 name|cp
 argument_list|,
-literal|" %x"
+literal|" %x%x"
 argument_list|,
-operator|*
 name|s
-operator|++
+index|[
+literal|0
+index|]
+argument_list|,
+name|s
+index|[
+literal|1
+index|]
 argument_list|)
+operator|,
+name|s
+operator|+=
+literal|2
 expr_stmt|;
 name|cp
 operator|=
