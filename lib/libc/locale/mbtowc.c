@@ -73,11 +73,6 @@ condition|(
 name|s
 operator|==
 name|NULL
-operator|||
-operator|*
-name|s
-operator|==
-literal|'\0'
 condition|)
 comment|/* No support for state dependent encodings. */
 return|return
@@ -110,9 +105,8 @@ name|EILSEQ
 expr_stmt|;
 return|return
 operator|(
-name|s
 operator|-
-name|e
+literal|1
 operator|)
 return|;
 block|}
@@ -129,6 +123,12 @@ name|r
 expr_stmt|;
 return|return
 operator|(
+name|r
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
 name|e
 operator|-
 name|s
