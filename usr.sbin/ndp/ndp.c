@@ -4869,6 +4869,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|", maxmtu=%d"
+argument_list|,
+name|ND
+operator|.
+name|maxmtu
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|", curhlim=%d"
 argument_list|,
 name|ND
