@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.6 1997/07/07 00:02:55 smp Exp smp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.7 1997/07/08 23:42:28 smp Exp smp $  */
 end_comment
 
 begin_include
@@ -162,6 +162,41 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|TEST_CPUSTOP
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|void
+name|db_printf
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|fmt
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TEST_CPUSTOP */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|APIC_IO
 argument_list|)
 end_if
@@ -183,7 +218,7 @@ file|<i386/isa/icu.h>
 end_include
 
 begin_comment
-comment|/* Xinvltlb() */
+comment|/* IPIs */
 end_comment
 
 begin_include
@@ -193,7 +228,7 @@ file|<i386/isa/intr_machdep.h>
 end_include
 
 begin_comment
-comment|/* Xinvltlb() */
+comment|/* IPIs */
 end_comment
 
 begin_endif
@@ -648,44 +683,6 @@ begin_comment
 comment|/*  * Values to send to the POST hardware.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|POSTCODE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|POSTCODE
-parameter_list|(
-name|X
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|POSTCODE_LO
-parameter_list|(
-name|X
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|POSTCODE_HI
-parameter_list|(
-name|X
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -757,7 +754,7 @@ value|0x19
 end_define
 
 begin_comment
-comment|/* XXX FIXME: where does this really belong, isa.h/isa.c perhaps? */
+comment|/** XXX FIXME: where does this really belong, isa.h/isa.c perhaps? */
 end_comment
 
 begin_decl_stmt
@@ -767,7 +764,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/** FIXME: what system files declare these??? */
+comment|/** XXX FIXME: what system files declare these??? */
 end_comment
 
 begin_decl_stmt
@@ -931,7 +928,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* virtual address of per-cpu common_tss */
+comment|/* Virtual address of per-cpu common_tss */
 end_comment
 
 begin_decl_stmt
@@ -943,7 +940,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * look for MP compliant motherboard.  */
+comment|/*  * Local data and functions.  */
 end_comment
 
 begin_decl_stmt
@@ -1078,7 +1075,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * calculate usable address in base memory for AP trampoline code  */
+comment|/*  * Calculate usable address in base memory for AP trampoline code.  */
 end_comment
 
 begin_function
@@ -1129,6 +1126,10 @@ name|boot_address
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Look for an Intel MP spec table (ie, SMP capable hardware).  */
+end_comment
 
 begin_function
 name|int
@@ -1282,7 +1283,6 @@ literal|0
 return|;
 name|found
 label|:
-comment|/* please forgive the 'goto'! */
 comment|/* calculate needed resources */
 name|mpfps
 operator|=
@@ -1313,7 +1313,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * startup the SMP processors  */
+comment|/*  * Startup the SMP processors.  */
 end_comment
 
 begin_function
@@ -1348,7 +1348,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * print various information about the SMP system hardware and setup  */
+comment|/*  * Print various information about the SMP system hardware and setup.  */
 end_comment
 
 begin_function
@@ -1659,9 +1659,13 @@ name|APIC_IO
 argument_list|)
 end_if
 
+begin_comment
+comment|/*  * Final configuration of the BSP's local APIC:  *  - disable 'pic mode'.  *  - disable 'virtual wire mode'.  *  - enable NMI.  */
+end_comment
+
 begin_function
 name|void
-name|configure_local_apic
+name|bsp_apic_configure
 parameter_list|(
 name|void
 parameter_list|)
@@ -1672,6 +1676,7 @@ decl_stmt|;
 name|u_int32_t
 name|temp
 decl_stmt|;
+comment|/* leave 'pic mode' if necessary */
 if|if
 condition|(
 name|picmode
@@ -1718,6 +1723,7 @@ name|temp
 operator||=
 name|APIC_LVT_M
 expr_stmt|;
+comment|/* set the mask */
 name|lapic
 operator|.
 name|lvt_lint0
@@ -1725,53 +1731,71 @@ operator|=
 name|temp
 expr_stmt|;
 comment|/* setup lint1 to handle NMI */
-if|#
-directive|if
-literal|1
-comment|/** XXX FIXME:           *      should we arrange for ALL CPUs to catch NMI???          *      it would probably crash, so for now only the BSP          *      will catch it          */
-if|if
-condition|(
-name|cpuid
-operator|!=
-literal|0
-condition|)
-return|return;
-endif|#
-directive|endif
-comment|/* 0/1 */
 name|temp
 operator|=
 name|lapic
 operator|.
 name|lvt_lint1
 expr_stmt|;
-comment|/* clear fields of interest, preserve undefined fields */
 name|temp
 operator|&=
 operator|~
-operator|(
-literal|0x1f000
-operator||
-name|APIC_LVT_DM
-operator||
-name|APIC_LVT_VECTOR
-operator|)
+name|APIC_LVT_M
 expr_stmt|;
-comment|/* setup for NMI, edge trigger, active hi */
-name|temp
-operator||=
-operator|(
-name|APIC_LVT_DM_NMI
-operator||
-name|APIC_LVT_IIPP_INTAHI
-operator|)
-expr_stmt|;
+comment|/* clear the mask */
 name|lapic
 operator|.
 name|lvt_lint1
 operator|=
 name|temp
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TEST_CPUSTOP
+argument_list|)
+name|printf
+argument_list|(
+literal|">>> CPU%02d bsp_apic_configure() lint0: 0x%08x\n"
+argument_list|,
+name|cpuid
+argument_list|,
+name|lapic
+operator|.
+name|lvt_lint0
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|">>>                            lint1: 0x%08x\n"
+argument_list|,
+name|lapic
+operator|.
+name|lvt_lint1
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|">>>                            TPR:   0x%08x\n"
+argument_list|,
+name|lapic
+operator|.
+name|tpr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|">>>                            SVR:   0x%08x\n"
+argument_list|,
+name|lapic
+operator|.
+name|svr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* TEST_CPUSTOP */
 block|}
 end_function
 
@@ -1824,7 +1848,7 @@ argument_list|(
 name|MP_ENABLE_POST
 argument_list|)
 expr_stmt|;
-comment|/* Turn on 4MB of V == P addressing so we can get to MP table */
+comment|/* turn on 4MB of V == P addressing so we can get to MP table */
 operator|*
 operator|(
 name|int
@@ -5659,9 +5683,7 @@ expr_stmt|;
 comment|/* this uses a LOGICAL cpu ID, ie BSP == 0 */
 comment|/* initialize BSP's local APIC */
 name|apic_initialize
-argument_list|(
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* install the AP 1st level boot code */
 name|install_ap_tramp
@@ -6913,6 +6935,9 @@ literal|"  spun\nstopped, sihits: %d\n"
 argument_list|,
 name|sihits
 argument_list|)
+expr_stmt|;
+name|cngetc
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif

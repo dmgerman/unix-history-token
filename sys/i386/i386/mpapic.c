@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.c,v 1.8 1997/07/06 23:59:31 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.c,v 1.6 1997/07/08 23:42:28 smp Exp smp $  */
 end_comment
 
 begin_include
@@ -71,6 +71,41 @@ begin_comment
 comment|/* Xspuriousint() */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TEST_CPUSTOP
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|void
+name|db_printf
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|fmt
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TEST_CPUSTOP */
+end_comment
+
 begin_comment
 comment|/* EISA Edge/Level trigger control registers */
 end_comment
@@ -131,25 +166,19 @@ comment|/* APIC_IO */
 end_comment
 
 begin_comment
-comment|/*  * enable APIC, configure interrupts  */
+comment|/*  * Enable APIC, configure interrupts.  *  * XXX FIXME: remove the magic numbers.  */
 end_comment
 
 begin_function
 name|void
 name|apic_initialize
 parameter_list|(
-name|int
-name|is_bsp
+name|void
 parameter_list|)
 block|{
 name|u_int
 name|temp
 decl_stmt|;
-if|if
-condition|(
-name|is_bsp
-condition|)
-block|{
 comment|/* setup LVT1 as ExtINT */
 name|temp
 operator|=
@@ -161,18 +190,31 @@ name|temp
 operator|&=
 literal|0xfffe58ff
 expr_stmt|;
+comment|/* preserve undefined fields */
+if|if
+condition|(
+name|cpuid
+operator|==
+literal|0
+condition|)
 name|temp
 operator||=
 literal|0x00000700
 expr_stmt|;
+comment|/* process ExtInts */
+else|else
+name|temp
+operator||=
+literal|0x00010700
+expr_stmt|;
+comment|/* mask ExtInts */
 name|lapic
 operator|.
 name|lvt_lint0
 operator|=
 name|temp
 expr_stmt|;
-block|}
-comment|/* setup LVT2 as NMI */
+comment|/* setup LVT2 as NMI, masked till later... */
 name|temp
 operator|=
 name|lapic
@@ -183,10 +225,12 @@ name|temp
 operator|&=
 literal|0xfffe58ff
 expr_stmt|;
+comment|/* preserve undefined fields */
 name|temp
 operator||=
-literal|0xffff0400
+literal|0x00010400
 expr_stmt|;
+comment|/* masked, edge trigger, active hi */
 name|lapic
 operator|.
 name|lvt_lint1
@@ -212,9 +256,22 @@ name|defined
 argument_list|(
 name|TEST_LOPRIO
 argument_list|)
+if|#
+directive|if
+literal|1
+comment|/* The new order of startup since private pages makes this possible. */
+name|temp
+operator||=
+literal|0x10
+expr_stmt|;
+comment|/* allow INT arbitration */
+else|#
+directive|else
 if|if
 condition|(
-name|is_bsp
+name|cpuid
+operator|==
+literal|0
 condition|)
 name|temp
 operator||=
@@ -229,6 +286,8 @@ expr_stmt|;
 comment|/* disallow INT arbitration */
 endif|#
 directive|endif
+endif|#
+directive|endif
 comment|/* TEST_LOPRIO */
 name|lapic
 operator|.
@@ -236,7 +295,7 @@ name|tpr
 operator|=
 name|temp
 expr_stmt|;
-comment|/* enable the beast */
+comment|/* enable the local APIC */
 name|temp
 operator|=
 name|lapic
@@ -265,10 +324,10 @@ condition|(
 operator|(
 name|XSPURIOUSINT_OFFSET
 operator|&
-literal|0xf
+name|APIC_SVR_VEC_FIX
 operator|)
 operator|!=
-literal|0xf
+name|APIC_SVR_VEC_FIX
 condition|)
 name|panic
 argument_list|(
@@ -280,36 +339,73 @@ expr_stmt|;
 name|temp
 operator|&=
 operator|~
-literal|0xff
+name|APIC_SVR_VEC_PROG
 expr_stmt|;
-comment|/* clear vector field */
+comment|/* clear (programmable) vector field */
 name|temp
 operator||=
+operator|(
 name|XSPURIOUSINT_OFFSET
-expr_stmt|;
-name|printf
-argument_list|(
-literal|">>> SVR: 0x%08x\n"
-argument_list|,
-name|temp
-argument_list|)
+operator|&
+name|APIC_SVR_VEC_PROG
+operator|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* TEST_CPUSTOP */
-if|#
-directive|if
-literal|0
-block|temp |= 0x20;
-comment|/** FIXME: 2f == strayIRQ15 */
-endif|#
-directive|endif
 name|lapic
 operator|.
 name|svr
 operator|=
 name|temp
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TEST_CPUSTOP
+argument_list|)
+name|printf
+argument_list|(
+literal|">>> CPU%02d apic_initialize()    lint0: 0x%08x\n"
+argument_list|,
+name|cpuid
+argument_list|,
+name|lapic
+operator|.
+name|lvt_lint0
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|">>>                            lint1: 0x%08x\n"
+argument_list|,
+name|lapic
+operator|.
+name|lvt_lint1
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|">>>                            TPR:   0x%08x\n"
+argument_list|,
+name|lapic
+operator|.
+name|tpr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|">>>                            SVR:   0x%08x\n"
+argument_list|,
+name|lapic
+operator|.
+name|svr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* TEST_CPUSTOP */
 block|}
 end_function
 
@@ -389,233 +485,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * setup I/O APIC  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HOW_8259_IS_PROGRAMMED
-end_ifdef
-
-begin_expr_stmt
-name|outb
-argument_list|(
-name|IO_ICU1
-argument_list|,
-literal|0x11
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* reset; program device, four bytes */
-end_comment
-
-begin_expr_stmt
-name|outb
-argument_list|(
-name|IO_ICU1
-operator|+
-literal|1
-argument_list|,
-name|NRSVIDT
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* starting at this vector index */
-end_comment
-
-begin_expr_stmt
-name|outb
-argument_list|(
-name|IO_ICU1
-operator|+
-literal|1
-argument_list|,
-literal|1
-operator|<<
-literal|2
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* slave on line 2 */
-end_comment
-
-begin_expr_stmt
-name|outb
-argument_list|(
-name|IO_ICU1
-operator|+
-literal|1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* 8086 mode */
-end_comment
-
-begin_expr_stmt
-name|outb
-argument_list|(
-name|IO_ICU1
-operator|+
-literal|1
-argument_list|,
-literal|0xff
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* leave interrupts masked */
-end_comment
-
-begin_expr_stmt
-name|outb
-argument_list|(
-name|IO_ICU1
-argument_list|,
-literal|0x0a
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* default to IRR on read */
-end_comment
-
-begin_expr_stmt
-name|outb
-argument_list|(
-name|IO_ICU1
-argument_list|,
-literal|0xc0
-operator||
-operator|(
-literal|3
-operator|-
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* pri order 3-7, 0-2 (com2 first) */
-end_comment
-
-begin_expr_stmt
-name|outb
-argument_list|(
-name|IO_ICU2
-argument_list|,
-literal|0x11
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* reset; program device, four bytes */
-end_comment
-
-begin_expr_stmt
-name|outb
-argument_list|(
-name|IO_ICU2
-operator|+
-literal|1
-argument_list|,
-name|NRSVIDT
-operator|+
-literal|8
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* staring at this vector index */
-end_comment
-
-begin_expr_stmt
-name|outb
-argument_list|(
-name|IO_ICU2
-operator|+
-literal|1
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* my slave id is 2 */
-end_comment
-
-begin_expr_stmt
-name|outb
-argument_list|(
-name|IO_ICU2
-operator|+
-literal|1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* 8086 mode */
-end_comment
-
-begin_expr_stmt
-name|outb
-argument_list|(
-name|IO_ICU2
-operator|+
-literal|1
-argument_list|,
-literal|0xff
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* leave interrupts masked */
-end_comment
-
-begin_expr_stmt
-name|outb
-argument_list|(
-name|IO_ICU2
-argument_list|,
-literal|0x0a
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* default to IRR on read */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HOW_8259_IS_PROGRAMMED */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -672,7 +541,7 @@ comment|/* TEST_LOPRIO */
 end_comment
 
 begin_comment
-comment|/*  *  */
+comment|/*  * Setup the IO APIC.  */
 end_comment
 
 begin_function
@@ -742,7 +611,7 @@ argument_list|(
 name|apic
 argument_list|)
 expr_stmt|;
-comment|/* pins-1 in this part */
+comment|/* pins-1 in APIC */
 for|for
 control|(
 name|pin
@@ -894,9 +763,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* program entry according to MP table. */
 else|else
 block|{
-comment|/* program entry according to MP table. */
 if|#
 directive|if
 name|defined
@@ -947,7 +816,7 @@ value|((u_int32_t)		\ 	 (IOART_INTMSET |	\ 	  IOART_TRGREDG |	\ 	  IOART_INTAHI 
 end_define
 
 begin_comment
-comment|/*  *  */
+comment|/*  * Setup the source of External INTerrupts.  */
 end_comment
 
 begin_function
@@ -992,13 +861,10 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/** FIXME: where should we steer ExtInts ??? */
+comment|/** XXX FIXME: changed on 970708, make default if no complaints */
 if|#
 directive|if
-name|defined
-argument_list|(
-name|BROADCAST_EXTINT
-argument_list|)
+literal|1
 name|target
 operator|=
 name|IOART_DEST
@@ -1069,7 +935,7 @@ name|DEFAULT_EXTINT_FLAGS
 end_undef
 
 begin_comment
-comment|/*  *  */
+comment|/*  * Set the trigger level for an IO APIC pin.  */
 end_comment
 
 begin_function
@@ -1257,7 +1123,7 @@ name|intcontrol
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* EISA IRQ's are identical to ISA irq's, regardless of 		 * whether they are edge or level since they go through the 		 * level/polarity converter gadget. */
+comment|/* 		 * EISA IRQ's are identical to ISA irq's, regardless of 		 * whether they are edge or level since they go through 		 * the level/polarity converter gadget. 		 */
 name|level
 operator|=
 literal|0
@@ -1312,7 +1178,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  */
+comment|/*  * Set the polarity value for an IO APIC pin.  */
 end_comment
 
 begin_function
@@ -1470,13 +1336,13 @@ name|pol
 operator|=
 literal|0
 expr_stmt|;
-comment|/* If level, active low */
+comment|/* if level, active low */
 else|else
 name|pol
 operator|=
 literal|1
 expr_stmt|;
-comment|/* If edge, high edge */
+comment|/* if edge, high edge */
 if|if
 condition|(
 name|pol
@@ -1525,7 +1391,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * set INT mask bit for each bit set in 'mask'.  * clear INT mask bit for all others.  * only consider lower 24 bits in mask.  */
+comment|/*  * Set INT mask bit for each bit set in 'mask'.  * Clear INT mask bit for all others.  * Only consider lower 24 bits in mask.  */
 end_comment
 
 begin_if
@@ -1721,7 +1587,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * read current IRQ0 -IRQ23 masks  */
+comment|/*  * Read current IRQ0 -IRQ23 masks.  */
 end_comment
 
 begin_if
@@ -1784,7 +1650,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * set INT mask bit for each bit set in 'mask'.  * ignore INT mask bit for all others.  * only consider lower 24 bits in mask.  */
+comment|/*  * Set INT mask bit for each bit set in 'mask'.  * Ignore INT mask bit for all others.  * Only consider lower 24 bits in mask.  */
 end_comment
 
 begin_function
@@ -1930,7 +1796,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * clear INT mask bit for each bit set in 'mask'.  * ignore INT mask bit for all others.  * only consider lower 24 bits in mask.  */
+comment|/*  * Clear INT mask bit for each bit set in 'mask'.  * Ignore INT mask bit for all others.  * Only consider lower 24 bits in mask.  */
 end_comment
 
 begin_function
@@ -2084,7 +1950,7 @@ comment|/*  * Inter Processor Interrupt functions.  */
 end_comment
 
 begin_comment
-comment|/*  * send APIC IPI 'vector' to 'destType' via 'deliveryMode'  *  *  destType is 1 of: APIC_DEST_SELF, APIC_DEST_ALLISELF, APIC_DEST_ALLESELF  *  vector is any valid SYSTEM INT vector  *  delivery_mode is 1 of: APIC_DELMODE_FIXED, APIC_DELMODE_LOWPRIO  */
+comment|/*  * Send APIC IPI 'vector' to 'destType' via 'deliveryMode'.  *  *  destType is 1 of: APIC_DEST_SELF, APIC_DEST_ALLISELF, APIC_DEST_ALLESELF  *  vector is any valid SYSTEM INT vector  *  delivery_mode is 1 of: APIC_DELMODE_FIXED, APIC_DELMODE_LOWPRIO  */
 end_comment
 
 begin_define
@@ -2257,7 +2123,7 @@ empty_stmt|;
 endif|#
 directive|endif
 comment|/* DETECT_DEADLOCK */
-comment|/** FIXME: return result */
+comment|/** XXX FIXME: return result */
 return|return
 literal|0
 return|;
@@ -2265,7 +2131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * send APIC IPI 'vector' to 'target's via 'delivery_mode'  *  *  target contains a bitfield with a bit set for selected APICs.  *  vector is any valid SYSTEM INT vector  *  delivery_mode is 1 of: APIC_DELMODE_FIXED, APIC_DELMODE_LOWPRIO  */
+comment|/*  * Send APIC IPI 'vector' to 'target's via 'delivery_mode'.  *  *  target contains a bitfield with a bit set for selected APICs.  *  vector is any valid SYSTEM INT vector  *  delivery_mode is 1 of: APIC_DELMODE_FIXED, APIC_DELMODE_LOWPRIO  */
 end_comment
 
 begin_function
@@ -2362,7 +2228,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DEBUG_CPUSTOP
+name|TEST_CPUSTOP
 argument_list|)
 name|db_printf
 argument_list|(
@@ -2375,7 +2241,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG_CPUSTOP */
+comment|/* TEST_CPUSTOP */
 comment|/* send the IPI */
 if|if
 condition|(
@@ -2416,7 +2282,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * send an IPI INTerrupt containing 'vector' to CPU 'target'  *   NOTE: target is a LOGICAL APIC ID  */
+comment|/*  * Send an IPI INTerrupt containing 'vector' to CPU 'target'  *   NOTE: target is a LOGICAL APIC ID  */
 end_comment
 
 begin_function
@@ -2500,7 +2366,7 @@ empty_stmt|;
 return|return
 literal|0
 return|;
-comment|/** FIXME: return result */
+comment|/** XXX FIXME: return result */
 block|}
 end_function
 
@@ -2523,11 +2389,11 @@ comment|/* APIC_IO */
 end_comment
 
 begin_comment
-comment|/*  * timer code, in development...  * suggested by rgrimes@gndrsh.aac.dev.com  */
+comment|/*  * Timer code, in development...  *  - suggested by rgrimes@gndrsh.aac.dev.com  */
 end_comment
 
 begin_comment
-comment|/** FIXME: temp hack till we can determin bus clock */
+comment|/** XXX FIXME: temp hack till we can determin bus clock */
 end_comment
 
 begin_ifndef
@@ -2590,7 +2456,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * acquire the APIC timer for exclusive use  */
+comment|/*  * Acquire the APIC timer for exclusive use.  */
 end_comment
 
 begin_function
@@ -2608,7 +2474,7 @@ literal|0
 return|;
 else|#
 directive|else
-comment|/** FIXME: make this really do something */
+comment|/** XXX FIXME: make this really do something */
 name|panic
 argument_list|(
 literal|"APIC timer in use when attempting to aquire"
@@ -2620,7 +2486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * return the APIC timer  */
+comment|/*  * Return the APIC timer.  */
 end_comment
 
 begin_function
@@ -2638,7 +2504,7 @@ literal|0
 return|;
 else|#
 directive|else
-comment|/** FIXME: make this really do something */
+comment|/** XXX FIXME: make this really do something */
 name|panic
 argument_list|(
 literal|"APIC timer was already released"
@@ -2659,7 +2525,7 @@ comment|/* READY */
 end_comment
 
 begin_comment
-comment|/*  * load a 'downcount time' in uSeconds  */
+comment|/*  * Load a 'downcount time' in uSeconds.  */
 end_comment
 
 begin_function
@@ -2676,7 +2542,7 @@ decl_stmt|;
 name|long
 name|ticks_per_microsec
 decl_stmt|;
-comment|/* calculate divisor and count from value: 	 *  	 * timeBase == CPU bus clock divisor == [1,2,4,8,16,32,64,128] value == 	 * time in uS 	 */
+comment|/* 	 * Calculate divisor and count from value: 	 *  	 *  timeBase == CPU bus clock divisor == [1,2,4,8,16,32,64,128] 	 *  value == time in uS 	 */
 name|lapic
 operator|.
 name|dcr_timer
@@ -2734,7 +2600,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * read remaining time in timer  */
+comment|/*  * Read remaining time in timer.  */
 end_comment
 
 begin_function
@@ -2747,7 +2613,7 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/** FIXME: we need to return the actual remaining time,          *         for now we just return the remaining count.          */
+comment|/** XXX FIXME: we need to return the actual remaining time,          *         for now we just return the remaining count.          */
 else|#
 directive|else
 return|return
@@ -2761,7 +2627,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * spin-style delay, set delay time in uS, spin till it drains  */
+comment|/*  * Spin-style delay, set delay time in uS, spin till it drains.  */
 end_comment
 
 begin_function
