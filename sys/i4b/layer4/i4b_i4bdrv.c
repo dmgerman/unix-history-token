@@ -20,13 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"i4bipr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"i4btel.h"
+file|"opt_i4b.h"
 end_include
 
 begin_include
@@ -93,18 +87,6 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"i4bing.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"i4bisppp.h"
 end_include
 
 begin_include

@@ -49,7 +49,7 @@ comment|/* the name */
 name|int
 name|f_type
 decl_stmt|;
-comment|/* type or count */
+comment|/* type */
 name|u_char
 name|f_flags
 decl_stmt|;
@@ -181,22 +181,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|NEED_COUNT
+name|ISDUP
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISDUP
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
 name|NOWERROR
-value|32
+value|16
 end_define
 
 begin_struct
@@ -212,10 +205,6 @@ modifier|*
 name|d_name
 decl_stmt|;
 comment|/* name of device (e.g. rk11) */
-name|int
-name|d_count
-decl_stmt|;
-comment|/* device count */
 define|#
 directive|define
 name|UNKNOWN

@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"i4bipr.h"
+file|"opt_i4b.h"
 end_include
 
 begin_include
@@ -45,30 +45,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"i4bing.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"i4bisppp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"i4brbch.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"i4btel.h"
 end_include
 
 begin_include

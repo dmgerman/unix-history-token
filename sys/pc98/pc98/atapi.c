@@ -16,22 +16,14 @@ end_undef
 begin_include
 include|#
 directive|include
-file|"wdc.h"
+file|"opt_wcd.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"wcd.h"
+file|"opt_wdc.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NWDC
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -852,11 +844,9 @@ case|case
 name|AT_TYPE_DIRECT
 case|:
 comment|/* direct-access */
-if|#
-directive|if
-name|NWCD
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_WCD
 comment|/* FALLTHROUGH */
 else|#
 directive|else
@@ -874,11 +864,9 @@ case|case
 name|AT_TYPE_CDROM
 case|:
 comment|/* CD-ROM device */
-if|#
-directive|if
-name|NWCD
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_WCD
 comment|/* ATAPI CD-ROM& CD-R/RW drives */
 if|if
 condition|(
@@ -5578,15 +5566,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NWDC */
-end_comment
 
 end_unit
 

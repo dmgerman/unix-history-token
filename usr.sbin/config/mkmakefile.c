@@ -1502,8 +1502,6 @@ name|imp_rule
 decl_stmt|,
 name|no_obj
 decl_stmt|,
-name|needcount
-decl_stmt|,
 name|before_depend
 decl_stmt|,
 name|mandatory
@@ -1536,7 +1534,7 @@ argument_list|)
 expr_stmt|;
 name|next
 label|:
-comment|/* 	 * filename    [ standard | mandatory | optional | count ] 	 *	[ dev* | profiling-routine ] [ no-obj ] 	 *	[ compile-with "compile rule" [no-implicit-rule] ] 	 *      [ dependency "dependency-list"] [ before-depend ] 	 *	[ clean "file-list"] [ warning "text warning" ] 	 */
+comment|/* 	 * filename    [ standard | mandatory | optional ] 	 *	[ dev* | profiling-routine ] [ no-obj ] 	 *	[ compile-with "compile rule" [no-implicit-rule] ] 	 *      [ dependency "dependency-list"] [ before-depend ] 	 *	[ clean "file-list"] [ warning "text warning" ] 	 */
 name|wd
 operator|=
 name|get_word
@@ -1720,10 +1718,6 @@ name|no_obj
 operator|=
 literal|0
 expr_stmt|;
-name|needcount
-operator|=
-literal|0
-expr_stmt|;
 name|before_depend
 operator|=
 literal|0
@@ -1771,22 +1765,6 @@ block|}
 elseif|else
 if|if
 condition|(
-name|eq
-argument_list|(
-name|wd
-argument_list|,
-literal|"count"
-argument_list|)
-condition|)
-block|{
-name|needcount
-operator|=
-literal|1
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
 operator|!
 name|eq
 argument_list|(
@@ -1798,7 +1776,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: %s must be count, optional, mandatory or standard\n"
+literal|"%s: %s must be optional, mandatory or standard\n"
 argument_list|,
 name|fname
 argument_list|,
@@ -2223,27 +2201,9 @@ argument_list|,
 name|wd
 argument_list|)
 condition|)
-block|{
-if|if
-condition|(
-name|std
-operator|&&
-name|dp
-operator|->
-name|d_count
-operator|<=
-literal|0
-condition|)
-name|dp
-operator|->
-name|d_count
-operator|=
-literal|1
-expr_stmt|;
 goto|goto
 name|nextparam
 goto|;
-block|}
 if|if
 condition|(
 name|mandatory
@@ -2381,16 +2341,6 @@ operator|->
 name|f_flags
 operator||=
 name|isdup
-expr_stmt|;
-if|if
-condition|(
-name|needcount
-condition|)
-name|tp
-operator|->
-name|f_flags
-operator||=
-name|NEED_COUNT
 expr_stmt|;
 name|tp
 operator|->
@@ -2539,16 +2489,6 @@ operator|->
 name|f_flags
 operator||=
 name|BEFORE_DEPEND
-expr_stmt|;
-if|if
-condition|(
-name|needcount
-condition|)
-name|tp
-operator|->
-name|f_flags
-operator||=
-name|NEED_COUNT
 expr_stmt|;
 if|if
 condition|(

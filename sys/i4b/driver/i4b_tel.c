@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"i4btel.h"
+file|"opt_i4b.h"
 end_include
 
 begin_undef

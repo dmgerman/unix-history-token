@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"wdc.h"
+file|"opt_wdc.h"
 end_include
 
 begin_undef
@@ -29,14 +29,6 @@ end_define
 begin_comment
 comment|/* 4 drives per wdc on PC98 */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|NWDC
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -4486,15 +4478,6 @@ argument|); 	return (-
 literal|1
 argument|); }
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NWDC> 0 */
-end_comment
 
 end_unit
 
