@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tip.c	5.17 (Berkeley) %G%"
+literal|"@(#)tip.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1584,6 +1584,14 @@ block|}
 block|}
 end_block
 
+begin_decl_stmt
+specifier|extern
+name|esctable_t
+name|etable
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Escape handler --  *  called on recognition of ``escapec'' at the beginning of a line  */
 end_comment
@@ -1614,11 +1622,6 @@ argument_list|(
 name|ESCAPE
 argument_list|)
 argument_list|)
-decl_stmt|;
-specifier|extern
-name|esctable_t
-name|etable
-index|[]
 decl_stmt|;
 name|gch
 operator|=
@@ -2114,11 +2117,6 @@ specifier|register
 name|esctable_t
 modifier|*
 name|p
-decl_stmt|;
-specifier|extern
-name|esctable_t
-name|etable
-index|[]
 decl_stmt|;
 name|printf
 argument_list|(
