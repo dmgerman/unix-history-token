@@ -2005,17 +2005,6 @@ endif|#
 directive|endif
 break|break;
 default|default:
-name|bsdtar_warnc
-argument_list|(
-name|bsdtar
-argument_list|,
-literal|0
-argument_list|,
-literal|"Unrecognized option -c"
-argument_list|,
-name|optopt
-argument_list|)
-expr_stmt|;
 name|usage
 argument_list|(
 name|bsdtar

@@ -1241,9 +1241,9 @@ name|bsdtar
 operator|->
 name|day_first
 condition|?
-literal|"%e %b  %R"
+literal|"%e %b %R"
 else|:
-literal|"%b %e  %R"
+literal|"%b %e %R"
 expr_stmt|;
 name|strftime
 argument_list|(
