@@ -625,7 +625,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|" w/s   kBps   ms/d   "
+literal|" w/s   kBps   ms/w   "
 argument_list|)
 expr_stmt|;
 if|if
