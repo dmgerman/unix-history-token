@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.12 1995/02/26 05:14:48 bde Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.13 1995/03/28 07:55:35 bde Exp $  */
 end_comment
 
 begin_include
@@ -270,6 +270,14 @@ begin_struct
 struct|struct
 name|ze_softc
 block|{
+name|caddr_t
+name|maddr
+decl_stmt|;
+name|u_long
+name|iobase
+decl_stmt|,
+name|irq
+decl_stmt|;
 name|struct
 name|arpcom
 name|arpcom
@@ -285,22 +293,6 @@ modifier|*
 name|mau
 decl_stmt|;
 comment|/* type of media access unit */
-if|#
-directive|if
-literal|0
-block|u_char	vendor;
-comment|/* interface vendor */
-block|u_char	type;
-comment|/* interface type code */
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|u_short	vector;
-comment|/* interrupt vector */
-endif|#
-directive|endif
 name|u_short
 name|nic_addr
 decl_stmt|;
@@ -442,6 +434,21 @@ argument_list|()
 decl_stmt|,
 name|ze_get_packet
 argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ze_setup
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ze_softc
+operator|*
+name|sc
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1055,7 +1062,7 @@ value|do { PEEK(addr) = (val); } while (0)
 end_define
 
 begin_comment
-comment|/*  * Determine if the device is present  *  *   on entry:  * 	a pointer to an isa_device struct  *   on exit:  *	NULL if device not found  *	or # of i/o addresses used (if found)  */
+comment|/*  * Determine if the device is present  *  *   on entry:  * 	a pointer to an isa_device struct  *   on exit:  *	NULL if device not found  *	or # of i/o addresses used (if found) 	pcic(  */
 end_comment
 
 begin_function
@@ -1238,207 +1245,45 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|re_init_flag
+name|sc
+operator|->
+name|maddr
 operator|=
-literal|0
-expr_stmt|;
-name|re_init
-label|:
-comment|/* 	 * (2) map card configuration registers.  these are offset 	 * in card memory space by 0x20000.  normally we could get 	 * this offset from the card information structure, but I'm 	 * too lazy and am not quite sure if I understand the CIS anyway. 	 * 	 * XXX IF YOU'RE TRYING TO PORT THIS DRIVER FOR A DIFFERENT 	 * PCMCIA CARD, the most likely thing to change is the constant 	 * 0x20000 in the next statement.  Oh yes, also change the 	 * card id string that we probe for. 	 */
-name|pcic_map_memory
-argument_list|(
-name|slot
-argument_list|,
-literal|0
-argument_list|,
-name|kvtop
-argument_list|(
 name|isa_dev
 operator|->
 name|id_maddr
-argument_list|)
-argument_list|,
-literal|0x20000
-argument_list|,
-literal|8L
-argument_list|,
-name|ATTRIBUTE
-argument_list|,
-literal|1
-argument_list|)
 expr_stmt|;
-name|POKE
-argument_list|(
-name|isa_dev
+name|sc
 operator|->
-name|id_maddr
-argument_list|,
-literal|0x80
-argument_list|)
-expr_stmt|;
-comment|/* reset the card (how long?) */
-name|DELAY
-argument_list|(
-literal|40000
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Set the configuration index.  According to [1], the adapter won't 	 * respond to any i/o signals until we do this; it uses the 	 * Memory Only interface (whatever that is; it's not documented). 	 * Also turn on "level" (not pulse) interrupts. 	 * 	 * XXX probably should init the socket and copy register also, 	 * so that we can deal with multiple instances of the same card. 	 */
-name|POKE
-argument_list|(
-name|isa_dev
-operator|->
-name|id_maddr
-argument_list|,
-literal|0x41
-argument_list|)
-expr_stmt|;
-name|pcic_unmap_memory
-argument_list|(
-name|slot
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* 	 * (3) now map in the shared memory buffer.  This has to be mapped 	 * as words, not bytes, and on a 16k boundary.  The offset value 	 * was derived by installing IBM's POINTETH.SYS under DOS and 	 * looking at the PCIC registers; it's not documented in IBM's 	 * tech ref manual ([1]). 	 */
-name|pcic_map_memory
-argument_list|(
-name|slot
-argument_list|,
-literal|0
-argument_list|,
-name|kvtop
-argument_list|(
-name|isa_dev
-operator|->
-name|id_maddr
-argument_list|)
-argument_list|,
-literal|0x4000L
-argument_list|,
-literal|0x4000L
-argument_list|,
-name|COMMON
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* 	 * (4) map i/o ports. 	 * 	 * XXX is it possible that the config file leaves this unspecified, 	 * in which case we have to pick one? 	 * 	 * At least one PCMCIA device driver I'v seen maps a block 	 * of 32 consecutive i/o ports as two windows of 16 ports each. 	 * Maybe some other pcic chips are restricted to 16-port windows; 	 * the 82365SL doesn't seem to have that problem.  But since 	 * we have an extra window anyway... 	 */
-ifdef|#
-directive|ifdef
-name|SHARED_MEMORY
-name|pcic_map_io
-argument_list|(
-name|slot
-argument_list|,
-literal|0
-argument_list|,
-name|isa_dev
-operator|->
-name|id_iobase
-argument_list|,
-literal|32
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|pcic_map_io
-argument_list|(
-name|slot
-argument_list|,
-literal|0
-argument_list|,
-name|isa_dev
-operator|->
-name|id_iobase
-argument_list|,
-literal|16
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|pcic_map_io
-argument_list|(
-name|slot
-argument_list|,
-literal|1
-argument_list|,
-name|isa_dev
-operator|->
-name|id_iobase
-operator|+
-literal|16
-argument_list|,
-literal|16
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* SHARED_MEMORY */
-comment|/* 	 * (5) configure the card for the desired interrupt 	 * 	 * XXX is it possible that the config file leaves this unspecified? 	 */
-name|pcic_map_irq
-argument_list|(
-name|slot
-argument_list|,
-name|ffs
-argument_list|(
+name|irq
+operator|=
 name|isa_dev
 operator|->
 name|id_irq
-argument_list|)
-operator|-
-literal|1
-argument_list|)
 expr_stmt|;
-comment|/* tell the PCIC that this is an I/O card (not memory) */
-name|pcic_putb
-argument_list|(
-name|slot
-argument_list|,
-name|PCIC_INT_GEN
-argument_list|,
-name|pcic_getb
-argument_list|(
-name|slot
-argument_list|,
-name|PCIC_INT_GEN
-argument_list|)
-operator||
-name|PCIC_CARDTYPE
-argument_list|)
+name|sc
+operator|->
+name|iobase
+operator|=
+name|isa_dev
+operator|->
+name|id_iobase
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* tell the PCIC to use level-mode interrupts */
-comment|/* XXX this register may not be present on all controllers */
-block|pcic_putb (slot, PCIC_GLO_CTRL, 		   pcic_getb (slot, PCIC_GLO_CTRL) | PCIC_LVL_MODE);
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|pcic_print_regs (slot);
-endif|#
-directive|endif
+name|sc
+operator|->
+name|slot
+operator|=
+name|slot
+expr_stmt|;
 comment|/* 	 * Setup i/o addresses 	 */
 name|sc
 operator|->
 name|nic_addr
 operator|=
-name|isa_dev
+name|sc
 operator|->
-name|id_iobase
+name|iobase
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|sc->vector = isa_dev->id_irq;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|smem_start
@@ -1446,84 +1291,26 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|isa_dev
+name|sc
 operator|->
-name|id_maddr
+name|maddr
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|sc->vendor = ZE_VENDOR_IBM; 	sc->type = xxx;
-endif|#
-directive|endif
-comment|/* reset card to force it into a known state */
+name|ze_setup
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|tmp
 operator|=
 name|inb
 argument_list|(
-name|isa_dev
+name|sc
 operator|->
-name|id_iobase
+name|iobase
 operator|+
 name|ZE_RESET
 argument_list|)
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|20000
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|isa_dev
-operator|->
-name|id_iobase
-operator|+
-name|ZE_RESET
-argument_list|,
-name|tmp
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|20000
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|tmp = inb(isa_dev->id_iobase); 	printf("CR = 0x%x\n", tmp);
-endif|#
-directive|endif
-comment|/* 	 * query MAM bit in misc register for 10base2 	 */
-name|tmp
-operator|=
-name|inb
-argument_list|(
-name|isa_dev
-operator|->
-name|id_iobase
-operator|+
-name|ZE_MISC
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Some Intel-compatible PCICs of Cirrus Logic fails in  	 * initializing them.  This is a quick hack to fix this  	 * problem. 	 *        HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp> 	 */
-if|if
-condition|(
-operator|!
-name|tmp
-operator|&&
-operator|!
-name|re_init_flag
-condition|)
-block|{
-name|re_init_flag
-operator|++
-expr_stmt|;
-goto|goto
-name|re_init
-goto|;
-block|}
 name|sc
 operator|->
 name|mau
@@ -1663,15 +1450,285 @@ name|last_up
 operator|=
 literal|0
 expr_stmt|;
-name|sc
-operator|->
-name|slot
-operator|=
-name|slot
-expr_stmt|;
 return|return
 literal|32
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ze_setup
+parameter_list|(
+name|struct
+name|ze_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|int
+name|re_init_flag
+init|=
+literal|0
+decl_stmt|,
+name|tmp
+decl_stmt|,
+name|slot
+init|=
+name|sc
+operator|->
+name|slot
+decl_stmt|;
+name|re_init
+label|:
+comment|/* 	 * (2) map card configuration registers.  these are offset 	 * in card memory space by 0x20000.  normally we could get 	 * this offset from the card information structure, but I'm 	 * too lazy and am not quite sure if I understand the CIS anyway. 	 * 	 * XXX IF YOU'RE TRYING TO PORT THIS DRIVER FOR A DIFFERENT 	 * PCMCIA CARD, the most likely thing to change is the constant 	 * 0x20000 in the next statement.  Oh yes, also change the 	 * card id string that we probe for. 	 */
+name|pcic_map_memory
+argument_list|(
+name|slot
+argument_list|,
+literal|0
+argument_list|,
+name|kvtop
+argument_list|(
+name|sc
+operator|->
+name|maddr
+argument_list|)
+argument_list|,
+literal|0x20000
+argument_list|,
+literal|8L
+argument_list|,
+name|ATTRIBUTE
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|POKE
+argument_list|(
+name|sc
+operator|->
+name|maddr
+argument_list|,
+literal|0x80
+argument_list|)
+expr_stmt|;
+comment|/* reset the card (how long?) */
+name|DELAY
+argument_list|(
+literal|40000
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Set the configuration index.  According to [1], the adapter won't 	 * respond to any i/o signals until we do this; it uses the 	 * Memory Only interface (whatever that is; it's not documented). 	 * Also turn on "level" (not pulse) interrupts. 	 * 	 * XXX probably should init the socket and copy register also, 	 * so that we can deal with multiple instances of the same card. 	 */
+name|POKE
+argument_list|(
+name|sc
+operator|->
+name|maddr
+argument_list|,
+literal|0x41
+argument_list|)
+expr_stmt|;
+name|pcic_unmap_memory
+argument_list|(
+name|slot
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * (3) now map in the shared memory buffer.  This has to be mapped 	 * as words, not bytes, and on a 16k boundary.  The offset value 	 * was derived by installing IBM's POINTETH.SYS under DOS and 	 * looking at the PCIC registers; it's not documented in IBM's 	 * tech ref manual ([1]). 	 */
+name|pcic_map_memory
+argument_list|(
+name|slot
+argument_list|,
+literal|0
+argument_list|,
+name|kvtop
+argument_list|(
+name|sc
+operator|->
+name|maddr
+argument_list|)
+argument_list|,
+literal|0x4000L
+argument_list|,
+literal|0x4000L
+argument_list|,
+name|COMMON
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* 	 * (4) map i/o ports. 	 * 	 * XXX is it possible that the config file leaves this unspecified, 	 * in which case we have to pick one? 	 * 	 * At least one PCMCIA device driver I'v seen maps a block 	 * of 32 consecutive i/o ports as two windows of 16 ports each. 	 * Maybe some other pcic chips are restricted to 16-port windows; 	 * the 82365SL doesn't seem to have that problem.  But since 	 * we have an extra window anyway... 	 */
+ifdef|#
+directive|ifdef
+name|SHARED_MEMORY
+name|pcic_map_io
+argument_list|(
+name|slot
+argument_list|,
+literal|0
+argument_list|,
+name|sc
+operator|->
+name|iobase
+argument_list|,
+literal|32
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|pcic_map_io
+argument_list|(
+name|slot
+argument_list|,
+literal|0
+argument_list|,
+name|sc
+operator|->
+name|iobase
+argument_list|,
+literal|16
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|pcic_map_io
+argument_list|(
+name|slot
+argument_list|,
+literal|1
+argument_list|,
+name|sc
+operator|->
+name|iobase
+operator|+
+literal|16
+argument_list|,
+literal|16
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SHARED_MEMORY */
+comment|/* 	 * (5) configure the card for the desired interrupt 	 * 	 * XXX is it possible that the config file leaves this unspecified? 	 */
+name|pcic_map_irq
+argument_list|(
+name|slot
+argument_list|,
+name|ffs
+argument_list|(
+name|sc
+operator|->
+name|irq
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* tell the PCIC that this is an I/O card (not memory) */
+name|pcic_putb
+argument_list|(
+name|slot
+argument_list|,
+name|PCIC_INT_GEN
+argument_list|,
+name|pcic_getb
+argument_list|(
+name|slot
+argument_list|,
+name|PCIC_INT_GEN
+argument_list|)
+operator||
+name|PCIC_CARDTYPE
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* tell the PCIC to use level-mode interrupts */
+comment|/* XXX this register may not be present on all controllers */
+block|pcic_putb (slot, PCIC_GLO_CTRL, 		   pcic_getb (slot, PCIC_GLO_CTRL) | PCIC_LVL_MODE);
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
+block|pcic_print_regs (slot);
+endif|#
+directive|endif
+comment|/* reset card to force it into a known state */
+name|tmp
+operator|=
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|iobase
+operator|+
+name|ZE_RESET
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|20000
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|iobase
+operator|+
+name|ZE_RESET
+argument_list|,
+name|tmp
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|20000
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|tmp = inb(sc->iobase); 	printf("CR = 0x%x\n", tmp);
+endif|#
+directive|endif
+comment|/* 	 * query MAM bit in misc register for 10base2 	 */
+name|tmp
+operator|=
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|iobase
+operator|+
+name|ZE_MISC
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Some Intel-compatible PCICs of Cirrus Logic fails in  	 * initializing them.  This is a quick hack to fix this  	 * problem. 	 *        HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp> 	 */
+if|if
+condition|(
+operator|!
+name|tmp
+operator|&&
+operator|!
+name|re_init_flag
+condition|)
+block|{
+name|re_init_flag
+operator|++
+expr_stmt|;
+goto|goto
+name|re_init
+goto|;
+block|}
 block|}
 end_function
 
@@ -2436,6 +2493,11 @@ operator|--
 name|n
 condition|)
 empty_stmt|;
+name|pcic_power_off
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2475,6 +2537,22 @@ decl_stmt|;
 name|u_short
 name|imask
 decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
+condition|)
+return|return;
 comment|/* select page zero */
 name|outb
 argument_list|(
@@ -2648,6 +2726,45 @@ decl_stmt|;
 name|u_char
 name|command
 decl_stmt|;
+name|pcic_power_on
+argument_list|(
+name|sc
+operator|->
+name|slot
+argument_list|)
+expr_stmt|;
+name|pcic_reset
+argument_list|(
+name|sc
+operator|->
+name|slot
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
+condition|)
+name|Debugger
+argument_list|(
+literal|"here!!"
+argument_list|)
+expr_stmt|;
+name|ze_setup
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* address not known */
 if|if
 condition|(
@@ -3019,13 +3136,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * If this is a 3Com board, the tranceiver must be software enabled 	 *	(there is no settable hardware default). 	 */
-block|if (sc->vendor == ZE_VENDOR_3COM) { 		if (ifp->if_flags& IFF_LINK0) { 			outb(sc->asic_addr + ZE_3COM_CR, 0); 		} else { 			outb(sc->asic_addr + ZE_3COM_CR, ZE_3COM_CR_XSEL); 		} 	}
-endif|#
-directive|endif
 comment|/* 	 * Set 'running' flag, and clear output active flag. 	 */
 name|ifp
 operator|->
@@ -3338,13 +3448,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Copy the mbuf chain into the transmit buffer 	 */
-if|#
-directive|if
-literal|0
-comment|/* 	 * Enable 16bit access to shared memory on WD/SMC boards 	 */
-block|if (sc->memwidth == 16) 		if (sc->vendor == ZE_VENDOR_WD_SMC) { 			laar_tmp = inb(sc->asic_addr + ZE_WD_LAAR); 			outb(sc->asic_addr + ZE_WD_LAAR, laar_tmp | ZE_WD_LAAR_M16EN); 		}
-endif|#
-directive|endif
 name|buffer
 operator|=
 name|sc
@@ -3411,13 +3514,6 @@ operator|->
 name|m_len
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* 	 * Restore previous shared mem access type 	 */
-block|if (sc->memwidth == 16) 		if (sc->vendor == ZE_VENDOR_WD_SMC) { 			outb(sc->asic_addr + ZE_WD_LAAR, laar_tmp); 		}
-endif|#
-directive|endif
 name|sc
 operator|->
 name|txb_next_len
@@ -3792,6 +3888,22 @@ decl_stmt|;
 name|u_char
 name|isr
 decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
+condition|)
+return|return;
 comment|/* 	 * Set NIC to page 0 registers 	 */
 name|outb
 argument_list|(
@@ -3964,12 +4076,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ZE_DEBUG
-if|#
-directive|if
-literal|0
-block|printf("ze%d: receive error %x\n", unit, 				inb(sc->nic_addr + ZE_P0_RSR));
-else|#
-directive|else
 name|printf
 argument_list|(
 literal|"ze%d: receive error %b\n"
@@ -3990,8 +4096,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|#
-directive|endif
 block|}
 comment|/* 		 * Overwrite warning. In order to make sure that a lockup 		 *	of the local DMA hasn't occurred, we reset and 		 *	re-init the NIC. The NSC manual suggests only a 		 *	partial reset/re-init is necessary - but some 		 *	chips seem to want more. The DMA lockup has been 		 *	seen only with early rev chips - Methinks this 		 *	bug was fixed in later revs. -DG 		 */
 if|if
@@ -4010,13 +4114,6 @@ name|ac_if
 operator|.
 name|if_ierrors
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* sigh.  this happens too often on our net */
-block|log(LOG_WARNING, 				"ze%d: warning - receiver ring buffer overrun\n", 				unit);
-endif|#
-directive|endif
 comment|/* 			 * Stop/reset/re-init NIC 			 */
 name|ze_reset
 argument_list|(
@@ -4102,25 +4199,11 @@ name|ZE_ISR_RXE
 operator|)
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* 			 * Enable access to shared memory on WD/SMC boards 			 */
-block|if (sc->memwidth == 16) 				if (sc->vendor == ZE_VENDOR_WD_SMC) { 					outb(sc->asic_addr + ZE_WD_LAAR, 						inb(sc->asic_addr + ZE_WD_LAAR) 						| ZE_WD_LAAR_M16EN); 				}
-endif|#
-directive|endif
 name|ze_rint
 argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 			 * Disable access to shared memory 			 */
-block|if (sc->memwidth == 16) 				if (sc->vendor == ZE_VENDOR_WD_SMC) { 					outb(sc->asic_addr + ZE_WD_LAAR, 						inb(sc->asic_addr + ZE_WD_LAAR)& ~ZE_WD_LAAR_M16EN); 				}
-endif|#
-directive|endif
 block|}
 comment|/* 		 * If it looks like the transmitter can take more data, 		 *	attempt to start output on the interface. If data is 		 *	already buffered and ready to go, send it first. 		 */
 if|if
@@ -4642,13 +4725,6 @@ name|ZE_RCR_AB
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-comment|/* 		 * An unfortunate hack to provide the (required) software control 		 *	of the tranceiver for 3Com boards. The LLC0 flag disables 		 *	the tranceiver if set. 		 */
-block|if (sc->vendor == ZE_VENDOR_3COM) { 			if (ifp->if_flags& IFF_LINK0) { 				outb(sc->asic_addr + ZE_3COM_CR, 0); 			} else { 				outb(sc->asic_addr + ZE_3COM_CR, ZE_3COM_CR_XSEL); 			} 		}
 endif|#
 directive|endif
 break|break;
