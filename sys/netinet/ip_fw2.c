@@ -13282,6 +13282,10 @@ condition|)
 return|return
 name|EINVAL
 return|;
+else|else
+goto|goto
+name|check_size
+goto|;
 case|case
 name|O_NETGRAPH
 case|:
@@ -13296,6 +13300,10 @@ condition|)
 return|return
 name|EINVAL
 return|;
+else|else
+goto|goto
+name|check_size
+goto|;
 case|case
 name|O_FORWARD_MAC
 case|:
@@ -13318,6 +13326,8 @@ case|:
 case|case
 name|O_SKIPTO
 case|:
+name|check_size
+label|:
 if|if
 condition|(
 name|cmdlen
