@@ -6442,6 +6442,9 @@ block|{
 case|case
 name|FIONBIO
 case|:
+case|case
+name|FIOASYNC
+case|:
 comment|/* All handled in the upper FS layer. */
 return|return
 operator|(
