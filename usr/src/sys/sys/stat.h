@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.14 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,7 +13,8 @@ begin_struct
 struct|struct
 name|ostat
 block|{
-name|u_short
+name|unsigned
+name|short
 name|st_dev
 decl_stmt|;
 comment|/* inode's device */
@@ -29,15 +30,18 @@ name|nlink_t
 name|st_nlink
 decl_stmt|;
 comment|/* number of hard links */
-name|u_short
+name|unsigned
+name|short
 name|st_uid
 decl_stmt|;
 comment|/* user ID of the file's owner */
-name|u_short
+name|unsigned
+name|short
 name|st_gid
 decl_stmt|;
 comment|/* group ID of the file's group */
-name|u_short
+name|unsigned
+name|short
 name|st_rdev
 decl_stmt|;
 comment|/* device type */
@@ -68,11 +72,13 @@ name|long
 name|st_blocks
 decl_stmt|;
 comment|/* blocks allocated for file */
-name|u_long
+name|unsigned
+name|long
 name|st_flags
 decl_stmt|;
 comment|/* user defined flags for file */
-name|u_long
+name|unsigned
+name|long
 name|st_gen
 decl_stmt|;
 comment|/* file generation number */
@@ -135,15 +141,18 @@ name|quad_t
 name|st_blocks
 decl_stmt|;
 comment|/* blocks allocated for file */
-name|u_long
+name|unsigned
+name|long
 name|st_blksize
 decl_stmt|;
 comment|/* optimal blocksize for I/O */
-name|u_long
+name|unsigned
+name|long
 name|st_flags
 decl_stmt|;
 comment|/* user defined flags for file */
-name|u_long
+name|unsigned
+name|long
 name|st_gen
 decl_stmt|;
 comment|/* file generation number */
