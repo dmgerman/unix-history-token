@@ -133,8 +133,7 @@ name|witness_watch
 decl_stmt|;
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|witness
 block|{
@@ -201,12 +200,10 @@ name|WITNESS_NCHILDREN
 index|]
 decl_stmt|;
 block|}
-name|witness_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|witness_blessed
 block|{
@@ -219,9 +216,8 @@ modifier|*
 name|b_lock2
 decl_stmt|;
 block|}
-name|witness_blessed_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
@@ -296,14 +292,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|mtx_t
+name|struct
+name|mtx
 name|w_mtx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w_free
 decl_stmt|;
@@ -311,7 +309,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w_all
 decl_stmt|;
@@ -337,7 +336,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|witness_t
+name|struct
+name|witness
 name|w_data
 index|[
 name|WITNESS_COUNT
@@ -347,7 +347,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|enroll
 name|__P
@@ -371,11 +372,13 @@ name|itismychild
 name|__P
 argument_list|(
 operator|(
-name|witness_t
+expr|struct
+name|witness
 operator|*
 name|parent
 operator|,
-name|witness_t
+expr|struct
+name|witness
 operator|*
 name|child
 operator|)
@@ -390,11 +393,13 @@ name|removechild
 name|__P
 argument_list|(
 operator|(
-name|witness_t
+expr|struct
+name|witness
 operator|*
 name|parent
 operator|,
-name|witness_t
+expr|struct
+name|witness
 operator|*
 name|child
 operator|)
@@ -409,11 +414,13 @@ name|isitmychild
 name|__P
 argument_list|(
 operator|(
-name|witness_t
+expr|struct
+name|witness
 operator|*
 name|parent
 operator|,
-name|witness_t
+expr|struct
+name|witness
 operator|*
 name|child
 operator|)
@@ -428,11 +435,13 @@ name|isitmydescendant
 name|__P
 argument_list|(
 operator|(
-name|witness_t
+expr|struct
+name|witness
 operator|*
 name|parent
 operator|,
-name|witness_t
+expr|struct
+name|witness
 operator|*
 name|child
 operator|)
@@ -447,7 +456,8 @@ name|dup_ok
 name|__P
 argument_list|(
 operator|(
-name|witness_t
+expr|struct
+name|witness
 operator|*
 operator|)
 argument_list|)
@@ -461,10 +471,12 @@ name|blessed
 name|__P
 argument_list|(
 operator|(
-name|witness_t
+expr|struct
+name|witness
 operator|*
 operator|,
-name|witness_t
+expr|struct
+name|witness
 operator|*
 operator|)
 argument_list|)
@@ -491,7 +503,8 @@ argument_list|,
 operator|...
 argument_list|)
 operator|,
-name|witness_t
+expr|struct
+name|witness
 operator|*
 operator|)
 argument_list|)
@@ -505,7 +518,8 @@ name|witness_leveldescendents
 name|__P
 argument_list|(
 operator|(
-name|witness_t
+expr|struct
+name|witness
 operator|*
 name|parent
 operator|,
@@ -531,7 +545,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|witness_get
 name|__P
@@ -550,7 +565,8 @@ name|witness_free
 name|__P
 argument_list|(
 operator|(
-name|witness_t
+expr|struct
+name|witness
 operator|*
 name|m
 operator|)
@@ -753,7 +769,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|witness_blessed_t
+name|struct
+name|witness_blessed
 name|blessed_list
 index|[]
 init|=
@@ -773,7 +790,8 @@ argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|witness_blessed_t
+expr|struct
+name|witness_blessed
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -782,7 +800,8 @@ begin_function
 name|void
 name|witness_init
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 parameter_list|,
@@ -810,12 +829,14 @@ begin_function
 name|void
 name|witness_destroy
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 parameter_list|)
 block|{
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m1
 decl_stmt|;
@@ -881,7 +902,8 @@ begin_function
 name|void
 name|witness_enter
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 parameter_list|,
@@ -897,14 +919,16 @@ name|int
 name|line
 parameter_list|)
 block|{
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w
 decl_stmt|,
 modifier|*
 name|w1
 decl_stmt|;
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m1
 decl_stmt|;
@@ -1576,7 +1600,8 @@ begin_function
 name|void
 name|witness_exit
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 parameter_list|,
@@ -1592,7 +1617,8 @@ name|int
 name|line
 parameter_list|)
 block|{
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w
 decl_stmt|;
@@ -1749,7 +1775,8 @@ begin_function
 name|void
 name|witness_try_enter
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 parameter_list|,
@@ -1770,7 +1797,8 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w
 init|=
@@ -1950,7 +1978,8 @@ modifier|...
 parameter_list|)
 parameter_list|)
 block|{
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w
 decl_stmt|,
@@ -2075,7 +2104,8 @@ parameter_list|(
 name|int
 name|check_only
 parameter_list|,
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|mtx
 parameter_list|,
@@ -2088,7 +2118,8 @@ name|int
 name|line
 parameter_list|)
 block|{
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 decl_stmt|;
@@ -2239,7 +2270,8 @@ end_function
 
 begin_function
 specifier|static
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|enroll
 parameter_list|(
@@ -2254,7 +2286,8 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w
 decl_stmt|,
@@ -2627,11 +2660,13 @@ specifier|static
 name|int
 name|itismychild
 parameter_list|(
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|parent
 parameter_list|,
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|child
 parameter_list|)
@@ -2811,16 +2846,19 @@ specifier|static
 name|void
 name|removechild
 parameter_list|(
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|parent
 parameter_list|,
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|child
 parameter_list|)
 block|{
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w
 decl_stmt|,
@@ -2980,16 +3018,19 @@ specifier|static
 name|int
 name|isitmychild
 parameter_list|(
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|parent
 parameter_list|,
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|child
 parameter_list|)
 block|{
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w
 decl_stmt|;
@@ -3060,16 +3101,19 @@ specifier|static
 name|int
 name|isitmydescendant
 parameter_list|(
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|parent
 parameter_list|,
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|child
 parameter_list|)
 block|{
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w
 decl_stmt|;
@@ -3195,7 +3239,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w
 decl_stmt|,
@@ -3300,7 +3345,8 @@ specifier|static
 name|void
 name|witness_leveldescendents
 parameter_list|(
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|parent
 parameter_list|,
@@ -3311,7 +3357,8 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w
 decl_stmt|;
@@ -3397,12 +3444,14 @@ parameter_list|,
 modifier|...
 parameter_list|)
 parameter_list|,
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|parent
 parameter_list|)
 block|{
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w
 decl_stmt|;
@@ -3550,7 +3599,8 @@ specifier|static
 name|int
 name|dup_ok
 parameter_list|(
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w
 parameter_list|)
@@ -3606,11 +3656,13 @@ specifier|static
 name|int
 name|blessed
 parameter_list|(
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w1
 parameter_list|,
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w2
 parameter_list|)
@@ -3618,7 +3670,8 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|witness_blessed_t
+name|struct
+name|witness_blessed
 modifier|*
 name|b
 decl_stmt|;
@@ -3728,12 +3781,14 @@ end_function
 
 begin_function
 specifier|static
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|witness_get
 parameter_list|()
 block|{
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w
 decl_stmt|;
@@ -3801,7 +3856,8 @@ specifier|static
 name|void
 name|witness_free
 parameter_list|(
-name|witness_t
+name|struct
+name|witness
 modifier|*
 name|w
 parameter_list|)
@@ -3829,7 +3885,8 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 decl_stmt|;
@@ -3892,7 +3949,8 @@ begin_function
 name|void
 name|witness_save
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 parameter_list|,
@@ -3932,7 +3990,8 @@ begin_function
 name|void
 name|witness_restore
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 parameter_list|,

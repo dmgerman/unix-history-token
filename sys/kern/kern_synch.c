@@ -1352,7 +1352,8 @@ name|void
 modifier|*
 name|ident
 decl_stmt|;
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|mtx
 decl_stmt|;

@@ -325,14 +325,6 @@ block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
-name|struct
-name|mtx
-name|mtx_t
-typedef|;
-end_typedef
-
 begin_comment
 comment|/*  * Filler for structs which need to remain the same size  * whether or not SMP_DEBUG is turned on.  */
 end_comment
@@ -415,7 +407,8 @@ begin_function_decl
 name|void
 name|mtx_init
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 parameter_list|,
@@ -433,7 +426,8 @@ begin_function_decl
 name|void
 name|mtx_enter_hard
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 parameter_list|,
 name|int
@@ -449,7 +443,8 @@ begin_function_decl
 name|void
 name|mtx_exit_hard
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 parameter_list|,
 name|int
@@ -462,7 +457,8 @@ begin_function_decl
 name|void
 name|mtx_destroy
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 parameter_list|)
@@ -493,7 +489,8 @@ begin_function_decl
 name|void
 name|_mtx_enter
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|mtxp
 parameter_list|,
@@ -515,7 +512,8 @@ begin_function_decl
 name|int
 name|_mtx_try_enter
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|mtxp
 parameter_list|,
@@ -537,7 +535,8 @@ begin_function_decl
 name|void
 name|_mtx_exit
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|mtxp
 parameter_list|,
@@ -605,14 +604,16 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|mtx_t
+name|struct
+name|mtx
 name|sched_lock
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|mtx_t
+name|struct
+name|mtx
 name|Giant
 decl_stmt|;
 end_decl_stmt
@@ -1031,7 +1032,8 @@ begin_function_decl
 name|void
 name|witness_init
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 parameter_list|,
 name|int
@@ -1044,7 +1046,8 @@ begin_function_decl
 name|void
 name|witness_destroy
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1054,7 +1057,8 @@ begin_function_decl
 name|void
 name|witness_enter
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 parameter_list|,
 name|int
@@ -1072,7 +1076,8 @@ begin_function_decl
 name|void
 name|witness_try_enter
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 parameter_list|,
 name|int
@@ -1090,7 +1095,8 @@ begin_function_decl
 name|void
 name|witness_exit
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 parameter_list|,
 name|int
@@ -1141,7 +1147,8 @@ name|witness_sleep
 parameter_list|(
 name|int
 parameter_list|,
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 parameter_list|,
 specifier|const
@@ -1157,7 +1164,8 @@ begin_function_decl
 name|void
 name|witness_save
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 parameter_list|,
 specifier|const
@@ -1175,7 +1183,8 @@ begin_function_decl
 name|void
 name|witness_restore
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 parameter_list|,
 specifier|const
@@ -1949,7 +1958,8 @@ name|_MTX_INLINE
 name|void
 name|_mtx_enter
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|mtxp
 parameter_list|,
@@ -1965,7 +1975,8 @@ name|int
 name|line
 parameter_list|)
 block|{
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|mpp
 init|=
@@ -2189,7 +2200,8 @@ name|_MTX_INLINE
 name|int
 name|_mtx_try_enter
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|mtxp
 parameter_list|,
@@ -2205,7 +2217,8 @@ name|int
 name|line
 parameter_list|)
 block|{
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 specifier|const
 name|mpp
@@ -2308,7 +2321,8 @@ name|_MTX_INLINE
 name|void
 name|_mtx_exit
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|mtxp
 parameter_list|,
@@ -2324,7 +2338,8 @@ name|int
 name|line
 parameter_list|)
 block|{
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 specifier|const
 name|mpp

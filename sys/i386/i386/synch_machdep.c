@@ -90,7 +90,8 @@ comment|/* All mutexes in system (used for debug/panic) */
 end_comment
 
 begin_decl_stmt
-name|mtx_t
+name|struct
+name|mtx
 name|all_mtx
 init|=
 block|{
@@ -286,7 +287,8 @@ name|p
 operator|->
 name|p_priority
 decl_stmt|;
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 init|=
@@ -630,7 +632,8 @@ begin_function
 name|void
 name|mtx_enter_hard
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 parameter_list|,
@@ -1305,7 +1308,8 @@ begin_function
 name|void
 name|mtx_exit_hard
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 parameter_list|,
@@ -1321,7 +1325,8 @@ decl_stmt|,
 modifier|*
 name|p1
 decl_stmt|;
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m1
 decl_stmt|;
@@ -1858,7 +1863,8 @@ name|mtx_validate
 name|__P
 argument_list|(
 operator|(
-name|mtx_t
+expr|struct
+name|mtx
 operator|*
 operator|,
 name|int
@@ -1871,7 +1877,8 @@ begin_function
 name|int
 name|mtx_validate
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 parameter_list|,
@@ -1879,7 +1886,8 @@ name|int
 name|when
 parameter_list|)
 block|{
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|mp
 decl_stmt|;
@@ -2164,7 +2172,8 @@ begin_function
 name|void
 name|mtx_init
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 parameter_list|,
@@ -2307,7 +2316,8 @@ begin_function
 name|void
 name|mtx_destroy
 parameter_list|(
-name|mtx_t
+name|struct
+name|mtx
 modifier|*
 name|m
 parameter_list|)

@@ -274,7 +274,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|mtx_t
+name|struct
+name|mtx
 name|malloc_mtx
 decl_stmt|;
 end_decl_stmt

@@ -272,7 +272,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|mtx_t
+name|struct
+name|mtx
 name|random_reseed_mtx
 decl_stmt|;
 end_decl_stmt
@@ -283,7 +284,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|mtx_t
+name|struct
+name|mtx
 name|random_harvest_mtx
 decl_stmt|;
 end_decl_stmt
