@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -67,7 +67,7 @@ begin_define
 define|#
 directive|define
 name|VERS_LOCAL
-value|"Phase-27"
+value|"Phase-28"
 end_define
 
 begin_decl_stmt
@@ -81,6 +81,12 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|devtype
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nplane
 decl_stmt|;
 end_decl_stmt
 
@@ -177,6 +183,11 @@ operator|=
 name|MHZ_25
 expr_stmt|;
 comment|/* for DELAY() macro */
+name|nplane
+operator|=
+name|get_plane_numbers
+argument_list|()
+expr_stmt|;
 name|cninit
 argument_list|()
 expr_stmt|;
@@ -216,6 +227,12 @@ name|dipsw1
 operator|)
 operator|&
 literal|0xFFFF
+expr_stmt|;
+name|kiff
+operator|->
+name|plane
+operator|=
+name|nplane
 expr_stmt|;
 name|i
 operator|=
@@ -450,6 +467,49 @@ end_function
 
 begin_function
 name|int
+name|get_plane_numbers
+parameter_list|()
+block|{
+specifier|register
+name|int
+name|r
+init|=
+name|ROM_plane
+decl_stmt|;
+specifier|register
+name|int
+name|n
+init|=
+literal|0
+decl_stmt|;
+for|for
+control|(
+init|;
+name|r
+condition|;
+name|r
+operator|>>=
+literal|1
+control|)
+if|if
+condition|(
+name|r
+operator|&
+literal|0x1
+condition|)
+name|n
+operator|++
+expr_stmt|;
+return|return
+operator|(
+name|n
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|reorder_dipsw
 parameter_list|(
 name|dipsw
@@ -516,10 +576,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* int exit() { 	ROM_abort(); } */
-end_comment
 
 end_unit
 
