@@ -310,8 +310,8 @@ name|sigaction
 name|act
 decl_stmt|;
 name|struct
-name|itimerval
-name|itimer
+name|sigaltstack
+name|alt
 decl_stmt|;
 comment|/* Check if this function has already been called: */
 if|if
@@ -501,7 +501,7 @@ argument_list|(
 literal|"Cannot get stdio flags"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Create a pipe that is written to by the signal handler to prevent 	 * signals being missed in calls to _select:  	 */
+comment|/* 	 * Create a pipe that is written to by the signal handler to prevent 	 * signals being missed in calls to _select: 	 */
 if|if
 condition|(
 name|_thread_sys_pipe
@@ -686,7 +686,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Insufficient memory to initialise this application, so 		 * abort:  		 */
+comment|/* 		 * Insufficient memory to initialise this application, so 		 * abort: 		 */
 name|PANIC
 argument_list|(
 literal|"Cannot allocate memory for initial thread"
@@ -702,9 +702,7 @@ name|_thread_kern_sched_stack
 operator|=
 name|malloc
 argument_list|(
-name|PAGE_SIZE
-operator|*
-literal|10
+name|SCHED_STACK_SIZE
 argument_list|)
 operator|)
 operator|==
@@ -876,9 +874,7 @@ name|_thread_kern_sched_jb
 argument_list|,
 name|_thread_kern_sched_stack
 operator|+
-name|PAGE_SIZE
-operator|*
-literal|10
+name|SCHED_STACK_SIZE
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -991,48 +987,18 @@ name|long
 operator|)
 name|_sched_ticks
 expr_stmt|;
-comment|/* Initialize the initial signal frame: */
-name|_thread_initial
-operator|->
-name|sigframes
-index|[
-literal|0
-index|]
-operator|=
-operator|&
-name|_thread_initial
-operator|->
-name|sigframe0
-expr_stmt|;
+comment|/* Initialize the initial context: */
 name|_thread_initial
 operator|->
 name|curframe
 operator|=
-operator|&
-name|_thread_initial
-operator|->
-name|sigframe0
+name|NULL
 expr_stmt|;
 name|_thread_initial
-operator|->
-name|curframe
 operator|->
 name|ctxtype
 operator|=
 name|CTX_JB_NOSIG
-expr_stmt|;
-comment|/* Set the base of the stack: */
-name|_thread_initial
-operator|->
-name|curframe
-operator|->
-name|stackp
-operator|=
-operator|(
-name|unsigned
-name|long
-operator|)
-name|USRSTACK
 expr_stmt|;
 comment|/* Initialise the rest of the fields: */
 name|_thread_initial
@@ -1134,6 +1100,8 @@ operator|.
 name|sa_flags
 operator|=
 name|SA_SIGINFO
+operator||
+name|SA_ONSTACK
 expr_stmt|;
 comment|/* Clear pending signals for the process: */
 name|sigemptyset
@@ -1153,6 +1121,46 @@ sizeof|sizeof
 argument_list|(
 name|_thread_sigq
 argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Create and install an alternate signal stack: */
+name|alt
+operator|.
+name|ss_sp
+operator|=
+name|malloc
+argument_list|(
+name|SIGSTKSZ
+argument_list|)
+expr_stmt|;
+comment|/* recommended stack size */
+name|alt
+operator|.
+name|ss_size
+operator|=
+name|SIGSTKSZ
+expr_stmt|;
+name|alt
+operator|.
+name|ss_flags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|_thread_sys_sigaltstack
+argument_list|(
+operator|&
+name|alt
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Unable to install alternate signal stack"
 argument_list|)
 expr_stmt|;
 comment|/* Enter a loop to get the existing signal status: */
@@ -1204,7 +1212,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 				 * Abort this process if signal 				 * initialisation fails:  				 */
+comment|/* 				 * Abort this process if signal 				 * initialisation fails: 				 */
 name|PANIC
 argument_list|(
 literal|"Cannot read signal handler info"
@@ -1260,7 +1268,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * Abort this process if signal initialisation fails:  			 */
+comment|/* 			 * Abort this process if signal initialisation fails: 			 */
 name|PANIC
 argument_list|(
 literal|"Cannot initialise signal handler"
@@ -1374,7 +1382,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* 			 * Cannot get the system defined table size, so abort 			 * this process.  			 */
+comment|/* 			 * Cannot get the system defined table size, so abort 			 * this process. 			 */
 name|PANIC
 argument_list|(
 literal|"Cannot get dtablesize"
@@ -1414,7 +1422,7 @@ name|_thread_dtablesize
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * Cannot allocate memory for the file descriptor 			 * table, so abort this process.  			 */
+comment|/* 			 * Cannot allocate memory for the file descriptor 			 * table, so abort this process. 			 */
 name|PANIC
 argument_list|(
 literal|"Cannot allocate memory for file descriptor table"
@@ -1447,7 +1455,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Cannot allocate memory for the file descriptor 			 * table, so abort this process.  			 */
+comment|/* 			 * Cannot allocate memory for the file descriptor 			 * table, so abort this process. 			 */
 name|PANIC
 argument_list|(
 literal|"Cannot allocate memory for pollfd table"
@@ -1456,7 +1464,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Enter a loop to initialise the file descriptor 			 * table:  			 */
+comment|/* 			 * Enter a loop to initialise the file descriptor 			 * table: 			 */
 for|for
 control|(
 name|i
@@ -1519,50 +1527,6 @@ literal|"descriptor table entry"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Install the scheduling timer: */
-name|itimer
-operator|.
-name|it_interval
-operator|.
-name|tv_sec
-operator|=
-literal|0
-expr_stmt|;
-name|itimer
-operator|.
-name|it_interval
-operator|.
-name|tv_usec
-operator|=
-name|_clock_res_usec
-expr_stmt|;
-name|itimer
-operator|.
-name|it_value
-operator|=
-name|itimer
-operator|.
-name|it_interval
-expr_stmt|;
-if|if
-condition|(
-name|setitimer
-argument_list|(
-name|_ITIMER_SCHED_TIMER
-argument_list|,
-operator|&
-name|itimer
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot set interval timer"
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 ifdef|#
@@ -1627,7 +1591,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Special start up code for NetBSD/Alpha   */
+comment|/*  * Special start up code for NetBSD/Alpha  */
 end_comment
 
 begin_if

@@ -106,16 +106,6 @@ parameter_list|)
 value|offsetof(struct pthread, f)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SIGFRAME_OFF
-parameter_list|(
-name|f
-parameter_list|)
-value|offsetof(struct pthread_signal_frame, f)
-end_define
-
 begin_decl_stmt
 name|int
 name|_thread_next_offset
@@ -164,47 +154,30 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|_thread_curframe_offset
+name|_thread_ctxtype_offset
 init|=
 name|OFF
-argument_list|(
-name|curframe
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|_thread_sigframe_ctx_offset
-init|=
-name|SIGFRAME_OFF
-argument_list|(
-name|ctx
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|_thread_sigframe_ctxtype_offset
-init|=
-name|SIGFRAME_OFF
 argument_list|(
 name|ctxtype
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_undef
-undef|#
-directive|undef
+begin_decl_stmt
+name|int
+name|_thread_ctx_offset
+init|=
 name|OFF
-end_undef
+argument_list|(
+name|ctx
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_undef
 undef|#
 directive|undef
-name|SIGFRAME_OFF
+name|OFF
 end_undef
 
 begin_decl_stmt
@@ -255,18 +228,6 @@ name|CTX_UC
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|_thread_sigframe_size_value
-init|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pthread_signal_frame
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|pthread_create
@@ -296,6 +257,10 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|struct
+name|itimerval
+name|itimer
+decl_stmt|;
 name|int
 name|f_gc
 init|=
@@ -662,34 +627,23 @@ name|_thread_run
 operator|->
 name|sigmask
 expr_stmt|;
-comment|/* Initialize the first signal frame: */
 name|new_thread
 operator|->
-name|sigframes
-index|[
-literal|0
-index|]
+name|sigmask_seqno
 operator|=
-operator|&
-name|new_thread
-operator|->
-name|sigframe0
+literal|0
 expr_stmt|;
+comment|/* Initialize the signal frame: */
 name|new_thread
 operator|->
 name|curframe
 operator|=
-operator|&
-name|new_thread
-operator|->
-name|sigframe0
+name|NULL
 expr_stmt|;
 comment|/* Initialise the jump buffer: */
 name|_setjmp
 argument_list|(
 name|new_thread
-operator|->
-name|curframe
 operator|->
 name|ctx
 operator|.
@@ -700,8 +654,6 @@ comment|/* 			 * Set up new stack frame so that it looks like it 			 * returned 
 name|SET_RETURN_ADDR_JB
 argument_list|(
 name|new_thread
-operator|->
-name|curframe
 operator|->
 name|ctx
 operator|.
@@ -714,8 +666,6 @@ comment|/* The stack starts high and builds down: */
 name|SET_STACK_JB
 argument_list|(
 name|new_thread
-operator|->
-name|curframe
 operator|->
 name|ctx
 operator|.
@@ -741,35 +691,9 @@ expr_stmt|;
 comment|/* Initialize the rest of the frame: */
 name|new_thread
 operator|->
-name|curframe
-operator|->
 name|ctxtype
 operator|=
 name|CTX_JB_NOSIG
-expr_stmt|;
-comment|/* Set the base of the stack: */
-name|new_thread
-operator|->
-name|curframe
-operator|->
-name|stackp
-operator|=
-name|GET_STACK_JB
-argument_list|(
-name|new_thread
-operator|->
-name|curframe
-operator|->
-name|ctx
-operator|.
-name|jb
-argument_list|)
-expr_stmt|;
-name|new_thread
-operator|->
-name|sigframe_count
-operator|=
-literal|0
 expr_stmt|;
 comment|/* Copy the thread attributes: */
 name|memcpy
@@ -788,7 +712,7 @@ name|pthread_attr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Check if this thread is to inherit the scheduling 			 * attributes from its parent:  			 */
+comment|/* 			 * Check if this thread is to inherit the scheduling 			 * attributes from its parent: 			 */
 if|if
 condition|(
 name|new_thread
@@ -840,7 +764,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * Use just the thread priority, leaving the 				 * other scheduling attributes as their 				 * default values:  				 */
+comment|/* 				 * Use just the thread priority, leaving the 				 * other scheduling attributes as their 				 * default values: 				 */
 name|new_thread
 operator|->
 name|base_priority
@@ -1003,6 +927,58 @@ operator|)
 operator|=
 name|new_thread
 expr_stmt|;
+if|if
+condition|(
+name|f_gc
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Install the scheduling timer: */
+name|itimer
+operator|.
+name|it_interval
+operator|.
+name|tv_sec
+operator|=
+literal|0
+expr_stmt|;
+name|itimer
+operator|.
+name|it_interval
+operator|.
+name|tv_usec
+operator|=
+name|_clock_res_usec
+expr_stmt|;
+name|itimer
+operator|.
+name|it_value
+operator|=
+name|itimer
+operator|.
+name|it_interval
+expr_stmt|;
+if|if
+condition|(
+name|setitimer
+argument_list|(
+name|_ITIMER_SCHED_TIMER
+argument_list|,
+operator|&
+name|itimer
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot set interval timer"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Schedule the new user thread: */
 name|_thread_kern_sched
 argument_list|(

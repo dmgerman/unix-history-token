@@ -378,8 +378,8 @@ modifier|*
 name|status
 parameter_list|)
 block|{
-name|int
-name|frame
+name|pthread_t
+name|pthread
 decl_stmt|;
 comment|/* Check if this thread is already in the process of exiting: */
 if|if
@@ -520,59 +520,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|frame
-operator|=
-name|_thread_run
-operator|->
-name|sigframe_count
-operator|)
-operator|==
-literal|0
-condition|)
-name|_thread_exit_finish
-argument_list|()
-expr_stmt|;
-else|else
-block|{
-comment|/* 		 * Jump back and unwind the signal frames to gracefully 		 * cleanup. 		 */
-name|___longjmp
-argument_list|(
-operator|*
-name|_thread_run
-operator|->
-name|sigframes
-index|[
-name|frame
-index|]
-operator|->
-name|sig_jb
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* This point should not be reached. */
-name|PANIC
-argument_list|(
-literal|"Dead thread has resumed"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|_thread_exit_finish
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|pthread_t
-name|pthread
-decl_stmt|;
 comment|/* 	 * Lock the garbage collector mutex to ensure that the garbage 	 * collector is not using the dead thread list. 	 */
 if|if
 condition|(
@@ -684,6 +631,44 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Set the return value for the woken thread: 		 */
+if|if
+condition|(
+operator|(
+name|_thread_run
+operator|->
+name|attr
+operator|.
+name|flags
+operator|&
+name|PTHREAD_DETACHED
+operator|)
+operator|!=
+literal|0
+condition|)
+name|pthread
+operator|->
+name|error
+operator|=
+name|ESRCH
+expr_stmt|;
+else|else
+block|{
+name|pthread
+operator|->
+name|ret
+operator|=
+name|_thread_run
+operator|->
+name|ret
+expr_stmt|;
+name|pthread
+operator|->
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 comment|/* Remove this thread from the thread list: */
 name|TAILQ_REMOVE
@@ -704,6 +689,12 @@ argument_list|,
 name|__FILE__
 argument_list|,
 name|__LINE__
+argument_list|)
+expr_stmt|;
+comment|/* This point should not be reached. */
+name|PANIC
+argument_list|(
+literal|"Dead thread has resumed"
 argument_list|)
 expr_stmt|;
 block|}

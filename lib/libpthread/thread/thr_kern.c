@@ -215,8 +215,10 @@ begin_function
 name|void
 name|_thread_kern_sched_frame
 parameter_list|(
-name|int
-name|frame
+name|struct
+name|pthread_signal_frame
+modifier|*
+name|psf
 parameter_list|)
 block|{
 comment|/* 	 * Flag the pthread kernel as executing scheduler code 	 * to avoid a signal from interrupting this execution and 	 * corrupting the (soon-to-be) current frame. 	 */
@@ -224,39 +226,13 @@ name|_thread_kern_in_sched
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Return to the specified frame: */
+comment|/* Restore the signal frame: */
+name|_thread_sigframe_restore
+argument_list|(
 name|_thread_run
-operator|->
-name|curframe
-operator|=
-name|_thread_run
-operator|->
-name|sigframes
-index|[
-name|frame
-index|]
-expr_stmt|;
-name|_thread_run
-operator|->
-name|sigframe_count
-operator|=
-name|frame
-expr_stmt|;
-if|if
-condition|(
-name|_thread_run
-operator|->
-name|sigframe_count
-operator|==
-literal|0
-condition|)
-comment|/* Restore the threads priority: */
-name|_thread_run
-operator|->
-name|active_priority
-operator|&=
-operator|~
-name|PTHREAD_SIGNAL_PRIORITY
+argument_list|,
+name|psf
+argument_list|)
 expr_stmt|;
 comment|/* Switch to the thread scheduler: */
 name|___longjmp
@@ -330,8 +306,6 @@ name|_setjmp
 argument_list|(
 name|_thread_run
 operator|->
-name|curframe
-operator|->
 name|ctx
 operator|.
 name|jb
@@ -343,15 +317,11 @@ block|{
 comment|/* Flag the jump buffer was the last state saved: */
 name|_thread_run
 operator|->
-name|curframe
-operator|->
 name|ctxtype
 operator|=
 name|CTX_JB_NOSIG
 expr_stmt|;
 name|_thread_run
-operator|->
-name|curframe
 operator|->
 name|longjmp_val
 operator|=
@@ -367,7 +337,7 @@ argument_list|,
 name|_thread_run
 argument_list|)
 expr_stmt|;
-comment|/* 			 * This point is reached when a longjmp() is called 			 * to restore the state of a thread.  			 * 			 * This is the normal way out of the scheduler. 			 */
+comment|/* 			 * This point is reached when a longjmp() is called 			 * to restore the state of a thread. 			 * 			 * This is the normal way out of the scheduler. 			 */
 name|_thread_kern_in_sched
 operator|=
 literal|0
@@ -407,7 +377,7 @@ operator|!=
 literal|0
 operator|)
 condition|)
-comment|/*  					 * Cancellations override signals. 					 * 					 * Stick a cancellation point at the 					 * start of each async-cancellable 					 * thread's resumption. 					 * 					 * We allow threads woken at cancel 					 * points to do their own checks. 					 */
+comment|/* 					 * Cancellations override signals. 					 * 					 * Stick a cancellation point at the 					 * start of each async-cancellable 					 * thread's resumption. 					 * 					 * We allow threads woken at cancel 					 * points to do their own checks. 					 */
 name|pthread_testcancel
 argument_list|()
 expr_stmt|;
@@ -471,11 +441,6 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|pthread_signal_frame
-modifier|*
-name|psf
-decl_stmt|;
-name|struct
 name|timespec
 name|ts
 decl_stmt|;
@@ -534,7 +499,7 @@ name|_thread_run
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Enter a scheduling loop that finds the next thread that is 	 * ready to run. This loop completes when there are no more threads 	 * in the global list or when a thread has its state restored by 	 * either a sigreturn (if the state was saved as a sigcontext) or a 	 * longjmp (if the state was saved by a setjmp).  	 */
+comment|/* 	 * Enter a scheduling loop that finds the next thread that is 	 * ready to run. This loop completes when there are no more threads 	 * in the global list or when a thread has its state restored by 	 * either a sigreturn (if the state was saved as a sigcontext) or a 	 * longjmp (if the state was saved by a setjmp). 	 */
 while|while
 condition|(
 operator|!
@@ -599,7 +564,7 @@ operator|!=
 name|PS_RUNNING
 condition|)
 block|{
-comment|/* 				 * Save the current time as the time that the 				 * thread became inactive:  				 */
+comment|/* 				 * Save the current time as the time that the 				 * thread became inactive: 				 */
 name|_thread_run
 operator|->
 name|last_inactive
@@ -661,7 +626,7 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-comment|/* 			 * States which do not depend on file descriptor I/O 			 * operations or timeouts:  			 */
+comment|/* 			 * States which do not depend on file descriptor I/O 			 * operations or timeouts: 			 */
 case|case
 name|PS_DEADLOCK
 case|:
@@ -811,7 +776,20 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* 		 * Avoid polling file descriptors if there are none 		 * waiting: 		 */
+if|if
+condition|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|_workq
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{ 		}
 comment|/* 		 * Poll file descriptors only if a new scheduling signal 		 * has occurred or if we have no more runnable threads. 		 */
+elseif|else
 if|if
 condition|(
 operator|(
@@ -847,7 +825,7 @@ name|_queue_signals
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * Poll file descriptors to update the state of threads 			 * waiting on file I/O where data may be available:  			 */
+comment|/* 			 * Poll file descriptors to update the state of threads 			 * waiting on file I/O where data may be available: 			 */
 name|thread_kern_poll
 argument_list|(
 literal|0
@@ -1031,7 +1009,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * Save the current time as the time that the 			 * thread became inactive:  			 */
+comment|/* 			 * Save the current time as the time that the 			 * thread became inactive: 			 */
 name|current_tick
 operator|=
 name|_sched_ticks
@@ -1167,7 +1145,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Lock the pthread kernel by changing the pointer to 			 * the running thread to point to the global kernel 			 * thread structure:  			 */
+comment|/* 			 * Lock the pthread kernel by changing the pointer to 			 * the running thread to point to the global kernel 			 * thread structure: 			 */
 name|_thread_run
 operator|=
 operator|&
@@ -1185,7 +1163,7 @@ name|_queue_signals
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * There are no threads ready to run, so wait until 			 * something happens that changes this condition:  			 */
+comment|/* 			 * There are no threads ready to run, so wait until 			 * something happens that changes this condition: 			 */
 name|thread_kern_poll
 argument_list|(
 literal|1
@@ -1313,7 +1291,7 @@ name|_thread_run
 operator|=
 name|pthread_h
 expr_stmt|;
-comment|/* 			 * Save the current time as the time that the thread 			 * became active:  			 */
+comment|/* 			 * Save the current time as the time that the thread 			 * became active: 			 */
 name|current_tick
 operator|=
 name|_sched_ticks
@@ -1327,7 +1305,7 @@ name|long
 operator|)
 name|current_tick
 expr_stmt|;
-comment|/* 			 * Check if this thread is running for the first time 			 * or running again after using its full time slice 			 * allocation:  			 */
+comment|/* 			 * Check if this thread is running for the first time 			 * or running again after using its full time slice 			 * allocation: 			 */
 if|if
 condition|(
 name|_thread_run
@@ -1371,15 +1349,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * Continue the thread at its current frame: 			 */
-name|psf
-operator|=
-name|_thread_run
-operator|->
-name|curframe
-expr_stmt|;
 switch|switch
 condition|(
-name|psf
+name|_thread_run
 operator|->
 name|ctxtype
 condition|)
@@ -1389,13 +1361,13 @@ name|CTX_JB_NOSIG
 case|:
 name|___longjmp
 argument_list|(
-name|psf
+name|_thread_run
 operator|->
 name|ctx
 operator|.
 name|jb
 argument_list|,
-name|psf
+name|_thread_run
 operator|->
 name|longjmp_val
 argument_list|)
@@ -1406,13 +1378,13 @@ name|CTX_JB
 case|:
 name|__longjmp
 argument_list|(
-name|psf
+name|_thread_run
 operator|->
 name|ctx
 operator|.
 name|jb
 argument_list|,
-name|psf
+name|_thread_run
 operator|->
 name|longjmp_val
 argument_list|)
@@ -1423,13 +1395,13 @@ name|CTX_SJB
 case|:
 name|__siglongjmp
 argument_list|(
-name|psf
+name|_thread_run
 operator|->
 name|ctx
 operator|.
 name|sigjb
 argument_list|,
-name|psf
+name|_thread_run
 operator|->
 name|longjmp_val
 argument_list|)
@@ -1442,14 +1414,14 @@ comment|/* XXX - Restore FP regsisters? */
 name|FP_RESTORE_UC
 argument_list|(
 operator|&
-name|psf
+name|_thread_run
 operator|->
 name|ctx
 operator|.
 name|uc
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Do a sigreturn to restart the thread that 				 * was interrupted by a signal:  				 */
+comment|/* 				 * Do a sigreturn to restart the thread that 				 * was interrupted by a signal: 				 */
 name|_thread_kern_in_sched
 operator|=
 literal|0
@@ -1460,7 +1432,7 @@ name|NOT_YET
 name|_setcontext
 argument_list|(
 operator|&
-name|psf
+name|_thread_run
 operator|->
 name|ctx
 operator|.
@@ -1470,7 +1442,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* 				 * Ensure the process signal mask is set 				 * correctly: 				 */
-name|psf
+name|_thread_run
 operator|->
 name|ctx
 operator|.
@@ -1483,7 +1455,7 @@ expr_stmt|;
 name|_thread_sys_sigreturn
 argument_list|(
 operator|&
-name|psf
+name|_thread_run
 operator|->
 name|ctx
 operator|.
@@ -2140,7 +2112,7 @@ block|}
 name|PTHREAD_WAITQ_CLEARACTIVE
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Wait for a file descriptor to be ready for read, write, or 	 * an exception, or a timeout to occur:  	 */
+comment|/* 	 * Wait for a file descriptor to be ready for read, write, or 	 * an exception, or a timeout to occur: 	 */
 name|count
 operator|=
 name|_thread_sys_poll
@@ -2158,7 +2130,7 @@ name|kern_pipe_added
 operator|!=
 literal|0
 condition|)
-comment|/* 		 * Remove the pthread kernel pipe file descriptor 		 * from the pollfd table:  		 */
+comment|/* 		 * Remove the pthread kernel pipe file descriptor 		 * from the pollfd table: 		 */
 name|nfds
 operator|=
 literal|1
@@ -2195,7 +2167,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * If the kernel read pipe was included in the 		 * count:  		 */
+comment|/* 		 * If the kernel read pipe was included in the 		 * count: 		 */
 if|if
 condition|(
 name|count
@@ -2233,7 +2205,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 		 * Enter a loop to look for threads waiting on file 		 * descriptors that are flagged as available by the 		 * _poll syscall:  		 */
+comment|/* 		 * Enter a loop to look for threads waiting on file 		 * descriptors that are flagged as available by the 		 * _poll syscall: 		 */
 name|PTHREAD_WAITQ_SETACTIVE
 argument_list|()
 expr_stmt|;
@@ -2686,7 +2658,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Set the wakeup time to something that can be recognised as 		 * different to an actual time of day:  		 */
+comment|/* 		 * Set the wakeup time to something that can be recognised as 		 * different to an actual time of day: 		 */
 name|_thread_run
 operator|->
 name|wakeup_time
@@ -2890,7 +2862,7 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Check for asynchronous cancellation before delivering any 		 * pending signals: 		 */
+comment|/* 		 * Check for asynchronous cancellation before delivering any 		 * pending signals: 		 */
 if|if
 condition|(
 operator|(
@@ -2972,7 +2944,7 @@ decl_stmt|;
 name|int
 name|num
 decl_stmt|;
-comment|/* 	 * Enter a loop to clear the pthread kernel pipe:  	 */
+comment|/* 	 * Enter a loop to clear the pthread kernel pipe: 	 */
 while|while
 condition|(
 operator|(

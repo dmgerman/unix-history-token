@@ -166,6 +166,12 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+comment|/* Increment the sequence number: */
+name|_thread_run
+operator|->
+name|sigmask_seqno
+operator|++
+expr_stmt|;
 comment|/* 		 * Check if there are pending signals for the running 		 * thread or process that aren't blocked: 		 */
 name|sigset
 operator|=

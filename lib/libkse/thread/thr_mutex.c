@@ -1466,19 +1466,22 @@ name|mutex
 operator|==
 name|NULL
 condition|)
-name|ret
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
+operator|)
+return|;
 comment|/* 	 * If the mutex is statically initialized, perform the dynamic 	 * initialization: 	 */
-elseif|else
 if|if
 condition|(
+operator|(
 operator|*
 name|mutex
-operator|!=
+operator|==
 name|NULL
-operator|||
+operator|)
+operator|&&
+operator|(
 operator|(
 name|ret
 operator|=
@@ -1487,8 +1490,49 @@ argument_list|(
 name|mutex
 argument_list|)
 operator|)
+operator|!=
+literal|0
+operator|)
+condition|)
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+comment|/* Reset the interrupted flag: */
+name|_thread_run
+operator|->
+name|interrupted
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * Enter a loop waiting to become the mutex owner.  We need a 	 * loop in case the waiting thread is interrupted by a signal 	 * to execute a signal handler.  It is not (currently) possible 	 * to remain in the waiting queue while running a handler. 	 * Instead, the thread is interrupted and backed out of the 	 * waiting queue prior to executing the signal handler. 	 */
+while|while
+condition|(
+operator|(
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_owner
+operator|!=
+name|_thread_run
+operator|)
+operator|&&
+operator|(
+name|ret
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+name|_thread_run
+operator|->
+name|interrupted
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* 		 * Defer signals to protect the scheduling queues from 		 * access by the signal handler: 		 */
@@ -1551,13 +1595,6 @@ name|mutex
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Reset the interrupted flag: */
-name|_thread_run
-operator|->
-name|interrupted
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Process according to mutex type: */
 switch|switch
 condition|(
@@ -2118,6 +2155,7 @@ comment|/* 		 * Undefer and handle pending signals, yielding if 		 * necessary: 
 name|_thread_kern_sig_undefer
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|_thread_run
@@ -2143,7 +2181,6 @@ operator|)
 name|_thread_run
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Return the completion status: */
 return|return
 operator|(
@@ -4176,11 +4213,15 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|pthread
 operator|->
-name|state
-operator|==
-name|PS_MUTEX_WAIT
+name|flags
+operator|&
+name|PTHREAD_FLAGS_IN_MUTEXQ
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|mutex
@@ -4208,9 +4249,7 @@ name|pthread
 argument_list|)
 expr_stmt|;
 comment|/* This thread is no longer waiting for the mutex: */
-name|mutex
-operator|->
-name|m_owner
+name|pthread
 operator|->
 name|data
 operator|.

@@ -153,6 +153,13 @@ argument_list|(
 name|_thread_run
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Enter a loop in case this thread is woken prematurely 		 * in order to invoke a signal handler: 		 */
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 comment|/* Clear the interrupted flag: */
 name|_thread_run
 operator|->
@@ -160,7 +167,7 @@ name|interrupted
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Protect against being context switched out while 		 * adding this thread to the join queue. 		 */
+comment|/* 			 * Protect against being context switched out while 			 * adding this thread to the join queue. 			 */
 name|_thread_kern_sig_defer
 argument_list|()
 expr_stmt|;
@@ -205,9 +212,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|_thread_run
 operator|->
-name|interrupted
+name|flags
+operator|&
+name|PTHREAD_FLAGS_IN_JOINQ
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -252,7 +263,10 @@ operator|->
 name|interrupted
 operator|!=
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|_thread_run
 operator|->
 name|continuation
@@ -266,9 +280,30 @@ argument_list|(
 name|_thread_run
 argument_list|)
 expr_stmt|;
-comment|/* Check if the thread is not detached: */
+comment|/* 				 * This thread was interrupted, probably to 				 * invoke a signal handler.  Make sure the 				 * target thread is still joinable. 				 */
 if|if
 condition|(
+operator|(
+operator|(
+name|_find_thread
+argument_list|(
+name|pthread
+argument_list|)
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|_find_dead_thread
+argument_list|(
+name|pthread
+argument_list|)
+operator|!=
+literal|0
+operator|)
+operator|)
+operator|||
+operator|(
 operator|(
 name|pthread
 operator|->
@@ -278,30 +313,67 @@ name|flags
 operator|&
 name|PTHREAD_DETACHED
 operator|)
-operator|==
+operator|!=
 literal|0
+operator|)
 condition|)
 block|{
-comment|/* Check if the return value is required: */
-if|if
-condition|(
-name|thread_return
-condition|)
-comment|/* Return the thread's return value: */
-operator|*
-name|thread_return
-operator|=
-name|pthread
-operator|->
-name|ret
-expr_stmt|;
-block|}
-else|else
 comment|/* Return an error: */
 name|ret
 operator|=
 name|ESRCH
 expr_stmt|;
+comment|/* We're done; break out of the loop. */
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+name|pthread
+operator|->
+name|state
+operator|==
+name|PS_DEAD
+condition|)
+block|{
+comment|/* We're done; break out of the loop. */
+break|break;
+block|}
+block|}
+else|else
+block|{
+comment|/* 				 * The thread return value and error are set 				 * by the thread we're joining to when it 				 * exits or detaches: 				 */
+name|ret
+operator|=
+name|_thread_run
+operator|->
+name|error
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ret
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|thread_return
+operator|!=
+name|NULL
+operator|)
+condition|)
+operator|*
+name|thread_return
+operator|=
+name|_thread_run
+operator|->
+name|ret
+expr_stmt|;
+comment|/* We're done; break out of the loop. */
+break|break;
+block|}
+block|}
 comment|/* Check if the return value is required: */
 block|}
 elseif|else
@@ -344,11 +416,15 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|pthread
 operator|->
-name|state
-operator|==
-name|PS_JOIN
+name|flags
+operator|&
+name|PTHREAD_FLAGS_IN_JOINQ
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|TAILQ_REMOVE

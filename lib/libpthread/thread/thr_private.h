@@ -941,6 +941,9 @@ decl_stmt|;
 name|long
 name|c_flags
 decl_stmt|;
+name|int
+name|c_seqno
+decl_stmt|;
 comment|/* 	 * Lock for accesses to this structure. 	 */
 name|spinlock_t
 name|lock
@@ -998,7 +1001,7 @@ define|#
 directive|define
 name|PTHREAD_COND_STATIC_INITIALIZER
 define|\
-value|{ COND_TYPE_FAST, TAILQ_INITIALIZER, NULL, NULL, \ 	0, _SPINLOCK_INITIALIZER }
+value|{ COND_TYPE_FAST, TAILQ_INITIALIZER, NULL, NULL, \ 	0, 0, _SPINLOCK_INITIALIZER }
 end_define
 
 begin_comment
@@ -1179,6 +1182,17 @@ define|#
 directive|define
 name|PTHREAD_STACK_INITIAL
 value|0x100000
+end_define
+
+begin_comment
+comment|/* Size of the scheduler stack: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCHED_STACK_SIZE
+value|PAGE_SIZE
 end_define
 
 begin_comment
@@ -1598,22 +1612,23 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_struct_decl
+struct_decl|struct
+name|pthread_signal_frame
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|pthread_state_data
 block|{
-name|int
-name|psd_interrupted
+name|struct
+name|pthread_signal_frame
+modifier|*
+name|psd_curframe
 decl_stmt|;
 name|sigset_t
 name|psd_sigmask
-decl_stmt|;
-name|enum
-name|pthread_state
-name|psd_state
-decl_stmt|;
-name|int
-name|psd_flags
 decl_stmt|;
 name|struct
 name|timespec
@@ -1622,6 +1637,28 @@ decl_stmt|;
 name|union
 name|pthread_wait_data
 name|psd_wait_data
+decl_stmt|;
+name|enum
+name|pthread_state
+name|psd_state
+decl_stmt|;
+name|int
+name|psd_flags
+decl_stmt|;
+name|int
+name|psd_interrupted
+decl_stmt|;
+name|int
+name|psd_longjmp_val
+decl_stmt|;
+name|int
+name|psd_sigmask_seqno
+decl_stmt|;
+name|int
+name|psd_signo
+decl_stmt|;
+name|int
+name|psd_sig_defer_count
 decl_stmt|;
 comment|/* XXX - What about thread->timeout and/or thread->error? */
 block|}
@@ -1665,11 +1702,6 @@ name|struct
 name|pthread_state_data
 name|saved_state
 decl_stmt|;
-comment|/* Beginning (bottom) of threads stack frame for this signal. */
-name|unsigned
-name|long
-name|stackp
-decl_stmt|;
 comment|/* 	 * Threads return context; ctxtype identifies the type of context. 	 * For signal frame 0, these point to the context storage area 	 * within the pthread structure.  When handling signals (frame> 0), 	 * these point to a context storage area that is allocated off the 	 * threads stack. 	 */
 union|union
 block|{
@@ -1691,15 +1723,6 @@ decl_stmt|;
 name|int
 name|longjmp_val
 decl_stmt|;
-comment|/* Threads "jump out of signal handler" destination frame. */
-name|int
-name|dst_frame
-decl_stmt|;
-comment|/* 	 * Used to return back to the signal handling frame in case 	 * the application tries to change contexts from the handler. 	 */
-name|jmp_buf
-modifier|*
-name|sig_jb
-decl_stmt|;
 name|int
 name|signo
 decl_stmt|;
@@ -1708,6 +1731,12 @@ name|int
 name|sig_has_args
 decl_stmt|;
 comment|/* use signal args if true */
+name|ucontext_t
+name|uc
+decl_stmt|;
+name|siginfo_t
+name|siginfo
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1778,29 +1807,32 @@ name|struct
 name|pthread_attr
 name|attr
 decl_stmt|;
-comment|/* 	 * Used for tracking delivery of nested signal handlers. 	 * Signal frame 0 is used for normal context (when no 	 * signal handlers are active for the thread).  Frame 	 * 1 is used as the context for the first signal, and 	 * frames 2 .. NSIG-1 are used when additional signals 	 * arrive interrupting already active signal handlers. 	 */
-name|struct
-name|pthread_signal_frame
-modifier|*
-name|sigframes
-index|[
-name|NSIG
-index|]
+comment|/* 	 * Threads return context; ctxtype identifies the type of context. 	 */
+union|union
+block|{
+name|jmp_buf
+name|jb
 decl_stmt|;
-name|struct
-name|pthread_signal_frame
-name|sigframe0
+name|sigjmp_buf
+name|sigjb
 decl_stmt|;
+name|ucontext_t
+name|uc
+decl_stmt|;
+block|}
+name|ctx
+union|;
+name|thread_context_t
+name|ctxtype
+decl_stmt|;
+name|int
+name|longjmp_val
+decl_stmt|;
+comment|/* 	 * Used for tracking delivery of signal handlers. 	 */
 name|struct
 name|pthread_signal_frame
 modifier|*
 name|curframe
-decl_stmt|;
-name|int
-name|sigframe_count
-decl_stmt|;
-name|int
-name|sigframe_done
 decl_stmt|;
 comment|/* 	 * Cancelability flags - the lower 2 bits are used by cancel 	 * definitions in pthread.h 	 */
 define|#
@@ -1831,6 +1863,9 @@ name|sigmask
 decl_stmt|;
 name|sigset_t
 name|sigpend
+decl_stmt|;
+name|int
+name|sigmask_seqno
 decl_stmt|;
 name|int
 name|check_pending
@@ -2833,6 +2868,23 @@ begin_decl_stmt
 name|SCLASS
 name|sigset_t
 name|_process_sigmask
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+endif|#
+directive|endif
 decl_stmt|;
 end_decl_stmt
 
@@ -3548,15 +3600,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_thread_exit_finish
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|_thread_fd_unlock
 parameter_list|(
 name|int
@@ -3651,8 +3694,10 @@ begin_function_decl
 name|void
 name|_thread_kern_sched_frame
 parameter_list|(
-name|int
-name|frame
+name|struct
+name|pthread_signal_frame
+modifier|*
+name|psf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3792,15 +3837,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|_thread_sigframe_find
+name|void
+name|_thread_sigframe_restore
 parameter_list|(
 name|pthread_t
-name|pthread
+name|thread
 parameter_list|,
-name|void
+name|struct
+name|pthread_signal_frame
 modifier|*
-name|stackp
+name|psf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3955,6 +4001,22 @@ name|int
 name|_thread_sys_sigreturn
 parameter_list|(
 name|ucontext_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_thread_sys_sigaltstack
+parameter_list|(
+specifier|const
+name|struct
+name|sigaltstack
+modifier|*
+parameter_list|,
+name|struct
+name|sigstack
 modifier|*
 parameter_list|)
 function_decl|;
