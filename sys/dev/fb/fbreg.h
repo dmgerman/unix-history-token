@@ -897,16 +897,6 @@ define|\
 value|(*vidsw[(adp)->va_index]->set_mode)((adp), (mode))
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX conflicts with syscons' set_border() */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -919,11 +909,6 @@ parameter_list|)
 define|\
 value|(*vidsw[(adp)->va_index]->set_border)((adp), (border))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
