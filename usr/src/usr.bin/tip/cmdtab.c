@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cmdtab.c	4.1	81/05/09	*/
+comment|/*	cmdtab.c	4.2	81/05/26	*/
 end_comment
 
 begin_include
@@ -139,6 +139,16 @@ block|,
 literal|"change directory"
 block|,
 name|chdirectory
+block|}
+block|,
+block|{
+literal|'.'
+block|,
+name|NORM
+block|,
+literal|"exit from tip"
+block|,
+name|finish
 block|}
 block|,
 block|{
