@@ -184,6 +184,50 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* find the base name of a path name */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|basename
+parameter_list|(
+name|char
+modifier|*
+name|file
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|f
+init|=
+name|rindex
+argument_list|(
+name|file
+argument_list|,
+literal|'/'
+argument_list|)
+decl_stmt|;
+comment|/* chop off dirname if present */
+if|if
+condition|(
+name|f
+operator|==
+name|NULL
+condition|)
+return|return
+name|file
+return|;
+else|else
+return|return
+operator|++
+name|f
+return|;
+comment|/* skip the / */
+block|}
+end_function
+
 begin_else
 else|#
 directive|else
@@ -545,29 +589,11 @@ name|char
 modifier|*
 name|f
 init|=
-name|rindex
+name|basename
 argument_list|(
 name|file
-argument_list|,
-literal|'/'
 argument_list|)
 decl_stmt|;
-comment|/* chop off dirname if present */
-if|if
-condition|(
-name|f
-operator|==
-name|NULL
-condition|)
-name|f
-operator|=
-name|file
-expr_stmt|;
-else|else
-name|f
-operator|++
-expr_stmt|;
-comment|/* skip the / */
 name|i
 operator|=
 name|malloccount
