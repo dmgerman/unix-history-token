@@ -1200,11 +1200,6 @@ argument_list|(
 name|rdch
 argument_list|)
 expr_stmt|;
-name|CHN_UNLOCK
-argument_list|(
-name|rdch
-argument_list|)
-expr_stmt|;
 block|}
 name|pcm_unlock
 argument_list|(
