@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)reg.h	5.5 (Berkeley) 1/18/91  *	$Id$  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)reg.h	5.5 (Berkeley) 1/18/91  *	$Id: reg.h,v 1.13 1997/02/22 09:35:07 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -16,11 +16,7 @@ name|_MACHINE_REG_H_
 end_define
 
 begin_comment
-comment|/*  * Location of the users' stored  * registers within appropriate frame of 'trap' and 'syscall', relative to  * base of stack frame.  * Normal usage is u.u_ar0[XX] in kernel.  */
-end_comment
-
-begin_comment
-comment|/* When referenced during a trap/exception, registers are at these offsets */
+comment|/*  * Indices for registers in `struct trapframe' and `struct regs'.  *  * This interface is deprecated.  In the kernel, it is only used in FPU  * emulators to convert from register numbers encoded in instructions to  * register values.  Everything else just accesses the relevant struct  * members.  In userland, debuggers tend to abuse this interface since  * they don't understand that `struct regs' is a struct.  I hope they have  * stopped accessing the registers in the trap frame via PT_{READ,WRITE}_U  * and we can stop supporting the user area soon.  */
 end_comment
 
 begin_define
@@ -136,7 +132,7 @@ value|(16)
 end_define
 
 begin_comment
-comment|/*  * Registers accessible to ptrace(2) syscall for debugger  * The machine-dependent code for PT_{SET,GET}REGS needs to  * use whichever order, defined above, is correct, so that it  * is all invisible to the user.  */
+comment|/*  * Register set accessible via /proc/$pid/regs and PT_{SET,GET}REGS.  */
 end_comment
 
 begin_struct
@@ -216,7 +212,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Register set accessible via /proc/$pid/fpreg  */
+comment|/*  * Register set accessible via /proc/$pid/fpregs.  */
 end_comment
 
 begin_struct
@@ -261,6 +257,10 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_comment
+comment|/*  * XXX these interfaces are MI, so they should be declared in a MI place.  */
+end_comment
 
 begin_decl_stmt
 name|int
