@@ -64,7 +64,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -75,7 +75,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -86,7 +86,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -97,7 +97,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -122,7 +122,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -147,7 +147,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -193,7 +193,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -260,7 +260,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -278,7 +278,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -289,7 +289,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -301,7 +301,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -312,7 +312,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -323,7 +323,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -349,7 +349,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -360,7 +360,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -399,7 +399,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -410,7 +410,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -421,7 +421,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -546,7 +546,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -564,7 +564,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -582,7 +582,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -600,7 +600,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -661,7 +661,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -679,7 +679,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -690,7 +690,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -701,7 +701,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -712,7 +712,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -730,7 +730,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -748,7 +748,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -787,7 +787,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -819,7 +819,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -831,7 +831,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -849,7 +849,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -924,7 +924,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -984,7 +984,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1002,7 +1002,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1041,7 +1041,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1073,7 +1073,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1085,7 +1085,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1103,7 +1103,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1121,7 +1121,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1138,7 +1138,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1148,7 +1148,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1158,7 +1158,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1168,7 +1168,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1178,7 +1178,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1188,7 +1188,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1198,7 +1198,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1208,7 +1208,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1218,7 +1218,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1228,7 +1228,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1238,7 +1238,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1248,7 +1248,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1258,7 +1258,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1268,7 +1268,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1278,7 +1278,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1288,7 +1288,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1298,7 +1298,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1308,7 +1308,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1318,7 +1318,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1328,7 +1328,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1338,7 +1338,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1348,7 +1348,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1358,7 +1358,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1368,7 +1368,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1378,7 +1378,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1388,7 +1388,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1398,7 +1398,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1408,7 +1408,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1418,7 +1418,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1428,7 +1428,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1438,7 +1438,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1448,7 +1448,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1458,7 +1458,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1468,7 +1468,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1478,7 +1478,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1488,7 +1488,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1498,7 +1498,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1508,7 +1508,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1518,7 +1518,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1528,7 +1528,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1538,7 +1538,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1548,7 +1548,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1558,7 +1558,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1568,7 +1568,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1578,7 +1578,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1588,7 +1588,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1598,7 +1598,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1608,7 +1608,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1618,7 +1618,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1628,7 +1628,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1638,7 +1638,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1648,7 +1648,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1658,7 +1658,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1668,7 +1668,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1678,7 +1678,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1688,7 +1688,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1698,7 +1698,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1708,7 +1708,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1718,7 +1718,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1728,7 +1728,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1738,7 +1738,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1748,7 +1748,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1758,7 +1758,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1768,7 +1768,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1778,7 +1778,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1788,7 +1788,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1798,7 +1798,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1808,7 +1808,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1818,7 +1818,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1828,7 +1828,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1838,7 +1838,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1848,7 +1848,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1858,7 +1858,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1868,7 +1868,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1878,7 +1878,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1888,7 +1888,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1898,7 +1898,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1908,7 +1908,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1918,7 +1918,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1928,7 +1928,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1938,7 +1938,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1948,7 +1948,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1958,7 +1958,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1968,7 +1968,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1978,7 +1978,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1988,7 +1988,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -1998,7 +1998,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2008,7 +2008,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2018,7 +2018,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2028,7 +2028,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2038,7 +2038,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2048,7 +2048,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2058,7 +2058,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2068,7 +2068,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2078,7 +2078,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2088,7 +2088,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2098,7 +2098,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2108,7 +2108,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2118,7 +2118,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2128,7 +2128,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2138,7 +2138,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2148,7 +2148,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2158,7 +2158,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2168,7 +2168,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2178,7 +2178,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2188,7 +2188,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2198,7 +2198,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2208,7 +2208,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2218,7 +2218,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2228,7 +2228,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2238,7 +2238,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2248,7 +2248,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2258,7 +2258,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2268,7 +2268,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2278,7 +2278,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2288,7 +2288,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2298,7 +2298,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2308,7 +2308,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2318,7 +2318,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2328,7 +2328,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2338,7 +2338,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2348,7 +2348,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2358,7 +2358,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2368,7 +2368,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2378,7 +2378,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2388,7 +2388,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2398,7 +2398,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2408,7 +2408,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -2430,7 +2430,7 @@ block|{
 name|ISFUNC
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 literal|0x0
@@ -4258,47 +4258,47 @@ comment|/* The regular control keys come first. */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-@ */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-a */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-b */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-c */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-d */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-e */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-f */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-g */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-h */
 end_comment
 
@@ -4318,7 +4318,7 @@ comment|/* Control-k */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-l */
 end_comment
 
@@ -4328,67 +4328,67 @@ comment|/* Control-m */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-n */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-o */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-p */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-q */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-r */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-s */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-t */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-u */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-v */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-w */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-x */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-y */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-z */
 end_comment
 
@@ -4398,17 +4398,17 @@ comment|/* Control-[ */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-\ */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-] */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* Control-^ */
 end_comment
 
@@ -4422,82 +4422,82 @@ comment|/* The start of printing characters. */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* SPACE */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* ! */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* " */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* # */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* $ */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* % */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/*& */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* ' */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* ( */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* ) */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* * */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* + */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* , */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* - */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* . */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* / */
 end_comment
 
@@ -4560,37 +4560,37 @@ comment|/* A little more punctuation. */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* : */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* ; */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/*< */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* = */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/*> */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* ? */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* @ */
 end_comment
 
@@ -4738,27 +4738,27 @@ comment|/* [ */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* \ */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* ] */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* ^ */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* _ */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* ` */
 end_comment
 
@@ -4767,72 +4767,72 @@ comment|/* Lowercase alphabet. */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* a */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* b */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* c */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* d */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* e */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* f */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* g */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* h */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* i */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* j */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* k */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* l */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* m */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* n */
 end_comment
 
@@ -4842,57 +4842,57 @@ comment|/* o */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* p */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* q */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* r */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* s */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* t */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* u */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* v */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* w */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* x */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* y */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* z */
 end_comment
 
@@ -4901,22 +4901,22 @@ comment|/* Final punctuation. */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* { */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* | */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* } */
 end_comment
 
 begin_comment
-unit|{ ISFUNC, (Function *)0x0 },
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },
 comment|/* ~ */
 end_comment
 
@@ -4938,7 +4938,7 @@ comment|/* Undefined keys. */
 end_comment
 
 begin_endif
-unit|{ ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 },   { ISFUNC, (Function *)0x0 }
+unit|{ ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 },   { ISFUNC, (rl_command_func_t *)0x0 }
 endif|#
 directive|endif
 end_endif

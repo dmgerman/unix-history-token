@@ -169,7 +169,7 @@ begin_decl_stmt
 specifier|extern
 name|HIST_ENTRY
 modifier|*
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 decl_stmt|;
 end_decl_stmt
 
@@ -201,6 +201,17 @@ specifier|static
 name|char
 modifier|*
 name|prev_line_found
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|char
+modifier|*
+name|default_isearch_terminators
+init|=
+literal|"\033\012"
 decl_stmt|;
 end_decl_stmt
 
@@ -547,6 +558,11 @@ name|char
 modifier|*
 name|isearch_terminators
 decl_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_ISEARCH
+argument_list|)
+expr_stmt|;
 name|orig_point
 operator|=
 name|rl_point
@@ -583,15 +599,10 @@ name|_rl_isearch_terminators
 condition|?
 name|_rl_isearch_terminators
 else|:
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-literal|"\033\012"
+name|default_isearch_terminators
 expr_stmt|;
 comment|/* Create an arrary of pointers to the lines that we want to search. */
-name|maybe_replace_line
+name|rl_maybe_replace_line
 argument_list|()
 expr_stmt|;
 name|i
@@ -671,14 +682,14 @@ name|line
 expr_stmt|;
 if|if
 condition|(
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 condition|)
 name|lines
 index|[
 name|i
 index|]
 operator|=
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 operator|->
 name|line
 expr_stmt|;
@@ -806,21 +817,31 @@ init|;
 condition|;
 control|)
 block|{
-name|Function
+name|rl_command_func_t
 modifier|*
 name|f
 init|=
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 name|NULL
 decl_stmt|;
 comment|/* Read a key and decide how to proceed. */
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|c
 operator|=
 name|rl_read_key
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -946,6 +967,7 @@ literal|'G'
 argument_list|)
 condition|)
 block|{
+comment|/* This sets rl_pending_input to c; it will be picked up the next 	     time rl_read_key is called. */
 name|rl_execute_next
 argument_list|(
 name|c
@@ -988,7 +1010,7 @@ operator|++
 name|line_index
 expr_stmt|;
 else|else
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 break|break;
@@ -1056,6 +1078,11 @@ argument_list|(
 name|lines
 argument_list|)
 expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_ISEARCH
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1063,7 +1090,7 @@ if|#
 directive|if
 literal|0
 comment|/* delete character from search string. */
-block|case -3: 	  if (search_string_index == 0) 	    ding (); 	  else 	    { 	      search_string[--search_string_index] = '\0';
+block|case -3: 	  if (search_string_index == 0) 	    rl_ding (); 	  else 	    { 	      search_string[--search_string_index] = '\0';
 comment|/* This is tricky.  To do this right, we need to keep a 		 stack of search positions for the current search, with 		 sentinels marking the beginning and end. */
 block|} 	  break;
 endif|#
@@ -1271,7 +1298,7 @@ name|failed
 condition|)
 block|{
 comment|/* We cannot find the search string.  Ding the bell. */
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 name|i
@@ -1439,6 +1466,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|lines
+argument_list|)
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_ISEARCH
 argument_list|)
 expr_stmt|;
 return|return

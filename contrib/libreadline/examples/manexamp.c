@@ -23,30 +23,35 @@ begin_comment
 comment|/*                                                                  */
 end_comment
 
-begin_expr_stmt
-operator|*
-name|How
-name|to
-name|Emulate
-name|gets
-argument_list|()
-operator|*
-operator|/
+begin_comment
+comment|/*   			How to Emulate gets ()			    */
+end_comment
+
+begin_comment
 comment|/*                                                                  */
+end_comment
+
+begin_comment
 comment|/* **************************************************************** */
+end_comment
+
+begin_comment
 comment|/* A static variable for holding the line. */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|char
-operator|*
+modifier|*
 name|line_read
-operator|=
+init|=
 operator|(
 name|char
 operator|*
 operator|)
 name|NULL
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Read a string, and return a pointer to it.  Returns NULL on EOF. */
@@ -267,7 +272,7 @@ control|)
 block|{
 if|if
 condition|(
-name|uppercase_p
+name|_rl_uppercase_p
 argument_list|(
 name|rl_line_buffer
 index|[
@@ -280,7 +285,7 @@ index|[
 name|start
 index|]
 operator|=
-name|to_lower
+name|_rl_to_lower
 argument_list|(
 name|rl_line_buffer
 index|[
@@ -291,7 +296,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|lowercase_p
+name|_rl_lowercase_p
 argument_list|(
 name|rl_line_buffer
 index|[
@@ -304,7 +309,7 @@ index|[
 name|start
 index|]
 operator|=
-name|to_upper
+name|_rl_to_upper
 argument_list|(
 name|rl_line_buffer
 index|[

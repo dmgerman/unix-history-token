@@ -107,7 +107,7 @@ comment|/* Allow using readline in situations where a program may have multiple 
 end_comment
 
 begin_decl_stmt
-name|VFunction
+name|rl_vcpfunc_t
 modifier|*
 name|rl_linefunc
 decl_stmt|;
@@ -190,29 +190,20 @@ name|prompt
 parameter_list|,
 name|linefunc
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|prompt
 decl_stmt|;
-name|VFunction
+name|rl_vcpfunc_t
 modifier|*
 name|linefunc
 decl_stmt|;
 block|{
-name|rl_prompt
-operator|=
-name|prompt
-expr_stmt|;
-name|rl_visible_prompt_length
-operator|=
-name|rl_prompt
-condition|?
-name|rl_expand_prompt
+name|rl_set_prompt
 argument_list|(
-name|rl_prompt
+name|prompt
 argument_list|)
-else|:
-literal|0
 expr_stmt|;
 name|rl_linefunc
 operator|=
@@ -263,6 +254,13 @@ operator|=
 name|readline_internal_char
 argument_list|()
 expr_stmt|;
+comment|/* We loop in case some function has pushed input back with rl_execute_next. */
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 if|if
 condition|(
 name|rl_done
@@ -315,7 +313,7 @@ condition|)
 name|_rl_init_line_state
 argument_list|()
 expr_stmt|;
-comment|/* Redisplay the prompt if readline_handler_{install,remove} not called. */
+comment|/* Redisplay the prompt if readline_handler_{install,remove} 	     not called. */
 if|if
 condition|(
 name|in_handler
@@ -327,6 +325,18 @@ condition|)
 name|_rl_callback_newline
 argument_list|()
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|rl_pending_input
+condition|)
+name|eof
+operator|=
+name|readline_internal_char
+argument_list|()
+expr_stmt|;
+else|else
+break|break;
 block|}
 block|}
 end_function

@@ -65,6 +65,7 @@ name|rl_get_termcap
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -126,13 +127,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|rl_numeric_arg
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|rl_arg_sign
 decl_stmt|;
 end_decl_stmt
@@ -140,29 +134,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|rl_explicit_arg
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|rl_editing_mode
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|rl_visible_prompt_length
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|Function
-modifier|*
-name|rl_last_func
 decl_stmt|;
 end_decl_stmt
 
@@ -329,6 +301,7 @@ name|_rl_savestring
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -421,10 +394,11 @@ name|_rl_bind_if_unbound
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 argument_list|)
@@ -459,6 +433,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -613,7 +588,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|_rl_currentb_display_line
+name|_rl_current_display_line
 name|__P
 argument_list|(
 operator|(
@@ -861,6 +836,7 @@ name|_rl_replace_text
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -897,6 +873,19 @@ name|__P
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|_rl_free_saved_history_line
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -958,6 +947,7 @@ name|_rl_init_terminal_io
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1014,6 +1004,7 @@ name|_rl_output_some_chars
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1069,7 +1060,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|alphabetic
+name|rl_alphabetic
 name|__P
 argument_list|(
 operator|(
@@ -1100,9 +1091,31 @@ name|_rl_strindex
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|_rl_strpbrk
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1312,6 +1325,30 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/* bind.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|_rl_possible_control_prefixes
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|_rl_possible_meta_prefixes
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* complete.c */
 end_comment
 
@@ -1373,28 +1410,6 @@ specifier|extern
 name|char
 modifier|*
 name|rl_display_prompt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* funmap.c */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|possible_control_prefixes
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|possible_meta_prefixes
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -1558,7 +1573,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|term_clreol
+name|_rl_term_clreol
 decl_stmt|;
 end_decl_stmt
 
@@ -1566,7 +1581,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|term_clrpag
+name|_rl_term_clrpag
 decl_stmt|;
 end_decl_stmt
 
@@ -1574,7 +1589,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|term_im
+name|_rl_term_im
 decl_stmt|;
 end_decl_stmt
 
@@ -1582,7 +1597,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|term_ic
+name|_rl_term_ic
 decl_stmt|;
 end_decl_stmt
 
@@ -1590,7 +1605,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|term_ei
+name|_rl_term_ei
 decl_stmt|;
 end_decl_stmt
 
@@ -1598,7 +1613,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|term_DC
+name|_rl_term_DC
 decl_stmt|;
 end_decl_stmt
 
@@ -1606,7 +1621,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|term_up
+name|_rl_term_up
 decl_stmt|;
 end_decl_stmt
 
@@ -1614,7 +1629,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|term_dc
+name|_rl_term_dc
 decl_stmt|;
 end_decl_stmt
 
@@ -1622,7 +1637,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|term_cr
+name|_rl_term_cr
 decl_stmt|;
 end_decl_stmt
 
@@ -1630,35 +1645,35 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|term_IC
+name|_rl_term_IC
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|screenheight
+name|_rl_screenheight
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|screenwidth
+name|_rl_screenwidth
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|screenchars
+name|_rl_screenchars
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|terminal_can_insert
+name|_rl_terminal_can_insert
 decl_stmt|;
 end_decl_stmt
 

@@ -275,6 +275,15 @@ begin_comment
 comment|/* !HAVE_SELECT */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|_paren_blink_usec
+init|=
+literal|500000
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Change emacs_standard_keymap to have bindings for paren matching when    ON_OR_OFF is 1, change them back to self_insert when ON_OR_OFF == 0. */
 end_comment
@@ -354,6 +363,41 @@ name|emacs_standard_keymap
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|int
+name|rl_set_paren_blink_timeout
+parameter_list|(
+name|u
+parameter_list|)
+name|int
+name|u
+decl_stmt|;
+block|{
+name|int
+name|o
+decl_stmt|;
+name|o
+operator|=
+name|_paren_blink_usec
+expr_stmt|;
+if|if
+condition|(
+name|u
+operator|>
+literal|0
+condition|)
+name|_paren_blink_usec
+operator|=
+name|u
+expr_stmt|;
+return|return
+operator|(
+name|o
+operator|)
+return|;
 block|}
 end_function
 
@@ -471,7 +515,7 @@ name|timer
 operator|.
 name|tv_usec
 operator|=
-literal|500000
+name|_paren_blink_usec
 expr_stmt|;
 name|orig_point
 operator|=

@@ -33,7 +33,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|single_quote
+name|sh_single_quote
 name|__P
 argument_list|(
 operator|(
@@ -47,7 +47,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|set_lines_and_columns
+name|sh_set_lines_and_columns
 name|__P
 argument_list|(
 operator|(
@@ -63,10 +63,11 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|get_env_value
+name|sh_get_env_value
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -78,7 +79,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|get_home_dir
+name|sh_get_home_dir
 name|__P
 argument_list|(
 operator|(
@@ -91,7 +92,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|unset_nodelay_mode
+name|sh_unset_nodelay_mode
 name|__P
 argument_list|(
 operator|(

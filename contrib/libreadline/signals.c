@@ -234,7 +234,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This typedef is equivalant to the one for Function; it allows us    to say SigHandler *foo = signal (SIGKILL, SIG_IGN); */
+comment|/* This typedef is equivalent to the one for Function; it allows us    to say SigHandler *foo = signal (SIGKILL, SIG_IGN); */
 end_comment
 
 begin_typedef
@@ -518,6 +518,11 @@ comment|/* !HAVE_BSD_SIGNALS */
 endif|#
 directive|endif
 comment|/* !HAVE_POSIX_SIGNALS */
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_SIGHANDLER
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 operator|!
@@ -723,6 +728,11 @@ name|rl_reset_after_signal
 argument_list|()
 expr_stmt|;
 block|}
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_SIGHANDLER
+argument_list|)
+expr_stmt|;
 name|SIGHANDLER_RETURN
 expr_stmt|;
 block|}
@@ -774,6 +784,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_SIGHANDLER
+argument_list|)
+expr_stmt|;
 name|rl_resize_terminal
 argument_list|()
 expr_stmt|;
@@ -814,6 +829,11 @@ name|oh
 call|)
 argument_list|(
 name|sig
+argument_list|)
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_SIGHANDLER
 argument_list|)
 expr_stmt|;
 name|SIGHANDLER_RETURN
@@ -1537,9 +1557,8 @@ expr_stmt|;
 name|rl_clear_signals
 argument_list|()
 expr_stmt|;
-name|rl_pending_input
-operator|=
-literal|0
+name|rl_clear_pending_input
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1581,7 +1600,7 @@ name|HIST_ENTRY
 modifier|*
 name|entry
 decl_stmt|;
-name|free_undo_list
+name|rl_free_undo_list
 argument_list|()
 expr_stmt|;
 name|entry

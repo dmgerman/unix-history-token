@@ -209,7 +209,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|term_forward_char
+name|_rl_term_forward_char
 decl_stmt|;
 end_decl_stmt
 
@@ -371,7 +371,7 @@ comment|/* Application-specific redisplay function. */
 end_comment
 
 begin_decl_stmt
-name|VFunction
+name|rl_voidfunc_t
 modifier|*
 name|rl_redisplay_function
 init|=
@@ -541,6 +541,10 @@ literal|1024
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Variables to keep track of the expanded prompt string, which may    include invisible characters. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -555,9 +559,9 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|visible_length
+name|prompt_visible_length
 decl_stmt|,
-name|prefix_length
+name|prompt_prefix_length
 decl_stmt|;
 end_decl_stmt
 
@@ -573,7 +577,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* static so it can be shared between rl_redisplay and update_line */
+comment|/* The number of invisible characters in the prompt string.  Static so it    can be shared between rl_redisplay and update_line */
 end_comment
 
 begin_decl_stmt
@@ -584,13 +588,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The index of the last invisible_character in the prompt string. */
+comment|/* The index of the last invisible character in the prompt string. */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
-name|last_invisible
+name|prompt_last_invisible
 decl_stmt|;
 end_decl_stmt
 
@@ -606,7 +610,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Expand the prompt string S and return the number of visible    characters in *LP, if LP is not null.  This is currently more-or-less    a placeholder for expansion.  LIP, if non-null is a place to store the    index of the last invisible character in the returned string. */
+comment|/* Number of invisible characters on the first physical line of the prompt.    Only valid when the number of physical characters in the prompt exceeds    (or is equal to) _rl_screenwidth. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|prompt_invis_chars_first_line
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|prompt_last_screen_line
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Expand the prompt string S and return the number of visible    characters in *LP, if LP is not null.  This is currently more-or-less    a placeholder for expansion.  LIP, if non-null is a place to store the    index of the last invisible character in the returned string. NIFLP,    if non-zero, is a place to store the number of invisible characters in    the first prompt line. */
 end_comment
 
 begin_comment
@@ -624,6 +646,8 @@ parameter_list|,
 name|lp
 parameter_list|,
 name|lip
+parameter_list|,
+name|niflp
 parameter_list|)
 name|char
 modifier|*
@@ -635,6 +659,9 @@ name|lp
 decl_stmt|,
 decl|*
 name|lip
+decl_stmt|,
+modifier|*
+name|niflp
 decl_stmt|;
 end_function
 
@@ -658,6 +685,10 @@ decl_stmt|,
 name|last
 decl_stmt|,
 name|ignoring
+decl_stmt|,
+name|ninvis
+decl_stmt|,
+name|invfl
 decl_stmt|;
 comment|/* Short-circuit if we can. */
 if|if
@@ -713,6 +744,11 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+name|invfl
+operator|=
+literal|0
+expr_stmt|;
+comment|/* invisible chars in first line of prompt */
 for|for
 control|(
 name|rl
@@ -720,6 +756,8 @@ operator|=
 name|ignoring
 operator|=
 name|last
+operator|=
+name|ninvis
 operator|=
 literal|0
 operator|,
@@ -792,8 +830,32 @@ condition|)
 name|rl
 operator|++
 expr_stmt|;
+else|else
+name|ninvis
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|rl
+operator|==
+name|_rl_screenwidth
+condition|)
+name|invfl
+operator|=
+name|ninvis
+expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|rl
+operator|<
+name|_rl_screenwidth
+condition|)
+name|invfl
+operator|=
+name|ninvis
+expr_stmt|;
 operator|*
 name|r
 operator|=
@@ -816,6 +878,15 @@ operator|*
 name|lip
 operator|=
 name|last
+expr_stmt|;
+if|if
+condition|(
+name|niflp
+condition|)
+operator|*
+name|niflp
+operator|=
+name|invfl
 expr_stmt|;
 return|return
 name|ret
@@ -860,6 +931,12 @@ name|int
 operator|*
 operator|)
 name|NULL
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -869,7 +946,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Expand the prompt string into the various display components, if  * necessary.  *  * local_prompt = expanded last line of string in rl_display_prompt  *		  (portion after the final newline)  * local_prompt_prefix = portion before last newline of rl_display_prompt,  *			 expanded via expand_prompt  * visible_length = number of visible characters in local_prompt  * prefix_length = number of visible characters in local_prompt_prefix  *  * This function is called once per call to readline().  It may also be  * called arbitrarily to expand the primary prompt.  *  * The return value is the number of visible characters on the last line  * of the (possibly multi-line) prompt.  */
+comment|/*  * Expand the prompt string into the various display components, if  * necessary.  *  * local_prompt = expanded last line of string in rl_display_prompt  *		  (portion after the final newline)  * local_prompt_prefix = portion before last newline of rl_display_prompt,  *			 expanded via expand_prompt  * prompt_visible_length = number of visible characters in local_prompt  * prompt_prefix_length = number of visible characters in local_prompt_prefix  *  * This function is called once per call to readline().  It may also be  * called arbitrarily to expand the primary prompt.  *  * The return value is the number of visible characters on the last line  * of the (possibly multi-line) prompt.  */
 end_comment
 
 begin_function
@@ -894,20 +971,12 @@ name|int
 name|c
 decl_stmt|;
 comment|/* Clear out any saved values. */
-if|if
-condition|(
-name|local_prompt
-condition|)
-name|free
+name|FREE
 argument_list|(
 name|local_prompt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|local_prompt_prefix
-condition|)
-name|free
+name|FREE
 argument_list|(
 name|local_prompt_prefix
 argument_list|)
@@ -922,9 +991,9 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-name|last_invisible
+name|prompt_last_invisible
 operator|=
-name|visible_length
+name|prompt_visible_length
 operator|=
 literal|0
 expr_stmt|;
@@ -959,7 +1028,7 @@ operator|!
 name|p
 condition|)
 block|{
-comment|/* The prompt is only one line. */
+comment|/* The prompt is only one logical line, though it might wrap. */
 name|local_prompt
 operator|=
 name|expand_prompt
@@ -967,10 +1036,13 @@ argument_list|(
 name|prompt
 argument_list|,
 operator|&
-name|visible_length
+name|prompt_visible_length
 argument_list|,
 operator|&
-name|last_invisible
+name|prompt_last_invisible
+argument_list|,
+operator|&
+name|prompt_invis_chars_first_line
 argument_list|)
 expr_stmt|;
 name|local_prompt_prefix
@@ -983,7 +1055,7 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-name|visible_length
+name|prompt_visible_length
 operator|)
 return|;
 block|}
@@ -1002,10 +1074,13 @@ argument_list|(
 name|p
 argument_list|,
 operator|&
-name|visible_length
+name|prompt_visible_length
 argument_list|,
 operator|&
-name|last_invisible
+name|prompt_last_invisible
+argument_list|,
+operator|&
+name|prompt_invis_chars_first_line
 argument_list|)
 expr_stmt|;
 name|c
@@ -1026,13 +1101,16 @@ argument_list|(
 name|prompt
 argument_list|,
 operator|&
-name|prefix_length
+name|prompt_prefix_length
 argument_list|,
 operator|(
 name|int
 operator|*
 operator|)
 name|NULL
+argument_list|,
+operator|&
+name|prompt_invis_chars_first_line
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1042,7 +1120,7 @@ name|c
 expr_stmt|;
 return|return
 operator|(
-name|prefix_length
+name|prompt_prefix_length
 operator|)
 return|;
 block|}
@@ -1493,7 +1571,7 @@ name|wrap_offset
 operator|=
 name|local_len
 operator|-
-name|visible_length
+name|prompt_visible_length
 expr_stmt|;
 block|}
 else|else
@@ -1644,6 +1722,8 @@ literal|'\0'
 expr_stmt|;
 name|wrap_offset
 operator|=
+name|prompt_invis_chars_first_line
+operator|=
 literal|0
 expr_stmt|;
 block|}
@@ -1658,7 +1738,7 @@ directive|define
 name|CHECK_LPOS
 parameter_list|()
 define|\
-value|do { \ 	lpos++; \ 	if (lpos>= screenwidth) \ 	  { \ 	    if (newlines>= (inv_lbsize - 2)) \ 	      { \ 		inv_lbsize *= 2; \ 		inv_lbreaks = (int *)xrealloc (inv_lbreaks, inv_lbsize * sizeof (int)); \ 	      } \ 	    inv_lbreaks[++newlines] = out; \ 	    lpos = 0; \ 	  } \       } while (0)
+value|do { \ 	lpos++; \ 	if (lpos>= _rl_screenwidth) \ 	  { \ 	    if (newlines>= (inv_lbsize - 2)) \ 	      { \ 		inv_lbsize *= 2; \ 		inv_lbreaks = (int *)xrealloc (inv_lbreaks, inv_lbsize * sizeof (int)); \ 	      } \ 	    inv_lbreaks[++newlines] = out; \ 	    lpos = 0; \ 	  } \       } while (0)
 comment|/* inv_lbreaks[i] is where line i starts in the buffer. */
 name|inv_lbreaks
 index|[
@@ -1675,15 +1755,16 @@ name|out
 operator|-
 name|wrap_offset
 expr_stmt|;
-comment|/* XXX - what if lpos is already>= screenwidth before we start drawing the      contents of the command line? */
+comment|/* prompt_invis_chars_first_line is the number of invisible characters in      the first physical line of the prompt.      wrap_offset - prompt_invis_chars_first_line is the number of invis      chars on the second line. */
+comment|/* what if lpos is already>= _rl_screenwidth before we start drawing the      contents of the command line? */
 while|while
 condition|(
 name|lpos
 operator|>=
-name|screenwidth
+name|_rl_screenwidth
 condition|)
 block|{
-comment|/* XXX - possible fix from Darin Johnson<darin@acuson.com> for prompt 	 string with invisible characters that is longer than the screen 	 width.  XXX - this doesn't work right if invisible characters have 	 to be put on the second screen line -- it adds too much (the number 	 of invisible chars after the screenwidth). */
+comment|/* fix from Darin Johnson<darin@acuson.com> for prompt string with          invisible characters that is longer than the screen width.  The          prompt_invis_chars_first_line variable could be made into an array          saying how many invisible characters there are per line, but that's          probably too much work for the benefit gained.  How many people have          prompts that exceed two physical lines? */
 name|temp
 operator|=
 operator|(
@@ -1693,7 +1774,7 @@ operator|+
 literal|1
 operator|)
 operator|*
-name|screenwidth
+name|_rl_screenwidth
 operator|)
 operator|+
 operator|(
@@ -1701,6 +1782,18 @@ operator|(
 name|newlines
 operator|==
 literal|0
+operator|)
+condition|?
+name|prompt_invis_chars_first_line
+else|:
+literal|0
+operator|)
+operator|+
+operator|(
+operator|(
+name|newlines
+operator|==
+literal|1
 operator|)
 condition|?
 name|wrap_offset
@@ -1718,9 +1811,14 @@ name|temp
 expr_stmt|;
 name|lpos
 operator|-=
-name|screenwidth
+name|_rl_screenwidth
 expr_stmt|;
 block|}
+name|prompt_last_screen_line
+operator|=
+name|newlines
+expr_stmt|;
+comment|/* Draw the rest of the line (after the prompt) into invisible_line, keeping      track of where the cursor is (c_pos), the number of the line containing      the cursor (lb_linenum), the last line number (lb_botlin and inv_botlin).      It maintains an array of line breaks for display (inv_lbreaks).      This handles expanding tabs for display and displaying meta characters. */
 name|lb_linenum
 operator|=
 literal|0
@@ -1835,12 +1933,12 @@ name|lpos
 operator|+
 literal|4
 operator|>=
-name|screenwidth
+name|_rl_screenwidth
 condition|)
 block|{
 name|temp
 operator|=
-name|screenwidth
+name|_rl_screenwidth
 operator|-
 name|lpos
 expr_stmt|;
@@ -1905,8 +2003,6 @@ condition|)
 block|{
 specifier|register
 name|int
-name|temp
-decl_stmt|,
 name|newout
 decl_stmt|;
 if|#
@@ -1939,7 +2035,7 @@ name|lpos
 operator|+
 name|temp
 operator|>=
-name|screenwidth
+name|_rl_screenwidth
 condition|)
 block|{
 specifier|register
@@ -1948,7 +2044,7 @@ name|temp2
 decl_stmt|;
 name|temp2
 operator|=
-name|screenwidth
+name|_rl_screenwidth
 operator|-
 name|lpos
 expr_stmt|;
@@ -2021,10 +2117,10 @@ name|_rl_horizontal_scroll_mode
 operator|==
 literal|0
 operator|&&
-name|term_up
+name|_rl_term_up
 operator|&&
 operator|*
-name|term_up
+name|_rl_term_up
 condition|)
 block|{
 name|line
@@ -2158,7 +2254,7 @@ name|cursor_linenum
 operator|=
 name|lb_linenum
 expr_stmt|;
-comment|/* C_POS == position in buffer where cursor should be placed. */
+comment|/* C_POS == position in buffer where cursor should be placed.      CURSOR_LINENUM == line number where the cursor should be placed. */
 comment|/* PWP: now is when things get a bit hairy.  The visible and invisible      line buffers are really multiple lines, which would wrap every      (screenwidth - 1) characters.  Go through each in turn, finding      the changed region and updating it.  The line order is top to bottom. */
 comment|/* If we can move the cursor up and down, then use multiple lines,      otherwise, let long lines display in a single terminal line, and      horizontally scroll it. */
 if|if
@@ -2167,10 +2263,10 @@ name|_rl_horizontal_scroll_mode
 operator|==
 literal|0
 operator|&&
-name|term_up
+name|_rl_term_up
 operator|&&
 operator|*
-name|term_up
+name|_rl_term_up
 condition|)
 block|{
 name|int
@@ -2197,11 +2293,11 @@ if|if
 condition|(
 name|out
 operator|>=
-name|screenchars
+name|_rl_screenchars
 condition|)
 name|out
 operator|=
-name|screenchars
+name|_rl_screenchars
 operator|-
 literal|1
 expr_stmt|;
@@ -2322,7 +2418,7 @@ condition|)
 block|{
 name|nleft
 operator|=
-name|screenwidth
+name|_rl_screenwidth
 operator|+
 name|wrap_offset
 operator|-
@@ -2418,7 +2514,7 @@ argument_list|(
 name|tt
 argument_list|)
 else|:
-name|screenwidth
+name|_rl_screenwidth
 argument_list|)
 expr_stmt|;
 block|}
@@ -2444,7 +2540,7 @@ argument_list|(
 name|cursor_linenum
 argument_list|)
 expr_stmt|;
-comment|/* If we moved up to the line with the prompt using term_up, 		 the physical cursor position on the screen stays the same, 		 but the buffer position needs to be adjusted to account 		 for invisible characters. */
+comment|/* If we moved up to the line with the prompt using _rl_term_up, 		 the physical cursor position on the screen stays the same, 		 but the buffer position needs to be adjusted to account 		 for invisible characters. */
 if|if
 condition|(
 name|cursor_linenum
@@ -2461,7 +2557,7 @@ block|}
 comment|/* We have to reprint the prompt if it contains invisible 	     characters, since it's not generally OK to just reprint 	     the characters from the current cursor position.  But we 	     only need to reprint it if the cursor is before the last 	     invisible character in the prompt string. */
 name|nleft
 operator|=
-name|visible_length
+name|prompt_visible_length
 operator|+
 name|wrap_offset
 expr_stmt|;
@@ -2481,7 +2577,7 @@ literal|0
 operator|&&
 name|_rl_last_c_pos
 operator|<=
-name|last_invisible
+name|prompt_last_invisible
 operator|&&
 name|local_prompt
 condition|)
@@ -2503,11 +2599,11 @@ else|#
 directive|else
 if|if
 condition|(
-name|term_cr
+name|_rl_term_cr
 condition|)
 name|tputs
 argument_list|(
-name|term_cr
+name|_rl_term_cr
 argument_list|,
 literal|1
 argument_list|,
@@ -2626,7 +2722,7 @@ name|wrap_offset
 expr_stmt|;
 name|nleft
 operator|=
-name|visible_length
+name|prompt_visible_length
 operator|+
 name|wrap_offset
 expr_stmt|;
@@ -2645,7 +2741,7 @@ operator|)
 expr_stmt|;
 name|t
 operator|=
-name|screenwidth
+name|_rl_screenwidth
 operator|/
 literal|3
 expr_stmt|;
@@ -2655,7 +2751,7 @@ if|if
 condition|(
 name|phys_c_pos
 operator|>
-name|screenwidth
+name|_rl_screenwidth
 operator|-
 literal|2
 condition|)
@@ -2703,7 +2799,7 @@ if|if
 condition|(
 name|ndisp
 operator|<
-name|screenwidth
+name|_rl_screenwidth
 operator|-
 literal|2
 condition|)
@@ -2784,7 +2880,7 @@ argument_list|,
 name|wrap_offset
 argument_list|)
 operator|+
-name|screenwidth
+name|_rl_screenwidth
 expr_stmt|;
 if|if
 condition|(
@@ -2833,11 +2929,11 @@ index|]
 argument_list|,
 literal|0
 argument_list|,
-name|screenwidth
+name|_rl_screenwidth
 operator|+
 name|visible_wrap_offset
 argument_list|,
-name|screenwidth
+name|_rl_screenwidth
 operator|+
 operator|(
 name|lmargin
@@ -2888,7 +2984,7 @@ condition|)
 block|{
 name|nleft
 operator|=
-name|screenwidth
+name|_rl_screenwidth
 operator|-
 name|t
 expr_stmt|;
@@ -2915,11 +3011,11 @@ if|if
 condition|(
 name|visible_first_line_len
 operator|>
-name|screenwidth
+name|_rl_screenwidth
 condition|)
 name|visible_first_line_len
 operator|=
-name|screenwidth
+name|_rl_screenwidth
 expr_stmt|;
 name|_rl_move_cursor_relative
 argument_list|(
@@ -2949,7 +3045,7 @@ comment|/* Swap visible and non-visible lines. */
 block|{
 name|char
 modifier|*
-name|temp
+name|vtemp
 init|=
 name|visible_line
 decl_stmt|;
@@ -2969,7 +3065,7 @@ name|invisible_line
 expr_stmt|;
 name|invisible_line
 operator|=
-name|temp
+name|vtemp
 expr_stmt|;
 name|vis_lbreaks
 operator|=
@@ -3106,7 +3202,7 @@ if|if
 condition|(
 name|temp
 operator|==
-name|screenwidth
+name|_rl_screenwidth
 operator|&&
 name|_rl_term_autowrap
 operator|&&
@@ -3442,23 +3538,23 @@ operator|&&
 operator|!
 name|_rl_horizontal_scroll_mode
 operator|&&
-name|term_cr
+name|_rl_term_cr
 operator|&&
 name|lendiff
 operator|>
-name|visible_length
+name|prompt_visible_length
 operator|&&
 name|_rl_last_c_pos
 operator|>
 literal|0
 operator|&&
 name|od
-operator|>
+operator|>=
 name|lendiff
 operator|&&
 name|_rl_last_c_pos
-operator|<
-name|last_invisible
+operator|<=
+name|prompt_last_invisible
 condition|)
 block|{
 if|#
@@ -3478,7 +3574,7 @@ else|#
 directive|else
 name|tputs
 argument_list|(
-name|term_cr
+name|_rl_term_cr
 argument_list|,
 literal|1
 argument_list|,
@@ -3570,7 +3666,7 @@ decl_stmt|;
 comment|/* Sometimes it is cheaper to print the characters rather than 	 use the terminal's capabilities.  If we're growing the number 	 of lines, make sure we actually cause the new line to wrap 	 around on auto-wrapping terminals. */
 if|if
 condition|(
-name|terminal_can_insert
+name|_rl_terminal_can_insert
 operator|&&
 operator|(
 operator|(
@@ -3581,7 +3677,7 @@ operator|)
 operator|>=
 name|lendiff
 operator|||
-name|term_IC
+name|_rl_term_IC
 operator|)
 operator|&&
 operator|(
@@ -3593,7 +3689,7 @@ name|gl
 operator|)
 condition|)
 block|{
-comment|/* If lendiff> visible_length and _rl_last_c_pos == 0 and 	     _rl_horizontal_scroll_mode == 1, inserting the characters with 	     term_IC or term_ic will screw up the screen because of the 	     invisible characters.  We need to just draw them. */
+comment|/* If lendiff> prompt_visible_length and _rl_last_c_pos == 0 and 	     _rl_horizontal_scroll_mode == 1, inserting the characters with 	     _rl_term_IC or _rl_term_ic will screw up the screen because of the 	     invisible characters.  We need to just draw them. */
 if|if
 condition|(
 operator|*
@@ -3609,7 +3705,7 @@ literal|0
 operator|||
 name|lendiff
 operator|<=
-name|visible_length
+name|prompt_visible_length
 operator|||
 operator|!
 name|current_invis_chars
@@ -3726,7 +3822,7 @@ block|{
 comment|/* If possible and inexpensive to use terminal deletion, then do so. */
 if|if
 condition|(
-name|term_dc
+name|_rl_term_dc
 operator|&&
 operator|(
 literal|2
@@ -4005,7 +4101,7 @@ expr_stmt|;
 comment|/* Dissect prompt_last_line into screen lines. Note that here we have      to use the real screenwidth. Readline's notion of screenwidth might be      one less, see terminal.c. */
 name|real_screenwidth
 operator|=
-name|screenwidth
+name|_rl_screenwidth
 operator|+
 operator|(
 name|_rl_term_autowrap
@@ -4162,6 +4258,7 @@ parameter_list|)
 name|int
 name|new
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|data
@@ -4210,7 +4307,7 @@ name|_rl_term_autowrap
 operator|&&
 name|i
 operator|==
-name|screenwidth
+name|_rl_screenwidth
 operator|)
 condition|)
 block|{
@@ -4231,7 +4328,7 @@ else|#
 directive|else
 name|tputs
 argument_list|(
-name|term_cr
+name|_rl_term_cr
 argument_list|,
 literal|1
 argument_list|,
@@ -4263,7 +4360,7 @@ name|HACK_TERMCAP_MOTION
 argument_list|)
 if|if
 condition|(
-name|term_forward_char
+name|_rl_term_forward_char
 condition|)
 for|for
 control|(
@@ -4280,7 +4377,7 @@ operator|++
 control|)
 name|tputs
 argument_list|(
-name|term_forward_char
+name|_rl_term_forward_char
 argument_list|,
 literal|1
 argument_list|,
@@ -4389,7 +4486,7 @@ name|to
 operator|||
 name|to
 operator|>
-name|screenheight
+name|_rl_screenheight
 condition|)
 return|return;
 if|if
@@ -4442,7 +4539,7 @@ else|#
 directive|else
 name|tputs
 argument_list|(
-name|term_cr
+name|_rl_term_cr
 argument_list|,
 literal|1
 argument_list|,
@@ -4461,10 +4558,10 @@ block|{
 comment|/* delta< 0 */
 if|if
 condition|(
-name|term_up
+name|_rl_term_up
 operator|&&
 operator|*
-name|term_up
+name|_rl_term_up
 condition|)
 for|for
 control|(
@@ -4482,7 +4579,7 @@ operator|++
 control|)
 name|tputs
 argument_list|(
-name|term_up
+name|_rl_term_up
 argument_list|,
 literal|1
 argument_list|,
@@ -5026,11 +5123,11 @@ name|local_prompt_prefix
 expr_stmt|;
 name|saved_last_invisible
 operator|=
-name|last_invisible
+name|prompt_last_invisible
 expr_stmt|;
 name|saved_visible_length
 operator|=
-name|visible_length
+name|prompt_visible_length
 expr_stmt|;
 name|local_prompt
 operator|=
@@ -5042,9 +5139,9 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-name|last_invisible
+name|prompt_last_invisible
 operator|=
-name|visible_length
+name|prompt_visible_length
 operator|=
 literal|0
 expr_stmt|;
@@ -5056,20 +5153,12 @@ name|void
 name|rl_restore_prompt
 parameter_list|()
 block|{
-if|if
-condition|(
-name|local_prompt
-condition|)
-name|free
+name|FREE
 argument_list|(
 name|local_prompt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|local_prompt_prefix
-condition|)
-name|free
+name|FREE
 argument_list|(
 name|local_prompt_prefix
 argument_list|)
@@ -5082,11 +5171,11 @@ name|local_prompt_prefix
 operator|=
 name|saved_local_prefix
 expr_stmt|;
-name|last_invisible
+name|prompt_last_invisible
 operator|=
 name|saved_last_invisible
 expr_stmt|;
-name|visible_length
+name|prompt_visible_length
 operator|=
 name|saved_visible_length
 expr_stmt|;
@@ -5231,11 +5320,11 @@ argument_list|(
 name|pmt
 argument_list|)
 expr_stmt|;
-name|last_invisible
+name|prompt_last_invisible
 operator|=
 name|saved_last_invisible
 expr_stmt|;
-name|visible_length
+name|prompt_visible_length
 operator|=
 name|saved_visible_length
 operator|+
@@ -5339,11 +5428,11 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|term_clreol
+name|_rl_term_clreol
 condition|)
 name|tputs
 argument_list|(
-name|term_clreol
+name|_rl_term_clreol
 argument_list|,
 literal|1
 argument_list|,
@@ -5416,11 +5505,11 @@ parameter_list|()
 block|{
 if|if
 condition|(
-name|term_clrpag
+name|_rl_term_clrpag
 condition|)
 name|tputs
 argument_list|(
-name|term_clrpag
+name|_rl_term_clrpag
 argument_list|,
 literal|1
 argument_list|,
@@ -5428,7 +5517,7 @@ name|_rl_output_character_function
 argument_list|)
 expr_stmt|;
 else|else
-name|crlf
+name|rl_crlf
 argument_list|()
 expr_stmt|;
 block|}
@@ -5458,7 +5547,7 @@ block|{
 comment|/* If IC is defined, then we do not have to "enter" insert mode. */
 if|if
 condition|(
-name|term_IC
+name|_rl_term_IC
 condition|)
 block|{
 name|char
@@ -5469,7 +5558,7 @@ name|buffer
 operator|=
 name|tgoto
 argument_list|(
-name|term_IC
+name|_rl_term_IC
 argument_list|,
 literal|0
 argument_list|,
@@ -5502,14 +5591,14 @@ decl_stmt|;
 comment|/* If we have to turn on insert-mode, then do so. */
 if|if
 condition|(
-name|term_im
+name|_rl_term_im
 operator|&&
 operator|*
-name|term_im
+name|_rl_term_im
 condition|)
 name|tputs
 argument_list|(
-name|term_im
+name|_rl_term_im
 argument_list|,
 literal|1
 argument_list|,
@@ -5519,10 +5608,10 @@ expr_stmt|;
 comment|/* If there is a special command for inserting characters, then 	 use that first to open up the space. */
 if|if
 condition|(
-name|term_ic
+name|_rl_term_ic
 operator|&&
 operator|*
-name|term_ic
+name|_rl_term_ic
 condition|)
 block|{
 for|for
@@ -5537,7 +5626,7 @@ condition|;
 control|)
 name|tputs
 argument_list|(
-name|term_ic
+name|_rl_term_ic
 argument_list|,
 literal|1
 argument_list|,
@@ -5556,14 +5645,14 @@ expr_stmt|;
 comment|/* If there is a string to turn off insert mode, we had best use 	 it now. */
 if|if
 condition|(
-name|term_ei
+name|_rl_term_ei
 operator|&&
 operator|*
-name|term_ei
+name|_rl_term_ei
 condition|)
 name|tputs
 argument_list|(
-name|term_ei
+name|_rl_term_ei
 argument_list|,
 literal|1
 argument_list|,
@@ -5593,16 +5682,16 @@ if|if
 condition|(
 name|count
 operator|>
-name|screenwidth
+name|_rl_screenwidth
 condition|)
 comment|/* XXX */
 return|return;
 if|if
 condition|(
-name|term_DC
+name|_rl_term_DC
 operator|&&
 operator|*
-name|term_DC
+name|_rl_term_DC
 condition|)
 block|{
 name|char
@@ -5613,7 +5702,7 @@ name|buffer
 operator|=
 name|tgoto
 argument_list|(
-name|term_DC
+name|_rl_term_DC
 argument_list|,
 name|count
 argument_list|,
@@ -5634,10 +5723,10 @@ else|else
 block|{
 if|if
 condition|(
-name|term_dc
+name|_rl_term_dc
 operator|&&
 operator|*
-name|term_dc
+name|_rl_term_dc
 condition|)
 while|while
 condition|(
@@ -5646,7 +5735,7 @@ operator|--
 condition|)
 name|tputs
 argument_list|(
-name|term_dc
+name|_rl_term_dc
 argument_list|,
 literal|1
 argument_list|,
@@ -5715,7 +5804,7 @@ argument_list|(
 name|_rl_vis_botlin
 argument_list|)
 operator|==
-name|screenwidth
+name|_rl_screenwidth
 operator|)
 condition|)
 block|{
@@ -5744,7 +5833,7 @@ endif|#
 directive|endif
 name|_rl_move_cursor_relative
 argument_list|(
-name|screenwidth
+name|_rl_screenwidth
 operator|-
 literal|1
 argument_list|,
@@ -5760,7 +5849,7 @@ name|putc
 argument_list|(
 name|last_line
 index|[
-name|screenwidth
+name|_rl_screenwidth
 operator|-
 literal|1
 index|]
@@ -5773,7 +5862,7 @@ name|_rl_vis_botlin
 operator|=
 literal|0
 expr_stmt|;
-name|crlf
+name|rl_crlf
 argument_list|()
 expr_stmt|;
 name|fflush
@@ -5799,7 +5888,7 @@ parameter_list|()
 block|{
 if|if
 condition|(
-name|term_cr
+name|_rl_term_cr
 condition|)
 block|{
 if|#
@@ -5819,7 +5908,7 @@ else|#
 directive|else
 name|tputs
 argument_list|(
-name|term_cr
+name|_rl_term_cr
 argument_list|,
 literal|1
 argument_list|,
@@ -5868,6 +5957,8 @@ decl_stmt|,
 name|oldlast
 decl_stmt|,
 name|oldplen
+decl_stmt|,
+name|oldninvis
 decl_stmt|;
 comment|/* Geez, I should make this a struct. */
 name|oldp
@@ -5884,15 +5975,19 @@ name|local_prompt_prefix
 expr_stmt|;
 name|oldlen
 operator|=
-name|visible_length
+name|prompt_visible_length
 expr_stmt|;
 name|oldplen
 operator|=
-name|prefix_length
+name|prompt_prefix_length
 expr_stmt|;
 name|oldlast
 operator|=
-name|last_invisible
+name|prompt_last_invisible
+expr_stmt|;
+name|oldninvis
+operator|=
+name|prompt_invis_chars_first_line
 expr_stmt|;
 name|rl_display_prompt
 operator|=
@@ -5905,10 +6000,13 @@ argument_list|(
 name|t
 argument_list|,
 operator|&
-name|visible_length
+name|prompt_visible_length
 argument_list|,
 operator|&
-name|last_invisible
+name|prompt_last_invisible
+argument_list|,
+operator|&
+name|prompt_invis_chars_first_line
 argument_list|)
 expr_stmt|;
 name|local_prompt_prefix
@@ -5934,17 +6032,21 @@ name|local_prompt_prefix
 operator|=
 name|oldlprefix
 expr_stmt|;
-name|visible_length
+name|prompt_visible_length
 operator|=
 name|oldlen
 expr_stmt|;
-name|prefix_length
+name|prompt_prefix_length
 operator|=
 name|oldplen
 expr_stmt|;
-name|last_invisible
+name|prompt_last_invisible
 operator|=
 name|oldlast
+expr_stmt|;
+name|prompt_invis_chars_first_line
+operator|=
+name|oldninvis
 expr_stmt|;
 block|}
 end_function
@@ -5965,7 +6067,7 @@ decl_stmt|;
 comment|/* Clear the current line and put the cursor at column 0.  Make sure      the right thing happens if we have wrapped to a new screen line. */
 if|if
 condition|(
-name|term_cr
+name|_rl_term_cr
 condition|)
 block|{
 if|#
@@ -5985,7 +6087,7 @@ else|#
 directive|else
 name|tputs
 argument_list|(
-name|term_cr
+name|_rl_term_cr
 argument_list|,
 literal|1
 argument_list|,
@@ -6006,7 +6108,7 @@ name|__MSDOS__
 argument_list|)
 name|space_to_eol
 argument_list|(
-name|screenwidth
+name|_rl_screenwidth
 argument_list|)
 expr_stmt|;
 name|putc
@@ -6020,11 +6122,11 @@ else|#
 directive|else
 if|if
 condition|(
-name|term_clreol
+name|_rl_term_clreol
 condition|)
 name|tputs
 argument_list|(
-name|term_clreol
+name|_rl_term_clreol
 argument_list|,
 literal|1
 argument_list|,
@@ -6035,12 +6137,12 @@ else|else
 block|{
 name|space_to_eol
 argument_list|(
-name|screenwidth
+name|_rl_screenwidth
 argument_list|)
 expr_stmt|;
 name|tputs
 argument_list|(
-name|term_cr
+name|_rl_term_cr
 argument_list|,
 literal|1
 argument_list|,
@@ -6063,7 +6165,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|crlf
+name|rl_crlf
 argument_list|()
 expr_stmt|;
 comment|/* Redraw only the last line of a multi-line prompt. */
@@ -6177,7 +6279,7 @@ name|nleft
 operator|=
 name|_rl_last_c_pos
 operator|-
-name|screenwidth
+name|_rl_screenwidth
 operator|-
 name|rl_visible_prompt_length
 expr_stmt|;
@@ -6186,7 +6288,7 @@ name|nleft
 operator|=
 name|_rl_last_c_pos
 operator|-
-name|screenwidth
+name|_rl_screenwidth
 expr_stmt|;
 if|if
 condition|(
@@ -6200,7 +6302,7 @@ literal|1
 operator|+
 name|nleft
 operator|/
-name|screenwidth
+name|_rl_screenwidth
 expr_stmt|;
 else|else
 name|ret

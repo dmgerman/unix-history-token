@@ -79,52 +79,80 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* Function pointers can be declared as (Function *)foo. */
 if|#
 directive|if
 operator|!
 name|defined
 argument_list|(
-name|_FUNCTION_DEF
+name|__STDC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+comment|/* gcc with -traditional */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+specifier|const
 argument_list|)
 define|#
 directive|define
-name|_FUNCTION_DEF
-typedef|typedef
-name|int
-name|Function
-parameter_list|()
-function_decl|;
-typedef|typedef
-name|void
-name|VFunction
-parameter_list|()
-function_decl|;
-typedef|typedef
-name|char
-modifier|*
-name|CPFunction
-parameter_list|()
-function_decl|;
-typedef|typedef
-name|char
-modifier|*
-modifier|*
-name|CPPFunction
-parameter_list|()
-function_decl|;
+name|const
+value|__const
 endif|#
 directive|endif
-comment|/* _FUNCTION_DEF */
+comment|/* !const */
+else|#
+directive|else
+comment|/* !__GNUC__ */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+specifier|const
+argument_list|)
+define|#
+directive|define
+name|const
+endif|#
+directive|endif
+comment|/* !const */
+endif|#
+directive|endif
+comment|/* !__GNUC__ */
+endif|#
+directive|endif
+comment|/* !__STDC__&& !__cplusplus */
+typedef|typedef
+name|char
+modifier|*
+name|tilde_hook_func_t
+name|__P
+typedef|((
+name|char
+modifier|*
+typedef|));
 comment|/* If non-null, this contains the address of a function that the application    wants called before trying the standard tilde expansions.  The function    is called with the text sans tilde, and returns a malloc()'ed string    which is the expansion, or a NULL pointer if the expansion fails. */
 specifier|extern
-name|CPFunction
+name|tilde_hook_func_t
 modifier|*
 name|tilde_expansion_preexpansion_hook
 decl_stmt|;
 comment|/* If non-null, this contains the address of a function to call if the    standard meaning for expanding a tilde fails.  The function is called    with the text (sans tilde, as in "foo"), and returns a malloc()'ed string    which is the expansion, or a NULL pointer if there is no expansion. */
 specifier|extern
-name|CPFunction
+name|tilde_hook_func_t
 modifier|*
 name|tilde_expansion_failure_hook
 decl_stmt|;
@@ -150,6 +178,7 @@ name|tilde_expand
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -163,6 +192,7 @@ name|tilde_expand_word
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)

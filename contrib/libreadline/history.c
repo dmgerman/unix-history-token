@@ -236,9 +236,19 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|history_max_entries
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|max_input_history
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* backwards compatibility */
+end_comment
 
 begin_comment
 comment|/* The current location of the interactive history pointer.  Just makes    life easier for outside callers. */
@@ -444,13 +454,11 @@ name|i
 decl_stmt|,
 name|result
 decl_stmt|;
-name|result
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
+operator|=
+name|result
 operator|=
 literal|0
 init|;
@@ -723,6 +731,7 @@ name|add_history
 parameter_list|(
 name|string
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
@@ -739,7 +748,7 @@ operator|&&
 operator|(
 name|history_length
 operator|==
-name|max_input_history
+name|history_max_entries
 operator|)
 condition|)
 block|{
@@ -747,7 +756,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-comment|/* If the history is stifled, and history_length is zero, 	 and it equals max_input_history, we don't save items. */
+comment|/* If the history is stifled, and history_length is zero, 	 and it equals history_max_entries, we don't save items. */
 if|if
 condition|(
 name|history_length
@@ -966,6 +975,7 @@ parameter_list|)
 name|int
 name|which
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|line
@@ -977,20 +987,7 @@ block|{
 name|HIST_ENTRY
 modifier|*
 name|temp
-init|=
-operator|(
-name|HIST_ENTRY
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|HIST_ENTRY
-argument_list|)
-argument_list|)
-decl_stmt|;
-name|HIST_ENTRY
+decl_stmt|,
 modifier|*
 name|old_value
 decl_stmt|;
@@ -1009,6 +1006,20 @@ operator|)
 name|NULL
 operator|)
 return|;
+name|temp
+operator|=
+operator|(
+name|HIST_ENTRY
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|HIST_ENTRY
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|old_value
 operator|=
 name|the_history
@@ -1065,6 +1076,10 @@ name|HIST_ENTRY
 modifier|*
 name|return_value
 decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
 name|which
@@ -1084,10 +1099,6 @@ name|NULL
 expr_stmt|;
 else|else
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
 name|return_value
 operator|=
 name|the_history
@@ -1146,6 +1157,12 @@ name|int
 name|max
 decl_stmt|;
 block|{
+specifier|register
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
 if|if
 condition|(
 name|max
@@ -1163,12 +1180,6 @@ operator|>
 name|max
 condition|)
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
 comment|/* This loses because we cannot free the data. */
 for|for
 control|(
@@ -1267,6 +1278,8 @@ literal|1
 expr_stmt|;
 name|max_input_history
 operator|=
+name|history_max_entries
+operator|=
 name|max
 expr_stmt|;
 block|}
@@ -1293,13 +1306,13 @@ expr_stmt|;
 return|return
 operator|(
 operator|-
-name|max_input_history
+name|history_max_entries
 operator|)
 return|;
 block|}
 return|return
 operator|(
-name|max_input_history
+name|history_max_entries
 operator|)
 return|;
 block|}

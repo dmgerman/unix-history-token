@@ -154,6 +154,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"rlstdc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"rlshell.h"
 end_include
 
@@ -173,15 +179,20 @@ name|HAVE_GETPW_DECLS
 argument_list|)
 end_if
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|struct
 name|passwd
 modifier|*
 name|getpwuid
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|uid_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -221,7 +232,7 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|single_quote
+name|sh_single_quote
 parameter_list|(
 name|string
 parameter_list|)
@@ -353,7 +364,7 @@ end_comment
 
 begin_function
 name|void
-name|set_lines_and_columns
+name|sh_set_lines_and_columns
 parameter_list|(
 name|lines
 parameter_list|,
@@ -488,10 +499,11 @@ end_function
 begin_function
 name|char
 modifier|*
-name|get_env_value
+name|sh_get_env_value
 parameter_list|(
 name|varname
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|varname
@@ -515,7 +527,7 @@ end_function
 begin_function
 name|char
 modifier|*
-name|get_home_dir
+name|sh_get_home_dir
 parameter_list|()
 block|{
 name|char
@@ -599,7 +611,7 @@ end_endif
 
 begin_function
 name|int
-name|unset_nodelay_mode
+name|sh_unset_nodelay_mode
 parameter_list|(
 name|fd
 parameter_list|)

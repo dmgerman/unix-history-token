@@ -348,7 +348,7 @@ decl_stmt|;
 comment|/* We don't have setlocale.  Finesse it.  Check the environment for the      appropriate variables and set eight-bit mode if they have the right      values. */
 name|lspec
 operator|=
-name|get_env_value
+name|sh_get_env_value
 argument_list|(
 literal|"LC_ALL"
 argument_list|)
@@ -361,7 +361,7 @@ literal|0
 condition|)
 name|lspec
 operator|=
-name|get_env_value
+name|sh_get_env_value
 argument_list|(
 literal|"LC_CTYPE"
 argument_list|)
@@ -374,7 +374,7 @@ literal|0
 condition|)
 name|lspec
 operator|=
-name|get_env_value
+name|sh_get_env_value
 argument_list|(
 literal|"LANG"
 argument_list|)

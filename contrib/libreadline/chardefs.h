@@ -204,7 +204,7 @@ name|CTRL_CHAR
 parameter_list|(
 name|c
 parameter_list|)
-value|((c)< control_character_threshold&& (c)>= 0)
+value|((c)< control_character_threshold&& (((c)& 0x80) == 0))
 end_define
 
 begin_define

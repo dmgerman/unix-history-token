@@ -453,6 +453,11 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

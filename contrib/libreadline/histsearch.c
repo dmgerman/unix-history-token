@@ -190,6 +190,7 @@ name|direction
 parameter_list|,
 name|anchored
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
@@ -521,6 +522,7 @@ name|string
 parameter_list|,
 name|direction
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
@@ -556,6 +558,7 @@ name|string
 parameter_list|,
 name|direction
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
@@ -593,6 +596,7 @@ name|dir
 parameter_list|,
 name|pos
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string

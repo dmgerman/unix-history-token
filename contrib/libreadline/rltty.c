@@ -156,7 +156,7 @@ comment|/* !errno */
 end_comment
 
 begin_decl_stmt
-name|VFunction
+name|rl_vintfunc_t
 modifier|*
 name|rl_prep_term_function
 init|=
@@ -165,7 +165,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|VFunction
+name|rl_voidfunc_t
 modifier|*
 name|rl_deprep_term_function
 init|=
@@ -761,6 +761,7 @@ operator|->
 name|tchars
 operator|.
 name|t_stopc
+expr_stmt|;
 name|_rl_tty_chars
 operator|.
 name|t_eof
@@ -900,6 +901,8 @@ name|lflag
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|tty
@@ -913,7 +916,13 @@ operator|->
 name|sgttyb
 operator|)
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|tiop
 operator|->
 name|flags
@@ -926,6 +935,8 @@ name|defined
 argument_list|(
 name|TIOCLGET
 argument_list|)
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|tty
@@ -939,7 +950,9 @@ operator|->
 name|lflag
 operator|)
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|tiop
 operator|->
 name|flags
@@ -954,6 +967,8 @@ name|defined
 argument_list|(
 name|TIOCGETC
 argument_list|)
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|tty
@@ -967,7 +982,9 @@ operator|->
 name|tchars
 operator|)
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|tiop
 operator|->
 name|flags
@@ -982,6 +999,8 @@ name|defined
 argument_list|(
 name|TIOCGLTC
 argument_list|)
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|tty
@@ -995,7 +1014,9 @@ operator|->
 name|ltchars
 operator|)
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|tiop
 operator|->
 name|flags
@@ -1192,7 +1213,7 @@ name|prepare_terminal_settings
 parameter_list|(
 name|meta_flag
 parameter_list|,
-name|otio
+name|oldtio
 parameter_list|,
 name|tiop
 parameter_list|)
@@ -1200,7 +1221,7 @@ name|int
 name|meta_flag
 decl_stmt|;
 name|TIOTYPE
-name|otio
+name|oldtio
 decl_stmt|,
 decl|*
 name|tiop
@@ -1212,7 +1233,7 @@ block|{
 name|readline_echoing_p
 operator|=
 operator|(
-name|otio
+name|oldtio
 operator|.
 name|sgttyb
 operator|.
@@ -1226,7 +1247,7 @@ name|tiop
 operator|->
 name|sgttyb
 operator|=
-name|otio
+name|oldtio
 operator|.
 name|sgttyb
 expr_stmt|;
@@ -1234,7 +1255,7 @@ name|tiop
 operator|->
 name|lflag
 operator|=
-name|otio
+name|oldtio
 operator|.
 name|lflag
 expr_stmt|;
@@ -1248,7 +1269,7 @@ name|tiop
 operator|->
 name|tchars
 operator|=
-name|otio
+name|oldtio
 operator|.
 name|tchars
 expr_stmt|;
@@ -1264,7 +1285,7 @@ name|tiop
 operator|->
 name|ltchars
 operator|=
-name|otio
+name|oldtio
 operator|.
 name|ltchars
 expr_stmt|;
@@ -1274,7 +1295,7 @@ name|tiop
 operator|->
 name|flags
 operator|=
-name|otio
+name|oldtio
 operator|.
 name|flags
 expr_stmt|;
@@ -1318,7 +1339,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|otio
+name|oldtio
 operator|.
 name|sgttyb
 operator|.
@@ -1332,7 +1353,7 @@ operator|)
 operator|||
 operator|(
 operator|(
-name|otio
+name|oldtio
 operator|.
 name|sgttyb
 operator|.
@@ -1415,7 +1436,7 @@ comment|/* C-q */
 comment|/* If there is an XON character, bind it to restart the output. */
 if|if
 condition|(
-name|otio
+name|oldtio
 operator|.
 name|tchars
 operator|.
@@ -1426,7 +1447,7 @@ literal|1
 condition|)
 name|rl_bind_key
 argument_list|(
-name|otio
+name|oldtio
 operator|.
 name|tchars
 operator|.
@@ -1441,7 +1462,7 @@ comment|/* USE_XON_XOFF */
 comment|/* If there is an EOF char, bind _rl_eof_char to it. */
 if|if
 condition|(
-name|otio
+name|oldtio
 operator|.
 name|tchars
 operator|.
@@ -1452,7 +1473,7 @@ literal|1
 condition|)
 name|_rl_eof_char
 operator|=
-name|otio
+name|oldtio
 operator|.
 name|tchars
 operator|.
@@ -1701,7 +1722,7 @@ name|tty
 parameter_list|,
 name|tiop
 parameter_list|)
-value|(ioctl (tty, TCSETA, tiop))
+value|(ioctl (tty, TCSETAW, tiop))
 end_define
 
 begin_endif
@@ -2391,7 +2412,7 @@ name|prepare_terminal_settings
 parameter_list|(
 name|meta_flag
 parameter_list|,
-name|otio
+name|oldtio
 parameter_list|,
 name|tiop
 parameter_list|)
@@ -2399,7 +2420,7 @@ name|int
 name|meta_flag
 decl_stmt|;
 name|TIOTYPE
-name|otio
+name|oldtio
 decl_stmt|,
 decl|*
 name|tiop
@@ -2411,7 +2432,7 @@ block|{
 name|readline_echoing_p
 operator|=
 operator|(
-name|otio
+name|oldtio
 operator|.
 name|c_lflag
 operator|&
@@ -2435,7 +2456,7 @@ operator|(
 name|unsigned
 name|char
 operator|)
-name|otio
+name|oldtio
 operator|.
 name|c_cc
 index|[
@@ -2450,7 +2471,7 @@ name|_POSIX_VDISABLE
 condition|)
 name|_rl_eof_char
 operator|=
-name|otio
+name|oldtio
 operator|.
 name|c_cc
 index|[
@@ -2605,7 +2626,7 @@ operator|&=
 operator|~
 name|FLUSHO
 expr_stmt|;
-name|otio
+name|oldtio
 operator|.
 name|c_lflag
 operator|&=
@@ -2786,6 +2807,11 @@ name|terminal_prepped
 operator|=
 literal|1
 expr_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_TERMPREPPED
+argument_list|)
+expr_stmt|;
 name|release_sigint
 argument_list|()
 expr_stmt|;
@@ -2856,6 +2882,11 @@ block|}
 name|terminal_prepped
 operator|=
 literal|0
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_TERMPREPPED
+argument_list|)
 expr_stmt|;
 name|release_sigint
 argument_list|()
@@ -3162,6 +3193,10 @@ begin_comment
 comment|/* **************************************************************** */
 end_comment
 
+begin_comment
+comment|/* Set the system's default editing characters to their readline equivalents    in KMAP.  Should be static, now that we have rl_tty_set_default_bindings. */
+end_comment
+
 begin_function
 name|void
 name|rltty_set_default_bindings
@@ -3372,6 +3407,28 @@ block|}
 endif|#
 directive|endif
 comment|/* !NEW_TTY_DRIVER */
+block|}
+end_function
+
+begin_comment
+comment|/* New public way to set the system default editing chars to their readline    equivalents. */
+end_comment
+
+begin_function
+name|void
+name|rl_tty_set_default_bindings
+parameter_list|(
+name|kmap
+parameter_list|)
+name|Keymap
+name|kmap
+decl_stmt|;
+block|{
+name|rltty_set_default_bindings
+argument_list|(
+name|kmap
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

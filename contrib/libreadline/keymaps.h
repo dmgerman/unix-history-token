@@ -43,6 +43,9 @@ file|"rlstdc.h"
 include|#
 directive|include
 file|"chardefs.h"
+include|#
+directive|include
+file|"rltypedefs.h"
 else|#
 directive|else
 include|#
@@ -51,41 +54,9 @@ file|<readline/rlstdc.h>
 include|#
 directive|include
 file|<readline/chardefs.h>
-endif|#
-directive|endif
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_FUNCTION_DEF
-argument_list|)
-define|#
-directive|define
-name|_FUNCTION_DEF
-typedef|typedef
-name|int
-name|Function
-parameter_list|()
-function_decl|;
-typedef|typedef
-name|void
-name|VFunction
-parameter_list|()
-function_decl|;
-typedef|typedef
-name|char
-modifier|*
-name|CPFunction
-parameter_list|()
-function_decl|;
-typedef|typedef
-name|char
-modifier|*
-modifier|*
-name|CPPFunction
-parameter_list|()
-function_decl|;
+include|#
+directive|include
+file|<readline/rltypedefs.h>
 endif|#
 directive|endif
 comment|/* A keymap contains one entry for each key in the ASCII set.    Each entry consists of a type and a pointer.    FUNCTION is the address of a function to run, or the    address of a keymap to indirect through.    TYPE says which kind of thing FUNCTION is. */
@@ -96,7 +67,7 @@ block|{
 name|char
 name|type
 decl_stmt|;
-name|Function
+name|rl_command_func_t
 modifier|*
 name|function
 decl_stmt|;
@@ -108,7 +79,7 @@ define|#
 directive|define
 name|KEYMAP_SIZE
 value|256
-comment|/* I wanted to make the above structure contain a union of:    union { Function *function; struct _keymap_entry *keymap; } value;    but this made it impossible for me to create a static array.    Maybe I need C lessons. */
+comment|/* I wanted to make the above structure contain a union of:    union { rl_command_func_t *function; struct _keymap_entry *keymap; } value;    but this made it impossible for me to create a static array.    Maybe I need C lessons. */
 typedef|typedef
 name|KEYMAP_ENTRY
 name|KEYMAP_ENTRY_ARRAY
@@ -200,6 +171,7 @@ name|rl_get_keymap_by_name
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)

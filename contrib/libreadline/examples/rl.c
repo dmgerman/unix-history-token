@@ -172,7 +172,7 @@ expr_stmt|;
 name|rl_startup_hook
 operator|=
 operator|(
-name|Function
+name|rl_hook_func_t
 operator|*
 operator|)
 name|NULL
@@ -502,8 +502,10 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|puts
+name|printf
 argument_list|(
+literal|"%s\n"
+argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;

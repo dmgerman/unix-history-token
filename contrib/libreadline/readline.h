@@ -118,11 +118,12 @@ typedef|typedef
 struct|struct
 name|_funmap
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
-name|Function
+name|rl_command_func_t
 modifier|*
 name|function
 decl_stmt|;
@@ -872,10 +873,10 @@ name|int
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/* Not available unless __CYGWIN32__ is defined. */
+comment|/* Not available unless __CYGWIN__ is defined. */
 ifdef|#
 directive|ifdef
-name|__CYGWIN32__
+name|__CYGWIN__
 specifier|extern
 name|int
 name|rl_paste_from_clipboard
@@ -1133,10 +1134,11 @@ name|rl_callback_handler_install
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
-name|VFunction
+name|rl_vcpfunc_t
 operator|*
 operator|)
 argument_list|)
@@ -1716,6 +1718,30 @@ name|readline
 name|__P
 argument_list|(
 operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|rl_set_prompt
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|rl_expand_prompt
+name|__P
+argument_list|(
+operator|(
 name|char
 operator|*
 operator|)
@@ -1731,6 +1757,7 @@ name|void
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Undocumented; unused by readline */
 specifier|extern
 name|int
 name|rl_discard_argument
@@ -1748,10 +1775,11 @@ name|rl_add_defun
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
-name|Function
+name|rl_command_func_t
 operator|*
 operator|,
 name|int
@@ -1766,7 +1794,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 argument_list|)
@@ -1779,7 +1807,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|Function
+name|rl_command_func_t
 operator|*
 operator|,
 name|Keymap
@@ -1814,7 +1842,7 @@ name|rl_unbind_function_in_map
 name|__P
 argument_list|(
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|,
 name|Keymap
@@ -1827,6 +1855,7 @@ name|rl_unbind_command_in_map
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1840,10 +1869,11 @@ name|rl_set_key
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
-name|Function
+name|rl_command_func_t
 operator|*
 operator|,
 name|Keymap
@@ -1858,6 +1888,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1874,9 +1905,11 @@ name|rl_variable_bind
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1889,9 +1922,11 @@ name|rl_macro_bind
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1906,6 +1941,7 @@ name|rl_translate_keyseq
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1929,24 +1965,26 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|Function
+name|rl_command_func_t
 modifier|*
 name|rl_named_function
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|Function
+name|rl_command_func_t
 modifier|*
 name|rl_function_of_keyseq
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1975,7 +2013,7 @@ name|rl_invoking_keyseqs_in_map
 name|__P
 argument_list|(
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|,
 name|Keymap
@@ -1990,7 +2028,7 @@ name|rl_invoking_keyseqs
 name|__P
 argument_list|(
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 argument_list|)
@@ -2031,6 +2069,7 @@ name|rl_read_init_file
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2094,6 +2133,7 @@ name|rl_get_keymap_by_name
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2130,6 +2170,7 @@ name|void
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Undocumented; used internally only. */
 specifier|extern
 name|void
 name|rl_set_keymap_from_edit_mode
@@ -2158,17 +2199,21 @@ name|rl_add_funmap_entry
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|void
-name|rl_initialize_funmap
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|rl_funmap_names
 name|__P
 argument_list|(
 operator|(
@@ -2176,11 +2221,10 @@ name|void
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Undocumented, only used internally -- there is only one funmap, and this    function may be called only once. */
 specifier|extern
-name|char
-modifier|*
-modifier|*
-name|rl_funmap_names
+name|void
+name|rl_initialize_funmap
 name|__P
 argument_list|(
 operator|(
@@ -2221,7 +2265,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|free_undo_list
+name|rl_free_undo_list
 name|__P
 argument_list|(
 operator|(
@@ -2332,6 +2376,16 @@ name|void
 operator|)
 argument_list|)
 decl_stmt|;
+specifier|extern
+name|int
+name|rl_crlf
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
 if|#
 directive|if
 operator|(
@@ -2375,7 +2429,6 @@ parameter_list|()
 function_decl|;
 endif|#
 directive|endif
-comment|/* Undocumented in texinfo manual. */
 specifier|extern
 name|int
 name|rl_show_char
@@ -2386,6 +2439,7 @@ name|int
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Undocumented in texinfo manual. */
 specifier|extern
 name|int
 name|rl_character_len
@@ -2395,16 +2449,6 @@ operator|(
 name|int
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|int
-name|crlf
-name|__P
-argument_list|(
-operator|(
-name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2436,6 +2480,7 @@ name|rl_insert_text
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2501,7 +2546,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|rltty_set_default_bindings
+name|rl_tty_set_default_bindings
 name|__P
 argument_list|(
 operator|(
@@ -2515,6 +2560,7 @@ name|rl_reset_terminal
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2530,24 +2576,29 @@ name|void
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/* `Public' utility functions . */
 specifier|extern
 name|void
-name|rl_extend_line_buffer
+name|rl_set_screen_size
 name|__P
 argument_list|(
 operator|(
+name|int
+operator|,
 name|int
 operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|int
-name|ding
+name|void
+name|rl_get_screen_size
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
+operator|*
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2574,6 +2625,16 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|int
+name|rl_clear_pending_input
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
 name|rl_read_key
 name|__P
 argument_list|(
@@ -2590,6 +2651,47 @@ argument_list|(
 operator|(
 name|FILE
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|rl_set_keyboard_input_timeout
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* `Public' utility functions . */
+specifier|extern
+name|void
+name|rl_extend_line_buffer
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|rl_ding
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|rl_alphabetic
+name|__P
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2647,28 +2749,18 @@ decl_stmt|;
 comment|/* Undocumented. */
 specifier|extern
 name|int
-name|rl_expand_prompt
+name|rl_set_paren_blink_timeout
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Undocumented. */
 specifier|extern
 name|int
-name|maybe_save_line
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|int
-name|maybe_unsave_line
+name|rl_maybe_save_line
 name|__P
 argument_list|(
 operator|(
@@ -2678,7 +2770,17 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|int
-name|maybe_replace_line
+name|rl_maybe_unsave_line
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|rl_maybe_replace_line
 name|__P
 argument_list|(
 operator|(
@@ -2717,14 +2819,15 @@ specifier|extern
 name|char
 modifier|*
 modifier|*
-name|completion_matches
+name|rl_completion_matches
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
-name|CPFunction
+name|rl_compentry_func_t
 operator|*
 operator|)
 argument_list|)
@@ -2732,10 +2835,11 @@ decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|username_completion_function
+name|rl_username_completion_function
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -2746,10 +2850,11 @@ decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|filename_completion_function
+name|rl_filename_completion_function
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -2757,6 +2862,13 @@ name|int
 operator|)
 argument_list|)
 decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* Backwards compatibility (compat.c).  These will go away sometime. */
+block|extern void free_undo_list __P((void)); extern int maybe_save_line __P((void)); extern int maybe_unsave_line __P((void)); extern int maybe_replace_line __P((void));  extern int ding __P((void)); extern int alphabetic __P((int)); extern int crlf __P((void));  extern char **completion_matches __P((char *, rl_compentry_func_t *)); extern char *username_completion_function __P((const char *, int)); extern char *filename_completion_function __P((const char *, int));
+endif|#
+directive|endif
 comment|/* **************************************************************** */
 comment|/*								    */
 comment|/*			Well Published Variables		    */
@@ -2764,6 +2876,7 @@ comment|/*								    */
 comment|/* **************************************************************** */
 comment|/* The version of this incarnation of the readline library. */
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|rl_library_version
@@ -2773,8 +2886,19 @@ specifier|extern
 name|int
 name|rl_gnu_readline_p
 decl_stmt|;
+comment|/* Flags word encapsulating the current readline state. */
+specifier|extern
+name|int
+name|rl_readline_state
+decl_stmt|;
+comment|/* Says which editing mode readline is currently using.  1 means emacs mode;    0 means vi mode. */
+specifier|extern
+name|int
+name|rl_editing_mode
+decl_stmt|;
 comment|/* The name of the calling program.  You should initialize this to    whatever was in argv[0].  It is used when parsing conditionals. */
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|rl_readline_name
@@ -2795,7 +2919,9 @@ comment|/* The location of point, and end. */
 specifier|extern
 name|int
 name|rl_point
-decl_stmt|,
+decl_stmt|;
+specifier|extern
+name|int
 name|rl_end
 decl_stmt|;
 comment|/* The mark, or saved cursor position. */
@@ -2818,8 +2944,25 @@ specifier|extern
 name|int
 name|rl_dispatching
 decl_stmt|;
+comment|/* Non-zero if the user typed a numeric argument before executing the    current function. */
+specifier|extern
+name|int
+name|rl_explicit_arg
+decl_stmt|;
+comment|/* The current value of the numeric argument specified by the user. */
+specifier|extern
+name|int
+name|rl_numeric_arg
+decl_stmt|;
+comment|/* The address of the last command function Readline executed. */
+specifier|extern
+name|rl_command_func_t
+modifier|*
+name|rl_last_func
+decl_stmt|;
 comment|/* The name of the terminal to use. */
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|rl_terminal_name
@@ -2829,45 +2972,48 @@ specifier|extern
 name|FILE
 modifier|*
 name|rl_instream
-decl_stmt|,
+decl_stmt|;
+specifier|extern
+name|FILE
 modifier|*
 name|rl_outstream
 decl_stmt|;
 comment|/* If non-zero, then this is the address of a function to call just    before readline_internal () prints the first prompt. */
 specifier|extern
-name|Function
+name|rl_hook_func_t
 modifier|*
 name|rl_startup_hook
 decl_stmt|;
 comment|/* If non-zero, this is the address of a function to call just before    readline_internal_setup () returns and readline_internal starts    reading input characters. */
 specifier|extern
-name|Function
+name|rl_hook_func_t
 modifier|*
 name|rl_pre_input_hook
 decl_stmt|;
 comment|/* The address of a function to call periodically while Readline is    awaiting character input, or NULL, for no event handling. */
 specifier|extern
-name|Function
+name|rl_hook_func_t
 modifier|*
 name|rl_event_hook
 decl_stmt|;
+comment|/* The address of the function to call to fetch a character from the current    Readline input stream */
 specifier|extern
-name|Function
+name|rl_getc_func_t
 modifier|*
 name|rl_getc_function
 decl_stmt|;
 specifier|extern
-name|VFunction
+name|rl_voidfunc_t
 modifier|*
 name|rl_redisplay_function
 decl_stmt|;
 specifier|extern
-name|VFunction
+name|rl_vintfunc_t
 modifier|*
 name|rl_prep_term_function
 decl_stmt|;
 specifier|extern
-name|VFunction
+name|rl_voidfunc_t
 modifier|*
 name|rl_deprep_term_function
 decl_stmt|;
@@ -2896,6 +3042,12 @@ specifier|extern
 name|int
 name|rl_num_chars_to_read
 decl_stmt|;
+comment|/* The text of a currently-executing keyboard macro. */
+specifier|extern
+name|char
+modifier|*
+name|rl_executing_macro
+decl_stmt|;
 comment|/* Variables to control readline signal handling. */
 comment|/* If non-zero, readline will install its own signal handlers for    SIGINT, SIGTERM, SIGQUIT, SIGALRM, SIGTSTP, SIGTTIN, and SIGTTOU. */
 specifier|extern
@@ -2910,63 +3062,75 @@ decl_stmt|;
 comment|/* Completion variables. */
 comment|/* Pointer to the generator function for completion_matches ().    NULL means to use filename_entry_function (), the default filename    completer. */
 specifier|extern
-name|Function
+name|rl_compentry_func_t
 modifier|*
 name|rl_completion_entry_function
 decl_stmt|;
 comment|/* If rl_ignore_some_completions_function is non-NULL it is the address    of a function to call after all of the possible matches have been    generated, but before the actual completion is done to the input line.    The function is called with one argument; a NULL terminated array    of (char *).  If your function removes any of the elements, they    must be free()'ed. */
 specifier|extern
-name|Function
+name|rl_compignore_func_t
 modifier|*
 name|rl_ignore_some_completions_function
 decl_stmt|;
 comment|/* Pointer to alternative function to create matches.    Function is called with TEXT, START, and END.    START and END are indices in RL_LINE_BUFFER saying what the boundaries    of TEXT are.    If this function exists and returns NULL then call the value of    rl_completion_entry_function to try to match, otherwise use the    array of strings returned. */
 specifier|extern
-name|CPPFunction
+name|rl_completion_func_t
 modifier|*
 name|rl_attempted_completion_function
 decl_stmt|;
 comment|/* The basic list of characters that signal a break between words for the    completer routine.  The initial contents of this variable is what    breaks words in the shell, i.e. "n\"\\'`@$>". */
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|rl_basic_word_break_characters
 decl_stmt|;
 comment|/* The list of characters that signal a break between words for    rl_complete_internal.  The default list is the contents of    rl_basic_word_break_characters.  */
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|rl_completer_word_break_characters
 decl_stmt|;
 comment|/* List of characters which can be used to quote a substring of the line.    Completion occurs on the entire substring, and within the substring       rl_completer_word_break_characters are treated as any other character,    unless they also appear within this list. */
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|rl_completer_quote_characters
 decl_stmt|;
 comment|/* List of quote characters which cause a word break. */
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|rl_basic_quote_characters
 decl_stmt|;
 comment|/* List of characters that need to be quoted in filenames by the completer. */
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|rl_filename_quote_characters
 decl_stmt|;
 comment|/* List of characters that are word break characters, but should be left    in TEXT when it is passed to the completion function.  The shell uses    this to help determine what kind of completing to do. */
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|rl_special_prefixes
 decl_stmt|;
-comment|/* If non-zero, then this is the address of a function to call when    completing on a directory name.  The function is called with    the address of a string (the current directory name) as an arg. */
+comment|/* If non-zero, then this is the address of a function to call when    completing on a directory name.  The function is called with    the address of a string (the current directory name) as an arg.  It    changes what is displayed when the possible completions are printed    or inserted. */
 specifier|extern
-name|Function
+name|rl_icppfunc_t
 modifier|*
 name|rl_directory_completion_hook
+decl_stmt|;
+comment|/* If non-zero, this is the address of a function to call when completing    a directory name.  This function takes the address of the directory name    to be modified as an argument.  Unlike rl_directory_completion_hook, it    only modifies the directory name used in opendir(2), not what is displayed    when the possible completions are printed or inserted.  It is called    before rl_directory_completion_hook.  I'm not happy with how this works    yet, so it's undocumented. */
+specifier|extern
+name|rl_icppfunc_t
+modifier|*
+name|rl_directory_rewrite_hook
 decl_stmt|;
 comment|/* Backwards compatibility with previous versions of readline. */
 define|#
@@ -2975,7 +3139,7 @@ name|rl_symbolic_link_hook
 value|rl_directory_completion_hook
 comment|/* If non-zero, then this is the address of a function to call when    completing a word would normally display the list of possible matches.    This function is called instead of actually doing the display.    It takes three arguments: (char **matches, int num_matches, int max_length)    where MATCHES is the array of strings that matched, NUM_MATCHES is the    number of strings in that array, and MAX_LENGTH is the length of the    longest string in that array. */
 specifier|extern
-name|VFunction
+name|rl_compdisp_func_t
 modifier|*
 name|rl_completion_display_matches_hook
 decl_stmt|;
@@ -2991,19 +3155,19 @@ name|rl_filename_quoting_desired
 decl_stmt|;
 comment|/* Set to a function to quote a filename in an application-specific fashion.    Called with the text to quote, the type of match found (single or multiple)    and a pointer to the quoting character to be used, which the function can    reset if desired. */
 specifier|extern
-name|CPFunction
+name|rl_quote_func_t
 modifier|*
 name|rl_filename_quoting_function
 decl_stmt|;
 comment|/* Function to call to remove quoting characters from a filename.  Called    before completion is attempted, so the embedded quotes do not interfere    with matching names in the file system. */
 specifier|extern
-name|CPFunction
+name|rl_dequote_func_t
 modifier|*
 name|rl_filename_dequoting_function
 decl_stmt|;
 comment|/* Function to call to decide whether or not a word break character is    quoted.  If a character is quoted, it does not break words for the    completer. */
 specifier|extern
-name|Function
+name|rl_linebuf_func_t
 modifier|*
 name|rl_char_is_quoted_p
 decl_stmt|;
@@ -3059,28 +3223,128 @@ define|#
 directive|define
 name|MULT_MATCH
 value|2
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|savestring
-argument_list|)
-specifier|extern
-name|char
-modifier|*
-name|savestring
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-comment|/* XXX backwards compatibility */
-endif|#
-directive|endif
+comment|/* Possible state values for rl_readline_state */
+define|#
+directive|define
+name|RL_STATE_NONE
+value|0x00000
+comment|/* no state; before first call */
+define|#
+directive|define
+name|RL_STATE_INITIALIZING
+value|0x00001
+comment|/* initializing */
+define|#
+directive|define
+name|RL_STATE_INITIALIZED
+value|0x00002
+comment|/* initialization done */
+define|#
+directive|define
+name|RL_STATE_TERMPREPPED
+value|0x00004
+comment|/* terminal is prepped */
+define|#
+directive|define
+name|RL_STATE_READCMD
+value|0x00008
+comment|/* reading a command key */
+define|#
+directive|define
+name|RL_STATE_METANEXT
+value|0x00010
+comment|/* reading input after ESC */
+define|#
+directive|define
+name|RL_STATE_DISPATCHING
+value|0x00020
+comment|/* dispatching to a command */
+define|#
+directive|define
+name|RL_STATE_MOREINPUT
+value|0x00040
+comment|/* reading more input in a command function */
+define|#
+directive|define
+name|RL_STATE_ISEARCH
+value|0x00080
+comment|/* doing incremental search */
+define|#
+directive|define
+name|RL_STATE_NSEARCH
+value|0x00100
+comment|/* doing non-inc search */
+define|#
+directive|define
+name|RL_STATE_SEARCH
+value|0x00200
+comment|/* doing a history search */
+define|#
+directive|define
+name|RL_STATE_NUMERICARG
+value|0x00400
+comment|/* reading numeric argument */
+define|#
+directive|define
+name|RL_STATE_MACROINPUT
+value|0x00800
+comment|/* getting input from a macro */
+define|#
+directive|define
+name|RL_STATE_MACRODEF
+value|0x01000
+comment|/* defining keyboard macro */
+define|#
+directive|define
+name|RL_STATE_OVERWRITE
+value|0x02000
+comment|/* overwrite mode */
+define|#
+directive|define
+name|RL_STATE_COMPLETING
+value|0x04000
+comment|/* doing completion */
+define|#
+directive|define
+name|RL_STATE_SIGHANDLER
+value|0x08000
+comment|/* in readline sighandler */
+define|#
+directive|define
+name|RL_STATE_UNDOING
+value|0x10000
+comment|/* doing an undo */
+define|#
+directive|define
+name|RL_STATE_INPUTPENDING
+value|0x20000
+comment|/* rl_execute_next called */
+define|#
+directive|define
+name|RL_STATE_DONE
+value|0x80000
+comment|/* done; accepted line */
+define|#
+directive|define
+name|RL_SETSTATE
+parameter_list|(
+name|x
+parameter_list|)
+value|(rl_readline_state |= (x))
+define|#
+directive|define
+name|RL_UNSETSTATE
+parameter_list|(
+name|x
+parameter_list|)
+value|(rl_readline_state&= ~(x))
+define|#
+directive|define
+name|RL_ISSTATE
+parameter_list|(
+name|x
+parameter_list|)
+value|(rl_readline_state& (x))
 ifdef|#
 directive|ifdef
 name|__cplusplus

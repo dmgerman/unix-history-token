@@ -302,7 +302,7 @@ end_comment
 
 begin_function
 name|void
-name|free_undo_list
+name|rl_free_undo_list
 parameter_list|()
 block|{
 while|while
@@ -369,10 +369,7 @@ name|release
 decl_stmt|;
 name|int
 name|waiting_for_begin
-init|=
-literal|0
-decl_stmt|;
-name|int
+decl_stmt|,
 name|start
 decl_stmt|,
 name|end
@@ -384,6 +381,14 @@ parameter_list|(
 name|i
 parameter_list|)
 value|((i) == -1 ? rl_point : ((i) == -2 ? rl_end : (i)))
+name|start
+operator|=
+name|end
+operator|=
+name|waiting_for_begin
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 if|if
@@ -399,6 +404,11 @@ return|;
 name|_rl_doing_an_undo
 operator|=
 literal|1
+expr_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_UNDOING
+argument_list|)
 expr_stmt|;
 comment|/* To better support vi-mode, a start or end value of -1 means 	 rl_point, and a value of -2 means rl_end. */
 if|if
@@ -501,7 +511,7 @@ name|waiting_for_begin
 operator|--
 expr_stmt|;
 else|else
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 break|break;
@@ -509,6 +519,11 @@ block|}
 name|_rl_doing_an_undo
 operator|=
 literal|0
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_UNDOING
+argument_list|)
 expr_stmt|;
 name|release
 operator|=
@@ -785,7 +800,7 @@ condition|(
 operator|!
 name|rl_undo_list
 condition|)
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 else|else
@@ -847,7 +862,7 @@ operator|--
 expr_stmt|;
 else|else
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 break|break;

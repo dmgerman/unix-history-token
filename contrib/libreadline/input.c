@@ -329,12 +329,12 @@ comment|/* Non-null means it is a pointer to a function to run while waiting for
 end_comment
 
 begin_decl_stmt
-name|Function
+name|rl_hook_func_t
 modifier|*
 name|rl_event_hook
 init|=
 operator|(
-name|Function
+name|rl_hook_func_t
 operator|*
 operator|)
 name|NULL
@@ -342,13 +342,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Function
+name|rl_getc_func_t
 modifier|*
 name|rl_getc_function
 init|=
 name|rl_getc
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|_keyboard_input_timeout
+init|=
+literal|100000
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0.1 seconds; it's in usec */
+end_comment
 
 begin_comment
 comment|/* **************************************************************** */
@@ -666,9 +679,8 @@ name|timeout
 operator|.
 name|tv_usec
 operator|=
-literal|100000
+name|_keyboard_input_timeout
 expr_stmt|;
-comment|/* 0.1 seconds */
 if|if
 condition|(
 name|select
@@ -873,6 +885,41 @@ block|}
 block|}
 end_function
 
+begin_function
+name|int
+name|rl_set_keyboard_input_timeout
+parameter_list|(
+name|u
+parameter_list|)
+name|int
+name|u
+decl_stmt|;
+block|{
+name|int
+name|o
+decl_stmt|;
+name|o
+operator|=
+name|_keyboard_input_timeout
+expr_stmt|;
+if|if
+condition|(
+name|u
+operator|>
+literal|0
+condition|)
+name|_keyboard_input_timeout
+operator|=
+name|u
+expr_stmt|;
+return|return
+operator|(
+name|o
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* Is there input available to be read on the readline input file    descriptor?  Only works if the system has select(2) or FIONREAD. */
 end_comment
@@ -964,9 +1011,8 @@ name|timeout
 operator|.
 name|tv_usec
 operator|=
-literal|100000
+name|_keyboard_input_timeout
 expr_stmt|;
-comment|/* 0.1 seconds */
 return|return
 operator|(
 name|select
@@ -1182,6 +1228,11 @@ name|rl_pending_input
 operator|=
 name|EOF
 expr_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_INPUTPENDING
+argument_list|)
+expr_stmt|;
 block|}
 name|ibuffer
 index|[
@@ -1224,6 +1275,35 @@ block|{
 name|rl_pending_input
 operator|=
 name|c
+expr_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_INPUTPENDING
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Clear any pending input pushed with rl_execute_next() */
+end_comment
+
+begin_function
+name|int
+name|rl_clear_pending_input
+parameter_list|()
+block|{
+name|rl_pending_input
+operator|=
+literal|0
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_INPUTPENDING
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -1275,9 +1355,8 @@ name|c
 operator|=
 name|rl_pending_input
 expr_stmt|;
-name|rl_pending_input
-operator|=
-literal|0
+name|rl_clear_pending_input
+argument_list|()
 expr_stmt|;
 block|}
 else|else
@@ -1320,6 +1399,16 @@ name|rl_event_hook
 call|)
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|rl_done
+condition|)
+comment|/* XXX - experimental */
+return|return
+operator|(
+literal|'\n'
+operator|)
+return|;
 name|rl_gather_tyi
 argument_list|()
 expr_stmt|;
@@ -1490,7 +1579,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|unset_nodelay_mode
+name|sh_unset_nodelay_mode
 argument_list|(
 name|fileno
 argument_list|(
