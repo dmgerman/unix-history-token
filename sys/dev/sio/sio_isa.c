@@ -316,6 +316,13 @@ block|}
 block|,
 comment|/* CRD0001 - Cardinal MVP288IV ? */
 block|{
+literal|0x01308c0e
+block|,
+name|NULL
+block|}
+block|,
+comment|/* CTL3001 - Creative Labs Phoneblaster */
+block|{
 literal|0x36033610
 block|,
 name|NULL
