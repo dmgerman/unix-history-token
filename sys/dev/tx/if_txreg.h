@@ -1109,19 +1109,11 @@ comment|/* Subsystem Id */
 end_comment
 
 begin_comment
-comment|/*  * Hardware structures  */
+comment|/*  * Hardware structures.  */
 end_comment
 
 begin_comment
-comment|/* EPIC's hardware descriptors, must be aligned on dword in memory */
-end_comment
-
-begin_comment
-comment|/* NB: to make driver happy, this two structures MUST have thier sizes */
-end_comment
-
-begin_comment
-comment|/* be divisor of PAGE_SIZE */
+comment|/*  * EPIC's hardware descriptors, must be aligned on dword in memory.  * NB: to make driver happy, this two structures MUST have their sizes  * be divisor of PAGE_SIZE.  */
 end_comment
 
 begin_struct
@@ -1185,15 +1177,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* This structure defines EPIC's fragment list, maximum number of frags */
-end_comment
-
-begin_comment
-comment|/* is 63. Let use maximum, becouse size of struct MUST be divisor of */
-end_comment
-
-begin_comment
-comment|/* PAGE_SIZE, and sometimes come mbufs with more then 30 frags */
+comment|/*  * This structure defines EPIC's fragment list, maximum number of frags  * is 63. Let's use the maximum, because size of struct MUST be divisor  * of PAGE_SIZE, and sometimes come mbufs with more then 30 frags.  */
 end_comment
 
 begin_define
