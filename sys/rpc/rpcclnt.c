@@ -3743,6 +3743,9 @@ name|LOG_INFO
 argument_list|,
 literal|"short receive (%d/%d) from rpc server %s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|u_int32_t
@@ -3752,6 +3755,9 @@ name|auio
 operator|.
 name|uio_resid
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|u_int32_t
