@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -379,7 +385,11 @@ define|#
 directive|define
 name|TWE_PLATFORM_SOFTC
 define|\
-value|device_t			twe_dev;
+value|bus_dmamap_t		twe_cmdmap;
+comment|/* DMA map for command */
+value|\     u_int32_t			twe_cmdphys;
+comment|/* address of command in controller space */
+value|\     device_t			twe_dev;
 comment|/* bus device */
 value|\     dev_t			twe_dev_t;
 comment|/* control device */
@@ -393,13 +403,21 @@ value|\     bus_dma_tag_t		twe_parent_dmat;
 comment|/* parent DMA tag */
 value|\     bus_dma_tag_t		twe_buffer_dmat;
 comment|/* data buffer DMA tag */
+value|\     bus_dma_tag_t		twe_cmd_dmat;
+comment|/* command buffer DMA tag */
+value|\     bus_dma_tag_t		twe_immediate_dmat;
+comment|/* command buffer DMA tag */
 value|\     struct resource		*twe_irq;
 comment|/* interrupt */
 value|\     void			*twe_intr;
 comment|/* interrupt handle */
 value|\     struct intr_config_hook	twe_ich;
 comment|/* delayed-startup hook */
-value|\     struct sysctl_ctx_list	sysctl_ctx;						\     struct sysctl_oid		*sysctl_tree;
+value|\     void			*twe_cmd;
+comment|/* command structures */
+value|\     void			*twe_immediate;
+comment|/* immediate commands */
+value|\     bus_dmamap_t		twe_immediate_map;					\     struct sysctl_ctx_list	sysctl_ctx;						\     struct sysctl_oid		*sysctl_tree;
 end_define
 
 begin_comment
@@ -411,11 +429,7 @@ define|#
 directive|define
 name|TWE_PLATFORM_REQUEST
 define|\
-value|bus_dmamap_t		tr_cmdmap;
-comment|/* DMA map for command */
-value|\     u_int32_t			tr_cmdphys;
-comment|/* address of command in controller space */
-value|\     bus_dmamap_t		tr_dmamap;
+value|bus_dmamap_t		tr_dmamap;
 comment|/* DMA map for data */
 value|\     u_int32_t			tr_dataphys;
 end_define

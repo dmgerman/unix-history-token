@@ -116,11 +116,9 @@ begin_struct
 struct|struct
 name|twe_request
 block|{
-comment|/* controller command */
-name|TWE_Command
-name|tr_command
+name|int
+name|tr_tag
 decl_stmt|;
-comment|/* command as submitted to controller */
 comment|/* command payload */
 name|void
 modifier|*
@@ -188,6 +186,15 @@ directive|define
 name|TWE_CMD_SLEEPER
 value|(1<<3)
 comment|/* owner is sleeping on this command */
+define|#
+directive|define
+name|TWE_CMD_IMMEDIATE
+value|(1<<4)
+comment|/* immediate request */
+define|#
+directive|define
+name|TWE_CMD_MAPPED
+value|(1<<5)
 name|void
 function_decl|(
 modifier|*
@@ -211,6 +218,27 @@ comment|/* platform-specific request elements */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|TWE_FIND_COMMAND
+parameter_list|(
+name|tr
+parameter_list|)
+define|\
+value|(TWE_Command *)((u_int8_t *)(tr)->tr_sc->twe_cmd +	\ 			((tr)->tr_tag * sizeof(TWE_Command)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWE_FIND_COMMANDPHYS
+parameter_list|(
+name|tr
+parameter_list|)
+value|((tr)->tr_sc->twe_cmdphys +	\ 					 ((tr)->tr_tag * sizeof(TWE_Command)))
+end_define
 
 begin_comment
 comment|/*  * Per-controller state.  */
@@ -316,6 +344,10 @@ directive|define
 name|TWE_STATE_SUSPEND
 value|(1<<3)
 comment|/* controller is suspended */
+define|#
+directive|define
+name|TWE_STATE_FRZN
+value|(1<<4)
 name|int
 name|twe_host_id
 decl_stmt|;
@@ -414,6 +446,19 @@ name|struct
 name|twe_softc
 modifier|*
 name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|twe_start
+parameter_list|(
+name|struct
+name|twe_request
+modifier|*
+name|tr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -552,7 +597,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* attach drive when found in twe_add_unit */
+comment|/* attach drive when found in twe_init */
 end_comment
 
 begin_function_decl
@@ -628,6 +673,9 @@ name|struct
 name|twe_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|tag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -655,7 +703,7 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|twe_map_request
 parameter_list|(
 name|struct
