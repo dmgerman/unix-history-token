@@ -716,12 +716,6 @@ name|struct
 name|ifnet
 name|ifnet
 decl_stmt|;
-name|char
-name|ifnamebuf
-index|[
-name|IFNAMSIZ
-index|]
-decl_stmt|;
 name|KREAD
 argument_list|(
 name|ifp
