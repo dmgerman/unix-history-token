@@ -2429,13 +2429,8 @@ modifier|*
 name|unused
 decl_stmt|;
 block|{
-name|cdevsw_add
-argument_list|(
-operator|&
-name|nmdm_cdevsw
-argument_list|)
-expr_stmt|;
 comment|/* XXX: Gross hack for DEVFS */
+comment|/* XXX: Yes, very gross.  Should be a _clone methind instead */
 name|nmdminit
 argument_list|(
 literal|0
