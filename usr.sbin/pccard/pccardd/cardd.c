@@ -625,6 +625,20 @@ break|break;
 case|case
 name|filled
 case|:
+comment|/* KLUDGE: if we were suspended, remove card */
+if|if
+condition|(
+name|state
+operator|.
+name|laststate
+operator|==
+name|suspend
+condition|)
+name|card_removed
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
 name|card_inserted
 argument_list|(
 name|sp
