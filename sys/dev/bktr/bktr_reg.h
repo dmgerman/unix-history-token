@@ -2461,6 +2461,20 @@ directive|if
 operator|(
 name|__FreeBSD_version
 operator|>=
+literal|500000
+operator|)
+name|struct
+name|mtx
+name|vbimutex
+decl_stmt|;
+comment|/* Mutex protecting vbi buffer */
+endif|#
+directive|endif
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
 literal|310000
 operator|)
 name|bus_space_tag_t

@@ -2391,6 +2391,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|USE_VBIMUTEX
+name|mtx_destroy
+argument_list|(
+operator|&
+name|bktr
+operator|->
+name|vbimutex
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Note: We do not free memory for RISC programs, grab buffer, vbi buffers */
 comment|/* The memory is retained by the bktr_mem module so we can unload and */
 comment|/* then reload the main bktr driver module */
@@ -3752,6 +3765,11 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|LOCK_VBI
+argument_list|(
+name|bktr
+argument_list|)
+expr_stmt|;
 name|DISABLE_INTR
 argument_list|(
 name|s
@@ -3817,6 +3835,11 @@ block|}
 name|ENABLE_INTR
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|UNLOCK_VBI
+argument_list|(
+name|bktr
 argument_list|)
 expr_stmt|;
 return|return
