@@ -413,7 +413,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)->m_type == MT_FREE) panic("mfree"); \ 	  mbstat.m_mtypes[(m)->m_type]--; (m)->m_type = MT_FREE; \ 	  if ((m)->m_off> MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~0x3ff); \ 		if (--mclrefcnt[mtocl(n)] == 0) \ 		    { (n)->m_next = mclfree;mclfree = (n);mbstat.m_clfree++;} \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); mbstat.m_mbfree++; \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)->m_type == MT_FREE) panic("mfree"); \ 	  mbstat.m_mtypes[(m)->m_type]--; (m)->m_type = MT_FREE; \ 	  if ((m)->m_off> MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~CLOFSET); \ 		if (--mclrefcnt[mtocl(n)] == 0) \ 		    { (n)->m_next = mclfree;mclfree = (n);mbstat.m_clfree++;} \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); mbstat.m_mbfree++; \ 	  splx(ms); }
 end_define
 
 begin_comment
