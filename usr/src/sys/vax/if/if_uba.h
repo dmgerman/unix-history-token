@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.h	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.h	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -60,10 +60,19 @@ name|caddr_t
 name|ifrw_addr
 decl_stmt|;
 comment|/* virt addr of header */
-name|int
+name|short
 name|ifrw_bdp
 decl_stmt|;
 comment|/* unibus bdp */
+name|short
+name|ifrw_flags
+decl_stmt|;
+comment|/* type, etc. */
+define|#
+directive|define
+name|IFRW_W
+value|0x01
+comment|/* is a transmit buffer */
 name|int
 name|ifrw_info
 decl_stmt|;
@@ -132,6 +141,13 @@ define|#
 directive|define
 name|ifw_bdp
 value|ifrw.ifrw_bdp
+end_define
+
+begin_define
+define|#
+directive|define
+name|ifw_flags
+value|ifrw.ifrw_flags
 end_define
 
 begin_define
