@@ -2930,12 +2930,6 @@ begin_comment
 comment|/*  * Platform Dependent Error and Debug Printout  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUCLIKE_ATTRIBUTE_PRINTF
-end_ifdef
-
 begin_function_decl
 name|void
 name|isp_prt
@@ -2953,51 +2947,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|__attribute__
+function_decl|__printflike
 parameter_list|(
-function_decl|(__format__
-parameter_list|(
-name|__printf__
-parameter_list|,
 function_decl|3
 operator|,
 function_decl|4
 end_function_decl
 
 begin_empty_stmt
-unit|)))
+unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|void
-name|isp_prt
-parameter_list|(
-name|struct
-name|ispsoftc
-modifier|*
-parameter_list|,
-name|int
-name|level
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
