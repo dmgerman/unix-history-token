@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.81 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.82 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5192,16 +5192,6 @@ name|FALSE
 block|,
 define|#
 directive|define
-name|O_BSP
-value|0x80
-literal|"BrokenSmtpPeers"
-block|,
-name|O_BSP
-block|,
-name|TRUE
-block|,
-define|#
-directive|define
 name|O_QUEUESORTORD
 value|0x81
 literal|"QueueSortOrder"
@@ -7427,18 +7417,6 @@ comment|/* work time factor */
 name|WkTimeFact
 operator|=
 name|atoi
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|O_BSP
-case|:
-comment|/* SMTP Peers can't handle 2-line greeting */
-name|BrokenSmtpPeers
-operator|=
-name|atobool
 argument_list|(
 name|val
 argument_list|)
