@@ -609,15 +609,9 @@ argument_list|(
 operator|(
 literal|100.0
 operator|*
-operator|(
 name|xs
 operator|->
 name|rcvd
-operator|+
-name|xs
-operator|->
-name|offset
-operator|)
 operator|)
 operator|/
 name|xs
@@ -713,7 +707,7 @@ name|xs
 operator|->
 name|rcvd
 operator|=
-literal|0
+name|offset
 expr_stmt|;
 name|stat_display
 argument_list|(
