@@ -1245,6 +1245,8 @@ decl_stmt|;
 block|{
 name|CORE_ADDR
 name|addr
+decl_stmt|,
+name|first_td
 decl_stmt|;
 name|void
 modifier|*
@@ -1281,25 +1283,46 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-comment|/* Read the PCB address in proc structure. */
+comment|/* Find the first thread in the process  XXXKSE */
 name|addr
 operator|+=
-operator|(
-name|int
-operator|)
-operator|&
-operator|(
-operator|(
+name|offsetof
+argument_list|(
 expr|struct
 name|proc
-operator|*
-operator|)
-literal|0
-operator|)
-operator|->
-name|p_thread
+argument_list|,
+name|p_threads
 operator|.
+name|tqh_first
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kvread
+argument_list|(
+name|addr
+argument_list|,
+operator|&
+name|first_td
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"cannot read thread ptr"
+argument_list|)
+expr_stmt|;
+comment|/* Read the PCB address in thread structure. */
+name|addr
+operator|=
+name|first_td
+operator|+
+name|offsetof
+argument_list|(
+expr|struct
+name|thread
+argument_list|,
 name|td_pcb
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1316,6 +1339,7 @@ argument_list|(
 literal|"cannot read pcb ptr"
 argument_list|)
 expr_stmt|;
+comment|/* Read the PCB address in proc structure. */
 if|if
 condition|(
 name|set_context
