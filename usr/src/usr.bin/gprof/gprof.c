@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.20 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,6 +171,16 @@ argument_list|(
 literal|"[main] debug = %d\n"
 argument_list|,
 name|debug
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+else|not DEBUG
+name|printf
+argument_list|(
+literal|"%s: -d ignored\n"
+argument_list|,
+name|whoami
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1117,9 +1127,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|npe
-operator|++
-expr_stmt|;
 block|}
 end_block
 
@@ -1848,8 +1855,6 @@ init|;
 name|nlp
 operator|<
 name|npe
-operator|-
-literal|1
 condition|;
 name|nlp
 operator|++
@@ -2177,7 +2182,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	Assign samples to the procedures to which they belong.  *  *	There are three cases as to where pcl and pch can be  *	with respect to the routine entry addresses svalue0 and svalue1  *	as shown in the following diagram.  overlap computes the  *	distance between the arrows, the fraction of the sample  *	that is to be credited to the routine which starts at svalue0.  *  *	    svalue0                                         svalue1  *	       |                                               |  *	       v                                               v  *  *	       +-----------------------------------------------+  *	       |					       |  *	  |  ->|    |<-		->|         |<-		->|    |<-  |  *	  |         |		  |         |		  |         |  *	  +---------+		  +---------+		  +---------+  *  *	  ^         ^		  ^         ^		  ^         ^  *	  |         |		  |         |		  |         |  *	 pcl       pch		 pcl       pch		 pcl       pch  *  *	For the vax we assert that samples will never fall in the first  *	two bytes of any routine, since that is the entry mask, thus we give  *	ourselves a little room and use svalue0+2 when assigning samples.  *	In conjunction with the alignment of routine addresses, this   *	should allow us to have one sample for every four bytes of text  *	space and never have any overlap (the two end cases, above).  */
+comment|/*  *	Assign samples to the procedures to which they belong.  *  *	There are three cases as to where pcl and pch can be  *	with respect to the routine entry addresses svalue0 and svalue1  *	as shown in the following diagram.  overlap computes the  *	distance between the arrows, the fraction of the sample  *	that is to be credited to the routine which starts at svalue0.  *  *	    svalue0                                         svalue1  *	       |                                               |  *	       v                                               v  *  *	       +-----------------------------------------------+  *	       |					       |  *	  |  ->|    |<-		->|         |<-		->|    |<-  |  *	  |         |		  |         |		  |         |  *	  +---------+		  +---------+		  +---------+  *  *	  ^         ^		  ^         ^		  ^         ^  *	  |         |		  |         |		  |         |  *	 pcl       pch		 pcl       pch		 pcl       pch  *  *	For the vax we assert that samples will never fall in the first  *	two bytes of any routine, since that is the entry mask,  *	thus we give call alignentries() to adjust the entry points if  *	the entry mask falls in one bucket but the code for the routine  *	doesn't start until the next bucket.  In conjunction with the  *	alignment of routine addresses, this should allow us to have  *	only one sample for every four bytes of text space and never  *	have any overlap (the two end cases, above).  */
 end_comment
 
 begin_macro
@@ -2228,6 +2233,9 @@ expr_stmt|;
 name|scale
 operator|/=
 name|nsamples
+expr_stmt|;
+name|alignentries
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -2337,12 +2345,7 @@ index|[
 name|j
 index|]
 operator|.
-name|value
-operator|/
-sizeof|sizeof
-argument_list|(
-name|UNIT
-argument_list|)
+name|svalue
 expr_stmt|;
 name|svalue1
 operator|=
@@ -2353,13 +2356,9 @@ operator|+
 literal|1
 index|]
 operator|.
-name|value
-operator|/
-sizeof|sizeof
-argument_list|(
-name|UNIT
-argument_list|)
+name|svalue
 expr_stmt|;
+comment|/* 		 *	if high end of tick is below entry address,  		 *	go for next tick. 		 */
 if|if
 condition|(
 name|pch
@@ -2367,6 +2366,7 @@ operator|<
 name|svalue0
 condition|)
 break|break;
+comment|/* 		 *	if low end of tick into next routine, 		 *	go for next routine. 		 */
 if|if
 condition|(
 name|pcl
@@ -2374,29 +2374,6 @@ operator|>=
 name|svalue1
 condition|)
 continue|continue;
-ifdef|#
-directive|ifdef
-name|vax
-name|overlap
-operator|=
-name|min
-argument_list|(
-name|pch
-argument_list|,
-name|svalue1
-argument_list|)
-operator|-
-name|max
-argument_list|(
-name|pcl
-argument_list|,
-name|svalue0
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|overlap
 operator|=
 name|min
@@ -2413,9 +2390,6 @@ argument_list|,
 name|svalue0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|vax
 if|if
 condition|(
 name|overlap
@@ -2435,7 +2409,19 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[asgnsamples] (0x%x-0x%x) %s gets %f ticks\n"
+literal|"[asgnsamples] (0x%x->0x%x-0x%x) %s gets %f ticks %d overlap\n"
+argument_list|,
+name|nl
+index|[
+name|j
+index|]
+operator|.
+name|value
+operator|/
+sizeof|sizeof
+argument_list|(
+name|UNIT
+argument_list|)
 argument_list|,
 name|svalue0
 argument_list|,
@@ -2453,6 +2439,8 @@ operator|*
 name|time
 operator|/
 name|scale
+argument_list|,
+name|overlap
 argument_list|)
 expr_stmt|;
 block|}
@@ -2568,6 +2556,131 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*      *	calculate scaled entry point addresses (to save time in asgnsamples),      *	and possibly push the scaled entry points over the entry mask,      *	if it turns out that the entry point is in one bucket and the code      *	for a routine is in the next bucket.      */
+end_comment
+
+begin_macro
+name|alignentries
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|nl
+modifier|*
+name|nlp
+decl_stmt|;
+name|unsigned
+name|long
+name|bucket_of_entry
+decl_stmt|;
+name|unsigned
+name|long
+name|bucket_of_code
+decl_stmt|;
+for|for
+control|(
+name|nlp
+operator|=
+name|nl
+init|;
+name|nlp
+operator|<
+name|npe
+condition|;
+name|nlp
+operator|++
+control|)
+block|{
+name|nlp
+operator|->
+name|svalue
+operator|=
+name|nlp
+operator|->
+name|value
+operator|/
+sizeof|sizeof
+argument_list|(
+name|UNIT
+argument_list|)
+expr_stmt|;
+name|bucket_of_entry
+operator|=
+operator|(
+name|nlp
+operator|->
+name|svalue
+operator|-
+name|lowpc
+operator|)
+operator|/
+name|scale
+expr_stmt|;
+name|bucket_of_code
+operator|=
+operator|(
+name|nlp
+operator|->
+name|svalue
+operator|+
+name|UNITS_TO_CODE
+operator|-
+name|lowpc
+operator|)
+operator|/
+name|scale
+expr_stmt|;
+if|if
+condition|(
+name|bucket_of_entry
+operator|<
+name|bucket_of_code
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+operator|&
+name|SAMPLEDEBUG
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"[alignentries] pushing svalue 0x%x to 0x%x\n"
+argument_list|,
+name|nlp
+operator|->
+name|svalue
+argument_list|,
+name|nlp
+operator|->
+name|svalue
+operator|+
+name|UNITS_TO_CODE
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|DEBUG
+name|nlp
+operator|->
+name|svalue
+operator|+=
+name|UNITS_TO_CODE
+expr_stmt|;
+block|}
+block|}
+block|}
+end_block
 
 begin_function
 name|bool
