@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.186 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.187 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -6241,49 +6241,26 @@ begin_comment
 comment|/* NEWS-OS 6.0.3 with /bin/cc */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SYSTEM5
-value|1
-end_define
-
-begin_comment
-comment|/* include all the System V defines */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__svr4__
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SYS5SIGNALS
-value|1
+name|__svr4__
 end_define
 
 begin_comment
-comment|/* SysV signal semantics -- reset on each sig */
+comment|/* use all System V Releae 4 defines below */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HASINITGROUPS
-value|1
-end_define
-
-begin_comment
-comment|/* has initgroups(3) call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USESETEUID
-value|1
-end_define
-
-begin_comment
-comment|/* has useable seteuid(2) call */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -6316,17 +6293,6 @@ end_define
 
 begin_comment
 comment|/* use MIOC_READKSYM ioctl */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFS_TYPE
-value|SFS_STATVFS
-end_define
-
-begin_comment
-comment|/* use<sys/statvfs.h> statvfs() impl */
 end_comment
 
 begin_ifndef
@@ -6369,6 +6335,24 @@ undef|#
 directive|undef
 name|WEXITSTATUS
 end_undef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYSLOG_BUFSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYSLOG_BUFSIZE
+value|1024
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
