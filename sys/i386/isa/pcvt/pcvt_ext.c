@@ -31,6 +31,16 @@ begin_comment
 comment|/* global include */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ISSIGVALID
+parameter_list|(
+name|sig
+parameter_list|)
+value|((sig)> 0&& (sig)< NSIG)
+end_define
+
 begin_function_decl
 specifier|static
 name|int
@@ -10944,6 +10954,30 @@ name|EBUSY
 return|;
 comment|/* already in use on this VT */
 block|}
+if|if
+condition|(
+name|ISSIGVALID
+argument_list|(
+name|newmode
+operator|->
+name|relsig
+argument_list|)
+operator|&&
+name|ISSIGVALID
+argument_list|(
+name|newmode
+operator|->
+name|acqsig
+argument_list|)
+operator|&&
+name|ISSIGVALID
+argument_list|(
+name|newmode
+operator|->
+name|frsig
+argument_list|)
+condition|)
+block|{
 name|vsp
 operator|->
 name|smode
@@ -10964,6 +10998,18 @@ name|p
 operator|->
 name|p_pid
 expr_stmt|;
+block|}
+else|else
+block|{
+name|splx
+argument_list|(
+name|opri
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
 if|#
 directive|if
 name|PCVT_FREEBSD
