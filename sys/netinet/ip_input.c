@@ -3010,6 +3010,7 @@ name|IP_OFFMASK
 operator|)
 condition|)
 block|{
+comment|/* If maxnipq is 0, never accept fragments. */
 if|if
 condition|(
 name|maxnipq
@@ -3116,7 +3117,7 @@ name|fp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Enforce upper bound on number of fragmented packets 		 * for which we attempt reassembly; 		 * If maxnipq is 0, never accept fragments. (Handled above.) 		 * If maxnipq is -1, accept all fragments without limitation. 		 */
+comment|/* 		 * Enforce upper bound on number of fragmented packets 		 * for which we attempt reassembly; 		 * If maxnipq is -1, accept all fragments without limitation. 		 */
 if|if
 condition|(
 operator|(
@@ -5074,6 +5075,17 @@ block|}
 block|}
 block|}
 comment|/* 	 * If we are over the maximum number of fragments 	 * (due to the limit being lowered), drain off 	 * enough to get down to the new limit. 	 */
+if|if
+condition|(
+name|maxnipq
+operator|>
+literal|0
+operator|&&
+name|nipq
+operator|>
+name|maxnipq
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -5087,13 +5099,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-if|if
-condition|(
-name|maxnipq
-operator|>=
-literal|0
-condition|)
 block|{
 while|while
 condition|(
