@@ -235,6 +235,14 @@ name|REVFMT_MAJMIN
 block|}
 block|,
 block|{
+literal|"Motorola PowerPC 7457"
+block|,
+name|MPC7457
+block|,
+name|REVFMT_MAJMIN
+block|}
+block|,
+block|{
 literal|"Motorola PowerPC 8240"
 block|,
 name|MPC8240
@@ -572,6 +580,9 @@ endif|#
 directive|endif
 break|break;
 case|case
+name|MPC7457
+case|:
+case|case
 name|MPC7455
 case|:
 case|case
@@ -707,6 +718,9 @@ case|:
 case|case
 name|MPC7455
 case|:
+case|case
+name|MPC7457
+case|:
 name|bitmask
 operator|=
 name|HID0_7450_BITMASK
@@ -741,6 +755,9 @@ name|MPC7450
 case|:
 case|case
 name|MPC7455
+case|:
+case|case
+name|MPC7457
 case|:
 name|cpu_print_speed
 argument_list|()
@@ -1034,6 +1051,10 @@ operator|||
 name|vers
 operator|==
 name|MPC7455
+operator|||
+name|vers
+operator|==
+name|MPC7457
 condition|)
 block|{
 name|u_int
