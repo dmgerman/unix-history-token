@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.1	81/03/15	*/
+comment|/*	autoconf.c	4.2	81/03/21	*/
 end_comment
 
 begin_include
@@ -270,11 +270,6 @@ init|=
 block|{
 name|MTR
 argument_list|(
-literal|3
-argument_list|)
-block|,
-name|MTR
-argument_list|(
 literal|4
 argument_list|)
 block|,
@@ -286,6 +281,11 @@ block|,
 name|MTR
 argument_list|(
 literal|6
+argument_list|)
+block|,
+name|MTR
+argument_list|(
+literal|7
 argument_list|)
 block|}
 decl_stmt|;
@@ -307,6 +307,62 @@ begin_undef
 undef|#
 directive|undef
 name|MTR
+end_undef
+
+begin_define
+define|#
+directive|define
+name|UTR
+parameter_list|(
+name|i
+parameter_list|)
+value|((struct uba_regs *)(NEX730+(i)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMA
+value|((caddr_t)UMEM730)
+end_define
+
+begin_decl_stmt
+name|struct
+name|uba_regs
+modifier|*
+name|ubaddr730
+index|[]
+init|=
+block|{
+name|UTR
+argument_list|(
+literal|3
+argument_list|)
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|caddr_t
+name|umaddr730
+index|[]
+init|=
+block|{
+name|UMA
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|UTR
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|UMA
 end_undef
 
 begin_macro
@@ -353,7 +409,6 @@ name|ubaddr
 operator|=
 name|ubaddr780
 expr_stmt|;
-comment|/*###47 [cc] warning: illegal pointer combination %%%*/
 name|umaddr
 operator|=
 name|umaddr780
@@ -370,10 +425,21 @@ name|ubaddr
 operator|=
 name|ubaddr750
 expr_stmt|;
-comment|/*###53 [cc] warning: illegal pointer combination %%%*/
 name|umaddr
 operator|=
 name|umaddr750
+expr_stmt|;
+break|break;
+case|case
+name|VAX_730
+case|:
+name|ubaddr
+operator|=
+name|ubaddr730
+expr_stmt|;
+name|umaddr
+operator|=
+name|umaddr730
 expr_stmt|;
 break|break;
 block|}
