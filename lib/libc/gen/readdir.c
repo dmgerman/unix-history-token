@@ -100,13 +100,11 @@ name|readdir
 parameter_list|(
 name|dirp
 parameter_list|)
-specifier|register
 name|DIR
 modifier|*
 name|dirp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|dirent
 modifier|*
