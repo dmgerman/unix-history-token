@@ -200,6 +200,7 @@ modifier|*
 name|cvp
 parameter_list|,
 name|int
+name|pri
 parameter_list|)
 function_decl|;
 end_function_decl
