@@ -865,53 +865,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|u_int32_t
-name|data
-decl_stmt|;
-name|data
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCI_CLASS_REG
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pci_get_class
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|PCIC_STORAGE
-operator|&&
-operator|(
-name|pci_get_subclass
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|PCIS_STORAGE_IDE
-operator|||
-name|pci_get_subclass
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|PCIS_STORAGE_RAID
-operator|||
-name|pci_get_subclass
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|PCIS_STORAGE_OTHER
-operator|)
-condition|)
-block|{
 switch|switch
 condition|(
 name|pci_get_devid
@@ -971,37 +924,52 @@ literal|0x05961106
 case|:
 comment|/* 82c596 */
 return|return
-literal|"VIA Apollo IDE controller (generic mode)"
+literal|"VIA Apollo IDE controller"
 return|;
 case|case
 literal|0x06401095
 case|:
 return|return
-literal|"CMD 640 IDE controller (generic mode)"
+literal|"CMD 640 IDE controller"
 return|;
 case|case
 literal|0x06461095
 case|:
 return|return
-literal|"CMD 646 IDE controller (generic mode)"
+literal|"CMD 646 IDE controller"
 return|;
 case|case
 literal|0xc6931080
 case|:
 return|return
-literal|"Cypress 82C693 IDE controller (generic mode)"
+literal|"Cypress 82C693 IDE controller"
 return|;
 case|case
 literal|0x01021078
 case|:
 return|return
-literal|"Cyrix 5530 IDE controller (generic mode)"
+literal|"Cyrix 5530 IDE controller"
 return|;
 default|default:
+if|if
+condition|(
+name|pci_get_class
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIC_STORAGE
+operator|&&
+name|pci_get_subclass
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIS_STORAGE_IDE
+condition|)
 return|return
-literal|"Unknown PCI IDE controller (generic mode)"
+literal|"Unknown PCI IDE controller (using generic mode)"
 return|;
-block|}
 block|}
 return|return
 name|NULL
