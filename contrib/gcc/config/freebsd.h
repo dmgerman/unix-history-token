@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: freebsd.h,v 1.7 1999/04/14 00:25:45 obrien Exp $ */
 end_comment
 
 begin_comment
@@ -31,16 +31,10 @@ begin_comment
 comment|/* This defines which switch letters take arguments.  On svr4, most of    the normal cases (defined in gcc.c) apply, and we also have -h* and    -z* options (for the linker).  We have a slightly different mix.  We    have -R (alias --rpath), no -z, --soname (-h), --assert etc. */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|SWITCH_TAKES_ARG
-end_undef
-
 begin_define
 define|#
 directive|define
-name|SWITCH_TAKES_ARG
+name|FBSD_SWITCH_TAKES_ARG
 parameter_list|(
 name|CHAR
 parameter_list|)
@@ -50,16 +44,10 @@ comment|/* ignored by ld */
 value|\    || (CHAR) == 'R')
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|WORD_SWITCH_TAKES_ARG
-end_undef
-
 begin_define
 define|#
 directive|define
-name|WORD_SWITCH_TAKES_ARG
+name|FBSD_WORD_SWITCH_TAKES_ARG
 parameter_list|(
 name|STR
 parameter_list|)
