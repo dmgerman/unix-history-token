@@ -6130,7 +6130,7 @@ operator|>
 literal|0
 condition|)
 block|{
-asm|__asm__ (  "   cld\n" 		   "1: lodsb\n" 		   "   xlatb\n" 		   "   stosb\n" 		   "   loop 1b\n": 	    : "b" ((long) table), "c" (n), "D" ((long) buff), "S" ((long) buff) 	    : "bx", "cx", "di", "si", "ax");
+asm|__asm__ (  "   cld\n" 		   "1: lodsb\n" 		   "   xlatb\n" 		   "   stosb\n" 		   "   loop 1b\n": 	    : "b" (table), "c" (n), "D" (buff), "S" (buff) 	    : "bx", "cx", "di", "si", "ax");
 block|}
 block|}
 end_function

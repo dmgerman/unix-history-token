@@ -805,7 +805,7 @@ operator|>
 literal|0
 condition|)
 block|{
-asm|__asm__("cld\n" 		"1:\tlodsb\n\t" 		"xlatb\n\t" 		"stosb\n\t" 		"loop 1b\n\t": 		:"b"((long) table), "c"(n), "D"((long) buff), "S"((long) buff) 		:"bx", "cx", "di", "si", "ax");
+asm|__asm__("cld\n" 		"1:\tlodsb\n\t" 		"xlatb\n\t" 		"stosb\n\t" 		"loop 1b\n\t": 		:"b"(table), "c"(n), "D"(buff), "S"(buff) 		:"bx", "cx", "di", "si", "ax");
 block|}
 block|}
 end_function
