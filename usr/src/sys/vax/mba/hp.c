@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.46	82/02/15	*/
+comment|/*	hp.c	4.47	82/02/18	*/
 end_comment
 
 begin_ifdef
@@ -2018,6 +2018,8 @@ decl_stmt|;
 specifier|register
 name|int
 name|er1
+decl_stmt|,
+name|er2
 decl_stmt|;
 name|int
 name|retry
@@ -2172,12 +2174,19 @@ name|hpaddr
 operator|->
 name|hper1
 expr_stmt|;
+name|er2
+operator|=
+name|hpaddr
+operator|->
+name|hper2
+expr_stmt|;
 if|if
 condition|(
 name|er1
 operator|&
 name|HPER1_HCRC
 condition|)
+block|{
 name|er1
 operator|&=
 operator|~
@@ -2187,6 +2196,12 @@ operator||
 name|HPER1_FER
 operator|)
 expr_stmt|;
+name|er2
+operator|&=
+operator|~
+name|HPER2_BSE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|er1
@@ -2290,9 +2305,7 @@ operator|!
 name|ML11
 operator|&&
 operator|(
-name|hpaddr
-operator|->
-name|hper2
+name|er2
 operator|&
 name|HPER2_HARD
 operator|)
@@ -2408,9 +2421,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|hpaddr
-operator|->
-name|hper2
+name|er2
 operator|&
 name|HPER2_BSE
 operator|)
@@ -2448,9 +2459,7 @@ if|if
 condition|(
 name|RM80
 operator|&&
-name|hpaddr
-operator|->
-name|hper2
+name|er2
 operator|&
 name|HPER2_SSE
 condition|)
