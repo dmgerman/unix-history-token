@@ -192,6 +192,34 @@ begin_comment
 comment|/* For optimizations */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PURE3274
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|TransparentClock
+decl_stmt|,
+name|OutputClock
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(PURE3274) */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1762,12 +1790,13 @@ name|void
 name|SendToIBM
 parameter_list|()
 block|{
-specifier|extern
-name|int
-name|TransparentClock
-decl_stmt|,
-name|OutputClock
-decl_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PURE3274
+argument_list|)
 if|if
 condition|(
 name|TransparentClock
@@ -1837,9 +1866,23 @@ name|CMD_READ_MODIFIED
 argument_list|)
 expr_stmt|;
 block|}
-name|netflush
-argument_list|()
+else|#
+directive|else
+comment|/* !defined(PURE3274) */
+if|if
+condition|(
+name|HadAid
+condition|)
+block|{
+name|DoReadModified
+argument_list|(
+name|CMD_READ_MODIFIED
+argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* !defined(PURE3274) */
 block|}
 end_function
 
@@ -2067,14 +2110,8 @@ literal|0
 decl_stmt|;
 comment|/* is the terminal in insert mode? */
 name|enum
-name|type
-name|type
-decl_stmt|;
-specifier|extern
-name|int
-name|OutputClock
-decl_stmt|,
-name|TransparentClock
+name|ctlrfcn
+name|ctlrfcn
 decl_stmt|;
 specifier|static
 name|int
@@ -2111,7 +2148,7 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
-name|type
+name|ctlrfcn
 operator|=
 name|hits
 index|[
@@ -2125,7 +2162,7 @@ name|HITNUM
 argument_list|()
 index|]
 operator|.
-name|type
+name|ctlrfcn
 expr_stmt|;
 name|c
 operator|=
@@ -2174,6 +2211,17 @@ return|;
 comment|/* nothing to do */
 block|}
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_RESET
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|FCN_MASTER_RESET
+argument_list|)
 if|if
 condition|(
 operator|!
@@ -2186,23 +2234,15 @@ block|{
 if|if
 condition|(
 operator|(
-name|type
-operator|==
-name|function
-operator|)
-operator|&&
-operator|(
-operator|(
-name|c
+name|ctlrfcn
 operator|==
 name|FCN_RESET
 operator|)
 operator|||
 operator|(
-name|c
+name|ctlrfcn
 operator|==
 name|FCN_MASTER_RESET
-operator|)
 operator|)
 condition|)
 block|{
@@ -2212,6 +2252,9 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* defined(FCN_RESET)&& defined(FCN_MASTER_RESET) */
 if|if
 condition|(
 operator|!
@@ -2230,6 +2273,13 @@ name|origCount
 operator|=
 name|count
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PURE3274
+argument_list|)
 if|if
 condition|(
 name|TransparentClock
@@ -2262,7 +2312,7 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
-name|type
+name|ctlrfcn
 operator|=
 name|hits
 index|[
@@ -2276,7 +2326,7 @@ name|HITNUM
 argument_list|()
 index|]
 operator|.
-name|type
+name|ctlrfcn
 expr_stmt|;
 name|c
 operator|=
@@ -2302,9 +2352,9 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
-name|type
+name|ctlrfcn
 operator|==
-name|aid
+name|FCN_AID
 condition|)
 block|{
 name|UnLocked
@@ -2326,17 +2376,11 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|type
-operator|==
-name|function
-condition|)
+else|else
 block|{
 switch|switch
 condition|(
-name|c
+name|ctlrfcn
 condition|)
 block|{
 case|case
@@ -2383,6 +2427,9 @@ block|}
 block|}
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* !defined(PURE3274) */
 while|while
 condition|(
 name|count
@@ -2408,7 +2455,7 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
-name|type
+name|ctlrfcn
 operator|=
 name|hits
 index|[
@@ -2422,7 +2469,7 @@ name|HITNUM
 argument_list|()
 index|]
 operator|.
-name|type
+name|ctlrfcn
 expr_stmt|;
 name|c
 operator|=
@@ -2448,9 +2495,9 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
-name|type
+name|ctlrfcn
 operator|==
-name|character
+name|FCN_CHARACTER
 condition|)
 block|{
 comment|/* Add the character to the buffer */
@@ -2465,9 +2512,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|type
+name|ctlrfcn
 operator|==
-name|aid
+name|FCN_AID
 condition|)
 block|{
 comment|/* got Aid */
@@ -2511,28 +2558,11 @@ name|count
 operator|)
 return|;
 block|}
-elseif|else
-if|if
-condition|(
-name|type
-operator|!=
-name|function
-condition|)
-block|{
-name|ExitString
-argument_list|(
-literal|"Illegal or undefined scancode!\n"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/*NOTREACHED*/
-block|}
 else|else
 block|{
 switch|switch
 condition|(
-name|c
+name|ctlrfcn
 condition|)
 block|{
 case|case

@@ -102,6 +102,16 @@ begin_comment
 comment|/* some globals */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PURE3274
+argument_list|)
+end_if
+
 begin_decl_stmt
 name|int
 name|OutputClock
@@ -124,6 +134,15 @@ end_decl_stmt
 
 begin_comment
 comment|/* time we were last in transparent */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(PURE3274) */
 end_comment
 
 begin_escape
@@ -829,6 +848,13 @@ block|}
 name|Clear3270
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PURE3274
+argument_list|)
 if|if
 condition|(
 name|TransparentClock
@@ -840,6 +866,9 @@ name|TransStop
 argument_list|()
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* !defined(PURE3274) */
 break|break;
 block|}
 case|case
@@ -1111,6 +1140,13 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PURE3274
+argument_list|)
 if|if
 condition|(
 operator|!
@@ -1178,9 +1214,11 @@ operator|-=
 name|count
 expr_stmt|;
 block|}
+break|break;
 block|}
-else|else
-block|{
+endif|#
+directive|endif
+comment|/* !defined(PURE3274) */
 name|BufferAddress
 operator|=
 name|Addr3270
@@ -1198,7 +1236,6 @@ name|count
 operator|-=
 literal|2
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|ORDER_IC
@@ -1684,10 +1721,20 @@ operator|==
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PURE3274
+argument_list|)
 name|OutputClock
 operator|++
 expr_stmt|;
 comment|/* time rolls on */
+endif|#
+directive|endif
+comment|/* !defined(PURE3274) */
 if|if
 condition|(
 name|control
@@ -1700,6 +1747,13 @@ operator|&
 name|WCC_RESTORE
 condition|)
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PURE3274
+argument_list|)
 if|if
 condition|(
 name|TransparentClock
@@ -1712,6 +1766,16 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* !defined(PURE3274) */
+name|AidByte
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !defined(PURE3274) */
 name|UnLocked
 operator|=
 literal|1
