@@ -198,6 +198,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|gv_free_raid5_packet
+parameter_list|(
+name|struct
+name|gv_raid5_packet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|gv_raid5_done
 parameter_list|(
 name|struct
