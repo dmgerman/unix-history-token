@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)npx.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)npx.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -50,13 +50,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"machine/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"machine/pcb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/pte.h"
+file|"machine/trap.h"
 end_include
 
 begin_include
@@ -116,7 +122,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|proc
 modifier|*
@@ -129,28 +134,15 @@ comment|/* process who owns device, otherwise zero */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|struct
-name|user
-name|npxutl
+name|pcb
+modifier|*
+name|npxpcb
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* owners user structure */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pte
-name|Npxmap
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* kernel ptes mapping owner's user structure */
+comment|/* owners context structure */
 end_comment
 
 begin_expr_stmt
@@ -326,11 +318,11 @@ directive|ifdef
 name|INTEL_COMPAT
 asm|asm ("	finit");
 asm|asm("	fldcw %0" : : "g" (control));
-asm|asm("	fnsave %0 " : : "g" 		(((struct pcb *)curproc->p_addr)->pcb_savefpu) );
+asm|asm("	fnsave %0 " : : "g" (curpcb->pcb_savefpu) );
 else|#
 directive|else
 asm|asm("fninit");
-asm|asm("fnsave %0" : : "g" 		(((struct pcb *)curproc->p_addr)->pcb_savefpu) );
+asm|asm("	fnsave %0 " : : "g" (curpcb->pcb_savefpu) );
 endif|#
 directive|endif
 name|load_cr0
@@ -344,12 +336,6 @@ expr_stmt|;
 comment|/* start emulating */
 block|}
 end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
 
 begin_comment
 comment|/*  * Load floating point context and record ownership to suite  */
@@ -375,17 +361,11 @@ name|npxproc
 operator|=
 name|curproc
 expr_stmt|;
-name|uaccess
-argument_list|(
-name|npxproc
-argument_list|,
-name|Npxmap
-argument_list|,
-operator|&
-name|npxutl
-argument_list|)
+name|npxpcb
+operator|=
+name|curpcb
 expr_stmt|;
-asm|asm("	frstor %0 " : : "g" 		(((struct pcb *)curproc->p_addr)->pcb_savefpu) );
+asm|asm("	frstor %0 " : : "g" (curpcb->pcb_savefpu) );
 block|}
 end_block
 
@@ -411,7 +391,7 @@ argument_list|(
 literal|"npxunload"
 argument_list|)
 expr_stmt|;
-asm|asm("	fsave %0 " : : "g" (npxutl.u_pcb.pcb_savefpu) );
+asm|asm("	fsave %0 " : : "g" (npxpcb->pcb_savefpu) );
 name|npxproc
 operator|=
 literal|0
@@ -419,22 +399,30 @@ expr_stmt|;
 block|}
 end_block
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Record information needed in processing an exception and clear status word  */
 end_comment
 
 begin_macro
 name|npxintr
-argument_list|()
+argument_list|(
+argument|frame
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|struct
+name|intrframe
+name|frame
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|trapframe
+name|tf
+decl_stmt|;
 name|outb
 argument_list|(
 literal|0xf0
@@ -443,7 +431,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* reset processor */
-comment|/* save state in appropriate user structure */
+comment|/* sync state in process context structure, in advance of debugger/process looking for it */
 if|if
 condition|(
 name|npxproc
@@ -459,19 +447,62 @@ argument_list|(
 literal|"npxintr"
 argument_list|)
 expr_stmt|;
+asm|asm ("	fnsave %0 " : : "g" (npxpcb->pcb_savefpu) );
+comment|/* 	 * Prepair a trap frame for our generic exception processing routine, trap() 	 */
+name|bcopy
+argument_list|(
+operator|&
+name|frame
+operator|.
+name|if_es
+argument_list|,
+operator|&
+name|tf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|tf
+operator|.
+name|tf_trapno
+operator|=
+name|T_ARITHTRAP
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notyet
-asm|asm ("	fnsave %0 " : : "g" (npxutl.u_pcb.pcb_savefpu) );
+comment|/* encode the appropriate code for detailed information on this exception */
+name|tf
+operator|.
+name|tf_err
+operator|=
+operator|???
+expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * encode the appropriate u_code for detailed information          * on this exception 	 */
-comment|/* signal appropriate process */
-name|psignal
+name|trap
 argument_list|(
-name|npxproc
+name|tf
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Restore with any changes to superior frame 	 */
+name|bcopy
+argument_list|(
+operator|&
+name|tf
 argument_list|,
-name|SIGFPE
+operator|&
+name|frame
+operator|.
+name|if_es
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tf
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* clear the exception so we can catch others like it */
@@ -505,16 +536,7 @@ if|if
 condition|(
 operator|!
 operator|(
-operator|(
-operator|(
-expr|struct
-name|pcb
-operator|*
-operator|)
-name|curproc
-operator|->
-name|p_addr
-operator|)
+name|curpcb
 operator|->
 name|pcb_flags
 operator|&
@@ -522,16 +544,7 @@ name|FP_WASUSED
 operator|)
 operator|||
 operator|(
-operator|(
-operator|(
-expr|struct
-name|pcb
-operator|*
-operator|)
-name|curproc
-operator|->
-name|p_addr
-operator|)
+name|curpcb
 operator|->
 name|pcb_flags
 operator|&
@@ -549,17 +562,8 @@ name|CR0_EM
 argument_list|)
 expr_stmt|;
 comment|/* stop emulating */
-asm|asm("	frstor %0 " : : "g" (((struct pcb *) curproc->p_addr)->pcb_savefpu) );
-operator|(
-operator|(
-expr|struct
-name|pcb
-operator|*
-operator|)
-name|curproc
-operator|->
-name|p_addr
-operator|)
+asm|asm("	frstor %0 " : : "g" (curpcb->pcb_savefpu));
+name|curpcb
 operator|->
 name|pcb_flags
 operator||=
@@ -567,16 +571,7 @@ name|FP_WASUSED
 operator||
 name|FP_NEEDSSAVE
 expr_stmt|;
-operator|(
-operator|(
-expr|struct
-name|pcb
-operator|*
-operator|)
-name|curproc
-operator|->
-name|p_addr
-operator|)
+name|curpcb
 operator|->
 name|pcb_flags
 operator|&=
@@ -586,6 +581,10 @@ expr_stmt|;
 name|npxproc
 operator|=
 name|curproc
+expr_stmt|;
+name|npxpcb
+operator|=
+name|curpcb
 expr_stmt|;
 return|return
 operator|(
