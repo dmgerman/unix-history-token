@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	4.2 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,6 +197,32 @@ block|,
 name|setifflags
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|notdef
+define|#
+directive|define
+name|EN_SWABIPS
+value|0x100
+block|{
+literal|"swabips"
+block|,
+name|EN_SWABIPS
+block|,
+name|setifflags
+block|}
+block|,
+block|{
+literal|"-swabips"
+block|,
+operator|-
+name|EN_SWABIPS
+block|,
+name|setifflags
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|,
