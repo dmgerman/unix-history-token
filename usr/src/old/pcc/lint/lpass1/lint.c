@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lint.c	1.9	(Berkeley)	%G%"
+literal|"@(#)lint.c	1.10	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1183,12 +1183,13 @@ argument|}  fsave( s ) char *s; { 	static union rec fsname; 	s = strip( s );
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
-argument|if( strncmp( s, fsname.f.fn, LFNM ) ){
+argument|if( strncmp( s, fsname.f.fn, LFNM ) )
 else|#
 directive|else
-argument|if (fsname.f.fn == NULL || strcmp(s, fsname.f.fn)) {
+argument|if (fsname.f.fn == NULL || strcmp(s, fsname.f.fn))
 endif|#
 directive|endif
+argument|{
 comment|/* new one */
 ifndef|#
 directive|ifndef
