@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.28 %G%"
+literal|"@(#)interp.c 1.29 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2699,9 +2699,9 @@ argument_list|()
 expr_stmt|;
 name|push2
 argument_list|(
-name|tl
-operator|&
 name|tl1
+operator|&
+name|tl
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2725,9 +2725,9 @@ argument_list|()
 expr_stmt|;
 name|push2
 argument_list|(
-name|tl
-operator||
 name|tl1
+operator||
+name|tl
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -4300,9 +4300,9 @@ argument_list|()
 expr_stmt|;
 name|push8
 argument_list|(
-name|td
-operator|+
 name|td1
+operator|+
+name|td
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -4326,9 +4326,9 @@ argument_list|()
 expr_stmt|;
 name|push8
 argument_list|(
-name|td
-operator|-
 name|td1
+operator|-
+name|td
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -4352,9 +4352,9 @@ argument_list|()
 expr_stmt|;
 name|push8
 argument_list|(
-name|td
-operator|*
 name|td1
+operator|*
+name|td
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -4378,9 +4378,9 @@ argument_list|()
 expr_stmt|;
 name|push8
 argument_list|(
-name|td
-operator|/
 name|td1
+operator|/
+name|td
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -4600,21 +4600,21 @@ operator|.
 name|cp
 operator|++
 expr_stmt|;
-name|td1
+name|td
 operator|=
 name|pop4
 argument_list|()
 expr_stmt|;
-name|td
+name|td1
 operator|=
 name|pop8
 argument_list|()
 expr_stmt|;
 name|push8
 argument_list|(
-name|td
-operator|/
 name|td1
+operator|/
+name|td
 argument_list|)
 expr_stmt|;
 continue|continue;
