@@ -324,16 +324,6 @@ name|kernel_pmap_store
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|LIST_HEAD
-argument_list|(
-name|pmaplist
-argument_list|,
-name|pmap
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|vm_paddr_t
 name|avail_start
