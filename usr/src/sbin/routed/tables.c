@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	4.8 (Berkeley) %G%"
+literal|"@(#)tables.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1129,14 +1129,6 @@ condition|)
 return|return;
 name|rt
 operator|->
-name|rt_hash
-operator|=
-name|h
-operator|.
-name|afh_nethash
-expr_stmt|;
-name|rt
-operator|->
 name|rt_dst
 operator|=
 name|inet_default
@@ -1179,6 +1171,14 @@ name|afh_nethash
 operator|&
 name|ROUTEHASHMASK
 index|]
+expr_stmt|;
+name|rt
+operator|->
+name|rt_hash
+operator|=
+name|h
+operator|.
+name|afh_nethash
 expr_stmt|;
 name|rt
 operator|->
