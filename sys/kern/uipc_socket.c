@@ -4037,7 +4037,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The part of soreceive() that implements reading non-inline out-of-band  * data from a socket.  For more complete comments, see soreceive(), from  * which this code originated.  *  * Note that soreceive_rcvoob(), unlike the remainder of soreiceve(), is  * unable to return an mbuf chain to the caller.  */
+comment|/*  * The part of soreceive() that implements reading non-inline out-of-band  * data from a socket.  For more complete comments, see soreceive(), from  * which this code originated.  *  * Note that soreceive_rcvoob(), unlike the remainder of soreceive(), is  * unable to return an mbuf chain to the caller.  */
 end_comment
 
 begin_function
