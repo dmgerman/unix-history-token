@@ -73,6 +73,7 @@ file|<openssl/rc5.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|RC5key
@@ -258,6 +259,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|RC5plain
@@ -363,6 +365,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|RC5cipher
@@ -475,6 +478,7 @@ value|27
 end_define
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|rc5_cbc_cipher
@@ -976,6 +980,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|rc5_cbc_key
@@ -1363,6 +1368,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|rc5_cbc_plain
@@ -1864,6 +1870,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rc5_cbc_rounds
 index|[
@@ -1929,6 +1936,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|rc5_cbc_iv

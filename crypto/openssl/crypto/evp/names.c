@@ -353,6 +353,13 @@ argument_list|(
 name|OBJ_NAME_TYPE_MD_METH
 argument_list|)
 expr_stmt|;
+comment|/* The above calls will only clean out the contents of the name 	   hash table, but not the hash table itself.  The following line 	   does that part.  -- Richard Levitte */
+name|OBJ_NAME_cleanup
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|EVP_PBE_cleanup
 argument_list|()
 expr_stmt|;

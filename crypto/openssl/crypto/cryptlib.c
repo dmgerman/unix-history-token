@@ -126,11 +126,15 @@ literal|"readdir"
 block|,
 literal|"RSA_blinding"
 block|,
+literal|"dh"
+block|,
+literal|"debug_malloc2"
+block|,
 if|#
 directive|if
 name|CRYPTO_NUM_LOCKS
 operator|!=
-literal|24
+literal|26
 error|#
 directive|error
 literal|"Inconsistency between crypto.h and cryptlib.c"
@@ -606,7 +610,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|MSDOS
+name|GETPID_IS_MEANINGLESS
 argument_list|)
 name|ret
 operator|=

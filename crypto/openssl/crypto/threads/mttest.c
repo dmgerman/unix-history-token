@@ -111,6 +111,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PTHREADS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pthread.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -132,7 +149,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../e_os.h"
+file|"../../e_os.h"
 end_include
 
 begin_include
@@ -153,6 +170,12 @@ directive|include
 file|<openssl/err.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/rand.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -168,7 +191,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../crypto/buffer/bss_file.c"
+file|"../buffer/bss_file.c"
 end_include
 
 begin_endif
@@ -180,14 +203,14 @@ begin_define
 define|#
 directive|define
 name|TEST_SERVER_CERT
-value|"../apps/server.pem"
+value|"../../apps/server.pem"
 end_define
 
 begin_define
 define|#
 directive|define
 name|TEST_CLIENT_CERT
-value|"../apps/client.pem"
+value|"../../apps/client.pem"
 end_define
 
 begin_define
@@ -205,23 +228,9 @@ parameter_list|(
 name|int
 name|ok
 parameter_list|,
-name|X509
+name|X509_STORE_CTX
 modifier|*
 name|xs
-parameter_list|,
-name|X509
-modifier|*
-name|xi
-parameter_list|,
-name|int
-name|depth
-parameter_list|,
-name|int
-name|error
-parameter_list|,
-name|char
-modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -454,6 +463,17 @@ name|int
 name|cache_stats
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rnd_seed
+index|[]
+init|=
+literal|"string to make the random number generator think it has entropy"
 decl_stmt|;
 end_decl_stmt
 
@@ -768,6 +788,14 @@ init|=
 name|SSLv23_method
 argument_list|()
 decl_stmt|;
+name|RAND_seed
+argument_list|(
+name|rnd_seed
+argument_list|,
+sizeof|sizeof
+name|rnd_seed
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bio_err
@@ -1203,7 +1231,7 @@ expr_stmt|;
 name|SSL_load_error_strings
 argument_list|()
 expr_stmt|;
-name|SSLeay_add_ssl_algorithms
+name|OpenSSL_add_ssl_algorithms
 argument_list|()
 expr_stmt|;
 name|c_ctx
@@ -1262,6 +1290,9 @@ operator||
 name|SSL_SESS_CACHE_SERVER
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|SSL_CTX_use_certificate_file
 argument_list|(
 name|s_ctx
@@ -1270,7 +1301,18 @@ name|scert
 argument_list|,
 name|SSL_FILETYPE_PEM
 argument_list|)
+condition|)
+block|{
+name|ERR_print_errors
+argument_list|(
+name|bio_err
+argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
 name|SSL_CTX_use_RSAPrivateKey_file
 argument_list|(
 name|s_ctx
@@ -1279,7 +1321,17 @@ name|scert
 argument_list|,
 name|SSL_FILETYPE_PEM
 argument_list|)
+condition|)
+block|{
+name|ERR_print_errors
+argument_list|(
+name|bio_err
+argument_list|)
 expr_stmt|;
+goto|goto
+name|end
+goto|;
+block|}
 if|if
 condition|(
 name|client_auth
@@ -2403,6 +2455,11 @@ argument_list|,
 literal|"ERROR in CLIENT\n"
 argument_list|)
 expr_stmt|;
+name|ERR_print_errors_fp
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -2506,6 +2563,11 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"ERROR in CLIENT\n"
+argument_list|)
+expr_stmt|;
+name|ERR_print_errors_fp
+argument_list|(
+name|stderr
 argument_list|)
 expr_stmt|;
 return|return
@@ -2998,26 +3060,15 @@ parameter_list|(
 name|int
 name|ok
 parameter_list|,
-name|X509
+name|X509_STORE_CTX
 modifier|*
-name|xs
-parameter_list|,
-name|X509
-modifier|*
-name|xi
-parameter_list|,
-name|int
-name|depth
-parameter_list|,
-name|int
-name|error
-parameter_list|,
-name|char
-modifier|*
-name|arg
+name|ctx
 parameter_list|)
 block|{
 name|char
+modifier|*
+name|s
+decl_stmt|,
 name|buf
 index|[
 literal|256
@@ -3028,11 +3079,15 @@ condition|(
 name|verbose
 condition|)
 block|{
+name|s
+operator|=
 name|X509_NAME_oneline
 argument_list|(
 name|X509_get_subject_name
 argument_list|(
-name|xs
+name|ctx
+operator|->
+name|current_cert
 argument_list|)
 argument_list|,
 name|buf
@@ -3040,6 +3095,13 @@ argument_list|,
 literal|256
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|ok
@@ -3050,7 +3112,9 @@ name|stderr
 argument_list|,
 literal|"depth=%d %s\n"
 argument_list|,
-name|depth
+name|ctx
+operator|->
+name|error_depth
 argument_list|,
 name|buf
 argument_list|)
@@ -3062,13 +3126,18 @@ name|stderr
 argument_list|,
 literal|"depth=%d error=%d %s\n"
 argument_list|,
-name|depth
+name|ctx
+operator|->
+name|error_depth
 argument_list|,
+name|ctx
+operator|->
 name|error
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -3094,10 +3163,8 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|HANDLE
+modifier|*
 name|lock_cs
-index|[
-name|CRYPTO_NUM_LOCKS
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -3111,6 +3178,19 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|lock_cs
+operator|=
+name|Malloc
+argument_list|(
+name|CRYPTO_num_locks
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|HANDLE
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3119,7 +3199,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -3188,7 +3269,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -3199,6 +3281,11 @@ name|lock_cs
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|lock_cs
 argument_list|)
 expr_stmt|;
 block|}
@@ -3576,24 +3663,20 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|mutex_t
+modifier|*
 name|lock_cs
-index|[
-name|CRYPTO_NUM_LOCKS
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*static rwlock_t lock_cs[CRYPTO_NUM_LOCKS]; */
+comment|/*static rwlock_t *lock_cs; */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|long
+modifier|*
 name|lock_count
-index|[
-name|CRYPTO_NUM_LOCKS
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -3607,6 +3690,32 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|lock_cs
+operator|=
+name|Malloc
+argument_list|(
+name|CRYPTO_num_locks
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|mutex_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|lock_count
+operator|=
+name|Malloc
+argument_list|(
+name|CRYPTO_num_locks
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3615,7 +3724,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -3703,7 +3813,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -3739,6 +3850,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|Free
+argument_list|(
+name|lock_cs
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|lock_count
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -3806,7 +3927,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* if (CRYPTO_LOCK_SSL_CERT == type) 	fprintf(stderr,"(t,m,f,l) %ld %d %s %d\n", 		CRYPTO_thread_id(), 		mode,file,line); */
+comment|/* 	if (CRYPTO_LOCK_SSL_CERT == type) 	fprintf(stderr,"(t,m,f,l) %ld %d %s %d\n", 		CRYPTO_thread_id(), 		mode,file,line); 	*/
 if|if
 condition|(
 name|mode
@@ -4051,10 +4172,8 @@ begin_decl_stmt
 specifier|static
 name|usema_t
 modifier|*
+modifier|*
 name|lock_cs
-index|[
-name|CRYPTO_NUM_LOCKS
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -4122,6 +4241,20 @@ argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
+name|lock_cs
+operator|=
+name|Malloc
+argument_list|(
+name|CRYPTO_num_locks
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|usema_t
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4130,7 +4263,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -4200,7 +4334,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -4244,6 +4379,11 @@ name|arena
 argument_list|)
 expr_stmt|;
 block|}
+name|Free
+argument_list|(
+name|lock_cs
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4482,20 +4622,16 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|pthread_mutex_t
+modifier|*
 name|lock_cs
-index|[
-name|CRYPTO_NUM_LOCKS
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|long
+modifier|*
 name|lock_count
-index|[
-name|CRYPTO_NUM_LOCKS
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -4509,6 +4645,32 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|lock_cs
+operator|=
+name|Malloc
+argument_list|(
+name|CRYPTO_num_locks
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|pthread_mutex_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|lock_count
+operator|=
+name|Malloc
+argument_list|(
+name|CRYPTO_num_locks
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4517,7 +4679,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -4602,7 +4765,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -4637,6 +4801,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|Free
+argument_list|(
+name|lock_cs
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|lock_count
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr

@@ -56,11 +56,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This version of crypt has been developed from my MIT compatable  * DES library.  * The library is available at pub/Crypto/DES at ftp.psy.uq.oz.au  * Eric Young (eay@cryptsoft.com)  */
+comment|/* This version of crypt has been developed from my MIT compatible  * DES library.  * Eric Young (eay@cryptsoft.com)  */
 end_comment
 
 begin_comment
-comment|/* Modification by Jens Kupferschmidt (Cu)  * I have included directive PARA for shared memory computers.  * I have included a directive LONGCRYPT to using this routine to cipher  * passwords with more then 8 bytes like HP-UX 10.x it used. The MAXPLEN  * definition is the maximum of lenght of password and can changed. I have  * defined 24.  */
+comment|/* Modification by Jens Kupferschmidt (Cu)  * I have included directive PARA for shared memory computers.  * I have included a directive LONGCRYPT to using this routine to cipher  * passwords with more then 8 bytes like HP-UX 10.x it used. The MAXPLEN  * definition is the maximum of length of password and can changed. I have  * defined 24.  */
 end_comment
 
 begin_include
@@ -809,7 +809,7 @@ name|c
 decl_stmt|,
 name|u
 decl_stmt|;
-comment|/* eay 25/08/92 	 * If you call crypt("pwd","*") as often happens when you 	 * have * as the pwd field in /etc/passwd, the function 	 * returns *\0XXXXXXXXX 	 * The \0 makes the string look like * so the pwd "*" would 	 * crypt to "*".  This was found when replacing the crypt in 	 * our shared libraries.  People found that the disbled 	 * accounts effectivly had no passwd :-(. */
+comment|/* eay 25/08/92 	 * If you call crypt("pwd","*") as often happens when you 	 * have * as the pwd field in /etc/passwd, the function 	 * returns *\0XXXXXXXXX 	 * The \0 makes the string look like * so the pwd "*" would 	 * crypt to "*".  This was found when replacing the crypt in 	 * our shared libraries.  People found that the disabled 	 * accounts effectively had no passwd :-(. */
 ifndef|#
 directive|ifndef
 name|CHARSET_EBCDIC
@@ -1017,7 +1017,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|key

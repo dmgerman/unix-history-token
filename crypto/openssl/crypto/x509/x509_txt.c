@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"cryptlib.h"
 end_include
 
@@ -280,6 +274,46 @@ case|:
 return|return
 operator|(
 literal|"certificate revoked"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_INVALID_CA
+case|:
+return|return
+operator|(
+literal|"invalid CA certificate"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_PATH_LENGTH_EXCEEDED
+case|:
+return|return
+operator|(
+literal|"path length constraint exceeded"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_INVALID_PURPOSE
+case|:
+return|return
+operator|(
+literal|"unsupported certificate purpose"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_CERT_UNTRUSTED
+case|:
+return|return
+operator|(
+literal|"certificate not trusted"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_CERT_REJECTED
+case|:
+return|return
+operator|(
+literal|"certificate rejected"
 operator|)
 return|;
 case|case

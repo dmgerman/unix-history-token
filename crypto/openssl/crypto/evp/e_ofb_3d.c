@@ -369,7 +369,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|deskey
@@ -386,7 +386,7 @@ operator|.
 name|ks1
 argument_list|)
 expr_stmt|;
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|deskey
@@ -539,7 +539,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|deskey
@@ -556,7 +556,7 @@ operator|.
 name|ks1
 argument_list|)
 expr_stmt|;
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|deskey
@@ -573,7 +573,7 @@ operator|.
 name|ks2
 argument_list|)
 expr_stmt|;
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|deskey

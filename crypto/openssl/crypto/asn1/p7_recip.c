@@ -246,7 +246,7 @@ name|ret
 operator|->
 name|version
 argument_list|,
-name|ASN1_INTEGER_new
+name|M_ASN1_INTEGER_new
 argument_list|)
 expr_stmt|;
 name|M_ASN1_New
@@ -273,7 +273,7 @@ name|ret
 operator|->
 name|enc_key
 argument_list|,
-name|ASN1_OCTET_STRING_new
+name|M_ASN1_OCTET_STRING_new
 argument_list|)
 expr_stmt|;
 name|ret
@@ -311,7 +311,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|a
 operator|->
@@ -332,7 +332,7 @@ operator|->
 name|key_enc_algor
 argument_list|)
 expr_stmt|;
-name|ASN1_OCTET_STRING_free
+name|M_ASN1_OCTET_STRING_free
 argument_list|(
 name|a
 operator|->

@@ -46,7 +46,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<bio.h>
+file|<openssl/bio.h>
 end_include
 
 begin_decl_stmt
@@ -324,16 +324,38 @@ name|tmpn
 init|=
 name|n
 decl_stmt|;
-name|BIO_printf
+endif|#
+directive|endif
+if|if
+condition|(
+operator|!
+name|pass
+condition|)
+block|{
+name|PKCS12err
 argument_list|(
-name|bio_err
+name|PKCS12_F_PKCS12_KEY_GEN_UNI
+argument_list|,
+name|ERR_R_PASSED_NULL_PARAMETER
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+ifdef|#
+directive|ifdef
+name|DEBUG_KEYGEN
+name|fprintf
+argument_list|(
+name|stderr
 argument_list|,
 literal|"KEYGEN DEBUG\n"
 argument_list|)
 expr_stmt|;
-name|BIO_printf
+name|fprintf
 argument_list|(
-name|bio_err
+name|stderr
 argument_list|,
 literal|"ID %d, ITER %d\n"
 argument_list|,
@@ -342,9 +364,9 @@ argument_list|,
 name|iter
 argument_list|)
 expr_stmt|;
-name|BIO_printf
+name|fprintf
 argument_list|(
-name|bio_err
+name|stderr
 argument_list|,
 literal|"Password (length %d):\n"
 argument_list|,
@@ -358,9 +380,9 @@ argument_list|,
 name|passlen
 argument_list|)
 expr_stmt|;
-name|BIO_printf
+name|fprintf
 argument_list|(
-name|bio_err
+name|stderr
 argument_list|,
 literal|"Salt (length %d):\n"
 argument_list|,
@@ -372,17 +394,6 @@ argument_list|(
 name|salt
 argument_list|,
 name|saltlen
-argument_list|)
-expr_stmt|;
-name|BIO_printf
-argument_list|(
-name|bio_err
-argument_list|,
-literal|"ID %d, ITER %d\n\n"
-argument_list|,
-name|id
-argument_list|,
-name|iter
 argument_list|)
 expr_stmt|;
 endif|#
@@ -724,9 +735,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_KEYGEN
-name|BIO_printf
+name|fprintf
 argument_list|(
-name|bio_err
+name|stderr
 argument_list|,
 literal|"Output KEY (length %d)\n"
 argument_list|,
@@ -913,9 +924,9 @@ condition|;
 name|p
 operator|++
 control|)
-name|BIO_printf
+name|fprintf
 argument_list|(
-name|bio_err
+name|stderr
 argument_list|,
 literal|"%02X"
 argument_list|,
@@ -923,9 +934,9 @@ operator|*
 name|p
 argument_list|)
 expr_stmt|;
-name|BIO_printf
+name|fprintf
 argument_list|(
-name|bio_err
+name|stderr
 argument_list|,
 literal|"\n"
 argument_list|)

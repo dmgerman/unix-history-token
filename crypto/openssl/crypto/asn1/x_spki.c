@@ -8,7 +8,7 @@ comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights 
 end_comment
 
 begin_comment
-comment|/* This module was send to me my Pat Richards<patr@x509.com> who   * wrote it.  It is under my Copyright with his permision   */
+comment|/* This module was send to me my Pat Richards<patr@x509.com> who   * wrote it.  It is under my Copyright with his permission   */
 end_comment
 
 begin_include
@@ -205,7 +205,7 @@ name|ret
 operator|->
 name|challenge
 argument_list|,
-name|ASN1_IA5STRING_new
+name|M_ASN1_IA5STRING_new
 argument_list|)
 expr_stmt|;
 return|return
@@ -244,7 +244,7 @@ operator|->
 name|pubkey
 argument_list|)
 expr_stmt|;
-name|ASN1_IA5STRING_free
+name|M_ASN1_IA5STRING_free
 argument_list|(
 name|a
 operator|->
@@ -253,10 +253,6 @@ argument_list|)
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|a
 argument_list|)
 expr_stmt|;
@@ -469,7 +465,7 @@ name|ret
 operator|->
 name|signature
 argument_list|,
-name|ASN1_BIT_STRING_new
+name|M_ASN1_BIT_STRING_new
 argument_list|)
 expr_stmt|;
 return|return
@@ -515,7 +511,7 @@ operator|->
 name|sig_algor
 argument_list|)
 expr_stmt|;
-name|ASN1_BIT_STRING_free
+name|M_ASN1_BIT_STRING_free
 argument_list|(
 name|a
 operator|->
@@ -524,10 +520,6 @@ argument_list|)
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|a
 argument_list|)
 expr_stmt|;

@@ -598,10 +598,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|m
 argument_list|)
 expr_stmt|;
@@ -1101,10 +1097,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|m
 argument_list|)
 expr_stmt|;
@@ -1740,7 +1732,7 @@ name|BIO_printf
 argument_list|(
 name|bp
 argument_list|,
-literal|"    recomented-private-length: %d bits\n"
+literal|"    recommended-private-length: %d bits\n"
 argument_list|,
 operator|(
 name|int
@@ -1783,10 +1775,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|m
 argument_list|)
 expr_stmt|;
@@ -2070,10 +2058,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|m
 argument_list|)
 expr_stmt|;

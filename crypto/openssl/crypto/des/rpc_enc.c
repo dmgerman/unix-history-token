@@ -67,7 +67,7 @@ decl_stmt|;
 name|int
 name|enc
 decl_stmt|;
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|desp

@@ -35,17 +35,6 @@ directive|include
 file|<openssl/x509v3.h>
 end_include
 
-begin_function_decl
-specifier|static
-name|ASN1_BIT_STRING
-modifier|*
-name|asn1_bit_string_new
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|ASN1_BIT_STRING
@@ -297,22 +286,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-name|ASN1_BIT_STRING
-modifier|*
-name|asn1_bit_string_new
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-name|ASN1_BIT_STRING_new
-argument_list|()
-return|;
-block|}
-end_function
-
 begin_expr_stmt
 specifier|static
 name|STACK_OF
@@ -424,7 +397,7 @@ operator|!
 operator|(
 name|bs
 operator|=
-name|ASN1_BIT_STRING_new
+name|M_ASN1_BIT_STRING_new
 argument_list|()
 operator|)
 condition|)
@@ -543,7 +516,7 @@ argument_list|(
 name|val
 argument_list|)
 expr_stmt|;
-name|ASN1_BIT_STRING_free
+name|M_ASN1_BIT_STRING_free
 argument_list|(
 name|bs
 argument_list|)

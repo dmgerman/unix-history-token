@@ -339,6 +339,8 @@ block|,
 name|acpt_new
 block|,
 name|acpt_free
+block|,
+name|NULL
 block|, 	}
 decl_stmt|;
 end_decl_stmt

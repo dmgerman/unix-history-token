@@ -49,6 +49,12 @@ directive|include
 file|<openssl/x509.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/x509v3.h>
+end_include
+
 begin_decl_stmt
 name|int
 name|X509v3_get_ext_count
@@ -1100,7 +1106,7 @@ operator|)
 return|;
 name|i
 operator|=
-name|ASN1_OCTET_STRING_set
+name|M_ASN1_OCTET_STRING_set
 argument_list|(
 name|ex
 operator|->

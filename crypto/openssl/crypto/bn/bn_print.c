@@ -500,7 +500,7 @@ block|}
 name|lp
 operator|--
 expr_stmt|;
-comment|/* We now have a series of blocks, BN_DEC_NUM chars 		 * in length, where the last one needs trucation. 		 * The blocks need to be reversed in order. */
+comment|/* We now have a series of blocks, BN_DEC_NUM chars 		 * in length, where the last one needs truncation. 		 * The blocks need to be reversed in order. */
 name|sprintf
 argument_list|(
 name|p
@@ -702,7 +702,7 @@ operator|(
 name|num
 operator|)
 return|;
-comment|/* a is the start of the hex digets, and it is 'i' long */
+comment|/* a is the start of the hex digits, and it is 'i' long */
 if|if
 condition|(
 operator|*
@@ -762,7 +762,7 @@ name|j
 operator|=
 name|i
 expr_stmt|;
-comment|/* least significate 'hex' */
+comment|/* least significant 'hex' */
 name|m
 operator|=
 literal|0
@@ -1091,7 +1091,7 @@ operator|(
 name|num
 operator|)
 return|;
-comment|/* a is the start of the digets, and it is 'i' long. 	 * We chop it into BN_DEC_NUM digets at a time */
+comment|/* a is the start of the digits, and it is 'i' long. 	 * We chop it into BN_DEC_NUM digits at a time */
 if|if
 condition|(
 operator|*
@@ -1286,6 +1286,7 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|a
@@ -1543,6 +1544,88 @@ operator|(
 name|ret
 operator|)
 return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BN_DEBUG
+end_ifdef
+
+begin_function
+name|void
+name|bn_dump1
+parameter_list|(
+name|FILE
+modifier|*
+name|o
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|a
+parameter_list|,
+name|BN_ULONG
+modifier|*
+name|b
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|o
+argument_list|,
+literal|"%s="
+argument_list|,
+name|a
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|n
+operator|-
+literal|1
+init|;
+name|i
+operator|>=
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+name|fprintf
+argument_list|(
+name|o
+argument_list|,
+literal|"%08lX"
+argument_list|,
+name|b
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* assumes 32-bit BN_ULONG */
+name|fprintf
+argument_list|(
+name|o
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

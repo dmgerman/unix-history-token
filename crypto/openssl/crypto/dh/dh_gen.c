@@ -32,7 +32,7 @@ file|<openssl/dh.h>
 end_include
 
 begin_comment
-comment|/* We generate DH parameters as follows  * find a prime q which is prime_len/2 bits long.  * p=(2*q)+1 or (p-1)/2 = q  * For this case, g is a generator if  * g^((p-1)/q) mod p != 1 for values of q which are the factors of p-1.  * Since the factors of p-1 are q and 2, we just need to check  * g^2 mod p != 1 and g^q mod p != 1.  *  * Having said all that,  * there is another special case method for the generators 2, 3 and 5.  * for 2, p mod 24 == 11  * for 3, p mod 12 == 5<<<<< does not work for strong primes.  * for 5, p mod 10 == 3 or 7  *  * Thanks to Phil Karn<karn@qualcomm.com> for the pointers about the  * special generators and for answering some of my questions.  *  * I've implemented the second simple method :-).  * Since DH should be using a strong prime (both p and q are prime),  * this generator function can take a very very long time to run.  */
+comment|/* We generate DH parameters as follows  * find a prime q which is prime_len/2 bits long.  * p=(2*q)+1 or (p-1)/2 = q  * For this case, g is a generator if  * g^((p-1)/q) mod p != 1 for values of q which are the factors of p-1.  * Since the factors of p-1 are q and 2, we just need to check  * g^2 mod p != 1 and g^q mod p != 1.  *  * Having said all that,  * there is another special case method for the generators 2, 3 and 5.  * for 2, p mod 24 == 11  * for 3, p mod 12 == 5<<<<< does not work for safe primes.  * for 5, p mod 10 == 3 or 7  *  * Thanks to Phil Karn<karn@qualcomm.com> for the pointers about the  * special generators and for answering some of my questions.  *  * I've implemented the second simple method :-).  * Since DH should be using a safe prime (both p and q are prime),  * this generator function can take a very very long time to run.  */
 end_comment
 
 begin_function
@@ -125,36 +125,38 @@ condition|)
 goto|goto
 name|err
 goto|;
+name|BN_CTX_start
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
 name|t1
 operator|=
-operator|&
-operator|(
+name|BN_CTX_get
+argument_list|(
 name|ctx
-operator|->
-name|bn
-index|[
-literal|0
-index|]
-operator|)
+argument_list|)
 expr_stmt|;
 name|t2
 operator|=
-operator|&
-operator|(
+name|BN_CTX_get
+argument_list|(
 name|ctx
-operator|->
-name|bn
-index|[
-literal|1
-index|]
-operator|)
+argument_list|)
 expr_stmt|;
-name|ctx
-operator|->
-name|tos
-operator|=
-literal|2
-expr_stmt|;
+if|if
+condition|(
+name|t1
+operator|==
+name|NULL
+operator|||
+name|t2
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 if|if
 condition|(
 name|generator
@@ -184,7 +186,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|undef
-comment|/* does not work for strong primes */
+comment|/* does not work for safe primes */
 elseif|else
 if|if
 condition|(
@@ -350,11 +352,18 @@ name|ctx
 operator|!=
 name|NULL
 condition|)
+block|{
+name|BN_CTX_end
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
 name|BN_CTX_free
 argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!

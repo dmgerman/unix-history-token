@@ -40,7 +40,7 @@ directive|endif
 define|#
 directive|define
 name|TLS1_ALLOW_EXPERIMENTAL_CIPHERSUITES
-value|0
+value|1
 define|#
 directive|define
 name|TLS1_VERSION
@@ -82,7 +82,7 @@ name|TLS1_AD_DECRYPT_ERROR
 value|51
 define|#
 directive|define
-name|TLS1_AD_EXPORT_RESTRICION
+name|TLS1_AD_EXPORT_RESTRICTION
 value|60
 comment|/* fatal */
 define|#
@@ -102,7 +102,7 @@ value|80
 comment|/* fatal */
 define|#
 directive|define
-name|TLS1_AD_USER_CANCLED
+name|TLS1_AD_USER_CANCELLED
 value|90
 define|#
 directive|define

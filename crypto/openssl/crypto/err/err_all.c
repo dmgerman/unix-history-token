@@ -137,6 +137,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<openssl/rand.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/err.h>
 end_include
 
@@ -229,6 +235,9 @@ name|ERR_load_PKCS7_strings
 argument_list|()
 expr_stmt|;
 name|ERR_load_PKCS12_strings
+argument_list|()
+expr_stmt|;
+name|ERR_load_RAND_strings
 argument_list|()
 expr_stmt|;
 endif|#

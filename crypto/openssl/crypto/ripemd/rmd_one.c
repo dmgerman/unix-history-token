@@ -16,7 +16,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"rmd_locl.h"
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/ripemd.h>
 end_include
 
 begin_function
@@ -25,6 +31,7 @@ name|char
 modifier|*
 name|RIPEMD160
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*

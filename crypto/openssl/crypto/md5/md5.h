@@ -141,8 +141,7 @@ modifier|*
 name|c
 parameter_list|,
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|,
@@ -169,6 +168,7 @@ name|char
 modifier|*
 name|MD5
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*

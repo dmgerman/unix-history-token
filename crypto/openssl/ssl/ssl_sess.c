@@ -91,15 +91,18 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|STACK
-modifier|*
+name|STACK_OF
+argument_list|(
+name|CRYPTO_EX_DATA_FUNCS
+argument_list|)
+operator|*
 name|ssl_session_meth
-init|=
+operator|=
 name|NULL
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|SSL_SESSION
@@ -110,6 +113,7 @@ name|SSL
 modifier|*
 name|ssl
 parameter_list|)
+comment|/* aka SSL_get0_session; gets 0 objects, just returns a copy of the pointer */
 block|{
 return|return
 operator|(
@@ -122,36 +126,76 @@ block|}
 end_function
 
 begin_function
+name|SSL_SESSION
+modifier|*
+name|SSL_get1_session
+parameter_list|(
+name|SSL
+modifier|*
+name|ssl
+parameter_list|)
+comment|/* variant of SSL_get_session: caller really gets something */
+block|{
+name|SSL_SESSION
+modifier|*
+name|sess
+decl_stmt|;
+comment|/* Need to lock this all up rather than just use CRYPTO_add so that 	 * somebody doesn't free ssl->session between when we check it's 	 * non-null and when we up the reference count. */
+name|CRYPTO_r_lock
+argument_list|(
+name|CRYPTO_LOCK_SSL_SESSION
+argument_list|)
+expr_stmt|;
+name|sess
+operator|=
+name|ssl
+operator|->
+name|session
+expr_stmt|;
+if|if
+condition|(
+name|sess
+condition|)
+name|sess
+operator|->
+name|references
+operator|++
+expr_stmt|;
+name|CRYPTO_r_unlock
+argument_list|(
+name|CRYPTO_LOCK_SSL_SESSION
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|sess
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|int
 name|SSL_SESSION_get_ex_new_index
 parameter_list|(
 name|long
 name|argl
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|argp
 parameter_list|,
-name|int
-function_decl|(
+name|CRYPTO_EX_new
 modifier|*
 name|new_func
-function_decl|)
-parameter_list|()
 parameter_list|,
-name|int
-function_decl|(
+name|CRYPTO_EX_dup
 modifier|*
 name|dup_func
-function_decl|)
-parameter_list|()
 parameter_list|,
-name|void
-function_decl|(
+name|CRYPTO_EX_free
 modifier|*
 name|free_func
-function_decl|)
-parameter_list|()
 parameter_list|)
 block|{
 name|ssl_session_num
@@ -306,6 +350,13 @@ argument_list|)
 expr_stmt|;
 name|ss
 operator|->
+name|verify_result
+operator|=
+literal|1
+expr_stmt|;
+comment|/* avoid 0 (= X509_V_OK) just in case */
+name|ss
+operator|->
 name|references
 operator|=
 literal|1
@@ -352,10 +403,6 @@ name|CRYPTO_new_ex_data
 argument_list|(
 name|ssl_session_meth
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|ss
 argument_list|,
 operator|&
@@ -564,7 +611,7 @@ name|SSL_SESSION
 modifier|*
 name|r
 decl_stmt|;
-name|RAND_bytes
+name|RAND_pseudo_bytes
 argument_list|(
 name|ss
 operator|->
@@ -594,10 +641,6 @@ name|ctx
 operator|->
 name|sessions
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|ss
 argument_list|)
 expr_stmt|;
@@ -614,7 +657,7 @@ name|NULL
 condition|)
 break|break;
 comment|/* else - woops a session_id match */
-comment|/* XXX should also check external cache! 			 * (But the probability of a collision is negligible, anyway...) */
+comment|/* XXX We should also check the external cache -- 			 * but the probability of a collision is negligible, and 			 * we could not prevent the concurrent creation of sessions 			 * with identical IDs since we currently don't have means 			 * to atomically check whether a session ID already exists 			 * and make a reservation for it if it does not 			 * (this problem applies to the internal cache as well). 			 */
 block|}
 block|}
 else|else
@@ -663,6 +706,12 @@ name|s
 operator|->
 name|version
 expr_stmt|;
+name|ss
+operator|->
+name|verify_result
+operator|=
+name|X509_V_OK
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -702,7 +751,6 @@ name|fatal
 init|=
 literal|0
 decl_stmt|;
-comment|/* conn_init();*/
 name|data
 operator|.
 name|ssl_version
@@ -770,10 +818,6 @@ name|ctx
 operator|->
 name|sessions
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|data
 argument_list|)
@@ -1179,6 +1223,16 @@ name|session
 operator|=
 name|ret
 expr_stmt|;
+name|s
+operator|->
+name|verify_result
+operator|=
+name|s
+operator|->
+name|session
+operator|->
+name|verify_result
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -1234,7 +1288,7 @@ name|SSL_SESSION
 modifier|*
 name|s
 decl_stmt|;
-comment|/* conn_init(); */
+comment|/* add just 1 reference count for the SSL_CTX's session cache 	 * even though it has two ways of access: each session is in a 	 * doubly linked list and an lhash */
 name|CRYPTO_add
 argument_list|(
 operator|&
@@ -1247,6 +1301,7 @@ argument_list|,
 name|CRYPTO_LOCK_SSL_SESSION
 argument_list|)
 expr_stmt|;
+comment|/* if session c is in already in cache, we take back the increment later */
 name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_SSL_CTX
@@ -1264,14 +1319,41 @@ name|ctx
 operator|->
 name|sessions
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|c
 argument_list|)
 expr_stmt|;
-comment|/* Put on the end of the queue unless it is already in the cache */
+comment|/* s != NULL iff we already had a session with the given PID. 	 * In this case, s == c should hold (then we did not really modify 	 * ctx->sessions), or we're in trouble. */
+if|if
+condition|(
+name|s
+operator|!=
+name|NULL
+operator|&&
+name|s
+operator|!=
+name|c
+condition|)
+block|{
+comment|/* We *are* in trouble ... */
+name|SSL_SESSION_list_remove
+argument_list|(
+name|ctx
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+name|SSL_SESSION_free
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* ... so pretend the other session did not exist in cache 		 * (we cannot handle two SSL_SESSION structures with identical 		 * session ID in the same cache, which could happen e.g. when 		 * two threads concurrently obtain the same session from an external 		 * cache) */
+name|s
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/* Put at the head of the queue unless it is already in the cache */
 if|if
 condition|(
 name|s
@@ -1285,7 +1367,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-comment|/* If the same session if is being 're-added', Free the old 	 * one when the last person stops using it. 	 * This will also work if it is alread in the cache. 	 * The references will go up and then down :-) */
 if|if
 condition|(
 name|s
@@ -1293,11 +1374,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* existing cache entry -- decrement previously incremented reference 		 * count because it already takes into account the cache */
 name|SSL_SESSION_free
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* s == c */
 name|ret
 operator|=
 literal|0
@@ -1305,6 +1388,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* new cache entry -- remove old ones if cache has become too large */
 name|ret
 operator|=
 literal|1
@@ -1461,10 +1545,6 @@ name|ctx
 operator|->
 name|sessions
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|c
 argument_list|)
 expr_stmt|;
@@ -1625,10 +1705,6 @@ name|CRYPTO_free_ex_data
 argument_list|(
 name|ssl_session_meth
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|ss
 argument_list|,
 operator|&
@@ -2265,10 +2341,6 @@ name|p
 operator|->
 name|cache
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|s
 argument_list|)
 expr_stmt|;
@@ -2403,10 +2475,6 @@ argument_list|()
 operator|)
 name|timeout
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|tp
 argument_list|)

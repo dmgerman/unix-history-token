@@ -255,12 +255,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_PROTO
-end_ifndef
-
 begin_function_decl
 specifier|static
 name|int
@@ -274,7 +268,7 @@ name|EVP_MD_CTX
 modifier|*
 name|in_ctx
 parameter_list|,
-name|unsigned
+specifier|const
 name|char
 modifier|*
 name|sender
@@ -289,24 +283,6 @@ name|p
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|int
-name|ssl3_handshake_mac
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -1705,11 +1681,6 @@ condition|(
 operator|(
 name|p
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|Malloc
 argument_list|(
 name|num
@@ -2327,7 +2298,7 @@ name|EVP_MD_CTX
 modifier|*
 name|ctx2
 parameter_list|,
-name|unsigned
+specifier|const
 name|char
 modifier|*
 name|sender
@@ -2399,7 +2370,7 @@ name|EVP_MD_CTX
 modifier|*
 name|in_ctx
 parameter_list|,
-name|unsigned
+specifier|const
 name|char
 modifier|*
 name|sender
@@ -2522,7 +2493,7 @@ argument_list|(
 operator|&
 name|ctx
 argument_list|,
-name|EVP_MD_CTX_type
+name|EVP_MD_CTX_md
 argument_list|(
 operator|&
 name|ctx
@@ -3393,7 +3364,7 @@ name|SSL3_AD_HANDSHAKE_FAILURE
 operator|)
 return|;
 case|case
-name|SSL_AD_EXPORT_RESTRICION
+name|SSL_AD_EXPORT_RESTRICTION
 case|:
 return|return
 operator|(
@@ -3425,7 +3396,7 @@ name|SSL3_AD_HANDSHAKE_FAILURE
 operator|)
 return|;
 case|case
-name|SSL_AD_USER_CANCLED
+name|SSL_AD_USER_CANCELLED
 case|:
 return|return
 operator|(

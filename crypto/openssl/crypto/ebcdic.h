@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* crypto/ebcdic.h */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -25,28 +29,28 @@ begin_define
 define|#
 directive|define
 name|os_toascii
-value|_eay2000_os_toascii
+value|_openssl_os_toascii
 end_define
 
 begin_define
 define|#
 directive|define
 name|os_toebcdic
-value|_eay2000_os_toebcdic
+value|_openssl_os_toebcdic
 end_define
 
 begin_define
 define|#
 directive|define
 name|ebcdic2ascii
-value|_eay2000_ebcdic2ascii
+value|_openssl_ebcdic2ascii
 end_define
 
 begin_define
 define|#
 directive|define
 name|ascii2ebcdic
-value|_eay2000_ascii2ebcdic
+value|_openssl_ascii2ebcdic
 end_define
 
 begin_decl_stmt
@@ -75,16 +79,15 @@ end_decl_stmt
 
 begin_function_decl
 name|void
+modifier|*
 name|ebcdic2ascii
 parameter_list|(
-name|unsigned
-name|char
+name|void
 modifier|*
 name|dest
 parameter_list|,
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 name|srce
 parameter_list|,
@@ -96,16 +99,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+modifier|*
 name|ascii2ebcdic
 parameter_list|(
-name|unsigned
-name|char
+name|void
 modifier|*
 name|dest
 parameter_list|,
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 name|srce
 parameter_list|,

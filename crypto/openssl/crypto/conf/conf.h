@@ -83,6 +83,9 @@ modifier|*
 name|eline
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|NO_FP_API
 name|LHASH
 modifier|*
 name|CONF_load_fp
@@ -100,6 +103,8 @@ modifier|*
 name|eline
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 name|LHASH
 modifier|*
 name|CONF_load_bio

@@ -48,6 +48,7 @@ parameter_list|,
 name|int
 name|len
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -68,6 +69,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*

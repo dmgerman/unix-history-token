@@ -56,6 +56,19 @@ name|PROG
 value|version_main
 end_define
 
+begin_function_decl
+name|int
+name|MAIN
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|MAIN

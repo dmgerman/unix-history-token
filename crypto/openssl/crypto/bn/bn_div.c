@@ -42,20 +42,122 @@ literal|0
 end_if
 
 begin_comment
-unit|int BN_div(BIGNUM *dv, BIGNUM *rem, BIGNUM *m, BIGNUM *d, BN_CTX *ctx) 	{ 	int i,nm,nd; 	BIGNUM *D;  	bn_check_top(m); 	bn_check_top(d); 	if (BN_is_zero(d)) 		{ 		BNerr(BN_F_BN_DIV,BN_R_DIV_BY_ZERO); 		return(0); 		}  	if (BN_ucmp(m,d)< 0) 		{ 		if (rem != NULL) 			{ if (BN_copy(rem,m) == NULL) return(0); } 		if (dv != NULL) BN_zero(dv); 		return(1); 		}  	D=&(ctx->bn[ctx->tos]); 	if (dv == NULL) dv=&(ctx->bn[ctx->tos+1]); 	if (rem == NULL) rem=&(ctx->bn[ctx->tos+2]);  	nd=BN_num_bits(d); 	nm=BN_num_bits(m); 	if (BN_copy(D,d) == NULL) return(0); 	if (BN_copy(rem,m) == NULL) return(0);
+unit|int BN_div(BIGNUM *dv, BIGNUM *rem, const BIGNUM *m, const BIGNUM *d, 	   BN_CTX *ctx) 	{ 	int i,nm,nd; 	int ret = 0; 	BIGNUM *D;  	bn_check_top(m); 	bn_check_top(d); 	if (BN_is_zero(d)) 		{ 		BNerr(BN_F_BN_DIV,BN_R_DIV_BY_ZERO); 		return(0); 		}  	if (BN_ucmp(m,d)< 0) 		{ 		if (rem != NULL) 			{ if (BN_copy(rem,m) == NULL) return(0); } 		if (dv != NULL) BN_zero(dv); 		return(1); 		}  	BN_CTX_start(ctx); 	D = BN_CTX_get(ctx); 	if (dv == NULL) dv = BN_CTX_get(ctx); 	if (rem == NULL) rem = BN_CTX_get(ctx); 	if (D == NULL || dv == NULL || rem == NULL) 		goto end;  	nd=BN_num_bits(d); 	nm=BN_num_bits(m); 	if (BN_copy(D,d) == NULL) goto end; 	if (BN_copy(rem,m) == NULL) goto end;
 comment|/* The next 2 are needed so we can do a dv->d[0]|=1 later 	 * since BN_lshift1 will only work once there is a value :-) */
 end_comment
 
 begin_comment
-unit|BN_zero(dv); 	bn_wexpand(dv,1); 	dv->top=1;  	if (!BN_lshift(D,D,nm-nd)) return(0); 	for (i=nm-nd; i>=0; i--) 		{ 		if (!BN_lshift1(dv,dv)) return(0); 		if (BN_ucmp(rem,D)>= 0) 			{ 			dv->d[0]|=1; 			if (!BN_usub(rem,rem,D)) return(0); 			}
+unit|BN_zero(dv); 	bn_wexpand(dv,1); 	dv->top=1;  	if (!BN_lshift(D,D,nm-nd)) goto end; 	for (i=nm-nd; i>=0; i--) 		{ 		if (!BN_lshift1(dv,dv)) goto end; 		if (BN_ucmp(rem,D)>= 0) 			{ 			dv->d[0]|=1; 			if (!BN_usub(rem,rem,D)) goto end; 			}
 comment|/* CAN IMPROVE (and have now :=) */
 end_comment
 
 begin_else
-unit|if (!BN_rshift1(D,D)) return(0); 		} 	rem->neg=BN_is_zero(rem)?0:m->neg; 	dv->neg=m->neg^d->neg; 	return(1); 	}
+unit|if (!BN_rshift1(D,D)) goto end; 		} 	rem->neg=BN_is_zero(rem)?0:m->neg; 	dv->neg=m->neg^d->neg; 	ret = 1;  end: 	BN_CTX_end(ctx); 	return(ret); 	}
 else|#
 directive|else
 end_else
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_ASM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_INLINE_ASM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|PEDANTIC
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BN_DIV3W
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|__GNUC__
+operator|>=
+literal|2
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386
+argument_list|)
+end_if
+
+begin_comment
+comment|/*     * There were two reasons for implementing this template:     * - GNU C generates a call to a function (__udivdi3 to be exact)     *   in reply to ((((BN_ULLONG)n0)<<BN_BITS2)|n1)/d0 (I fail to     *   understand why...);     * - divl doesn't only calculate quotient, but also leaves     *   remainder in %edx which we can definitely use here:-)     *     *<appro@fy.chalmers.se>     */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bn_div_words
+parameter_list|(
+name|n0
+parameter_list|,
+name|n1
+parameter_list|,
+name|d0
+parameter_list|)
+define|\
+value|({  asm volatile (			\ 		"divl	%4"			\ 		: "=a"(q), "=d"(rem)		\ 		: "a"(n1), "d"(n0), "g"(d0)	\ 		: "cc");			\ 	    q;					\ 	})
+end_define
+
+begin_define
+define|#
+directive|define
+name|REMAINDER_IS_ALREADY_CALCULATED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __<cpu> */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GNUC__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NO_ASM */
+end_comment
 
 begin_function
 name|int
@@ -209,19 +311,17 @@ literal|1
 operator|)
 return|;
 block|}
+name|BN_CTX_start
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
 name|tmp
 operator|=
-operator|&
-operator|(
+name|BN_CTX_get
+argument_list|(
 name|ctx
-operator|->
-name|bn
-index|[
-name|ctx
-operator|->
-name|tos
-index|]
-operator|)
+argument_list|)
 expr_stmt|;
 name|tmp
 operator|->
@@ -231,35 +331,17 @@ literal|0
 expr_stmt|;
 name|snum
 operator|=
-operator|&
-operator|(
+name|BN_CTX_get
+argument_list|(
 name|ctx
-operator|->
-name|bn
-index|[
-name|ctx
-operator|->
-name|tos
-operator|+
-literal|1
-index|]
-operator|)
+argument_list|)
 expr_stmt|;
 name|sdiv
 operator|=
-operator|&
-operator|(
+name|BN_CTX_get
+argument_list|(
 name|ctx
-operator|->
-name|bn
-index|[
-name|ctx
-operator|->
-name|tos
-operator|+
-literal|2
-index|]
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -269,25 +351,25 @@ name|NULL
 condition|)
 name|res
 operator|=
-operator|&
-operator|(
+name|BN_CTX_get
+argument_list|(
 name|ctx
-operator|->
-name|bn
-index|[
-name|ctx
-operator|->
-name|tos
-operator|+
-literal|3
-index|]
-operator|)
+argument_list|)
 expr_stmt|;
 else|else
 name|res
 operator|=
 name|dv
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 comment|/* First we normalise the numbers */
 name|norm_shift
 operator|=
@@ -599,67 +681,13 @@ name|bn_div_3_words
 argument_list|(
 name|wnump
 argument_list|,
-name|d0
-argument_list|,
 name|d1
+argument_list|,
+name|d0
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NO_ASM
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|PEDANTIC
-argument_list|)
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|&&
-name|__GNUC__
-operator|>=
-literal|2
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386
-argument_list|)
-comment|/*     * There were two reasons for implementing this template:     * - GNU C generates a call to a function (__udivdi3 to be exact)     *   in reply to ((((BN_ULLONG)n0)<<BN_BITS2)|n1)/d0 (I fail to     *   understand why...);     * - divl doesn't only calculate quotient, but also leaves     *   remainder in %edx which we can definitely use here:-)     *     *<appro@fy.chalmers.se>     */
-define|#
-directive|define
-name|bn_div_words
-parameter_list|(
-name|n0
-parameter_list|,
-name|n1
-parameter_list|,
-name|d0
-parameter_list|)
-define|\
-value|({  asm volatile (			\ 		"divl	%4"			\ 		: "=a"(q), "=d"(rem)		\ 		: "a"(n1), "d"(n0), "g"(d0)	\ 		: "cc");			\ 	    q;					\ 	})
-define|#
-directive|define
-name|REMINDER_IS_ALREADY_CALCULATED
-endif|#
-directive|endif
-comment|/* __<cpu> */
-endif|#
-directive|endif
-comment|/* __GNUC__ */
-endif|#
-directive|endif
-comment|/* NO_ASM */
 name|BN_ULONG
 name|n0
 decl_stmt|,
@@ -695,6 +723,14 @@ operator|=
 name|BN_MASK2
 expr_stmt|;
 else|else
+comment|/* n0< d0 */
+block|{
+ifdef|#
+directive|ifdef
+name|BN_LLONG
+name|BN_ULLONG
+name|t2
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -714,6 +750,10 @@ name|bn_div_words
 argument_list|)
 name|q
 operator|=
+call|(
+name|BN_ULONG
+call|)
+argument_list|(
 operator|(
 operator|(
 operator|(
@@ -730,6 +770,7 @@ name|n1
 operator|)
 operator|/
 name|d0
+argument_list|)
 expr_stmt|;
 else|#
 directive|else
@@ -746,17 +787,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|{
-ifdef|#
-directive|ifdef
-name|BN_LLONG
-name|BN_ULLONG
-name|t2
-decl_stmt|;
 ifndef|#
 directive|ifndef
-name|REMINDER_IS_ALREADY_CALCULATED
-comment|/* 		 * rem doesn't have to be BN_ULLONG. The least we 		 * know it's less that d0, isn't it? 		 */
+name|REMAINDER_IS_ALREADY_CALCULATED
+comment|/* 			 * rem doesn't have to be BN_ULLONG. The least we 			 * know it's less that d0, isn't it? 			 */
 name|rem
 operator|=
 operator|(
@@ -832,6 +866,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
+comment|/* !BN_LLONG */
 name|BN_ULONG
 name|t2l
 decl_stmt|,
@@ -841,10 +876,20 @@ name|ql
 decl_stmt|,
 name|qh
 decl_stmt|;
+name|q
+operator|=
+name|bn_div_words
+argument_list|(
+name|n0
+argument_list|,
+name|n1
+argument_list|,
+name|d0
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
-name|REMINDER_IS_ALREADY_CALCULATED
-comment|/* 		 * It's more than enough with the only multiplication. 		 * See the comment above in BN_LLONG section... 		 */
+name|REMAINDER_IS_ALREADY_CALCULATED
 name|rem
 operator|=
 operator|(
@@ -859,6 +904,26 @@ name|BN_MASK2
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|BN_UMULT_HIGH
+name|t2l
+operator|=
+name|d1
+operator|*
+name|q
+expr_stmt|;
+name|t2h
+operator|=
+name|BN_UMULT_HIGH
+argument_list|(
+name|d1
+argument_list|,
+name|q
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|t2l
 operator|=
 name|LBITS
@@ -899,6 +964,8 @@ name|qh
 argument_list|)
 expr_stmt|;
 comment|/* t2=(BN_ULLONG)d1*q; */
+endif|#
+directive|endif
 for|for
 control|(
 init|;
@@ -963,20 +1030,11 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* !BN_LLONG */
 block|}
 endif|#
 directive|endif
 comment|/* !BN_DIV3W */
-name|wnum
-operator|.
-name|d
-operator|--
-expr_stmt|;
-name|wnum
-operator|.
-name|top
-operator|++
-expr_stmt|;
 name|l0
 operator|=
 name|bn_mul_words
@@ -993,6 +1051,16 @@ name|div_n
 argument_list|,
 name|q
 argument_list|)
+expr_stmt|;
+name|wnum
+operator|.
+name|d
+operator|--
+expr_stmt|;
+name|wnum
+operator|.
+name|top
+operator|++
 expr_stmt|;
 name|tmp
 operator|->
@@ -1142,6 +1210,11 @@ operator|->
 name|neg
 expr_stmt|;
 block|}
+name|BN_CTX_end
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -1149,6 +1222,11 @@ operator|)
 return|;
 name|err
 label|:
+name|BN_CTX_end
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1193,7 +1271,7 @@ if|#
 directive|if
 literal|0
 comment|/* The old slow way */
-block|int i,nm,nd; 	BIGNUM *dv;  	if (BN_ucmp(m,d)< 0) 		return((BN_copy(rem,m) == NULL)?0:1);  	dv=&(ctx->bn[ctx->tos]);  	if (!BN_copy(rem,m)) return(0);  	nm=BN_num_bits(rem); 	nd=BN_num_bits(d); 	if (!BN_lshift(dv,d,nm-nd)) return(0); 	for (i=nm-nd; i>=0; i--) 		{ 		if (BN_cmp(rem,dv)>= 0) 			{ 			if (!BN_sub(rem,rem,dv)) return(0); 			} 		if (!BN_rshift1(dv,dv)) return(0); 		} 	return(1);
+block|int i,nm,nd; 	BIGNUM *dv;  	if (BN_ucmp(m,d)< 0) 		return((BN_copy(rem,m) == NULL)?0:1);  	BN_CTX_start(ctx); 	dv=BN_CTX_get(ctx);  	if (!BN_copy(rem,m)) goto err;  	nm=BN_num_bits(rem); 	nd=BN_num_bits(d); 	if (!BN_lshift(dv,d,nm-nd)) goto err; 	for (i=nm-nd; i>=0; i--) 		{ 		if (BN_cmp(rem,dv)>= 0) 			{ 			if (!BN_sub(rem,rem,dv)) goto err; 			} 		if (!BN_rshift1(dv,dv)) goto err; 		} 	BN_CTX_end(ctx); 	return(1);  err: 	BN_CTX_end(ctx); 	return(0);
 else|#
 directive|else
 return|return

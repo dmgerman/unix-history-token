@@ -113,10 +113,11 @@ name|HMAC_CTX
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
-name|key
+name|data
 parameter_list|,
 name|int
 name|len
@@ -166,6 +167,7 @@ parameter_list|,
 name|int
 name|key_len
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

@@ -8,7 +8,7 @@ comment|/* ==================================================================== 
 end_comment
 
 begin_comment
-comment|/*  * This is a generic 32 bit "collector" for message digest algorithms.  * Whenever needed it collects input character stream into chunks of  * 32 bit values and invokes a block function that performs actual hash  * calculations.  *  * Porting guide.  *  * Obligatory macros:  *  * DATA_ORDER_IS_BIG_ENDIAN or DATA_ORDER_IS_LITTLE_ENDIAN  *	this macro defines byte order of input stream.  * HASH_CBLOCK  *	size of a unit chunk HASH_BLOCK operates on.  * HASH_LONG  *	has to be at lest 32 bit wide, if it's wider, then  *	HASH_LONG_LOG2 *has to* be defined along  * HASH_CTX  *	context structure that at least contains following  *	members:  *		typedef struct {  *			...  *			HASH_LONG	Nl,Nh;  *			HASH_LONG	data[HASH_LBLOCK];  *			int		num;  *			...  *			} HASH_CTX;  * HASH_UPDATE  *	name of "Update" function, implemented here.  * HASH_TRANSFORM  *	name of "Transform" function, implemented here.  * HASH_FINAL  *	name of "Final" function, implemented here.  * HASH_BLOCK_HOST_ORDER  *	name of "block" function treating *aligned* input message  *	in host byte order, implemented externally.  * HASH_BLOCK_DATA_ORDER  *	name of "block" function treating *unaligned* input message  *	in original (data) byte order, implemented externally (it  *	actually is optional if data and host are of the same  *	"endianess").  *  * Optional macros:  *  * B_ENDIAN or L_ENDIAN  *	defines host byte-order.  * HASH_LONG_LOG2  *	defaults to 2 if not states otherwise.  * HASH_LBLOCK  *	assumed to be HASH_CBLOCK/4 if not stated otherwise.  * HASH_BLOCK_DATA_ORDER_ALIGNED  *	alternative "block" function capable of treating  *	aligned input message in original (data) order,  *	implemented externally.  *  * MD5 example:  *  *	#define DATA_ORDER_IS_LITTLE_ENDIAN  *  *	#define HASH_LONG		MD5_LONG  *	#define HASH_LONG_LOG2		MD5_LONG_LOG2  *	#define HASH_CTX		MD5_CTX  *	#define HASH_CBLOCK		MD5_CBLOCK  *	#define HASH_LBLOCK		MD5_LBLOCK  *	#define HASH_UPDATE		MD5_Update  *	#define HASH_TRANSFORM		MD5_Transform  *	#define HASH_FINAL		MD5_Final  *	#define HASH_BLOCK_HOST_ORDER	md5_block_host_order  *	#define HASH_BLOCK_DATA_ORDER	md5_block_data_order  *  *<appro@fy.chalmers.se>  */
+comment|/*  * This is a generic 32 bit "collector" for message digest algorithms.  * Whenever needed it collects input character stream into chunks of  * 32 bit values and invokes a block function that performs actual hash  * calculations.  *  * Porting guide.  *  * Obligatory macros:  *  * DATA_ORDER_IS_BIG_ENDIAN or DATA_ORDER_IS_LITTLE_ENDIAN  *	this macro defines byte order of input stream.  * HASH_CBLOCK  *	size of a unit chunk HASH_BLOCK operates on.  * HASH_LONG  *	has to be at lest 32 bit wide, if it's wider, then  *	HASH_LONG_LOG2 *has to* be defined along  * HASH_CTX  *	context structure that at least contains following  *	members:  *		typedef struct {  *			...  *			HASH_LONG	Nl,Nh;  *			HASH_LONG	data[HASH_LBLOCK];  *			int		num;  *			...  *			} HASH_CTX;  * HASH_UPDATE  *	name of "Update" function, implemented here.  * HASH_TRANSFORM  *	name of "Transform" function, implemented here.  * HASH_FINAL  *	name of "Final" function, implemented here.  * HASH_BLOCK_HOST_ORDER  *	name of "block" function treating *aligned* input message  *	in host byte order, implemented externally.  * HASH_BLOCK_DATA_ORDER  *	name of "block" function treating *unaligned* input message  *	in original (data) byte order, implemented externally (it  *	actually is optional if data and host are of the same  *	"endianess").  * HASH_MAKE_STRING  *	macro convering context variables to an ASCII hash string.  *  * Optional macros:  *  * B_ENDIAN or L_ENDIAN  *	defines host byte-order.  * HASH_LONG_LOG2  *	defaults to 2 if not states otherwise.  * HASH_LBLOCK  *	assumed to be HASH_CBLOCK/4 if not stated otherwise.  * HASH_BLOCK_DATA_ORDER_ALIGNED  *	alternative "block" function capable of treating  *	aligned input message in original (data) order,  *	implemented externally.  *  * MD5 example:  *  *	#define DATA_ORDER_IS_LITTLE_ENDIAN  *  *	#define HASH_LONG		MD5_LONG  *	#define HASH_LONG_LOG2		MD5_LONG_LOG2  *	#define HASH_CTX		MD5_CTX  *	#define HASH_CBLOCK		MD5_CBLOCK  *	#define HASH_LBLOCK		MD5_LBLOCK  *	#define HASH_UPDATE		MD5_Update  *	#define HASH_TRANSFORM		MD5_Transform  *	#define HASH_FINAL		MD5_Final  *	#define HASH_BLOCK_HOST_ORDER	md5_block_host_order  *	#define HASH_BLOCK_DATA_ORDER	md5_block_data_order  *  *<appro@fy.chalmers.se>  */
 end_comment
 
 begin_if
@@ -267,6 +267,83 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
+name|__MWERKS__
+argument_list|)
+end_elif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__POWERPC__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ROTATE
+parameter_list|(
+name|a
+parameter_list|,
+name|n
+parameter_list|)
+value|__rlwinm(a,n,0,31)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__MC68K__
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* Motorola specific tweak.<appro@fy.chalmers.se> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ROTATE
+parameter_list|(
+name|a
+parameter_list|,
+name|n
+parameter_list|)
+value|( n<24 ? __rol(a,n) : __ror(a,32-n) )
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ROTATE
+parameter_list|(
+name|a
+parameter_list|,
+name|n
+parameter_list|)
+value|__rol(a,n)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|__GNUC__
 argument_list|)
 operator|&&
@@ -278,6 +355,12 @@ operator|!
 name|defined
 argument_list|(
 name|NO_ASM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_INLINE_ASM
 argument_list|)
 end_elif
 
@@ -303,7 +386,7 @@ name|a
 parameter_list|,
 name|n
 parameter_list|)
-value|({ register unsigned int ret;	\ 				asm volatile (		\ 				"roll %1,%0"		\ 				: "=r"(ret)		\ 				: "I"(n), "0"(a)	\ 				: "cc");		\ 			   ret;				\ 			})
+value|({ register unsigned int ret;	\ 				asm (			\ 				"roll %1,%0"		\ 				: "=r"(ret)		\ 				: "I"(n), "0"(a)	\ 				: "cc");		\ 			   ret;				\ 			})
 end_define
 
 begin_elif
@@ -312,6 +395,11 @@ directive|elif
 name|defined
 argument_list|(
 name|__powerpc
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ppc
 argument_list|)
 end_elif
 
@@ -324,7 +412,7 @@ name|a
 parameter_list|,
 name|n
 parameter_list|)
-value|({ register unsigned int ret;	\ 				asm volatile (		\ 				"rlwinm %0,%1,%2,0,31"	\ 				: "=r"(ret)		\ 				: "r"(a), "I"(n));	\ 			   ret;				\ 			})
+value|({ register unsigned int ret;	\ 				asm (			\ 				"rlwinm %0,%1,%2,0,31"	\ 				: "=r"(ret)		\ 				: "r"(a), "I"(n));	\ 			   ret;				\ 			})
 end_define
 
 begin_endif
@@ -358,6 +446,12 @@ name|defined
 argument_list|(
 name|NO_ASM
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_INLINE_ASM
+argument_list|)
 end_if
 
 begin_comment
@@ -386,7 +480,7 @@ name|BE_FETCH32
 parameter_list|(
 name|a
 parameter_list|)
-value|({ register unsigned int l=(a);\ 				asm volatile (		\ 				"bswapl %0"		\ 				: "=r"(l) : "0"(l));	\ 			  l;				\ 			})
+value|({ register unsigned int l=(a);\ 				asm (			\ 				"bswapl %0"		\ 				: "=r"(l) : "0"(l));	\ 			  l;				\ 			})
 end_define
 
 begin_elif
@@ -405,7 +499,7 @@ name|LE_FETCH32
 parameter_list|(
 name|a
 parameter_list|)
-value|({ register unsigned int l;	\ 				asm volatile (		\ 				"lwbrx %0,0,%1"		\ 				: "=r"(l)		\ 				: "r"(a));		\ 			   l;				\ 			})
+value|({ register unsigned int l;	\ 				asm (			\ 				"lwbrx %0,0,%1"		\ 				: "=r"(l)		\ 				: "r"(a));		\ 			   l;				\ 			})
 end_define
 
 begin_elif
@@ -429,7 +523,7 @@ name|LE_FETCH32
 parameter_list|(
 name|a
 parameter_list|)
-value|({ register unsigned int l;		\ 				asm volatile (			\ 				"lda [%1]#ASI_PRIMARY_LITTLE,%0"\ 				: "=r"(l)			\ 				: "r"(a));			\ 			   l;					\ 			})
+value|({ register unsigned int l;		\ 				asm (				\ 				"lda [%1]#ASI_PRIMARY_LITTLE,%0"\ 				: "=r"(l)			\ 				: "r"(a));			\ 			   l;					\ 			})
 end_define
 
 begin_endif
@@ -994,16 +1088,23 @@ modifier|*
 name|c
 parameter_list|,
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
-name|data
+name|data_
 parameter_list|,
 name|unsigned
 name|long
 name|len
 parameter_list|)
 block|{
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|data
+init|=
+name|data_
+decl_stmt|;
 specifier|register
 name|HASH_LONG
 modifier|*
@@ -1925,58 +2026,23 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|l
-operator|=
-name|c
-operator|->
-name|A
-expr_stmt|;
-name|HOST_l2c
+ifndef|#
+directive|ifndef
+name|HASH_MAKE_STRING
+error|#
+directive|error
+literal|"HASH_MAKE_STRING must be defined!"
+else|#
+directive|else
+name|HASH_MAKE_STRING
 argument_list|(
-name|l
+name|c
 argument_list|,
 name|md
 argument_list|)
 expr_stmt|;
-name|l
-operator|=
-name|c
-operator|->
-name|B
-expr_stmt|;
-name|HOST_l2c
-argument_list|(
-name|l
-argument_list|,
-name|md
-argument_list|)
-expr_stmt|;
-name|l
-operator|=
-name|c
-operator|->
-name|C
-expr_stmt|;
-name|HOST_l2c
-argument_list|(
-name|l
-argument_list|,
-name|md
-argument_list|)
-expr_stmt|;
-name|l
-operator|=
-name|c
-operator|->
-name|D
-expr_stmt|;
-name|HOST_l2c
-argument_list|(
-name|l
-argument_list|,
-name|md
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
 name|c
 operator|->
 name|num

@@ -9,6 +9,7 @@ end_comment
 
 begin_decl_stmt
 name|OPENSSL_GLOBAL
+specifier|const
 name|CAST_LONG
 name|CAST_S_table0
 index|[
@@ -533,6 +534,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|OPENSSL_GLOBAL
+specifier|const
 name|CAST_LONG
 name|CAST_S_table1
 index|[
@@ -1057,6 +1059,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|OPENSSL_GLOBAL
+specifier|const
 name|CAST_LONG
 name|CAST_S_table2
 index|[
@@ -1581,6 +1584,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|OPENSSL_GLOBAL
+specifier|const
 name|CAST_LONG
 name|CAST_S_table3
 index|[
@@ -2105,6 +2109,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|OPENSSL_GLOBAL
+specifier|const
 name|CAST_LONG
 name|CAST_S_table4
 index|[
@@ -2629,6 +2634,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|OPENSSL_GLOBAL
+specifier|const
 name|CAST_LONG
 name|CAST_S_table5
 index|[
@@ -3153,6 +3159,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|OPENSSL_GLOBAL
+specifier|const
 name|CAST_LONG
 name|CAST_S_table6
 index|[
@@ -3677,6 +3684,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|OPENSSL_GLOBAL
+specifier|const
 name|CAST_LONG
 name|CAST_S_table7
 index|[

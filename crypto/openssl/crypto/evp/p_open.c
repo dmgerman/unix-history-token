@@ -293,6 +293,37 @@ return|;
 block|}
 end_function
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !NO_RSA */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PEDANTIC
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|dummy
+init|=
+operator|&
+name|dummy
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* apps/s_cb.c */
+comment|/* apps/s_cb.c - callback functions used by s_client, s_server, and s_time */
 end_comment
 
 begin_comment

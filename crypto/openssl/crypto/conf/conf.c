@@ -276,7 +276,7 @@ name|LHASH
 modifier|*
 name|ltmp
 decl_stmt|;
-name|FILE
+name|BIO
 modifier|*
 name|in
 init|=
@@ -287,7 +287,7 @@ directive|ifdef
 name|VMS
 name|in
 operator|=
-name|fopen
+name|BIO_new_file
 argument_list|(
 name|file
 argument_list|,
@@ -298,7 +298,7 @@ else|#
 directive|else
 name|in
 operator|=
-name|fopen
+name|BIO_new_file
 argument_list|(
 name|file
 argument_list|,
@@ -314,26 +314,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|SYSerr
-argument_list|(
-name|SYS_F_FOPEN
-argument_list|,
-name|get_last_sys_error
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|ERR_set_error_data
-argument_list|(
-name|BUF_strdup
-argument_list|(
-name|file
-argument_list|)
-argument_list|,
-name|ERR_TXT_MALLOCED
-operator||
-name|ERR_TXT_STRING
-argument_list|)
-expr_stmt|;
 name|CONFerr
 argument_list|(
 name|CONF_F_CONF_LOAD
@@ -347,7 +327,7 @@ return|;
 block|}
 name|ltmp
 operator|=
-name|CONF_load_fp
+name|CONF_load_bio
 argument_list|(
 name|h
 argument_list|,
@@ -356,7 +336,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-name|fclose
+name|BIO_free
 argument_list|(
 name|in
 argument_list|)
@@ -366,6 +346,12 @@ name|ltmp
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FP_API
+end_ifndef
 
 begin_function
 name|LHASH
@@ -440,6 +426,11 @@ name|ltmp
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|LHASH
@@ -1505,10 +1496,6 @@ name|lh_insert
 argument_list|(
 name|ret
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|v
 argument_list|)
 expr_stmt|;
@@ -1783,10 +1770,6 @@ name|lh_retrieve
 argument_list|(
 name|conf
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|vv
 argument_list|)
@@ -1858,10 +1841,6 @@ name|lh_retrieve
 argument_list|(
 name|conf
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|vv
 argument_list|)
@@ -1960,10 +1939,6 @@ name|lh_retrieve
 argument_list|(
 name|conf
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|vv
 argument_list|)
@@ -2155,10 +2130,6 @@ argument_list|()
 operator|)
 name|value_free_hash
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|conf
 argument_list|)
 expr_stmt|;
@@ -2176,10 +2147,6 @@ argument_list|()
 operator|)
 name|value_free_stack
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|conf
 argument_list|)
 expr_stmt|;
@@ -2224,10 +2191,6 @@ name|lh_delete
 argument_list|(
 name|conf
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|a
 argument_list|)
 expr_stmt|;
@@ -3553,10 +3516,6 @@ name|lh_insert
 argument_list|(
 name|conf
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|v
 argument_list|)
 expr_stmt|;

@@ -31,6 +31,7 @@ name|char
 modifier|*
 name|MDC2
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*

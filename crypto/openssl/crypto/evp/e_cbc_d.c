@@ -256,7 +256,7 @@ name|deskey
 operator|!=
 name|NULL
 condition|)
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 name|deskey
 argument_list|,

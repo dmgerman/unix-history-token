@@ -318,6 +318,8 @@ block|,
 name|sock_new
 block|,
 name|sock_free
+block|,
+name|NULL
 block|, 	}
 decl_stmt|;
 end_decl_stmt
@@ -368,6 +370,8 @@ block|,
 name|fd_new
 block|,
 name|fd_free
+block|,
+name|NULL
 block|, 	}
 decl_stmt|;
 end_decl_stmt
@@ -597,16 +601,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|BIO_FD
-name|shutdown
-argument_list|(
-name|a
-operator|->
-name|num
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|closesocket
+name|SHUTDOWN2
 argument_list|(
 name|a
 operator|->

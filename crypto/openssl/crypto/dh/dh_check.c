@@ -32,7 +32,7 @@ file|<openssl/dh.h>
 end_include
 
 begin_comment
-comment|/* Check that p is a strong prime and  * if g is 2, 3 or 5, check that is is a suitable generator  * where  * for 2, p mod 24 == 11  * for 3, p mod 12 == 5  * for 5, p mod 10 == 3 or 7  * should hold.  */
+comment|/* Check that p is a safe prime and  * if g is 2, 3 or 5, check that is is a suitable generator  * where  * for 2, p mod 24 == 11  * for 3, p mod 12 == 5  * for 5, p mod 10 == 3 or 7  * should hold.  */
 end_comment
 
 begin_function
@@ -136,7 +136,12 @@ operator||=
 name|DH_NOT_SUITABLE_GENERATOR
 expr_stmt|;
 block|}
-comment|/*	else if (BN_is_word(dh->g,DH_GENERATOR_3)) 		{ 		l=BN_mod_word(dh->p,12); 		if (l != 5) *ret|=DH_NOT_SUITABLE_GENERATOR; 		}*/
+if|#
+directive|if
+literal|0
+if|else if (BN_is_word(dh->g,DH_GENERATOR_3)) 		{ 		l=BN_mod_word(dh->p,12); 		if (l != 5) *ret|=DH_NOT_SUITABLE_GENERATOR; 		}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -246,7 +251,7 @@ condition|)
 operator|*
 name|ret
 operator||=
-name|DH_CHECK_P_NOT_STRONG_PRIME
+name|DH_CHECK_P_NOT_SAFE_PRIME
 expr_stmt|;
 block|}
 name|ok

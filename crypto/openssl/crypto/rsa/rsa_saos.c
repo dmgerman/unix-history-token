@@ -481,7 +481,7 @@ name|sig
 operator|!=
 name|NULL
 condition|)
-name|ASN1_OCTET_STRING_free
+name|M_ASN1_OCTET_STRING_free
 argument_list|(
 name|sig
 argument_list|)

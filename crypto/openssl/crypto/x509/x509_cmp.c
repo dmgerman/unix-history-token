@@ -16,18 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"cryptlib.h"
 end_include
 
@@ -47,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/x509.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/x509v3.h>
 end_include
 
 begin_function
@@ -86,7 +80,7 @@ name|cert_info
 expr_stmt|;
 name|i
 operator|=
-name|ASN1_INTEGER_cmp
+name|M_ASN1_INTEGER_cmp
 argument_list|(
 name|ai
 operator|->
@@ -534,6 +528,72 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_SHA
+end_ifndef
+
+begin_comment
+comment|/* Compare two certificates: they must be identical for  * this to work.  */
+end_comment
+
+begin_function
+name|int
+name|X509_cmp
+parameter_list|(
+name|X509
+modifier|*
+name|a
+parameter_list|,
+name|X509
+modifier|*
+name|b
+parameter_list|)
+block|{
+comment|/* ensure hash is valid */
+name|X509_check_purpose
+argument_list|(
+name|a
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|X509_check_purpose
+argument_list|(
+name|b
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+name|memcmp
+argument_list|(
+name|a
+operator|->
+name|sha1_hash
+argument_list|,
+name|b
+operator|->
+name|sha1_hash
+argument_list|,
+name|SHA_DIGEST_LENGTH
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|X509_NAME_cmp
@@ -790,7 +850,7 @@ name|NO_MD5
 end_ifndef
 
 begin_comment
-comment|/* I now DER encode the name and hash it.  Since I cache the DER encoding,  * this is reasonably effiecent. */
+comment|/* I now DER encode the name and hash it.  Since I cache the DER encoding,  * this is reasonably efficient. */
 end_comment
 
 begin_function
@@ -1013,6 +1073,14 @@ name|x509
 init|=
 name|NULL
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|sk
+condition|)
+return|return
+name|NULL
+return|;
 name|x
 operator|.
 name|cert_info

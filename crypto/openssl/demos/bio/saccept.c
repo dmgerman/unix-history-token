@@ -150,7 +150,7 @@ name|SSL_load_error_strings
 argument_list|()
 expr_stmt|;
 comment|/* Add ciphers and message digests */
-name|SSLeay_add_ssl_algorithms
+name|OpenSSL_add_ssl_algorithms
 argument_list|()
 expr_stmt|;
 name|ctx

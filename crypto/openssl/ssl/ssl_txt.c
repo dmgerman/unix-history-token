@@ -384,7 +384,7 @@ name|BIO_puts
 argument_list|(
 name|bp
 argument_list|,
-literal|"\nSession-ID-ctx: "
+literal|"\n    Session-ID-ctx: "
 argument_list|)
 operator|<=
 literal|0
@@ -754,6 +754,52 @@ argument_list|(
 name|bp
 argument_list|,
 literal|"\n"
+argument_list|)
+operator|<=
+literal|0
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
+name|BIO_puts
+argument_list|(
+name|bp
+argument_list|,
+literal|"    Verify return code: "
+argument_list|)
+operator|<=
+literal|0
+condition|)
+goto|goto
+name|err
+goto|;
+name|sprintf
+argument_list|(
+name|str
+argument_list|,
+literal|"%ld (%s)\n"
+argument_list|,
+name|x
+operator|->
+name|verify_result
+argument_list|,
+name|X509_verify_cert_error_string
+argument_list|(
+name|x
+operator|->
+name|verify_result
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|BIO_puts
+argument_list|(
+name|bp
+argument_list|,
+name|str
 argument_list|)
 operator|<=
 literal|0

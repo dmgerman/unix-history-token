@@ -41,7 +41,7 @@ comment|/* For a 32 bit machine  * 2 -   4 ==  128  * 3 -   8 ==  256  * 4 -  16
 end_comment
 
 begin_decl_stmt
-name|OPENSSL_GLOBAL
+specifier|static
 name|int
 name|bn_limit_bits
 init|=
@@ -50,7 +50,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|OPENSSL_GLOBAL
+specifier|static
 name|int
 name|bn_limit_num
 init|=
@@ -63,7 +63,7 @@ comment|/* (1<<bn_limit_bits) */
 end_comment
 
 begin_decl_stmt
-name|OPENSSL_GLOBAL
+specifier|static
 name|int
 name|bn_limit_bits_low
 init|=
@@ -72,7 +72,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|OPENSSL_GLOBAL
+specifier|static
 name|int
 name|bn_limit_num_low
 init|=
@@ -85,7 +85,7 @@ comment|/* (1<<bn_limit_bits_low) */
 end_comment
 
 begin_decl_stmt
-name|OPENSSL_GLOBAL
+specifier|static
 name|int
 name|bn_limit_bits_high
 init|=
@@ -94,7 +94,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|OPENSSL_GLOBAL
+specifier|static
 name|int
 name|bn_limit_num_high
 init|=
@@ -107,7 +107,7 @@ comment|/* (1<<bn_limit_bits_high) */
 end_comment
 
 begin_decl_stmt
-name|OPENSSL_GLOBAL
+specifier|static
 name|int
 name|bn_limit_bits_mont
 init|=
@@ -116,7 +116,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|OPENSSL_GLOBAL
+specifier|static
 name|int
 name|bn_limit_num_mont
 init|=
@@ -1801,167 +1801,9 @@ return|;
 block|}
 end_function
 
-begin_function
-name|BN_CTX
-modifier|*
-name|BN_CTX_new
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|BN_CTX
-modifier|*
-name|ret
-decl_stmt|;
-name|ret
-operator|=
-operator|(
-name|BN_CTX
-operator|*
-operator|)
-name|Malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|BN_CTX
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|==
-name|NULL
-condition|)
-block|{
-name|BNerr
-argument_list|(
-name|BN_F_BN_CTX_NEW
-argument_list|,
-name|ERR_R_MALLOC_FAILURE
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-name|BN_CTX_init
-argument_list|(
-name|ret
-argument_list|)
-expr_stmt|;
-name|ret
-operator|->
-name|flags
-operator|=
-name|BN_FLG_MALLOCED
-expr_stmt|;
-return|return
-operator|(
-name|ret
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|BN_CTX_init
-parameter_list|(
-name|BN_CTX
-modifier|*
-name|ctx
-parameter_list|)
-block|{
-name|memset
-argument_list|(
-name|ctx
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|BN_CTX
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ctx
-operator|->
-name|tos
-operator|=
-literal|0
-expr_stmt|;
-name|ctx
-operator|->
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|BN_CTX_free
-parameter_list|(
-name|BN_CTX
-modifier|*
-name|c
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-if|if
-condition|(
-name|c
-operator|==
-name|NULL
-condition|)
-return|return;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|BN_CTX_NUM
-condition|;
-name|i
-operator|++
-control|)
-name|BN_clear_free
-argument_list|(
-operator|&
-operator|(
-name|c
-operator|->
-name|bn
-index|[
-name|i
-index|]
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|c
-operator|->
-name|flags
-operator|&
-name|BN_FLG_MALLOCED
-condition|)
-name|Free
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_comment
+comment|/* This is an internal function that should not be used in applications.  * It ensures that 'b' has enough room for a 'words' word number number.  * It is mostly used by the various BIGNUM routines. If there is an error,  * NULL is returned. If not, 'b' is returned. */
+end_comment
 
 begin_function
 name|BIGNUM
@@ -2096,9 +1938,9 @@ if|#
 directive|if
 literal|0
 comment|/* This lot is an unrolled loop to copy b->top  			 * BN_ULONGs from B to A 			 */
-comment|/*  * I have nothing against unrolling but it's usually done for  * several reasons, namely:  * - minimize percentage of decision making code, i.e. branches;  * - avoid cache trashing;  * - make it possible to schedule loads earlier;  * Now let's examine the code below. The cornerstone of C is  * "programmer is always right" and that's what we love it for:-)  * For this very reason C compilers have to be paranoid when it  * comes to data aliasing and assume the worst. Yeah, but what  * does it mean in real life? This means that loop body below will  * be compiled to sequence of loads immediately followed by stores  * as compiler assumes the worst, something in A==B+1 style. As a  * result CPU pipeline is going to starve for incoming data. Secondly  * if A and B happen to share same cache line such code is going to  * cause severe cache trashing. Both factors have severe impact on  * performance of modern CPUs and this is the reason why this  * particulare piece of code is #ifdefed away and replaced by more  * "friendly" version found in #else section below. This comment  * also applies to BN_copy function.  *  *<appro@fy.chalmers.se>  */
+comment|/*  * I have nothing against unrolling but it's usually done for  * several reasons, namely:  * - minimize percentage of decision making code, i.e. branches;  * - avoid cache trashing;  * - make it possible to schedule loads earlier;  * Now let's examine the code below. The cornerstone of C is  * "programmer is always right" and that's what we love it for:-)  * For this very reason C compilers have to be paranoid when it  * comes to data aliasing and assume the worst. Yeah, but what  * does it mean in real life? This means that loop body below will  * be compiled to sequence of loads immediately followed by stores  * as compiler assumes the worst, something in A==B+1 style. As a  * result CPU pipeline is going to starve for incoming data. Secondly  * if A and B happen to share same cache line such code is going to  * cause severe cache trashing. Both factors have severe impact on  * performance of modern CPUs and this is the reason why this  * particular piece of code is #ifdefed away and replaced by more  * "friendly" version found in #else section below. This comment  * also applies to BN_copy function.  *  *<appro@fy.chalmers.se>  */
 block|for (i=b->top&(~7); i>0; i-=8) 				{ 				A[0]=B[0]; A[1]=B[1]; A[2]=B[2]; A[3]=B[3]; 				A[4]=B[4]; A[5]=B[5]; A[6]=B[6]; A[7]=B[7]; 				A+=8; 				B+=8; 				} 			switch (b->top&7) 				{ 			case 7: 				A[6]=B[6]; 			case 6: 				A[5]=B[5]; 			case 5: 				A[4]=B[4]; 			case 4: 				A[3]=B[3]; 			case 3: 				A[2]=B[2]; 			case 2: 				A[1]=B[1]; 			case 1: 				A[0]=B[0]; 			case 0:
-comment|/* I need the 'case 0' entry for utrix cc. 				 * If the optimiser is turned on, it does the 				 * switch table by doing 				 * a=top&7 				 * a--; 				 * goto jump_table[a]; 				 * If top is 0, this makes us jump to 0xffffffc  				 * which is rather bad :-(. 				 * eric 23-Apr-1998 				 */
+comment|/* I need the 'case 0' entry for utrix cc. 				 * If the optimizer is turned on, it does the 				 * switch table by doing 				 * a=top&7 				 * a--; 				 * goto jump_table[a]; 				 * If top is 0, this makes us jump to 0xffffffc  				 * which is rather bad :-(. 				 * eric 23-Apr-1998 				 */
 block|; 				}
 else|#
 directive|else

@@ -22,20 +22,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"cryptlib.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_SYS_TYPES_H
+end_ifndef
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -66,6 +71,7 @@ name|i2d
 function_decl|)
 parameter_list|()
 parameter_list|,
+specifier|const
 name|EVP_MD
 modifier|*
 name|type

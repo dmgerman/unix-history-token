@@ -57,7 +57,7 @@ condition|(
 operator|(
 name|os
 operator|=
-name|ASN1_OCTET_STRING_new
+name|M_ASN1_OCTET_STRING_new
 argument_list|()
 operator|)
 operator|==
@@ -71,7 +71,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|ASN1_OCTET_STRING_set
+name|M_ASN1_OCTET_STRING_set
 argument_list|(
 name|os
 argument_list|,
@@ -170,7 +170,7 @@ return|;
 block|}
 name|p
 operator|=
-name|ASN1_STRING_data
+name|M_ASN1_STRING_data
 argument_list|(
 name|a
 operator|->
@@ -181,7 +181,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ASN1_STRING_length
+name|M_ASN1_STRING_length
 argument_list|(
 name|a
 operator|->
@@ -364,16 +364,16 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|ASN1_STRING_length
+name|M_ASN1_STRING_length_set
 argument_list|(
 name|osp
-argument_list|)
-operator|=
+argument_list|,
 name|size
+argument_list|)
 expr_stmt|;
 name|p
 operator|=
-name|ASN1_STRING_data
+name|M_ASN1_STRING_data
 argument_list|(
 name|osp
 argument_list|)
@@ -514,7 +514,7 @@ goto|;
 block|}
 name|p
 operator|=
-name|ASN1_STRING_data
+name|M_ASN1_STRING_data
 argument_list|(
 name|a
 operator|->
@@ -525,7 +525,7 @@ argument_list|)
 expr_stmt|;
 name|length
 operator|=
-name|ASN1_STRING_length
+name|M_ASN1_STRING_length
 argument_list|(
 name|a
 operator|->
@@ -683,7 +683,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ASN1_STRING_length
+name|M_ASN1_STRING_length
 argument_list|(
 name|os
 argument_list|)
@@ -713,7 +713,7 @@ name|memcpy
 argument_list|(
 name|data
 argument_list|,
-name|ASN1_STRING_data
+name|M_ASN1_STRING_data
 argument_list|(
 name|os
 argument_list|)
@@ -742,7 +742,7 @@ name|os
 operator|!=
 name|NULL
 condition|)
-name|ASN1_OCTET_STRING_free
+name|M_ASN1_OCTET_STRING_free
 argument_list|(
 name|os
 argument_list|)
@@ -753,7 +753,7 @@ name|ai
 operator|!=
 name|NULL
 condition|)
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|ai
 argument_list|)

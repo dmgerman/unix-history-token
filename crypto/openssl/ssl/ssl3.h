@@ -365,45 +365,14 @@ define|#
 directive|define
 name|SSL3_RT_MAX_DATA_SIZE
 value|(1024*1024)
-comment|/* the states that a SSL3_RECORD can be in  * For SSL_read it goes  * rbuf->ENCODED	-> read   * ENCODED		-> we need to decode everything - call decode_record  */
-define|#
-directive|define
-name|SSL3_RS_BLANK
-value|1
-define|#
-directive|define
-name|SSL3_RS_DATA
-define|#
-directive|define
-name|SSL3_RS_ENCODED
-value|2
-define|#
-directive|define
-name|SSL3_RS_READ_MORE
-value|3
-define|#
-directive|define
-name|SSL3_RS_WRITE_MORE
-define|#
-directive|define
-name|SSL3_RS_PLAIN
-value|3
-define|#
-directive|define
-name|SSL3_RS_PART_READ
-value|4
-define|#
-directive|define
-name|SSL3_RS_PART_WRITE
-value|5
 define|#
 directive|define
 name|SSL3_MD_CLIENT_FINISHED_CONST
-value|{0x43,0x4C,0x4E,0x54}
+value|"\x43\x4C\x4E\x54"
 define|#
 directive|define
 name|SSL3_MD_SERVER_FINISHED_CONST
-value|{0x53,0x52,0x56,0x52}
+value|"\x53\x52\x56\x52"
 define|#
 directive|define
 name|SSL3_VERSION
@@ -502,9 +471,6 @@ name|int
 name|type
 decl_stmt|;
 comment|/* type of record */
-comment|/*  */
-comment|/*int state;*/
-comment|/* any data in it? */
 comment|/*rw*/
 name|unsigned
 name|int
@@ -545,33 +511,20 @@ typedef|typedef
 struct|struct
 name|ssl3_buffer_st
 block|{
-comment|/*r */
-name|int
-name|total
-decl_stmt|;
-comment|/* used in non-blocking writes */
-comment|/*r */
-name|int
-name|wanted
-decl_stmt|;
-comment|/* how many more bytes we need */
-comment|/*rw*/
-name|int
-name|left
-decl_stmt|;
-comment|/* how many bytes left */
-comment|/*rw*/
-name|int
-name|offset
-decl_stmt|;
-comment|/* where to 'copy from' */
-comment|/*rw*/
 name|unsigned
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-comment|/* SSL3_RT_MAX_PACKET_SIZE bytes */
+comment|/* SSL3_RT_MAX_PACKET_SIZE bytes (more if 	                   	 * SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER is set) */
+name|int
+name|offset
+decl_stmt|;
+comment|/* where to 'copy from' */
+name|int
+name|left
+decl_stmt|;
+comment|/* how many bytes left */
 block|}
 name|SSL3_BUFFER
 typedef|;
@@ -623,121 +576,9 @@ define|#
 directive|define
 name|TLS1_FLAGS_TLS_PADDING_BUG
 value|0x0008
-if|#
-directive|if
-literal|0
-define|#
-directive|define
-name|AD_CLOSE_NOTIFY
-value|0
-define|#
-directive|define
-name|AD_UNEXPECTED_MESSAGE
-value|1
-define|#
-directive|define
-name|AD_BAD_RECORD_MAC
-value|2
-define|#
-directive|define
-name|AD_DECRYPTION_FAILED
-value|3
-define|#
-directive|define
-name|AD_RECORD_OVERFLOW
-value|4
-define|#
-directive|define
-name|AD_DECOMPRESSION_FAILURE
-value|5
-comment|/* fatal */
-define|#
-directive|define
-name|AD_HANDSHAKE_FAILURE
-value|6
-comment|/* fatal */
-define|#
-directive|define
-name|AD_NO_CERTIFICATE
-value|7
-comment|/* Not under TLS */
-define|#
-directive|define
-name|AD_BAD_CERTIFICATE
-value|8
-define|#
-directive|define
-name|AD_UNSUPPORTED_CERTIFICATE
-value|9
-define|#
-directive|define
-name|AD_CERTIFICATE_REVOKED
-value|10
-define|#
-directive|define
-name|AD_CERTIFICATE_EXPIRED
-value|11
-define|#
-directive|define
-name|AD_CERTIFICATE_UNKNOWN
-value|12
-define|#
-directive|define
-name|AD_ILLEGAL_PARAMETER
-value|13
-comment|/* fatal */
-define|#
-directive|define
-name|AD_UNKNOWN_CA
-value|14
-comment|/* fatal */
-define|#
-directive|define
-name|AD_ACCESS_DENIED
-value|15
-comment|/* fatal */
-define|#
-directive|define
-name|AD_DECODE_ERROR
-value|16
-comment|/* fatal */
-define|#
-directive|define
-name|AD_DECRYPT_ERROR
-value|17
-define|#
-directive|define
-name|AD_EXPORT_RESTRICION
-value|18
-comment|/* fatal */
-define|#
-directive|define
-name|AD_PROTOCOL_VERSION
-value|19
-comment|/* fatal */
-define|#
-directive|define
-name|AD_INSUFFICIENT_SECURITY
-value|20
-comment|/* fatal */
-define|#
-directive|define
-name|AD_INTERNAL_ERROR
-value|21
-comment|/* fatal */
-define|#
-directive|define
-name|AD_USER_CANCLED
-value|22
-define|#
-directive|define
-name|AD_NO_RENEGOTIATION
-value|23
-endif|#
-directive|endif
 typedef|typedef
 struct|struct
-name|ssl3_ctx_st
+name|ssl3_state_st
 block|{
 name|long
 name|flags
@@ -803,7 +644,29 @@ name|SSL3_RECORD
 name|wrec
 decl_stmt|;
 comment|/* goes out from here */
-comment|/* Used by ssl3_read_n to point 				 * to input data packet */
+comment|/* storage for Alert/Handshake protocol data received but not 	 * yet processed by ssl3_read_bytes: */
+name|unsigned
+name|char
+name|alert_fragment
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|unsigned
+name|int
+name|alert_fragment_len
+decl_stmt|;
+name|unsigned
+name|char
+name|handshake_fragment
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|unsigned
+name|int
+name|handshake_fragment_len
+decl_stmt|;
 comment|/* partial write - check the numbers match */
 name|unsigned
 name|int
@@ -844,7 +707,7 @@ decl_stmt|;
 name|int
 name|fatal_alert
 decl_stmt|;
-comment|/* we alow one fatal and one warning alert to be outstanding, 	 * send close alert via the warning alert */
+comment|/* we allow one fatal and one warning alert to be outstanding, 	 * send close alert via the warning alert */
 name|int
 name|alert_dispatch
 decl_stmt|;
@@ -870,7 +733,17 @@ name|in_read_app_data
 decl_stmt|;
 struct|struct
 block|{
-comment|/* Actually only needs to be 16+20 for SSLv3 and 12 for TLS */
+comment|/* actually only needs to be 16+20 */
+name|unsigned
+name|char
+name|cert_verify_md
+index|[
+name|EVP_MAX_MD_SIZE
+operator|*
+literal|2
+index|]
+decl_stmt|;
+comment|/* actually only need to be 16+20 for SSLv3 and 12 for TLS */
 name|unsigned
 name|char
 name|finish_md
@@ -879,6 +752,21 @@ name|EVP_MAX_MD_SIZE
 operator|*
 literal|2
 index|]
+decl_stmt|;
+name|int
+name|finish_md_len
+decl_stmt|;
+name|unsigned
+name|char
+name|peer_finish_md
+index|[
+name|EVP_MAX_MD_SIZE
+operator|*
+literal|2
+index|]
+decl_stmt|;
+name|int
+name|peer_finish_md_len
 decl_stmt|;
 name|unsigned
 name|long
@@ -972,7 +860,7 @@ block|}
 name|tmp
 struct|;
 block|}
-name|SSL3_CTX
+name|SSL3_STATE
 typedef|;
 comment|/* SSLv3 */
 comment|/*client */
@@ -1230,7 +1118,7 @@ name|SSL3_ST_SW_FINISHED_B
 value|(0x1E1|SSL_ST_ACCEPT)
 define|#
 directive|define
-name|SSL3_MT_CLIENT_REQUEST
+name|SSL3_MT_HELLO_REQUEST
 value|0
 define|#
 directive|define

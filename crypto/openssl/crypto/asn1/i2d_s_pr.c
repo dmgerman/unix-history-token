@@ -413,10 +413,6 @@ expr_stmt|;
 block|}
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|bs
 operator|.
 name|data

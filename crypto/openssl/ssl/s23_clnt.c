@@ -253,7 +253,7 @@ name|new_state
 decl_stmt|,
 name|state
 decl_stmt|;
-name|RAND_seed
+name|RAND_add
 argument_list|(
 operator|&
 name|Time
@@ -262,6 +262,8 @@ sizeof|sizeof
 argument_list|(
 name|Time
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ERR_clear_error
@@ -761,7 +763,7 @@ name|s3
 operator|->
 name|client_random
 expr_stmt|;
-name|RAND_bytes
+name|RAND_pseudo_bytes
 argument_list|(
 name|p
 argument_list|,
@@ -1037,7 +1039,7 @@ argument_list|,
 name|SSL3_RANDOM_SIZE
 argument_list|)
 expr_stmt|;
-name|RAND_bytes
+name|RAND_pseudo_bytes
 argument_list|(
 operator|&
 operator|(
@@ -1193,8 +1195,6 @@ name|p
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|ch_len
 decl_stmt|;
 name|int
 name|n
@@ -1290,6 +1290,9 @@ else|#
 directive|else
 comment|/* we are talking sslv2 */
 comment|/* we need to clean up the SSLv3 setup and put in the 		 * sslv2 stuff. */
+name|int
+name|ch_len
+decl_stmt|;
 if|if
 condition|(
 name|s

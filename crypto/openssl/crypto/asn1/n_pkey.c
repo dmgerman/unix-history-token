@@ -586,10 +586,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|pkey
 operator|->
 name|private_key
@@ -1080,7 +1076,7 @@ argument_list|,
 name|ASN1_R_PRIVATE_KEY_HEADER_MISSING
 argument_list|)
 expr_stmt|;
-name|ASN1_BIT_STRING_free
+name|M_ASN1_BIT_STRING_free
 argument_list|(
 name|os
 argument_list|)
@@ -1089,7 +1085,7 @@ goto|goto
 name|err
 goto|;
 block|}
-name|ASN1_BIT_STRING_free
+name|M_ASN1_BIT_STRING_free
 argument_list|(
 name|os
 argument_list|)
@@ -1558,7 +1554,7 @@ name|os
 operator|!=
 name|NULL
 condition|)
-name|ASN1_BIT_STRING_free
+name|M_ASN1_BIT_STRING_free
 argument_list|(
 name|os
 argument_list|)
@@ -1773,7 +1769,7 @@ name|ret
 operator|->
 name|version
 argument_list|,
-name|ASN1_INTEGER_new
+name|M_ASN1_INTEGER_new
 argument_list|)
 expr_stmt|;
 name|M_ASN1_New
@@ -1791,7 +1787,7 @@ name|ret
 operator|->
 name|private_key
 argument_list|,
-name|ASN1_OCTET_STRING_new
+name|M_ASN1_OCTET_STRING_new
 argument_list|)
 expr_stmt|;
 return|return
@@ -1824,7 +1820,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|a
 operator|->
@@ -1838,7 +1834,7 @@ operator|->
 name|algor
 argument_list|)
 expr_stmt|;
-name|ASN1_OCTET_STRING_free
+name|M_ASN1_OCTET_STRING_free
 argument_list|(
 name|a
 operator|->
@@ -1847,10 +1843,6 @@ argument_list|)
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|a
 argument_list|)
 expr_stmt|;
@@ -1865,6 +1857,37 @@ end_endif
 begin_comment
 comment|/* NO_RC4 */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !NO_RSA */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|PEDANTIC
+end_if
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|dummy
+init|=
+operator|&
+name|dummy
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

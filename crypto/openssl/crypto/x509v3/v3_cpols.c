@@ -780,7 +780,7 @@ name|d
 operator|.
 name|cpsuri
 operator|=
-name|ASN1_IA5STRING_new
+name|M_ASN1_IA5STRING_new
 argument_list|()
 expr_stmt|;
 if|if
@@ -1119,7 +1119,7 @@ name|not
 operator|->
 name|exptext
 operator|=
-name|ASN1_VISIBLESTRING_new
+name|M_ASN1_VISIBLESTRING_new
 argument_list|()
 expr_stmt|;
 if|if
@@ -1208,7 +1208,7 @@ name|nref
 operator|->
 name|organization
 operator|=
-name|ASN1_IA5STRING_new
+name|M_ASN1_IA5STRING_new
 argument_list|()
 expr_stmt|;
 else|else
@@ -1216,7 +1216,7 @@ name|nref
 operator|->
 name|organization
 operator|=
-name|ASN1_VISIBLESTRING_new
+name|M_ASN1_VISIBLESTRING_new
 argument_list|()
 expr_stmt|;
 if|if
@@ -2748,7 +2748,7 @@ block|{
 case|case
 name|NID_id_qt_cps
 case|:
-name|ASN1_IA5STRING_free
+name|M_ASN1_IA5STRING_free
 argument_list|(
 name|a
 operator|->
@@ -3011,7 +3011,7 @@ operator|->
 name|noticeref
 argument_list|)
 expr_stmt|;
-name|DISPLAYTEXT_free
+name|M_DISPLAYTEXT_free
 argument_list|(
 name|a
 operator|->
@@ -3245,7 +3245,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|DISPLAYTEXT_free
+name|M_DISPLAYTEXT_free
 argument_list|(
 name|a
 operator|->

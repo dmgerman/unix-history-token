@@ -131,6 +131,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|SSL23_version_str
@@ -206,6 +207,12 @@ name|ssl23_default_timeout
 block|,
 operator|&
 name|ssl3_undef_enc_method
+block|,
+name|ssl_undefined_function
+block|,
+name|ssl3_callback_ctrl
+block|,
+name|ssl3_ctx_callback_ctrl
 block|, 	}
 decl_stmt|;
 end_decl_stmt

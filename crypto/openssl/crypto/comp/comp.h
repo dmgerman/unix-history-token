@@ -75,6 +75,13 @@ name|ctrl
 function_decl|)
 parameter_list|()
 function_decl|;
+name|long
+function_decl|(
+modifier|*
+name|callback_ctrl
+function_decl|)
+parameter_list|()
+function_decl|;
 block|}
 name|COMP_METHOD
 typedef|;

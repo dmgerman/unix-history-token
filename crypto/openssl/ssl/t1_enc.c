@@ -2929,7 +2929,7 @@ name|EVP_MD_CTX
 modifier|*
 name|in2_ctx
 parameter_list|,
-name|unsigned
+specifier|const
 name|char
 modifier|*
 name|str
@@ -3889,11 +3889,11 @@ name|TLS1_AD_DECRYPT_ERROR
 operator|)
 return|;
 case|case
-name|SSL_AD_EXPORT_RESTRICION
+name|SSL_AD_EXPORT_RESTRICTION
 case|:
 return|return
 operator|(
-name|TLS1_AD_EXPORT_RESTRICION
+name|TLS1_AD_EXPORT_RESTRICTION
 operator|)
 return|;
 case|case
@@ -3921,11 +3921,11 @@ name|TLS1_AD_INTERNAL_ERROR
 operator|)
 return|;
 case|case
-name|SSL_AD_USER_CANCLED
+name|SSL_AD_USER_CANCELLED
 case|:
 return|return
 operator|(
-name|TLS1_AD_USER_CANCLED
+name|TLS1_AD_USER_CANCELLED
 operator|)
 return|;
 case|case

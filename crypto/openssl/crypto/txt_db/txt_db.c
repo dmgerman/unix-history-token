@@ -829,10 +829,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ret
 operator|->
 name|qual
@@ -952,10 +948,6 @@ name|lh_retrieve
 argument_list|(
 name|lh
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|value
 argument_list|)
 expr_stmt|;
@@ -1640,10 +1632,6 @@ index|[
 name|i
 index|]
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|row
 argument_list|)
 expr_stmt|;
@@ -1771,10 +1759,6 @@ index|[
 name|i
 index|]
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|row
 argument_list|)
 expr_stmt|;

@@ -69,6 +69,7 @@ file|<openssl/rc4.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|keys
@@ -188,6 +189,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|data_len
@@ -212,6 +214,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|data
@@ -419,6 +422,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|output

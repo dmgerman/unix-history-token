@@ -14,6 +14,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/pkcs7.h>
 end_include
 
@@ -168,6 +174,11 @@ name|ASN1_OCTET_STRING_set
 argument_list|(
 name|os
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|str
 argument_list|,
 name|strlen
@@ -322,14 +333,15 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|signed_seq2string_nid
-operator|=
+init|=
 operator|-
 literal|1
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ########################################### */
@@ -411,6 +423,11 @@ name|ASN1_OCTET_STRING_set
 argument_list|(
 name|os1
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|str1
 argument_list|,
 name|strlen
@@ -423,6 +440,11 @@ name|ASN1_OCTET_STRING_set
 argument_list|(
 name|os2
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|str1
 argument_list|,
 name|strlen
@@ -1048,6 +1070,11 @@ name|ASN1_OCTET_STRING_set
 argument_list|(
 name|os
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|str
 argument_list|,
 name|strlen
@@ -1301,6 +1328,11 @@ name|ASN1_OCTET_STRING_set
 argument_list|(
 name|os1
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|str1
 argument_list|,
 name|strlen
@@ -1313,6 +1345,11 @@ name|ASN1_OCTET_STRING_set
 argument_list|(
 name|os2
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|str1
 argument_list|,
 name|strlen

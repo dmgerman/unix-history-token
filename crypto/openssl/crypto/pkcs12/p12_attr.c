@@ -96,7 +96,7 @@ operator|!
 operator|(
 name|oct
 operator|=
-name|ASN1_OCTET_STRING_new
+name|M_ASN1_OCTET_STRING_new
 argument_list|()
 operator|)
 condition|)
@@ -115,7 +115,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|ASN1_OCTET_STRING_set
+name|M_ASN1_OCTET_STRING_set
 argument_list|(
 name|oct
 argument_list|,
@@ -340,7 +340,7 @@ operator|!
 operator|(
 name|bstr
 operator|=
-name|ASN1_BIT_STRING_new
+name|M_ASN1_BIT_STRING_new
 argument_list|()
 operator|)
 condition|)
@@ -359,7 +359,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|ASN1_BIT_STRING_set
+name|M_ASN1_BIT_STRING_set
 argument_list|(
 name|bstr
 argument_list|,
@@ -677,7 +677,7 @@ operator|!
 operator|(
 name|bmp
 operator|=
-name|ASN1_BMPSTRING_new
+name|M_ASN1_BMPSTRING_new
 argument_list|()
 operator|)
 condition|)

@@ -87,7 +87,7 @@ comment|/*double d; */
 name|long
 name|d
 decl_stmt|;
-name|RAND_bytes
+name|RAND_pseudo_bytes
 argument_list|(
 name|buf
 argument_list|,

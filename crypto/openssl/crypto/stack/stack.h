@@ -70,7 +70,7 @@ name|M_sk_num
 parameter_list|(
 name|sk
 parameter_list|)
-value|((sk)->num)
+value|((sk) ? (sk)->num:-1)
 define|#
 directive|define
 name|M_sk_value
@@ -79,7 +79,7 @@ name|sk
 parameter_list|,
 name|n
 parameter_list|)
-value|((sk)->data[n])
+value|((sk) ? (sk)->data[n] : NULL)
 name|int
 name|sk_num
 parameter_list|(

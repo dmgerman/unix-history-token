@@ -9,6 +9,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|BF_KEY
 name|bf_init
 init|=

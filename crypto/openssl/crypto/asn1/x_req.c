@@ -78,7 +78,7 @@ argument_list|,
 name|i2d_X509_PUBKEY
 argument_list|)
 expr_stmt|;
-comment|/* this is a *nasty* hack reported to be required to 	 * allow some CA Software to accept the cert request. 	 * It is not following the PKCS standards ... 	 * PKCS#10 pg 5 	 * attributes [0] IMPLICIT Attibutes 	 * NOTE: no OPTIONAL ... so it *must* be there 	 */
+comment|/* this is a *nasty* hack reported to be required to 	 * allow some CA Software to accept the cert request. 	 * It is not following the PKCS standards ... 	 * PKCS#10 pg 5 	 * attributes [0] IMPLICIT Attributes 	 * NOTE: no OPTIONAL ... so it *must* be there 	 */
 if|if
 condition|(
 name|a
@@ -146,7 +146,7 @@ argument_list|,
 name|i2d_X509_PUBKEY
 argument_list|)
 expr_stmt|;
-comment|/* this is a *nasty* hack reported to be required by some CA's. 	 * It is not following the PKCS standards ... 	 * PKCS#10 pg 5 	 * attributes [0] IMPLICIT Attibutes 	 * NOTE: no OPTIONAL ... so it *must* be there 	 */
+comment|/* this is a *nasty* hack reported to be required by some CA's. 	 * It is not following the PKCS standards ... 	 * PKCS#10 pg 5 	 * attributes [0] IMPLICIT Attributes 	 * NOTE: no OPTIONAL ... so it *must* be there 	 */
 if|if
 condition|(
 name|a
@@ -253,7 +253,7 @@ argument_list|,
 name|d2i_X509_PUBKEY
 argument_list|)
 expr_stmt|;
-comment|/* this is a *nasty* hack to allow for some CA's that 	 * have been reported as requiring it. 	 * It is not following the PKCS standards ... 	 * PKCS#10 pg 5 	 * attributes [0] IMPLICIT Attibutes 	 * NOTE: no OPTIONAL ... so it *must* be there 	 */
+comment|/* this is a *nasty* hack to allow for some CA's that 	 * have been reported as requiring it. 	 * It is not following the PKCS standards ... 	 * PKCS#10 pg 5 	 * attributes [0] IMPLICIT Attributes 	 * NOTE: no OPTIONAL ... so it *must* be there 	 */
 if|if
 condition|(
 name|asn1_Finish
@@ -328,7 +328,7 @@ name|ret
 operator|->
 name|version
 argument_list|,
-name|ASN1_INTEGER_new
+name|M_ASN1_INTEGER_new
 argument_list|)
 expr_stmt|;
 name|M_ASN1_New
@@ -393,7 +393,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|a
 operator|->
@@ -425,10 +425,6 @@ argument_list|)
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|a
 argument_list|)
 expr_stmt|;
@@ -647,7 +643,7 @@ name|ret
 operator|->
 name|signature
 argument_list|,
-name|ASN1_BIT_STRING_new
+name|M_ASN1_BIT_STRING_new
 argument_list|)
 expr_stmt|;
 return|return
@@ -753,7 +749,7 @@ operator|->
 name|sig_alg
 argument_list|)
 expr_stmt|;
-name|ASN1_BIT_STRING_free
+name|M_ASN1_BIT_STRING_free
 argument_list|(
 name|a
 operator|->
@@ -762,10 +758,6 @@ argument_list|)
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|a
 argument_list|)
 expr_stmt|;

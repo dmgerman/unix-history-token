@@ -249,6 +249,10 @@ name|ERR_LIB_PKCS12
 value|35
 define|#
 directive|define
+name|ERR_LIB_RAND
+value|36
+define|#
+directive|define
 name|ERR_LIB_USER
 value|128
 define|#
@@ -467,6 +471,15 @@ parameter_list|,
 name|r
 parameter_list|)
 value|ERR_PUT_error(ERR_LIB_PKCS12,(f),(r),ERR_file_name,__LINE__)
+define|#
+directive|define
+name|RANDerr
+parameter_list|(
+name|f
+parameter_list|,
+name|r
+parameter_list|)
+value|ERR_PUT_error(ERR_LIB_RAND,(f),(r),ERR_file_name,__LINE__)
 comment|/* Borland C seems too stupid to be able to shift and do longs in  * the pre-processor :-( */
 define|#
 directive|define
@@ -507,7 +520,7 @@ parameter_list|(
 name|l
 parameter_list|)
 value|(int)((l)&ERR_R_FATAL)
-comment|/* OS fuctions */
+comment|/* OS functions */
 define|#
 directive|define
 name|SYS_F_FOPEN

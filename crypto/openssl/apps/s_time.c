@@ -35,32 +35,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NO_RSA
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NO_SSL2
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NO_SSL2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -816,7 +790,7 @@ name|char
 name|umsg
 index|[]
 init|=
-literal|"\ -time arg     - max number of seconds to collect data, default %d\n\ -verify arg   - turn on peer certificate verification, arg == depth\n\ -cert arg     - certificate file to use, PEM format assumed\n\ -key arg      - RSA file to use, PEM format assumed, key is in cert file\n\                 file if not specified by this option\n\ -CApath arg   - PEM format directory of CA's\n\ -CAfile arg   - PEM format file of CA's\n\ -cipher       - prefered cipher to use, play with 'openssl ciphers'\n\n"
+literal|"\ -time arg     - max number of seconds to collect data, default %d\n\ -verify arg   - turn on peer certificate verification, arg == depth\n\ -cert arg     - certificate file to use, PEM format assumed\n\ -key arg      - RSA file to use, PEM format assumed, key is in cert file\n\                 file if not specified by this option\n\ -CApath arg   - PEM format directory of CA's\n\ -CAfile arg   - PEM format file of CA's\n\ -cipher       - preferred cipher to use, play with 'openssl ciphers'\n\n"
 decl_stmt|;
 name|printf
 argument_list|(
@@ -850,7 +824,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"-bugs         - Turn on SSL bug compatability\n"
+literal|"-bugs         - Turn on SSL bug compatibility\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -910,36 +884,6 @@ expr_stmt|;
 name|verify_error
 operator|=
 name|X509_V_OK
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FIONBIO
-name|t_nbio
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-name|apps_startup
-argument_list|()
-expr_stmt|;
-name|s_time_init
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|bio_err
-operator|==
-name|NULL
-condition|)
-name|bio_err
-operator|=
-name|BIO_new_fp
-argument_list|(
-name|stderr
-argument_list|,
-name|BIO_NOCLOSE
-argument_list|)
 expr_stmt|;
 name|argc
 operator|--
@@ -1661,6 +1605,19 @@ begin_comment
 comment|/***********************************************************************  * MAIN - main processing area for client  *			real name depends on MONOLITH  */
 end_comment
 
+begin_function_decl
+name|int
+name|MAIN
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|MAIN
@@ -1714,6 +1671,27 @@ decl_stmt|;
 name|int
 name|ver
 decl_stmt|;
+name|apps_startup
+argument_list|()
+expr_stmt|;
+name|s_time_init
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|bio_err
+operator|==
+name|NULL
+condition|)
+name|bio_err
+operator|=
+name|BIO_new_fp
+argument_list|(
+name|stderr
+argument_list|,
+name|BIO_NOCLOSE
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 operator|!
@@ -1773,7 +1751,7 @@ condition|)
 goto|goto
 name|end
 goto|;
-name|SSLeay_add_ssl_algorithms
+name|OpenSSL_add_ssl_algorithms
 argument_list|()
 expr_stmt|;
 if|if
@@ -1860,7 +1838,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* BIO_printf(bio_err,"error seting default verify locations\n"); */
+comment|/* BIO_printf(bio_err,"error setting default verify locations\n"); */
 name|ERR_print_errors
 argument_list|(
 name|bio_err
@@ -2749,10 +2727,6 @@ name|NULL
 condition|)
 name|serverCon
 operator|=
-operator|(
-name|SSL
-operator|*
-operator|)
 name|SSL_new
 argument_list|(
 name|tm_ctx

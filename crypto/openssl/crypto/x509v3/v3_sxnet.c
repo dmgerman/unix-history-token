@@ -275,7 +275,7 @@ name|ret
 operator|->
 name|version
 argument_list|,
-name|ASN1_INTEGER_new
+name|M_ASN1_INTEGER_new
 argument_list|)
 expr_stmt|;
 name|M_ASN1_New
@@ -386,7 +386,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|a
 operator|->
@@ -511,7 +511,7 @@ name|ret
 operator|->
 name|user
 argument_list|,
-name|ASN1_OCTET_STRING_new
+name|M_ASN1_OCTET_STRING_new
 argument_list|)
 expr_stmt|;
 return|return
@@ -609,14 +609,14 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|a
 operator|->
 name|zone
 argument_list|)
 expr_stmt|;
-name|ASN1_OCTET_STRING_free
+name|M_ASN1_OCTET_STRING_free
 argument_list|(
 name|a
 operator|->
@@ -751,7 +751,7 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
-name|ASN1_OCTET_STRING_print
+name|M_ASN1_OCTET_STRING_print
 argument_list|(
 name|out
 argument_list|,
@@ -986,7 +986,7 @@ operator|!
 operator|(
 name|izone
 operator|=
-name|ASN1_INTEGER_new
+name|M_ASN1_INTEGER_new
 argument_list|()
 operator|)
 operator|||
@@ -1006,7 +1006,7 @@ argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|izone
 argument_list|)
@@ -1220,7 +1220,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ASN1_OCTET_STRING_set
+name|M_ASN1_OCTET_STRING_set
 argument_list|(
 name|id
 operator|->
@@ -1347,7 +1347,7 @@ argument_list|,
 name|izone
 argument_list|)
 expr_stmt|;
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|izone
 argument_list|)
@@ -1388,7 +1388,7 @@ operator|!
 operator|(
 name|izone
 operator|=
-name|ASN1_INTEGER_new
+name|M_ASN1_INTEGER_new
 argument_list|()
 operator|)
 operator|||
@@ -1408,7 +1408,7 @@ argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|izone
 argument_list|)
@@ -1426,7 +1426,7 @@ argument_list|,
 name|izone
 argument_list|)
 expr_stmt|;
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|izone
 argument_list|)
@@ -1491,7 +1491,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ASN1_INTEGER_cmp
+name|M_ASN1_INTEGER_cmp
 argument_list|(
 name|id
 operator|->

@@ -532,10 +532,20 @@ argument_list|(
 name|CRYPTO_LOCK_GETSERVBYNAME
 argument_list|)
 expr_stmt|;
+comment|/* Note: under VMS with SOCKETSHR, it seems like the first 		 * parameter is 'char *', instead of 'const char *' 		 */
 name|s
 operator|=
 name|getservbyname
 argument_list|(
+ifndef|#
+directive|ifndef
+name|CONST_STRICT
+operator|(
+name|char
+operator|*
+operator|)
+endif|#
+directive|endif
 name|str
 argument_list|,
 literal|"tcp"
@@ -1232,8 +1242,6 @@ operator|->
 name|h_name
 argument_list|,
 name|j
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 for|for
@@ -1307,8 +1315,6 @@ name|i
 index|]
 argument_list|,
 name|j
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1547,10 +1553,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|a
 operator|->
 name|h_name
@@ -1713,10 +1715,20 @@ block|{
 name|BIO_ghbn_miss
 operator|++
 expr_stmt|;
+comment|/* Note: under VMS with SOCKETSHR, it seems like the first 		 * parameter is 'char *', instead of 'const char *' 		 */
 name|ret
 operator|=
 name|gethostbyname
 argument_list|(
+ifndef|#
+directive|ifndef
+name|CONST_STRICT
+operator|(
+name|char
+operator|*
+operator|)
+endif|#
+directive|endif
 name|name
 argument_list|)
 expr_stmt|;

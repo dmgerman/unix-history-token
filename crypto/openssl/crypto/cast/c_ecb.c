@@ -26,6 +26,7 @@ file|<openssl/opensslv.h>
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|CAST_version

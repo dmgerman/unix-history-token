@@ -150,6 +150,9 @@ init|;
 condition|;
 control|)
 block|{
+if|if
+condition|(
+operator|!
 name|BN_rand
 argument_list|(
 name|priv_key
@@ -160,7 +163,10 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 if|if
 condition|(
 name|BN_cmp

@@ -539,7 +539,7 @@ operator|!
 operator|(
 name|oct
 operator|=
-name|ASN1_OCTET_STRING_new
+name|M_ASN1_OCTET_STRING_new
 argument_list|()
 operator|)
 condition|)

@@ -35,6 +35,7 @@ name|char
 modifier|*
 name|MD2
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*

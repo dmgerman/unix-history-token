@@ -298,7 +298,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|RAND_bytes
+name|RAND_pseudo_bytes
 argument_list|(
 name|shortbuf
 operator|+
@@ -318,11 +318,6 @@ else|else
 block|{
 name|cp
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|buf
 expr_stmt|;
 name|rnum
@@ -428,13 +423,17 @@ operator|+=
 name|i
 control|)
 block|{
-comment|/* eay 26/08/92 I was not doing writing from where we 		 * got upto. */
+comment|/* eay 26/08/92 I was not doing writing from where we 		 * got up to. */
 name|i
 operator|=
 name|write
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 operator|(
 name|outbuf
@@ -456,6 +455,9 @@ operator|-
 literal|1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|EINTR
 if|if
 condition|(
 name|errno
@@ -467,6 +469,8 @@ operator|=
 literal|0
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 comment|/* This is really a bad error - very bad 				 * It will stuff-up both ends. */
 return|return
 operator|(

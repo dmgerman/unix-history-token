@@ -3,6 +3,10 @@ begin_comment
 comment|/* NOCW */
 end_comment
 
+begin_comment
+comment|/* used by apps/speed.c */
+end_comment
+
 begin_function_decl
 name|DSA
 modifier|*
@@ -2382,6 +2386,26 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rnd_seed
+index|[]
+init|=
+literal|"string to make the random number generator think it has entropy"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|rnd_fake
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

@@ -111,6 +111,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PTHREADS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pthread.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -154,7 +171,7 @@ file|<openssl/err.h>
 end_include
 
 begin_function_decl
-name|int
+name|void
 name|CRYPTO_thread_setup
 parameter_list|(
 name|void
@@ -289,7 +306,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* usage:  * CRYPTO_thread_setup();  * applicaion code  * CRYPTO_thread_cleanup();  */
+comment|/* usage:  * CRYPTO_thread_setup();  * application code  * CRYPTO_thread_cleanup();  */
 end_comment
 
 begin_define
@@ -308,15 +325,13 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|HANDLE
+modifier|*
 name|lock_cs
-index|[
-name|CRYPTO_NUM_LOCKS
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|void
 name|CRYPTO_thread_setup
 parameter_list|(
 name|void
@@ -325,6 +340,19 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|lock_cs
+operator|=
+name|Malloc
+argument_list|(
+name|CRYPTO_num_locks
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|HANDLE
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -333,7 +361,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -408,7 +437,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -419,6 +449,11 @@ name|lock_cs
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|lock_cs
 argument_list|)
 expr_stmt|;
 block|}
@@ -495,16 +530,6 @@ directive|define
 name|USE_MUTEX
 end_define
 
-begin_decl_stmt
-specifier|static
-name|mutex_t
-name|lock_cs
-index|[
-name|CRYPTO_NUM_LOCKS
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -513,11 +538,9 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-name|long
-name|lock_count
-index|[
-name|CRYPTO_NUM_LOCKS
-index|]
+name|mutex_t
+modifier|*
+name|lock_cs
 decl_stmt|;
 end_decl_stmt
 
@@ -529,10 +552,8 @@ end_else
 begin_decl_stmt
 specifier|static
 name|rwlock_t
+modifier|*
 name|lock_cs
-index|[
-name|CRYPTO_NUM_LOCKS
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -540,6 +561,14 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|long
+modifier|*
+name|lock_count
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -551,6 +580,52 @@ block|{
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_MUTEX
+name|lock_cs
+operator|=
+name|Malloc
+argument_list|(
+name|CRYPTO_num_locks
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|mutex_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|lock_cs
+operator|=
+name|Malloc
+argument_list|(
+name|CRYPTO_num_locks
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|rwlock_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|lock_count
+operator|=
+name|Malloc
+argument_list|(
+name|CRYPTO_num_locks
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -559,7 +634,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -661,7 +737,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -697,6 +774,16 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|Free
+argument_list|(
+name|lock_cs
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|lock_count
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -886,10 +973,8 @@ begin_decl_stmt
 specifier|static
 name|usema_t
 modifier|*
+modifier|*
 name|lock_cs
-index|[
-name|CRYPTO_NUM_LOCKS
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -957,6 +1042,20 @@ argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
+name|lock_cs
+operator|=
+name|Malloc
+argument_list|(
+name|CRYPTO_num_locks
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|usema_t
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -965,7 +1064,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -1035,7 +1135,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -1079,6 +1180,11 @@ name|arena
 argument_list|)
 expr_stmt|;
 block|}
+name|Free
+argument_list|(
+name|lock_cs
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1181,20 +1287,16 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|pthread_mutex_t
+modifier|*
 name|lock_cs
-index|[
-name|CRYPTO_NUM_LOCKS
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|long
+modifier|*
 name|lock_count
-index|[
-name|CRYPTO_NUM_LOCKS
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1208,6 +1310,32 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|lock_cs
+operator|=
+name|Malloc
+argument_list|(
+name|CRYPTO_num_locks
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|pthread_mutex_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|lock_count
+operator|=
+name|Malloc
+argument_list|(
+name|CRYPTO_num_locks
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1216,7 +1344,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -1294,7 +1423,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_num_locks
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -1312,6 +1442,16 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|Free
+argument_list|(
+name|lock_cs
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|lock_count
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

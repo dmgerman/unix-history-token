@@ -60,7 +60,7 @@ file|<openssl/pem.h>
 end_include
 
 begin_comment
-comment|/* -inform arg	- input format - default PEM (DER or PEM)  * -in arg	- input file - default stdin  * -i		- indent the details by depth  * -offset	- where in the file to start  * -length	- how many bytes to use  * -oid file	- extra oid decription file  */
+comment|/* -inform arg	- input format - default PEM (DER or PEM)  * -in arg	- input file - default stdin  * -i		- indent the details by depth  * -offset	- where in the file to start  * -length	- how many bytes to use  * -oid file	- extra oid description file  */
 end_comment
 
 begin_undef
@@ -75,6 +75,19 @@ directive|define
 name|PROG
 value|asn1parse_main
 end_define
+
+begin_function_decl
+name|int
+name|MAIN
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -142,6 +155,10 @@ name|int
 name|informat
 decl_stmt|,
 name|indent
+init|=
+literal|0
+decl_stmt|,
+name|noout
 init|=
 literal|0
 decl_stmt|;
@@ -401,6 +418,23 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
+literal|"-noout"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|noout
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
 literal|"-oid"
 argument_list|)
 operator|==
@@ -609,6 +643,20 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
+literal|" -out arg      output file\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -noout arg    don't produce any output\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
 literal|" -offset arg   offset into file\n"
 argument_list|)
 expr_stmt|;
@@ -616,7 +664,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -length arg   lenth of section in file\n"
+literal|" -length arg   length of section in file\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -1204,6 +1252,9 @@ block|}
 block|}
 if|if
 condition|(
+operator|!
+name|noout
+operator|&&
 operator|!
 name|ASN1_parse
 argument_list|(

@@ -86,6 +86,7 @@ directive|endif
 end_endif
 
 begin_struct
+specifier|static
 struct|struct
 name|test_st
 block|{

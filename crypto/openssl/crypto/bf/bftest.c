@@ -90,6 +90,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|bf_key
@@ -110,6 +111,7 @@ comment|/* big endian */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|BF_LONG
 name|bf_plain
 index|[
@@ -136,6 +138,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|BF_LONG
 name|bf_cipher
 index|[
@@ -2369,6 +2372,7 @@ value|25
 end_define
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|key_test
@@ -2431,6 +2435,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|key_data
@@ -2459,6 +2464,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|key_out

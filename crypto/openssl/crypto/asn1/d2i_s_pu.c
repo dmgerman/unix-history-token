@@ -343,7 +343,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|bs
 argument_list|)
@@ -406,7 +406,7 @@ name|bs
 operator|!=
 name|NULL
 condition|)
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|bs
 argument_list|)
