@@ -103,7 +103,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|len
 argument_list|)
