@@ -2098,6 +2098,10 @@ block|,
 literal|"RTM_DELADDR"
 block|,
 literal|"RTM_IFINFO"
+block|,
+literal|"RTM_NEWMADDR"
+block|,
+literal|"RTM_DELMADDR"
 block|}
 decl_stmt|;
 specifier|static
