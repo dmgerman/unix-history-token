@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	3.17	%G%	*/
+comment|/*	tty.c	3.18	%G%	*/
 end_comment
 
 begin_comment
@@ -1075,6 +1075,32 @@ expr_stmt|;
 name|int
 name|temp
 decl_stmt|;
+comment|/* 	 * This is especially so that isatty() will 	 * fail when carrier is gone. 	 */
+if|if
+condition|(
+operator|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|CARR_ON
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|EBADF
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 comment|/* 	 * If the ioctl involves modification, 	 * insist on being able to write the device, 	 * and hang if in the background. 	 */
 switch|switch
 condition|(
@@ -1082,7 +1108,13 @@ name|com
 condition|)
 block|{
 case|case
-name|TIOCHPCL
+name|TIOCSETD
+case|:
+case|case
+name|TIOCSETP
+case|:
+case|case
+name|TIOCSETN
 case|:
 case|case
 name|TIOCFLUSH
@@ -1108,29 +1140,7 @@ case|:
 case|case
 name|TIOCSTI
 case|:
-if|if
-condition|(
-operator|(
-name|flag
-operator|&
-name|FWRITE
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|EBADF
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
+comment|/* this is reasonable, but impractical...  		if ((flag& FWRITE) == 0) { 			u.u_error = EBADF; 			return (1); 		}  */
 while|while
 condition|(
 name|tp
