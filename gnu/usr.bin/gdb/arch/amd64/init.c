@@ -755,6 +755,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|initialize_file_ftype
+name|_initialize_thread_db
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|initialize_file_ftype
 name|_initialize_tui_hooks
 decl_stmt|;
 end_decl_stmt
@@ -857,6 +864,9 @@ name|_initialize_gcore
 argument_list|()
 expr_stmt|;
 name|_initialize_fbsd_proc
+argument_list|()
+expr_stmt|;
+name|_initialize_thread_db
 argument_list|()
 expr_stmt|;
 name|_initialize_remote
