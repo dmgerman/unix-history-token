@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx.h#51 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx.h#62 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -1200,19 +1200,28 @@ block|,
 comment|/* Negotiation forced for command. */
 name|SCB_ABORT
 init|=
-literal|0x1000
+literal|0x0100
 block|,
 name|SCB_UNTAGGEDQ
 init|=
-literal|0x2000
+literal|0x0200
 block|,
 name|SCB_ACTIVE
 init|=
-literal|0x4000
+literal|0x0400
 block|,
 name|SCB_TARGET_IMMEDIATE
 init|=
-literal|0x8000
+literal|0x0800
+block|,
+name|SCB_TRANSMISSION_ERROR
+init|=
+literal|0x1000
+block|,
+comment|/* 					  * We detected a parity or CRC 					  * error that has effected the 					  * payload of the command.  This 					  * flag is checked when normal 					  * status is returned to catch 					  * the case of a target not 					  * responding to our attempt 					  * to report the error. 					  */
+name|SCB_TARGET_SCB
+init|=
+literal|0x2000
 block|}
 name|scb_flag
 typedef|;
@@ -1562,6 +1571,34 @@ begin_comment
 comment|/* Modify user negotiation settings */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AHC_WIDTH_UNKNOWN
+value|0xFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_PERIOD_UNKNOWN
+value|0xFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_OFFSET_UNKNOWN
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_PPR_OPTS_UNKNOWN
+value|0xFF
+end_define
+
 begin_comment
 comment|/*  * Transfer Negotiation Information.  */
 end_comment
@@ -1712,6 +1749,24 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Safe and valid period for async negotiations. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHC_ASYNC_XFER_PERIOD
+value|0x44
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_ULTRA2_XFER_PERIOD
+value|0x0a
+end_define
 
 begin_comment
 comment|/*  * Indexes into our table of syncronous transfer rates.  */
@@ -2016,7 +2071,7 @@ value|0x1000
 comment|/* Ultra2 secondary high term */
 define|#
 directive|define
-name|CFDOMAINVAL
+name|CFENABLEDV
 value|0x4000
 comment|/* Perform Domain Validation*/
 comment|/*  * Bus Release Time, Host Adapter ID  */
@@ -2224,6 +2279,17 @@ function_decl|)
 parameter_list|(
 name|struct
 name|ahc_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|ahc_callback_t
+parameter_list|(
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2462,6 +2528,13 @@ decl_stmt|;
 comment|/* PCI cacheline size. */
 name|u_int
 name|pci_cachesize
+decl_stmt|;
+name|u_int
+name|stack_size
+decl_stmt|;
+name|uint16_t
+modifier|*
+name|saved_stack
 decl_stmt|;
 comment|/* Per-Unit descriptive information */
 specifier|const
@@ -2756,6 +2829,17 @@ modifier|*
 parameter_list|,
 name|struct
 name|ahc_pci_identity
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ahc_pci_test_register_access
+parameter_list|(
+name|struct
+name|ahc_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3572,6 +3656,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Negotiation types.  These are used to qualify if we should renegotiate  * even if our goal and current transport parameters are identical.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|AHC_NEG_TO_GOAL
+block|,
+comment|/* Renegotiate only if goal and curr differ. */
+name|AHC_NEG_IF_NON_ASYNC
+block|,
+comment|/* Renegotiate so long as goal is non-async. */
+name|AHC_NEG_ALWAYS
+comment|/* Renegotiat even if goal is async. */
+block|}
+name|ahc_neg_type
+typedef|;
+end_typedef
+
 begin_function_decl
 name|int
 name|ahc_update_neg_request
@@ -3592,8 +3697,7 @@ name|struct
 name|ahc_initiator_tinfo
 modifier|*
 parameter_list|,
-name|int
-comment|/*force*/
+name|ahc_neg_type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3864,6 +3968,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AHC_SHOW_DV
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
 name|AHC_SHOW_SELTO
 value|0x0080
 end_define
@@ -3909,6 +4020,23 @@ name|struct
 name|scb
 modifier|*
 name|scb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahc_print_devinfo
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|,
+name|struct
+name|ahc_devinfo
+modifier|*
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
