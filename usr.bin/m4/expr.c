@@ -1407,7 +1407,7 @@ init|;
 name|i
 operator|<
 operator|(
-name|int
+name|ssize_t
 operator|)
 sizeof|sizeof
 argument_list|(
