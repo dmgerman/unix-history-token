@@ -14254,9 +14254,6 @@ decl_stmt|;
 name|tcb_p
 name|tp
 decl_stmt|;
-name|lcb_p
-name|lp
-decl_stmt|;
 comment|/* 	**	Sanity check 	*/
 if|if
 condition|(
@@ -14379,19 +14376,6 @@ operator|->
 name|ccb_h
 operator|.
 name|target_id
-index|]
-expr_stmt|;
-name|lp
-operator|=
-name|tp
-operator|->
-name|lp
-index|[
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|target_lun
 index|]
 expr_stmt|;
 comment|/* 	**	We do not queue more than 1 nccb per target  	**	with negotiation at any time. If this nccb was  	**	used for negotiation, clear this info in the tcb. 	*/

@@ -1536,9 +1536,6 @@ name|acl
 modifier|*
 name|acl
 decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Disallow write attempts on read-only filesystems; 	 * unless the file is a socket, fifo, or a block or 	 * character device resident on the filesystem. 	 */
@@ -1669,14 +1666,6 @@ argument_list|,
 name|M_ACL
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|len
-operator|=
-sizeof|sizeof
-argument_list|(
-operator|*
-name|acl
 argument_list|)
 expr_stmt|;
 name|error
