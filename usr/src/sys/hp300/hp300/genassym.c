@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -229,14 +229,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPMAP %d\n"
+literal|"#define\tVM_PMAP %d\n"
 argument_list|,
 operator|&
 name|vms
 operator|->
-name|vm_map
-operator|.
-name|pmap
+name|vm_pmap
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1056,25 +1054,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_SSWAP %d\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_sswap
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPCB_SIGC %d\n"
-argument_list|,
-name|pcb
-operator|->
-name|pcb_sigc
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#define\tPCB_ONFAULT %d\n"
 argument_list|,
 operator|&
@@ -1091,6 +1070,17 @@ operator|&
 name|pcb
 operator|->
 name|pcb_fpregs
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tSIZEOF_PCB %d\n"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcb
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1218,41 +1208,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-if|if
-condition|(
-operator|(
-literal|1
-operator|<<
-name|i
-operator|)
-operator|&
-name|SPTECHG
-condition|)
-name|printf
-argument_list|(
-literal|"#define\tSPTECHGB %d\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-literal|1
-operator|<<
-name|i
-operator|)
-operator|&
-name|PCB_AST
-condition|)
-name|printf
-argument_list|(
-literal|"#define\tPCB_ASTB %d\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1270,7 +1225,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
