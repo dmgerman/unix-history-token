@@ -113,12 +113,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ps.h"
 end_include
 
@@ -346,7 +340,7 @@ begin_define
 define|#
 directive|define
 name|USERLEN
-value|UT_NAMESIZE
+value|(MAXLOGNAME - 1)
 end_define
 
 begin_decl_stmt

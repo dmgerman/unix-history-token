@@ -175,12 +175,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lomac.h"
 end_include
 
@@ -2074,9 +2068,7 @@ block|{
 name|char
 name|name
 index|[
-name|UT_NAMESIZE
-operator|+
-literal|1
+name|MAXLOGNAME
 index|]
 decl_stmt|;
 name|struct
