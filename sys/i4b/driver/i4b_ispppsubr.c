@@ -8078,6 +8078,27 @@ case|:
 case|case
 name|STATE_REQ_SENT
 case|:
+comment|/* 			 * sppp_cp_change_state() have the side effect of 			 * restarting the timeouts. We want to avoid that 			 * if the state don't change, otherwise we won't 			 * ever timeout and resend a configuration request 			 * that got lost. 			 */
+if|if
+condition|(
+name|sp
+operator|->
+name|state
+index|[
+name|cp
+operator|->
+name|protoidx
+index|]
+operator|==
+operator|(
+name|rv
+condition|?
+name|STATE_ACK_SENT
+else|:
+name|STATE_REQ_SENT
+operator|)
+condition|)
+break|break;
 name|sppp_cp_change_state
 argument_list|(
 name|cp
