@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	5.29 (Berkeley) %G%"
+literal|"@(#)rcp.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,10 +199,6 @@ name|int
 name|use_kerberos
 init|=
 literal|1
-decl_stmt|,
-name|encrypt
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -227,12 +223,43 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRYPT
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|encrypt
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|OPTIONS
 value|"dfkprtx"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OPTIONS
+value|"dfkprt"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -372,6 +399,9 @@ modifier|*
 name|targ
 decl_stmt|,
 modifier|*
+name|shell
+decl_stmt|,
+modifier|*
 name|colon
 argument_list|()
 decl_stmt|;
@@ -450,6 +480,9 @@ operator|=
 name|dst_realm_buf
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|CRYPT
 case|case
 literal|'x'
 case|:
@@ -459,6 +492,8 @@ literal|1
 expr_stmt|;
 comment|/* des_set_key(cred.session, schedule); */
 break|break;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* rshd-invoked options (server) */
@@ -515,17 +550,30 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KERBEROS
-name|sp
+ifdef|#
+directive|ifdef
+name|CRYPT
+name|shell
 operator|=
-name|getservbyname
-argument_list|(
-operator|(
 name|encrypt
 condition|?
 literal|"ekshell"
 else|:
 literal|"kshell"
-operator|)
+expr_stmt|;
+else|#
+directive|else
+name|shell
+operator|=
+literal|"kshell"
+expr_stmt|;
+endif|#
+directive|endif
+name|sp
+operator|=
+name|getservbyname
+argument_list|(
+name|shell
 argument_list|,
 literal|"tcp"
 argument_list|)
@@ -556,13 +604,7 @@ name|msgbuf
 argument_list|,
 literal|"can't get entry for %s/tcp service"
 argument_list|,
-operator|(
-name|encrypt
-condition|?
-literal|"ekshell"
-else|:
-literal|"kshell"
-operator|)
+name|shell
 argument_list|)
 expr_stmt|;
 name|old_warning
@@ -759,6 +801,9 @@ literal|" -r"
 else|:
 literal|""
 argument_list|,
+ifdef|#
+directive|ifdef
+name|CRYPT
 operator|(
 operator|(
 name|encrypt
@@ -771,6 +816,12 @@ else|:
 literal|""
 operator|)
 argument_list|,
+else|#
+directive|else
+literal|""
+argument_list|,
+endif|#
+directive|endif
 name|pflag
 condition|?
 literal|" -p"
@@ -4986,6 +5037,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|KERBEROS
+ifdef|#
+directive|ifdef
+name|CRYPT
 operator|(
 name|void
 operator|)
@@ -5000,6 +5054,24 @@ argument_list|,
 literal|"or: rcp [-k realm] [-rpx] f1 ... fn directory"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n\t%s\n"
+argument_list|,
+literal|"usage: rcp [-k realm] [-p] f1 f2"
+argument_list|,
+literal|"or: rcp [-k realm] [-rp] f1 ... fn directory"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 else|#
 directive|else
 operator|(
@@ -5123,6 +5195,9 @@ operator|*
 name|host
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|encrypt
@@ -5150,6 +5225,8 @@ name|schedule
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|rem
 operator|=
 name|krcmd
@@ -5245,6 +5322,9 @@ block|}
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|encrypt
@@ -5263,6 +5343,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|rem
 operator|=
 name|rcmd
