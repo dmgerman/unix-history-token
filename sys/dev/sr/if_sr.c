@@ -826,27 +826,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|MODULE_DEPEND
-argument_list|(
-name|ng_sync_sr
-argument_list|,
-name|netgraph
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -1252,18 +1231,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|ngsr_init
-parameter_list|(
-name|void
-modifier|*
-name|ignored
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|ng_constructor_t
@@ -1372,14 +1339,16 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|ngsr_done_init
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|NETGRAPH_INIT
+argument_list|(
+name|sync_sr
+argument_list|,
+operator|&
+name|typestruct
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -2008,18 +1977,6 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* NETGRAPH */
-comment|/* 		 * we have found a node, make sure our 'type' is availabe. 		 */
-if|if
-condition|(
-name|ngsr_done_init
-operator|==
-literal|0
-condition|)
-name|ngsr_init
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ng_make_node_common
@@ -8301,40 +8258,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * called during bootup  * or LKM loading to put this type into the list of known modules  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|ngsr_init
-parameter_list|(
-name|void
-modifier|*
-name|ignored
-parameter_list|)
-block|{
-if|if
-condition|(
-name|ng_newtype
-argument_list|(
-operator|&
-name|typestruct
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"ngsr install failed\n"
-argument_list|)
-expr_stmt|;
-name|ngsr_done_init
-operator|=
-literal|1
-expr_stmt|;
 block|}
 end_function
 
