@@ -1797,6 +1797,9 @@ name|char
 modifier|*
 modifier|*
 name|kname
+decl_stmt|,
+modifier|*
+name|knm
 decl_stmt|;
 if|#
 directive|if
@@ -2193,6 +2196,11 @@ ifdef|#
 directive|ifdef
 name|HAVE_GETBOOTFILE
 comment|/* XXX bogus cast to avoid `const' poisoning. */
+name|kname
+operator|=
+operator|&
+name|knm
+block|;
 operator|*
 name|kname
 operator|=
