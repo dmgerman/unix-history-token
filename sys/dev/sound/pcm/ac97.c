@@ -1192,10 +1192,23 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|codec
+operator|->
+name|dev
+argument_list|,
+literal|"ac97 invalid mode set 0x%04x\n"
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 name|snd_mtxlock
 argument_list|(
 name|codec
