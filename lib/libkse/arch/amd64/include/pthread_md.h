@@ -43,23 +43,6 @@ directive|include
 file|<ucontext.h>
 end_include
 
-begin_comment
-comment|/*<machine/sysarch.h> should define this, but doesn't. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|sysarch
-parameter_list|(
-name|int
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -411,18 +394,9 @@ modifier|*
 name|kcb
 parameter_list|)
 block|{
-name|void
-modifier|*
-name|addr
-init|=
-name|kcb
-decl_stmt|;
-name|sysarch
+name|amd64_set_fsbase
 argument_list|(
-name|AMD64_SET_FSBASE
-argument_list|,
-operator|&
-name|addr
+name|kcb
 argument_list|)
 expr_stmt|;
 block|}
