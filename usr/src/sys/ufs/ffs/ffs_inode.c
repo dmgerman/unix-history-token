@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_inode.c	6.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_inode.c	6.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cmap.h"
 end_include
 
 begin_ifdef
@@ -1783,8 +1789,6 @@ name|osize
 decl_stmt|,
 name|size
 decl_stmt|,
-name|error
-decl_stmt|,
 name|count
 decl_stmt|,
 name|level
@@ -2352,7 +2356,7 @@ control|)
 block|{
 specifier|register
 name|int
-name|size
+name|bsize
 decl_stmt|;
 name|bn
 operator|=
@@ -2379,7 +2383,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|size
+name|bsize
 operator|=
 operator|(
 name|off_t
@@ -2399,14 +2403,14 @@ name|ip
 argument_list|,
 name|bn
 argument_list|,
-name|size
+name|bsize
 argument_list|)
 expr_stmt|;
 name|blocksreleased
 operator|+=
 name|btodb
 argument_list|(
-name|size
+name|bsize
 argument_list|)
 expr_stmt|;
 block|}

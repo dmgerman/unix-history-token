@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_log.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_log.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -175,6 +175,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|logopen
 argument_list|(
@@ -310,6 +314,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|logclose
 argument_list|(
@@ -364,6 +372,10 @@ directive|endif
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|logread
 argument_list|(
@@ -396,12 +408,6 @@ decl_stmt|;
 specifier|register
 name|u_int
 name|c
-decl_stmt|;
-specifier|register
-name|struct
-name|iovec
-modifier|*
-name|iov
 decl_stmt|;
 specifier|register
 name|int
@@ -635,6 +641,10 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|logselect

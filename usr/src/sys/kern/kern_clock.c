@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_clock.c	6.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_clock.c	6.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -267,8 +267,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|s
-decl_stmt|,
-name|cpstate
 decl_stmt|;
 comment|/* 	 * Update real-time timeout queue. 	 * At front of queue are some number of events which are ``due''. 	 * The time to these is<= 0 and if negative represents the 	 * number of ticks which have passed since it was supposed to happen. 	 * The rest of the q elements (times> 0) are events yet to happen, 	 * where the time for each is given as a delta from the previous. 	 * Decrementing just the first of these serves to decrement the time 	 * to all events. 	 */
 name|p1
@@ -369,51 +367,15 @@ argument_list|,
 name|SIGVTALRM
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_nice
-operator|>
-name|NZERO
-condition|)
-name|cpstate
-operator|=
-name|CP_NICE
-expr_stmt|;
-else|else
-name|cpstate
-operator|=
-name|CP_USER
-expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * CPU was in system state.  If profiling kernel 		 * increment a counter.  If no process is running 		 * then this is a system tick if we were running 		 * at a non-zero IPL (in a driver).  If a process is running, 		 * then we charge it with system time even if we were 		 * at a non-zero IPL, since the system often runs 		 * this way during processing of system calls. 		 * This is approximate, but the lack of true interval 		 * timers makes doing anything else difficult. 		 */
-name|cpstate
-operator|=
-name|CP_SYS
-expr_stmt|;
+comment|/* 		 * CPU was in system state. 		 */
 if|if
 condition|(
+operator|!
 name|noproc
 condition|)
-block|{
-if|if
-condition|(
-name|BASEPRI
-argument_list|(
-name|ps
-argument_list|)
-condition|)
-name|cpstate
-operator|=
-name|CP_IDLE
-expr_stmt|;
-block|}
-else|else
 block|{
 name|BUMPTIME
 argument_list|(
@@ -913,7 +875,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * CPU was in system state.  If profiling kernel 		 * increment a counter. 		 */
+comment|/* 		 * CPU was in system state.  If profiling kernel 		 * increment a counter.  If no process is running 		 * then this is a system tick if we were running 		 * at a non-zero IPL (in a driver).  If a process is running, 		 * then we charge it with system time even if we were 		 * at a non-zero IPL, since the system often runs 		 * this way during processing of system calls. 		 * This is approximate, but the lack of true interval 		 * timers makes doing anything else difficult. 		 */
 name|cpstate
 operator|=
 name|CP_SYS
