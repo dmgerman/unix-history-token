@@ -191,7 +191,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"  pid   proc     addr    uid  ppid  pgrp  flag   stat  wmesg    wchan  cmd\n"
+literal|"  pid   proc     uarea   uid  ppid  pgrp  flag   stat  wmesg    wchan  cmd\n"
 argument_list|)
 expr_stmt|;
 while|while
