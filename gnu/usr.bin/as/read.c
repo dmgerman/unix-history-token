@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: read.c,v 1.7 1996/10/01 00:11:37 peter Exp $"
+literal|"$Id: read.c,v 1.7.2.1 1997/04/18 17:10:45 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5916,6 +5916,11 @@ name|c
 expr_stmt|;
 name|SKIP_WHITESPACE
 argument_list|()
+expr_stmt|;
+name|S_SET_EXTERNAL
+argument_list|(
+name|symbolP
+argument_list|)
 expr_stmt|;
 name|symbolP
 operator|->
