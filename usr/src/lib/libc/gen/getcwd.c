@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getcwd.c	5.2 (Berkeley) %G%"
+literal|"@(#)getcwd.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -465,11 +465,6 @@ operator|!=
 name|cdev
 condition|)
 do|;
-name|closedir
-argument_list|(
-name|dirp
-argument_list|)
-expr_stmt|;
 name|pnptr
 operator|=
 name|prepend
@@ -484,6 +479,11 @@ name|d_name
 argument_list|,
 name|pnptr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|closedir
+argument_list|(
+name|dirp
 argument_list|)
 expr_stmt|;
 block|}
