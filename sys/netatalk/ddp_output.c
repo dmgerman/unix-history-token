@@ -633,11 +633,6 @@ block|}
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"ddp_route: still have no valid route\n"
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
