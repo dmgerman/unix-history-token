@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Make the uba interrupt file ubglue.s  */
+comment|/*  * Make the uba interrupt file ubglue.s  *	mkubglue.c	1.2	81/02/26  */
 end_comment
 
 begin_include
@@ -48,9 +48,7 @@ name|fopen
 argument_list|(
 name|path
 argument_list|(
-name|ubglue
-operator|.
-name|c
+literal|"ubglue.s"
 argument_list|)
 argument_list|,
 literal|"w"
