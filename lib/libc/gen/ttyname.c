@@ -141,8 +141,6 @@ argument_list|)
 operator|+
 name|MAXNAMLEN
 index|]
-init|=
-name|_PATH_DEV
 decl_stmt|;
 end_decl_stmt
 
