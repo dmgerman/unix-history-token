@@ -12087,6 +12087,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Atomically extract and hold the physical page with the given  * pmap and virtual address pair if that mapping permits the given  * protection.  *  * XXX Need to implement the protection check.  */
+end_comment
+
 begin_function
 name|vm_page_t
 name|pmap_extract_and_hold
