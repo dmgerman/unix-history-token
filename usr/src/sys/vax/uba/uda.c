@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)uda.c	6.7 (Berkeley) %G%  */
+comment|/*  *	@(#)uda.c	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3174,6 +3174,9 @@ name|cpu
 condition|)
 block|{
 case|case
+name|VAX_8600
+case|:
+case|case
 name|VAX_780
 case|:
 name|i
@@ -3841,9 +3844,17 @@ name|ca_ringbase
 operator|)
 operator||
 operator|(
+operator|(
 name|cpu
 operator|==
 name|VAX_780
+operator|)
+operator|||
+operator|(
+name|cpu
+operator|==
+name|VAX_8600
+operator|)
 condition|?
 name|UDA_PI
 else|:
