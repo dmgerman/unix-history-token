@@ -672,6 +672,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*   * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -710,6 +714,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|suser
@@ -721,11 +731,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 comment|/* 	 * Swap metadata may not fit in the KVM if we have physical 	 * memory of>1GB. 	 */
 if|if
 condition|(
@@ -733,11 +741,15 @@ name|swap_zone
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 name|NDINIT
 argument_list|(
 operator|&
@@ -768,11 +780,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|NDFREE
 argument_list|(
 operator|&
@@ -874,6 +884,14 @@ condition|)
 name|vrele
 argument_list|(
 name|vp
+argument_list|)
+expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
