@@ -1139,6 +1139,17 @@ begin_comment
 comment|/* No associated object */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VM_ALLOC_NOBUSY
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Do not busy the page */
+end_comment
+
 begin_function_decl
 name|void
 name|vm_page_flag_set
