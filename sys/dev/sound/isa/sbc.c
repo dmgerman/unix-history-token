@@ -1065,7 +1065,7 @@ block|}
 block|,
 comment|/* @@@1001 */
 block|{
-literal|0x01200001
+literal|0x01200000
 block|,
 literal|"Avance Logic ALS120"
 block|}
