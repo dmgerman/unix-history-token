@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ndbm.c	5.10 (Berkeley) %G%"
+literal|"@(#)ndbm.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<ndbm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_include
@@ -681,49 +675,6 @@ operator|->
 name|fp
 operator|)
 return|;
-block|}
-end_block
-
-begin_macro
-name|dbm_pagfno
-argument_list|(
-argument|db
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|DBM
-modifier|*
-name|db
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-define|#
-directive|define
-name|PAGFNOERR
-value|"ndbm: hash: dbm_pagfno not available\n"
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|STDERR_FILENO
-argument_list|,
-name|PAGFNOERR
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|PAGFNOERR
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
 block|}
 end_block
 
