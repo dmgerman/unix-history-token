@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syscallsubr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -134,29 +140,6 @@ end_decl_stmt
 begin_comment
 comment|/*  * Time of day and interval timer support.  *  * These routines provide the kernel entry points to get and set  * the time-of-day and per-process interval timers.  Subroutines  * here provide support for adding and subtracting timeval structures  * and decrementing interval timers, optionally reloading the interval  * timers when they expire.  */
 end_comment
-
-begin_function_decl
-specifier|static
-name|int
-name|nanosleep1
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|timespec
-modifier|*
-name|rqt
-parameter_list|,
-name|struct
-name|timespec
-modifier|*
-name|rmt
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1037,9 +1020,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|int
-name|nanosleep1
+name|kern_nanosleep
 parameter_list|(
 name|struct
 name|thread
@@ -1393,7 +1375,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|nanosleep1
+name|kern_nanosleep
 argument_list|(
 name|td
 argument_list|,
