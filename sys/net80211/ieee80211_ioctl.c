@@ -2421,7 +2421,9 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|len
+name|ic
+operator|->
+name|ic_des_esslen
 argument_list|)
 expr_stmt|;
 name|error
