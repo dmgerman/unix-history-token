@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.74 92/12/20$  *  *	@(#)machdep.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.74 92/12/20$  *  *	@(#)machdep.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4976,9 +4976,12 @@ block|{
 name|int
 name|nblks
 decl_stmt|;
+comment|/* 	 * XXX include the final RAM page which is not included in physmem. 	 */
 name|dumpsize
 operator|=
 name|physmem
+operator|+
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -5056,7 +5059,7 @@ name|btodb
 argument_list|(
 name|ctob
 argument_list|(
-name|physmem
+name|dumpsize
 argument_list|)
 argument_list|)
 expr_stmt|;
