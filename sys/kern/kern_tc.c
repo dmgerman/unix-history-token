@@ -2640,6 +2640,9 @@ decl_stmt|,
 modifier|*
 name|osp
 decl_stmt|;
+name|u_int64_t
+name|scale
+decl_stmt|;
 name|u_int
 name|tcount
 decl_stmt|,
@@ -2990,7 +2993,7 @@ condition|(
 name|fhard
 condition|)
 block|{
-comment|/* 		 * Feed the NTP PLL/FLL. 		 * The FLL wants to know how many nanoseconds elapsed since 		 * the previous event. 		 * I have never been able to convince myself that this code 		 * is actually correct:  Using th_scale is bound to contain 		 * a phase correction component from userland, when running 		 * as FLL, so the number hardpps() gets is not meaningful IMO. 		 */
+comment|/* 		 * Feed the NTP PLL/FLL. 		 * The FLL wants to know how many (hardware) nanoseconds 		 * elapsed since the previous event. 		 */
 name|tcount
 operator|=
 name|pps
@@ -3025,6 +3028,29 @@ name|th_counter
 operator|->
 name|tc_counter_mask
 expr_stmt|;
+name|scale
+operator|=
+operator|(
+name|u_int64_t
+operator|)
+literal|1
+operator|<<
+literal|63
+expr_stmt|;
+name|scale
+operator|/=
+name|pps
+operator|->
+name|capth
+operator|->
+name|th_counter
+operator|->
+name|tc_frequency
+expr_stmt|;
+name|scale
+operator|*=
+literal|2
+expr_stmt|;
 name|bt
 operator|.
 name|sec
@@ -3042,11 +3068,7 @@ argument_list|(
 operator|&
 name|bt
 argument_list|,
-name|pps
-operator|->
-name|capth
-operator|->
-name|th_scale
+name|scale
 operator|*
 name|tcount
 argument_list|)
