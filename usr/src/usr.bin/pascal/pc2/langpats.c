@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c 1.14 %G%"
+literal|"@(#)langpats.c 1.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -578,7 +578,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|strcmpn
+name|strncmp
 argument_list|(
 name|cp
 argument_list|,
@@ -618,7 +618,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcmpn
+name|strncmp
 argument_list|(
 operator|(
 operator|*
