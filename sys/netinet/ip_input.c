@@ -3010,6 +3010,27 @@ name|IP_OFFMASK
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|maxnipq
+operator|==
+literal|0
+condition|)
+block|{
+name|ipstat
+operator|.
+name|ips_fragments
+operator|++
+expr_stmt|;
+name|ipstat
+operator|.
+name|ips_fragdropped
+operator|++
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 name|sum
 operator|=
 name|IPREASS_HASH
@@ -3095,12 +3116,20 @@ name|fp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* check if there's a place for the new queue */
+comment|/* 		 * Enforce upper bound on number of fragmented packets 		 * for which we attempt reassembly; 		 * If maxnipq is 0, never accept fragments. (Handled above.) 		 * If maxnipq is -1, accept all fragments without limitation. 		 */
 if|if
 condition|(
+operator|(
 name|nipq
 operator|>
 name|maxnipq
+operator|)
+operator|&&
+operator|(
+name|maxnipq
+operator|>
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* 		     * drop something from the tail of the current queue 		     * before proceeding further 		     */
@@ -3174,11 +3203,17 @@ argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
+name|ipstat
+operator|.
+name|ips_fragtimeout
+operator|++
+expr_stmt|;
 break|break;
 block|}
 block|}
 block|}
 else|else
+block|{
 name|ip_freef
 argument_list|(
 operator|&
@@ -3190,6 +3225,12 @@ argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
+name|ipstat
+operator|.
+name|ips_fragtimeout
+operator|++
+expr_stmt|;
+block|}
 block|}
 name|found
 label|:
@@ -4022,7 +4063,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Enforce upper bound on number of fragmented packets 		 * for which we attempt reassembly; 		 * If maxfrag is 0, never accept fragments. 		 * If maxfrag is -1, accept all fragments without limitation. 		 */
 if|if
 condition|(
 operator|(
