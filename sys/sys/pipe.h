@@ -16,7 +16,58 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * pipe buffer information  * Separate in, out, cnt is used to simplify calculations.  */
+comment|/*  * Pipe buffer size, keep moderate in value, pipes take kva space.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PIPE_SIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PIPE_SIZE
+value|(16384)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * PIPE_MINDIRECT MUST be smaller than PIPE_SIZE and MUST be bigger  * than PIPE_BUF  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PIPE_MINDIRECT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PIPE_MINDIRECT
+value|(8192)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|PIPENPAGES
+value|(PIPE_SIZE/PAGE_SIZE + 1)
+end_define
+
+begin_comment
+comment|/*  * pipe buffer information  * Seperate in, out, cnt is used to simplify calculations.  */
 end_comment
 
 begin_struct
@@ -49,6 +100,41 @@ modifier|*
 name|object
 decl_stmt|;
 comment|/* VM object containing buffer */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * information to support direct transfers between processes for pipes  */
+end_comment
+
+begin_struct
+struct|struct
+name|pipemapping
+block|{
+name|vm_offset_t
+name|kva
+decl_stmt|;
+comment|/* kernel virtual address */
+name|vm_size_t
+name|cnt
+decl_stmt|;
+comment|/* number of chars in buffer */
+name|vm_size_t
+name|pos
+decl_stmt|;
+comment|/* current position of transfer */
+name|int
+name|npages
+decl_stmt|;
+comment|/* number of pages */
+name|vm_page_t
+name|ms
+index|[
+name|PIPENPAGES
+index|]
+decl_stmt|;
+comment|/* pages in source process */
 block|}
 struct|;
 end_struct
@@ -156,6 +242,32 @@ begin_comment
 comment|/* Process wants exclusive access to pointers/data */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PIPE_DIRECTW
+value|0x400
+end_define
+
+begin_comment
+comment|/* Pipe direct write active */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIPE_DIRECTOK
+value|0x800
+end_define
+
+begin_comment
+comment|/* Direct mode ok */
+end_comment
+
+begin_comment
+comment|/*  * Buffered write is active when buffer.cnt  * field is set.  */
+end_comment
+
 begin_comment
 comment|/*  * Per-pipe data structure  * Two of these are linked together to produce bi-directional  * pipes.  */
 end_comment
@@ -169,6 +281,11 @@ name|pipebuf
 name|pipe_buffer
 decl_stmt|;
 comment|/* data storage */
+name|struct
+name|pipemapping
+name|pipe_map
+decl_stmt|;
+comment|/* pipe mapping for dir I/O */
 name|struct
 name|selinfo
 name|pipe_sel
