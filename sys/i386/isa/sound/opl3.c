@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/opl3.c  *   * A low level driver for Yamaha YM3812 and OPL-3 -chips  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
+comment|/*  * sound/opl3.c  *  * A low level driver for Yamaha YM3812 and OPL-3 -chips  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -367,6 +367,11 @@ name|int
 name|both
 parameter_list|)
 block|{
+if|if
+condition|(
+name|opl3_enabled
+condition|)
+return|return;
 name|opl3_enabled
 operator|=
 literal|1
@@ -768,7 +773,7 @@ name|int
 name|ioaddr
 parameter_list|)
 block|{
-comment|/*    * This function returns 1 if the FM chicp is present at the given I/O port    * The detection algorithm plays with the timer built in the FM chip and    * looks for a change in the status register.    *     * Note! The timers of the FM chip are not connected to AdLib (and compatible)    * boards.    *     * Note2! The chip is initialized if detected.    */
+comment|/*    * This function returns 1 if the FM chicp is present at the given I/O port    * The detection algorithm plays with the timer built in the FM chip and    * looks for a change in the status register.    *    * Note! The timers of the FM chip are not connected to AdLib (and compatible)    * boards.    *    * Note2! The chip is initialized if detected.    */
 name|unsigned
 name|char
 name|stat1
@@ -3934,6 +3939,20 @@ parameter_list|)
 block|{ }
 end_function
 
+begin_function
+specifier|static
+name|void
+name|opl3_volume_method
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|int
+name|mode
+parameter_list|)
+block|{ }
+end_function
+
 begin_define
 define|#
 directive|define
@@ -4375,7 +4394,7 @@ operator|&
 literal|0x3
 operator|)
 expr_stmt|;
-comment|/* KEYON|OCTAVE|MS bits * of f-num */
+comment|/* KEYON|OCTAVE|MS bits 									   * of f-num */
 name|voices
 index|[
 name|voice
@@ -4479,6 +4498,8 @@ name|opl3_controller
 block|,
 name|opl3_panning
 block|,
+name|opl3_volume_method
+block|,
 name|opl3_patchmgr
 block|}
 decl_stmt|;
@@ -4536,11 +4557,23 @@ condition|(
 name|opl3_enabled
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|printk
 argument_list|(
 literal|"snd1:<Yamaha OPL-3 FM>"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printk
+argument_list|(
+literal|"<Yamaha OPL-3 FM>"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|fm_model
 operator|=
 literal|2
@@ -4641,11 +4674,23 @@ comment|/* Select all 2-OP 									 * voices */
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|printk
 argument_list|(
 literal|"snd1:<Yamaha 2-OP FM>"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printk
+argument_list|(
+literal|"<Yamaha 2-OP FM>"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|fm_model
 operator|=
 literal|1

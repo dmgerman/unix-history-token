@@ -1241,6 +1241,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|sb_midi_interrupt
+parameter_list|(
+name|int
+name|dummy
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*	From sb_mixer.c	*/
 end_comment
@@ -1282,7 +1292,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|sb_mixer_init
 parameter_list|(
 name|int
@@ -1654,6 +1664,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|gus_default_mixer_ioctl
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|unsigned
+name|int
+name|cmd
+parameter_list|,
+name|unsigned
+name|int
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*	From gus_midi.c */
 end_comment
@@ -1837,6 +1865,20 @@ parameter_list|,
 name|unsigned
 name|long
 name|parm4
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* 	From ics2101.c */
+end_comment
+
+begin_function_decl
+name|long
+name|ics2101_mixer_init
+parameter_list|(
+name|long
+name|mem_start
 parameter_list|)
 function_decl|;
 end_function_decl
