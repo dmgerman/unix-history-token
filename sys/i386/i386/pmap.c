@@ -5967,6 +5967,16 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|kernel_map
+operator|->
+name|system_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kernel_vm_end
