@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mktemp.c,v 1.7 1997/04/07 18:01:10 guido Exp $"
+literal|"$Id: mktemp.c,v 1.8 1998/02/13 02:13:24 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,21 +98,38 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_function_decl
+begin_decl_stmt
+name|char
+modifier|*
+name|_mktemp
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|_gettemp
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|char
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|int
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -187,17 +204,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_function_decl
-name|char
-modifier|*
-name|_mktemp
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|char
@@ -446,6 +452,12 @@ operator|=
 name|c
 expr_stmt|;
 block|}
+name|start
+operator|=
+name|trv
+operator|+
+literal|1
+expr_stmt|;
 comment|/* 	 * check the target directory; if you have six X's and it 	 * doesn't exist this runs for a *very* long time. 	 */
 if|if
 condition|(
@@ -456,11 +468,6 @@ condition|)
 block|{
 for|for
 control|(
-name|start
-operator|=
-name|trv
-operator|+
-literal|1
 init|;
 condition|;
 operator|--
