@@ -4022,6 +4022,13 @@ literal|"memory for cardbus device\n"
 operator|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|barlist
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -4365,6 +4372,13 @@ literal|"IO port for cardbus device\n"
 operator|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|barlist
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -4460,7 +4474,6 @@ block|}
 block|}
 block|}
 comment|/* Allocate IRQ */
-comment|/* XXX: Search CIS for IRQ description */
 name|rid
 operator|=
 literal|0
@@ -4559,6 +4572,13 @@ name|res
 argument_list|)
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|barlist
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
