@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* graph.c	1.8	83/11/22  *  *	This file contains the functions for producing the graphics  *   images in the varian/versatec drivers for ditroff.  */
+comment|/* graph.c	1.9	83/11/30  *  *	This file contains the functions for producing the graphics  *   images in the varian/versatec drivers for ditroff.  */
 end_comment
 
 begin_include
@@ -306,6 +306,13 @@ begin_comment
 comment|/*----------------------------------------------------------------------------  * Routine:	drawellip (horizontal_diameter, vertical_diameter)  *  * Results:	Draws regular ellipses given the major "diameters."  It does  *		so by drawing many small lines, every other pixel.  The ellipse  *		formula:  ((x-x0)/hrad)**2 + ((y-y0)/vrad)**2 = 1 is used,  *		converting to:  y = y0 +- vrad * sqrt(1 - ((x-x0)/hrad)**2).  *		The line segments are duplicated (mirrored) on either side of  *		the horizontal "diameter".  *  * Side Efct:	Resulting position is at (hpos + hd, vpos).  *  * Bugs:	Odd numbered horizontal axes are rounded up to even numbers.  *----------------------------------------------------------------------------*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ELLIPSEDX
+value|3
+end_define
+
 begin_expr_stmt
 name|drawellip
 argument_list|(
@@ -359,21 +366,37 @@ decl_stmt|,
 name|oldy2
 decl_stmt|;
 comment|/* oldy? are last y points drawn to */
+if|if
+condition|(
 name|hd
-operator|=
-literal|2
-operator|*
-operator|(
-operator|(
-name|hd
+operator|<
+name|ELLIPSEDX
+condition|)
+block|{
+if|if
+condition|(
+name|output
+condition|)
+name|HGtline
+argument_list|(
+name|hpos
+argument_list|,
+name|vpos
+argument_list|,
+name|hpos
 operator|+
-literal|1
-operator|)
-operator|/
-literal|2
-operator|)
+name|hd
+argument_list|,
+name|vpos
+argument_list|)
 expr_stmt|;
-comment|/* don't accept odd diameters */
+name|hmot
+argument_list|(
+name|hd
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|bx
 operator|=
 literal|4
@@ -404,22 +427,20 @@ name|hd
 operator|*
 name|hd
 operator|-
-literal|4
-operator|*
 operator|(
+literal|2
+operator|*
 name|hpos
 operator|+
 name|hd
-operator|/
-literal|2
 operator|)
 operator|*
 operator|(
+literal|2
+operator|*
 name|hpos
 operator|+
 name|hd
-operator|/
-literal|2
 operator|)
 expr_stmt|;
 name|oldy1
@@ -440,7 +461,17 @@ if|if
 condition|(
 name|output
 condition|)
-do|do
+block|{
+while|while
+condition|(
+operator|(
+name|hd
+operator|-=
+name|ELLIPSEDX
+operator|)
+operator|>
+literal|0
+condition|)
 block|{
 name|yk
 operator|=
@@ -461,13 +492,17 @@ operator|+
 operator|(
 name|bx
 operator|-=
-literal|8
+operator|(
+literal|4
+operator|*
+name|ELLIPSEDX
+operator|)
 operator|)
 operator|*
 operator|(
 name|x
 operator|+=
-literal|2
+name|ELLIPSEDX
 operator|)
 argument_list|)
 argument_list|)
@@ -477,7 +512,7 @@ name|HGtline
 argument_list|(
 name|x
 operator|-
-literal|2
+name|ELLIPSEDX
 argument_list|,
 name|oldy1
 argument_list|,
@@ -490,7 +525,7 @@ operator|+
 name|yk
 argument_list|)
 expr_stmt|;
-comment|/* top half of ellipse */
+comment|/* top half */
 name|oldy1
 operator|=
 name|y
@@ -499,7 +534,7 @@ name|HGtline
 argument_list|(
 name|x
 operator|-
-literal|2
+name|ELLIPSEDX
 argument_list|,
 name|oldy2
 argument_list|,
@@ -512,19 +547,35 @@ operator|-
 name|yk
 argument_list|)
 expr_stmt|;
-comment|/* bottom half of ellipse */
+comment|/* bottom */
 name|oldy2
 operator|=
 name|y
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|hd
-operator|-=
-literal|2
-condition|)
-do|;
+name|HGtline
+argument_list|(
+name|x
+argument_list|,
+name|oldy1
+argument_list|,
+name|hpos
+argument_list|,
+name|vpos
+argument_list|)
+expr_stmt|;
+name|HGtline
+argument_list|(
+name|x
+argument_list|,
+name|oldy2
+argument_list|,
+name|hpos
+argument_list|,
+name|vpos
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -1022,7 +1073,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*----------------------------------------------------------------------------  * Routine:	picurve (xpoints, ypoints, num_of_points)  *  * Results:	Draws a curve delimited by (not through) the line segments  *		traced by (xpoints, ypoints) point list.  This is the "Pic"  *		style curve.  *  * Bugs:	does nothing yet....  *----------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------  * Routine:	picurve (xpoints, ypoints, num_of_points)  *  * Results:	Draws a curve delimited by (not through) the line segments  *		traced by (xpoints, ypoints) point list.  This is the "Pic"  *		style curve.  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -1530,7 +1581,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*----------------------------------------------------------------------------  * Routine:	line (xstart, ystart, xend, yend)  *  * Results:	Draws a one-pixel wide line from (x0, y0) to  *		(x1, y1) using point(x,y) to place the dots.  *----------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------  * Routine:	line (xstart, ystart, xend, yend)  *  * Results:	Draws a one-pixel wide line from (x0, y0) to (x1, y1)  *		using point(x,y) to place the dots.  Line style  *		is done in this routine by masking off unwanted dots.  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_expr_stmt
