@@ -13753,6 +13753,21 @@ block|}
 else|else
 block|{
 comment|/* MPI-350 */
+comment|/* Disable interrupts. */
+name|CSR_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|AN_INT_EN
+argument_list|(
+name|sc
+operator|->
+name|mpi350
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|sc
@@ -14126,6 +14141,26 @@ operator|=
 literal|5
 expr_stmt|;
 block|}
+comment|/* Re-enable interrupts. */
+name|CSR_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|AN_INT_EN
+argument_list|(
+name|sc
+operator|->
+name|mpi350
+argument_list|)
+argument_list|,
+name|AN_INTRS
+argument_list|(
+name|sc
+operator|->
+name|mpi350
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
