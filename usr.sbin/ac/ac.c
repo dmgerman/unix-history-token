@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ac.c,v 1.2 1994/11/14 20:26:52 ache Exp $"
+literal|"$Id: ac.c,v 1.3 1995/05/30 03:45:34 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +88,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_comment
@@ -1172,6 +1178,16 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_TIME
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|fp
 operator|=
 name|NULL
