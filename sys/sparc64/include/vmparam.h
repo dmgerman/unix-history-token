@@ -330,6 +330,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|UMA_MD_SMALL_ALLOC
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|vm_offset_t
