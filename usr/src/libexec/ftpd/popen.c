@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	8.2 (Berkeley) %G%"
+literal|"@(#)popen.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -339,6 +339,8 @@ name|int
 name|flags
 init|=
 name|GLOB_BRACE
+operator||
+name|GLOB_NOCHECK
 operator||
 name|GLOB_QUOTE
 operator||

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	8.2 (Berkeley) %G%"
+literal|"@(#)ftpd.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7225,6 +7225,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|int
+name|flags
+init|=
+name|GLOB_BRACE
+operator||
+name|GLOB_NOCHECK
+operator||
+name|GLOB_QUOTE
+operator||
+name|GLOB_TILDE
+decl_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -7248,11 +7259,7 @@ name|glob
 argument_list|(
 name|whichf
 argument_list|,
-name|GLOB_BRACE
-operator||
-name|GLOB_QUOTE
-operator||
-name|GLOB_TILDE
+name|flags
 argument_list|,
 literal|0
 argument_list|,
