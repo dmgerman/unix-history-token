@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -80,6 +86,17 @@ include|#
 directive|include
 file|<err.h>
 end_include
+
+begin_comment
+comment|/* the 'sockaddr overhead' for a netgraph address. This is everything before  * the string that constitutes the address. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGSA_OVERHEAD
+value|(offsetof(struct sockaddr_ng, sg_data))
+end_define
 
 begin_decl_stmt
 specifier|extern

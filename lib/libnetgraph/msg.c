@@ -206,9 +206,7 @@ name|header
 operator|.
 name|cmdstr
 argument_list|,
-name|NG_CMDSTRLEN
-operator|+
-literal|1
+name|NG_CMDSTRSIZ
 argument_list|,
 literal|"cmd%d"
 argument_list|,
@@ -773,9 +771,9 @@ block|{
 name|u_char
 name|sgbuf
 index|[
-name|NG_PATHLEN
+name|NG_PATHSIZ
 operator|+
-literal|3
+name|NGSA_OVERHEAD
 index|]
 decl_stmt|;
 name|struct
@@ -910,19 +908,16 @@ name|sg_family
 operator|=
 name|AF_NETGRAPH
 expr_stmt|;
-name|snprintf
+comment|/* XXX handle overflow */
+name|strlcpy
 argument_list|(
 name|sg
 operator|->
 name|sg_data
 argument_list|,
-name|NG_PATHLEN
-operator|+
-literal|1
-argument_list|,
-literal|"%s"
-argument_list|,
 name|path
+argument_list|,
+name|NG_PATHSIZ
 argument_list|)
 expr_stmt|;
 name|sg
@@ -936,7 +931,9 @@ operator|->
 name|sg_data
 argument_list|)
 operator|+
-literal|3
+literal|1
+operator|+
+name|NGSA_OVERHEAD
 expr_stmt|;
 comment|/* Debugging */
 if|if
@@ -1090,13 +1087,9 @@ block|{
 name|u_char
 name|sgbuf
 index|[
-name|NG_PATHLEN
+name|NG_PATHSIZ
 operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_ng
-argument_list|)
+name|NGSA_OVERHEAD
 index|]
 decl_stmt|;
 name|struct
@@ -1181,19 +1174,15 @@ name|path
 operator|!=
 name|NULL
 condition|)
-name|snprintf
+name|strlcpy
 argument_list|(
 name|path
-argument_list|,
-name|NG_PATHLEN
-operator|+
-literal|1
-argument_list|,
-literal|"%s"
 argument_list|,
 name|sg
 operator|->
 name|sg_data
+argument_list|,
+name|NG_PATHSIZ
 argument_list|)
 expr_stmt|;
 comment|/* Debugging */
