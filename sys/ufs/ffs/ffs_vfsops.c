@@ -1837,20 +1837,11 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
-comment|/* XXX Why lock only to release immediately?? */
-name|mtx_lock
-argument_list|(
-operator|&
-name|devvp
-operator|->
-name|v_interlock
-argument_list|)
-expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|devvp
 argument_list|,
-name|LK_INTERLOCK
+literal|0
 argument_list|,
 name|td
 argument_list|)
@@ -2308,6 +2299,11 @@ argument_list|,
 name|v_nmntvnodes
 argument_list|)
 expr_stmt|;
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -2317,28 +2313,25 @@ expr_stmt|;
 comment|/* 		 * Step 4: invalidate all inactive vnodes. 		 */
 if|if
 condition|(
-name|vrecycle
+name|vp
+operator|->
+name|v_usecount
+operator|==
+literal|0
+condition|)
+block|{
+name|vgonel
 argument_list|(
 name|vp
-argument_list|,
-name|NULL
 argument_list|,
 name|td
 argument_list|)
-condition|)
+expr_stmt|;
 goto|goto
 name|loop
 goto|;
+block|}
 comment|/* 		 * Step 5: invalidate all cached file data. 		 */
-comment|/* XXX Why lock only to release immediately? */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vp
-operator|->
-name|v_interlock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vget
@@ -2716,20 +2709,11 @@ argument_list|,
 name|cred
 argument_list|)
 expr_stmt|;
-comment|/* XXX Why lock only to release immediately?? */
-name|mtx_lock
-argument_list|(
-operator|&
-name|devvp
-operator|->
-name|v_interlock
-argument_list|)
-expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|devvp
 argument_list|,
-name|LK_INTERLOCK
+literal|0
 argument_list|,
 name|td
 argument_list|)
