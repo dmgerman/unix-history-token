@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumplab.c	1.2 (UKC) %G%"
+literal|"@(#)dumplab.c	1.3 (UKC) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,6 +119,26 @@ init|=
 literal|"/etc/dumpvolumes"
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RDUMP
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|host
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|RDUMP
+end_endif
 
 begin_comment
 comment|/*  *	Called from argument decoding to store the  *	basic label format  *	This is the parameter to the -l parameter  */
@@ -849,7 +869,7 @@ literal|"Mount tape %s for reel 1 of the dump\n"
 argument_list|,
 name|createlabel
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -922,23 +942,15 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	labelcheck  *	read a dump header and check that the tape header contains  *	the label we expected  *	close the fd on error to allow upper levels to loop  */
+comment|/*  *	labelcheck  *	read a dump header and check that the tape header contains  *	the label we expected  *	close the tape after use  */
 end_comment
 
 begin_macro
 name|labelcheck
 argument_list|(
-argument|fd
-argument_list|,
 argument|tno
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|fd
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -948,11 +960,13 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|fd
+expr_stmt|;
 name|union
 name|u_spcl
 name|uin
 decl_stmt|;
-comment|/* lots on the stack but that should be OK */
 specifier|register
 name|char
 modifier|*
@@ -989,6 +1003,165 @@ argument_list|(
 name|tno
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RDUMP
+comment|/* doing it this way to make it easier to read */
+if|if
+condition|(
+name|host
+condition|)
+block|{
+while|while
+condition|(
+name|rmtopen
+argument_list|(
+name|tape
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+if|if
+condition|(
+operator|!
+name|query
+argument_list|(
+literal|"Cannot open tape. Do you want to retry the open?"
+argument_list|)
+condition|)
+name|dumpabort
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|rmtread
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|uin
+argument_list|,
+sizeof|sizeof
+name|uin
+argument_list|)
+operator|!=
+sizeof|sizeof
+name|uin
+condition|)
+block|{
+name|msg
+argument_list|(
+literal|"Tape does not start with the correctly sized record\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|rmtclose
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|ontape
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+operator|||
+name|strcmp
+argument_list|(
+name|ontape
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|ontape
+argument_list|,
+name|label
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|rmtclose
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|msg
+argument_list|(
+literal|"Tape labels do not match should be `%s' is `%s'\n"
+argument_list|,
+name|label
+argument_list|,
+name|ontape
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|rmtclose
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+endif|RDUMP
+while|while
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|tape
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+if|if
+condition|(
+operator|!
+name|query
+argument_list|(
+literal|"Cannot open tape. Do you want to retry the open?"
+argument_list|)
+condition|)
+name|dumpabort
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|read
@@ -1015,6 +1188,9 @@ argument_list|(
 literal|"Tape does not start with the correctly sized record\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fd
@@ -1055,19 +1231,12 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* skip back one record */
-if|if
-condition|(
-name|backone
+operator|(
+name|void
+operator|)
+name|close
 argument_list|(
 name|fd
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|labfatal
-argument_list|(
-literal|"Label check cannot backspace tape\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1085,6 +1254,9 @@ argument_list|,
 name|ontape
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fd
