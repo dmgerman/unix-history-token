@@ -517,6 +517,12 @@ literal|"Intel Pro/100 Ethernet"
 block|}
 block|,
 block|{
+literal|0x1059
+block|,
+literal|"Intel Pro/100 M Mobile Connection"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
