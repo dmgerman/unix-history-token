@@ -89,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|BSIZEMAX
-value|8192
+value|16384
 end_define
 
 begin_typedef
