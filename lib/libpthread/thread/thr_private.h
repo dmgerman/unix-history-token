@@ -1928,21 +1928,25 @@ directive|define
 name|THR_FLAGS_SUSPENDED
 value|0x0010
 comment|/* thread is suspended */
+comment|/* Thread list flags; only set with thread list lock held. */
 define|#
 directive|define
-name|THR_FLAGS_GC_SAFE
-value|0x0020
+name|TLFLAGS_GC_SAFE
+value|0x0001
 comment|/* thread safe for cleaning */
 define|#
 directive|define
-name|THR_FLAGS_IN_TDLIST
-value|0x0040
+name|TLFLAGS_IN_TDLIST
+value|0x0002
 comment|/* thread in all thread list */
 define|#
 directive|define
-name|THR_FLAGS_IN_GCLIST
-value|0x0080
+name|TLFLAGS_IN_GCLIST
+value|0x0004
 comment|/* thread in gc list */
+name|int
+name|tlflags
+decl_stmt|;
 comment|/* 	 * Base priority is the user setable and retrievable priority 	 * of the thread.  It is only affected by explicit calls to 	 * set thread priority and upon thread creation via a thread 	 * attribute or default priority. 	 */
 name|char
 name|base_priority
@@ -2180,7 +2184,7 @@ name|THR_LIST_ADD
 parameter_list|(
 name|thrd
 parameter_list|)
-value|do {					\ 	if (((thrd)->flags& THR_FLAGS_IN_TDLIST) == 0) {	\ 		TAILQ_INSERT_HEAD(&_thread_list, thrd, tle);	\ 		_thr_hash_add(thrd);				\ 		(thrd)->flags |= THR_FLAGS_IN_TDLIST;		\ 	}							\ } while (0)
+value|do {					\ 	if (((thrd)->tlflags& TLFLAGS_IN_TDLIST) == 0) {	\ 		TAILQ_INSERT_HEAD(&_thread_list, thrd, tle);	\ 		_thr_hash_add(thrd);				\ 		(thrd)->tlflags |= TLFLAGS_IN_TDLIST;		\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -2190,7 +2194,7 @@ name|THR_LIST_REMOVE
 parameter_list|(
 name|thrd
 parameter_list|)
-value|do {				\ 	if (((thrd)->flags& THR_FLAGS_IN_TDLIST) != 0) {	\ 		TAILQ_REMOVE(&_thread_list, thrd, tle);		\ 		_thr_hash_remove(thrd);				\ 		(thrd)->flags&= ~THR_FLAGS_IN_TDLIST;		\ 	}							\ } while (0)
+value|do {				\ 	if (((thrd)->tlflags& TLFLAGS_IN_TDLIST) != 0) {	\ 		TAILQ_REMOVE(&_thread_list, thrd, tle);		\ 		_thr_hash_remove(thrd);				\ 		(thrd)->tlflags&= ~TLFLAGS_IN_TDLIST;		\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -2200,7 +2204,7 @@ name|THR_GCLIST_ADD
 parameter_list|(
 name|thrd
 parameter_list|)
-value|do {				\ 	if (((thrd)->flags& THR_FLAGS_IN_GCLIST) == 0) {	\ 		TAILQ_INSERT_HEAD(&_thread_gc_list, thrd, gcle);\ 		(thrd)->flags |= THR_FLAGS_IN_GCLIST;		\ 		_gc_count++;					\ 	}							\ } while (0)
+value|do {				\ 	if (((thrd)->tlflags& TLFLAGS_IN_GCLIST) == 0) {	\ 		TAILQ_INSERT_HEAD(&_thread_gc_list, thrd, gcle);\ 		(thrd)->tlflags |= TLFLAGS_IN_GCLIST;		\ 		_gc_count++;					\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -2210,7 +2214,7 @@ name|THR_GCLIST_REMOVE
 parameter_list|(
 name|thrd
 parameter_list|)
-value|do {				\ 	if (((thrd)->flags& THR_FLAGS_IN_GCLIST) != 0) {	\ 		TAILQ_REMOVE(&_thread_gc_list, thrd, gcle);	\ 		(thrd)->flags&= ~THR_FLAGS_IN_GCLIST;		\ 		_gc_count--;					\ 	}							\ } while (0)
+value|do {				\ 	if (((thrd)->tlflags& TLFLAGS_IN_GCLIST) != 0) {	\ 		TAILQ_REMOVE(&_thread_gc_list, thrd, gcle);	\ 		(thrd)->tlflags&= ~TLFLAGS_IN_GCLIST;		\ 		_gc_count--;					\ 	}							\ } while (0)
 end_define
 
 begin_define

@@ -5144,11 +5144,7 @@ name|thread
 operator|->
 name|flags
 operator|&
-operator|(
 name|THR_FLAGS_PRIVATE
-operator||
-name|THR_FLAGS_IN_TDLIST
-operator|)
 expr_stmt|;
 name|psf
 operator|->
