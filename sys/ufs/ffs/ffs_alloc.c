@@ -304,7 +304,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|ino_t
+name|ufs2_daddr_t
 name|ffs_nodealloccg
 parameter_list|(
 name|struct
@@ -8254,7 +8254,7 @@ end_comment
 
 begin_function
 specifier|static
-name|ino_t
+name|ufs2_daddr_t
 name|ffs_nodealloccg
 parameter_list|(
 name|ip
