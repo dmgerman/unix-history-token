@@ -3837,6 +3837,11 @@ operator|)
 return|;
 break|break;
 default|default:
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4143,6 +4148,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Do not free mbuf chain here as it is queued in llinfo_nd6 */
 return|return
 operator|(
 literal|0
@@ -8089,6 +8095,11 @@ literal|1
 operator|)
 return|;
 default|default:
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -8101,7 +8112,22 @@ condition|(
 name|rt
 operator|==
 name|NULL
-operator|||
+condition|)
+block|{
+comment|/* This could happen if we could not allocate memory */
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|rt
 operator|->
 name|rt_gateway
@@ -8113,7 +8139,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"nd6_storelladdr: something odd happens\n"
+literal|"nd6_storelladdr: something odd happened\n"
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 return|return
@@ -8144,6 +8175,11 @@ comment|/* this should be impossible, but we bark here for debugging */
 name|printf
 argument_list|(
 literal|"nd6_storelladdr: sdl_alen == 0\n"
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 return|return
