@@ -618,8 +618,6 @@ name|ns_msg
 name|handle
 decl_stmt|;
 name|int
-name|n
-decl_stmt|,
 name|qdcount
 decl_stmt|,
 name|ancount

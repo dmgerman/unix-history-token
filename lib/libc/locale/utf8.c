@@ -139,8 +139,6 @@ decl_stmt|,
 name|len
 decl_stmt|,
 name|mask
-decl_stmt|,
-name|siglen
 decl_stmt|;
 name|rune_t
 name|lbound

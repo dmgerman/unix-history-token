@@ -141,11 +141,6 @@ decl_stmt|,
 name|x
 decl_stmt|;
 name|char
-name|tmp
-index|[
-literal|50
-index|]
-decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;

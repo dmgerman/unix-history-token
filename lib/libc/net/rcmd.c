@@ -1944,13 +1944,7 @@ name|family
 decl_stmt|;
 block|{
 name|int
-name|i
-decl_stmt|,
 name|s
-decl_stmt|,
-name|len
-decl_stmt|,
-name|err
 decl_stmt|;
 name|struct
 name|sockaddr_storage
@@ -3340,9 +3334,6 @@ decl_stmt|,
 name|hostok
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|h_error
 decl_stmt|;
 ifdef|#
 directive|ifdef

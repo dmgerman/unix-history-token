@@ -1091,8 +1091,6 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|,
-name|c
-decl_stmt|,
 name|len
 decl_stmt|,
 name|checked

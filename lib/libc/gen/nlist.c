@@ -1011,10 +1011,6 @@ name|shdr
 init|=
 name|NULL
 decl_stmt|;
-name|Elf_Shdr
-modifier|*
-name|sh
-decl_stmt|;
 name|Elf_Word
 name|shdr_size
 decl_stmt|;
