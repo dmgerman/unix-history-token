@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.21 (Berkeley) %G%"
+literal|"@(#)command.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -826,7 +826,7 @@ name|sprintf
 argument_list|(
 name|pbuf
 argument_list|,
-literal|" byte %ld"
+literal|" byte %qd"
 argument_list|,
 name|pos
 argument_list|)
@@ -856,7 +856,7 @@ name|sprintf
 argument_list|(
 name|pbuf
 argument_list|,
-literal|"/%ld pct %ld%%"
+literal|"/%qd pct %qd%%"
 argument_list|,
 name|len
 argument_list|,
@@ -959,7 +959,7 @@ name|sprintf
 argument_list|(
 name|pbuf
 argument_list|,
-literal|" (%ld%%)"
+literal|" (%qd%%)"
 argument_list|,
 operator|(
 operator|(
