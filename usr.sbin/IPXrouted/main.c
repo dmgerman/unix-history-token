@@ -1916,7 +1916,7 @@ name|fh
 operator|=
 name|fopen
 argument_list|(
-literal|"/tmp/ipxrouted.dmp"
+literal|"/var/log/ipxrouted.dmp"
 argument_list|,
 literal|"a"
 argument_list|)
