@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Device driver optimized for the Symbios/LSI 53C896/53C895A/53C1010   *  PCI-SCSI controllers.  *  *  Copyright (C) 1999  Gerard Roudier<groudier@club-internet.fr>  *  *  This driver also supports the following Symbios/LSI PCI-SCSI chips:  *	53C810A, 53C825A, 53C860, 53C875, 53C876, 53C885, 53C895.  *  *  but does not support earlier chips as the following ones:  *	53C810, 53C815, 53C825.  *    *  This driver for FreeBSD-CAM is derived from the Linux sym53c8xx driver.  *  Copyright (C) 1998-1999  Gerard Roudier  *  *  The sym53c8xx driver is derived from the ncr53c8xx driver that had been   *  a port of the FreeBSD ncr driver to Linux-1.2.13.  *  *  The original ncr driver has been written for 386bsd and FreeBSD by  *          Wolfgang Stanglmeier<wolf@cologne.de>  *          Stefan Esser<se@mi.Uni-Koeln.de>  *  Copyright (C) 1994  Wolfgang Stanglmeier  *  *  The initialisation code, and part of the code that addresses   *  FreeBSD-CAM services is based on the aic7xxx driver for FreeBSD-CAM   *  written by Justin T. Gibbs.  *  *  Other major contributions:  *  *  NVRAM detection and reading.  *  Copyright (C) 1997 Richard Waltham<dormouse@farsrobt.demon.co.uk>  *  *-----------------------------------------------------------------------------  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  *  Device driver optimized for the Symbios/LSI 53C896/53C895A/53C1010   *  PCI-SCSI controllers.  *  *  Copyright (C) 1999-2000  Gerard Roudier<groudier@club-internet.fr>  *  *  This driver also supports the following Symbios/LSI PCI-SCSI chips:  *	53C810A, 53C825A, 53C860, 53C875, 53C876, 53C885, 53C895.  *  *  but does not support earlier chips as the following ones:  *	53C810, 53C815, 53C825.  *    *  This driver for FreeBSD-CAM is derived from the Linux sym53c8xx driver.  *  Copyright (C) 1998-1999  Gerard Roudier  *  *  The sym53c8xx driver is derived from the ncr53c8xx driver that had been   *  a port of the FreeBSD ncr driver to Linux-1.2.13.  *  *  The original ncr driver has been written for 386bsd and FreeBSD by  *          Wolfgang Stanglmeier<wolf@cologne.de>  *          Stefan Esser<se@mi.Uni-Koeln.de>  *  Copyright (C) 1994  Wolfgang Stanglmeier  *  *  The initialisation code, and part of the code that addresses   *  FreeBSD-CAM services is based on the aic7xxx driver for FreeBSD-CAM   *  written by Justin T. Gibbs.  *  *  Other major contributions:  *  *  NVRAM detection and reading.  *  Copyright (C) 1997 Richard Waltham<dormouse@farsrobt.demon.co.uk>  *  *-----------------------------------------------------------------------------  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|SYM_DRIVER_NAME
-value|"sym-1.1.1-20000101"
+value|"sym-1.2.0-20000108"
 end_define
 
 begin_include
@@ -3410,6 +3410,24 @@ value|(1<<3)
 end_define
 
 begin_comment
+comment|/*  *  Host adapter miscellaneous flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYM_AVOID_BUS_RESET
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYM_SCAN_TARGETS_HILO
+value|(1<<1)
+end_define
+
+begin_comment
 comment|/*  *  Device quirks.  *  Some devices, for example the CHEETAH 2 LVD, disconnects without   *  saving the DATA POINTER then reconnect and terminates the IO.  *  On reselection, the automatic RESTORE DATA POINTER makes the   *  CURRENT DATA POINTER not point at the end of the IO.  *  This behaviour just breaks our calculation of the residual.  *  For now, we just force an AUTO SAVE on disconnection and will   *  fix that in a further driver version.  */
 end_comment
 
@@ -4617,6 +4635,10 @@ name|scratch
 decl_stmt|;
 comment|/* Scratch for SCSI receive	*/
 comment|/* 	 *  Miscellaneous configuration and status parameters. 	 */
+name|u_char
+name|usrflags
+decl_stmt|;
+comment|/* Miscellaneous user flags	*/
 name|u_char
 name|scsi_mode
 decl_stmt|;
@@ -27342,6 +27364,126 @@ argument_list|,
 name|wide
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|1
+comment|/* 		 * Negotiate for SYNC immediately after WIDE response. 		 * This allows to negotiate for both WIDE and SYNC on  		 * a single SCSI command (Suggested by Justin Gibbs). 		 */
+if|if
+condition|(
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|goal
+operator|.
+name|offset
+condition|)
+block|{
+name|np
+operator|->
+name|msgout
+index|[
+literal|0
+index|]
+operator|=
+name|M_EXTENDED
+expr_stmt|;
+name|np
+operator|->
+name|msgout
+index|[
+literal|1
+index|]
+operator|=
+literal|3
+expr_stmt|;
+name|np
+operator|->
+name|msgout
+index|[
+literal|2
+index|]
+operator|=
+name|M_X_SYNC_REQ
+expr_stmt|;
+name|np
+operator|->
+name|msgout
+index|[
+literal|3
+index|]
+operator|=
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|goal
+operator|.
+name|period
+expr_stmt|;
+name|np
+operator|->
+name|msgout
+index|[
+literal|4
+index|]
+operator|=
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|goal
+operator|.
+name|offset
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_NEGO
+condition|)
+block|{
+name|sym_print_msg
+argument_list|(
+name|cp
+argument_list|,
+literal|"sync msgout"
+argument_list|,
+name|np
+operator|->
+name|msgout
+argument_list|)
+expr_stmt|;
+block|}
+name|cp
+operator|->
+name|nego_status
+operator|=
+name|NS_SYNC
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|HS_PRT
+argument_list|,
+name|HS_NEGOTIATE
+argument_list|)
+expr_stmt|;
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|SCRIPTH_BA
+argument_list|(
+name|np
+argument_list|,
+name|sdtr_resp
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 name|OUTL
 argument_list|(
 name|nc_dsp
@@ -34280,7 +34422,7 @@ operator|->
 name|target_id
 index|]
 expr_stmt|;
-comment|/* 		 *  Update user transfer settings if asked by user. 		 */
+comment|/* 		 *  Update our transfer settings (basically WIDE/SYNC).  		 *  These features are to be handled in a per target  		 *  basis according to SCSI specifications. 		 */
 if|if
 condition|(
 operator|(
@@ -34309,7 +34451,6 @@ argument_list|,
 name|cts
 argument_list|)
 expr_stmt|;
-comment|/* 		 *  Update current wished settings if asked by user. 		 *  Force negotiations if something has changed. 		 */
 if|if
 condition|(
 operator|(
@@ -34338,7 +34479,7 @@ argument_list|,
 name|cts
 argument_list|)
 expr_stmt|;
-comment|/* 		 *  The guys that have implemented this CAM seem to  		 *  have made the common mistake about the CmdQue flag. 		 *  This feature is a device feature and so must be  		 *  handled per logical unit. 		 */
+comment|/* 		 *  Update our disconnect and tag settings. 		 *  SCSI requires CmdQue feature to be handled in a per  		 *  device (logical unit) basis. 		 */
 name|lp
 operator|=
 name|sym_lp
@@ -34797,6 +34938,34 @@ name|hba_misc
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|usrflags
+operator|&
+name|SYM_SCAN_TARGETS_HILO
+condition|)
+name|cpi
+operator|->
+name|hba_misc
+operator||=
+name|PIM_SCANHILO
+expr_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|usrflags
+operator|&
+name|SYM_AVOID_BUS_RESET
+condition|)
+name|cpi
+operator|->
+name|hba_misc
+operator||=
+name|PIM_NOBUSRESET
+expr_stmt|;
 name|cpi
 operator|->
 name|hba_eng_cnt
@@ -35174,9 +35343,7 @@ name|tip
 operator|->
 name|width
 operator|=
-name|np
-operator|->
-name|maxwide
+name|SYM_SETUP_MAX_WIDE
 expr_stmt|;
 if|if
 condition|(
@@ -35208,9 +35375,7 @@ name|tip
 operator|->
 name|offset
 operator|=
-name|np
-operator|->
-name|maxoffs
+name|SYM_SETUP_MAX_OFFS
 expr_stmt|;
 if|if
 condition|(
@@ -39416,7 +39581,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SYM_CONF_NVRAM_SUPPORT
-comment|/* 	 *  Get parity checking, host ID and verbose mode from NVRAM 	 */
+comment|/* 	 *  Get parity checking, host ID, verbose mode  	 *  and miscellaneous host flags from NVRAM. 	 */
 switch|switch
 condition|(
 name|nvram
@@ -39480,6 +39645,42 @@ operator|->
 name|verbose
 operator|+=
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|nvram
+operator|->
+name|data
+operator|.
+name|Symbios
+operator|.
+name|flags1
+operator|&
+name|SYMBIOS_SCAN_HI_LO
+condition|)
+name|np
+operator|->
+name|usrflags
+operator||=
+name|SYM_SCAN_TARGETS_HILO
+expr_stmt|;
+if|if
+condition|(
+name|nvram
+operator|->
+name|data
+operator|.
+name|Symbios
+operator|.
+name|flags2
+operator|&
+name|SYMBIOS_AVOID_BUS_RESET
+condition|)
+name|np
+operator|->
+name|usrflags
+operator||=
+name|SYM_AVOID_BUS_RESET
 expr_stmt|;
 break|break;
 case|case
@@ -39933,7 +40134,7 @@ decl_stmt|;
 comment|/* display Symbios nvram host data */
 name|printf
 argument_list|(
-literal|"%s: HOST ID=%d%s%s%s%s%s\n"
+literal|"%s: HOST ID=%d%s%s%s%s%s%s\n"
 argument_list|,
 name|sym_name
 argument_list|(
@@ -39991,6 +40192,18 @@ name|SYMBIOS_CHS_MAPPING
 operator|)
 condition|?
 literal|" CHS_ALT"
+else|:
+literal|""
+argument_list|,
+operator|(
+name|nvram
+operator|->
+name|flags2
+operator|&
+name|SYMBIOS_AVOID_BUS_RESET
+operator|)
+condition|?
+literal|" NO_RESET"
 else|:
 literal|""
 argument_list|,
