@@ -276,7 +276,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"setrunqueue: proc %p (pid %d, %s), schedlock %x"
+literal|"setrunqueue: proc %p (pid %d, %s), schedlock %lx"
 argument_list|,
 name|p
 argument_list|,
@@ -288,6 +288,9 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sched_lock
 operator|.
 name|mtx_lock
@@ -507,7 +510,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"remrunqueue: proc %p (pid %d, %s), schedlock %x"
+literal|"remrunqueue: proc %p (pid %d, %s), schedlock %lx"
 argument_list|,
 name|p
 argument_list|,
@@ -519,6 +522,9 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sched_lock
 operator|.
 name|mtx_lock
@@ -900,8 +906,11 @@ name|CTR1
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"chooseproc: idleproc, schedlock %x"
+literal|"chooseproc: idleproc, schedlock %lx"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sched_lock
 operator|.
 name|mtx_lock
@@ -973,7 +982,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"chooseproc: proc %p (pid %d, %s), schedlock %x"
+literal|"chooseproc: proc %p (pid %d, %s), schedlock %lx"
 argument_list|,
 name|p
 argument_list|,
@@ -985,6 +994,9 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sched_lock
 operator|.
 name|mtx_lock

@@ -649,6 +649,9 @@ name|printf
 argument_list|(
 literal|"%ldd"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ts
 operator|.
 name|tv_sec
@@ -682,6 +685,9 @@ name|printf
 argument_list|(
 literal|"%ldh"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ts
 operator|.
 name|tv_sec
@@ -715,6 +721,9 @@ name|printf
 argument_list|(
 literal|"%ldm"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ts
 operator|.
 name|tv_sec
@@ -737,6 +746,9 @@ name|printf
 argument_list|(
 literal|"%lds\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ts
 operator|.
 name|tv_sec
