@@ -648,10 +648,8 @@ argument_list|)
 return|;
 else|else
 return|return
-name|printf
+name|prn_normal
 argument_list|(
-literal|"%s"
-argument_list|,
 name|name
 argument_list|)
 return|;
@@ -1234,6 +1232,7 @@ operator|==
 name|NO_PRINT
 condition|)
 continue|continue;
+comment|/* XXX strlen does not take octal escapes into account. */
 if|if
 condition|(
 name|strlen

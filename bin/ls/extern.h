@@ -188,6 +188,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|prn_normal
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|size_t
 name|len_octal
 parameter_list|(
