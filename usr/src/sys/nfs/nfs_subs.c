@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.68 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.69 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5188,43 +5188,6 @@ operator|*
 name|fromcp
 operator|==
 literal|'/'
-condition|)
-block|{
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-if|if
-condition|(
-operator|*
-name|fromcp
-operator|&
-literal|0200
-condition|)
-if|if
-condition|(
-operator|(
-operator|*
-name|fromcp
-operator|&
-literal|0377
-operator|)
-operator|==
-operator|(
-literal|'/'
-operator||
-literal|0200
-operator|)
-operator|||
-name|cnp
-operator|->
-name|cn_nameiop
-operator|!=
-name|DELETE
 condition|)
 block|{
 name|error
