@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)names.c	1.1 %G%"
+literal|"@(#)names.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1397,21 +1397,21 @@ block|{
 case|case
 literal|0
 case|:
-name|signal
+name|sigsys
 argument_list|(
 name|SIGHUP
 argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigsys
 argument_list|(
 name|SIGINT
 argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigsys
 argument_list|(
 name|SIGQUIT
 argument_list|,
