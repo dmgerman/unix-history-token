@@ -243,6 +243,14 @@ directive|include
 file|"opt_vfs_aio.h"
 end_include
 
+begin_expr_stmt
+name|NET_NEEDS_GIANT
+argument_list|(
+literal|"aio"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Counter for allocating reference ids to new jobs.  Wrapped to 1 on  * overflow.  */
 end_comment
