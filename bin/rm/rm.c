@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: rm.c,v 1.11 1996/03/07 23:26:59 wosch Exp $  */
+comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: rm.c,v 1.11.2.1 1997/12/03 05:40:08 imp Exp $  */
 end_comment
 
 begin_ifndef
@@ -269,6 +269,8 @@ name|ch
 decl_stmt|,
 name|rflag
 decl_stmt|;
+name|Pflag
+operator|=
 name|rflag
 operator|=
 literal|0
@@ -375,28 +377,23 @@ argument_list|(
 name|argv
 argument_list|)
 expr_stmt|;
+name|uid
+operator|=
+name|geteuid
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|*
 name|argv
 condition|)
-name|exit
-argument_list|(
-name|eval
-argument_list|)
-expr_stmt|;
+block|{
 name|stdin_ok
 operator|=
 name|isatty
 argument_list|(
 name|STDIN_FILENO
 argument_list|)
-expr_stmt|;
-name|uid
-operator|=
-name|geteuid
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -413,6 +410,7 @@ argument_list|(
 name|argv
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 name|eval
@@ -445,6 +443,9 @@ name|int
 name|needstat
 decl_stmt|;
 name|int
+name|flags
+decl_stmt|;
+name|int
 name|rval
 decl_stmt|;
 comment|/* 	 * Remove a file hierarchy.  If forcing removal (-f), or interactive 	 * (-i) or can't ask anyway (stdin_ok), don't stat the file. 	 */
@@ -453,6 +454,7 @@ operator|=
 operator|!
 name|uid
 operator|||
+operator|(
 operator|!
 name|fflag
 operator|&&
@@ -460,6 +462,7 @@ operator|!
 name|iflag
 operator|&&
 name|stdin_ok
+operator|)
 expr_stmt|;
 comment|/* 	 * If the -i option is specified, the user can skip on the pre-order 	 * visit.  The fts_number field flags skipped directories. 	 */
 define|#
@@ -635,7 +638,8 @@ case|:
 comment|/* Pre-order: give user chance to skip. */
 if|if
 condition|(
-name|iflag
+operator|!
+name|fflag
 operator|&&
 operator|!
 name|check
@@ -748,7 +752,7 @@ name|SKIPPED
 condition|)
 continue|continue;
 break|break;
-block|}
+default|default:
 if|if
 condition|(
 operator|!
@@ -771,6 +775,7 @@ name|fts_statp
 argument_list|)
 condition|)
 continue|continue;
+block|}
 name|rval
 operator|=
 literal|0
@@ -1490,6 +1495,7 @@ operator|->
 name|st_mode
 argument_list|)
 operator|||
+operator|(
 operator|!
 name|access
 argument_list|(
@@ -1527,6 +1533,7 @@ operator|)
 operator|||
 operator|!
 name|uid
+operator|)
 operator|)
 condition|)
 return|return
@@ -1789,7 +1796,7 @@ condition|;
 operator|++
 name|t
 control|)
-empty_stmt|;
+continue|continue;
 name|t
 operator|=
 name|save
