@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexec.c 4.1 %G%"
+literal|"@(#)rexec.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_in
 name|sin
