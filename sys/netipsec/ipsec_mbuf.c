@@ -1061,8 +1061,7 @@ block|}
 else|else
 block|{
 comment|/* 		 * Copy the remainder to the back of the mbuf 		 * so there's space to write the new header. 		 */
-comment|/* XXX can this be memcpy? does it handle overlap? */
-name|ovbcopy
+name|bcopy
 argument_list|(
 name|mtod
 argument_list|(
