@@ -9514,7 +9514,7 @@ name|mdst
 argument_list|)
 argument_list|)
 decl_stmt|;
-name|bcopy
+name|pagecopy
 argument_list|(
 operator|(
 name|void
@@ -9527,8 +9527,6 @@ name|void
 operator|*
 operator|)
 name|dst
-argument_list|,
-name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
