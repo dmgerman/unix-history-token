@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cat.c	4.6 (Berkeley) %G%"
+literal|"@(#)cat.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,15 +41,6 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
-
-begin_decl_stmt
-name|char
-name|stdbuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -113,13 +104,6 @@ decl_stmt|;
 name|lno
 operator|=
 literal|1
-expr_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|stdbuf
-argument_list|)
 expr_stmt|;
 for|for
 control|(
