@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tar.c	5.8 (Berkeley) %G%"
+literal|"@(#)tar.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2677,7 +2677,7 @@ name|size
 argument_list|,
 literal|"%11lo"
 argument_list|,
-literal|0
+literal|0L
 argument_list|)
 expr_stmt|;
 name|sprintf
