@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkmakefile.c	1.25	83/02/09	*/
+comment|/*	mkmakefile.c	1.26	83/02/21	*/
 end_comment
 
 begin_comment
