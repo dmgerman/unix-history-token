@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	3.3	%G%"
+literal|"@(#)queue.c	3.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -497,6 +497,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGALRM
@@ -504,8 +507,14 @@ argument_list|,
 name|reordersig
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|alarm
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|QueueIntvl
 argument_list|)
 expr_stmt|;
@@ -534,8 +543,14 @@ comment|/* parent */
 return|return;
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|alarm
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -683,6 +698,9 @@ specifier|static
 name|int
 name|st
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|wait
 argument_list|(
 operator|&
@@ -703,7 +721,9 @@ condition|)
 block|{
 comment|/* new child; run queue */
 name|runqueue
-argument_list|()
+argument_list|(
+name|FALSE
+argument_list|)
 expr_stmt|;
 name|finis
 argument_list|()
@@ -718,8 +738,14 @@ comment|/* 	**  Arrange to get this signal again. 	*/
 end_comment
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|alarm
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|QueueIntvl
 argument_list|)
 expr_stmt|;

@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.52	%G%"
+literal|"@(#)main.c	3.53	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -682,6 +682,10 @@ name|setbuf
 argument_list|(
 name|stdout
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -2249,11 +2253,6 @@ specifier|extern
 name|char
 modifier|*
 name|arpadate
-parameter_list|()
-function_decl|;
-specifier|extern
-name|long
-name|time
 parameter_list|()
 function_decl|;
 comment|/* convert timeout interval to absolute time */

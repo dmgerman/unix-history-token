@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	3.3	%G%"
+literal|"@(#)daemon.c	3.4	%G%"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	3.4	%G% */
+comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	3.5	%G% */
 end_comment
 
 begin_ifndef
@@ -142,7 +142,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|long
+name|time_t
 name|time
 parameter_list|()
 function_decl|;

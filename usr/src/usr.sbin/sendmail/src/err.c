@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	3.15	%G%"
+literal|"@(#)err.c	3.16	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,6 +112,10 @@ name|fmtmsg
 argument_list|(
 name|errbuf
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|,
 name|Arpa_Syserr
@@ -452,6 +456,10 @@ end_escape
 
 begin_comment
 comment|/* **  FMTMSG -- format a message into buffer. ** **	Parameters: **		eb -- error buffer to get result. **		to -- the recipient tag for this message. **		num -- arpanet error number. **		fmt -- format of string. **		a, b, c, d, e -- arguments. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+end_comment
+
+begin_comment
+comment|/*VARARGS4*/
 end_comment
 
 begin_expr_stmt

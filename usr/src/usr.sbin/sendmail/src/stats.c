@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stats.c	3.2	%G%"
+literal|"@(#)stats.c	3.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,11 +53,6 @@ decl_stmt|;
 specifier|extern
 name|long
 name|lseek
-parameter_list|()
-function_decl|;
-specifier|extern
-name|long
-name|time
 parameter_list|()
 function_decl|;
 operator|(
