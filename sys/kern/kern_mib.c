@@ -394,7 +394,7 @@ name|SYSCTL_INT
 argument_list|(
 name|_kern
 argument_list|,
-name|KERN_MAXPROCPERUID
+name|OID_AUTO
 argument_list|,
 name|maxusers
 argument_list|,
