@@ -396,6 +396,8 @@ literal|"\t-a\tappend to outfile)\n"
 literal|"\t-k\ttake input from kldstat(8)\n"
 literal|"\t-x\tdon't append \".debug\" to module name\n"
 argument_list|,
+literal|"\t-s\tdon't prepend subdir for module path\n"
+argument_list|,
 name|myname
 argument_list|)
 expr_stmt|;
@@ -482,6 +484,11 @@ name|token
 index|[
 name|MAXTOKEN
 index|]
+decl_stmt|;
+name|int
+name|nosubdir
+init|=
+literal|0
 decl_stmt|;
 name|getcwd
 argument_list|(
@@ -602,6 +609,27 @@ comment|/* no .debug extension */
 name|debugname
 operator|=
 literal|""
+expr_stmt|;
+comment|/* nothing */
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"-s"
+argument_list|)
+operator|==
+literal|0
+condition|)
+comment|/* no subdir */
+name|nosubdir
+operator|=
+literal|1
 expr_stmt|;
 comment|/* nothing */
 else|else
@@ -833,6 +861,18 @@ operator|-
 literal|3
 index|]
 operator|=
+literal|'/'
+expr_stmt|;
+name|basetoken
+index|[
+name|strlen
+argument_list|(
+name|basetoken
+argument_list|)
+operator|-
+literal|2
+index|]
+operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* cut off the .ko */
@@ -842,10 +882,14 @@ name|ocbuf
 argument_list|,
 name|MAXLINE
 argument_list|,
-literal|"/usr/bin/objdump --section-headers %s/%s/%s%s"
+literal|"/usr/bin/objdump --section-headers %s/%s%s%s"
 argument_list|,
 name|modules_path
 argument_list|,
+name|nosubdir
+condition|?
+literal|""
+else|:
 name|basetoken
 argument_list|,
 name|token
@@ -1032,12 +1076,16 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"add-symbol-file %s/%s/%s/%s%s 0x%llx"
+literal|"add-symbol-file %s/%s/%s%s%s 0x%llx"
 argument_list|,
 name|cwd
 argument_list|,
 name|modules_path
 argument_list|,
+name|nosubdir
+condition|?
+literal|""
+else|:
 name|basetoken
 argument_list|,
 name|token
