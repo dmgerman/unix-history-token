@@ -2113,6 +2113,7 @@ literal|8
 index|]
 init|=
 block|{
+block|{
 literal|0
 block|,
 literal|1
@@ -2128,8 +2129,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* A = 0110 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2145,8 +2148,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* B = 1110 */
+block|{
 literal|0
 block|,
 literal|1
@@ -2162,8 +2167,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* C = 0010 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2179,8 +2186,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* D = 1010 */
+block|{
 literal|0
 block|,
 literal|1
@@ -2196,8 +2205,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* E = 0001 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2213,8 +2224,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* F = 1001 */
+block|{
 literal|0
 block|,
 literal|1
@@ -2230,8 +2243,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* G = 0101 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2247,8 +2262,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* H = 1101 */
+block|{
 literal|0
 block|,
 literal|1
@@ -2264,8 +2281,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* I = 0111 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2281,8 +2300,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* J = 1111 */
+block|{
 literal|0
 block|,
 literal|1
@@ -2298,8 +2319,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* K = 0011 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2315,8 +2338,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* L = 1011 */
+block|{
 literal|0
 block|,
 literal|1
@@ -2332,8 +2357,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* M = 0000 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2349,8 +2376,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* N = 1000 */
+block|{
 literal|0
 block|,
 literal|1
@@ -2366,8 +2395,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* O = 0100 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2383,6 +2414,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 comment|/* P = 1100 */
 block|}
 decl_stmt|;
@@ -2407,6 +2439,7 @@ literal|10
 index|]
 init|=
 block|{
+block|{
 literal|0
 block|,
 literal|1
@@ -2426,8 +2459,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 01100 => 1 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2447,8 +2482,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 11100 => 2 */
+block|{
 literal|0
 block|,
 literal|1
@@ -2468,8 +2505,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 00100 => 3 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2489,8 +2528,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 10100 => 4 */
+block|{
 literal|0
 block|,
 literal|1
@@ -2510,8 +2551,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 00010 => 5 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2531,8 +2574,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 10010 => 6 */
+block|{
 literal|0
 block|,
 literal|1
@@ -2552,8 +2597,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 01010 => 7 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2573,8 +2620,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 11010 => 8 */
+block|{
 literal|0
 block|,
 literal|1
@@ -2594,8 +2643,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 01110 => 9 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2615,8 +2666,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 11110 => 10 */
+block|{
 literal|0
 block|,
 literal|1
@@ -2636,8 +2689,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 00110 => 11 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2657,8 +2712,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 10110 => 12 */
+block|{
 literal|0
 block|,
 literal|1
@@ -2678,8 +2735,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 00000 => 13 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2699,8 +2758,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 10000 => 14 */
+block|{
 literal|0
 block|,
 literal|1
@@ -2720,8 +2781,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 01000 => 15 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2741,8 +2804,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 comment|/* 11000 => 16 */
+block|{
 literal|0
 block|,
 literal|1
@@ -2762,8 +2827,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* 00001 => All Units Off */
+block|{
 literal|0
 block|,
 literal|1
@@ -2783,8 +2850,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* 00011 => All Units On */
+block|{
 literal|0
 block|,
 literal|1
@@ -2804,8 +2873,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* 00101 => On */
+block|{
 literal|0
 block|,
 literal|1
@@ -2825,8 +2896,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* 00111 => Off */
+block|{
 literal|0
 block|,
 literal|1
@@ -2846,8 +2919,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* 01001 => Dim */
+block|{
 literal|0
 block|,
 literal|1
@@ -2867,8 +2942,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* 01011 => Bright */
+block|{
 literal|0
 block|,
 literal|1
@@ -2888,8 +2965,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* 01101 => All LIGHTS Off */
+block|{
 literal|0
 block|,
 literal|1
@@ -2909,8 +2988,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* 01111 => Extended Code */
+block|{
 literal|1
 block|,
 literal|0
@@ -2930,8 +3011,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* 10001 => Hail Request */
+block|{
 literal|1
 block|,
 literal|0
@@ -2951,8 +3034,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* 10011 => Hail Acknowledge */
+block|{
 literal|1
 block|,
 literal|0
@@ -2972,8 +3057,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* 10101 => Preset Dim 0 */
+block|{
 literal|1
 block|,
 literal|0
@@ -2993,8 +3080,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* 10111 => Preset Dim 1 */
+block|{
 literal|1
 block|,
 literal|0
@@ -3014,8 +3103,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
-comment|/* 11000 => Extended Data (analog) */
+comment|/* 11000 => Ext Data (analog) */
+block|{
 literal|1
 block|,
 literal|0
@@ -3035,8 +3126,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* 11011 => Status = on */
+block|{
 literal|1
 block|,
 literal|0
@@ -3056,8 +3149,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 comment|/* 11101 => Status = off */
+block|{
 literal|1
 block|,
 literal|0
@@ -3077,6 +3172,7 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 comment|/* 11111 => Status request */
 block|}
 decl_stmt|;
