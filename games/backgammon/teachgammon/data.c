@@ -159,7 +159,7 @@ init|=
 block|{
 literal|"Not a spectacular move, but a safe one.  I follow by rolling 6 1."
 block|,
-literal|"I decide to use this roll to move 22-16,16-17.  It leaves me with"
+literal|"I decide to use this roll to move 22-16,16-15.  It leaves me with"
 block|,
 literal|"one man still open, but the blot is farther back on the board, and"
 block|,
@@ -237,7 +237,7 @@ init|=
 block|{
 literal|"My venture off the bar did not last long.  However, I got lucky"
 block|,
-literal|"and rolled double 1's, allowing me to move 0-1,1-2,15-14,15-14."
+literal|"and rolled double 1's, allowing me to move 25-24,24-23,15-14,15-14."
 block|,
 literal|0
 block|}
