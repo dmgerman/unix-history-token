@@ -429,107 +429,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function declarations */
-end_comment
-
-begin_function_decl
-name|int
-name|atoi
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* no atoi in the kernel */
-end_comment
-
-begin_comment
-comment|/* Minimal version of atoi */
-end_comment
-
-begin_function
-name|int
-name|atoi
-parameter_list|(
-name|char
-modifier|*
-name|s
-parameter_list|)
-block|{
-comment|/* no atoi in the kernel */
-name|int
-name|r
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|sign
-init|=
-literal|1
-decl_stmt|;
-while|while
-condition|(
-operator|(
-operator|(
-operator|*
-name|s
-operator|>=
-literal|'0'
-operator|)
-operator|&&
-operator|(
-operator|*
-name|s
-operator|<=
-literal|'9'
-operator|)
-operator|)
-operator|||
-operator|(
-operator|*
-name|s
-operator|==
-literal|'-'
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|*
-name|s
-operator|==
-literal|'-'
-condition|)
-name|sign
-operator|=
-operator|-
-name|sign
-expr_stmt|;
-else|else
-name|r
-operator|=
-name|r
-operator|*
-literal|10
-operator|+
-operator|(
-operator|*
-name|s
-operator|-
-literal|'0'
-operator|)
-expr_stmt|;
-block|}
-return|return
-name|r
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Check a volume to see if the plex is already assigned to it.  * Return index in volume->plex, or -1 if not assigned  */
 end_comment
 
@@ -938,7 +837,7 @@ name|plexoffset
 expr_stmt|;
 comment|/* starts here */
 else|else
-comment|/* striped or RAID-5, */
+comment|/* striped, RAID-4 or RAID-5 */
 name|sd
 operator|->
 name|plexoffset
@@ -1023,12 +922,12 @@ expr_stmt|;
 comment|/* Adjust size of plex and volume. */
 if|if
 condition|(
+name|isparity
+argument_list|(
 name|plex
-operator|->
-name|organization
-operator|==
-name|plex_raid5
+argument_list|)
 condition|)
+comment|/* RAID-4 or RAID-5 */
 name|plex
 operator|->
 name|length
@@ -1213,7 +1112,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add a subdisk to drive if possible.  The pointer to the drive  * must already be stored in the sd structure, but the drive  * doesn't know about the subdisk yet.  */
+comment|/*  * Add a subdisk to drive if possible.  The  * pointer to the drive must already be stored in  * the sd structure, but the drive doesn't know  * about the subdisk yet.  */
 end_comment
 
 begin_function
@@ -1856,18 +1755,22 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* don't be confusing */
-name|free_sd
+name|set_sd_state
 argument_list|(
 name|sd
 operator|->
 name|sdno
+argument_list|,
+name|sd_down
+argument_list|,
+name|setstate_force
 argument_list|)
 expr_stmt|;
 name|throw_rude_remark
 argument_list|(
 name|ENOSPC
 argument_list|,
-literal|"No space for subdisk %s on drive %s at offset %lld"
+literal|"No space for %s on drive %s at offset %lld"
 argument_list|,
 name|sd
 operator|->
@@ -1884,6 +1787,7 @@ operator|->
 name|driveoffset
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 comment|/* 		 * We've found the space, and we can allocate it. 		 * We don't need to say that to the subdisk, which 		 * already knows about it.  We need to tell it to 		 * the free list, though.  We have four possibilities: 		 * 		 * 1.  The subdisk exactly eats up the entry.  That's the 		 *     same as above. 		 * 2.  The subdisk starts at the beginning and leaves space 		 *     at the end. 		 * 3.  The subdisk starts after the beginning and leaves 		 *     space at the end as well: we end up with another 		 *     fragment. 		 * 4.  The subdisk leaves space at the beginning and finishes 		 *     at the end. 		 */
 name|drive
@@ -2776,7 +2680,9 @@ operator|||
 operator|(
 name|drive
 operator|->
-name|vp
+name|flags
+operator|&
+name|VF_OPEN
 operator|)
 condition|)
 block|{
@@ -2790,7 +2696,9 @@ if|if
 condition|(
 name|drive
 operator|->
-name|vp
+name|flags
+operator|&
+name|VF_OPEN
 condition|)
 block|{
 comment|/* it's open, */
@@ -3402,7 +3310,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free an allocated sd entry  * This performs memory management only.  remove()  * is responsible for checking relationships.  */
+comment|/*  * Free an allocated sd entry.  * This performs memory management only.  remove()  * is responsible for checking relationships.  */
 end_comment
 
 begin_function
@@ -3499,6 +3407,12 @@ name|state
 operator|=
 name|sd_unallocated
 expr_stmt|;
+name|vinum_conf
+operator|.
+name|subdisks_used
+operator|--
+expr_stmt|;
+comment|/* one less sd */
 block|}
 end_function
 
@@ -4230,6 +4144,9 @@ name|int
 name|otherdriveno
 decl_stmt|;
 comment|/* index of possible second drive */
+name|int
+name|sdno
+decl_stmt|;
 if|if
 condition|(
 name|tokens
@@ -4751,6 +4668,75 @@ name|drives_used
 operator|++
 expr_stmt|;
 comment|/* passed all hurdles: one more in use */
+comment|/*      * If we're replacing a drive, it could be that      * we already have subdisks referencing this      * drive.  Note where they should be and change      * their state to obsolete.      */
+for|for
+control|(
+name|sdno
+operator|=
+literal|0
+init|;
+name|sdno
+operator|<
+name|vinum_conf
+operator|.
+name|subdisks_allocated
+condition|;
+name|sdno
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|SD
+index|[
+name|sdno
+index|]
+operator|.
+name|state
+operator|>
+name|sd_referenced
+operator|)
+operator|&&
+operator|(
+name|SD
+index|[
+name|sdno
+index|]
+operator|.
+name|driveno
+operator|==
+name|driveno
+operator|)
+condition|)
+block|{
+name|give_sd_to_drive
+argument_list|(
+name|sdno
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SD
+index|[
+name|sdno
+index|]
+operator|.
+name|state
+operator|>
+name|sd_stale
+condition|)
+name|SD
+index|[
+name|sdno
+index|]
+operator|.
+name|state
+operator|=
+name|sd_stale
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -4812,6 +4798,12 @@ name|int
 name|namedsdno
 decl_stmt|;
 comment|/* index of another with this name */
+name|char
+name|partition
+init|=
+literal|0
+decl_stmt|;
+comment|/* partition of external subdisk */
 name|sdno
 operator|=
 name|get_empty_sd
@@ -5351,12 +5343,88 @@ argument_list|)
 expr_stmt|;
 comment|/* set the state */
 break|break;
+case|case
+name|kw_partition
+case|:
+name|parameter
+operator|++
+expr_stmt|;
+comment|/* skip the keyword */
+if|if
+condition|(
+operator|(
+name|strlen
+argument_list|(
+name|token
+index|[
+name|parameter
+index|]
+argument_list|)
+operator|!=
+literal|1
+operator|)
+operator|||
+operator|(
+name|token
+index|[
+name|parameter
+index|]
+index|[
+literal|0
+index|]
+operator|<
+literal|'a'
+operator|)
+operator|||
+operator|(
+name|token
+index|[
+name|parameter
+index|]
+index|[
+literal|0
+index|]
+operator|>
+literal|'h'
+operator|)
+condition|)
+name|throw_rude_remark
+argument_list|(
+name|EINVAL
+argument_list|,
+literal|"%s: invalid partition %c"
+argument_list|,
+name|sd
+operator|->
+name|name
+argument_list|,
+name|token
+index|[
+name|parameter
+index|]
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|partition
+operator|=
+name|token
+index|[
+name|parameter
+index|]
+index|[
+literal|0
+index|]
+expr_stmt|;
+break|break;
 default|default:
 name|throw_rude_remark
 argument_list|(
 name|EINVAL
 argument_list|,
-literal|"sd %s, invalid keyword: %s"
+literal|"%s: invalid keyword: %s"
 argument_list|,
 name|sd
 operator|->
@@ -6010,6 +6078,61 @@ expr_stmt|;
 break|break;
 block|}
 case|case
+name|kw_raid4
+case|:
+block|{
+name|int
+name|stripesize
+init|=
+name|sizespec
+argument_list|(
+name|token
+index|[
+operator|++
+name|parameter
+index|]
+argument_list|)
+decl_stmt|;
+name|plex
+operator|->
+name|organization
+operator|=
+name|plex_raid4
+expr_stmt|;
+if|if
+condition|(
+name|stripesize
+operator|%
+name|DEV_BSIZE
+operator|!=
+literal|0
+condition|)
+comment|/* not a multiple of block size, */
+name|throw_rude_remark
+argument_list|(
+name|EINVAL
+argument_list|,
+literal|"plex %s: stripe size %d not a multiple of sector size"
+argument_list|,
+name|plex
+operator|->
+name|name
+argument_list|,
+name|stripesize
+argument_list|)
+expr_stmt|;
+else|else
+name|plex
+operator|->
+name|stripesize
+operator|=
+name|stripesize
+operator|/
+name|DEV_BSIZE
+expr_stmt|;
+break|break;
+block|}
+case|case
 name|kw_raid5
 case|:
 block|{
@@ -6075,23 +6198,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-operator|(
+name|isstriped
+argument_list|(
 name|plex
-operator|->
-name|organization
-operator|==
-name|plex_striped
-operator|)
-operator|||
-operator|(
-name|plex
-operator|->
-name|organization
-operator|==
-name|plex_raid5
-operator|)
-operator|)
+argument_list|)
 operator|&&
 operator|(
 name|plex
@@ -7743,7 +7853,7 @@ literal|1
 expr_stmt|;
 comment|/* disown the subdisk */
 block|}
-comment|/* 	     * removing a subdisk from a striped or 	     * RAID-5 plex really tears the hell out of 	     * the structure, and it needs to be 	     * reinitialized. 	     */
+comment|/* 	     * Removing a subdisk from a striped or 	     * RAID-4 or RAID-5 plex really tears the 	     * hell out of the structure, and it needs 	     * to be reinitialized. 	     */
 if|if
 condition|(
 name|plex
@@ -7781,12 +7891,6 @@ argument_list|(
 name|sdno
 argument_list|)
 expr_stmt|;
-name|vinum_conf
-operator|.
-name|subdisks_used
-operator|--
-expr_stmt|;
-comment|/* one less sd */
 block|}
 else|else
 name|ioctl_reply
@@ -7815,12 +7919,6 @@ argument_list|(
 name|sdno
 argument_list|)
 expr_stmt|;
-name|vinum_conf
-operator|.
-name|subdisks_used
-operator|--
-expr_stmt|;
-comment|/* one less sd */
 block|}
 block|}
 end_function
@@ -7953,7 +8051,6 @@ condition|;
 name|sdno
 operator|++
 control|)
-block|{
 name|free_sd
 argument_list|(
 name|plex
@@ -7965,13 +8062,6 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* free all subdisks */
-name|vinum_conf
-operator|.
-name|subdisks_used
-operator|--
-expr_stmt|;
-comment|/* one less sd */
-block|}
 block|}
 else|else
 block|{
@@ -8495,7 +8585,7 @@ decl_stmt|;
 name|int
 name|data_sds
 decl_stmt|;
-comment|/* number of sds carrying data, for RAID-5 */
+comment|/* number of sds carrying data */
 if|if
 condition|(
 name|plex
@@ -8579,7 +8669,7 @@ expr_stmt|;
 comment|/* so take ourselves down */
 block|}
 block|}
-comment|/*      * Check that our subdisks make sense.  For      * striped and RAID5 plexes, we need at least      * two subdisks, and they must all be the same      * size      */
+comment|/*      * Check that our subdisks make sense.  For      * striped, RAID-4 and RAID-5 plexes, we need at      * least two subdisks, and they must all be the      * same size.      */
 if|if
 condition|(
 name|plex
@@ -8603,13 +8693,13 @@ block|}
 elseif|else
 if|if
 condition|(
+name|isparity
+argument_list|(
 name|plex
-operator|->
-name|organization
-operator|==
-name|plex_raid5
+argument_list|)
 condition|)
 block|{
+comment|/* RAID 4 or 5 */
 name|data_sds
 operator|=
 name|plex
@@ -8635,7 +8725,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* striped or RAID-5 */
+comment|/* striped, RAID-4 or RAID-5 */
 if|if
 condition|(
 name|plex
@@ -8850,23 +8940,10 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|(
+name|isstriped
+argument_list|(
 name|plex
-operator|->
-name|organization
-operator|==
-name|plex_striped
-operator|)
-operator|||
-operator|(
-name|plex
-operator|->
-name|organization
-operator|==
-name|plex_raid5
-operator|)
-operator|)
+argument_list|)
 operator|&&
 operator|(
 name|sdno
@@ -8941,11 +9018,10 @@ comment|/* plex has subdisks, calculate size */
 comment|/* 	 * XXX We shouldn't need to calculate the size any 	 * more.  Check this some time 	 */
 if|if
 condition|(
+name|isparity
+argument_list|(
 name|plex
-operator|->
-name|organization
-operator|==
-name|plex_raid5
+argument_list|)
 condition|)
 name|size
 operator|=
@@ -8963,7 +9039,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/* less space for RAID-5 */
+comment|/* less space for RAID-4 and RAID-5 */
 if|if
 condition|(
 name|plex
