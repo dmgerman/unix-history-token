@@ -144,16 +144,20 @@ modifier|*
 name|Address
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+comment|/* The supporting code for this is not yet available.      * Return to the old situation for now.      */
+block|return (AeLocalGetRootPointer(Flags, (ACPI_PHYSICAL_ADDRESS *)Address));
+else|#
+directive|else
 return|return
 operator|(
-name|AeLocalGetRootPointer
-argument_list|(
-name|Flags
-argument_list|,
-name|Address
-argument_list|)
+name|AE_OK
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
