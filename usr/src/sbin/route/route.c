@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.45 (Berkeley) %G%"
+literal|"@(#)route.c	5.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -331,22 +331,6 @@ decl_stmt|,
 name|lockrest
 decl_stmt|,
 name|debugonly
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|sockaddr_in
-name|sin
-init|=
-block|{
-sizeof|sizeof
-argument_list|(
-name|sin
-argument_list|)
-block|,
-name|AF_INET
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -5654,6 +5638,8 @@ name|siso
 operator|.
 name|siso_nlen
 argument_list|,
+name|MAX
+argument_list|(
 name|so_mask
 operator|.
 name|sa
@@ -5661,6 +5647,9 @@ operator|.
 name|sa_len
 operator|-
 literal|6
+argument_list|,
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5836,7 +5825,7 @@ name|char
 name|ifnetflags
 index|[]
 init|=
-literal|"\1UP\2BROADCAST\3DEBUG\4LOOPBACK\5PTP\6NOTRAILERS\7RUNNING\010NOARP\011PPROMISC\012ALLMULTI\013OACTIVE\014SIMPLEX\015LINK0\016LINK1\017LINK2"
+literal|"\1UP\2BROADCAST\3DEBUG\4LOOPBACK\5PTP\6NOTRAILERS\7RUNNING\010NOARP\011PPROMISC\012ALLMULTI\013OACTIVE\014SIMPLEX\015LINK0\016LINK1\017LINK2\020MULTICAST"
 decl_stmt|;
 end_decl_stmt
 
