@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.7	82/02/27	*/
+comment|/*	if_acc.c	4.8	82/03/12	*/
 end_comment
 
 begin_include
@@ -881,9 +881,9 @@ name|IN_RMR
 operator||
 name|IN_IMPBSY
 operator|)
+operator|)
 operator|==
 literal|0
-operator|)
 condition|)
 break|break;
 name|addr
