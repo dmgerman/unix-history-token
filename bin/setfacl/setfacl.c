@@ -794,6 +794,9 @@ name|fgets
 argument_list|(
 name|filename
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|filename

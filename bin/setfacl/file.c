@@ -158,6 +158,9 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
+operator|(
+name|size_t
+operator|)
 literal|1
 argument_list|,
 name|file
