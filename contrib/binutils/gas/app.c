@@ -298,6 +298,13 @@ end_endif
 begin_define
 define|#
 directive|define
+name|LEX_IS_PARALLEL_SEPARATOR
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_SYMBOL_COMPONENT
 parameter_list|(
 name|c
@@ -323,6 +330,16 @@ parameter_list|(
 name|c
 parameter_list|)
 value|(lex[c] == LEX_IS_LINE_SEPARATOR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_PARALLEL_SEPARATOR
+parameter_list|(
+name|c
+parameter_list|)
+value|(lex[c] == LEX_IS_PARALLEL_SEPARATOR)
 end_define
 
 begin_define
@@ -654,6 +671,39 @@ name|LEX_IS_LINE_SEPARATOR
 expr_stmt|;
 block|}
 comment|/* declare line separators */
+ifdef|#
+directive|ifdef
+name|tc_parallel_separator_chars
+comment|/* This macro permits the processor to specify all characters which      separate parallel insns on the same line.  */
+for|for
+control|(
+name|p
+operator|=
+name|tc_parallel_separator_chars
+init|;
+operator|*
+name|p
+condition|;
+name|p
+operator|++
+control|)
+block|{
+name|lex
+index|[
+operator|(
+name|unsigned
+name|char
+operator|)
+operator|*
+name|p
+index|]
+operator|=
+name|LEX_IS_PARALLEL_SEPARATOR
+expr_stmt|;
+block|}
+comment|/* declare parallel separators */
+endif|#
+directive|endif
 comment|/* Only allow slash-star comments if slash is not in use.      FIXME: This isn't right.  We should always permit them.  */
 if|if
 condition|(
@@ -1403,7 +1453,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/*State 0: beginning of normal line 	  1: After first whitespace on line (flush more white) 	  2: After first non-white (opcode) on line (keep 1white) 	  3: after second white on line (into operands) (flush white) 	  4: after putting out a .line, put out digits 	  5: parsing a string, then go to old-state 	  6: putting out \ escape in a "d string. 	  7: After putting out a .appfile, put out string. 	  8: After putting out a .appfile string, flush until newline. 	  9: After seeing symbol char in state 3 (keep 1white after symchar) 	 10: After seeing whitespace in state 9 (keep white before symchar) 	 11: After seeing a symbol character in state 0 (eg a label definition) 	 -1: output string in out_string and go to the state in old_state 	 -2: flush text until a '*' '/' is seen, then go to state old_state #ifdef TC_V850          12: After seeing a dash, looking for a second dash as a start of comment. #endif #ifdef DOUBLEBAR_PARALLEL 	 13: After seeing a vertical bar, looking for a second vertical bar as a parallel expression seperator. #endif 	  */
-comment|/* I added states 9 and 10 because the MIPS ECOFF assembler uses      constructs like ``.loc 1 20''.  This was turning into ``.loc      120''.  States 9 and 10 ensure that a space is never dropped in      between characters which could appear in a identifier.  Ian      Taylor, ian@cygnus.com.       I added state 11 so that something like "Lfoo add %r25,%r26,%r27" works      correctly on the PA (and any other target where colons are optional).      Jeff Law, law@cs.utah.edu.       I added state 13 so that something like "cmp r1, r2 || trap #1" does not      get squashed into "cmp r1,r2||trap#1", with the all important space      between the 'trap' and the '#1' being eliminated.  nickc@cygnus.com  */
+comment|/* I added states 9 and 10 because the MIPS ECOFF assembler uses      constructs like ``.loc 1 20''.  This was turning into ``.loc      120''.  States 9 and 10 ensure that a space is never dropped in      between characters which could appear in an identifier.  Ian      Taylor, ian@cygnus.com.       I added state 11 so that something like "Lfoo add %r25,%r26,%r27" works      correctly on the PA (and any other target where colons are optional).      Jeff Law, law@cs.utah.edu.       I added state 13 so that something like "cmp r1, r2 || trap #1" does not      get squashed into "cmp r1,r2||trap#1", with the all important space      between the 'trap' and the '#1' being eliminated.  nickc@cygnus.com  */
 comment|/* This macro gets the next input character.  */
 define|#
 directive|define
@@ -1870,7 +1920,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"end of file in string: inserted '\"'"
+literal|"end of file in string; inserted '\"'"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2074,7 +2124,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Unknown escape '\\%c' in string: Ignored"
+literal|"unknown escape '\\%c' in string; ignored"
 argument_list|)
 argument_list|,
 name|ch
@@ -2097,7 +2147,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"End of file in string: '\"' inserted"
+literal|"end of file in string; '\"' inserted"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2587,6 +2637,11 @@ operator|==
 literal|'/'
 operator|||
 name|IS_LINE_SEPARATOR
+argument_list|(
+name|ch
+argument_list|)
+operator|||
+name|IS_PARALLEL_SEPARATOR
 argument_list|(
 name|ch
 argument_list|)
@@ -3200,7 +3255,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Missing close quote: (assumed)"
+literal|"missing close quote; (assumed)"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3344,6 +3399,19 @@ case|:
 name|state
 operator|=
 literal|0
+expr_stmt|;
+name|PUT
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|LEX_IS_PARALLEL_SEPARATOR
+case|:
+name|state
+operator|=
+literal|1
 expr_stmt|;
 name|PUT
 argument_list|(
@@ -3623,7 +3691,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"EOF in Comment: Newline inserted"
+literal|"end of file in comment; newline inserted"
 argument_list|)
 argument_list|)
 expr_stmt|;

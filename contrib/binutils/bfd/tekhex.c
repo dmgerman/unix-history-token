@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD backend for Extended Tektronix Hex Format  objects.    Copyright 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD backend for Extended Tektronix Hex Format  objects.    Copyright 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -282,7 +282,7 @@ name|char
 operator|*
 operator|*
 operator|,
-name|CONST
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1087,12 +1087,16 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 literal|12
 argument_list|)
 decl_stmt|;
 comment|/* No chunk for this address, so make one up */
 name|d
 operator|=
+operator|(
 operator|(
 expr|struct
 name|data_struct
@@ -1102,12 +1106,16 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|data_struct
 argument_list|)
 argument_list|)
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1274,6 +1282,7 @@ name|section
 init|=
 name|bfd_abs_section_ptr
 decl_stmt|;
+name|unsigned
 name|int
 name|len
 decl_stmt|;
@@ -1373,6 +1382,9 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 name|len
 operator|+
 literal|1
@@ -1485,6 +1497,14 @@ literal|'8'
 case|:
 comment|/* Symbols, add to section */
 block|{
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+name|tekhex_symbol_type
+argument_list|)
+decl_stmt|;
 name|tekhex_symbol_type
 modifier|*
 name|new
@@ -1497,14 +1517,11 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tekhex_symbol_type
-argument_list|)
+name|amt
 argument_list|)
 decl_stmt|;
 name|char
-name|type
+name|stype
 init|=
 operator|(
 operator|*
@@ -1584,6 +1601,9 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 name|len
 operator|+
 literal|1
@@ -1633,7 +1653,7 @@ name|section
 expr_stmt|;
 if|if
 condition|(
-name|type
+name|stype
 operator|<=
 literal|'4'
 condition|)
@@ -1780,12 +1800,13 @@ call|(
 name|boolean
 call|)
 argument_list|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|src
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 literal|1
 argument_list|,
 name|abfd
@@ -1811,12 +1832,13 @@ call|(
 name|boolean
 call|)
 argument_list|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|src
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 literal|1
 argument_list|,
 name|abfd
@@ -1837,12 +1859,13 @@ expr_stmt|;
 comment|/* Fetch the type and the length and the checksum */
 if|if
 condition|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|src
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 literal|5
 argument_list|,
 name|abfd
@@ -1894,12 +1917,13 @@ expr_stmt|;
 comment|/* Already read five char */
 if|if
 condition|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|src
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 name|chars_on_line
 argument_list|,
 name|abfd
@@ -2061,7 +2085,9 @@ block|{
 name|tdata_type
 modifier|*
 name|tdata
-init|=
+decl_stmt|;
+name|tdata
+operator|=
 operator|(
 name|tdata_type
 operator|*
@@ -2070,12 +2096,15 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 sizeof|sizeof
 argument_list|(
 name|tdata_type
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2179,12 +2208,13 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|b
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 literal|4
 argument_list|,
 name|abfd
@@ -2289,7 +2319,6 @@ name|locationp
 decl_stmt|;
 name|file_ptr
 name|offset
-name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd_size_type
 name|count
@@ -2329,6 +2358,13 @@ operator|*
 operator|)
 name|NULL
 decl_stmt|;
+name|BFD_ASSERT
+argument_list|(
+name|offset
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|addr
@@ -2348,15 +2384,18 @@ name|addr
 operator|++
 control|)
 block|{
+comment|/* Get high bits of address.  */
 name|bfd_vma
 name|chunk_number
 init|=
 name|addr
 operator|&
 operator|~
+operator|(
+name|bfd_vma
+operator|)
 name|CHUNK_MASK
 decl_stmt|;
-comment|/* Get high bits of address */
 name|bfd_vma
 name|low_bits
 init|=
@@ -2652,6 +2691,9 @@ operator|->
 name|vma
 operator|&
 operator|~
+operator|(
+name|bfd_vma
+operator|)
 name|CHUNK_MASK
 init|;
 name|vma
@@ -2857,7 +2899,7 @@ modifier|*
 modifier|*
 name|dst
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|sym
@@ -3118,12 +3160,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 name|front
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 literal|6
 argument_list|,
 name|abfd
@@ -3151,11 +3194,9 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 name|start
-argument_list|,
-literal|1
 argument_list|,
 name|wrlen
 argument_list|,
@@ -3244,7 +3285,7 @@ block|{
 name|int
 name|low
 decl_stmt|;
-name|CONST
+specifier|const
 name|int
 name|span
 init|=
@@ -3504,7 +3545,7 @@ block|{
 comment|/* do not include debug symbols */
 name|asymbol
 modifier|*
-name|s
+name|sym
 init|=
 operator|*
 name|p
@@ -3520,7 +3561,7 @@ argument_list|(
 operator|&
 name|dst
 argument_list|,
-name|s
+name|sym
 operator|->
 name|section
 operator|->
@@ -3624,7 +3665,7 @@ argument_list|(
 operator|&
 name|dst
 argument_list|,
-name|s
+name|sym
 operator|->
 name|name
 argument_list|)
@@ -3634,11 +3675,11 @@ argument_list|(
 operator|&
 name|dst
 argument_list|,
-name|s
+name|sym
 operator|->
 name|value
 operator|+
-name|s
+name|sym
 operator|->
 name|section
 operator|->
@@ -3662,12 +3703,13 @@ block|}
 comment|/* And the terminator */
 if|if
 condition|(
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 literal|"%0781010\n"
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 literal|9
 argument_list|,
 name|abfd
@@ -3722,6 +3764,15 @@ modifier|*
 name|abfd
 decl_stmt|;
 block|{
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tekhex_symbol_struct
+argument_list|)
+decl_stmt|;
 name|tekhex_symbol_type
 modifier|*
 name|new
@@ -3734,11 +3785,7 @@ name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|tekhex_symbol_struct
-argument_list|)
+name|amt
 argument_list|)
 decl_stmt|;
 if|if
@@ -3819,7 +3866,7 @@ specifier|static
 name|void
 name|tekhex_print_symbol
 parameter_list|(
-name|ignore_abfd
+name|abfd
 parameter_list|,
 name|filep
 parameter_list|,
@@ -3829,8 +3876,7 @@ name|how
 parameter_list|)
 name|bfd
 modifier|*
-name|ignore_abfd
-name|ATTRIBUTE_UNUSED
+name|abfd
 decl_stmt|;
 name|PTR
 name|filep
@@ -3881,7 +3927,7 @@ case|case
 name|bfd_print_symbol_all
 case|:
 block|{
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|section_name
@@ -3894,6 +3940,8 @@ name|name
 decl_stmt|;
 name|bfd_print_symbol_vandf
 argument_list|(
+name|abfd
+argument_list|,
 operator|(
 name|PTR
 operator|)
@@ -4003,6 +4051,13 @@ define|#
 directive|define
 name|tekhex_bfd_gc_sections
 value|bfd_generic_gc_sections
+end_define
+
+begin_define
+define|#
+directive|define
+name|tekhex_bfd_merge_sections
+value|bfd_generic_merge_sections
 end_define
 
 begin_define

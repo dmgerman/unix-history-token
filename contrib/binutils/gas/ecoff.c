@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|"safe-ctype.h"
 end_include
 
 begin_comment
@@ -4151,7 +4151,7 @@ name|as_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"String too big (%lu bytes)"
+literal|"string too big (%lu bytes)"
 argument_list|)
 argument_list|,
 name|len
@@ -4303,7 +4303,7 @@ name|as_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"Inserting \"%s\" into string hash table: %s"
+literal|"inserting \"%s\" into string hash table: %s"
 argument_list|)
 argument_list|,
 name|str
@@ -6517,7 +6517,7 @@ name|as_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"Inserting \"%s\" into tag hash table: %s"
+literal|"inserting \"%s\" into tag hash table: %s"
 argument_list|)
 argument_list|,
 name|tag
@@ -7563,7 +7563,7 @@ name|as_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"Filename goes over one page boundary."
+literal|"filename goes over one page boundary"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8554,7 +8554,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Empty symbol name in .def; ignored"
+literal|"empty symbol name in .def; ignored"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8772,7 +8772,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Badly formed .dim directive"
+literal|"badly formed .dim directive"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8813,7 +8813,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Too many .dim entries"
+literal|"too many .dim entries"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9013,7 +9013,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Badly formed .size directive"
+literal|"badly formed .size directive"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9054,7 +9054,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Too many .size entries"
+literal|"too many .size entries"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9197,7 +9197,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"The type of %s is too complex; it will be simplified"
+literal|"the type of %s is too complex; it will be simplified"
 argument_list|)
 argument_list|,
 name|coff_sym_name
@@ -9702,7 +9702,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Bad COFF debugging info"
+literal|"bad COFF debugging information"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9938,7 +9938,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"No tag specified for %s"
+literal|"no tag specified for %s"
 argument_list|)
 argument_list|,
 name|name
@@ -10033,7 +10033,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Bad COFF debugging information"
+literal|"bad COFF debugging information"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10234,10 +10234,6 @@ decl_stmt|;
 name|char
 name|name_end
 decl_stmt|;
-specifier|register
-name|int
-name|ch
-decl_stmt|;
 name|symbolS
 modifier|*
 name|ent
@@ -10299,18 +10295,11 @@ operator|=
 name|get_symbol_end
 argument_list|()
 expr_stmt|;
-name|ch
-operator|=
-operator|*
-name|name
-expr_stmt|;
 if|if
 condition|(
-operator|!
-name|is_name_beginner
-argument_list|(
-name|ch
-argument_list|)
+name|name
+operator|==
+name|input_line_pointer
 condition|)
 block|{
 name|as_warn
@@ -10449,10 +10438,6 @@ decl_stmt|;
 name|char
 name|name_end
 decl_stmt|;
-specifier|register
-name|int
-name|ch
-decl_stmt|;
 if|if
 condition|(
 name|cur_file_ptr
@@ -10510,18 +10495,11 @@ operator|=
 name|get_symbol_end
 argument_list|()
 expr_stmt|;
-name|ch
-operator|=
-operator|*
-name|name
-expr_stmt|;
 if|if
 condition|(
-operator|!
-name|is_name_beginner
-argument_list|(
-name|ch
-argument_list|)
+name|name
+operator|==
+name|input_line_pointer
 condition|)
 block|{
 name|as_warn
@@ -10573,12 +10551,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|input_line_pointer
 argument_list|)
@@ -10728,7 +10702,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"No way to handle .file within .ent/.end section"
+literal|"no way to handle .file within .ent/.end section"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10831,7 +10805,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Bad .fmask directive"
+literal|"bad .fmask directive"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10946,7 +10920,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Bad .frame directive"
+literal|"bad .frame directive"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -11054,7 +11028,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Bad .mask directive"
+literal|"bad .mask directive"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -11571,7 +11545,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Ignoring attempt to redefine symbol `%s'."
+literal|"symbol `%s' is already defined"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -11893,7 +11867,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Line number (%d) for .stab%c directive cannot fit in index field (20 bits)"
+literal|"line number (%d) for .stab%c directive cannot fit in index field (20 bits)"
 argument_list|)
 argument_list|,
 name|desc
@@ -11973,12 +11947,8 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|input_line_pointer
 argument_list|)
@@ -12039,7 +12009,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Illegal .stab%c directive, bad character"
+literal|"illegal .stab%c directive, bad character"
 argument_list|)
 argument_list|,
 name|what
@@ -12249,9 +12219,6 @@ argument_list|(
 name|sym
 argument_list|)
 operator|<=
-operator|(
-name|unsigned
-operator|)
 name|bfd_get_gp_size
 argument_list|(
 name|stdoutput
@@ -12359,7 +12326,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Symbol `%s' can not be both weak and common"
+literal|"symbol `%s' can not be both weak and common"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -14360,9 +14327,6 @@ literal|0
 operator|||
 name|s
 operator|>
-operator|(
-name|unsigned
-operator|)
 name|bfd_get_gp_size
 argument_list|(
 name|stdoutput
@@ -14426,9 +14390,6 @@ argument_list|(
 name|as_sym
 argument_list|)
 operator|<=
-operator|(
-name|unsigned
-operator|)
 name|bfd_get_gp_size
 argument_list|(
 name|stdoutput
@@ -17487,7 +17448,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Missing .end or .bend at end of file"
+literal|"missing .end or .bend at end of file"
 argument_list|)
 argument_list|)
 expr_stmt|;

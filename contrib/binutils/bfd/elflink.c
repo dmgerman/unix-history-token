@@ -232,7 +232,14 @@ return|return
 name|false
 return|;
 block|}
-comment|/* Define the symbol _GLOBAL_OFFSET_TABLE_ at the start of the .got      (or .got.plt) section.  We don't do this in the linker script      because we don't want to define the symbol if we are not creating      a global offset table.  */
+if|if
+condition|(
+name|bed
+operator|->
+name|want_got_sym
+condition|)
+block|{
+comment|/* Define the symbol _GLOBAL_OFFSET_TABLE_ at the start of the .got 	 (or .got.plt) section.  We don't do this in the linker script 	 because we don't want to define the symbol if we are not creating 	 a global offset table.  */
 name|h
 operator|=
 name|NULL
@@ -322,6 +329,7 @@ name|hgot
 operator|=
 name|h
 expr_stmt|;
+block|}
 comment|/* The first bit of the global offset table is the header.  */
 name|s
 operator|->
@@ -457,6 +465,8 @@ name|pltflags
 operator|&=
 operator|~
 operator|(
+name|SEC_CODE
+operator||
 name|SEC_LOAD
 operator||
 name|SEC_HAS_CONTENTS
@@ -805,7 +815,7 @@ literal|1
 condition|)
 block|{
 name|struct
-name|bfd_strtab_hash
+name|elf_strtab_hash
 modifier|*
 name|dynstr
 decl_stmt|;
@@ -921,7 +931,7 @@ name|dynstr
 operator|=
 name|dynstr
 operator|=
-name|_bfd_elf_stringtab_init
+name|_bfd_elf_strtab_init
 argument_list|()
 expr_stmt|;
 if|if
@@ -976,11 +986,16 @@ name|alc
 operator|=
 name|bfd_malloc
 argument_list|(
+call|(
+name|bfd_size_type
+call|)
+argument_list|(
 name|p
 operator|-
 name|name
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -998,9 +1013,14 @@ name|alc
 argument_list|,
 name|name
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|p
 operator|-
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|alc
@@ -1023,13 +1043,11 @@ expr_stmt|;
 block|}
 name|indx
 operator|=
-name|_bfd_stringtab_add
+name|_bfd_elf_strtab_add
 argument_list|(
 name|dynstr
 argument_list|,
 name|name
-argument_list|,
-name|true
 argument_list|,
 name|copy
 argument_list|)
@@ -1457,6 +1475,14 @@ name|asection
 modifier|*
 name|s
 decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+name|elf_linker_section_t
+argument_list|)
+decl_stmt|;
 name|lsect
 operator|=
 operator|(
@@ -1467,10 +1493,7 @@ name|bfd_alloc
 argument_list|(
 name|dynobj
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|elf_linker_section_t
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1669,7 +1692,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: Section %s is already to large to put hole of %ld bytes in"
+literal|"%s: Section %s is too large to add hole of %ld bytes"
 argument_list|)
 argument_list|,
 name|bfd_get_filename
@@ -1969,7 +1992,7 @@ name|elf_linker_section_pointers_t
 modifier|*
 name|linker_pointers
 decl_stmt|;
-name|bfd_signed_vma
+name|bfd_vma
 name|addend
 decl_stmt|;
 name|elf_linker_section_enum_t

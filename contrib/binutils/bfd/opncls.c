@@ -132,6 +132,9 @@ operator|*
 operator|)
 name|bfd_zmalloc
 argument_list|(
+operator|(
+name|bfd_size_type
+operator|)
 sizeof|sizeof
 argument_list|(
 name|bfd
@@ -171,6 +174,11 @@ argument_list|(
 name|bfd_error_no_memory
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|nbfd
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -200,6 +208,29 @@ name|where
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bfd_hash_table_init
+argument_list|(
+operator|&
+name|nbfd
+operator|->
+name|section_htab
+argument_list|,
+name|bfd_section_hash_newfunc
+argument_list|)
+condition|)
+block|{
+name|free
+argument_list|(
+name|nbfd
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|nbfd
 operator|->
 name|sections
@@ -209,6 +240,15 @@ name|asection
 operator|*
 operator|)
 name|NULL
+expr_stmt|;
+name|nbfd
+operator|->
+name|section_tail
+operator|=
+operator|&
+name|nbfd
+operator|->
+name|sections
 expr_stmt|;
 name|nbfd
 operator|->
@@ -343,11 +383,54 @@ block|}
 end_function
 
 begin_comment
+comment|/* Delete a BFD.  */
+end_comment
+
+begin_function
+name|void
+name|_bfd_delete_bfd
+parameter_list|(
+name|abfd
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+block|{
+name|bfd_hash_table_free
+argument_list|(
+operator|&
+name|abfd
+operator|->
+name|section_htab
+argument_list|)
+expr_stmt|;
+name|objalloc_free
+argument_list|(
+operator|(
+expr|struct
+name|objalloc
+operator|*
+operator|)
+name|abfd
+operator|->
+name|memory
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|abfd
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* SECTION 	Opening and closing BFDs  */
 end_comment
 
 begin_comment
-comment|/* FUNCTION 	bfd_openr  SYNOPSIS         bfd *bfd_openr(CONST char *filename, CONST char *target);  DESCRIPTION 	Open the file @var{filename} (using<<fopen>>) with the target 	@var{target}.  Return a pointer to the created BFD.  	Calls<<bfd_find_target>>, so @var{target} is interpreted as by 	that function.  	If<<NULL>> is returned then an error has occured.   Possible errors 	are<<bfd_error_no_memory>>,<<bfd_error_invalid_target>> or<<system_call>> error. */
+comment|/* FUNCTION 	bfd_openr  SYNOPSIS         bfd *bfd_openr(const char *filename, const char *target);  DESCRIPTION 	Open the file @var{filename} (using<<fopen>>) with the target 	@var{target}.  Return a pointer to the created BFD.  	Calls<<bfd_find_target>>, so @var{target} is interpreted as by 	that function.  	If<<NULL>> is returned then an error has occured.   Possible errors 	are<<bfd_error_no_memory>>,<<bfd_error_invalid_target>> or<<system_call>> error. */
 end_comment
 
 begin_function
@@ -359,12 +442,12 @@ name|filename
 parameter_list|,
 name|target
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|filename
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|target
@@ -409,26 +492,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|objalloc_free
-argument_list|(
-operator|(
-expr|struct
-name|objalloc
-operator|*
-operator|)
-name|nbfd
-operator|->
-name|memory
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|nbfd
-argument_list|)
-expr_stmt|;
 name|bfd_set_error
 argument_list|(
 name|bfd_error_invalid_target
+argument_list|)
+expr_stmt|;
+name|_bfd_delete_bfd
+argument_list|(
+name|nbfd
 argument_list|)
 expr_stmt|;
 return|return
@@ -463,19 +534,7 @@ argument_list|(
 name|bfd_error_system_call
 argument_list|)
 expr_stmt|;
-name|objalloc_free
-argument_list|(
-operator|(
-expr|struct
-name|objalloc
-operator|*
-operator|)
-name|nbfd
-operator|->
-name|memory
-argument_list|)
-expr_stmt|;
-name|free
+name|_bfd_delete_bfd
 argument_list|(
 name|nbfd
 argument_list|)
@@ -495,7 +554,7 @@ comment|/* Don't try to `optimize' this function:     o - We lock using stack sp
 end_comment
 
 begin_comment
-comment|/* FUNCTION          bfd_fdopenr  SYNOPSIS          bfd *bfd_fdopenr(CONST char *filename, CONST char *target, int fd);  DESCRIPTION<<bfd_fdopenr>> is to<<bfd_fopenr>> much like<<fdopen>> is to<<fopen>>. 	 It opens a BFD on a file already described by the @var{fd} 	 supplied.  	 When the file is later<<bfd_close>>d, the file descriptor will be closed.  	 If the caller desires that this file descriptor be cached by BFD 	 (opened as needed, closed as needed to free descriptors for 	 other opens), with the supplied @var{fd} used as an initial 	 file descriptor (but subject to closure at any time), call 	 bfd_set_cacheable(bfd, 1) on the returned BFD.  The default is to 	 assume no cacheing; the file descriptor will remain open until<<bfd_close>>, and will not be affected by BFD operations on other 	 files.           Possible errors are<<bfd_error_no_memory>>,<<bfd_error_invalid_target>> and<<bfd_error_system_call>>. */
+comment|/* FUNCTION          bfd_fdopenr  SYNOPSIS          bfd *bfd_fdopenr(const char *filename, const char *target, int fd);  DESCRIPTION<<bfd_fdopenr>> is to<<bfd_fopenr>> much like<<fdopen>> is to<<fopen>>. 	 It opens a BFD on a file already described by the @var{fd} 	 supplied.  	 When the file is later<<bfd_close>>d, the file descriptor will be closed.  	 If the caller desires that this file descriptor be cached by BFD 	 (opened as needed, closed as needed to free descriptors for 	 other opens), with the supplied @var{fd} used as an initial 	 file descriptor (but subject to closure at any time), call 	 bfd_set_cacheable(bfd, 1) on the returned BFD.  The default is to 	 assume no cacheing; the file descriptor will remain open until<<bfd_close>>, and will not be affected by BFD operations on other 	 files.           Possible errors are<<bfd_error_no_memory>>,<<bfd_error_invalid_target>> and<<bfd_error_system_call>>. */
 end_comment
 
 begin_function
@@ -509,12 +568,12 @@ name|target
 parameter_list|,
 name|fd
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|filename
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|target
@@ -618,19 +677,7 @@ argument_list|(
 name|bfd_error_invalid_target
 argument_list|)
 expr_stmt|;
-name|objalloc_free
-argument_list|(
-operator|(
-expr|struct
-name|objalloc
-operator|*
-operator|)
-name|nbfd
-operator|->
-name|memory
-argument_list|)
-expr_stmt|;
-name|free
+name|_bfd_delete_bfd
 argument_list|(
 name|nbfd
 argument_list|)
@@ -738,19 +785,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|objalloc_free
-argument_list|(
-operator|(
-expr|struct
-name|objalloc
-operator|*
-operator|)
-name|nbfd
-operator|->
-name|memory
-argument_list|)
-expr_stmt|;
-name|free
+name|_bfd_delete_bfd
 argument_list|(
 name|nbfd
 argument_list|)
@@ -821,19 +856,7 @@ name|nbfd
 argument_list|)
 condition|)
 block|{
-name|objalloc_free
-argument_list|(
-operator|(
-expr|struct
-name|objalloc
-operator|*
-operator|)
-name|nbfd
-operator|->
-name|memory
-argument_list|)
-expr_stmt|;
-name|free
+name|_bfd_delete_bfd
 argument_list|(
 name|nbfd
 argument_list|)
@@ -937,19 +960,7 @@ argument_list|(
 name|bfd_error_invalid_target
 argument_list|)
 expr_stmt|;
-name|objalloc_free
-argument_list|(
-operator|(
-expr|struct
-name|objalloc
-operator|*
-operator|)
-name|nbfd
-operator|->
-name|memory
-argument_list|)
-expr_stmt|;
-name|free
+name|_bfd_delete_bfd
 argument_list|(
 name|nbfd
 argument_list|)
@@ -988,19 +999,7 @@ name|nbfd
 argument_list|)
 condition|)
 block|{
-name|objalloc_free
-argument_list|(
-operator|(
-expr|struct
-name|objalloc
-operator|*
-operator|)
-name|nbfd
-operator|->
-name|memory
-argument_list|)
-expr_stmt|;
-name|free
+name|_bfd_delete_bfd
 argument_list|(
 name|nbfd
 argument_list|)
@@ -1023,7 +1022,7 @@ comment|/** bfd_openw -- open for writing.   Returns a pointer to a freshly-allo
 end_comment
 
 begin_comment
-comment|/* FUNCTION 	bfd_openw  SYNOPSIS 	bfd *bfd_openw(CONST char *filename, CONST char *target);  DESCRIPTION 	Create a BFD, associated with file @var{filename}, using the 	file format @var{target}, and return a pointer to it.  	Possible errors are<<bfd_error_system_call>>,<<bfd_error_no_memory>>,<<bfd_error_invalid_target>>. */
+comment|/* FUNCTION 	bfd_openw  SYNOPSIS 	bfd *bfd_openw(const char *filename, const char *target);  DESCRIPTION 	Create a BFD, associated with file @var{filename}, using the 	file format @var{target}, and return a pointer to it.  	Possible errors are<<bfd_error_system_call>>,<<bfd_error_no_memory>>,<<bfd_error_invalid_target>>. */
 end_comment
 
 begin_function
@@ -1035,12 +1034,12 @@ name|filename
 parameter_list|,
 name|target
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|filename
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|target
@@ -1091,19 +1090,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|objalloc_free
-argument_list|(
-operator|(
-expr|struct
-name|objalloc
-operator|*
-operator|)
-name|nbfd
-operator|->
-name|memory
-argument_list|)
-expr_stmt|;
-name|free
+name|_bfd_delete_bfd
 argument_list|(
 name|nbfd
 argument_list|)
@@ -1140,19 +1127,7 @@ name|bfd_error_system_call
 argument_list|)
 expr_stmt|;
 comment|/* File not writeable, etc */
-name|objalloc_free
-argument_list|(
-operator|(
-expr|struct
-name|objalloc
-operator|*
-operator|)
-name|nbfd
-operator|->
-name|memory
-argument_list|)
-expr_stmt|;
-name|free
+name|_bfd_delete_bfd
 argument_list|(
 name|nbfd
 argument_list|)
@@ -1273,6 +1248,7 @@ operator|==
 literal|0
 condition|)
 block|{
+name|unsigned
 name|int
 name|mask
 init|=
@@ -1318,19 +1294,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|objalloc_free
-argument_list|(
-operator|(
-expr|struct
-name|objalloc
-operator|*
-operator|)
-name|abfd
-operator|->
-name|memory
-argument_list|)
-expr_stmt|;
-name|free
+name|_bfd_delete_bfd
 argument_list|(
 name|abfd
 argument_list|)
@@ -1403,6 +1367,7 @@ operator|==
 literal|0
 condition|)
 block|{
+name|unsigned
 name|int
 name|mask
 init|=
@@ -1448,19 +1413,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|objalloc_free
-argument_list|(
-operator|(
-expr|struct
-name|objalloc
-operator|*
-operator|)
-name|abfd
-operator|->
-name|memory
-argument_list|)
-expr_stmt|;
-name|free
+name|_bfd_delete_bfd
 argument_list|(
 name|abfd
 argument_list|)
@@ -1472,7 +1425,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_create  SYNOPSIS 	bfd *bfd_create(CONST char *filename, bfd *templ);  DESCRIPTION 	Create a new BFD in the manner of<<bfd_openw>>, but without opening a file. The new BFD 	takes the target from the target used by @var{template}. The 	format is always set to<<bfd_object>>.  */
+comment|/* FUNCTION 	bfd_create  SYNOPSIS 	bfd *bfd_create(const char *filename, bfd *templ);  DESCRIPTION 	Create a new BFD in the manner of<<bfd_openw>>, but without opening a file. The new BFD 	takes the target from the target used by @var{template}. The 	format is always set to<<bfd_object>>.  */
 end_comment
 
 begin_function
@@ -1484,7 +1437,7 @@ name|filename
 parameter_list|,
 name|templ
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -1590,18 +1543,23 @@ block|}
 name|bim
 operator|=
 operator|(
+operator|(
 expr|struct
 name|bfd_in_memory
 operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
+operator|(
+name|bfd_size_type
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|bfd_in_memory
 argument_list|)
 argument_list|)
+operator|)
 expr_stmt|;
 name|abfd
 operator|->
@@ -1612,7 +1570,7 @@ name|PTR
 operator|)
 name|bim
 expr_stmt|;
-comment|/* bfd_write will grow these as needed */
+comment|/* bfd_bwrite will grow these as needed */
 name|bim
 operator|->
 name|size
@@ -1882,13 +1840,33 @@ name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
-name|size_t
+name|bfd_size_type
 name|size
 decl_stmt|;
 block|{
 name|PTR
 name|ret
 decl_stmt|;
+if|if
+condition|(
+name|size
+operator|!=
+operator|(
+name|unsigned
+name|long
+operator|)
+name|size
+condition|)
+block|{
+name|bfd_set_error
+argument_list|(
+name|bfd_error_no_memory
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|ret
 operator|=
 name|objalloc_alloc
@@ -1933,7 +1911,7 @@ name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
-name|size_t
+name|bfd_size_type
 name|size
 decl_stmt|;
 block|{
@@ -1959,6 +1937,9 @@ name|res
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -1969,7 +1950,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Free a block allocated for a BFD.  */
+comment|/* Free a block allocated for a BFD.    Note:  Also frees all more recently allocated blocks!  */
 end_comment
 
 begin_function

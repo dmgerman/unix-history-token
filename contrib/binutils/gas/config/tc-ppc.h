@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-ppc.h -- Header file for tc-ppc.c.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-ppc.h -- Header file for tc-ppc.c.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -165,14 +165,19 @@ name|TARGET_FORMAT
 value|(ppc_target_format ())
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|ppc_target_format
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Permit temporary numeric labels.  */
@@ -277,14 +282,22 @@ directive|define
 name|WORKING_DOT_WORD
 end_define
 
-begin_comment
-comment|/* We set the fx_done field appropriately in md_apply_fix.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|MAX_MEM_FOR_RS_ALIGN_CODE
+value|4
+end_define
 
 begin_define
 define|#
 directive|define
-name|TC_HANDLES_FX_DONE
+name|HANDLE_ALIGN
+parameter_list|(
+name|FRAGP
+parameter_list|)
+define|\
+value|if ((FRAGP)->fr_type == rs_align_code) 				\     {									\       valueT count = ((FRAGP)->fr_next->fr_address			\ 		      - ((FRAGP)->fr_address + (FRAGP)->fr_fix));	\       if (count != 0&& (count& 3) == 0)				\ 	{								\ 	  unsigned char *dest = (FRAGP)->fr_literal + (FRAGP)->fr_fix;	\ 									\ 	  (FRAGP)->fr_var = 4;						\ 	  if (target_big_endian)					\ 	    {								\ 	      *dest++ = 0x60;						\ 	      *dest++ = 0;						\ 	      *dest++ = 0;						\ 	      *dest++ = 0;						\ 	    }								\ 	  else								\ 	    {								\ 	      *dest++ = 0;						\ 	      *dest++ = 0;						\ 	      *dest++ = 0;						\ 	      *dest++ = 0x60;						\ 	    }								\ 	}								\     }
 end_define
 
 begin_escape
@@ -725,7 +738,7 @@ parameter_list|(
 name|FIXP
 parameter_list|)
 define|\
-value|((FIXP)->fx_r_type == BFD_RELOC_PPC_B16_BRTAKEN				\  || (FIXP)->fx_r_type == BFD_RELOC_PPC_B16_BRNTAKEN			\  || (FIXP)->fx_r_type == BFD_RELOC_PPC_BA16_BRTAKEN			\  || (FIXP)->fx_r_type == BFD_RELOC_PPC_BA16_BRNTAKEN			\  || (FIXP)->fx_r_type == BFD_RELOC_VTABLE_INHERIT			\  || (FIXP)->fx_r_type == BFD_RELOC_VTABLE_ENTRY)
+value|((FIXP)->fx_r_type == BFD_RELOC_PPC_B16_BRTAKEN				\  || (FIXP)->fx_r_type == BFD_RELOC_PPC_B16_BRNTAKEN			\  || (FIXP)->fx_r_type == BFD_RELOC_PPC_BA16_BRTAKEN			\  || (FIXP)->fx_r_type == BFD_RELOC_PPC_BA16_BRNTAKEN			\  || (BFD_DEFAULT_TARGET_SIZE == 64					\&& (FIXP)->fx_r_type == BFD_RELOC_PPC64_TOC)			\  || (FIXP)->fx_r_type == BFD_RELOC_VTABLE_INHERIT			\  || (FIXP)->fx_r_type == BFD_RELOC_VTABLE_ENTRY)
 end_define
 
 begin_define
@@ -861,6 +874,31 @@ parameter_list|)
 value|ppc_section_flags (FLAGS, ATTR, TYPE)
 end_define
 
+begin_if
+if|#
+directive|if
+name|BFD_DEFAULT_TARGET_SIZE
+operator|==
+literal|64
+end_if
+
+begin_comment
+comment|/* Extra sections for 64-bit ELF PPC. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELF_TC_SPECIAL_SECTIONS
+define|\
+value|{ ".toc",		SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE}, \   { ".tocbss",		SHT_NOBITS,	SHF_ALLOC + SHF_WRITE},
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
 comment|/* Add extra PPC sections -- Note, for now, make .sbss2 and .PPC.EMB.sbss0 a    normal section, and not a bss section so that the linker doesn't crater    when trying to make more than 2 sections.  */
 end_comment
@@ -872,6 +910,11 @@ name|ELF_TC_SPECIAL_SECTIONS
 define|\
 value|{ ".tags",		SHT_ORDERED,	SHF_ALLOC }, \   { ".sdata",		SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE }, \   { ".sbss",		SHT_NOBITS,	SHF_ALLOC + SHF_WRITE }, \   { ".sdata2",		SHT_PROGBITS,	SHF_ALLOC }, \   { ".sbss2",		SHT_PROGBITS,	SHF_ALLOC }, \   { ".PPC.EMB.sdata0",	SHT_PROGBITS,	SHF_ALLOC }, \   { ".PPC.EMB.sbss0",	SHT_PROGBITS,	SHF_ALLOC },
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -898,11 +941,25 @@ define|#
 directive|define
 name|tc_fix_adjustable
 parameter_list|(
-name|FIX
+name|fixp
 parameter_list|)
-define|\
-value|((FIX)->fx_r_type != BFD_RELOC_16_GOTOFF              		\&& (FIX)->fx_r_type != BFD_RELOC_LO16_GOTOFF         		\&& (FIX)->fx_r_type != BFD_RELOC_HI16_GOTOFF         		\&& (FIX)->fx_r_type != BFD_RELOC_HI16_S_GOTOFF       		\&& (FIX)->fx_r_type != BFD_RELOC_GPREL16             		\&& (FIX)->fx_r_type != BFD_RELOC_VTABLE_INHERIT			\&& (FIX)->fx_r_type != BFD_RELOC_VTABLE_ENTRY			\&& ! S_IS_EXTERNAL ((FIX)->fx_addsy)					\&& ! S_IS_WEAK ((FIX)->fx_addsy)					\&& ((FIX)->fx_pcrel				        		\        || ((FIX)->fx_subsy != NULL					\&& (S_GET_SEGMENT ((FIX)->fx_subsy)				\ 	       == S_GET_SEGMENT ((FIX)->fx_addsy)))			\        || S_IS_LOCAL ((FIX)->fx_addsy)))
+value|ppc_fix_adjustable (fixp)
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ppc_fix_adjustable
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|fix
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* We must never ever try to resolve references to externally visible    symbols in the assembler, because the .o file might go into a shared    library, and some other shared library might override that symbol.  */
@@ -919,6 +976,49 @@ define|\
 value|((FIX)->fx_addsy == NULL \    || (! S_IS_EXTERNAL ((FIX)->fx_addsy) \&& ! S_IS_WEAK ((FIX)->fx_addsy) \&& S_IS_DEFINED ((FIX)->fx_addsy) \&& ! S_IS_COMMON ((FIX)->fx_addsy)))
 end_define
 
+begin_if
+if|#
+directive|if
+name|BFD_DEFAULT_TARGET_SIZE
+operator|==
+literal|64
+end_if
+
+begin_comment
+comment|/* Finish up the symbol.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|tc_frob_symbol
+parameter_list|(
+name|sym
+parameter_list|,
+name|punt
+parameter_list|)
+value|punt = ppc_elf_frob_symbol (sym)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ppc_elf_frob_symbol
+name|PARAMS
+argument_list|(
+operator|(
+name|symbolS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -934,16 +1034,6 @@ end_endif
 begin_comment
 comment|/* OBJ_ELF */
 end_comment
-
-begin_comment
-comment|/* call md_apply_fix3 with segment instead of md_apply_fix */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MD_APPLY_FIX3
-end_define
 
 begin_comment
 comment|/* call md_pcrel_from_section, not md_pcrel_from */
@@ -986,6 +1076,8 @@ parameter_list|(
 name|name
 parameter_list|,
 name|exp
+parameter_list|,
+name|c
 parameter_list|)
 value|ppc_parse_name (name, exp)
 end_define

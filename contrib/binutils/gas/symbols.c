@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|"as.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"as.h"
+file|"safe-ctype.h"
 end_include
 
 begin_include
@@ -174,6 +174,22 @@ begin_decl_stmt
 name|struct
 name|obstack
 name|notes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|save_symbol_name
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -412,7 +428,6 @@ operator|!
 name|symbols_case_sensitive
 condition|)
 block|{
-name|unsigned
 name|char
 modifier|*
 name|s
@@ -421,11 +436,6 @@ for|for
 control|(
 name|s
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|ret
 init|;
 operator|*
@@ -436,18 +446,10 @@ condition|;
 name|s
 operator|++
 control|)
-if|if
-condition|(
-name|islower
-argument_list|(
-operator|*
-name|s
-argument_list|)
-condition|)
 operator|*
 name|s
 operator|=
-name|toupper
+name|TOUPPER
 argument_list|(
 operator|*
 name|s
@@ -759,7 +761,7 @@ name|name
 parameter_list|,
 name|section
 parameter_list|,
-name|offset
+name|value
 parameter_list|,
 name|frag
 parameter_list|)
@@ -772,7 +774,7 @@ name|segT
 name|section
 decl_stmt|;
 name|valueT
-name|offset
+name|value
 decl_stmt|;
 name|fragS
 modifier|*
@@ -842,9 +844,9 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|->
-name|lsy_offset
+name|lsy_value
 operator|=
-name|offset
+name|value
 expr_stmt|;
 name|hash_jam
 argument_list|(
@@ -925,7 +927,7 @@ name|lsy_section
 argument_list|,
 name|locsym
 operator|->
-name|lsy_offset
+name|lsy_value
 argument_list|,
 name|local_symbol_get_frag
 argument_list|(
@@ -953,6 +955,18 @@ name|sy_used
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TC_LOCAL_SYMFIELD_CONVERT
+name|TC_LOCAL_SYMFIELD_CONVERT
+argument_list|(
+name|locsym
+argument_list|,
+name|ret
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|symbol_table_insert
 argument_list|(
 name|ret
@@ -1317,7 +1331,7 @@ name|now_seg
 operator|||
 name|locsym
 operator|->
-name|lsy_offset
+name|lsy_value
 operator|!=
 name|frag_now_fix
 argument_list|()
@@ -1328,7 +1342,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Symbol %s already defined."
+literal|"symbol `%s' is already defined"
 argument_list|)
 argument_list|,
 name|sym_name
@@ -1353,7 +1367,7 @@ argument_list|)
 expr_stmt|;
 name|locsym
 operator|->
-name|lsy_offset
+name|lsy_value
 operator|=
 name|frag_now_fix
 argument_list|()
@@ -1657,7 +1671,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Symbol \"%s\" is already defined as \"%s\"/%s%ld."
+literal|"symbol `%s' is already defined as \"%s\"/%s%ld"
 argument_list|)
 argument_list|,
 name|sym_name
@@ -1718,7 +1732,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Symbol %s already defined."
+literal|"symbol `%s' is already defined"
 argument_list|)
 argument_list|,
 name|sym_name
@@ -1979,7 +1993,7 @@ name|as_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"Inserting \"%s\" into symbol table failed: %s"
+literal|"inserting \"%s\" into symbol table failed: %s"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -2018,7 +2032,7 @@ name|as_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"Inserting \"%s\" into symbol table failed: %s"
+literal|"inserting \"%s\" into symbol table failed: %s"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -2398,25 +2412,14 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-if|if
-condition|(
-name|islower
-argument_list|(
-name|c
-argument_list|)
-condition|)
-name|c
-operator|=
-name|toupper
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
 operator|*
 name|copy
 operator|++
 operator|=
+name|TOUPPER
+argument_list|(
 name|c
+argument_list|)
 expr_stmt|;
 block|}
 operator|*
@@ -3152,15 +3155,10 @@ name|valueT
 name|resolve_symbol_value
 parameter_list|(
 name|symp
-parameter_list|,
-name|finalize
 parameter_list|)
 name|symbolS
 modifier|*
 name|symp
-decl_stmt|;
-name|int
-name|finalize
 decl_stmt|;
 block|{
 name|int
@@ -3195,6 +3193,12 @@ operator|*
 operator|)
 name|symp
 decl_stmt|;
+name|final_val
+operator|=
+name|locsym
+operator|->
+name|lsy_value
+expr_stmt|;
 if|if
 condition|(
 name|local_symbol_resolved_p
@@ -3203,43 +3207,27 @@ name|locsym
 argument_list|)
 condition|)
 return|return
-name|locsym
-operator|->
-name|lsy_offset
-operator|/
-name|bfd_octets_per_byte
-argument_list|(
-name|stdoutput
-argument_list|)
+name|final_val
 return|;
 name|final_val
-operator|=
-operator|(
+operator|+=
 name|local_symbol_get_frag
 argument_list|(
 name|locsym
 argument_list|)
 operator|->
 name|fr_address
-operator|+
-name|locsym
-operator|->
-name|lsy_offset
-operator|)
 operator|/
-name|bfd_octets_per_byte
-argument_list|(
-name|stdoutput
-argument_list|)
+name|OCTETS_PER_BYTE
 expr_stmt|;
 if|if
 condition|(
-name|finalize
+name|finalize_syms
 condition|)
 block|{
 name|locsym
 operator|->
-name|lsy_offset
+name|lsy_value
 operator|=
 name|final_val
 expr_stmt|;
@@ -3307,13 +3295,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|finalize
+name|finalize_syms
 condition|)
 name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Symbol definition loop encountered at %s"
+literal|"symbol definition loop encountered at `%s'"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -3451,9 +3439,26 @@ operator|=
 name|resolve_symbol_value
 argument_list|(
 name|add_symbol
-argument_list|,
-name|finalize
 argument_list|)
+expr_stmt|;
+name|seg_left
+operator|=
+name|S_GET_SEGMENT
+argument_list|(
+name|add_symbol
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|finalize_syms
+condition|)
+name|symp
+operator|->
+name|sy_value
+operator|.
+name|X_op_symbol
+operator|=
+name|NULL
 expr_stmt|;
 name|do_symbol
 label|:
@@ -3464,7 +3469,7 @@ operator|->
 name|sy_mri_common
 condition|)
 block|{
-comment|/* This is a symbol inside an MRI common section.  The                  relocation routines are going to handle it specially.                  Don't change the value.  */
+comment|/* This is a symbol inside an MRI common section.  The 		 relocation routines are going to handle it specially. 		 Don't change the value.  */
 name|resolved
 operator|=
 name|symbol_resolved_p
@@ -3476,7 +3481,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|finalize
+name|finalize_syms
 operator|&&
 name|final_val
 operator|==
@@ -3510,7 +3515,7 @@ name|add_symbol
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If we have equated this symbol to an undefined symbol, we              keep X_op set to O_symbol, and we don't change              X_add_number.  This permits the routine which writes out              relocation to detect this case, and convert the              relocation to be against the symbol to which this symbol              is equated.  */
+comment|/* If we have equated this symbol to an undefined or common 	     symbol, keep X_op set to O_symbol, and don't change 	     X_add_number.  This permits the routine which writes out 	     relocation to detect this case, and convert the 	     relocation to be against the symbol to which this symbol 	     is equated.  */
 if|if
 condition|(
 operator|!
@@ -3527,19 +3532,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|finalize
+name|finalize_syms
 condition|)
 block|{
-name|S_SET_SEGMENT
-argument_list|(
-name|symp
-argument_list|,
-name|S_GET_SEGMENT
-argument_list|(
-name|add_symbol
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|symp
 operator|->
 name|sy_value
@@ -3564,6 +3559,19 @@ name|X_add_number
 operator|=
 name|final_val
 expr_stmt|;
+comment|/* Use X_op_symbol as a flag.  */
+name|symp
+operator|->
+name|sy_value
+operator|.
+name|X_op_symbol
+operator|=
+name|add_symbol
+expr_stmt|;
+name|final_seg
+operator|=
+name|seg_left
+expr_stmt|;
 block|}
 name|final_val
 operator|=
@@ -3575,6 +3583,90 @@ name|symbol_resolved_p
 argument_list|(
 name|add_symbol
 argument_list|)
+expr_stmt|;
+name|symp
+operator|->
+name|sy_resolving
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|exit_dont_set_value
+goto|;
+block|}
+elseif|else
+if|if
+condition|(
+name|finalize_syms
+operator|&&
+name|final_seg
+operator|==
+name|expr_section
+operator|&&
+name|seg_left
+operator|!=
+name|expr_section
+condition|)
+block|{
+comment|/* If the symbol is an expression symbol, do similarly 		 as for undefined and common syms above.  Handles 		 "sym +/- expr" where "expr" cannot be evaluated 		 immediately, and we want relocations to be against 		 "sym", eg. because it is weak.  */
+name|symp
+operator|->
+name|sy_value
+operator|.
+name|X_op
+operator|=
+name|O_symbol
+expr_stmt|;
+name|symp
+operator|->
+name|sy_value
+operator|.
+name|X_add_symbol
+operator|=
+name|add_symbol
+expr_stmt|;
+name|symp
+operator|->
+name|sy_value
+operator|.
+name|X_add_number
+operator|=
+name|final_val
+expr_stmt|;
+name|symp
+operator|->
+name|sy_value
+operator|.
+name|X_op_symbol
+operator|=
+name|add_symbol
+expr_stmt|;
+name|final_seg
+operator|=
+name|seg_left
+expr_stmt|;
+name|final_val
+operator|+=
+name|symp
+operator|->
+name|sy_frag
+operator|->
+name|fr_address
+operator|+
+name|left
+expr_stmt|;
+name|resolved
+operator|=
+name|symbol_resolved_p
+argument_list|(
+name|add_symbol
+argument_list|)
+expr_stmt|;
+name|symp
+operator|->
+name|sy_resolving
+operator|=
+literal|0
 expr_stmt|;
 goto|goto
 name|exit_dont_set_value
@@ -3604,10 +3696,7 @@ name|undefined_section
 condition|)
 name|final_seg
 operator|=
-name|S_GET_SEGMENT
-argument_list|(
-name|add_symbol
-argument_list|)
+name|seg_left
 expr_stmt|;
 block|}
 name|resolved
@@ -3632,8 +3721,6 @@ operator|=
 name|resolve_symbol_value
 argument_list|(
 name|add_symbol
-argument_list|,
-name|finalize
 argument_list|)
 expr_stmt|;
 if|if
@@ -3759,8 +3846,6 @@ operator|=
 name|resolve_symbol_value
 argument_list|(
 name|add_symbol
-argument_list|,
-name|finalize
 argument_list|)
 expr_stmt|;
 name|right
@@ -3768,8 +3853,6 @@ operator|=
 name|resolve_symbol_value
 argument_list|(
 name|op_symbol
-argument_list|,
-name|finalize
 argument_list|)
 expr_stmt|;
 name|seg_left
@@ -3792,10 +3875,6 @@ condition|(
 name|op
 operator|==
 name|O_add
-operator|||
-name|op
-operator|==
-name|O_subtract
 condition|)
 block|{
 if|if
@@ -3805,28 +3884,9 @@ operator|==
 name|absolute_section
 condition|)
 block|{
-if|if
-condition|(
-name|op
-operator|==
-name|O_add
-condition|)
 name|final_val
 operator|+=
 name|right
-expr_stmt|;
-else|else
-name|final_val
-operator|-=
-name|right
-expr_stmt|;
-name|op
-operator|=
-name|O_symbol
-expr_stmt|;
-name|op_symbol
-operator|=
-name|NULL
 expr_stmt|;
 goto|goto
 name|do_symbol
@@ -3838,16 +3898,8 @@ condition|(
 name|seg_left
 operator|==
 name|absolute_section
-operator|&&
-name|op
-operator|==
-name|O_add
 condition|)
 block|{
-name|op
-operator|=
-name|O_symbol
-expr_stmt|;
 name|final_val
 operator|+=
 name|left
@@ -3860,19 +3912,50 @@ name|left
 operator|=
 name|right
 expr_stmt|;
-name|op_symbol
+name|seg_left
 operator|=
-name|NULL
+name|seg_right
 expr_stmt|;
 goto|goto
 name|do_symbol
 goto|;
 block|}
 block|}
-comment|/* Subtraction is permitted if both operands are in the same 	     section.  Otherwise, both operands must be absolute.  We 	     already handled the case of addition or subtraction of a 	     constant above.  This will probably need to be changed 	     for an object file format which supports arbitrary 	     expressions, such as IEEE-695.  */
-comment|/* Don't emit messages unless we're finalizing the symbol value, 	     otherwise we may get the same message multiple times.  */
+elseif|else
 if|if
 condition|(
+name|op
+operator|==
+name|O_subtract
+condition|)
+block|{
+if|if
+condition|(
+name|seg_right
+operator|==
+name|absolute_section
+condition|)
+block|{
+name|final_val
+operator|-=
+name|right
+expr_stmt|;
+goto|goto
+name|do_symbol
+goto|;
+block|}
+block|}
+comment|/* Equality and non-equality tests are permitted on anything. 	     Subtraction, and other comparison operators are permitted if 	     both operands are in the same section.  Otherwise, both 	     operands must be absolute.  We already handled the case of 	     addition or subtraction of a constant above.  This will 	     probably need to be changed for an object file format which 	     supports arbitrary expressions, such as IEEE-695.  	     Don't emit messages unless we're finalizing the symbol value, 	     otherwise we may get the same message multiple times.  */
+if|if
+condition|(
+name|op
+operator|!=
+name|O_eq
+operator|&&
+name|op
+operator|!=
+name|O_ne
+operator|&&
 operator|(
 name|seg_left
 operator|!=
@@ -3883,21 +3966,45 @@ operator|!=
 name|absolute_section
 operator|)
 operator|&&
+operator|(
 operator|(
 name|op
 operator|!=
 name|O_subtract
+operator|&&
+name|op
+operator|!=
+name|O_lt
+operator|&&
+name|op
+operator|!=
+name|O_le
+operator|&&
+name|op
+operator|!=
+name|O_ge
+operator|&&
+name|op
+operator|!=
+name|O_gt
+operator|)
 operator|||
 name|seg_left
 operator|!=
 name|seg_right
 operator|||
+operator|(
 name|seg_left
 operator|==
 name|undefined_section
+operator|&&
+name|add_symbol
+operator|!=
+name|op_symbol
+operator|)
 operator|)
 operator|&&
-name|finalize
+name|finalize_syms
 condition|)
 block|{
 name|char
@@ -3936,7 +4043,7 @@ name|line
 argument_list|,
 name|_
 argument_list|(
-literal|"undefined symbol %s in operation"
+literal|"undefined symbol `%s' in operation"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -3963,7 +4070,7 @@ name|line
 argument_list|,
 name|_
 argument_list|(
-literal|"undefined symbol %s in operation"
+literal|"undefined symbol `%s' in operation"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -4011,7 +4118,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"undefined symbol %s in operation setting %s"
+literal|"undefined symbol `%s' in operation setting `%s'"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -4039,7 +4146,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"undefined symbol %s in operation setting %s"
+literal|"undefined symbol `%s' in operation setting `%s'"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -4071,7 +4178,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"invalid section for operation setting %s"
+literal|"invalid section for operation setting `%s'"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -4100,14 +4207,14 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* If seg_right is not absolute_section, then we've                  already issued a warning about using a bad symbol.  */
+comment|/* If seg_right is not absolute_section, then we've 		 already issued a warning about using a bad symbol.  */
 if|if
 condition|(
 name|seg_right
 operator|==
 name|absolute_section
 operator|&&
-name|finalize
+name|finalize_syms
 condition|)
 block|{
 name|char
@@ -4148,7 +4255,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"division by zero when setting %s"
+literal|"division by zero when setting `%s'"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -4264,29 +4371,29 @@ break|break;
 case|case
 name|O_eq
 case|:
-name|left
-operator|=
-name|left
-operator|==
-name|right
-condition|?
-operator|~
-operator|(
-name|offsetT
-operator|)
-literal|0
-else|:
-literal|0
-expr_stmt|;
-break|break;
 case|case
 name|O_ne
 case|:
 name|left
 operator|=
+operator|(
 name|left
-operator|!=
+operator|==
 name|right
+operator|&&
+name|seg_left
+operator|==
+name|seg_right
+operator|&&
+operator|(
+name|seg_left
+operator|!=
+name|undefined_section
+operator|||
+name|add_symbol
+operator|==
+name|op_symbol
+operator|)
 condition|?
 operator|~
 operator|(
@@ -4295,6 +4402,22 @@ operator|)
 literal|0
 else|:
 literal|0
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|symp
+operator|->
+name|sy_value
+operator|.
+name|X_op
+operator|==
+name|O_ne
+condition|)
+name|left
+operator|=
+operator|~
+name|left
 expr_stmt|;
 break|break;
 case|case
@@ -4454,9 +4577,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|finalize
+name|finalize_syms
 condition|)
-block|{
 name|S_SET_VALUE
 argument_list|(
 name|symp
@@ -4464,6 +4586,9 @@ argument_list|,
 name|final_val
 argument_list|)
 expr_stmt|;
+name|exit_dont_set_value
+label|:
+comment|/* Always set the segment, even if not finalizing the value.      The segment is used to determine whether a symbol is defined.  */
 if|#
 directive|if
 name|defined
@@ -4476,7 +4601,7 @@ name|defined
 argument_list|(
 name|BFD_ASSEMBLER
 argument_list|)
-comment|/* The old a.out backend does not handle S_SET_SEGMENT correctly          for a stab symbol, so we use this bad hack.  */
+comment|/* The old a.out backend does not handle S_SET_SEGMENT correctly      for a stab symbol, so we use this bad hack.  */
 if|if
 condition|(
 name|final_seg
@@ -4495,13 +4620,10 @@ argument_list|,
 name|final_seg
 argument_list|)
 expr_stmt|;
-block|}
-name|exit_dont_set_value
-label|:
 comment|/* Don't worry if we can't resolve an expr_section symbol.  */
 if|if
 condition|(
-name|finalize
+name|finalize_syms
 condition|)
 block|{
 if|if
@@ -4529,7 +4651,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"can't resolve value for symbol \"%s\""
+literal|"can't resolve value for symbol `%s'"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -4607,8 +4729,6 @@ condition|)
 name|resolve_symbol_value
 argument_list|(
 name|value
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -5959,12 +6079,8 @@ name|index
 operator|+
 literal|1
 init|;
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|p
 argument_list|)
@@ -6021,12 +6137,8 @@ operator|,
 name|p
 operator|++
 init|;
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|p
 argument_list|)
@@ -6114,16 +6226,10 @@ name|s
 argument_list|)
 condition|)
 return|return
-operator|(
-operator|(
-expr|struct
-name|local_symbol
-operator|*
-operator|)
+name|resolve_symbol_value
+argument_list|(
 name|s
-operator|)
-operator|->
-name|lsy_offset
+argument_list|)
 return|;
 endif|#
 directive|endif
@@ -6133,22 +6239,25 @@ operator|!
 name|s
 operator|->
 name|sy_resolved
-operator|&&
-name|s
-operator|->
-name|sy_value
-operator|.
-name|X_op
-operator|!=
-name|O_constant
 condition|)
+block|{
+name|valueT
+name|val
+init|=
 name|resolve_symbol_value
 argument_list|(
 name|s
-argument_list|,
-literal|1
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|finalize_syms
+condition|)
+return|return
+name|val
+return|;
+block|}
 if|if
 condition|(
 name|s
@@ -6218,7 +6327,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Attempt to get value of unresolved symbol %s"
+literal|"attempt to get value of unresolved symbol `%s'"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -6285,7 +6394,7 @@ operator|)
 name|s
 operator|)
 operator|->
-name|lsy_offset
+name|lsy_value
 operator|=
 name|val
 expr_stmt|;
@@ -7159,7 +7268,7 @@ name|line
 argument_list|,
 name|_
 argument_list|(
-literal|"Section symbols are already global"
+literal|"section symbols are already global"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8253,6 +8362,73 @@ block|}
 end_function
 
 begin_comment
+comment|/* Return whether a symbol is equated to another symbol, and should be    treated specially when writing out relocs.  */
+end_comment
+
+begin_function
+name|int
+name|symbol_equated_reloc_p
+parameter_list|(
+name|s
+parameter_list|)
+name|symbolS
+modifier|*
+name|s
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|LOCAL_SYMBOL_CHECK
+argument_list|(
+name|s
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+comment|/* X_op_symbol, normally not used for O_symbol, is set by      resolve_symbol_value to flag expression syms that have been      equated.  */
+return|return
+operator|(
+name|s
+operator|->
+name|sy_value
+operator|.
+name|X_op
+operator|==
+name|O_symbol
+operator|&&
+operator|(
+operator|(
+name|s
+operator|->
+name|sy_resolved
+operator|&&
+name|s
+operator|->
+name|sy_value
+operator|.
+name|X_op_symbol
+operator|!=
+name|NULL
+operator|)
+operator|||
+operator|!
+name|S_IS_DEFINED
+argument_list|(
+name|s
+argument_list|)
+operator|||
+name|S_IS_COMMON
+argument_list|(
+name|s
+argument_list|)
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Return whether a symbol has a constant value.  */
 end_comment
 
@@ -9158,7 +9334,7 @@ operator|)
 name|sym
 argument_list|)
 operator|->
-name|lsy_offset
+name|lsy_value
 argument_list|)
 expr_stmt|;
 else|else

@@ -4,7 +4,7 @@ comment|/* Portable version of bzero for systems without it.    This function is
 end_comment
 
 begin_comment
-comment|/* NAME 	bzero -- zero the contents of a specified memory region  SYNOPSIS 	void bzero (char *to, int count)  DESCRIPTION 	Zero COUNT bytes of memory pointed to by TO.  BUGS 	Significant speed enhancements may be made in some environments 	by zeroing more than a single byte at a time, or by unrolling the 	loop.  */
+comment|/*  @deftypefn Supplemental void bzero (char *@var{mem}, int @var{count})  Zeros @var{count} bytes starting at @var{mem}.  Use of this function is deprecated in favor of @code{memset}.  @end deftypefn  */
 end_comment
 
 begin_function

@@ -1397,7 +1397,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Attempt to switch to nonexistent segment \"%s\""
+literal|"attempt to switch to nonexistent segment \"%s\""
 argument_list|)
 argument_list|,
 name|segname
@@ -2264,6 +2264,10 @@ operator|||
 name|sec
 operator|==
 name|bss_section
+operator|||
+name|sec
+operator|==
+name|absolute_section
 condition|)
 return|return
 literal|0

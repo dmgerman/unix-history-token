@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"libiberty.h"
 end_include
 
@@ -25,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"as.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"safe-ctype.h"
 end_include
 
 begin_include
@@ -251,6 +251,19 @@ operator|*
 operator|,
 name|expressionS
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|init_opcode_tables
+name|PARAMS
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1744,7 +1757,7 @@ block|}
 comment|/* Skip leading white space.  */
 while|while
 condition|(
-name|isspace
+name|ISSPACE
 argument_list|(
 operator|*
 name|str
@@ -2325,7 +2338,7 @@ init|;
 operator|*
 name|t
 operator|&&
-name|isalnum
+name|ISALNUM
 argument_list|(
 operator|*
 name|t
@@ -3050,7 +3063,7 @@ decl_stmt|;
 comment|/* For the moment we assume a valid `str' can only contain blanks 	     now.  IE: We needn't try again with a longer version of the 	     insn and it is assumed that longer versions of insns appear 	     before shorter ones (eg: lsr r2,r3,1 vs lsr r2,r3).  */
 while|while
 condition|(
-name|isspace
+name|ISSPACE
 argument_list|(
 operator|*
 name|str
@@ -3370,7 +3383,7 @@ name|arc_operand
 modifier|*
 name|operand
 decl_stmt|;
-comment|/* Create a fixup for this operand. 		 At this point we do not use a bfd_reloc_code_real_type for 		 operands residing in the insn, but instead just use the 		 operand index.  This lets us easily handle fixups for any 		 operand type, although that is admittedly not a very exciting 		 feature.  We pick a BFD reloc type in md_apply_fix.  		 Limm values (4 byte immediate "constants") must be treated 		 normally because they're not part of the actual insn word 		 and thus the insertion routines don't handle them.  */
+comment|/* Create a fixup for this operand. 		 At this point we do not use a bfd_reloc_code_real_type for 		 operands residing in the insn, but instead just use the 		 operand index.  This lets us easily handle fixups for any 		 operand type, although that is admittedly not a very exciting 		 feature.  We pick a BFD reloc type in md_apply_fix3.  		 Limm values (4 byte immediate "constants") must be treated 		 normally because they're not part of the actual insn word 		 and thus the insertion routines don't handle them.  */
 if|if
 condition|(
 name|arc_operands
@@ -3696,18 +3709,10 @@ operator|*
 name|p
 condition|)
 block|{
-if|if
-condition|(
-name|isupper
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|)
 operator|*
 name|p
 operator|=
-name|tolower
+name|TOLOWER
 argument_list|(
 operator|*
 name|p
@@ -6012,7 +6017,7 @@ name|litP
 parameter_list|,
 name|sizeP
 parameter_list|)
-name|char
+name|int
 name|type
 decl_stmt|;
 name|char
@@ -6044,8 +6049,19 @@ decl_stmt|;
 name|char
 modifier|*
 name|atof_ieee
-parameter_list|()
-function_decl|;
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|LITTLENUM_TYPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -6363,13 +6379,6 @@ operator|->
 name|X_add_number
 operator|==
 literal|0
-comment|/* I think this test is unnecessary but just as a sanity check...  */
-operator|&&
-name|expressionP
-operator|->
-name|X_op_symbol
-operator|==
-name|NULL
 condition|)
 block|{
 name|expressionS
@@ -6642,7 +6651,7 @@ name|l
 argument_list|)
 operator|&&
 operator|!
-name|isalnum
+name|ISALNUM
 argument_list|(
 operator|*
 operator|(
@@ -6730,7 +6739,7 @@ name|l
 argument_list|)
 operator|&&
 operator|!
-name|isalnum
+name|ISALNUM
 argument_list|(
 operator|*
 operator|(
@@ -7276,12 +7285,12 @@ comment|/* Apply a fixup to the object code.  This is called for all the    fixu
 end_comment
 
 begin_function
-name|int
+name|void
 name|md_apply_fix3
 parameter_list|(
 name|fixP
 parameter_list|,
-name|valueP
+name|valP
 parameter_list|,
 name|seg
 parameter_list|)
@@ -7291,7 +7300,7 @@ name|fixP
 decl_stmt|;
 name|valueT
 modifier|*
-name|valueP
+name|valP
 decl_stmt|;
 name|segT
 name|seg
@@ -7305,6 +7314,9 @@ endif|#
 directive|endif
 name|valueT
 name|value
+init|=
+operator|*
+name|valP
 decl_stmt|;
 comment|/* FIXME FIXME FIXME: The value we are passed in *valueP includes      the symbol values.  Since we are using BFD_ASSEMBLER, if we are      doing this relocation the code in write.c is going to call      bfd_perform_relocation, which is also going to use the symbol      value.  That means that if the reloc is fully resolved we want to      use *valueP since bfd_perform_relocation is not being used.      However, if the reloc is not fully resolved we do not want to use      *valueP, and must use fx_offset instead.  However, if the reloc      is PC relative, we do want to use *valueP since it includes the      result of md_pcrel_from.  This is confusing.  */
 if|if
@@ -7319,19 +7331,12 @@ operator|*
 operator|)
 name|NULL
 condition|)
-block|{
-name|value
-operator|=
-operator|*
-name|valueP
-expr_stmt|;
 name|fixP
 operator|->
 name|fx_done
 operator|=
 literal|1
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -7340,11 +7345,6 @@ operator|->
 name|fx_pcrel
 condition|)
 block|{
-name|value
-operator|=
-operator|*
-name|valueP
-expr_stmt|;
 comment|/* ELF relocations are against symbols. 	 If this symbol is in a different section then we need to leave it for 	 the linker to deal with.  Unfortunately, md_pcrel_from can't tell, 	 so we have to undo it's effects here.  */
 if|if
 condition|(
@@ -7597,9 +7597,7 @@ name|fx_done
 condition|)
 block|{
 comment|/* Nothing else to do here.  */
-return|return
-literal|1
-return|;
+return|return;
 block|}
 comment|/* Determine a BFD reloc value based on the operand information. 	 We are only prepared to turn a few of the operands into relocs. 	 !!! Note that we can't handle limm values here.  Since we're using 	 implicit addends the addend must be inserted into the instruction, 	 however, the opcode insertion routines currently do nothing with 	 limm values.  */
 if|if
@@ -7748,9 +7746,7 @@ name|fx_done
 operator|=
 literal|1
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
 block|}
 else|else
@@ -7869,9 +7865,6 @@ name|fx_addnumber
 operator|=
 name|value
 expr_stmt|;
-return|return
-literal|1
-return|;
 block|}
 end_function
 

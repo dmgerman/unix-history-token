@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-ia64.h -- Header file for tc-ia64.c.    Copyright 1998, 1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by David Mosberger-Tang<davidm@hpl.hp.com>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* tc-ia64.h -- Header file for tc-ia64.c.    Copyright 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by David Mosberger-Tang<davidm@hpl.hp.com>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -45,6 +45,13 @@ name|TARGET_BYTES_BIG_ENDIAN
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|MD_FLAGS_DEFAULT
+value|EF_IA_64_BE
+end_define
+
 begin_else
 else|#
 directive|else
@@ -62,6 +69,13 @@ define|#
 directive|define
 name|TARGET_BYTES_BIG_ENDIAN
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD_FLAGS_DEFAULT
+value|EF_IA_64_ABI64
 end_define
 
 begin_endif
@@ -139,12 +153,6 @@ end_define
 begin_comment
 comment|/* allow //-style comments */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_HANDLES_FX_DONE
-end_define
 
 begin_define
 define|#
@@ -477,6 +485,23 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|ia64_elf_section_letter
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|flagword
 name|ia64_elf_section_flags
 name|PARAMS
@@ -565,6 +590,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|ia64_after_parse_args
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -617,6 +655,8 @@ parameter_list|(
 name|s
 parameter_list|,
 name|e
+parameter_list|,
+name|c
 parameter_list|)
 value|ia64_parse_name (s, e)
 end_define
@@ -704,7 +744,7 @@ name|fr
 parameter_list|,
 name|s
 parameter_list|)
-value|as_fatal("ia64_create_long_jump")
+value|as_fatal ("ia64_create_long_jump")
 end_define
 
 begin_define
@@ -723,7 +763,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|as_fatal("ia64_create_short_jump")
+value|as_fatal ("ia64_create_short_jump")
 end_define
 
 begin_define
@@ -737,6 +777,13 @@ name|s
 parameter_list|)
 define|\
 value|(as_fatal ("ia64_estimate_size_before_relax"), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|md_elf_section_letter
+value|ia64_elf_section_letter
 end_define
 
 begin_define
@@ -848,18 +895,16 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_MEM_FOR_RS_ALIGN_CODE
-value|(15 + 16)
+name|md_after_parse_args
+parameter_list|()
+value|ia64_after_parse_args ()
 end_define
-
-begin_comment
-comment|/* Call md_apply_fix3 with segment instead of md_apply_fix.  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|MD_APPLY_FIX3
+name|MAX_MEM_FOR_RS_ALIGN_CODE
+value|(15 + 16)
 end_define
 
 begin_define
@@ -877,7 +922,7 @@ define|#
 directive|define
 name|ELF_TC_SPECIAL_SECTIONS
 define|\
-value|{ ".sbss",	SHT_NOBITS,	SHF_ALLOC + SHF_WRITE + SHF_IA_64_SHORT }, \ { ".sdata",	SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE + SHF_IA_64_SHORT },
+value|{ ".init_array",SHT_INIT_ARRAY,	SHF_ALLOC + SHF_WRITE                   }, \ { ".fini_array",SHT_FINI_ARRAY,	SHF_ALLOC + SHF_WRITE                   }, \ { ".sbss",	SHT_NOBITS,	SHF_ALLOC + SHF_WRITE + SHF_IA_64_SHORT }, \ { ".sdata",	SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE + SHF_IA_64_SHORT },
 end_define
 
 begin_define
@@ -1411,6 +1456,10 @@ begin_comment
 comment|/* This expression evaluates to false if the relocation is for a local     object for which we still want to do the relocation at runtime.    True if we are willing to perform this relocation while building    the .o file.  This is only used for pcrel relocations.  */
 end_comment
 
+begin_comment
+comment|/* If the reloc type is BFD_RELOC_UNUSED, then this is for a TAG13/TAG13b field    which has no external reloc, so we must resolve the value now.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1419,7 +1468,7 @@ parameter_list|(
 name|FIX
 parameter_list|)
 define|\
-value|((FIX)->fx_addsy == NULL					\    || (FIX)->fx_r_type == 0					\    || (! S_IS_EXTERNAL ((FIX)->fx_addsy)			\&& ! S_IS_WEAK ((FIX)->fx_addsy)				\&& S_IS_DEFINED ((FIX)->fx_addsy)			\&& ! S_IS_COMMON ((FIX)->fx_addsy)))
+value|((FIX)->fx_addsy == NULL					\    || (FIX)->fx_r_type == BFD_RELOC_UNUSED			\    || (! S_IS_EXTERNAL ((FIX)->fx_addsy)			\&& ! S_IS_WEAK ((FIX)->fx_addsy)				\&& S_IS_DEFINED ((FIX)->fx_addsy)			\&& ! S_IS_COMMON ((FIX)->fx_addsy)))
 end_define
 
 end_unit

@@ -719,6 +719,23 @@ name|Elf64_External_Sym
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|unsigned
+name|char
+name|est_shndx
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Section index */
+block|}
+name|Elf_External_Sym_Shndx
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* Note segments */
 end_comment

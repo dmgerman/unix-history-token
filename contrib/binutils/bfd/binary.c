@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for binary objects.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for binary objects.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* This is a BFD backend which may be used to write binary objects.    It may only be used for output, not input.  The intention is that    this may be used as an output format for objcopy in order to    generate raw binary data.     This is very simple.  The only complication is that the real data    will start at some address X, and in some cases we will not want to    include X zeroes just to get to that point.  Since the start    address is not meaningful for this object file format, we use it    instead to indicate the number of zeroes to skip at the start of    the file.  objcopy cooperates by specially setting the start    address to zero by default.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_include
 include|#
@@ -23,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"sysdep.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"safe-ctype.h"
 end_include
 
 begin_include
@@ -147,21 +147,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|asymbol
-modifier|*
-name|binary_make_empty_symbol
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|void
 name|binary_get_symbol_info
 name|PARAMS
@@ -216,6 +201,19 @@ operator|,
 name|boolean
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Set by external programs - specifies the BFD architecture    to use when creating binary BFDs.  */
+end_comment
+
+begin_decl_stmt
+name|enum
+name|bfd_architecture
+name|bfd_external_binary_architecture
+init|=
+name|bfd_arch_unknown
 decl_stmt|;
 end_decl_stmt
 
@@ -375,6 +373,48 @@ name|PTR
 operator|)
 name|sec
 expr_stmt|;
+if|if
+condition|(
+name|bfd_get_arch_info
+argument_list|(
+name|abfd
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|bfd_get_arch_info
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|arch
+operator|==
+name|bfd_arch_unknown
+operator|)
+operator|&&
+operator|(
+name|bfd_external_binary_architecture
+operator|!=
+name|bfd_arch_unknown
+operator|)
+condition|)
+name|bfd_set_arch_info
+argument_list|(
+name|abfd
+argument_list|,
+name|bfd_lookup_arch
+argument_list|(
+name|bfd_external_binary_architecture
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|abfd
 operator|->
@@ -455,11 +495,9 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|location
-argument_list|,
-literal|1
 argument_list|,
 name|count
 argument_list|,
@@ -533,7 +571,7 @@ modifier|*
 name|suffix
 decl_stmt|;
 block|{
-name|int
+name|bfd_size_type
 name|size
 decl_stmt|;
 name|char
@@ -616,12 +654,8 @@ control|)
 if|if
 condition|(
 operator|!
-name|isalnum
+name|ISALNUM
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|p
 argument_list|)
@@ -682,6 +716,16 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+name|BIN_SYMS
+operator|*
+sizeof|sizeof
+argument_list|(
+name|asymbol
+argument_list|)
+decl_stmt|;
 name|syms
 operator|=
 operator|(
@@ -692,12 +736,7 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-name|BIN_SYMS
-operator|*
-sizeof|sizeof
-argument_list|(
-name|asymbol
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -930,40 +969,12 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* Make an empty symbol.  */
-end_comment
-
-begin_function
-specifier|static
-name|asymbol
-modifier|*
+begin_define
+define|#
+directive|define
 name|binary_make_empty_symbol
-parameter_list|(
-name|abfd
-parameter_list|)
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|asymbol
-operator|*
-operator|)
-name|bfd_alloc
-argument_list|(
-name|abfd
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|asymbol
-argument_list|)
-argument_list|)
-return|;
-block|}
-end_function
+value|_bfd_generic_make_empty_symbol
+end_define
 
 begin_define
 define|#
@@ -1442,6 +1453,13 @@ define|#
 directive|define
 name|binary_bfd_gc_sections
 value|bfd_generic_gc_sections
+end_define
+
+begin_define
+define|#
+directive|define
+name|binary_bfd_merge_sections
+value|bfd_generic_merge_sections
 end_define
 
 begin_define

@@ -254,6 +254,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  @deftypefn Replacement long get_run_time (void)  Returns the time used so far, in microseconds.  If possible, this is the time used by this process, else it is the elapsed time since the process started.  @end deftypefn  */
+end_comment
+
 begin_function
 name|long
 name|get_run_time

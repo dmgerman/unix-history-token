@@ -7,66 +7,30 @@ begin_comment
 comment|/* This file is an amalgamation of several standard include files that    define coff format, such as filehdr.h, aouthdr.h, and so forth.  In    addition, all datatypes have been translated into character arrays of    (presumed) equivalent size.  This is necessary so that this file can    be used with different systems while still yielding the same results.  */
 end_comment
 
-begin_comment
-comment|/********************** FILE HEADER **********************/
-end_comment
+begin_define
+define|#
+directive|define
+name|L_LNNO_SIZE
+value|2
+end_define
 
-begin_struct
-struct|struct
-name|external_filehdr
-block|{
-name|char
-name|f_magic
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* magic number			*/
-name|char
-name|f_nscns
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* number of sections		*/
-name|char
-name|f_timdat
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* time& date stamp		*/
-name|char
-name|f_symptr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* file pointer to symtab	*/
-name|char
-name|f_nsyms
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* number of symtab entries	*/
-name|char
-name|f_opthdr
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* sizeof(optional hdr)		*/
-name|char
-name|f_flags
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* flags			*/
-block|}
-struct|;
-end_struct
+begin_define
+define|#
+directive|define
+name|DO_NOT_DEFINE_SYMENT
+end_define
+
+begin_define
+define|#
+directive|define
+name|DO_NOT_DEFINE_AUXENT
+end_define
+
+begin_include
+include|#
+directive|include
+file|"coff/external.h"
+end_include
 
 begin_define
 define|#
@@ -133,103 +97,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|FILHDR
-value|struct external_filehdr
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILHSZ
-value|20
-end_define
-
-begin_comment
-comment|/********************** AOUT "OPTIONAL HEADER" **********************/
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|char
-name|magic
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* type of file				*/
-name|char
-name|vstamp
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* version stamp			*/
-name|char
-name|tsize
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* text size in bytes, padded to FW bdry*/
-name|char
-name|dsize
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* initialized data "  "		*/
-name|char
-name|bsize
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* uninitialized data "   "		*/
-name|char
-name|entry
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* entry pt.				*/
-name|char
-name|text_start
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* base of text used for this file */
-name|char
-name|data_start
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* base of data used for this file */
-block|}
-name|AOUTHDR
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|AOUTSZ
-value|28
-end_define
-
-begin_define
-define|#
-directive|define
-name|AOUTHDRSZ
-value|28
-end_define
-
-begin_define
-define|#
-directive|define
 name|OMAGIC
 value|0404
 end_define
@@ -272,125 +139,8 @@ comment|/* host   shlib */
 end_comment
 
 begin_comment
-comment|/********************** SECTION HEADER **********************/
+comment|/* More names of "special" sections. */
 end_comment
-
-begin_struct
-struct|struct
-name|external_scnhdr
-block|{
-name|char
-name|s_name
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* section name			*/
-name|char
-name|s_paddr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* physical address, aliased s_nlib */
-name|char
-name|s_vaddr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* virtual address		*/
-name|char
-name|s_size
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* section size			*/
-name|char
-name|s_scnptr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* file ptr to raw data for section */
-name|char
-name|s_relptr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* file ptr to relocation	*/
-name|char
-name|s_lnnoptr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* file ptr to line numbers	*/
-name|char
-name|s_nreloc
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* number of relocation entries	*/
-name|char
-name|s_nlnno
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* number of line number entries*/
-name|char
-name|s_flags
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* flags			*/
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|SCNHDR
-value|struct external_scnhdr
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCNHSZ
-value|40
-end_define
-
-begin_comment
-comment|/* Names of "special" sections. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_TEXT
-value|".text"
-end_define
-
-begin_define
-define|#
-directive|define
-name|_DATA
-value|".data"
-end_define
-
-begin_define
-define|#
-directive|define
-name|_BSS
-value|".bss"
-end_define
 
 begin_define
 define|#
@@ -411,76 +161,6 @@ define|#
 directive|define
 name|_FINI
 value|".fini"
-end_define
-
-begin_define
-define|#
-directive|define
-name|_COMMENT
-value|".comment"
-end_define
-
-begin_define
-define|#
-directive|define
-name|_LIB
-value|".lib"
-end_define
-
-begin_comment
-comment|/********************** LINE NUMBERS **********************/
-end_comment
-
-begin_comment
-comment|/* 1 line number entry for every "breakpointable" source line in a section.    Line numbers are grouped on a per function basis; first entry in a function    grouping will have l_lnno = 0 and in place of physical address will be the    symbol table index of the function name. */
-end_comment
-
-begin_struct
-struct|struct
-name|external_lineno
-block|{
-union|union
-block|{
-name|char
-name|l_symndx
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* fn name symbol index, iff l_lnno == 0 */
-name|char
-name|l_paddr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* (physical) address of line number */
-block|}
-name|l_addr
-union|;
-name|char
-name|l_lnno
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* line number */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|LINENO
-value|struct external_lineno
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINESZ
-value|(6)
 end_define
 
 begin_comment

@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* atof_generic.c - turn a string of digits into a Flonum    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1998, 1999, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* atof_generic.c - turn a string of digits into a Flonum    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_include
 include|#
@@ -19,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"as.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"safe-ctype.h"
 end_include
 
 begin_ifndef
@@ -440,12 +440,8 @@ control|)
 block|{
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|c
 argument_list|)
 condition|)
@@ -514,12 +510,8 @@ operator|*
 name|p
 operator|)
 operator|&&
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|c
 argument_list|)
 condition|;
@@ -602,12 +594,8 @@ control|)
 block|{
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|c
 argument_list|)
 condition|)
@@ -769,12 +757,8 @@ control|)
 block|{
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|c
 argument_list|)
 condition|)
@@ -1083,12 +1067,8 @@ name|p
 expr_stmt|;
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|c
 argument_list|)
 condition|)
@@ -1177,7 +1157,7 @@ name|as_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"failed sanity check."
+literal|"failed sanity check"
 argument_list|)
 argument_list|)
 expr_stmt|;

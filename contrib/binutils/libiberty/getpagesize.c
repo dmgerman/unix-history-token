@@ -4,7 +4,7 @@ comment|/* Emulation of getpagesize() for systems that need it. */
 end_comment
 
 begin_comment
-comment|/*  NAME  	getpagesize -- return the number of bytes in page of memory  SYNOPSIS  	int getpagesize (void)  DESCRIPTION  	Returns the number of bytes in a page of memory.  This is the 	granularity of many of the system memory management routines. 	No guarantee is made as to whether or not it is the same as the 	basic memory management hardware page size.  BUGS  	Is intended as a reasonable replacement for systems where this 	is not provided as a system call.  The value of 4096 may or may 	not be correct for the systems where it is returned as the default 	value.  */
+comment|/*  @deftypefn Supplemental int getpagesize (void)  Returns the number of bytes in a page of memory.  This is the granularity of many of the system memory management routines.  No guarantee is made as to whether or not it is the same as the basic memory management hardware page size.  @end deftypefn  BUGS  	Is intended as a reasonable replacement for systems where this 	is not provided as a system call.  The value of 4096 may or may 	not be correct for the systems where it is returned as the default 	value.  */
 end_comment
 
 begin_ifndef

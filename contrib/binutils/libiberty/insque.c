@@ -4,7 +4,7 @@ comment|/* insque(3C) routines    This file is in the public domain.  */
 end_comment
 
 begin_comment
-comment|/* NAME 	insque, remque -- insert, remove an element from a queue  SYNOPSIS 	struct qelem { 	  struct qelem *q_forw; 	  struct qelem *q_back; 	  char q_data[]; 	};  	void insque (struct qelem *elem, struct qelem *pred)  	void remque (struct qelem *elem)  DESCRIPTION 	Routines to manipulate queues built from doubly linked lists. 	The insque routine inserts ELEM in the queue immediately after 	PRED.  The remque routine removes ELEM from its containing queue. */
+comment|/*  @deftypefn Supplemental void insque (struct qelem *@var{elem}, struct qelem *@var{pred}) @deftypefnx Supplemental void remque (struct qelem *@var{elem})  Routines to manipulate queues built from doubly linked lists.  The @code{insque} routine inserts @var{elem} in the queue immediately after @var{pred}.  The @code{remque} routine removes @var{elem} from its containing queue.  These routines expect to be passed pointers to structures which have as their first members a forward pointer and a back pointer, like this prototype (although no prototype is provided):  @example struct qelem @{   struct qelem *q_forw;   struct qelem *q_back;   char q_data[]; @}; @end example  @end deftypefn  */
 end_comment
 
 begin_struct

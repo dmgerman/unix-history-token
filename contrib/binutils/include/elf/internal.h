@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1997, 1998, 2000    Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ELF support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1997, 1998, 2000, 2001    Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -84,32 +84,32 @@ name|e_machine
 decl_stmt|;
 comment|/* Specifies required architecture */
 name|unsigned
-name|short
+name|int
 name|e_ehsize
 decl_stmt|;
 comment|/* ELF header size in bytes */
 name|unsigned
-name|short
+name|int
 name|e_phentsize
 decl_stmt|;
 comment|/* Program header table entry size */
 name|unsigned
-name|short
+name|int
 name|e_phnum
 decl_stmt|;
 comment|/* Program header table entry count */
 name|unsigned
-name|short
+name|int
 name|e_shentsize
 decl_stmt|;
 comment|/* Section header table entry size */
 name|unsigned
-name|short
+name|int
 name|e_shnum
 decl_stmt|;
 comment|/* Section header table entry count */
 name|unsigned
-name|short
+name|int
 name|e_shstrndx
 decl_stmt|;
 comment|/* Section header string table index */
@@ -288,7 +288,9 @@ modifier|*
 name|bfd_section
 decl_stmt|;
 comment|/* Associated BFD section.  */
-name|PTR
+name|unsigned
+name|char
+modifier|*
 name|contents
 decl_stmt|;
 comment|/* Section contents.  */
@@ -357,7 +359,7 @@ name|st_other
 decl_stmt|;
 comment|/* Visibilty, and target specific */
 name|unsigned
-name|short
+name|int
 name|st_shndx
 decl_stmt|;
 comment|/* Associated section index */
@@ -522,7 +524,7 @@ name|bfd_vma
 name|r_info
 decl_stmt|;
 comment|/* Index and Type of relocation */
-name|bfd_signed_vma
+name|bfd_vma
 name|r_addend
 decl_stmt|;
 comment|/* Constant addend used to compute value */

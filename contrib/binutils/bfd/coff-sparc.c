@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for Sparc COFF files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1999, 2000    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for Sparc COFF files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -66,6 +66,41 @@ directive|define
 name|COFF_PAGE_SIZE
 value|0x10000
 end_define
+
+begin_decl_stmt
+specifier|static
+name|reloc_howto_type
+modifier|*
+name|coff_sparc_reloc_type_lookup
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|bfd_reloc_code_real_type
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|rtype2howto
+name|PARAMS
+argument_list|(
+operator|(
+name|arelent
+operator|*
+operator|,
+expr|struct
+name|internal_reloc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_enum
 enum|enum
@@ -133,7 +168,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static CONST char *CONST reloc_type_names[] = {   "R_SPARC_NONE",   "R_SPARC_8",		"R_SPARC_16",		"R_SPARC_32",   "R_SPARC_DISP8",	"R_SPARC_DISP16",	"R_SPARC_DISP32",   "R_SPARC_WDISP30",	"R_SPARC_WDISP22",   "R_SPARC_HI22",	"R_SPARC_22",   "R_SPARC_13",		"R_SPARC_LO10",   "R_SPARC_GOT10",	"R_SPARC_GOT13",	"R_SPARC_GOT22",   "R_SPARC_PC10",	"R_SPARC_PC22",   "R_SPARC_WPLT30",   "R_SPARC_COPY",   "R_SPARC_GLOB_DAT",	"R_SPARC_JMP_SLOT",   "R_SPARC_RELATIVE",   "R_SPARC_UA32", };
+unit|static const char *const reloc_type_names[] = {   "R_SPARC_NONE",   "R_SPARC_8",		"R_SPARC_16",		"R_SPARC_32",   "R_SPARC_DISP8",	"R_SPARC_DISP16",	"R_SPARC_DISP32",   "R_SPARC_WDISP30",	"R_SPARC_WDISP22",   "R_SPARC_HI22",	"R_SPARC_22",   "R_SPARC_13",		"R_SPARC_LO10",   "R_SPARC_GOT10",	"R_SPARC_GOT13",	"R_SPARC_GOT22",   "R_SPARC_PC10",	"R_SPARC_PC22",   "R_SPARC_WPLT30",   "R_SPARC_COPY",   "R_SPARC_GLOB_DAT",	"R_SPARC_JMP_SLOT",   "R_SPARC_RELATIVE",   "R_SPARC_UA32", };
 endif|#
 directive|endif
 end_endif
@@ -985,14 +1020,14 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|CONST
-expr|struct
+specifier|const
+name|struct
 name|coff_reloc_map
 name|sparc_reloc_map
 index|[]
-operator|=
+init|=
 block|{
 block|{
 name|BFD_RELOC_NONE
@@ -1135,8 +1170,8 @@ block|}
 block|,
 comment|/*  { BFD_RELOC_SPARC_UA32, R_SPARC_UA32 }, not used?? */
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -1287,14 +1322,14 @@ begin_define
 define|#
 directive|define
 name|SWAP_IN_RELOC_OFFSET
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|SWAP_OUT_RELOC_OFFSET
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_define

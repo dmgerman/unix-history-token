@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD PowerPC CPU definition    Copyright 1994, 1995, 1996, 2000 Free Software Foundation, Inc.    Contributed by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD PowerPC CPU definition    Copyright 1994, 1995, 1996, 2000, 2001 Free Software Foundation, Inc.    Contributed by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -319,9 +319,11 @@ literal|"powerpc:620"
 block|,
 literal|3
 block|,
-name|false
+name|BFD_DEFAULT_TARGET_SIZE
+operator|==
+literal|64
 block|,
-comment|/* not the default */
+comment|/* default for 64 bit target */
 name|powerpc_compatible
 block|,
 name|bfd_default_scan
@@ -562,9 +564,11 @@ literal|"powerpc:common"
 block|,
 literal|3
 block|,
-name|true
+name|BFD_DEFAULT_TARGET_SIZE
+operator|!=
+literal|64
 block|,
-comment|/* the default */
+comment|/* default for 32 bit target */
 name|powerpc_compatible
 block|,
 name|bfd_default_scan

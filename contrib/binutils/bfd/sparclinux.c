@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for linux flavored sparc a.out binaries.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 2000    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for linux flavored sparc a.out binaries.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 2000, 2001    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -111,6 +111,10 @@ name|DEFAULT_ARCH
 value|bfd_arch_sparc
 end_define
 
+begin_comment
+comment|/* Do not "beautify" the CONCAT* macro args.  Traditional C will not    remove whitespace added here, and thus will fail to concatenate    the tokens.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -118,7 +122,7 @@ name|MY
 parameter_list|(
 name|OP
 parameter_list|)
-value|CAT(sparclinux_,OP)
+value|CONCAT2 (sparclinux_,OP)
 end_define
 
 begin_define
@@ -834,9 +838,17 @@ name|linux_link_hash_table
 modifier|*
 name|ret
 decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|linux_link_hash_table
+argument_list|)
+decl_stmt|;
 name|ret
 operator|=
-operator|(
 operator|(
 expr|struct
 name|linux_link_hash_table
@@ -846,13 +858,8 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|linux_link_hash_table
+name|amt
 argument_list|)
-argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1596,6 +1603,9 @@ name|BSF_CONSTRUCTOR
 argument_list|,
 name|s
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 literal|0
 argument_list|,
 name|NULL
@@ -1764,6 +1774,9 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
+operator|(
+name|bfd_size_type
+operator|)
 name|strlen
 argument_list|(
 name|name
@@ -2414,15 +2427,19 @@ name|s
 operator|->
 name|_raw_size
 operator|=
-literal|8
-operator|+
 name|linux_hash_table
 argument_list|(
 name|info
 argument_list|)
 operator|->
 name|fixup_count
-operator|*
+operator|+
+literal|1
+expr_stmt|;
+name|s
+operator|->
+name|_raw_size
+operator|*=
 literal|8
 expr_stmt|;
 name|s
@@ -2615,6 +2632,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|linux_hash_table
 argument_list|(
 name|info
@@ -2811,6 +2831,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|new_addr
 argument_list|,
 name|fixup_table
@@ -2844,6 +2867,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|new_addr
 argument_list|,
 name|fixup_table
@@ -2890,6 +2916,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 literal|0
 argument_list|,
 name|fixup_table
@@ -2903,6 +2932,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 literal|0
 argument_list|,
 name|fixup_table
@@ -3073,6 +3105,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|new_addr
 argument_list|,
 name|fixup_table
@@ -3141,6 +3176,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 literal|0
 argument_list|,
 name|fixup_table
@@ -3154,6 +3192,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 literal|0
 argument_list|,
 name|fixup_table
@@ -3273,6 +3314,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|new_addr
 argument_list|,
 name|fixup_table
@@ -3284,6 +3328,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 literal|0
 argument_list|,
 name|fixup_table
@@ -3295,6 +3342,10 @@ name|bfd_seek
 argument_list|(
 name|output_bfd
 argument_list|,
+call|(
+name|file_ptr
+call|)
+argument_list|(
 name|os
 operator|->
 name|filepos
@@ -3302,6 +3353,7 @@ operator|+
 name|s
 operator|->
 name|output_offset
+argument_list|)
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -3313,7 +3365,7 @@ name|false
 return|;
 if|if
 condition|(
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 operator|(
 name|PTR
@@ -3321,8 +3373,6 @@ operator|)
 name|s
 operator|->
 name|contents
-argument_list|,
-literal|1
 argument_list|,
 name|s
 operator|->

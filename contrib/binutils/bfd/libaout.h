@@ -26,7 +26,211 @@ file|"bfdlink.h"
 end_include
 
 begin_comment
+comment|/* Macros for accessing components in an aout header.  Saves cluttering    the source with (bfd_vma) and (bfd_byte *) casts.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_PUT_64
+parameter_list|(
+name|abfd
+parameter_list|,
+name|val
+parameter_list|,
+name|where
+parameter_list|)
+define|\
+value|bfd_h_put_64 ((abfd), (bfd_vma) (val), (bfd_byte *) (where))
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_PUT_32
+parameter_list|(
+name|abfd
+parameter_list|,
+name|val
+parameter_list|,
+name|where
+parameter_list|)
+define|\
+value|bfd_h_put_32 ((abfd), (bfd_vma) (val), (bfd_byte *) (where))
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_PUT_16
+parameter_list|(
+name|abfd
+parameter_list|,
+name|val
+parameter_list|,
+name|where
+parameter_list|)
+define|\
+value|bfd_h_put_16 ((abfd), (bfd_vma) (val), (bfd_byte *) (where))
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_PUT_8
+value|bfd_h_put_8
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_PUT_S64
+parameter_list|(
+name|abfd
+parameter_list|,
+name|val
+parameter_list|,
+name|where
+parameter_list|)
+define|\
+value|bfd_h_put_signed_64 ((abfd), (bfd_vma) (val), (bfd_byte *) (where))
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_PUT_S32
+parameter_list|(
+name|abfd
+parameter_list|,
+name|val
+parameter_list|,
+name|where
+parameter_list|)
+define|\
+value|bfd_h_put_signed_32 ((abfd), (bfd_vma) (val), (bfd_byte *) (where))
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_PUT_S16
+parameter_list|(
+name|abfd
+parameter_list|,
+name|val
+parameter_list|,
+name|where
+parameter_list|)
+define|\
+value|bfd_h_put_signed_16 ((abfd), (bfd_vma) (val), (bfd_byte *) (where))
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_PUT_S8
+value|bfd_h_put_signed_8
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_GET_64
+parameter_list|(
+name|abfd
+parameter_list|,
+name|where
+parameter_list|)
+define|\
+value|bfd_h_get_64 ((abfd), (bfd_byte *) (where))
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_GET_32
+parameter_list|(
+name|abfd
+parameter_list|,
+name|where
+parameter_list|)
+define|\
+value|bfd_h_get_32 ((abfd), (bfd_byte *) (where))
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_GET_16
+parameter_list|(
+name|abfd
+parameter_list|,
+name|where
+parameter_list|)
+define|\
+value|bfd_h_get_16 ((abfd), (bfd_byte *) (where))
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_GET_8
+value|bfd_h_get_8
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_GET_S64
+parameter_list|(
+name|abfd
+parameter_list|,
+name|where
+parameter_list|)
+define|\
+value|bfd_h_get_signed_64 ((abfd), (bfd_byte *) (where))
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_GET_S32
+parameter_list|(
+name|abfd
+parameter_list|,
+name|where
+parameter_list|)
+define|\
+value|bfd_h_get_signed_32 ((abfd), (bfd_byte *) (where))
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_GET_S16
+parameter_list|(
+name|abfd
+parameter_list|,
+name|where
+parameter_list|)
+define|\
+value|bfd_h_get_signed_16 ((abfd), (bfd_byte *) (where))
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_GET_S8
+value|bfd_h_get_signed_8
+end_define
+
+begin_comment
 comment|/* Parameterize the a.out code based on whether it is being built    for a 32-bit architecture or a 64-bit architecture.  */
+end_comment
+
+begin_comment
+comment|/* Do not "beautify" the CONCAT* macro args.  Traditional C will not    remove whitespace added here, and thus will fail to concatenate    the tokens.  */
 end_comment
 
 begin_if
@@ -41,21 +245,35 @@ begin_define
 define|#
 directive|define
 name|GET_WORD
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_SWORD
-value|bfd_h_get_signed_64
+value|H_GET_S64
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_MAGIC
+value|H_GET_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_WORD
-value|bfd_h_put_64
+value|H_PUT_64
+end_define
+
+begin_define
+define|#
+directive|define
+name|PUT_MAGIC
+value|H_PUT_32
 end_define
 
 begin_ifndef
@@ -73,7 +291,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|CAT3(x,_64_,y)
+value|CONCAT3 (x,_64_,y)
 end_define
 
 begin_endif
@@ -88,7 +306,7 @@ name|JNAME
 parameter_list|(
 name|x
 parameter_list|)
-value|CAT(x,_64)
+value|CONCAT2 (x,_64)
 end_define
 
 begin_define
@@ -96,6 +314,94 @@ define|#
 directive|define
 name|BYTES_IN_WORD
 value|8
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|ARCH_SIZE
+operator|==
+literal|16
+end_if
+
+begin_define
+define|#
+directive|define
+name|GET_WORD
+value|H_GET_16
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_SWORD
+value|H_GET_S16
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_MAGIC
+value|H_GET_16
+end_define
+
+begin_define
+define|#
+directive|define
+name|PUT_WORD
+value|H_PUT_16
+end_define
+
+begin_define
+define|#
+directive|define
+name|PUT_MAGIC
+value|H_PUT_16
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NAME
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NAME
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|CONCAT3 (x,_16_,y)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|JNAME
+parameter_list|(
+name|x
+parameter_list|)
+value|CONCAT2 (x,_16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BYTES_IN_WORD
+value|2
 end_define
 
 begin_else
@@ -111,21 +417,35 @@ begin_define
 define|#
 directive|define
 name|GET_WORD
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_SWORD
-value|bfd_h_get_signed_32
+value|H_GET_S32
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_MAGIC
+value|H_GET_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_WORD
-value|bfd_h_put_32
+value|H_PUT_32
+end_define
+
+begin_define
+define|#
+directive|define
+name|PUT_MAGIC
+value|H_PUT_32
 end_define
 
 begin_ifndef
@@ -143,7 +463,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|CAT3(x,_32_,y)
+value|CONCAT3 (x,_32_,y)
 end_define
 
 begin_endif
@@ -158,7 +478,7 @@ name|JNAME
 parameter_list|(
 name|x
 parameter_list|)
-value|CAT(x,_32)
+value|CONCAT2 (x,_32)
 end_define
 
 begin_define
@@ -175,6 +495,15 @@ end_endif
 
 begin_comment
 comment|/* ARCH_SIZE==32 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ARCH_SIZE==64 */
 end_comment
 
 begin_comment
@@ -538,7 +867,7 @@ parameter_list|(
 name|abfd
 parameter_list|)
 define|\
-value|((CONST struct aout_backend_data *)((abfd)->xvec->backend_data))
+value|((const struct aout_backend_data *)((abfd)->xvec->backend_data))
 end_define
 
 begin_comment
@@ -921,7 +1250,7 @@ parameter_list|,
 name|dynamic
 parameter_list|)
 define|\
-value|((exec).a_info = (dynamic) ? ((exec).a_info | 0x80000000) : \ ((exec).a_info& 0x7fffffff))
+value|((exec).a_info = (dynamic) ? (long) ((exec).a_info | 0x80000000) : \ ((exec).a_info& 0x7fffffff))
 end_define
 
 begin_endif
@@ -1434,6 +1763,7 @@ comment|/* Prototype declarations for functions defined in aoutx.h  */
 end_comment
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -1443,23 +1773,18 @@ name|squirt_out_relocs
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|,
-name|asection
-modifier|*
-name|section
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|asection *
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -1478,6 +1803,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 specifier|const
 name|bfd_target
 modifier|*
@@ -1489,35 +1815,30 @@ name|some_aout_object_p
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|,
-decl|struct
-name|internal_exec
-modifier|*
-name|execp
-decl_stmt|, 				       const
-name|bfd_target
-modifier|*
-argument_list|(
-operator|*
-name|callback
-argument_list|)
-argument_list|(
-name|bfd
-operator|*
-argument_list|)
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|struct internal_exec *
+operator|,
+function_decl|const bfd_target *
+parameter_list|(
+function_decl|*
 end_function_decl
 
-begin_empty_stmt
+begin_expr_stmt
 unit|)
+operator|(
+name|bfd
+operator|*
+operator|)
+end_expr_stmt
+
+begin_empty_stmt
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -1527,7 +1848,7 @@ name|mkobject
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(bfd *abfd
+function_decl|(bfd *
 end_function_decl
 
 begin_empty_stmt
@@ -1536,6 +1857,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|enum
 name|machine_type
 name|NAME
@@ -1549,15 +1871,12 @@ parameter_list|(
 function_decl|(
 name|enum
 name|bfd_architecture
-name|arch
 decl_stmt|,
 name|unsigned
 name|long
-name|machine
 decl_stmt|,
 name|boolean
 modifier|*
-name|unknown
 decl_stmt|)
 end_function_decl
 
@@ -1567,6 +1886,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -1576,27 +1896,20 @@ name|set_arch_mach
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|,
-decl|enum
-name|bfd_architecture
-name|arch
-decl_stmt|,
-name|unsigned
-name|long
-name|machine
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|enum bfd_architecture
+operator|,
+function_decl|unsigned long
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -1606,23 +1919,18 @@ name|new_section_hook
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|,
-name|asection
-modifier|*
-name|newsect
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|asection *
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -1632,31 +1940,24 @@ name|set_section_contents
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|,
-name|sec_ptr
-name|section
-decl_stmt|,
-name|PTR
-name|location
-decl_stmt|,
-name|file_ptr
-name|offset
-decl_stmt|,
-name|bfd_size_type
-name|count
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|sec_ptr
+operator|,
+function_decl|PTR
+operator|,
+function_decl|file_ptr
+operator|,
+function_decl|bfd_size_type
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|asymbol
 modifier|*
 name|NAME
@@ -1667,7 +1968,7 @@ name|make_empty_symbol
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(bfd *abfd
+function_decl|(bfd *
 end_function_decl
 
 begin_empty_stmt
@@ -1676,6 +1977,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -1697,7 +1999,7 @@ function_decl|char *
 operator|,
 function_decl|bfd_size_type
 operator|,
-function_decl|boolean dynamic
+function_decl|boolean
 end_function_decl
 
 begin_empty_stmt
@@ -1706,6 +2008,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -1715,7 +2018,7 @@ name|slurp_symbol_table
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(bfd *abfd
+function_decl|(bfd *
 end_function_decl
 
 begin_empty_stmt
@@ -1724,6 +2027,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -1733,7 +2037,7 @@ name|write_syms
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(bfd *abfd
+function_decl|(bfd *
 end_function_decl
 
 begin_empty_stmt
@@ -1742,6 +2046,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|void
 name|NAME
 parameter_list|(
@@ -1751,7 +2056,7 @@ name|reclaim_symbol_table
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(bfd *abfd
+function_decl|(bfd *
 end_function_decl
 
 begin_empty_stmt
@@ -1760,6 +2065,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|long
 name|NAME
 parameter_list|(
@@ -1769,7 +2075,7 @@ name|get_symtab_upper_bound
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(bfd *abfd
+function_decl|(bfd *
 end_function_decl
 
 begin_empty_stmt
@@ -1778,6 +2084,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|long
 name|NAME
 parameter_list|(
@@ -1787,24 +2094,18 @@ name|get_symtab
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|,
-name|asymbol
-modifier|*
-modifier|*
-name|location
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|asymbol **
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|void
 name|NAME
 parameter_list|(
@@ -1831,6 +2132,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|void
 name|NAME
 parameter_list|(
@@ -1857,6 +2159,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|reloc_howto_type
 modifier|*
 name|NAME
@@ -1867,22 +2170,18 @@ name|reloc_type_lookup
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|,
-name|bfd_reloc_code_real_type
-name|code
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|bfd_reloc_code_real_type
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -1892,27 +2191,20 @@ name|slurp_reloc_table
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|,
-name|sec_ptr
-name|asect
-decl_stmt|,
-name|asymbol
-modifier|*
-modifier|*
-name|symbols
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|sec_ptr
+operator|,
+function_decl|asymbol **
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|long
 name|NAME
 parameter_list|(
@@ -1922,32 +2214,22 @@ name|canonicalize_reloc
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|,
-name|sec_ptr
-name|section
-decl_stmt|,
-name|arelent
-modifier|*
-modifier|*
-name|relptr
-decl_stmt|,
-name|asymbol
-modifier|*
-modifier|*
-name|symbols
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|sec_ptr
+operator|,
+function_decl|arelent **
+operator|,
+function_decl|asymbol **
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|long
 name|NAME
 parameter_list|(
@@ -1957,22 +2239,18 @@ name|get_reloc_upper_bound
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|,
-name|sec_ptr
-name|asect
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|sec_ptr
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|void
 name|NAME
 parameter_list|(
@@ -1982,22 +2260,18 @@ name|reclaim_reloc
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|ignore_abfd
-decl_stmt|,
-name|sec_ptr
-name|ignore
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|sec_ptr
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|alent
 modifier|*
 name|NAME
@@ -2008,23 +2282,18 @@ name|get_lineno
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|ignore_abfd
-decl_stmt|,
-name|asymbol
-modifier|*
-name|ignore_symbol
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|asymbol *
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|void
 name|NAME
 parameter_list|(
@@ -2034,29 +2303,22 @@ name|print_symbol
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|ignore_abfd
-decl_stmt|,
-name|PTR
-name|file
-decl_stmt|,
-name|asymbol
-modifier|*
-name|symbol
-decl_stmt|,
-name|bfd_print_symbol_type
-name|how
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|PTR
+operator|,
+function_decl|asymbol *
+operator|,
+function_decl|bfd_print_symbol_type
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|void
 name|NAME
 parameter_list|(
@@ -2066,27 +2328,20 @@ name|get_symbol_info
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|ignore_abfd
-decl_stmt|,
-name|asymbol
-modifier|*
-name|symbol
-decl_stmt|,
-name|symbol_info
-modifier|*
-name|ret
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|asymbol *
+operator|,
+function_decl|symbol_info *
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -2096,48 +2351,28 @@ name|find_nearest_line
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|,
-name|asection
-modifier|*
-name|section
-decl_stmt|,
-name|asymbol
-modifier|*
-modifier|*
-name|symbols
-decl_stmt|,
-name|bfd_vma
-name|offset
-decl_stmt|,
-name|CONST
-name|char
-modifier|*
-modifier|*
-name|filename_ptr
-decl_stmt|,
-name|CONST
-name|char
-modifier|*
-modifier|*
-name|functionname_ptr
-decl_stmt|,
-name|unsigned
-name|int
-modifier|*
-name|line_ptr
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|asection *
+operator|,
+function_decl|asymbol **
+operator|,
+function_decl|bfd_vma
+operator|,
+function_decl|const char **
+operator|,
+function_decl|const char **
+operator|,
+function_decl|unsigned int *
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|long
 name|NAME
 parameter_list|(
@@ -2162,6 +2397,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|asymbol
 modifier|*
 name|NAME
@@ -2187,6 +2423,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|int
 name|NAME
 parameter_list|(
@@ -2196,22 +2433,18 @@ name|sizeof_headers
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|,
-name|boolean
-name|exec
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|boolean
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -2221,27 +2454,20 @@ name|adjust_sizes_and_vmas
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|,
-name|bfd_size_type
-modifier|*
-name|text_size
-decl_stmt|,
-name|file_ptr
-modifier|*
-name|text_end
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|bfd_size_type *
+operator|,
+function_decl|file_ptr *
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|void
 name|NAME
 parameter_list|(
@@ -2251,28 +2477,20 @@ name|swap_exec_header_in
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|,
-decl|struct
-name|external_exec
-modifier|*
-name|raw_bytes
-decl_stmt|, struct
-name|internal_exec
-modifier|*
-name|execp
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|struct external_exec *
+operator|,
+function_decl|struct internal_exec *
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|void
 name|NAME
 parameter_list|(
@@ -2282,28 +2500,20 @@ name|swap_exec_header_out
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
-function_decl|(
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|,
-decl|struct
-name|internal_exec
-modifier|*
-name|execp
-decl_stmt|, struct
-name|external_exec
-modifier|*
-name|raw_bytes
-decl_stmt|)
+function_decl|(bfd *
+operator|,
+function_decl|struct internal_exec *
+operator|,
+function_decl|struct external_exec *
 end_function_decl
 
 begin_empty_stmt
-unit|)
+unit|))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|struct
 name|bfd_hash_entry
 modifier|*
@@ -2328,6 +2538,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -2369,6 +2580,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|struct
 name|bfd_link_hash_table
 modifier|*
@@ -2389,6 +2601,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -2409,6 +2622,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -2450,6 +2664,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|extern
 name|boolean
 name|NAME
 parameter_list|(
@@ -2470,6 +2685,13 @@ end_empty_stmt
 begin_comment
 comment|/* A.out uses the generic versions of these routines... */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|aout_16_get_section_contents
+value|_bfd_generic_get_section_contents
+end_define
 
 begin_define
 define|#
@@ -2539,9 +2761,9 @@ parameter_list|)
 define|\
 value|{									      \ 	bfd_size_type text_size;
 comment|/* dummy vars */
-value|\ 	file_ptr text_end;						      \ 	if (adata(abfd).magic == undecided_magic)			      \ 	  NAME(aout,adjust_sizes_and_vmas) (abfd,&text_size,&text_end);     \     									      \ 	execp->a_syms = bfd_get_symcount (abfd) * EXTERNAL_NLIST_SIZE;	      \ 	execp->a_entry = bfd_get_start_address (abfd);			      \     									      \ 	execp->a_trsize = ((obj_textsec (abfd)->reloc_count) *		      \ 			   obj_reloc_entry_size (abfd));		      \ 	execp->a_drsize = ((obj_datasec (abfd)->reloc_count) *		      \ 			   obj_reloc_entry_size (abfd));		      \ 	NAME(aout,swap_exec_header_out) (abfd, execp,&exec_bytes);	      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) 0, SEEK_SET) != 0) return false;	      \ 	if (bfd_write ((PTR)&exec_bytes, 1, EXEC_BYTES_SIZE, abfd)	      \ 	    != EXEC_BYTES_SIZE)						      \ 	  return false;							      \
+value|\ 	file_ptr text_end;						      \ 	if (adata(abfd).magic == undecided_magic)			      \ 	  NAME(aout,adjust_sizes_and_vmas) (abfd,&text_size,&text_end);     \     									      \ 	execp->a_syms = bfd_get_symcount (abfd) * EXTERNAL_NLIST_SIZE;	      \ 	execp->a_entry = bfd_get_start_address (abfd);			      \     									      \ 	execp->a_trsize = ((obj_textsec (abfd)->reloc_count) *		      \ 			   obj_reloc_entry_size (abfd));		      \ 	execp->a_drsize = ((obj_datasec (abfd)->reloc_count) *		      \ 			   obj_reloc_entry_size (abfd));		      \ 	NAME(aout,swap_exec_header_out) (abfd, execp,&exec_bytes);	      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) 0, SEEK_SET) != 0		      \ 	    || bfd_bwrite ((PTR)&exec_bytes, (bfd_size_type) EXEC_BYTES_SIZE, \ 			  abfd) != EXEC_BYTES_SIZE)			      \ 	  return false;							      \
 comment|/* Now write out reloc info, followed by syms and strings */
-value|\   									      \ 	if (bfd_get_outsymbols (abfd) != (asymbol **) NULL		      \&& bfd_get_symcount (abfd) != 0) 				      \ 	  {								      \ 	    if (bfd_seek (abfd, (file_ptr)(N_SYMOFF(*execp)), SEEK_SET) != 0) \ 	      return false;						      \ 									      \ 	    if (! NAME(aout,write_syms)(abfd)) return false;		      \ 	  }								      \ 									      \ 	if (bfd_seek (abfd, (file_ptr)(N_TRELOFF(*execp)), SEEK_SET) != 0)    \ 	  return false;						      	      \ 	if (!NAME(aout,squirt_out_relocs) (abfd, obj_textsec (abfd)))         \ 	  return false;						      	      \ 									      \ 	if (bfd_seek (abfd, (file_ptr)(N_DRELOFF(*execp)), SEEK_SET) != 0)    \ 	  return false;						      	      \ 	if (!NAME(aout,squirt_out_relocs)(abfd, obj_datasec (abfd)))          \ 	  return false;						      	      \       }
+value|\   									      \ 	if (bfd_get_outsymbols (abfd) != (asymbol **) NULL		      \&& bfd_get_symcount (abfd) != 0) 				      \ 	  {								      \ 	    if (bfd_seek (abfd, (file_ptr) (N_SYMOFF(*execp)), SEEK_SET) != 0)\ 	      return false;						      \ 									      \ 	    if (! NAME(aout,write_syms) (abfd))				      \ 	      return false;						      \ 	  }								      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) (N_TRELOFF(*execp)), SEEK_SET) != 0)   \ 	  return false;						      	      \ 	if (!NAME(aout,squirt_out_relocs) (abfd, obj_textsec (abfd)))         \ 	  return false;						      	      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) (N_DRELOFF(*execp)), SEEK_SET) != 0)   \ 	  return false;						      	      \ 	if (!NAME(aout,squirt_out_relocs) (abfd, obj_datasec (abfd)))         \ 	  return false;						      	      \       }
 end_define
 
 begin_endif

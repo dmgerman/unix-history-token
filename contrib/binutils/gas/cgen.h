@@ -138,6 +138,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Routines and macros for saving fixup chains. */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -145,7 +149,7 @@ name|gas_cgen_save_fixups
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -158,7 +162,7 @@ name|gas_cgen_restore_fixups
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -171,11 +175,31 @@ name|gas_cgen_swap_fixups
 name|PARAMS
 argument_list|(
 operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|gas_cgen_initialize_saved_fixups_array
+name|PARAMS
+argument_list|(
+operator|(
 name|void
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MAX_SAVED_FIXUP_CHAINS
+value|50
+end_define
 
 begin_comment
 comment|/* Add a register to the assembler's hash table.    This makes lets GAS parse registers for us.    ??? This isn't currently used, but it could be in the future.  */
@@ -302,7 +326,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|void
 name|gas_cgen_md_apply_fix3
 name|PARAMS
 argument_list|(
@@ -396,6 +420,20 @@ operator|*
 operator|,
 name|int
 operator|,
+name|expressionS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|gas_cgen_md_operand
+name|PARAMS
+argument_list|(
+operator|(
 name|expressionS
 operator|*
 operator|)

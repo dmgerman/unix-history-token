@@ -4,7 +4,7 @@ comment|/* Return the basename of a pathname.    This file is in the public doma
 end_comment
 
 begin_comment
-comment|/* NAME 	basename -- return pointer to last component of a pathname  SYNOPSIS 	char *basename (const char *name)  DESCRIPTION 	Given a pointer to a string containing a typical pathname 	(/usr/src/cmd/ls/ls.c for example), returns a pointer to the 	last component of the pathname ("ls.c" in this case).  BUGS 	Presumes a UNIX or DOS/Windows style path with UNIX or DOS/Windows  	style separators. */
+comment|/*  @deftypefn Supplemental char* basename (const char *@var{name})  Returns a pointer to the last component of pathname @var{name}. Behavior is undefined if the pathname ends in a directory separator.  @end deftypefn  */
 end_comment
 
 begin_include

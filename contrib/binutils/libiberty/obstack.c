@@ -1955,11 +1955,18 @@ directive|ifndef
 name|_
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
 name|HAVE_LIBINTL_H
-end_ifdef
+operator|&&
+name|ENABLE_NLS
+operator|)
+operator|||
+name|defined
+name|_LIBC
+end_if
 
 begin_include
 include|#

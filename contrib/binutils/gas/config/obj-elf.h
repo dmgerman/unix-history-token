@@ -824,9 +824,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* When setting one symbol equal to another, by default we probably    want them to have the same "size", whatever it means in the current    context.  */
-end_comment
+begin_decl_stmt
+name|void
+name|elf_copy_symbol_attributes
+name|PARAMS
+argument_list|(
+operator|(
+name|symbolS
+operator|*
+operator|,
+name|symbolS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -844,7 +856,7 @@ parameter_list|,
 name|SRC
 parameter_list|)
 define|\
-value|do								\   {								\     struct elf_obj_sy *srcelf = symbol_get_obj (SRC);		\     struct elf_obj_sy *destelf = symbol_get_obj (DEST);		\     if (srcelf->size)						\       {								\ 	if (destelf->size == NULL)				\ 	  destelf->size =					\ 	    (expressionS *) xmalloc (sizeof (expressionS));	\ 	*destelf->size = *srcelf->size;				\       }								\     else							\       {								\ 	if (destelf->size != NULL)				\ 	  free (destelf->size);					\ 	destelf->size = NULL;					\       }								\     S_SET_SIZE ((DEST), S_GET_SIZE (SRC));			\     S_SET_OTHER ((DEST), S_GET_OTHER (SRC));			\   }								\ while (0)
+value|(elf_copy_symbol_attributes (DEST, SRC))
 end_define
 
 begin_endif

@@ -7,6 +7,10 @@ begin_comment
 comment|/* This function is in the public domain.  --Mike Stump. */
 end_comment
 
+begin_comment
+comment|/*  @deftypefn Supplemental int atexit (void (*@var{f})())  Causes function @var{f} to be called at exit.  Returns 0.  @end deftypefn  */
+end_comment
+
 begin_include
 include|#
 directive|include

@@ -4,7 +4,7 @@ comment|/* rename -- rename a file    This function is in the public domain. */
 end_comment
 
 begin_comment
-comment|/* Rename a file.  */
+comment|/*  @deftypefn Supplemental int rename (const char *@var{old}, const char *@var{new})  Renames a file from @var{old} to @var{new}.  If @var{new} already exists, it is removed.  @end deftypefn  */
 end_comment
 
 begin_ifdef

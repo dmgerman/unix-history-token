@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for a.out files encapsulated with COFF headers.    Copyright 1990, 1991, 1994, 1995, 2000 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for a.out files encapsulated with COFF headers.    Copyright 1990, 1991, 1994, 1995, 2000, 2001    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -55,7 +55,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sysdep.h>
+file|"sysdep.h"
 end_include
 
 begin_include
@@ -67,7 +67,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<aout/aout64.h>
+file|"aout/aout64.h"
 end_include
 
 begin_include
@@ -138,29 +138,29 @@ name|struct
 name|internal_exec
 name|exec
 decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+name|magicbuf
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 operator|(
 name|PTR
 operator|)
 name|magicbuf
 argument_list|,
-literal|1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|magicbuf
-argument_list|)
+name|amt
 argument_list|,
 name|abfd
 argument_list|)
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|magicbuf
-argument_list|)
+name|amt
 condition|)
 block|{
 if|if
@@ -181,7 +181,7 @@ return|;
 block|}
 name|coff_magic
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -198,54 +198,15 @@ return|return
 literal|0
 return|;
 comment|/* Not an encap coff file */
-name|__header_offset_temp
-operator|==
-name|COFF_MAGIC
-condition|?
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|coffheader
-argument_list|)
-else|:
-literal|0
-block|)
-parameter_list|(
-function|fseek
-parameter_list|(
-function|(f
-end_function
-
-begin_operator
-unit|)
-operator|,
-end_operator
-
-begin_expr_stmt
-name|HEADER_OFFSET
-argument_list|(
-operator|(
-name|f
-operator|)
-argument_list|)
-operator|,
-literal|1
-end_expr_stmt
-
-begin_expr_stmt
-unit|))
 name|magic
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
 name|magicbuf
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|N_BADMAG
@@ -265,19 +226,36 @@ condition|)
 return|return
 literal|0
 return|;
-end_if
-
-begin_decl_stmt
-name|struct
-name|external_exec
-name|exec_bytes
-decl_stmt|;
-end_decl_stmt
-
-begin_if
 if|if
 condition|(
-name|bfd_read
+name|bfd_seek
+argument_list|(
+name|abfd
+argument_list|,
+operator|(
+name|file_ptr
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|coffheader
+argument_list|)
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+name|amt
+operator|=
+name|EXEC_BYTES_SIZE
+expr_stmt|;
+if|if
+condition|(
+name|bfd_bread
 argument_list|(
 operator|(
 name|PTR
@@ -285,14 +263,12 @@ operator|)
 operator|&
 name|exec_bytes
 argument_list|,
-literal|1
-argument_list|,
-name|EXEC_BYTES_SIZE
+name|amt
 argument_list|,
 name|abfd
 argument_list|)
 operator|!=
-name|EXEC_BYTES_SIZE
+name|amt
 condition|)
 block|{
 if|if
@@ -311,9 +287,6 @@ return|return
 literal|0
 return|;
 block|}
-end_if
-
-begin_expr_stmt
 name|NAME
 argument_list|(
 name|aout
@@ -330,9 +303,6 @@ operator|&
 name|exec
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|aout_32_some_aout_object_p
 argument_list|(
@@ -344,15 +314,15 @@ argument_list|,
 name|encap_realcallback
 argument_list|)
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
-comment|/* Finish up the reading of a encapsulated-coff a.out file header */
+comment|/* Finish up the reading of an encapsulated-coff a.out file header.  */
 end_comment
 
 begin_function
-unit|const
+specifier|const
 name|bfd_target
 modifier|*
 name|encap_real_callback
@@ -493,6 +463,7 @@ argument_list|)
 expr_stmt|;
 name|exec_data_start
 operator|=
+operator|(
 name|IS_OBJECT_FILE
 argument_list|(
 name|exec_aouthdr
@@ -506,6 +477,7 @@ name|N_DATADDR
 argument_list|(
 name|exec_aouthdr
 argument_list|)
+operator|)
 expr_stmt|;
 block|}
 comment|/* Determine the architecture and machine type of the object file.  */
@@ -561,7 +533,7 @@ argument_list|(
 name|abfd
 argument_list|)
 decl_stmt|;
-comment|/****** FIXME:  Fragments from the old GNU LD program for dealing with         encap coff.  */
+comment|/* FIXME:  Fragments from the old GNU LD program for dealing with      encap coff.  */
 name|struct
 name|coffheader
 name|coffheader

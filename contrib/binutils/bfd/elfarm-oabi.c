@@ -125,11 +125,63 @@ end_define
 begin_decl_stmt
 specifier|static
 name|reloc_howto_type
+modifier|*
+name|find_howto
+name|PARAMS
+argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|elf32_arm_info_to_howto
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|arelent
+operator|*
+operator|,
+name|Elf32_Internal_Rela
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|reloc_howto_type
+modifier|*
+name|elf32_arm_reloc_type_lookup
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|bfd_reloc_code_real_type
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|reloc_howto_type
 name|elf32_arm_howto_table
 index|[]
 init|=
 block|{
-comment|/* No relocation */
+comment|/* No relocation.  */
 name|HOWTO
 argument_list|(
 name|R_ARM_NONE
@@ -214,7 +266,7 @@ name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 32 bit absolute */
+comment|/* 32 bit absolute.  */
 name|HOWTO
 argument_list|(
 name|R_ARM_ABS32
@@ -257,7 +309,7 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* standard 32bit pc-relative reloc */
+comment|/* Standard 32bit pc-relative reloc.  */
 name|HOWTO
 argument_list|(
 name|R_ARM_REL32
@@ -300,7 +352,7 @@ name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 8 bit absolute */
+comment|/* 8 bit absolute.  */
 name|HOWTO
 argument_list|(
 name|R_ARM_ABS8
@@ -343,7 +395,7 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 16 bit absolute */
+comment|/* 16 bit absolute.  */
 name|HOWTO
 argument_list|(
 name|R_ARM_ABS16
@@ -386,7 +438,7 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 12 bit absolute */
+comment|/* 12 bit absolute.  */
 name|HOWTO
 argument_list|(
 name|R_ARM_ABS12
@@ -597,7 +649,7 @@ name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 12 bit pc relative */
+comment|/* 12 bit pc relative.  */
 name|HOWTO
 argument_list|(
 name|R_ARM_THM_PC11
@@ -640,7 +692,7 @@ name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 12 bit pc relative */
+comment|/* 12 bit pc relative.  */
 name|HOWTO
 argument_list|(
 name|R_ARM_THM_PC9
@@ -683,7 +735,7 @@ name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* GNU extension to record C++ vtable hierarchy */
+comment|/* GNU extension to record C++ vtable hierarchy.  */
 name|HOWTO
 argument_list|(
 name|R_ARM_GNU_VTINHERIT
@@ -726,7 +778,7 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* GNU extension to record C++ vtable member usage */
+comment|/* GNU extension to record C++ vtable member usage.  */
 name|HOWTO
 argument_list|(
 name|R_ARM_GNU_VTENTRY

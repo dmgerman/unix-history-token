@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* size.c -- report size of various sections of an executable file.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* size.c -- report size of various sections of an executable file.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* Extensions/incompatibilities:    o - BSD output has filenames at the end.    o - BSD output can appear in different radicies.    o - SysV output has less redundant whitespace.  Filename comes at end.    o - SysV output doesn't show VMA which is always the same as the PMA.    o - We also handle core files.    o - We also handle archives.    If you write shell scripts which manipulate this info then you may be    out of luck; there's no --compatibility or --pedantic option. */
+comment|/* Extensions/incompatibilities:    o - BSD output has filenames at the end.    o - BSD output can appear in different radicies.    o - SysV output has less redundant whitespace.  Filename comes at end.    o - SysV output doesn't show VMA which is always the same as the PMA.    o - We also handle core files.    o - We also handle archives.    If you write shell scripts which manipulate this info then you may be    out of luck; there's no --compatibility or --pedantic option.  */
 end_comment
 
 begin_include
@@ -99,6 +99,35 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|show_totals
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bfd_size_type
+name|total_bsssize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bfd_size_type
+name|total_datasize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bfd_size_type
+name|total_textsize
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Program exit status.  */
 end_comment
@@ -122,7 +151,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Static declarations */
+comment|/* Static declarations.  */
 end_comment
 
 begin_decl_stmt
@@ -150,7 +179,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|filename
 operator|)
 argument_list|)
 decl_stmt|;
@@ -204,7 +232,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void lprint_number PARAMS ((int, bfd_size_type));
+unit|static void lprint_number         PARAMS ((int, bfd_size_type));
 endif|#
 directive|endif
 end_endif
@@ -349,39 +377,52 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\ Usage: %s [-A | --format=sysv | -B | --format=berkeley]\n\        [-o | --radix=8 | -d | --radix=10 | -h | --radix=16]\n\        [-V | --version] [--target=bfdname] [--help] [file...]\n"
+literal|"Usage: %s [option(s)] [file(s)]\n"
 argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|" Displays the sizes of sections inside binary files\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|" If no input file(s) are specified, a.out is assumed\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|" The options are:\n\   -A|-B     --format={sysv|berkeley}  Select output style (default is %s)\n\   -o|-d|-h  --radix={8|10|16}         Display numbers in octal, decimal or hex\n\   -t        --totals                  Display the total sizes (Berkeley only)\n\             --target=<bfdname>        Set the binary file format\n\   -h        --help                    Display this information\n\   -v        --version                 Display the program's version\n\ \n"
+argument_list|)
+argument_list|,
 if|#
 directive|if
 name|BSD_DEFAULT
-name|fputs
-argument_list|(
-name|_
-argument_list|(
-literal|"default is --format=berkeley\n"
-argument_list|)
-argument_list|,
-name|stream
-argument_list|)
-expr_stmt|;
+literal|"berkeley"
 else|#
 directive|else
-name|fputs
-argument_list|(
-name|_
-argument_list|(
-literal|"default is --format=sysv\n"
-argument_list|)
-argument_list|,
-name|stream
-argument_list|)
-expr_stmt|;
+literal|"sysv"
 endif|#
 directive|endif
+argument_list|)
+expr_stmt|;
 name|list_supported_targets
 argument_list|(
 name|program_name
@@ -453,6 +494,17 @@ literal|202
 block|}
 block|,
 block|{
+literal|"totals"
+block|,
+name|no_argument
+block|,
+operator|&
+name|show_totals
+block|,
+literal|1
+block|}
+block|,
+block|{
 literal|"version"
 block|,
 name|no_argument
@@ -484,6 +536,22 @@ block|,
 literal|0
 block|}
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+decl|main
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -530,6 +598,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|bindtextdomain
 argument_list|(
 name|PACKAGE
@@ -569,7 +652,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ABVdfox"
+literal|"ABHhVvdfotx"
 argument_list|,
 name|long_options
 argument_list|,
@@ -744,6 +827,9 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'v'
+case|:
+case|case
 literal|'V'
 case|:
 name|show_version
@@ -776,6 +862,14 @@ name|octal
 expr_stmt|;
 break|break;
 case|case
+literal|'t'
+case|:
+name|show_totals
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'f'
 case|:
 comment|/* FIXME : For sysv68, `-f' means `full format', i.e. 		   `[fname:] M(.text) + N(.data) + O(.bss) + P(.comment) = Q' 		   where `fname: ' appears only if there are>= 2 input files, 		   and M, N, O, P, Q are expressed in decimal by default, 		   hexa or octal if requested by `-x' or `-o'. 		   Just to make things interesting, Solaris also accepts -f, 		   which prints out the size of each allocatable section, the 		   name of the section, and the total of the section sizes.  */
@@ -785,6 +879,12 @@ case|case
 literal|0
 case|:
 break|break;
+case|case
+literal|'h'
+case|:
+case|case
+literal|'H'
+case|:
 case|case
 literal|'?'
 case|:
@@ -845,6 +945,88 @@ operator|++
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|show_totals
+operator|&&
+name|berkeley_format
+condition|)
+block|{
+name|bfd_size_type
+name|total
+init|=
+name|total_textsize
+operator|+
+name|total_datasize
+operator|+
+name|total_bsssize
+decl_stmt|;
+name|rprint_number
+argument_list|(
+literal|7
+argument_list|,
+name|total_textsize
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\t'
+argument_list|)
+expr_stmt|;
+name|rprint_number
+argument_list|(
+literal|7
+argument_list|,
+name|total_datasize
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\t'
+argument_list|)
+expr_stmt|;
+name|rprint_number
+argument_list|(
+literal|7
+argument_list|,
+name|total_bsssize
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+operator|(
+operator|(
+name|radix
+operator|==
+name|octal
+operator|)
+condition|?
+literal|"\t%7lo\t%7lx\t"
+else|:
+literal|"\t%7lu\t%7lx\t"
+operator|)
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|total
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|total
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"(TOTALS)\n"
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|return_code
 return|;
@@ -956,7 +1138,7 @@ name|matching
 argument_list|)
 condition|)
 block|{
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|core_cmd
@@ -1109,7 +1291,7 @@ argument_list|(
 name|arfile
 argument_list|)
 expr_stmt|;
-comment|/* Don't close the archive elements; we need them for next_archive */
+comment|/* Don't close the archive elements; we need them for next_archive.  */
 block|}
 block|}
 end_function
@@ -1276,7 +1458,7 @@ comment|/* This is not used.  */
 end_comment
 
 begin_endif
-unit|static void lprint_number (width, num)      int width;      bfd_size_type num; {   char buffer[40];   sprintf (buffer, 	   (radix == decimal ? "%lu" : 	   ((radix == octal) ? "0%lo" : "0x%lx")), 	   (unsigned long) num);    printf ("%-*s", width, buffer); }
+unit|static void lprint_number (width, num)      int width;      bfd_size_type num; {   char buffer[40];    sprintf (buffer, 	   (radix == decimal ? "%lu" : 	   ((radix == octal) ? "0%lo" : "0x%lx")), 	   (unsigned long) num);    printf ("%-*s", width, buffer); }
 endif|#
 directive|endif
 end_endif
@@ -1551,6 +1733,24 @@ name|datasize
 operator|+
 name|bsssize
 expr_stmt|;
+if|if
+condition|(
+name|show_totals
+condition|)
+block|{
+name|total_textsize
+operator|+=
+name|textsize
+expr_stmt|;
+name|total_datasize
+operator|+=
+name|datasize
+expr_stmt|;
+name|total_bsssize
+operator|+=
+name|bsssize
+expr_stmt|;
+block|}
 name|rprint_number
 argument_list|(
 literal|7
@@ -1910,7 +2110,7 @@ modifier|*
 name|file
 decl_stmt|;
 block|{
-comment|/* size all of the columns */
+comment|/* Size all of the columns.  */
 name|svi_total
 operator|=
 literal|0

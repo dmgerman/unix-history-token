@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* CGEN generic assembler support code.     Copyright 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.     This file is part of the GNU Binutils and GDB, the GNU debugger.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation, Inc.,    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* CGEN generic assembler support code.     Copyright 1996, 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.     This file is part of the GNU Binutils and GDB, the GNU debugger.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation, Inc.,    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ansidecl.h"
 end_include
 
@@ -31,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"libiberty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"safe-ctype.h"
 end_include
 
 begin_include
@@ -56,6 +56,73 @@ include|#
 directive|include
 file|"opintl.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|CGEN_INSN_LIST
+modifier|*
+name|hash_insn_array
+name|PARAMS
+argument_list|(
+operator|(
+name|CGEN_CPU_DESC
+operator|,
+specifier|const
+name|CGEN_INSN
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|CGEN_INSN_LIST
+operator|*
+operator|*
+operator|,
+name|CGEN_INSN_LIST
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|CGEN_INSN_LIST
+modifier|*
+name|hash_insn_list
+name|PARAMS
+argument_list|(
+operator|(
+name|CGEN_CPU_DESC
+operator|,
+specifier|const
+name|CGEN_INSN_LIST
+operator|*
+operator|,
+name|CGEN_INSN_LIST
+operator|*
+operator|*
+operator|,
+name|CGEN_INSN_LIST
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|build_asm_hash_table
+name|PARAMS
+argument_list|(
+operator|(
+name|CGEN_CPU_DESC
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Set the cgen_parse_operand_fn callback.  */
@@ -737,6 +804,24 @@ decl_stmt|,
 modifier|*
 name|start
 decl_stmt|;
+if|if
+condition|(
+name|keyword_table
+operator|->
+name|name_hash_table
+operator|==
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|cgen_keyword_search_init
+argument_list|(
+name|keyword_table
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|start
@@ -744,7 +829,7 @@ operator|=
 operator|*
 name|strp
 expr_stmt|;
-comment|/* Allow any first character.      Note that this allows recognizing ",a" for the annul flag in sparc      even though "," is subsequently not a valid keyword char.  */
+comment|/* Allow any first character.  This is to make life easier for      the fairly common case of suffixes, eg. 'ld.b.w', where the first      character of the suffix ('.') is special.  */
 if|if
 condition|(
 operator|*
@@ -753,7 +838,7 @@ condition|)
 operator|++
 name|p
 expr_stmt|;
-comment|/* Now allow letters, digits, and _.  */
+comment|/* Allow letters, digits, and any special characters.  */
 while|while
 condition|(
 operator|(
@@ -772,21 +857,25 @@ name|buf
 argument_list|)
 operator|)
 operator|&&
+operator|*
+name|p
+operator|&&
 operator|(
-name|isalnum
+name|ISALNUM
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|p
 argument_list|)
 operator|||
+name|strchr
+argument_list|(
+name|keyword_table
+operator|->
+name|nonalpha_chars
+argument_list|,
 operator|*
 name|p
-operator|==
-literal|'_'
+argument_list|)
 operator|)
 condition|)
 operator|++
@@ -806,12 +895,18 @@ argument_list|(
 name|buf
 argument_list|)
 condition|)
-return|return
-name|_
-argument_list|(
-literal|"unrecognized keyword/register name"
-argument_list|)
-return|;
+block|{
+comment|/* All non-empty CGEN keywords can fit into BUF.  The only thing 	 we can match here is the empty keyword.  */
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
 name|memcpy
 argument_list|(
 name|buf
@@ -832,6 +927,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|ke
 operator|=
 name|cgen_keyword_lookup_name

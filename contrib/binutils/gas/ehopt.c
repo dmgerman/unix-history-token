@@ -1454,8 +1454,6 @@ argument_list|(
 name|frag
 operator|->
 name|fr_symbol
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1622,8 +1620,6 @@ argument_list|(
 name|frag
 operator|->
 name|fr_symbol
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 switch|switch

@@ -21,12 +21,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"bfd.h"
 end_include
 
@@ -34,6 +28,12 @@ begin_include
 include|#
 directive|include
 file|"sysdep.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"safe-ctype.h"
 end_include
 
 begin_include
@@ -178,6 +178,27 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|reloc_howto_type
+modifier|*
+name|NAME
+parameter_list|(
+name|aout
+parameter_list|,
+name|reloc_type_lookup
+parameter_list|)
+function_decl|PARAMS
+parameter_list|(
+function_decl|(bfd *
+operator|,
+function_decl|bfd_reloc_code_real_type
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
 comment|/* SUBSECTION 	Relocations  DESCRIPTION 	The file @file{aoutx.h} provides for both the @emph{standard} 	and @emph{extended} forms of a.out relocation records.  	The standard records contain only an 	address, a symbol index, and a type field. The extended records 	(used on 29ks and sparcs) also have a full integer for an 	addend.  */
 end_comment
@@ -202,7 +223,8 @@ name|CTOR_TABLE_RELOC_HOWTO
 parameter_list|(
 name|BFD
 parameter_list|)
-value|((obj_reloc_entry_size(BFD) == RELOC_EXT_SIZE \ 	     ? howto_table_ext : howto_table_std) \ 	    + CTOR_TABLE_RELOC_IDX)
+define|\
+value|((obj_reloc_entry_size (BFD) == RELOC_EXT_SIZE			\     ? howto_table_ext : howto_table_std)				\    + CTOR_TABLE_RELOC_IDX)
 end_define
 
 begin_endif
@@ -1718,7 +1740,7 @@ name|TABLE_SIZE
 parameter_list|(
 name|TABLE
 parameter_list|)
-value|(sizeof (TABLE)/sizeof (TABLE[0]))
+value|(sizeof (TABLE) / sizeof (TABLE[0]))
 end_define
 
 begin_decl_stmt
@@ -2095,7 +2117,7 @@ name|execp
 operator|->
 name|a_info
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -2266,7 +2288,7 @@ operator|)
 name|raw_bytes
 decl_stmt|;
 comment|/* Now fill in fields in the raw data, from the fields in the exec struct.  */
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -2557,6 +2579,15 @@ name|bfd_target
 modifier|*
 name|result
 decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aout_data_struct
+argument_list|)
+decl_stmt|;
 name|rawptr
 operator|=
 operator|(
@@ -2568,11 +2599,7 @@ name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|aout_data_struct
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -3316,6 +3343,7 @@ name|execp
 operator|->
 name|a_entry
 operator|<
+operator|(
 name|obj_textsec
 argument_list|(
 name|abfd
@@ -3329,6 +3357,7 @@ name|abfd
 argument_list|)
 operator|->
 name|_raw_size
+operator|)
 operator|)
 condition|)
 name|abfd
@@ -3473,12 +3502,20 @@ name|aout_data_struct
 modifier|*
 name|rawptr
 decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aout_data_struct
+argument_list|)
+decl_stmt|;
 name|bfd_set_error
 argument_list|(
 name|bfd_error_system_call
 argument_list|)
 expr_stmt|;
-comment|/* Use an intermediate variable for clarity */
 name|rawptr
 operator|=
 operator|(
@@ -3490,11 +3527,7 @@ name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|aout_data_struct
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -3825,16 +3858,13 @@ case|case
 name|bfd_mach_mips16
 case|:
 case|case
-name|bfd_mach_mips32
-case|:
-case|case
-name|bfd_mach_mips32_4k
+name|bfd_mach_mipsisa32
 case|:
 case|case
 name|bfd_mach_mips5
 case|:
 case|case
-name|bfd_mach_mips64
+name|bfd_mach_mipsisa64
 case|:
 case|case
 name|bfd_mach_mips_sb1
@@ -4194,7 +4224,7 @@ if|#
 directive|if
 literal|0
 comment|/* ?? Does alignment in the file image really matter? */
-block|pad = align_power (vma, obj_datasec(abfd)->alignment_power) - vma;
+block|pad = align_power (vma, obj_datasec (abfd)->alignment_power) - vma;
 endif|#
 directive|endif
 name|obj_textsec
@@ -4276,7 +4306,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|pad = align_power (vma, obj_bsssec(abfd)->alignment_power) - vma;
+block|pad = align_power (vma, obj_bsssec (abfd)->alignment_power) - vma;
 endif|#
 directive|endif
 name|obj_datasec
@@ -4308,7 +4338,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* The VMA of the .bss section is set by the the VMA of the          .data section plus the size of the .data section.  We may          need to add padding bytes to make this true.  */
+comment|/* The VMA of the .bss section is set by the VMA of the          .data section plus the size of the .data section.  We may          need to add padding bytes to make this true.  */
 name|pad
 operator|=
 name|obj_bsssec
@@ -4423,7 +4453,7 @@ decl_stmt|;
 name|file_ptr
 name|text_end
 decl_stmt|;
-name|CONST
+specifier|const
 name|struct
 name|aout_backend_data
 modifier|*
@@ -4759,35 +4789,48 @@ operator|->
 name|zmagic_mapped_contiguous
 condition|)
 block|{
-name|text_pad
-operator|=
-operator|(
+name|asection
+modifier|*
+name|text
+init|=
+name|obj_textsec
+argument_list|(
+name|abfd
+argument_list|)
+decl_stmt|;
+name|asection
+modifier|*
+name|data
+init|=
 name|obj_datasec
 argument_list|(
 name|abfd
 argument_list|)
+decl_stmt|;
+name|text_pad
+operator|=
+name|data
 operator|->
 name|vma
 operator|-
-name|obj_textsec
-argument_list|(
-name|abfd
-argument_list|)
+operator|(
+name|text
 operator|->
 name|vma
-operator|-
-name|obj_textsec
-argument_list|(
-name|abfd
-argument_list|)
+operator|+
+name|text
 operator|->
 name|_raw_size
 operator|)
 expr_stmt|;
-name|obj_textsec
-argument_list|(
-name|abfd
-argument_list|)
+comment|/* Only pad the text section if the data 	 section is going to be placed after it.  */
+if|if
+condition|(
+name|text_pad
+operator|>
+literal|0
+condition|)
+name|text
 operator|->
 name|_raw_size
 operator|+=
@@ -5024,7 +5067,6 @@ name|abfd
 argument_list|)
 operator|->
 name|_raw_size
-operator|)
 condition|?
 literal|0
 else|:
@@ -5036,6 +5078,7 @@ operator|->
 name|_raw_size
 operator|-
 name|data_pad
+operator|)
 expr_stmt|;
 else|else
 name|execp
@@ -5488,31 +5531,31 @@ argument|stderr
 argument_list|,
 literal|"%s text=<%x,%x,%x> data=<%x,%x,%x> bss=<%x,%x,%x>\n"
 argument_list|,
-argument|({ char *str; 	      switch (adata(abfd).magic) { 	      case n_magic: str =
+argument|({ char *str; 	      switch (adata (abfd).magic) 		{ 		case n_magic: str =
 literal|"NMAGIC"
-argument|; break; 	      case o_magic: str =
+argument|; break; 		case o_magic: str =
 literal|"OMAGIC"
-argument|; break; 	      case z_magic: str =
+argument|; break; 		case z_magic: str =
 literal|"ZMAGIC"
-argument|; break; 	      default: abort (); 	      } 	      str; 	    })
+argument|; break; 		default: abort (); 		} 	      str; 	    })
 argument_list|,
-argument|obj_textsec(abfd)->vma
+argument|obj_textsec (abfd)->vma
 argument_list|,
-argument|obj_textsec(abfd)->_raw_size
+argument|obj_textsec (abfd)->_raw_size
 argument_list|,
-argument|obj_textsec(abfd)->alignment_power
+argument|obj_textsec (abfd)->alignment_power
 argument_list|,
-argument|obj_datasec(abfd)->vma
+argument|obj_datasec (abfd)->vma
 argument_list|,
-argument|obj_datasec(abfd)->_raw_size
+argument|obj_datasec (abfd)->_raw_size
 argument_list|,
-argument|obj_datasec(abfd)->alignment_power
+argument|obj_datasec (abfd)->alignment_power
 argument_list|,
-argument|obj_bsssec(abfd)->vma
+argument|obj_bsssec (abfd)->vma
 argument_list|,
-argument|obj_bsssec(abfd)->_raw_size
+argument|obj_bsssec (abfd)->_raw_size
 argument_list|,
-argument|obj_bsssec(abfd)->alignment_power
+argument|obj_bsssec (abfd)->alignment_power
 argument_list|)
 empty_stmt|;
 endif|#
@@ -5994,11 +6037,9 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 name|location
-argument_list|,
-literal|1
 argument_list|,
 name|count
 argument_list|,
@@ -6058,6 +6099,9 @@ name|struct
 name|external_nlist
 modifier|*
 name|syms
+decl_stmt|;
+name|bfd_size_type
+name|amt
 decl_stmt|;
 name|count
 operator|=
@@ -6132,9 +6176,6 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
-operator|(
-name|size_t
-operator|)
 name|count
 operator|*
 name|EXTERNAL_NLIST_SIZE
@@ -6159,6 +6200,15 @@ condition|)
 return|return
 name|false
 return|;
+name|amt
+operator|=
+name|exec_hdr
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|a_syms
+expr_stmt|;
 if|if
 condition|(
 name|bfd_seek
@@ -6175,30 +6225,16 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-operator|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|syms
 argument_list|,
-literal|1
-argument_list|,
-name|exec_hdr
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|a_syms
+name|amt
 argument_list|,
 name|abfd
 argument_list|)
 operator|!=
-name|exec_hdr
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|a_syms
-operator|)
+name|amt
 condition|)
 block|{
 name|free
@@ -6260,6 +6296,11 @@ name|char
 modifier|*
 name|strings
 decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+name|BYTES_IN_WORD
+decl_stmt|;
 comment|/* Get the size of the strings.  */
 if|if
 condition|(
@@ -6277,23 +6318,19 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-operator|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 operator|(
 name|PTR
 operator|)
 name|string_chars
 argument_list|,
-name|BYTES_IN_WORD
-argument_list|,
-literal|1
+name|amt
 argument_list|,
 name|abfd
 argument_list|)
 operator|!=
-name|BYTES_IN_WORD
-operator|)
+name|amt
 condition|)
 return|return
 name|false
@@ -6360,9 +6397,6 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
-operator|(
-name|size_t
-operator|)
 name|stringsize
 operator|+
 literal|1
@@ -6378,26 +6412,26 @@ return|return
 name|false
 return|;
 comment|/* Skip space for the string count in the buffer for convenience 	 when using indexes.  */
+name|amt
+operator|=
+name|stringsize
+operator|-
+name|BYTES_IN_WORD
+expr_stmt|;
 if|if
 condition|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|strings
 operator|+
 name|BYTES_IN_WORD
 argument_list|,
-literal|1
-argument_list|,
-name|stringsize
-operator|-
-name|BYTES_IN_WORD
+name|amt
 argument_list|,
 name|abfd
 argument_list|)
 operator|!=
-name|stringsize
-operator|-
-name|BYTES_IN_WORD
+name|amt
 condition|)
 block|{
 name|free
@@ -6865,15 +6899,15 @@ comment|/* This code is no longer needed.  It used to be used to make           
 if|#
 directive|if
 literal|0
-block|asection *section; 	arelent_chain *reloc; 	asection *into_section;
+block|asection *section; 	arelent_chain *reloc; 	asection *into_section; 	bfd_size_type amt;
 comment|/* This is a set symbol.  The name of the symbol is the name 	   of the set (e.g., __CTOR_LIST__).  The value of the symbol 	   is the value to add to the set.  We create a section with 	   the same name as the symbol, and add a reloc to insert the 	   appropriate value into the section.  	   This action is actually obsolete; it used to make the 	   linker do the right thing, but the linker no longer uses 	   this function.  */
-block|section = bfd_get_section_by_name (abfd, cache_ptr->symbol.name); 	if (section == NULL) 	  { 	    char *copy;  	    copy = bfd_alloc (abfd, strlen (cache_ptr->symbol.name) + 1); 	    if (copy == NULL) 	      return false;  	    strcpy (copy, cache_ptr->symbol.name); 	    section = bfd_make_section (abfd, copy); 	    if (section == NULL) 	      return false; 	  }  	reloc = (arelent_chain *) bfd_alloc (abfd, sizeof (arelent_chain)); 	if (reloc == NULL) 	  return false;
+block|section = bfd_get_section_by_name (abfd, cache_ptr->symbol.name); 	if (section == NULL) 	  { 	    char *copy;  	    amt = strlen (cache_ptr->symbol.name) + 1; 	    copy = bfd_alloc (abfd, amt); 	    if (copy == NULL) 	      return false;  	    strcpy (copy, cache_ptr->symbol.name); 	    section = bfd_make_section (abfd, copy); 	    if (section == NULL) 	      return false; 	  }  	amt = sizeof (arelent_chain); 	reloc = (arelent_chain *) bfd_alloc (abfd, amt); 	if (reloc == NULL) 	  return false;
 comment|/* Build a relocation entry for the constructor.  */
 block|switch (cache_ptr->type& N_TYPE) 	  { 	  case N_SETA: 	    into_section = bfd_abs_section_ptr; 	    cache_ptr->type = N_ABS; 	    break; 	  case N_SETT: 	    into_section = obj_textsec (abfd); 	    cache_ptr->type = N_TEXT; 	    break; 	  case N_SETD: 	    into_section = obj_datasec (abfd); 	    cache_ptr->type = N_DATA; 	    break; 	  case N_SETB: 	    into_section = obj_bsssec (abfd); 	    cache_ptr->type = N_BSS; 	    break; 	  }
 comment|/* Build a relocation pointing into the constructor section 	   pointing at the symbol in the set vector specified.  */
 block|reloc->relent.addend = cache_ptr->symbol.value; 	cache_ptr->symbol.section = into_section; 	reloc->relent.sym_ptr_ptr = into_section->symbol_ptr_ptr;
 comment|/* We modify the symbol to belong to a section depending upon 	   the name of the symbol, and add to the size of the section 	   to contain a pointer to the symbol. Build a reloc entry to 	   relocate to this symbol attached to this section.  */
-block|section->flags = SEC_CONSTRUCTOR | SEC_RELOC;  	section->reloc_count++; 	section->alignment_power = 2;  	reloc->next = section->constructor_chain; 	section->constructor_chain = reloc; 	reloc->relent.address = section->_raw_size; 	section->_raw_size += BYTES_IN_WORD;  	reloc->relent.howto = CTOR_TABLE_RELOC_HOWTO(abfd);
+block|section->flags = SEC_CONSTRUCTOR | SEC_RELOC;  	section->reloc_count++; 	section->alignment_power = 2;  	reloc->next = section->constructor_chain; 	section->constructor_chain = reloc; 	reloc->relent.address = section->_raw_size; 	section->_raw_size += BYTES_IN_WORD;  	reloc->relent.howto = CTOR_TABLE_RELOC_HOWTO (abfd);
 endif|#
 directive|endif
 comment|/* 0 */
@@ -7764,6 +7798,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+name|aout_symbol_type
+argument_list|)
+decl_stmt|;
 name|aout_symbol_type
 modifier|*
 name|new
@@ -7776,10 +7818,7 @@ name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|aout_symbol_type
-argument_list|)
+name|amt
 argument_list|)
 decl_stmt|;
 if|if
@@ -7987,7 +8026,7 @@ name|in
 operator|->
 name|desc
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -8000,7 +8039,7 @@ name|in
 operator|->
 name|other
 operator|=
-name|bfd_h_get_8
+name|H_GET_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -8013,7 +8052,7 @@ name|in
 operator|->
 name|type
 operator|=
-name|bfd_h_get_8
+name|H_GET_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -8096,7 +8135,7 @@ name|aout_symbol_type
 modifier|*
 name|cached
 decl_stmt|;
-name|size_t
+name|bfd_size_type
 name|cached_size
 decl_stmt|;
 comment|/* If there's no work to be done, don't do any */
@@ -8136,17 +8175,17 @@ name|false
 return|;
 name|cached_size
 operator|=
-operator|(
 name|obj_aout_external_sym_count
 argument_list|(
 name|abfd
 argument_list|)
-operator|*
+expr_stmt|;
+name|cached_size
+operator|*=
 sizeof|sizeof
 argument_list|(
 name|aout_symbol_type
 argument_list|)
-operator|)
 expr_stmt|;
 name|cached
 operator|=
@@ -8184,6 +8223,9 @@ name|cached
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|cached_size
 argument_list|)
 expr_stmt|;
@@ -8510,6 +8552,11 @@ index|[
 name|BYTES_IN_WORD
 index|]
 decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+name|BYTES_IN_WORD
+decl_stmt|;
 comment|/* The string table starts with the size.  */
 name|PUT_WORD
 argument_list|(
@@ -8527,21 +8574,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 operator|(
 name|PTR
 operator|)
 name|buffer
 argument_list|,
-literal|1
-argument_list|,
-name|BYTES_IN_WORD
+name|amt
 argument_list|,
 name|abfd
 argument_list|)
 operator|!=
-name|BYTES_IN_WORD
+name|amt
 condition|)
 return|return
 name|false
@@ -8645,6 +8690,9 @@ name|struct
 name|external_nlist
 name|nsp
 decl_stmt|;
+name|bfd_size_type
+name|amt
+decl_stmt|;
 name|indx
 operator|=
 name|add_to_stringtab
@@ -8702,7 +8750,7 @@ operator|->
 name|flavour
 condition|)
 block|{
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -8718,7 +8766,7 @@ operator|.
 name|e_desc
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -8734,7 +8782,7 @@ operator|.
 name|e_other
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -8753,7 +8801,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -8764,7 +8812,7 @@ operator|.
 name|e_desc
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -8775,7 +8823,7 @@ operator|.
 name|e_other
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -8803,9 +8851,13 @@ condition|)
 goto|goto
 name|error_return
 goto|;
+name|amt
+operator|=
+name|EXTERNAL_NLIST_SIZE
+expr_stmt|;
 if|if
 condition|(
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 operator|(
 name|PTR
@@ -8813,14 +8865,12 @@ operator|)
 operator|&
 name|nsp
 argument_list|,
-literal|1
-argument_list|,
-name|EXTERNAL_NLIST_SIZE
+name|amt
 argument_list|,
 name|abfd
 argument_list|)
 operator|!=
-name|EXTERNAL_NLIST_SIZE
+name|amt
 condition|)
 goto|goto
 name|error_return
@@ -9294,6 +9344,7 @@ literal|0
 index|]
 operator|=
 operator|(
+operator|(
 name|r_extern
 condition|?
 name|RELOC_STD_BITS_EXTERN_BIG
@@ -9338,6 +9389,7 @@ name|r_length
 operator|<<
 name|RELOC_STD_BITS_LENGTH_SH_BIG
 operator|)
+operator|)
 expr_stmt|;
 block|}
 else|else
@@ -9380,6 +9432,7 @@ index|[
 literal|0
 index|]
 operator|=
+operator|(
 operator|(
 name|r_extern
 condition|?
@@ -9424,6 +9477,7 @@ operator|(
 name|r_length
 operator|<<
 name|RELOC_STD_BITS_LENGTH_SH_LITTLE
+operator|)
 operator|)
 expr_stmt|;
 block|}
@@ -9510,8 +9564,7 @@ name|unsigned
 name|int
 name|r_type
 decl_stmt|;
-name|unsigned
-name|int
+name|bfd_vma
 name|r_addend
 decl_stmt|;
 name|asymbol
@@ -9792,6 +9845,7 @@ literal|0
 index|]
 operator|=
 operator|(
+operator|(
 name|r_extern
 condition|?
 name|RELOC_EXT_BITS_EXTERN_LITTLE
@@ -9803,6 +9857,7 @@ operator|(
 name|r_type
 operator|<<
 name|RELOC_EXT_BITS_TYPE_SH_LITTLE
+operator|)
 operator|)
 expr_stmt|;
 block|}
@@ -9821,7 +9876,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* BFD deals internally with all things based from the section they're    in. so, something in 10 bytes into a text section  with a base of    50 would have a symbol (.text+10) and know .text vma was 50.     Aout keeps all it's symbols based from zero, so the symbol would    contain 60. This macro subs the base of each section from the value    to give the true offset from the section */
+comment|/* BFD deals internally with all things based from the section they're    in. so, something in 10 bytes into a text section  with a base of    50 would have a symbol (.text+10) and know .text vma was 50.     Aout keeps all it's symbols based from zero, so the symbol would    contain 60. This macro subs the base of each section from the value    to give the true offset from the section.  */
 end_comment
 
 begin_define
@@ -9832,39 +9887,37 @@ parameter_list|(
 name|ad
 parameter_list|)
 define|\
-value|if (r_extern) {							\
-comment|/* undefined symbol */
-value|\      cache_ptr->sym_ptr_ptr = symbols + r_index;			\      cache_ptr->addend = ad;						\      } else {								\
-comment|/* defined, section relative. replace symbol with pointer to    	\        symbol which points to section  */
-value|\     switch (r_index) {							\     case N_TEXT:							\     case N_TEXT | N_EXT:						\       cache_ptr->sym_ptr_ptr  = obj_textsec(abfd)->symbol_ptr_ptr;	\       cache_ptr->addend = ad  - su->textsec->vma;			\       break;								\     case N_DATA:							\     case N_DATA | N_EXT:						\       cache_ptr->sym_ptr_ptr  = obj_datasec(abfd)->symbol_ptr_ptr;	\       cache_ptr->addend = ad - su->datasec->vma;			\       break;								\     case N_BSS:								\     case N_BSS | N_EXT:							\       cache_ptr->sym_ptr_ptr  = obj_bsssec(abfd)->symbol_ptr_ptr;	\       cache_ptr->addend = ad - su->bsssec->vma;				\       break;								\     default:								\     case N_ABS:								\     case N_ABS | N_EXT:							\      cache_ptr->sym_ptr_ptr = bfd_abs_section_ptr->symbol_ptr_ptr;	\       cache_ptr->addend = ad;						\       break;								\     }									\   }     								\  void
+value|if (r_extern)								\     {									\
+comment|/* Undefined symbol.  */
+value|\       cache_ptr->sym_ptr_ptr = symbols + r_index;			\       cache_ptr->addend = ad;						\     }									\    else									\     {									\
+comment|/* Defined, section relative.  Replace symbol with pointer to	\ 	 symbol which points to section.  */
+value|\       switch (r_index)							\ 	{								\ 	case N_TEXT:							\ 	case N_TEXT | N_EXT:						\ 	  cache_ptr->sym_ptr_ptr = obj_textsec (abfd)->symbol_ptr_ptr;	\ 	  cache_ptr->addend = ad - su->textsec->vma;			\ 	  break;							\ 	case N_DATA:							\ 	case N_DATA | N_EXT:						\ 	  cache_ptr->sym_ptr_ptr = obj_datasec (abfd)->symbol_ptr_ptr;	\ 	  cache_ptr->addend = ad - su->datasec->vma;			\ 	  break;							\ 	case N_BSS:							\ 	case N_BSS | N_EXT:						\ 	  cache_ptr->sym_ptr_ptr = obj_bsssec (abfd)->symbol_ptr_ptr;	\ 	  cache_ptr->addend = ad - su->bsssec->vma;			\ 	  break;							\ 	default:							\ 	case N_ABS:							\ 	case N_ABS | N_EXT:						\ 	  cache_ptr->sym_ptr_ptr = bfd_abs_section_ptr->symbol_ptr_ptr;	\ 	  cache_ptr->addend = ad;					\ 	  break;							\ 	}								\     }
 end_define
 
-begin_macro
+begin_decl_stmt
+name|void
 name|NAME
 argument_list|(
-argument|aout
+name|aout
 argument_list|,
-argument|swap_ext_reloc_in
+name|swap_ext_reloc_in
 argument_list|)
-end_macro
-
-begin_expr_stmt
-operator|(
+argument_list|(
 name|abfd
-operator|,
+argument_list|,
 name|bytes
-operator|,
+argument_list|,
 name|cache_ptr
-operator|,
+argument_list|,
 name|symbols
-operator|,
+argument_list|,
 name|symcount
-operator|)
+argument_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -9951,6 +10004,7 @@ block|{
 name|r_index
 operator|=
 operator|(
+operator|(
 name|bytes
 operator|->
 name|r_index
@@ -9978,6 +10032,7 @@ name|r_index
 index|[
 literal|2
 index|]
+operator|)
 expr_stmt|;
 name|r_extern
 operator|=
@@ -9999,6 +10054,7 @@ expr_stmt|;
 name|r_type
 operator|=
 operator|(
+operator|(
 name|bytes
 operator|->
 name|r_type
@@ -10010,12 +10066,14 @@ name|RELOC_EXT_BITS_TYPE_BIG
 operator|)
 operator|>>
 name|RELOC_EXT_BITS_TYPE_SH_BIG
+operator|)
 expr_stmt|;
 block|}
 else|else
 block|{
 name|r_index
 operator|=
+operator|(
 operator|(
 name|bytes
 operator|->
@@ -10044,6 +10102,7 @@ name|r_index
 index|[
 literal|0
 index|]
+operator|)
 expr_stmt|;
 name|r_extern
 operator|=
@@ -10065,6 +10124,7 @@ expr_stmt|;
 name|r_type
 operator|=
 operator|(
+operator|(
 name|bytes
 operator|->
 name|r_type
@@ -10076,6 +10136,7 @@ name|RELOC_EXT_BITS_TYPE_LITTLE
 operator|)
 operator|>>
 name|RELOC_EXT_BITS_TYPE_SH_LITTLE
+operator|)
 expr_stmt|;
 block|}
 name|cache_ptr
@@ -10240,7 +10301,7 @@ name|cache_ptr
 operator|->
 name|address
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -10260,6 +10321,7 @@ condition|)
 block|{
 name|r_index
 operator|=
+operator|(
 operator|(
 name|bytes
 operator|->
@@ -10288,6 +10350,7 @@ name|r_index
 index|[
 literal|2
 index|]
+operator|)
 expr_stmt|;
 name|r_extern
 operator|=
@@ -10377,6 +10440,7 @@ expr_stmt|;
 name|r_length
 operator|=
 operator|(
+operator|(
 name|bytes
 operator|->
 name|r_type
@@ -10388,12 +10452,14 @@ name|RELOC_STD_BITS_LENGTH_BIG
 operator|)
 operator|>>
 name|RELOC_STD_BITS_LENGTH_SH_BIG
+operator|)
 expr_stmt|;
 block|}
 else|else
 block|{
 name|r_index
 operator|=
+operator|(
 operator|(
 name|bytes
 operator|->
@@ -10422,6 +10488,7 @@ name|r_index
 index|[
 literal|0
 index|]
+operator|)
 expr_stmt|;
 name|r_extern
 operator|=
@@ -10511,6 +10578,7 @@ expr_stmt|;
 name|r_length
 operator|=
 operator|(
+operator|(
 name|bytes
 operator|->
 name|r_type
@@ -10522,10 +10590,12 @@ name|RELOC_STD_BITS_LENGTH_LITTLE
 operator|)
 operator|>>
 name|RELOC_STD_BITS_LENGTH_SH_LITTLE
+operator|)
 expr_stmt|;
 block|}
 name|howto_idx
 operator|=
+operator|(
 name|r_length
 operator|+
 literal|4
@@ -10543,6 +10613,7 @@ operator|+
 literal|32
 operator|*
 name|r_relative
+operator|)
 expr_stmt|;
 name|BFD_ASSERT
 argument_list|(
@@ -10655,8 +10726,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|unsigned
-name|int
+name|bfd_size_type
 name|count
 decl_stmt|;
 name|bfd_size_type
@@ -10681,6 +10751,9 @@ decl_stmt|;
 name|arelent
 modifier|*
 name|cache_ptr
+decl_stmt|;
+name|bfd_size_type
+name|amt
 decl_stmt|;
 if|if
 condition|(
@@ -10795,6 +10868,15 @@ name|reloc_size
 operator|/
 name|each_size
 expr_stmt|;
+name|amt
+operator|=
+name|count
+operator|*
+sizeof|sizeof
+argument_list|(
+name|arelent
+argument_list|)
+expr_stmt|;
 name|reloc_cache
 operator|=
 operator|(
@@ -10803,17 +10885,7 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
-call|(
-name|size_t
-call|)
-argument_list|(
-name|count
-operator|*
-sizeof|sizeof
-argument_list|(
-name|arelent
-argument_list|)
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -10835,21 +10907,16 @@ name|reloc_cache
 argument_list|,
 literal|0
 argument_list|,
-name|count
-operator|*
-sizeof|sizeof
-argument_list|(
-name|arelent
-argument_list|)
+operator|(
+name|size_t
+operator|)
+name|amt
 argument_list|)
 expr_stmt|;
 name|relocs
 operator|=
 name|bfd_malloc
 argument_list|(
-operator|(
-name|size_t
-operator|)
 name|reloc_size
 argument_list|)
 expr_stmt|;
@@ -10875,11 +10942,9 @@ return|;
 block|}
 if|if
 condition|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|relocs
-argument_list|,
-literal|1
 argument_list|,
 name|reloc_size
 argument_list|,
@@ -10914,7 +10979,6 @@ operator|==
 name|RELOC_EXT_SIZE
 condition|)
 block|{
-specifier|register
 name|struct
 name|reloc_ext_external
 modifier|*
@@ -10953,6 +11017,9 @@ name|cache_ptr
 argument_list|,
 name|symbols
 argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 name|bfd_get_symcount
 argument_list|(
 name|abfd
@@ -10962,7 +11029,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|register
 name|struct
 name|reloc_std_external
 modifier|*
@@ -11001,6 +11067,9 @@ name|cache_ptr
 argument_list|,
 name|symbols
 argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 name|bfd_get_symcount
 argument_list|(
 name|abfd
@@ -11089,7 +11158,7 @@ name|section
 operator|->
 name|reloc_count
 decl_stmt|;
-name|size_t
+name|bfd_size_type
 name|natsize
 decl_stmt|;
 if|if
@@ -11116,6 +11185,9 @@ argument_list|)
 expr_stmt|;
 name|natsize
 operator|=
+operator|(
+name|bfd_size_type
+operator|)
 name|each_size
 operator|*
 name|count
@@ -11231,14 +11303,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 operator|(
 name|PTR
 operator|)
 name|native
-argument_list|,
-literal|1
 argument_list|,
 name|natsize
 argument_list|,
@@ -11932,7 +12002,7 @@ argument_list|,
 name|print_symbol
 argument_list|)
 argument_list|(
-name|ignore_abfd
+name|abfd
 argument_list|,
 name|afile
 argument_list|,
@@ -11942,8 +12012,7 @@ name|how
 argument_list|)
 name|bfd
 modifier|*
-name|ignore_abfd
-name|ATTRIBUTE_UNUSED
+name|abfd
 decl_stmt|;
 end_decl_stmt
 
@@ -12059,7 +12128,7 @@ case|case
 name|bfd_print_symbol_all
 case|:
 block|{
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|section_name
@@ -12072,6 +12141,8 @@ name|name
 decl_stmt|;
 name|bfd_print_symbol_vandf
 argument_list|(
+name|abfd
+argument_list|,
 operator|(
 name|PTR
 operator|)
@@ -12495,7 +12566,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -12504,7 +12575,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -12528,28 +12599,28 @@ modifier|*
 modifier|*
 name|p
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|directory_name
 init|=
 name|NULL
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|main_file_name
 init|=
 name|NULL
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|current_file_name
 init|=
 name|NULL
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|line_file_name
@@ -12557,7 +12628,7 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* Value of current_file_name at line number.  */
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|line_directory_name
@@ -12581,7 +12652,7 @@ name|func
 init|=
 literal|0
 decl_stmt|;
-name|size_t
+name|bfd_size_type
 name|filelen
 decl_stmt|,
 name|funclen
@@ -12657,7 +12728,7 @@ block|{
 case|case
 name|N_TEXT
 case|:
-comment|/* If this looks like a file name symbol, and it comes after            the line number we have found so far, but before the            offset, then we have probably not found the right line            number.  */
+comment|/* If this looks like a file name symbol, and it comes after 		 the line number we have found so far, but before the 		 offset, then we have probably not found the right line 		 number.  */
 if|if
 condition|(
 name|q
@@ -12779,7 +12850,7 @@ break|break;
 case|case
 name|N_SO
 case|:
-comment|/* If this symbol is less than the offset, but greater than            the line number we have found so far, then we have not            found the right line number.  */
+comment|/* If this symbol is less than the offset, but greater than 		 the line number we have found so far, then we have not 		 found the right line number.  */
 if|if
 condition|(
 name|q
@@ -12923,7 +12994,7 @@ case|:
 case|case
 name|N_BSLINE
 case|:
-comment|/* We'll keep this if it resolves nearer than the one we have            already.  */
+comment|/* We'll keep this if it resolves nearer than the one we have 		 already.  */
 if|if
 condition|(
 name|q
@@ -13241,7 +13312,7 @@ name|name
 decl_stmt|;
 name|char
 modifier|*
-name|p
+name|colon
 decl_stmt|;
 comment|/* The caller expects a symbol name.  We actually have a 	 function name, without the leading underscore.  Put the 	 underscore back in, so that the caller gets a symbol name.  */
 if|if
@@ -13283,7 +13354,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Have to remove : stuff */
-name|p
+name|colon
 operator|=
 name|strchr
 argument_list|(
@@ -13294,12 +13365,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|colon
 operator|!=
 name|NULL
 condition|)
 operator|*
-name|p
+name|colon
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -13881,9 +13952,17 @@ name|aout_link_hash_table
 modifier|*
 name|ret
 decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aout_link_hash_table
+argument_list|)
+decl_stmt|;
 name|ret
 operator|=
-operator|(
 operator|(
 expr|struct
 name|aout_link_hash_table
@@ -13893,13 +13972,8 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|aout_link_hash_table
+name|amt
 argument_list|)
-argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -14434,7 +14508,7 @@ block|{
 name|int
 name|type
 init|=
-name|bfd_h_get_8
+name|H_GET_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -15073,6 +15147,9 @@ name|external_nlist
 modifier|*
 name|pend
 decl_stmt|;
+name|bfd_size_type
+name|amt
+decl_stmt|;
 name|syms
 operator|=
 name|obj_aout_external_syms
@@ -15155,9 +15232,19 @@ name|false
 return|;
 block|}
 comment|/* We keep a list of the linker hash table entries that correspond      to particular symbols.  We could just look them up in the hash      table, but keeping the list is more efficient.  Perhaps this      should be conditional on info->keep_memory.  */
+name|amt
+operator|=
+name|sym_count
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aout_link_hash_entry
+operator|*
+argument_list|)
+expr_stmt|;
 name|sym_hash
 operator|=
-operator|(
 operator|(
 expr|struct
 name|aout_link_hash_entry
@@ -15168,21 +15255,8 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-operator|(
-name|size_t
-operator|)
-name|sym_count
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|aout_link_hash_entry
-operator|*
+name|amt
 argument_list|)
-operator|)
-argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -15277,7 +15351,7 @@ name|NULL
 expr_stmt|;
 name|type
 operator|=
-name|bfd_h_get_8
+name|H_GET_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -16016,7 +16090,7 @@ parameter_list|,
 name|copy
 parameter_list|)
 define|\
-value|((struct aout_link_includes_entry *) \    bfd_hash_lookup (&(table)->root, (string), (create), (copy)))
+value|((struct aout_link_includes_entry *)					\    bfd_hash_lookup (&(table)->root, (string), (create), (copy)))
 end_define
 
 begin_comment
@@ -16526,13 +16600,13 @@ name|trsize
 decl_stmt|,
 name|drsize
 decl_stmt|;
-name|size_t
+name|bfd_size_type
 name|max_contents_size
 decl_stmt|;
-name|size_t
+name|bfd_size_type
 name|max_relocs_size
 decl_stmt|;
-name|size_t
+name|bfd_size_type
 name|max_sym_count
 decl_stmt|;
 name|bfd_size_type
@@ -16666,7 +16740,7 @@ operator|->
 name|link_next
 control|)
 block|{
-name|size_t
+name|bfd_size_type
 name|sz
 decl_stmt|;
 if|if
@@ -17874,17 +17948,15 @@ block|{
 name|bfd_byte
 name|b
 decl_stmt|;
+name|file_ptr
+name|pos
+decl_stmt|;
 name|b
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|bfd_seek
-argument_list|(
-name|abfd
-argument_list|,
-operator|(
+name|pos
+operator|=
 name|obj_datasec
 argument_list|(
 name|abfd
@@ -17900,20 +17972,28 @@ operator|->
 name|a_data
 operator|-
 literal|1
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|bfd_seek
+argument_list|(
+name|abfd
+argument_list|,
+name|pos
 argument_list|,
 name|SEEK_SET
 argument_list|)
 operator|!=
 literal|0
 operator|||
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 operator|&
 name|b
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 literal|1
 argument_list|,
 name|abfd
@@ -18391,7 +18471,7 @@ operator|!=
 name|discard_all
 condition|)
 block|{
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|output_bfd
 argument_list|,
@@ -18402,7 +18482,7 @@ operator|->
 name|e_type
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|output_bfd
 argument_list|,
@@ -18413,13 +18493,10 @@ operator|->
 name|e_other
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|output_bfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 literal|0
 argument_list|,
 name|outsym
@@ -18548,6 +18625,9 @@ name|symbol_map
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|sym_count
 operator|*
 sizeof|sizeof
@@ -18619,7 +18699,7 @@ literal|1
 expr_stmt|;
 name|type
 operator|=
-name|bfd_h_get_8
+name|H_GET_8
 argument_list|(
 name|input_bfd
 argument_list|,
@@ -19599,6 +19679,9 @@ block|{
 case|case
 name|discard_none
 case|:
+case|case
+name|discard_sec_merge
+case|:
 break|break;
 case|case
 name|discard_l
@@ -19701,7 +19784,7 @@ name|incl_type
 decl_stmt|;
 name|incl_type
 operator|=
-name|bfd_h_get_8
+name|H_GET_8
 argument_list|(
 name|input_bfd
 argument_list|,
@@ -19795,12 +19878,8 @@ name|s
 expr_stmt|;
 while|while
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|s
 argument_list|)
@@ -19983,7 +20062,7 @@ name|incl_type
 decl_stmt|;
 name|incl_type
 operator|=
-name|bfd_h_get_8
+name|H_GET_8
 argument_list|(
 name|input_bfd
 argument_list|,
@@ -20046,7 +20125,7 @@ block|}
 block|}
 block|}
 comment|/* Copy this symbol into the list of symbols we are going to 	 write out.  */
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|output_bfd
 argument_list|,
@@ -20057,11 +20136,11 @@ operator|->
 name|e_type
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|output_bfd
 argument_list|,
-name|bfd_h_get_8
+name|H_GET_8
 argument_list|(
 name|input_bfd
 argument_list|,
@@ -20075,11 +20154,11 @@ operator|->
 name|e_other
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|output_bfd
 argument_list|,
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|input_bfd
 argument_list|,
@@ -20214,7 +20293,7 @@ name|output_syms
 condition|)
 block|{
 name|bfd_size_type
-name|outsym_count
+name|outsym_size
 decl_stmt|;
 if|if
 condition|(
@@ -20234,7 +20313,7 @@ condition|)
 return|return
 name|false
 return|;
-name|outsym_count
+name|outsym_size
 operator|=
 name|outsym
 operator|-
@@ -20242,9 +20321,13 @@ name|finfo
 operator|->
 name|output_syms
 expr_stmt|;
+name|outsym_size
+operator|*=
+name|EXTERNAL_NLIST_SIZE
+expr_stmt|;
 if|if
 condition|(
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 operator|(
 name|PTR
@@ -20253,22 +20336,12 @@ name|finfo
 operator|->
 name|output_syms
 argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
-name|EXTERNAL_NLIST_SIZE
-argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
-name|outsym_count
+name|outsym_size
 argument_list|,
 name|output_bfd
 argument_list|)
 operator|!=
-name|outsym_count
-operator|*
-name|EXTERNAL_NLIST_SIZE
+name|outsym_size
 condition|)
 return|return
 name|false
@@ -20277,9 +20350,7 @@ name|finfo
 operator|->
 name|symoff
 operator|+=
-name|outsym_count
-operator|*
-name|EXTERNAL_NLIST_SIZE
+name|outsym_size
 expr_stmt|;
 block|}
 return|return
@@ -20338,6 +20409,9 @@ name|outsym
 decl_stmt|;
 name|bfd_size_type
 name|indx
+decl_stmt|;
+name|bfd_size_type
+name|amt
 decl_stmt|;
 name|output_bfd
 operator|=
@@ -20702,7 +20776,7 @@ return|return
 name|true
 return|;
 block|}
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|output_bfd
 argument_list|,
@@ -20713,7 +20787,7 @@ operator|.
 name|e_type
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|output_bfd
 argument_list|,
@@ -20724,7 +20798,7 @@ operator|.
 name|e_other
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|output_bfd
 argument_list|,
@@ -20760,10 +20834,10 @@ if|if
 condition|(
 name|indx
 operator|==
+operator|-
 operator|(
 name|bfd_size_type
 operator|)
-operator|-
 literal|1
 condition|)
 block|{
@@ -20794,6 +20868,10 @@ operator|.
 name|e_value
 argument_list|)
 expr_stmt|;
+name|amt
+operator|=
+name|EXTERNAL_NLIST_SIZE
+expr_stmt|;
 if|if
 condition|(
 name|bfd_seek
@@ -20809,7 +20887,7 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 operator|(
 name|PTR
@@ -20817,20 +20895,12 @@ operator|)
 operator|&
 name|outsym
 argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
-name|EXTERNAL_NLIST_SIZE
-argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
-literal|1
+name|amt
 argument_list|,
 name|output_bfd
 argument_list|)
 operator|!=
-name|EXTERNAL_NLIST_SIZE
+name|amt
 condition|)
 block|{
 comment|/* FIXME: No way to handle errors.  */
@@ -21006,11 +21076,9 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|relocs
-argument_list|,
-literal|1
 argument_list|,
 name|rel_size
 argument_list|,
@@ -21116,6 +21184,9 @@ name|finfo
 operator|->
 name|contents
 argument_list|,
+operator|(
+name|file_ptr
+operator|)
 name|input_section
 operator|->
 name|output_offset
@@ -21161,14 +21232,9 @@ name|false
 return|;
 if|if
 condition|(
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 name|relocs
-argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
-literal|1
 argument_list|,
 name|rel_size
 argument_list|,
@@ -24047,7 +24113,7 @@ name|r_index
 expr_stmt|;
 name|type
 operator|=
-name|bfd_h_get_8
+name|H_GET_8
 argument_list|(
 name|input_bfd
 argument_list|,
@@ -24653,6 +24719,9 @@ name|erel
 decl_stmt|;
 name|PTR
 name|rel_ptr
+decl_stmt|;
+name|bfd_size_type
+name|amt
 decl_stmt|;
 name|pr
 operator|=
@@ -25345,6 +25414,9 @@ name|finfo
 operator|->
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|pr
 operator|->
 name|addend
@@ -25672,6 +25744,9 @@ name|finfo
 operator|->
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|pr
 operator|->
 name|addend
@@ -25693,6 +25768,15 @@ operator|&
 name|erel
 expr_stmt|;
 block|}
+name|amt
+operator|=
+name|obj_reloc_entry_size
+argument_list|(
+name|finfo
+operator|->
+name|output_bfd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bfd_seek
@@ -25709,35 +25793,18 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-operator|(
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 name|rel_ptr
 argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
-literal|1
-argument_list|,
-name|obj_reloc_entry_size
-argument_list|(
-name|finfo
-operator|->
-name|output_bfd
-argument_list|)
+name|amt
 argument_list|,
 name|finfo
 operator|->
 name|output_bfd
 argument_list|)
 operator|!=
-name|obj_reloc_entry_size
-argument_list|(
-name|finfo
-operator|->
-name|output_bfd
-argument_list|)
-operator|)
+name|amt
 condition|)
 return|return
 name|false

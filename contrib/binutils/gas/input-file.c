@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* input_file.c - Deal with Input Files -    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1999, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* input_file.c - Deal with Input Files -    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*  * Confines all details of reading source bytes to this module.  * All O/S specific crocks should live here.  * What we lose in "efficiency" we gain in modularity.  * Note we don't need to #include the "as.h" file. No common coupling!  */
+comment|/* Confines all details of reading source bytes to this module.    All O/S specific crocks should live here.    What we lose in "efficiency" we gain in modularity.    Note we don't need to #include the "as.h" file. No common coupling!  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ directive|include
 file|"input-file.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"safe-ctype.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -48,7 +54,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This variable is non-zero if the file currently being read should be    preprocessed by app.  It is zero if the file can be read straight in.    */
+comment|/* This variable is non-zero if the file currently being read should be    preprocessed by app.  It is zero if the file can be read straight in.  */
 end_comment
 
 begin_decl_stmt
@@ -60,7 +66,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This code opens a file, then delivers BUFFER_SIZE character  * chunks of the file on demand.  * BUFFER_SIZE is supposed to be a number chosen for speed.  * The caller only asks once what BUFFER_SIZE is, and asks before  * the nature of the input files (if any) is known.  */
+comment|/* This code opens a file, then delivers BUFFER_SIZE character    chunks of the file on demand.    BUFFER_SIZE is supposed to be a number chosen for speed.    The caller only asks once what BUFFER_SIZE is, and asks before    the nature of the input files (if any) is known.  */
 end_comment
 
 begin_define
@@ -71,7 +77,7 @@ value|(32 * 1024)
 end_define
 
 begin_comment
-comment|/*  * We use static data: the data area is not sharable.  */
+comment|/* We use static data: the data area is not sharable.  */
 end_comment
 
 begin_decl_stmt
@@ -241,10 +247,10 @@ operator|=
 name|app_push
 argument_list|()
 expr_stmt|;
+comment|/* Initialize for new file.  */
 name|input_file_begin
 argument_list|()
 expr_stmt|;
-comment|/* Initialize for new file */
 return|return
 operator|(
 name|char
@@ -282,7 +288,7 @@ decl_stmt|;
 name|input_file_end
 argument_list|()
 expr_stmt|;
-comment|/* Close out old file */
+comment|/* Close out old file.  */
 name|f_in
 operator|=
 name|saved
@@ -376,7 +382,7 @@ name|fopen
 argument_list|(
 name|filename
 argument_list|,
-literal|"r"
+name|FOPEN_RT
 argument_list|)
 expr_stmt|;
 name|file_name
@@ -415,7 +421,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Can't open %s for reading."
+literal|"can't open %s for reading"
 argument_list|)
 argument_list|,
 name|file_name
@@ -444,7 +450,7 @@ operator|==
 literal|'#'
 condition|)
 block|{
-comment|/* Begins with comment, may not want to preprocess */
+comment|/* Begins with comment, may not want to preprocess.  */
 name|c
 operator|=
 name|getc
@@ -471,11 +477,21 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|strcmp
+name|strncmp
 argument_list|(
 name|buf
 argument_list|,
-literal|"O_APP\n"
+literal|"O_APP"
+argument_list|,
+literal|5
+argument_list|)
+operator|&&
+name|ISSPACE
+argument_list|(
+name|buf
+index|[
+literal|5
+index|]
 argument_list|)
 condition|)
 name|preprocess
@@ -499,7 +515,74 @@ argument_list|,
 name|f_in
 argument_list|)
 expr_stmt|;
-comment|/* It was longer */
+comment|/* It was longer.  */
+else|else
+name|ungetc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|f_in
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'A'
+condition|)
+block|{
+name|fgets
+argument_list|(
+name|buf
+argument_list|,
+literal|80
+argument_list|,
+name|f_in
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|buf
+argument_list|,
+literal|"PP"
+argument_list|,
+literal|2
+argument_list|)
+operator|&&
+name|ISSPACE
+argument_list|(
+name|buf
+index|[
+literal|2
+index|]
+argument_list|)
+condition|)
+name|preprocess
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strchr
+argument_list|(
+name|buf
+argument_list|,
+literal|'\n'
+argument_list|)
+condition|)
+name|ungetc
+argument_list|(
+literal|'#'
+argument_list|,
+name|f_in
+argument_list|)
+expr_stmt|;
 else|else
 name|ungetc
 argument_list|(
@@ -552,20 +635,18 @@ name|void
 name|input_file_close
 parameter_list|()
 block|{
+comment|/* Don't close a null file pointer.  */
 if|if
 condition|(
 name|f_in
 operator|!=
 name|NULL
 condition|)
-block|{
 name|fclose
 argument_list|(
 name|f_in
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* don't close a null file pointer */
 name|f_in
 operator|=
 literal|0
@@ -680,7 +761,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/*    * fflush (stdin); could be done here if you want to synchronise    * stdin and stdout, for the case where our input file is stdin.    * Since the assembler shouldn't do any output to stdout, we    * don't bother to synch output and input.    */
+comment|/* fflush (stdin); could be done here if you want to synchronise      stdin and stdout, for the case where our input file is stdin.      Since the assembler shouldn't do any output to stdout, we      don't bother to synch output and input.  */
 if|if
 condition|(
 name|preprocess
@@ -778,9 +859,7 @@ literal|0
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|return_value
-operator|)
 return|;
 block|}
 end_function

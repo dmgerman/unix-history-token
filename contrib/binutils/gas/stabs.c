@@ -676,8 +676,10 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|".stabs: Missing comma"
+literal|".stab%c: missing comma"
 argument_list|)
+argument_list|,
+name|what
 argument_list|)
 expr_stmt|;
 name|ignore_rest_of_line
@@ -701,7 +703,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|".stab%c: Missing comma"
+literal|".stab%c: missing comma"
 argument_list|)
 argument_list|,
 name|what
@@ -731,7 +733,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|".stab%c: Missing comma"
+literal|".stab%c: missing comma"
 argument_list|)
 argument_list|,
 name|what
@@ -774,7 +776,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|".stab%c: Missing comma"
+literal|".stab%c: missing comma"
 argument_list|)
 argument_list|,
 name|what
@@ -1544,7 +1546,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Expected comma after name \"%s\""
+literal|"expected comma after \"%s\""
 argument_list|)
 argument_list|,
 name|name
@@ -1797,25 +1799,28 @@ argument_list|,
 literal|'\\'
 argument_list|)
 decl_stmt|;
-name|int
+name|size_t
 name|len
 init|=
 operator|(
 name|bslash
+operator|)
 condition|?
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|bslash
 operator|-
 name|tmp
 operator|+
 literal|1
-operator|)
+argument_list|)
 else|:
 name|strlen
 argument_list|(
 name|tmp
 argument_list|)
-operator|)
 decl_stmt|;
 comment|/* Double all backslashes, since demand_copy_C_string (used by 	 s_stab to extract the part in quotes) will try to replace them as 	 escape sequences.  backslash may appear in a filespec.  */
 name|strncpy
@@ -1938,11 +1943,22 @@ index|[
 literal|30
 index|]
 decl_stmt|;
-comment|/* Let the world know that we are in the middle of generating a      piece of stabs line debugging information.  */
-name|outputting_stabs_line_debug
-operator|=
+comment|/* Remember the last file/line and avoid duplicates. */
+specifier|static
+name|unsigned
+name|int
+name|prev_lineno
+init|=
+operator|-
 literal|1
-expr_stmt|;
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|prev_file
+init|=
+name|NULL
+decl_stmt|;
 comment|/* Rather than try to do this in some efficient fashion, we just      generate a string and then parse it again.  That lets us use the      existing stabs hook, which expect to see a string, rather than      inventing new ones.  */
 name|hold
 operator|=
@@ -1956,6 +1972,85 @@ argument_list|,
 operator|&
 name|lineno
 argument_list|)
+expr_stmt|;
+comment|/* Don't emit sequences of stabs for the same line. */
+if|if
+condition|(
+name|prev_file
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* First time thru. */
+name|prev_file
+operator|=
+name|xstrdup
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
+name|prev_lineno
+operator|=
+name|lineno
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|lineno
+operator|==
+name|prev_lineno
+operator|&&
+name|strcmp
+argument_list|(
+name|file
+argument_list|,
+name|prev_file
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Same file/line as last time. */
+return|return;
+block|}
+else|else
+block|{
+comment|/* Remember file/line for next time. */
+name|prev_lineno
+operator|=
+name|lineno
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|file
+argument_list|,
+name|prev_file
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|free
+argument_list|(
+name|prev_file
+argument_list|)
+expr_stmt|;
+name|prev_file
+operator|=
+name|xstrdup
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Let the world know that we are in the middle of generating a      piece of stabs line debugging information.  */
+name|outputting_stabs_line_debug
+operator|=
+literal|1
 expr_stmt|;
 name|generate_asm_file
 argument_list|(

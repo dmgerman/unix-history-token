@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dllwrap.c -- wrapper for DLLTOOL and GCC to generate PE style DLLs    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Mumit Khan (khan@xraylith.wisc.edu).     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* dllwrap.c -- wrapper for DLLTOOL and GCC to generate PE style DLLs    Copyright 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Mumit Khan (khan@xraylith.wisc.edu).     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -80,12 +80,6 @@ begin_include
 include|#
 directive|include
 file|"dyn-string.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -2147,7 +2141,7 @@ name|file
 argument_list|,
 name|_
 argument_list|(
-literal|"Usage %s<options><object-files>\n"
+literal|"Usage %s<option(s)><object-file(s)>\n"
 argument_list|)
 argument_list|,
 name|program_name
@@ -3168,6 +3162,53 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_LC_MESSAGES
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_MESSAGES
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|bindtextdomain
+argument_list|(
+name|PACKAGE
+argument_list|,
+name|LOCALEDIR
+argument_list|)
+expr_stmt|;
+name|textdomain
+argument_list|(
+name|PACKAGE
+argument_list|)
+expr_stmt|;
 name|saved_argv
 operator|=
 operator|(
@@ -3838,15 +3879,7 @@ name|warn
 argument_list|(
 name|_
 argument_list|(
-literal|"no export definition file provided"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|warn
-argument_list|(
-name|_
-argument_list|(
-literal|"creating one, but that may not be what you want"
+literal|"no export definition file provided.\n\ Creating one, but that may not be what you want"
 argument_list|)
 argument_list|)
 expr_stmt|;

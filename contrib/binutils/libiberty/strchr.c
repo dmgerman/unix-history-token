@@ -4,7 +4,7 @@ comment|/* Portable version of strchr()    This function is in the public domain
 end_comment
 
 begin_comment
-comment|/* NAME 	strchr -- return pointer to first occurance of a character  SYNOPSIS 	char *strchr (const char *s, int c)  DESCRIPTION 	Returns a pointer to the first occurance of character C in 	string S, or a NULL pointer if no occurance is found. 	 BUGS 	Behavior when character is the null character is implementation 	dependent. */
+comment|/*  @deftypefn Supplemental char* strchr (const char *@var{s}, int @var{c})  Returns a pointer to the first occurrence of the character @var{c} in the string @var{s}, or @code{NULL} if not found.  If @var{c} is itself the null character, the results are undefined.  @end deftypefn  */
 end_comment
 
 begin_include

@@ -431,6 +431,11 @@ comment|/* one of enum mach_attr */
 name|int
 name|num
 decl_stmt|;
+comment|/* parameter from mach->cpu */
+name|unsigned
+name|int
+name|insn_chunk_bitsize
+decl_stmt|;
 block|}
 name|CGEN_MACH
 typedef|;
@@ -1189,6 +1194,13 @@ name|CGEN_KEYWORD_ENTRY
 modifier|*
 name|null_entry
 decl_stmt|;
+comment|/* String containing non-alphanumeric characters used      in keywords.        At present, the highest number of entries used is 1.  */
+name|char
+name|nonalpha_chars
+index|[
+literal|8
+index|]
+decl_stmt|;
 block|}
 name|CGEN_KEYWORD
 typedef|;
@@ -1608,6 +1620,45 @@ value|CGEN_OPERAND_MAX
 end_define
 
 begin_comment
+comment|/* A tree of these structs represents the multi-ifield    structure of an operand's hw-index value, if it exists.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|cgen_ifld
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|cgen_maybe_multi_ifield
+block|{
+name|int
+name|count
+decl_stmt|;
+comment|/* 0: indexed by single cgen_ifld (possibly null: dead entry); 		n: indexed by array of more cgen_maybe_multi_ifields.  */
+union|union
+block|{
+name|struct
+name|cgen_maybe_multi_ifield
+modifier|*
+name|multi
+decl_stmt|;
+name|struct
+name|cgen_ifld
+modifier|*
+name|leaf
+decl_stmt|;
+block|}
+name|val
+union|;
+block|}
+name|CGEN_MAYBE_MULTI_IFLD
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* This struct defines each entry in the operand table.  */
 end_comment
 
@@ -1640,6 +1691,10 @@ comment|/* The number of bits in the operand.      This is just a hint, and may 
 name|unsigned
 name|char
 name|length
+decl_stmt|;
+comment|/* The (possibly-multi) ifield used as an index for this operand, if it      is indexed by a field at all. This substitutes / extends the start and      length fields above, but unsure at this time whether they are used      anywhere.  */
+name|CGEN_MAYBE_MULTI_IFLD
+name|index_fields
 decl_stmt|;
 if|#
 directive|if
@@ -1875,8 +1930,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CGEN_MAX_SYNTAX_BYTES
-value|40
+name|CGEN_MAX_SYNTAX_ELEMENTS
+value|48
 end_define
 
 begin_comment
@@ -1886,21 +1941,21 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CGEN_ACTUAL_MAX_SYNTAX_BYTES
+name|CGEN_ACTUAL_MAX_SYNTAX_ELEMENTS
 end_ifdef
 
 begin_if
 if|#
 directive|if
-name|CGEN_ACTUAL_MAX_SYNTAX_BYTES
+name|CGEN_ACTUAL_MAX_SYNTAX_ELEMENTS
 operator|>
-name|CGEN_MAX_SYNTAX_BYTES
+name|CGEN_MAX_SYNTAX_ELEMENTS
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"CGEN_ACTUAL_MAX_SYNTAX_BYTES too high - enlarge CGEN_MAX_SYNTAX_BYTES"
+literal|"CGEN_ACTUAL_MAX_SYNTAX_ELEMENTS too high - enlarge CGEN_MAX_SYNTAX_ELEMENTS"
 end_error
 
 begin_endif
@@ -1913,33 +1968,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_OPERANDS
-argument_list|)
-operator|||
-name|MAX_OPERANDS
-operator|<=
-literal|127
-end_if
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|CGEN_SYNTAX_CHAR_TYPE
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -1948,11 +1976,6 @@ name|CGEN_SYNTAX_CHAR_TYPE
 typedef|;
 end_typedef
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1960,7 +1983,7 @@ block|{
 name|CGEN_SYNTAX_CHAR_TYPE
 name|syntax
 index|[
-name|CGEN_MAX_SYNTAX_BYTES
+name|CGEN_MAX_SYNTAX_ELEMENTS
 index|]
 decl_stmt|;
 block|}
@@ -2638,6 +2661,22 @@ name|CGEN_OPINST
 modifier|*
 name|opinst
 decl_stmt|;
+comment|/* Regex to disambiguate overloaded opcodes */
+name|void
+modifier|*
+name|rx
+decl_stmt|;
+define|#
+directive|define
+name|CGEN_INSN_RX
+parameter_list|(
+name|insn
+parameter_list|)
+value|((insn)->rx)
+define|#
+directive|define
+name|CGEN_MAX_RX_ELEMENTS
+value|(CGEN_MAX_SYNTAX_ELEMENTS * 5)
 block|}
 struct|;
 end_struct
@@ -3116,6 +3155,11 @@ comment|/* ??? Or maybe maximum word size - might we ever need to allow a cpu ta
 name|unsigned
 name|int
 name|word_bitsize
+decl_stmt|;
+comment|/* Instruction chunk size (in bits), for purposes of endianness      conversion.  */
+name|unsigned
+name|int
+name|insn_chunk_bitsize
 decl_stmt|;
 comment|/* Indicator if sizes are unknown.      This is used by default_insn_bitsize,base_insn_bitsize if there is a      difference between the selected isa's.  */
 define|#
@@ -3869,6 +3913,28 @@ parameter_list|)
 function_decl|PARAMS
 parameter_list|(
 function_decl|(CGEN_CPU_DESC cd_
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* build the insn selection regex.    called by init_opcode_table */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|CGEN_SYM
+parameter_list|(
+name|build_insn_regex
+parameter_list|)
+function_decl|PARAMS
+parameter_list|(
+function_decl|(CGEN_INSN *insn_
 end_function_decl
 
 begin_empty_stmt

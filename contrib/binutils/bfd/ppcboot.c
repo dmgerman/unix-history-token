@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for PPCbug boot records.    Copyright 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Michael Meissner, Cygnus Support,<meissner@cygnus.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for PPCbug boot records.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Michael Meissner, Cygnus Support,<meissner@cygnus.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|"safe-ctype.h"
 end_include
 
 begin_include
@@ -361,21 +361,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|asymbol
-modifier|*
-name|ppcboot_make_empty_symbol
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|void
 name|ppcboot_get_symbol_info
 name|PARAMS
@@ -498,6 +483,15 @@ argument_list|(
 name|abfd
 argument_list|)
 condition|)
+block|{
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+name|ppcboot_data_t
+argument_list|)
+decl_stmt|;
 name|ppcboot_set_tdata
 argument_list|(
 name|abfd
@@ -506,13 +500,11 @@ name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ppcboot_data_t
-argument_list|)
+name|amt
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|true
 return|;
@@ -697,7 +689,7 @@ return|;
 block|}
 if|if
 condition|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 operator|(
 name|PTR
@@ -705,12 +697,13 @@ operator|)
 operator|&
 name|hdr
 argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 sizeof|sizeof
 argument_list|(
 name|hdr
 argument_list|)
-argument_list|,
-literal|1
 argument_list|,
 name|abfd
 argument_list|)
@@ -943,7 +936,7 @@ name|abfd
 argument_list|,
 name|bfd_arch_powerpc
 argument_list|,
-literal|0
+literal|0L
 argument_list|)
 expr_stmt|;
 return|return
@@ -1024,6 +1017,9 @@ name|abfd
 argument_list|,
 name|offset
 operator|+
+operator|(
+name|file_ptr
+operator|)
 sizeof|sizeof
 argument_list|(
 name|ppcboot_hdr_t
@@ -1034,11 +1030,9 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|location
-argument_list|,
-literal|1
 argument_list|,
 name|count
 argument_list|,
@@ -1118,7 +1112,7 @@ modifier|*
 name|suffix
 decl_stmt|;
 block|{
-name|int
+name|bfd_size_type
 name|size
 decl_stmt|;
 name|char
@@ -1201,12 +1195,8 @@ control|)
 if|if
 condition|(
 operator|!
-name|isalnum
+name|ISALNUM
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|p
 argument_list|)
@@ -1267,6 +1257,16 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+name|PPCBOOT_SYMS
+operator|*
+sizeof|sizeof
+argument_list|(
+name|asymbol
+argument_list|)
+decl_stmt|;
 name|syms
 operator|=
 operator|(
@@ -1277,12 +1277,7 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-name|PPCBOOT_SYMS
-operator|*
-sizeof|sizeof
-argument_list|(
-name|asymbol
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -1515,46 +1510,12 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
-begin_comment
-comment|/* Make an empty symbol.  */
-end_comment
-
-begin_function
-specifier|static
-name|asymbol
-modifier|*
+begin_define
+define|#
+directive|define
 name|ppcboot_make_empty_symbol
-parameter_list|(
-name|abfd
-parameter_list|)
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|asymbol
-operator|*
-operator|)
-name|bfd_alloc
-argument_list|(
-name|abfd
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|asymbol
-argument_list|)
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_escape
-end_escape
+value|_bfd_generic_make_empty_symbol
+end_define
 
 begin_define
 define|#
@@ -2404,6 +2365,13 @@ define|#
 directive|define
 name|ppcboot_bfd_gc_sections
 value|bfd_generic_gc_sections
+end_define
+
+begin_define
+define|#
+directive|define
+name|ppcboot_bfd_merge_sections
+value|bfd_generic_merge_sections
 end_define
 
 begin_define

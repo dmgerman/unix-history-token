@@ -44,11 +44,9 @@ comment|/* Object file address (as an octet offset).  */
 name|addressT
 name|fr_address
 decl_stmt|;
-comment|/* Chain forward; ascending address order.  Rooted in frch_root.  */
-name|struct
-name|frag
-modifier|*
-name|fr_next
+comment|/* When relaxing multiple times, remember the address the frag had      in the last relax pass.  */
+name|addressT
+name|last_fr_address
 decl_stmt|;
 comment|/* (Fixed) number of octets we know we have.  May be 0.  */
 name|offsetT
@@ -59,18 +57,33 @@ name|offsetT
 name|fr_var
 decl_stmt|;
 comment|/* For variable-length tail.  */
+name|offsetT
+name|fr_offset
+decl_stmt|;
+comment|/* For variable-length tail.  */
 name|symbolS
 modifier|*
 name|fr_symbol
-decl_stmt|;
-comment|/* For variable-length tail.  */
-name|offsetT
-name|fr_offset
 decl_stmt|;
 comment|/* Points to opcode low addr byte, for relaxation.  */
 name|char
 modifier|*
 name|fr_opcode
+decl_stmt|;
+comment|/* Chain forward; ascending address order.  Rooted in frch_root.  */
+name|struct
+name|frag
+modifier|*
+name|fr_next
+decl_stmt|;
+comment|/* Where the frag was created, or where it became a variant frag.  */
+name|char
+modifier|*
+name|fr_file
+decl_stmt|;
+name|unsigned
+name|int
+name|fr_line
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -130,15 +143,6 @@ name|tc_frag_data
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* Where the frag was created, or where it became a variant frag.  */
-name|char
-modifier|*
-name|fr_file
-decl_stmt|;
-name|unsigned
-name|int
-name|fr_line
-decl_stmt|;
 comment|/* Data begins here.  */
 name|char
 name|fr_literal

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* read.c - read a source file -    Copyright 1986, 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997,    1998, 1999, 2000 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* read.c - read a source file -    Copyright 1986, 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997,    1998, 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -52,20 +52,16 @@ begin_comment
 comment|/* Routines that read assembler source text to build spagetti in memory.    Another group of these functions is in the expr.c module.  */
 end_comment
 
-begin_comment
-comment|/* For isdigit ().  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|"as.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"as.h"
+file|"safe-ctype.h"
 end_include
 
 begin_include
@@ -2485,6 +2481,14 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+literal|"endr"
+block|,
+name|s_bad_endr
+block|,
+literal|0
+block|}
+block|,
 comment|/* endef  */
 block|{
 literal|"equ"
@@ -2747,6 +2751,14 @@ block|,
 name|s_ifdef
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"incbin"
+block|,
+name|s_incbin
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4375,22 +4387,10 @@ operator|*
 name|s2
 condition|)
 block|{
-if|if
-condition|(
-name|isupper
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|s2
-argument_list|)
-condition|)
 operator|*
 name|s2
 operator|=
-name|tolower
+name|TOLOWER
 argument_list|(
 operator|*
 name|s2
@@ -4636,7 +4636,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Unknown pseudo-op:  `%s'"
+literal|"unknown pseudo-op: `%s'"
 argument_list|)
 argument_list|,
 name|s
@@ -4997,12 +4997,8 @@ operator|||
 name|LOCAL_LABELS_FB
 operator|)
 operator|&&
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|c
 argument_list|)
 condition|)
@@ -5026,12 +5022,8 @@ expr_stmt|;
 comment|/* Read the whole number.  */
 while|while
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|input_line_pointer
 argument_list|)
@@ -5516,7 +5508,6 @@ condition|)
 continue|continue;
 endif|#
 directive|endif
-comment|/* as_warn (_("Junk character %d."),c); Now done by ignore_rest.  */
 name|input_line_pointer
 operator|--
 expr_stmt|;
@@ -5845,6 +5836,54 @@ name|int
 name|max
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|now_seg
+operator|==
+name|absolute_section
+condition|)
+block|{
+if|if
+condition|(
+name|fill
+operator|!=
+name|NULL
+condition|)
+while|while
+condition|(
+name|len
+operator|--
+operator|>
+literal|0
+condition|)
+if|if
+condition|(
+operator|*
+name|fill
+operator|++
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|"ignoring fill value in absolute section"
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|fill
+operator|=
+name|NULL
+expr_stmt|;
+name|len
+operator|=
+literal|0
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|md_do_align
@@ -6102,7 +6141,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Alignment not a power of 2"
+literal|"alignment not a power of 2"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6123,11 +6162,11 @@ name|align
 operator|=
 literal|15
 expr_stmt|;
-name|as_bad
+name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Alignment too large: %u assumed"
+literal|"alignment too large: %u assumed"
 argument_list|)
 argument_list|,
 name|align
@@ -6470,6 +6509,26 @@ name|p
 operator|=
 name|c
 expr_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+name|p
+condition|)
+block|{
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"expected symbol name"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|discard_rest_of_line
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
@@ -6481,13 +6540,25 @@ operator|!=
 literal|','
 condition|)
 block|{
+operator|*
+name|p
+operator|=
+literal|0
+expr_stmt|;
 name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Expected comma after symbol-name: rest of line ignored."
+literal|"expected comma after \"%s\""
 argument_list|)
+argument_list|,
+name|name
 argument_list|)
+expr_stmt|;
+operator|*
+name|p
+operator|=
+name|c
 expr_stmt|;
 name|ignore_rest_of_line
 argument_list|()
@@ -6525,7 +6596,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|".COMMon length (%ld.)<0! Ignored."
+literal|".COMMon length (%ld)< 0 ignored"
 argument_list|)
 argument_list|,
 operator|(
@@ -6585,7 +6656,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Ignoring attempt to re-define symbol `%s'."
+literal|"symbol `%s' is already defined"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -6634,7 +6705,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Length of .comm \"%s\" is already %ld. Not changed to %ld."
+literal|"length of .comm \"%s\" is already %ld; not changing to %ld"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -6808,12 +6879,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|name
 argument_list|)
@@ -6833,12 +6900,8 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|input_line_pointer
 argument_list|)
@@ -6969,7 +7032,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"attempt to re-define symbol `%s'"
+literal|"symbol `%s' is already defined"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -7338,7 +7401,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Line numbers must be positive; line number %d rejected."
+literal|"line numbers must be positive; line number %d rejected"
 argument_list|)
 argument_list|,
 name|l
@@ -7655,7 +7718,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|".fill size clamped to %d."
+literal|".fill size clamped to %d"
 argument_list|)
 argument_list|,
 name|BSD_FILL_SIZE_CROCK_8
@@ -7677,7 +7740,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Size negative: .fill ignored."
+literal|"size negative; .fill ignored"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7714,7 +7777,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Repeat< 0, .fill ignored"
+literal|"repeat< 0; .fill ignored"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7905,7 +7968,7 @@ operator|)
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* The magic number BSD_FILL_SIZE_CROCK_4 is from BSD 4.2 VAX          flavoured AS.  The following bizzare behaviour is to be          compatible with above.  I guess they tried to take up to 8          bytes from a 4-byte expression and they forgot to sign          extend. Un*x Sux.  */
+comment|/* The magic number BSD_FILL_SIZE_CROCK_4 is from BSD 4.2 VAX          flavoured AS.  The following bizarre behaviour is to be          compatible with above.  I guess they tried to take up to 8          bytes from a 4-byte expression and they forgot to sign          extend.  */
 define|#
 directive|define
 name|BSD_FILL_SIZE_CROCK_4
@@ -8035,10 +8098,15 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|is_end_of_line
+index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|input_line_pointer
-operator|==
-literal|'\n'
+index|]
 condition|)
 name|c
 operator|=
@@ -8581,6 +8649,26 @@ name|p
 operator|=
 name|c
 expr_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+name|p
+condition|)
+block|{
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"expected symbol name"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|discard_rest_of_line
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
@@ -8602,17 +8690,22 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|is_end_of_line
+index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|input_line_pointer
-operator|==
-literal|'\n'
+index|]
 condition|)
 block|{
 name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Missing size expression"
+literal|"missing size expression"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8634,7 +8727,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"BSS length (%d.)<0! Ignored."
+literal|"BSS length (%d)< 0 ignored"
 argument_list|)
 argument_list|,
 name|temp
@@ -8670,6 +8763,9 @@ block|{
 comment|/* For MIPS and Alpha ECOFF or ELF, small objects are put in .sbss.  */
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|temp
 operator|<=
 name|bfd_get_gp_size
@@ -8781,7 +8877,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Expected comma after size"
+literal|"expected comma after size"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8798,17 +8894,22 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|is_end_of_line
+index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|input_line_pointer
-operator|==
-literal|'\n'
+index|]
 condition|)
 block|{
 name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Missing alignment"
+literal|"missing alignment"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8868,7 +8969,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Alignment not a power of 2"
+literal|"alignment not a power of 2"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8893,7 +8994,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Alignment too large: %d. assumed."
+literal|"alignment too large; %d assumed"
 argument_list|)
 argument_list|,
 name|align
@@ -8916,7 +9017,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Alignment negative. 0 assumed."
+literal|"alignment negative; 0 assumed"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9226,7 +9327,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Ignoring attempt to re-define symbol `%s'."
+literal|"symbol `%s' is already defined"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -9340,6 +9441,26 @@ name|p
 operator|=
 name|c
 expr_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+name|p
+condition|)
+block|{
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"expected symbol name"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|discard_rest_of_line
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
@@ -9360,7 +9481,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Expected comma after name \"%s\""
+literal|"expected comma after \"%s\""
 argument_list|)
 argument_list|,
 name|name
@@ -9480,7 +9601,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Symbol %s already defined"
+literal|"symbol `%s' is already defined"
 argument_list|)
 argument_list|,
 name|name
@@ -10117,17 +10238,12 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"invalid segment \"%s\"; segment \"%s\" assumed"
+literal|"invalid segment \"%s\""
 argument_list|)
 argument_list|,
 name|segment_name
 argument_list|(
 name|segment
-argument_list|)
-argument_list|,
-name|segment_name
-argument_list|(
-name|now_seg
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10409,12 +10525,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|name
 argument_list|)
@@ -10434,12 +10546,8 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|input_line_pointer
 argument_list|)
@@ -10525,12 +10633,8 @@ name|input_line_pointer
 expr_stmt|;
 name|c
 operator|=
-name|toupper
+name|TOUPPER
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|c
 argument_list|)
 expr_stmt|;
@@ -11122,6 +11226,35 @@ end_comment
 
 begin_function
 name|void
+name|s_bad_endr
+parameter_list|(
+name|ignore
+parameter_list|)
+name|int
+name|ignore
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|".endr encountered without preceeding .rept, .irc, or .irp"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|demand_empty_rest_of_line
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Handle the .rept pseudo-op.  */
+end_comment
+
+begin_function
+name|void
 name|s_rept
 parameter_list|(
 name|ignore
@@ -11365,6 +11498,26 @@ name|end_name
 operator|=
 name|delim
 expr_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+name|end_name
+condition|)
+block|{
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"expected symbol name"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|discard_rest_of_line
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
@@ -11385,7 +11538,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Expected comma after name \"%s\""
+literal|"expected comma after \"%s\""
 argument_list|)
 argument_list|,
 name|name
@@ -11626,7 +11779,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"symbol `%s' already defined"
+literal|"symbol `%s' is already defined"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -11958,7 +12111,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Unsupported variable size or fill value"
+literal|"unsupported variable size or fill value"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -12395,12 +12548,8 @@ index|]
 operator|==
 literal|'0'
 operator|&&
-name|isalpha
+name|ISALPHA
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|input_line_pointer
 index|[
 literal|1
@@ -12496,7 +12645,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Bad floating literal: %s"
+literal|"bad floating literal: %s"
 argument_list|)
 argument_list|,
 name|err
@@ -12736,21 +12885,17 @@ condition|)
 block|{
 if|if
 condition|(
-name|isprint
+name|ISPRINT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|input_line_pointer
 argument_list|)
 condition|)
-name|as_bad
+name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Rest of line ignored. First ignored character is `%c'."
+literal|"rest of line ignored; first ignored character is `%c'"
 argument_list|)
 argument_list|,
 operator|*
@@ -12758,11 +12903,11 @@ name|input_line_pointer
 argument_list|)
 expr_stmt|;
 else|else
-name|as_bad
+name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Rest of line ignored. First ignored character valued 0x%x."
+literal|"rest of line ignored; first ignored character valued 0x%x"
 argument_list|)
 argument_list|,
 operator|*
@@ -12960,7 +13105,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"illegal expression; zero assumed"
+literal|"illegal expression"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -12977,7 +13122,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"missing expression; zero assumed"
+literal|"missing expression"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13003,7 +13148,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"bignum invalid; zero assumed"
+literal|"bignum invalid"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13012,7 +13157,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"floating point number invalid; zero assumed"
+literal|"floating point number invalid"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13264,7 +13409,7 @@ argument_list|)
 condition|)
 name|as_bad
 argument_list|(
-literal|"invalid attempt to set value of section symbol"
+literal|"attempt to set value of section symbol"
 argument_list|)
 expr_stmt|;
 else|else
@@ -14327,7 +14472,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"floating point number invalid; zero assumed"
+literal|"floating point number invalid"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -14755,7 +14900,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Value 0x%lx truncated to 0x%lx."
+literal|"value 0x%lx truncated to 0x%lx"
 argument_list|)
 argument_list|,
 operator|(
@@ -14830,7 +14975,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Bignum truncated to %d bytes"
+literal|"bignum truncated to %d bytes"
 argument_list|)
 argument_list|,
 name|nbytes
@@ -14882,8 +15027,8 @@ expr_stmt|;
 while|while
 condition|(
 name|size
-operator|>
-literal|0
+operator|>=
+name|CHARS_PER_LITTLENUM
 condition|)
 block|{
 operator|--
@@ -14921,8 +15066,8 @@ expr_stmt|;
 while|while
 condition|(
 name|size
-operator|>
-literal|0
+operator|>=
+name|CHARS_PER_LITTLENUM
 condition|)
 block|{
 name|md_number_to_chars
@@ -14957,8 +15102,8 @@ block|}
 while|while
 condition|(
 name|nbytes
-operator|>
-literal|0
+operator|>=
+name|CHARS_PER_LITTLENUM
 condition|)
 block|{
 name|md_number_to_chars
@@ -15888,7 +16033,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Unresolvable or nonpositive repeat count; using 1"
+literal|"unresolvable or nonpositive repeat count; using 1"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -16027,7 +16172,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Unknown floating type type '%c'"
+literal|"unknown floating type type '%c'"
 argument_list|)
 argument_list|,
 name|float_type
@@ -16085,7 +16230,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Floating point constant too large"
+literal|"floating point constant too large"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -16281,12 +16426,8 @@ index|]
 operator|==
 literal|'0'
 operator|&&
-name|isalpha
+name|ISALPHA
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|input_line_pointer
 index|[
 literal|1
@@ -16370,7 +16511,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Bad floating literal: %s"
+literal|"bad floating literal: %s"
 argument_list|)
 argument_list|,
 name|err
@@ -17455,7 +17596,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"floating point number invalid; zero assumed"
+literal|"floating point number invalid"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -17942,7 +18083,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Expected<nn>"
+literal|"expected<nn>"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -18024,7 +18165,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Unterminated string: Newline inserted."
+literal|"unterminated string; newline inserted"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -18150,7 +18291,7 @@ name|number
 operator|=
 literal|0
 init|;
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|c
 argument_list|)
@@ -18213,7 +18354,7 @@ operator|++
 expr_stmt|;
 while|while
 condition|(
-name|isxdigit
+name|ISXDIGIT
 argument_list|(
 name|c
 argument_list|)
@@ -18221,7 +18362,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|c
 argument_list|)
@@ -18239,7 +18380,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|isupper
+name|ISUPPER
 argument_list|(
 name|c
 argument_list|)
@@ -18295,7 +18436,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Unterminated string: Newline inserted."
+literal|"unterminated string; newline inserted"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -18315,7 +18456,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Bad escaped character in string, '?' assumed"
+literal|"bad escaped character in string"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -18395,7 +18536,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"expected address expression; zero assumed"
+literal|"expected address expression"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -18567,7 +18708,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"bad or irreducible absolute expression; zero assumed"
+literal|"bad or irreducible absolute expression"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -18701,7 +18842,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"This string may not contain \'\\0\'"
+literal|"this string may not contain \'\\0\'"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -18812,7 +18953,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Missing string"
+literal|"missing string"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -19045,7 +19186,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"symbol `%s' already defined"
+literal|"symbol `%s' is already defined"
 argument_list|)
 argument_list|,
 name|S_GET_NAME
@@ -19093,6 +19234,431 @@ name|stopc
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* .incbin -- include a file verbatim at the current location.  */
+end_comment
+
+begin_function
+name|void
+name|s_incbin
+parameter_list|(
+name|x
+parameter_list|)
+name|int
+name|x
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+name|FILE
+modifier|*
+name|binfile
+decl_stmt|;
+name|char
+modifier|*
+name|path
+decl_stmt|;
+name|char
+modifier|*
+name|filename
+decl_stmt|;
+name|char
+modifier|*
+name|binfrag
+decl_stmt|;
+name|long
+name|skip
+init|=
+literal|0
+decl_stmt|;
+name|long
+name|count
+init|=
+literal|0
+decl_stmt|;
+name|long
+name|bytes
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|md_flush_pending_output
+name|md_flush_pending_output
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
+name|filename
+operator|=
+name|demand_copy_string
+argument_list|(
+operator|&
+name|len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|filename
+operator|==
+name|NULL
+condition|)
+return|return;
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
+comment|/* Look for optional skip and count.  */
+if|if
+condition|(
+operator|*
+name|input_line_pointer
+operator|==
+literal|','
+condition|)
+block|{
+operator|++
+name|input_line_pointer
+expr_stmt|;
+name|skip
+operator|=
+name|get_absolute_expression
+argument_list|()
+expr_stmt|;
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|input_line_pointer
+operator|==
+literal|','
+condition|)
+block|{
+operator|++
+name|input_line_pointer
+expr_stmt|;
+name|count
+operator|=
+name|get_absolute_expression
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|count
+operator|==
+literal|0
+condition|)
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|".incbin count zero, ignoring `%s'"
+argument_list|)
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+name|demand_empty_rest_of_line
+argument_list|()
+expr_stmt|;
+comment|/* Try opening absolute path first, then try include dirs.  */
+name|binfile
+operator|=
+name|fopen
+argument_list|(
+name|filename
+argument_list|,
+name|FOPEN_RB
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|binfile
+operator|==
+name|NULL
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|path
+operator|=
+name|xmalloc
+argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|)
+name|len
+operator|+
+name|include_dir_maxlen
+operator|+
+literal|5
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|include_dir_count
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sprintf
+argument_list|(
+name|path
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|include_dirs
+index|[
+name|i
+index|]
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|binfile
+operator|=
+name|fopen
+argument_list|(
+name|path
+argument_list|,
+name|FOPEN_RB
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|binfile
+operator|!=
+name|NULL
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|binfile
+operator|==
+name|NULL
+condition|)
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"file not found: %s"
+argument_list|)
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|path
+operator|=
+name|xstrdup
+argument_list|(
+name|filename
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|binfile
+condition|)
+block|{
+name|long
+name|file_len
+decl_stmt|;
+name|register_dependency
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+comment|/* Compute the length of the file.  */
+if|if
+condition|(
+name|fseek
+argument_list|(
+name|binfile
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_END
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"seek to end of .incbin file failed `%s'"
+argument_list|)
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+name|file_len
+operator|=
+name|ftell
+argument_list|(
+name|binfile
+argument_list|)
+expr_stmt|;
+comment|/* If a count was not specified use the size of the file.  */
+if|if
+condition|(
+name|count
+operator|==
+literal|0
+condition|)
+name|count
+operator|=
+name|file_len
+expr_stmt|;
+if|if
+condition|(
+name|skip
+operator|+
+name|count
+operator|>
+name|file_len
+condition|)
+block|{
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"skip (%ld) + count (%ld) larger than file size (%ld)"
+argument_list|)
+argument_list|,
+name|skip
+argument_list|,
+name|count
+argument_list|,
+name|file_len
+argument_list|)
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+if|if
+condition|(
+name|fseek
+argument_list|(
+name|binfile
+argument_list|,
+name|skip
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"could not skip to %ld in file `%s'"
+argument_list|)
+argument_list|,
+name|skip
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+comment|/* Allocate frag space and store file contents in it.  */
+name|binfrag
+operator|=
+name|frag_more
+argument_list|(
+name|count
+argument_list|)
+expr_stmt|;
+name|bytes
+operator|=
+name|fread
+argument_list|(
+name|binfrag
+argument_list|,
+literal|1
+argument_list|,
+name|count
+argument_list|,
+name|binfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bytes
+operator|<
+name|count
+condition|)
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|"truncated file `%s', %ld of %ld bytes read"
+argument_list|)
+argument_list|,
+name|path
+argument_list|,
+name|bytes
+argument_list|,
+name|count
+argument_list|)
+expr_stmt|;
+block|}
+name|done
+label|:
+if|if
+condition|(
+name|binfile
+operator|!=
+name|NULL
+condition|)
+name|fclose
+argument_list|(
+name|binfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|path
+condition|)
+name|free
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -19301,7 +19867,7 @@ name|fopen
 argument_list|(
 name|path
 argument_list|,
-literal|"r"
+name|FOPEN_RT
 argument_list|)
 operator|)
 condition|)
