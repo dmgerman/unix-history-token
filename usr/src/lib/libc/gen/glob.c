@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	8.2 (Berkeley) %G%"
+literal|"@(#)glob.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2148,15 +2148,9 @@ name|pglob
 operator|->
 name|gl_flags
 operator|&
-operator|(
 name|GLOB_NOMAGIC
-operator||
-name|GLOB_BRACE
-operator||
-name|GLOB_TILDE
 operator|)
-operator|)
-operator|||
+operator|&&
 operator|!
 operator|(
 name|pglob
