@@ -202,10 +202,6 @@ name|sarea
 decl_stmt|;
 name|drm_local_map_t
 modifier|*
-name|fb
-decl_stmt|;
-name|drm_local_map_t
-modifier|*
 name|mmio
 decl_stmt|;
 name|drm_local_map_t

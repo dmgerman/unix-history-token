@@ -842,11 +842,10 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|map
 operator|->
 name|mtrr
-operator|<=
-literal|0
 condition|)
 name|yesno
 operator|=

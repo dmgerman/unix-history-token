@@ -998,7 +998,7 @@ name|long
 name|base
 decl_stmt|;
 name|int
-name|agp_mtrr
+name|mtrr
 decl_stmt|;
 name|int
 name|cant_use_aperture
@@ -1074,7 +1074,7 @@ comment|/* Kernel-space: kernel-virtual address    */
 name|int
 name|mtrr
 decl_stmt|;
-comment|/* MTRR slot used			    */
+comment|/* Boolean: MTRR used */
 comment|/* Private data			    */
 name|bus_space_tag_t
 name|iot
