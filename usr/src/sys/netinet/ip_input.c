@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	6.7	84/11/15	*/
+comment|/*	ip_input.c	6.8	84/12/20	*/
 end_comment
 
 begin_include
@@ -212,7 +212,7 @@ operator|.
 name|dom_protosw
 init|;
 name|pr
-operator|<=
+operator|<
 name|inetdomain
 operator|.
 name|dom_protoswNPROTOSW
@@ -2141,8 +2141,14 @@ condition|(
 name|optlen
 operator|<=
 literal|0
+operator|||
+name|optlen
+operator|>=
+name|cnt
 condition|)
-break|break;
+goto|goto
+name|bad
+goto|;
 block|}
 switch|switch
 condition|(
