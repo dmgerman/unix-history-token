@@ -961,6 +961,13 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|maxsockets
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|u_long
 name|sb_max
 decl_stmt|;
