@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)value.h	3.1 83/11/22  */
+comment|/*  *	@(#)value.h	3.2 83/12/06  */
 end_comment
 
 begin_struct
@@ -10,11 +10,6 @@ block|{
 name|char
 name|v_type
 decl_stmt|;
-name|struct
-name|value
-modifier|*
-name|v_link
-decl_stmt|;
 union|union
 block|{
 name|int
@@ -23,9 +18,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|V_str
-decl_stmt|;
-name|int
-name|V_tok
 decl_stmt|;
 block|}
 name|v_un
@@ -51,13 +43,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|v_tok
-value|v_un.V_tok
-end_define
-
-begin_define
-define|#
-directive|define
 name|V_NUM
 value|1
 end_define
@@ -72,15 +57,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_TOK
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
 name|V_ERR
-value|4
+value|3
 end_define
 
 end_unit
