@@ -316,6 +316,16 @@ init|=
 literal|0x2100000
 block|,
 comment|/* CPU resource(s)*/
+name|SI_SUB_MAC
+init|=
+literal|0x2180000
+block|,
+comment|/* TrustedBSD MAC subsystem */
+name|SI_SUB_MAC_POLICY
+init|=
+literal|0x21C0000
+block|,
+comment|/* TrustedBSD MAC policies */
 name|SI_SUB_INTRINSIC
 init|=
 literal|0x2200000
