@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.54 (Berkeley) %G%"
+literal|"@(#)conf.c	6.55 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2953,12 +2953,23 @@ directive|include
 file|<sys/exec.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PS_STRINGS
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|SETPROC_STATIC
 value|static
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
