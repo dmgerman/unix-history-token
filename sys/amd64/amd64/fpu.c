@@ -255,6 +255,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ldmxcsr
+parameter_list|(
+name|r
+parameter_list|)
+value|__asm __volatile("ldmxcsr %0" : : "m" (r))
+end_define
+
+begin_define
+define|#
+directive|define
 name|start_emulating
 parameter_list|()
 value|__asm("smsw %%ax; orb %0,%%al; lmsw %%ax" \ 				      : : "n" (CR0_TS) : "ax")
@@ -457,6 +467,9 @@ block|{
 name|register_t
 name|savecrit
 decl_stmt|;
+name|u_int
+name|mxcsr
+decl_stmt|;
 name|u_short
 name|control
 decl_stmt|;
@@ -486,6 +499,15 @@ name|fldcw
 argument_list|(
 operator|&
 name|control
+argument_list|)
+expr_stmt|;
+name|mxcsr
+operator|=
+name|__INITIAL_MXCSR__
+expr_stmt|;
+name|ldmxcsr
+argument_list|(
+name|mxcsr
 argument_list|)
 expr_stmt|;
 name|fxsave
