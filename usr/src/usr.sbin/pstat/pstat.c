@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pstat.c	4.7 (Berkeley) %G%"
+literal|"@(#)pstat.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1273,6 +1273,14 @@ argument_list|(
 name|word
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kflg
+condition|)
+name|word
+operator|&=
+literal|0x7fffffff
 expr_stmt|;
 return|return
 operator|(
