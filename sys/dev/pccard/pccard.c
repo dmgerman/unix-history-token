@@ -6030,7 +6030,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"Only one interrupt handler per function allowed\n"
+literal|"Only one interrupt handler per function allowed"
 argument_list|)
 expr_stmt|;
 name|err
