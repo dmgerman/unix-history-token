@@ -229,6 +229,12 @@ name|USB_PRODUCT_DLINK_DUBE100
 block|}
 block|,
 block|{
+name|USB_VENDOR_JVC
+block|,
+name|USB_PRODUCT_JVC_MP_PRX1
+block|}
+block|,
+block|{
 name|USB_VENDOR_LINKSYS2
 block|,
 name|USB_PRODUCT_LINKSYS2_USB200M
