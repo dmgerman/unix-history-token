@@ -1065,6 +1065,12 @@ name|offset
 expr_stmt|;
 name|bp
 operator|->
+name|b_iooffset
+operator|=
+name|offset
+expr_stmt|;
+name|bp
+operator|->
 name|b_saveaddr
 operator|=
 name|bp
