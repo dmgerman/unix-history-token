@@ -45,13 +45,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/mman.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mman.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include

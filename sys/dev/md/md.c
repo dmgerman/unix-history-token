@@ -92,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/mdioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mdioctl.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
