@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.23 1997/07/29 22:37:04 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.24 1997/08/19 01:10:20 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
 end_comment
 
 begin_include
@@ -342,6 +342,22 @@ name|NULL
 block|,
 name|NULL
 block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+name|LogIPCP
 block|,
 name|IpcpLayerUp
 block|,
@@ -860,7 +876,7 @@ name|s_addr
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"Using trigger address %s\n"
 argument_list|,
@@ -983,7 +999,7 @@ name|ReqBuff
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"IpcpSendConfigReq\n"
 argument_list|)
@@ -1132,7 +1148,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"IpcpSendTerminateAck\n"
 argument_list|)
@@ -1171,7 +1187,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"IpcpLayerStart.\n"
 argument_list|)
@@ -1194,7 +1210,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"IpcpLayerFinish.\n"
 argument_list|)
@@ -1230,7 +1246,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"IpcpLayerDown.\n"
 argument_list|)
@@ -1272,7 +1288,7 @@ argument_list|()
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"IpcpLayerUp(%d).\n"
 argument_list|,
@@ -1304,10 +1320,10 @@ name|LogPrintf
 argument_list|(
 name|LogIsKept
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|)
 condition|?
-name|LogLCP
+name|LogIPCP
 else|:
 name|LogLINK
 argument_list|,
@@ -1392,7 +1408,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"IPCP Up event!!\n"
 argument_list|)
@@ -1718,7 +1734,7 @@ name|lp
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"%s %s\n"
 argument_list|,
@@ -1840,7 +1856,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"%s --> %s\n"
 argument_list|,
@@ -1901,7 +1917,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"%s %08x\n"
 argument_list|,
@@ -2180,7 +2196,7 @@ name|MODE_NAK
 case|:
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"%s changing compproto: %08x --> %08x\n"
 argument_list|,
@@ -2260,7 +2276,7 @@ name|lp
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"%s %s, "
 argument_list|,
@@ -2274,7 +2290,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"%s\n"
 argument_list|,
@@ -2323,7 +2339,7 @@ name|MODE_NAK
 case|:
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"%s changing address: %s "
 argument_list|,
@@ -2339,7 +2355,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"--> %s\n"
 argument_list|,
@@ -2400,7 +2416,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"MS NS req - rejected - msext disabled\n"
 argument_list|)
@@ -2502,7 +2518,7 @@ expr_stmt|;
 comment|/* copy first two (type/length) */
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"MS NS req %d:%s->%s - nak\n"
 argument_list|,
@@ -2540,7 +2556,7 @@ block|}
 comment|/* 	   Otherwise they have it right (this time) so we send 	   a ack packet back confirming it... end of story 	  */
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"MS NS req %d:%s ok - ack\n"
 argument_list|,
@@ -2572,7 +2588,7 @@ case|:
 comment|/* what does this mean?? */
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"MS NS req %d - NAK??\n"
 argument_list|,
@@ -2586,7 +2602,7 @@ case|:
 comment|/* confused?? me to :) */
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"MS NS req %d - REJ??\n"
 argument_list|,
@@ -2614,7 +2630,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"MS NBNS req - rejected - msext disabled\n"
 argument_list|)
@@ -2728,7 +2744,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"MS NBNS req %d:%s->%s - nak\n"
 argument_list|,
@@ -2753,7 +2769,7 @@ break|break;
 block|}
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"MS NBNS req %d:%s ok - ack\n"
 argument_list|,
@@ -2784,7 +2800,7 @@ name|MODE_NAK
 case|:
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"MS NBNS req %d - NAK??\n"
 argument_list|,
@@ -2797,7 +2813,7 @@ name|MODE_REJ
 case|:
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogIPCP
 argument_list|,
 literal|"MS NBNS req %d - REJ??\n"
 argument_list|,
