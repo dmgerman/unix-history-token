@@ -278,7 +278,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 define|#
 directive|define
 name|X_ISA_BIO
@@ -289,7 +289,7 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* __386BSD__ */
+comment|/* __FreeBSD__ */
 block|{
 name|NULL
 block|}
