@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pl_7.c	5.1 (Berkeley) %G%"
+literal|"@(#)pl_7.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -798,8 +798,10 @@ name|ship
 operator|!=
 literal|0
 condition|)
-name|p
-operator|=
+block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -821,6 +823,11 @@ name|ship
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|p
+operator|=
+name|buf
+expr_stmt|;
+block|}
 name|sc_prompt
 operator|=
 name|p
