@@ -1512,6 +1512,18 @@ operator|*
 argument_list|)
 expr_stmt|;
 comment|/* Run packet through filter */
+if|if
+condition|(
+name|totlen
+operator|==
+literal|0
+condition|)
+name|len
+operator|=
+literal|0
+expr_stmt|;
+comment|/* don't call bpf_filter() with totlen == 0! */
+else|else
 name|len
 operator|=
 name|bpf_filter
