@@ -4216,7 +4216,7 @@ comment|/* set master volume to max */
 name|DDB
 argument_list|(
 argument|printf(
-literal|"set yamaha master volume to max"
+literal|"set yamaha master volume to max\n"
 argument|);
 argument_list|)
 name|outb
