@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	5.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	5.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -987,6 +987,17 @@ begin_comment
 comment|/* AUTHENTICATION: client version of IS */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TELQUAL_NAME
+value|3
+end_define
+
+begin_comment
+comment|/* AUTHENTICATION: client version of IS */
+end_comment
+
 begin_comment
 comment|/*  * LINEMODE suboptions  */
 end_comment
@@ -1661,8 +1672,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ENCRYPT_CNT
+name|ENCRYPT_ENC_KEYID
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENCRYPT_DEC_KEYID
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENCRYPT_CNT
+value|9
 end_define
 
 begin_define
@@ -1675,15 +1700,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|ENCTYPE_KRBDES
+name|ENCTYPE_DES_CFB64
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ENCTYPE_CNT
+name|ENCTYPE_DES_OFB64
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENCTYPE_CNT
+value|3
 end_define
 
 begin_ifdef
@@ -1713,6 +1745,10 @@ literal|"REQUEST-START"
 block|,
 literal|"REQUEST-END"
 block|,
+literal|"ENC-KEYID"
+block|,
+literal|"DEC-KEYID"
+block|,
 literal|0
 block|, }
 decl_stmt|;
@@ -1727,7 +1763,9 @@ init|=
 block|{
 literal|"ANY"
 block|,
-literal|"KRBDES"
+literal|"DES_CFB64"
+block|,
+literal|"DES_OFB64"
 block|,
 literal|0
 block|, }
