@@ -931,6 +931,13 @@ name|vnode
 modifier|*
 name|vnp
 decl_stmt|;
+if|if
+condition|(
+name|pfs_vncache
+operator|==
+name|NULL
+condition|)
+return|return;
 name|mtx_lock
 argument_list|(
 operator|&
