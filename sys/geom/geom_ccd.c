@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.42 1999/03/10 00:41:27 mjacob Exp $ */
+comment|/* $Id: ccd.c,v 1.43 1999/03/11 18:50:39 dg Exp $ */
 end_comment
 
 begin_comment
@@ -122,28 +122,6 @@ include|#
 directive|include
 file|<sys/devicestat.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|KERNEL
-end_undef
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/disk.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
 
 begin_include
 include|#
@@ -2823,9 +2801,7 @@ operator|=
 operator|&
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_label
+name|sc_label
 expr_stmt|;
 name|part
 operator|=
@@ -2856,9 +2832,7 @@ operator|&&
 operator|(
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_openmask
+name|sc_openmask
 operator|==
 literal|0
 operator|)
@@ -2918,9 +2892,7 @@ name|S_IFCHR
 case|:
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_copenmask
+name|sc_copenmask
 operator||=
 name|pmask
 expr_stmt|;
@@ -2930,9 +2902,7 @@ name|S_IFBLK
 case|:
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_bopenmask
+name|sc_bopenmask
 operator||=
 name|pmask
 expr_stmt|;
@@ -2940,21 +2910,15 @@ break|break;
 block|}
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_openmask
+name|sc_openmask
 operator|=
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_copenmask
+name|sc_copenmask
 operator||
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_bopenmask
+name|sc_bopenmask
 expr_stmt|;
 name|done
 label|:
@@ -3097,9 +3061,7 @@ name|S_IFCHR
 case|:
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_copenmask
+name|sc_copenmask
 operator|&=
 operator|~
 operator|(
@@ -3114,9 +3076,7 @@ name|S_IFBLK
 case|:
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_bopenmask
+name|sc_bopenmask
 operator|&=
 operator|~
 operator|(
@@ -3129,21 +3089,15 @@ break|break;
 block|}
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_openmask
+name|sc_openmask
 operator|=
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_copenmask
+name|sc_copenmask
 operator||
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_bopenmask
+name|sc_bopenmask
 expr_stmt|;
 name|ccdunlock
 argument_list|(
@@ -3349,9 +3303,7 @@ operator|=
 operator|&
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_label
+name|sc_label
 expr_stmt|;
 comment|/* 	 * Do bounds checking and adjust transfer.  If there's an 	 * error, the bounds check will flag that for us. 	 */
 name|wlabel
@@ -3531,9 +3483,7 @@ operator|=
 operator|&
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_label
+name|sc_label
 operator|.
 name|d_partitions
 index|[
@@ -4186,16 +4136,6 @@ operator|*
 argument_list|)
 operator|)
 name|ccdiodone
-expr_stmt|;
-name|cbp
-operator|->
-name|cb_buf
-operator|.
-name|b_proc
-operator|=
-name|bp
-operator|->
-name|b_proc
 expr_stmt|;
 name|cbp
 operator|->
@@ -5772,9 +5712,7 @@ condition|(
 operator|(
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_openmask
+name|sc_openmask
 operator|&
 operator|~
 name|pmask
@@ -5784,9 +5722,7 @@ operator|(
 operator|(
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_bopenmask
+name|sc_bopenmask
 operator|&
 name|pmask
 operator|)
@@ -5794,9 +5730,7 @@ operator|&&
 operator|(
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_copenmask
+name|sc_copenmask
 operator|&
 name|pmask
 operator|)
@@ -6073,9 +6007,7 @@ name|data
 operator|=
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_label
+name|sc_label
 expr_stmt|;
 break|break;
 case|case
@@ -6112,9 +6044,7 @@ operator|=
 operator|&
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_label
+name|sc_label
 expr_stmt|;
 operator|(
 operator|(
@@ -6130,9 +6060,7 @@ operator|=
 operator|&
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_label
+name|sc_label
 operator|.
 name|d_partitions
 index|[
@@ -6212,9 +6140,7 @@ argument_list|(
 operator|&
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_label
+name|sc_label
 argument_list|,
 operator|(
 expr|struct
@@ -6226,7 +6152,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*,&cs->sc_dkdev.dk_cpulabel); */
 if|if
 condition|(
 name|error
@@ -6254,12 +6179,9 @@ argument_list|,
 operator|&
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_label
+name|sc_label
 argument_list|)
 expr_stmt|;
-comment|/*&cs->sc_dkdev.dk_cpulabel); */
 block|}
 name|cs
 operator|->
@@ -6439,9 +6361,7 @@ if|if
 condition|(
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_label
+name|sc_label
 operator|.
 name|d_partitions
 index|[
@@ -6462,9 +6382,7 @@ name|size
 operator|=
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_label
+name|sc_label
 operator|.
 name|d_partitions
 index|[
@@ -6882,9 +6800,7 @@ init|=
 operator|&
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_label
+name|sc_label
 decl_stmt|;
 name|struct
 name|ccdgeom
@@ -7093,9 +7009,7 @@ argument_list|(
 operator|&
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_label
+name|sc_label
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Call the generic disklabel extraction routine. 	 */
@@ -7116,9 +7030,7 @@ argument_list|,
 operator|&
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_label
+name|sc_label
 argument_list|)
 operator|)
 operator|!=
@@ -7184,9 +7096,7 @@ init|=
 operator|&
 name|cs
 operator|->
-name|sc_dkdev
-operator|.
-name|dk_label
+name|sc_label
 decl_stmt|;
 comment|/* 	 * For historical reasons, if there's no disklabel present 	 * the raw partition must be marked FS_BSDFFS. 	 */
 name|lp
