@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	7.4	89/11/22	*/
+comment|/*	cons.c	7.5	90/01/17	*/
 end_comment
 
 begin_comment
@@ -1057,6 +1057,22 @@ name|cntty
 index|[
 name|unit
 index|]
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tp
+operator|->
+name|t_cflag
+operator|&
+name|CSIZE
+operator|)
+operator|!=
+name|CS8
+condition|)
+name|c
+operator|&=
+literal|0177
 expr_stmt|;
 ifdef|#
 directive|ifdef
