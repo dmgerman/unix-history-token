@@ -2478,7 +2478,7 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"acquring duplicate lock of same type: \"%s\"\n"
+literal|"acquiring duplicate lock of same type: \"%s\"\n"
 argument_list|,
 name|lock
 operator|->
