@@ -2240,6 +2240,19 @@ name|PCIC_VPP_12V
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|slt
+operator|->
+name|pwr
+operator|.
+name|vcc
+condition|)
+name|reg
+operator||=
+name|PCIC_VCC_ON
+expr_stmt|;
+comment|/* Turn on Vcc */
 switch|switch
 condition|(
 name|slt
@@ -2262,10 +2275,6 @@ break|break;
 case|case
 literal|33
 case|:
-name|reg
-operator||=
-name|PCIC_VCC_ON
-expr_stmt|;
 comment|/* 		 * The wildboar code has comments that state that 		 * the IBM KING controller doesn't support 3.3V 		 * on the "IBM Smart PC card drive".  The code 		 * intemates that's the only place they have seen 		 * it used and that there's a boatload of issues 		 * with it.  I'm not even sure this is right because 		 * the only docs I've been able to find say this is for 		 * 5V power.  Of course, this "doc" is just code comments 		 * so who knows for sure. 		 */
 if|if
 condition|(
@@ -2355,7 +2364,7 @@ name|reg
 operator||=
 name|PCIC_VCC_5V_KING
 expr_stmt|;
-comment|/* 		 * For either of the two variant power schemes for 3.3V 		 * go ahead and turn off the 3.3V magic.  Then set the 		 * 5V bits in all cases.  This works because bit 4 is 		 * set in PCIC_VCC_5V and in the altenrate PCIC_VCC_ON 		 * is what non-82365 datasheets would lead one to believe 		 * the bits are for. 		 */
+comment|/* 		 * For either of the two variant power schemes for 3.3V 		 * go ahead and turn off the 3.3V magic.  For all 		 * bridges, the setting the Vcc on bit does the rest. 		 */
 if|if
 condition|(
 name|sc
@@ -2390,10 +2399,6 @@ name|PCIC_MISC1
 argument_list|,
 name|PCIC_MISC1_VCC_33
 argument_list|)
-expr_stmt|;
-name|reg
-operator||=
-name|PCIC_VCC_5V
 expr_stmt|;
 break|break;
 block|}
