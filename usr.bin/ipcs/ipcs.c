@@ -250,6 +250,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+name|char
+modifier|*
+name|fmt_perm
+parameter_list|(
+name|u_short
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cvt_time
+parameter_list|(
+name|time_t
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|sysctlgatherstruct
 parameter_list|(
@@ -1188,9 +1210,9 @@ operator|.
 name|n_name
 argument_list|)
 expr_stmt|;
-break|break;
 endif|#
 directive|endif
+break|break;
 block|}
 block|}
 name|kget
@@ -1495,6 +1517,9 @@ operator|->
 name|msg_perm
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|msqptr
 operator|->
 name|msg_perm
@@ -1574,7 +1599,7 @@ name|OUTSTANDING
 condition|)
 name|printf
 argument_list|(
-literal|" %6d %6d"
+literal|" %6lu %6lu"
 argument_list|,
 name|msqptr
 operator|->
@@ -1593,7 +1618,7 @@ name|BIGGEST
 condition|)
 name|printf
 argument_list|(
-literal|" %6d"
+literal|" %6lu"
 argument_list|,
 name|msqptr
 operator|->
@@ -1965,6 +1990,9 @@ operator|->
 name|shm_perm
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|shmptr
 operator|->
 name|shm_perm
@@ -2444,6 +2472,9 @@ operator|->
 name|sem_perm
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|semaptr
 operator|->
 name|sem_perm
