@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.44 (Berkeley) %G%"
+literal|"@(#)ls.c	5.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -905,13 +905,13 @@ operator|!
 name|argc
 condition|)
 block|{
+specifier|static
 name|char
 name|dot
 index|[]
 init|=
 literal|"."
 decl_stmt|;
-comment|/* ANSI says it's not writable.*/
 name|argc
 operator|=
 literal|1
