@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.47 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.48 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -337,18 +337,20 @@ begin_comment
 comment|/*  * Free a busy filesystem.  * Panic if filesystem is not busy.  */
 end_comment
 
-begin_function
-name|void
+begin_expr_stmt
 name|vfs_unbusy
-parameter_list|(
+argument_list|(
 name|mp
-parameter_list|)
+argument_list|)
 specifier|register
-name|struct
+expr|struct
 name|mount
-modifier|*
+operator|*
 name|mp
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 if|if
 condition|(
@@ -403,7 +405,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Lookup a mount point by filesystem identifier.  */
@@ -1029,6 +1031,9 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+operator|(
+name|u_long
+operator|)
 sizeof|sizeof
 expr|*
 name|vp
@@ -2432,7 +2437,7 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|long
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -3693,6 +3698,10 @@ begin_comment
 comment|/*  * Dump vnode list (via kinfo).  * Copyout address of vnode followed by vnode.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|kinfo_vnode
 argument_list|(
@@ -3709,6 +3718,12 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+name|int
+name|op
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|where
@@ -3719,6 +3734,8 @@ begin_decl_stmt
 name|int
 modifier|*
 name|acopysize
+decl_stmt|,
+name|arg
 decl_stmt|,
 modifier|*
 name|aneeded
@@ -3745,11 +3762,6 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-specifier|register
-name|needed
-operator|=
-literal|0
-expr_stmt|;
 specifier|register
 name|char
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cache.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cache.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"time.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mount.h"
 end_include
 
 begin_include
@@ -660,6 +666,9 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+operator|(
+name|u_long
+operator|)
 sizeof|sizeof
 expr|*
 name|ncp
@@ -920,6 +929,9 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|nchashsize
 argument_list|,
 name|M_CACHE
@@ -1112,18 +1124,20 @@ begin_comment
 comment|/*  * Cache flush, a whole filesystem; called when filesys is umounted to  * remove entries that would now be invalid  *  * The line "nxtcp = nchhead" near the end is to avoid potential problems  * if the cache lru chain is modified while we are dumping the  * inode.  This makes the algorithm O(n^2), but do you think I care?  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|cache_purgevfs
 argument_list|(
-name|mp
+argument|mp
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|mount
-operator|*
+modifier|*
 name|mp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
