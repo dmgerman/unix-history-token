@@ -583,7 +583,7 @@ name|lo
 parameter_list|,
 name|flags
 parameter_list|)
-value|do {					\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR3(KTR_LOCK, __func__ ": %p (%s) %s",	(lo),		\  		    (lo)->lo_class->lc_name, (lo)->lo_name);		\ } while (0)
+value|do {					\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR4(KTR_LOCK, "%s: %p (%s) %s", __func__, (lo),	\  		    (lo)->lo_class->lc_name, (lo)->lo_name);		\ } while (0)
 end_define
 
 begin_define
