@@ -80,8 +80,7 @@ name|char
 operator|*
 name|dir
 operator|,
-name|unsigned
-name|int
+name|off_t
 name|name_size
 operator|)
 argument_list|)

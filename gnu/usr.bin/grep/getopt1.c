@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* getopt_long and getopt_long_only entry points for GNU getopt.    Copyright (C) 1987,88,89,90,91,92,93,94,96,97, 98 Free Software Foundation, Inc.     This file is part of the GNU C Library.  Its master source is NOT part of    the C library, however.  The master source lives in /gd/gnu/lib.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* getopt_long and getopt_long_only entry points for GNU getopt.    Copyright (C) 1987,88,89,90,91,92,93,94,96,97,98      Free Software Foundation, Inc.    NOTE: The canonical source of this file is maintained with the GNU C Library.    Bugs can be reported to bug-glibc@gnu.org.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_escape
@@ -18,25 +18,17 @@ directive|include
 file|<config.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"getopt.h"
-end_include
+begin_else
+else|#
+directive|else
+end_else
 
 begin_if
 if|#
 directive|if
 operator|!
 name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|||
 operator|!
 name|__STDC__
@@ -68,6 +60,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"getopt.h"
+end_include
+
 begin_include
 include|#
 directive|include
@@ -90,14 +93,10 @@ if|#
 directive|if
 operator|!
 name|defined
-argument_list|(
 name|_LIBC
-argument_list|)
 operator|&&
 name|defined
-argument_list|(
 name|__GLIBC__
-argument_list|)
 operator|&&
 name|__GLIBC__
 operator|>=
@@ -479,10 +478,7 @@ literal|0
 case|:
 name|printf
 argument_list|(
-name|_
-argument_list|(
 literal|"option %s"
-argument_list|)
 argument_list|,
 name|long_options
 index|[
@@ -498,10 +494,7 @@ name|optarg
 condition|)
 name|printf
 argument_list|(
-name|_
-argument_list|(
 literal|" with arg %s"
-argument_list|)
 argument_list|,
 name|optarg
 argument_list|)
@@ -554,10 +547,7 @@ name|this_option_optind
 condition|)
 name|printf
 argument_list|(
-name|_
-argument_list|(
 literal|"digits occur in two different argv-elements.\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|digit_optind
@@ -566,10 +556,7 @@ name|this_option_optind
 expr_stmt|;
 name|printf
 argument_list|(
-name|_
-argument_list|(
 literal|"option %c\n"
-argument_list|)
 argument_list|,
 name|c
 argument_list|)
@@ -580,10 +567,7 @@ literal|'a'
 case|:
 name|printf
 argument_list|(
-name|_
-argument_list|(
 literal|"option a\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -592,10 +576,7 @@ literal|'b'
 case|:
 name|printf
 argument_list|(
-name|_
-argument_list|(
 literal|"option b\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -604,10 +585,7 @@ literal|'c'
 case|:
 name|printf
 argument_list|(
-name|_
-argument_list|(
 literal|"option c with value `%s'\n"
-argument_list|)
 argument_list|,
 name|optarg
 argument_list|)
@@ -618,10 +596,7 @@ literal|'d'
 case|:
 name|printf
 argument_list|(
-name|_
-argument_list|(
 literal|"option d with value `%s'\n"
-argument_list|)
 argument_list|,
 name|optarg
 argument_list|)
@@ -634,10 +609,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-name|_
-argument_list|(
 literal|"?? getopt returned character code 0%o ??\n"
-argument_list|)
 argument_list|,
 name|c
 argument_list|)
@@ -653,10 +625,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-name|_
-argument_list|(
 literal|"non-option ARGV-elements: "
-argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
