@@ -58,16 +58,6 @@ name|_GLIBCPP_SUPPORTS_WEAK
 end_undef
 
 begin_comment
-comment|// Define if gthr-default.h exists (meaning that threading support is enabled).
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_GTHR_DEFAULT
-end_undef
-
-begin_comment
 comment|// Include I/O support for 'long long' and 'unsigned long long'.
 end_comment
 
@@ -138,7 +128,7 @@ name|_GLIBCPP_CONCEPT_CHECKS
 end_undef
 
 begin_comment
-comment|// Define if you have the atan2f function.
+comment|// Define if the atan2f function exists.
 end_comment
 
 begin_undef
@@ -148,7 +138,7 @@ name|_GLIBCPP_HAVE_ATAN2F
 end_undef
 
 begin_comment
-comment|// Define if you have the atan2l function.
+comment|// Define if the atan2l function exists.
 end_comment
 
 begin_undef
@@ -158,7 +148,7 @@ name|_GLIBCPP_HAVE_ATAN2L
 end_undef
 
 begin_comment
-comment|// Define if you have the copysignf function.
+comment|// Define if the copysignf function exists.
 end_comment
 
 begin_undef
@@ -236,6 +226,56 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// Define if gthr-default.h exists (meaning that threading support is enabled).
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_GTHR_DEFAULT
+end_undef
+
+begin_comment
+comment|// Define if drand48 exists.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_DRAND48
+end_undef
+
+begin_comment
+comment|// Define if getpagesize exists.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_GETPAGESIZE
+end_undef
+
+begin_comment
+comment|// Define if setenv exists.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_SETENV
+end_undef
+
+begin_comment
+comment|// Define if sigsetjmp exists.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_SIGSETJMP
+end_undef
 
 begin_comment
 comment|// Define if mbstate_t exists in wchar.h.

@@ -4,7 +4,7 @@ comment|// std::messages implementation details, generic version -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -121,6 +121,62 @@ operator|<
 name|typename
 name|_CharT
 operator|>
+name|messages
+operator|<
+name|_CharT
+operator|>
+operator|::
+name|messages
+argument_list|(
+argument|size_t __refs
+argument_list|)
+operator|:
+name|locale
+operator|::
+name|facet
+argument_list|(
+argument|__refs
+argument_list|)
+block|{
+name|_M_c_locale_messages
+operator|=
+name|_S_c_locale
+block|; }
+name|template
+operator|<
+name|typename
+name|_CharT
+operator|>
+name|messages
+operator|<
+name|_CharT
+operator|>
+operator|::
+name|messages
+argument_list|(
+argument|__c_locale __cloc
+argument_list|,
+argument|const char*
+argument_list|,
+argument|size_t __refs
+argument_list|)
+operator|:
+name|locale
+operator|::
+name|facet
+argument_list|(
+argument|__refs
+argument_list|)
+block|{
+name|_M_c_locale_messages
+operator|=
+name|_S_c_locale
+block|; }
+name|template
+operator|<
+name|typename
+name|_CharT
+operator|>
 name|typename
 name|messages
 operator|<
@@ -161,6 +217,25 @@ comment|// Virtual member functions.
 end_comment
 
 begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_CharT
+operator|>
+name|messages
+operator|<
+name|_CharT
+operator|>
+operator|::
+operator|~
+name|messages
+argument_list|()
+block|{
+name|_S_destroy_c_locale
+argument_list|(
+name|_M_c_locale_messages
+argument_list|)
+block|; }
 name|template
 operator|<
 name|typename
@@ -246,6 +321,44 @@ argument|catalog
 argument_list|)
 specifier|const
 block|{ }
+comment|// messages_byname
+name|template
+operator|<
+name|typename
+name|_CharT
+operator|>
+name|messages_byname
+operator|<
+name|_CharT
+operator|>
+operator|::
+name|messages_byname
+argument_list|(
+argument|const char* __s
+argument_list|,
+argument|size_t __refs
+argument_list|)
+operator|:
+name|messages
+operator|<
+name|_CharT
+operator|>
+operator|(
+name|__refs
+operator|)
+block|{
+name|_S_destroy_c_locale
+argument_list|(
+name|_M_c_locale_messages
+argument_list|)
+block|;
+name|_S_create_c_locale
+argument_list|(
+name|_M_c_locale_messages
+argument_list|,
+name|__s
+argument_list|)
+block|;       }
 end_expr_stmt
 
 end_unit

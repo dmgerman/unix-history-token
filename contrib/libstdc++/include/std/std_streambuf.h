@@ -4,7 +4,7 @@ comment|// Stream buffer classes -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
 end_comment
 
 begin_comment
@@ -766,10 +766,6 @@ name|openmode
 argument_list|(
 literal|0
 argument_list|)
-block|;
-name|_M_buf_locale_init
-operator|=
-name|false
 block|;       }
 comment|// Locales:
 name|locale
@@ -803,17 +799,8 @@ name|getloc
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-name|_M_buf_locale_init
-condition|)
 return|return
 name|_M_buf_locale
-return|;
-else|else
-return|return
-name|locale
-argument_list|()
 return|;
 block|}
 comment|// Buffer and positioning:
@@ -1207,11 +1194,6 @@ name|locale
 argument_list|()
 argument_list|)
 operator|,
-name|_M_buf_locale_init
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|_M_pback_cur_save
 argument_list|(
 literal|0
@@ -1425,10 +1407,6 @@ modifier|&
 name|__loc
 parameter_list|)
 block|{
-name|_M_buf_locale_init
-operator|=
-name|true
-expr_stmt|;
 if|if
 condition|(
 name|_M_buf_locale

@@ -1083,7 +1083,7 @@ name|_Impl
 modifier|*
 name|_S_classic
 decl_stmt|;
-comment|// Current global reference locale
+comment|// Current global locale
 specifier|static
 name|_Impl
 modifier|*
@@ -1685,11 +1685,19 @@ name|_M_references
 block|;
 name|protected
 operator|:
-comment|// Contains data from the underlying "C" library for default "C"
-comment|// or "POSIX" locale.
+comment|// Contains data from the underlying "C" library for for the
+comment|// classic locale.
 specifier|static
 name|__c_locale
 name|_S_c_locale
+block|;
+comment|// String literal for the name of the classic locale.
+specifier|static
+name|char
+name|_S_c_name
+index|[
+literal|2
+index|]
 block|;
 name|explicit
 name|facet
