@@ -1451,7 +1451,7 @@ begin_define
 define|#
 directive|define
 name|PCIS_PROCESSOR_MIPS
-value|0x20
+value|0x30
 end_define
 
 begin_define
