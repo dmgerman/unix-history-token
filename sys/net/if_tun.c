@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*	$NetBSD: if_tun.c,v 1.14 1994/06/29 06:36:25 cgd Exp $	*/
 end_comment
 
@@ -1896,6 +1900,19 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
+if|if
+condition|(
+name|tunp
+operator|->
+name|mtu
+operator|<
+name|IF_MINMTU
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|tp
 operator|->
 name|tun_if

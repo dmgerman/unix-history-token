@@ -3012,20 +3012,19 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-comment|/* 		 * 72 was chosen below because it is the size of a TCP/IP 		 * header (40) + the minimum mss (32). 		 */
 if|if
 condition|(
 name|ifr
 operator|->
 name|ifr_mtu
 operator|<
-literal|72
+name|IF_MINMTU
 operator|||
 name|ifr
 operator|->
 name|ifr_mtu
 operator|>
-literal|65535
+name|IF_MAXMTU
 condition|)
 return|return
 operator|(

@@ -829,6 +829,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * 72 was chosen below because it is the size of a TCP/IP  * header (40) + the minimum mss (32).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IF_MINMTU
+value|72
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_MAXMTU
+value|65535
+end_define
+
 begin_endif
 endif|#
 directive|endif
