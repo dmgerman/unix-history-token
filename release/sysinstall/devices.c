@@ -649,6 +649,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"sis"
+block|,
+literal|"SiS 900/SiS 7016 PCI ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"ste"
 block|,
 literal|"Sundance ST201 PCI ethernet card"
