@@ -143,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|PROBE_SUCCESS
-value|1
+value|IO_GSCSIZE
 end_define
 
 begin_define
