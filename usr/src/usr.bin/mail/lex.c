@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	1.1 %G%"
+literal|"@(#)lex.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,6 +194,8 @@ operator|!
 name|sourcing
 condition|)
 return|return;
+name|top
+label|:
 if|if
 condition|(
 name|prompt
@@ -256,6 +258,27 @@ argument_list|()
 expr_stmt|;
 goto|goto
 name|more
+goto|;
+block|}
+if|if
+condition|(
+name|value
+argument_list|(
+literal|"ignoreeof"
+argument_list|)
+operator|!=
+name|NOSTR
+operator|&&
+name|prompt
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Use \"quit\" to quit.\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|top
 goto|;
 block|}
 if|if
