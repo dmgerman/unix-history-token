@@ -5078,10 +5078,6 @@ name|int
 name|flag
 parameter_list|)
 block|{
-name|stliport_t
-modifier|*
-name|portp
-decl_stmt|;
 if|#
 directive|if
 name|DEBUG
