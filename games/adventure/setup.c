@@ -146,6 +146,7 @@ comment|/* How many values do we get on a line? */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -237,7 +238,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\nchar data_file[] =\n{"
+literal|"\n\nconst char data_file[] =\n{"
 argument_list|)
 expr_stmt|;
 name|srandom

@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -98,10 +104,17 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hdr.h"
 end_include
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -117,10 +130,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -134,35 +143,17 @@ name|text
 modifier|*
 name|kk
 decl_stmt|;
-extern|extern trapdel(
-block|)
-function|;
-end_function
-
-begin_comment
 comment|/* revoke */
-end_comment
-
-begin_expr_stmt
 name|setgid
 argument_list|(
 name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|init
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Initialize everything */
-end_comment
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGINT
@@ -170,9 +161,6 @@ argument_list|,
 name|trapdel
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|argc
@@ -253,19 +241,10 @@ comment|/* File could be non-adventure */
 block|}
 comment|/* So don't unlink it. */
 block|}
-end_if
-
-begin_expr_stmt
 name|startup
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* prepare for a user           */
-end_comment
-
-begin_for
 for|for
 control|(
 init|;
@@ -417,8 +396,6 @@ literal|16
 index|]
 expr_stmt|;
 block|}
-name|l2001
-label|:
 if|if
 condition|(
 name|toting
@@ -1231,6 +1208,8 @@ argument_list|(
 name|wd2
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 argument_list|)
 condition|)
@@ -1277,6 +1256,8 @@ name|wd1
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1468,8 +1449,6 @@ condition|)
 goto|goto
 name|l4090
 goto|;
-name|l4080
-label|:
 switch|switch
 condition|(
 name|verb
@@ -1949,6 +1928,8 @@ argument_list|(
 name|wd1
 argument_list|,
 literal|3
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|spk
@@ -2381,8 +2362,6 @@ literal|105
 argument_list|)
 expr_stmt|;
 block|}
-name|l9030
-label|:
 case|case
 literal|3
 case|:
@@ -3426,8 +3405,6 @@ expr_stmt|;
 goto|goto
 name|l2012
 goto|;
-name|l9280
-label|:
 case|case
 literal|28
 case|:
@@ -3515,8 +3492,6 @@ argument_list|(
 literal|3
 argument_list|)
 expr_stmt|;
-name|l9290
-label|:
 case|case
 literal|29
 case|:
@@ -3836,8 +3811,8 @@ goto|goto
 name|l2012
 goto|;
 block|}
-end_for
+block|}
+end_function
 
-unit|}
 end_unit
 

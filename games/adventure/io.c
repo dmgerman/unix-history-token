@@ -75,30 +75,136 @@ directive|include
 file|<err.h>
 end_include
 
-begin_macro
+begin_function_decl
+specifier|static
+name|int
+name|next
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|rnum
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|rdesc
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|rdflt
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|rhints
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|rliq
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|rlocs
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|rtrav
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|rvoc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|void
+name|twrite
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|void
 name|getin
-argument_list|(
-argument|wrd1
-argument_list|,
-argument|wrd2
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|wrd1
+parameter_list|,
+name|wrd2
+parameter_list|)
 comment|/* get command from user        */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|wrd1
 decl_stmt|,
-modifier|*
+decl|*
 modifier|*
 name|wrd2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* no prompt, usually           */
@@ -311,22 +417,17 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|yes
-argument_list|(
-argument|x
-argument_list|,
-argument|y
-argument_list|,
-argument|z
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|)
 comment|/* confirm with rspeak          */
-end_comment
-
-begin_decl_stmt
 name|int
 name|x
 decl_stmt|,
@@ -334,9 +435,6 @@ name|y
 decl_stmt|,
 name|z
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|result
@@ -344,6 +442,10 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
+name|result
+operator|=
+name|FALSE
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -448,24 +550,19 @@ name|result
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|yesm
-argument_list|(
-argument|x
-argument_list|,
-argument|y
-argument_list|,
-argument|z
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|)
 comment|/* confirm with mspeak          */
-end_comment
-
-begin_decl_stmt
 name|int
 name|x
 decl_stmt|,
@@ -473,9 +570,6 @@ name|y
 decl_stmt|,
 name|z
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|result
@@ -483,6 +577,10 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
+name|result
+operator|=
+name|FALSE
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -587,7 +685,7 @@ name|result
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* FILE *inbuf,*outbuf; */
@@ -640,16 +738,12 @@ begin_comment
 comment|/* pointer to encryption tape   */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|next
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* next virtual char, bump adr  */
-end_comment
-
-begin_block
 block|{
 name|int
 name|ch
@@ -705,7 +799,7 @@ name|ch
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|char
@@ -717,16 +811,11 @@ begin_comment
 comment|/* tell which char ended rnum   */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rdata
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* "read" data from virtual file*/
-end_comment
-
-begin_block
 block|{
 name|int
 name|sect
@@ -973,7 +1062,7 @@ name|FLUSHLF
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|char
@@ -984,16 +1073,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|rnum
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* read initial location num    */
-end_comment
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -1080,7 +1165,7 @@ operator|)
 return|;
 comment|/* convert it to integer        */
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|char
@@ -1089,32 +1174,18 @@ name|seekhere
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|rdesc
-argument_list|(
-argument|sect
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|sect
+parameter_list|)
 comment|/* read description-format msgs */
-end_comment
-
-begin_decl_stmt
 name|int
 name|sect
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|char
-modifier|*
-name|s
-decl_stmt|,
-modifier|*
-name|t
-decl_stmt|;
 name|int
 name|locc
 decl_stmt|;
@@ -1124,13 +1195,6 @@ name|seekstart
 decl_stmt|,
 modifier|*
 name|maystart
-decl_stmt|,
-modifier|*
-name|adrstart
-decl_stmt|;
-name|char
-modifier|*
-name|entry
 decl_stmt|;
 name|seekhere
 operator|=
@@ -1463,18 +1527,14 @@ expr_stmt|;
 comment|/* scan the line                */
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|rtrav
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* read travel table            */
-end_comment
-
-begin_block
 block|{
 name|int
 name|locc
@@ -1503,6 +1563,14 @@ name|n
 decl_stmt|,
 name|entries
 decl_stmt|;
+name|entries
+operator|=
+literal|0
+expr_stmt|;
+name|t
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|oldloc
@@ -1538,8 +1606,25 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* terminate the old entry      */
-comment|/*      printf("%d:%d entries\n",oldloc,entries);       */
-comment|/*      twrite(oldloc);                                 */
+if|#
+directive|if
+name|DEBUG
+name|printf
+argument_list|(
+literal|"%d:%d entries\n"
+argument_list|,
+name|oldloc
+argument_list|,
+name|entries
+argument_list|)
+expr_stmt|;
+name|twrite
+argument_list|(
+name|oldloc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -1601,14 +1686,14 @@ operator|=
 name|locc
 expr_stmt|;
 block|}
-for|for
-control|(
 name|s
 operator|=
 name|buf
+expr_stmt|;
+for|for
+control|(
 init|;
 condition|;
-operator|*
 name|s
 operator|++
 control|)
@@ -1772,7 +1857,7 @@ comment|/*      printf("entry %d for %d\n",entries,locc);       */
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -1780,24 +1865,17 @@ directive|ifdef
 name|DEBUG
 end_ifdef
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|twrite
-argument_list|(
-argument|loq
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|loq
+parameter_list|)
 comment|/* travel options from this loc */
-end_comment
-
-begin_decl_stmt
 name|int
 name|loq
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|travlist
@@ -1912,7 +1990,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -1920,12 +1998,11 @@ directive|endif
 endif|DEBUG
 end_endif
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|rvoc
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 modifier|*
@@ -2036,20 +2113,15 @@ name|index
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*	prht();	*/
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|rlocs
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* initial object locations     */
-end_comment
-
-begin_block
 block|{
 for|for
 control|(
@@ -2103,18 +2175,14 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|rdflt
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* default verb messages        */
-end_comment
-
-begin_block
 block|{
 for|for
 control|(
@@ -2144,18 +2212,14 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|rliq
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* liquid assets&c: cond bits  */
-end_comment
-
-begin_block
 block|{
 name|int
 name|bitnum
@@ -2207,14 +2271,13 @@ break|break;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|rhints
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|hintnum
@@ -2279,22 +2342,17 @@ name|hintnum
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|rspeak
-argument_list|(
-argument|msg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msg
+parameter_list|)
 name|int
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2312,22 +2370,17 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|mspeak
-argument_list|(
-argument|msg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msg
+parameter_list|)
 name|int
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2345,33 +2398,22 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|speak
-argument_list|(
-argument|msg
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|msg
+parameter_list|)
 comment|/* read, decrypt, and print a message (not ptext)      */
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|struct
 name|text
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* msg is a pointer to seek address and length of mess */
-end_comment
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -2530,42 +2572,25 @@ do|;
 comment|/* better end with LF   */
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|pspeak
-argument_list|(
-argument|m
-argument_list|,
-argument|skip
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|m
+parameter_list|,
+name|skip
+parameter_list|)
 comment|/* read, decrypt an print a ptext message              */
-end_comment
-
-begin_decl_stmt
 name|int
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* msg is the number of all the p msgs for this place  */
-end_comment
-
-begin_decl_stmt
 name|int
 name|skip
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* assumes object 1 doesn't have prop 1, obj 2 no prop 2&c*/
-end_comment
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -2859,7 +2884,7 @@ name|tbuf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

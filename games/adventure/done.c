@@ -57,16 +57,11 @@ directive|include
 file|"hdr.h"
 end_include
 
-begin_macro
+begin_function
+name|int
 name|score
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* sort of like 20000   */
-end_comment
-
-begin_block
 block|{
 name|int
 name|scor
@@ -337,38 +332,21 @@ name|scor
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|done
-argument_list|(
-argument|entry
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|entry
+parameter_list|)
 comment|/* entry=1 means goto 13000 */
-end_comment
-
-begin_comment
 comment|/* game is over         */
-end_comment
-
-begin_decl_stmt
 name|int
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* entry=2 means goto 20000 */
-end_comment
-
-begin_comment
 comment|/* 3=19000 */
-end_comment
-
-begin_block
 block|{
 name|int
 name|i
@@ -537,7 +515,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void

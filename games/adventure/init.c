@@ -126,16 +126,21 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function_decl
+specifier|static
+name|void
+name|linkdata
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
 name|init
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* everything for 1st time run  */
-end_comment
-
-begin_block
 block|{
 name|rdata
 argument_list|()
@@ -148,7 +153,7 @@ name|poof
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|char
@@ -242,16 +247,12 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|linkdata
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/*  secondary data manipulation */
-end_comment
-
-begin_block
 block|{
 name|int
 name|i
@@ -480,6 +481,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|lamp
@@ -501,6 +504,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|grate
@@ -521,6 +526,8 @@ name|e
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|cage
@@ -542,6 +549,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|rod
@@ -564,6 +573,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|rod2
@@ -590,6 +601,8 @@ name|s
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|bird
@@ -611,6 +624,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|door
@@ -632,6 +647,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|pillow
@@ -652,6 +669,8 @@ name|o
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|snake
@@ -672,6 +691,8 @@ name|e
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|fissur
@@ -692,6 +713,8 @@ name|u
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|tablet
@@ -712,6 +735,8 @@ name|e
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|clam
@@ -733,6 +758,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|oyster
@@ -753,6 +780,8 @@ name|e
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|magzin
@@ -773,6 +802,8 @@ name|z
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|dwarf
@@ -793,6 +824,8 @@ name|f
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|knife
@@ -813,6 +846,8 @@ name|e
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|food
@@ -834,6 +869,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|bottle
@@ -854,6 +891,8 @@ name|l
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|water
@@ -874,6 +913,8 @@ name|r
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|oil
@@ -896,6 +937,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|plant
@@ -916,6 +959,8 @@ name|t
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|plant2
@@ -944,6 +989,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|mirror
@@ -964,6 +1011,8 @@ name|o
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|dragon
@@ -984,6 +1033,8 @@ name|o
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|chasm
@@ -1004,6 +1055,8 @@ name|m
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|troll
@@ -1024,6 +1077,8 @@ name|l
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|troll2
@@ -1051,6 +1106,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|messag
@@ -1071,6 +1128,8 @@ name|a
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vend
@@ -1091,6 +1150,8 @@ name|i
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|batter
@@ -1111,6 +1172,8 @@ name|e
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|nugget
@@ -1132,6 +1195,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|coins
@@ -1152,6 +1217,8 @@ name|s
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|chest
@@ -1172,6 +1239,8 @@ name|t
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|eggs
@@ -1193,6 +1262,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|tridnt
@@ -1213,6 +1284,8 @@ name|e
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vase
@@ -1234,6 +1307,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|emrald
@@ -1254,6 +1329,8 @@ name|a
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|pyram
@@ -1274,6 +1351,8 @@ name|m
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|pearl
@@ -1294,6 +1373,8 @@ name|l
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|rug
@@ -1316,6 +1397,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|chain
@@ -1336,6 +1419,8 @@ name|n
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|back
@@ -1355,6 +1440,8 @@ argument_list|,
 operator|\
 literal|0
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1378,6 +1465,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|cave
@@ -1397,6 +1486,8 @@ argument_list|,
 operator|\
 literal|0
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1420,6 +1511,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|entrnc
@@ -1438,6 +1531,8 @@ name|r
 argument_list|,
 name|a
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1460,6 +1555,8 @@ name|e
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|enter
@@ -1478,6 +1575,8 @@ name|e
 argument_list|,
 name|r
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1501,6 +1600,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|say
@@ -1523,6 +1624,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|lock
@@ -1544,6 +1647,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|throw
@@ -1564,6 +1669,8 @@ name|w
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|find
@@ -1585,6 +1692,8 @@ literal|0
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|invent
@@ -1605,6 +1714,8 @@ name|n
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* initialize dwarves */
@@ -1780,18 +1891,18 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|trapdel
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|(
+name|sig
+parameter_list|)
 comment|/* come here if he hits a del   */
-end_comment
-
-begin_block
+name|int
+name|sig
+decl_stmt|;
 block|{
 name|delhit
 operator|=
@@ -1807,14 +1918,12 @@ argument_list|)
 expr_stmt|;
 comment|/* catch subsequent DELs        */
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|startup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|demo
 operator|=
@@ -1863,7 +1972,7 @@ literal|1000
 expr_stmt|;
 comment|/* better batteries if instrucs */
 block|}
-end_block
+end_function
 
 end_unit
 

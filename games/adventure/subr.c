@@ -63,24 +63,91 @@ directive|include
 file|"hdr.h"
 end_include
 
+begin_function_decl
+specifier|static
+name|void
+name|badmove
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|bitset
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|dropper
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|liq2
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|mback
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|specials
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|trbridge
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*              Statement functions     */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|toting
-argument_list|(
-argument|objj
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|objj
+parameter_list|)
 name|int
 name|objj
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -104,22 +171,17 @@ name|FALSE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|here
-argument_list|(
-argument|objj
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|objj
+parameter_list|)
 name|int
 name|objj
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -147,22 +209,17 @@ name|FALSE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|at
-argument_list|(
-argument|objj
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|objj
+parameter_list|)
 name|int
 name|objj
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -192,22 +249,18 @@ name|FALSE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|liq2
-argument_list|(
-argument|pbotl
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pbotl
+parameter_list|)
 name|int
 name|pbotl
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -233,14 +286,12 @@ operator|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|liq
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|i
@@ -282,26 +333,18 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|liqloc
-argument_list|(
-argument|locc
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|locc
+parameter_list|)
 comment|/* may want to clean this one up a bit */
-end_comment
-
-begin_decl_stmt
 name|int
 name|locc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -361,26 +404,22 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|bitset
-argument_list|(
-argument|l
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|l
+parameter_list|,
+name|n
+parameter_list|)
 name|int
 name|l
 decl_stmt|,
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -405,22 +444,17 @@ name|FALSE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|forced
-argument_list|(
-argument|locc
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|locc
+parameter_list|)
 name|int
 name|locc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -442,14 +476,12 @@ name|FALSE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|dark
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -490,22 +522,17 @@ name|FALSE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|pct
-argument_list|(
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|n
+parameter_list|)
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -527,18 +554,13 @@ name|FALSE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|fdwarf
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 71 */
-end_comment
-
-begin_block
 block|{
 name|int
 name|i
@@ -1536,18 +1558,13 @@ goto|goto
 name|l82
 goto|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|march
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* label 8              */
-end_comment
-
-begin_block
 block|{
 name|int
 name|ll1
@@ -1973,18 +1990,14 @@ goto|goto
 name|l11
 goto|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|mback
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 20                   */
-end_comment
-
-begin_block
 block|{
 name|struct
 name|travlist
@@ -2164,18 +2177,14 @@ literal|2
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|specials
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 30000                */
-end_comment
-
-begin_block
 block|{
 switch|switch
 condition|(
@@ -2265,19 +2274,22 @@ literal|29
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* NOTREACHED */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|trbridge
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 30300                */
-end_comment
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2463,10 +2475,11 @@ literal|99
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
-name|int
+specifier|static
+name|void
 name|badmove
 parameter_list|()
 comment|/* 20                   */
@@ -2913,16 +2926,11 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|trsay
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 9030                 */
-end_comment
-
-begin_block
 block|{
 name|int
 name|i
@@ -2949,6 +2957,8 @@ name|wd1
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2998,22 +3008,14 @@ literal|2012
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|trtake
-argument_list|()
-end_macro
-
-begin_comment
-comment|/* 9010                 */
-end_comment
-
-begin_block
-block|{
+begin_function
 name|int
-name|i
-decl_stmt|;
+name|trtake
+parameter_list|()
+comment|/* 9010                 */
+block|{
 if|if
 condition|(
 name|toting
@@ -3338,18 +3340,14 @@ literal|2009
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|dropper
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 9021                 */
-end_comment
-
-begin_block
 block|{
 name|k
 operator|=
@@ -3429,18 +3427,13 @@ literal|2012
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|trdrop
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 9020                 */
-end_comment
-
-begin_block
 block|{
 if|if
 condition|(
@@ -3777,18 +3770,13 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|tropen
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 9040                 */
-end_comment
-
-begin_block
 block|{
 if|if
 condition|(
@@ -4228,18 +4216,13 @@ literal|2010
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|trkill
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 9120                         */
-end_comment
-
-begin_block
 block|{
 name|int
 name|i
@@ -4782,18 +4765,13 @@ literal|8
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|trtoss
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 9170: throw                  */
-end_comment
-
-begin_block
 block|{
 name|int
 name|i
@@ -5144,18 +5122,13 @@ literal|9120
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|trfeed
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 9210                 */
-end_comment
-
-begin_block
 block|{
 if|if
 condition|(
@@ -5389,18 +5362,13 @@ literal|2011
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|trfill
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 9220 */
-end_comment
-
-begin_block
 block|{
 if|if
 condition|(
@@ -5600,7 +5568,7 @@ literal|2011
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void

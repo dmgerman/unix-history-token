@@ -47,6 +47,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"hdr.h"
+end_include
+
 begin_decl_stmt
 specifier|const
 name|u_long
@@ -585,12 +591,10 @@ name|step
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|crc_start
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|crcval
 operator|=
@@ -599,7 +603,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|u_long

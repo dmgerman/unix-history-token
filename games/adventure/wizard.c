@@ -81,24 +81,32 @@ directive|include
 file|"hdr.h"
 end_include
 
-begin_macro
-name|datime
-argument_list|(
-argument|d
-argument_list|,
-argument|t
-argument_list|)
-end_macro
+begin_function_decl
+specifier|static
+name|int
+name|wizard
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function
+name|void
+name|datime
+parameter_list|(
+name|d
+parameter_list|,
+name|t
+parameter_list|)
 name|int
 modifier|*
 name|d
 decl_stmt|,
-modifier|*
+decl|*
 name|t
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -202,12 +210,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|poof
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|strcpy
 argument_list|(
@@ -232,14 +238,12 @@ operator|=
 literal|45
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|Start
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|d
@@ -361,22 +365,15 @@ name|FALSE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|wizard
-argument_list|()
-end_macro
-
-begin_comment
-comment|/* not as complex as advent/10 (for now)        */
-end_comment
-
-begin_block
-block|{
+begin_function
+specifier|static
 name|int
-name|wiz
-decl_stmt|;
+name|wizard
+parameter_list|()
+comment|/* not as complex as advent/10 (for now)        */
+block|{
 name|char
 modifier|*
 name|word
@@ -449,38 +446,22 @@ name|TRUE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|ciao
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 modifier|*
 name|c
-decl_stmt|;
-name|int
-name|outfd
-decl_stmt|,
-name|size
 decl_stmt|;
 name|char
 name|fname
 index|[
 literal|80
 index|]
-decl_stmt|,
-name|buf
-index|[
-literal|512
-index|]
-decl_stmt|;
-specifier|extern
-name|unsigned
-name|filesize
 decl_stmt|;
 name|printf
 argument_list|(
@@ -566,22 +547,17 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|ran
-argument_list|(
-argument|range
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|range
+parameter_list|)
 name|int
 name|range
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -599,7 +575,7 @@ name|i
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
