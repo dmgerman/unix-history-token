@@ -5574,6 +5574,10 @@ name|did
 condition|)
 block|{
 case|case
+name|TC_DEVICEID_BOOMERANG_10_100BT
+case|:
+comment|/* 3c905-TX */
+case|case
 name|TC_DEVICEID_HURRICANE_575A
 case|:
 case|case
