@@ -103,16 +103,6 @@ begin_comment
 comment|/* XXX for M_XDATA */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SESID2HID
-parameter_list|(
-name|sid
-parameter_list|)
-value|(((sid)>> 32)& 0xffffffff)
-end_define
-
 begin_comment
 comment|/*  * Crypto drivers register themselves by allocating a slot in the  * crypto_drivers table with crypto_get_driverid() and then registering  * each algorithm they support with crypto_register() and crypto_kregister().  */
 end_comment
@@ -874,24 +864,29 @@ name|hid
 operator|++
 control|)
 block|{
-comment|/* 		 * If it's not initialized or has remaining sessions 		 * referencing it, skip. 		 */
-if|if
-condition|(
+name|struct
+name|cryptocap
+modifier|*
+name|cap
+init|=
+operator|&
 name|crypto_drivers
 index|[
 name|hid
 index|]
-operator|.
+decl_stmt|;
+comment|/* 		 * If it's not initialized or has remaining sessions 		 * referencing it, skip. 		 */
+if|if
+condition|(
+name|cap
+operator|->
 name|cc_newsession
 operator|==
 name|NULL
 operator|||
 operator|(
-name|crypto_drivers
-index|[
-name|hid
-index|]
-operator|.
+name|cap
+operator|->
 name|cc_flags
 operator|&
 name|CRYPTOCAP_F_CLEANUP
@@ -906,11 +901,8 @@ operator|>
 literal|0
 operator|&&
 operator|(
-name|crypto_drivers
-index|[
-name|hid
-index|]
-operator|.
+name|cap
+operator|->
 name|cc_flags
 operator|&
 name|CRYPTOCAP_F_SOFTWARE
@@ -925,11 +917,8 @@ operator|<
 literal|0
 operator|&&
 operator|(
-name|crypto_drivers
-index|[
-name|hid
-index|]
-operator|.
+name|cap
+operator|->
 name|cc_flags
 operator|&
 name|CRYPTOCAP_F_SOFTWARE
@@ -955,11 +944,8 @@ name|cri_next
 control|)
 if|if
 condition|(
-name|crypto_drivers
-index|[
-name|hid
-index|]
-operator|.
+name|cap
+operator|->
 name|cc_alg
 index|[
 name|cr
@@ -987,18 +973,15 @@ expr_stmt|;
 comment|/* Pass the driver ID. */
 name|err
 operator|=
-name|crypto_drivers
-index|[
-name|hid
-index|]
-operator|.
+call|(
+modifier|*
+name|cap
+operator|->
 name|cc_newsession
+call|)
 argument_list|(
-name|crypto_drivers
-index|[
-name|hid
-index|]
-operator|.
+name|cap
+operator|->
 name|cc_arg
 argument_list|,
 operator|&
@@ -1014,11 +997,25 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* XXX assert (hid&~ 0xffffff) == 0 */
+comment|/* XXX assert (cap->cc_flags&~ 0xff) == 0 */
 operator|(
 operator|*
 name|sid
 operator|)
 operator|=
+operator|(
+operator|(
+name|cap
+operator|->
+name|cc_flags
+operator|&
+literal|0xff
+operator|)
+operator|<<
+literal|24
+operator|)
+operator||
 name|hid
 expr_stmt|;
 operator|(
@@ -1039,11 +1036,8 @@ operator|&
 literal|0xffffffff
 operator|)
 expr_stmt|;
-name|crypto_drivers
-index|[
-name|hid
-index|]
-operator|.
+name|cap
+operator|->
 name|cc_sessions
 operator|++
 expr_stmt|;
@@ -1107,7 +1101,7 @@ block|}
 comment|/* Determine two IDs. */
 name|hid
 operator|=
-name|SESID2HID
+name|CRYPTO_SESID2HID
 argument_list|(
 name|sid
 argument_list|)
@@ -2300,7 +2294,7 @@ block|{
 name|u_int32_t
 name|hid
 init|=
-name|SESID2HID
+name|CRYPTO_SESID2HID
 argument_list|(
 name|crp
 operator|->
@@ -3060,7 +3054,7 @@ return|;
 block|}
 name|hid
 operator|=
-name|SESID2HID
+name|CRYPTO_SESID2HID
 argument_list|(
 name|crp
 operator|->
@@ -3448,6 +3442,9 @@ modifier|*
 name|crp
 parameter_list|)
 block|{
+name|int
+name|flags
+decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -3510,13 +3507,37 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * CBIMM means unconditionally do the callback immediately; 	 * CBIFSYNC means do the callback immediately only if the 	 * operation was done synchronously.  Both are used to avoid 	 * doing extraneous context switches; the latter is mostly 	 * used with the software crypto driver. 	 */
 if|if
 condition|(
+operator|(
 name|crp
 operator|->
 name|crp_flags
 operator|&
 name|CRYPTO_F_CBIMM
+operator|)
+operator|||
+operator|(
+operator|(
+name|crp
+operator|->
+name|crp_flags
+operator|&
+name|CRYPTO_F_CBIFSYNC
+operator|)
+operator|&&
+operator|(
+name|CRYPTO_SESID2CAPS
+argument_list|(
+name|crp
+operator|->
+name|crp_sid
+argument_list|)
+operator|&
+name|CRYPTOCAP_F_SYNC
+operator|)
+operator|)
 condition|)
 block|{
 comment|/* 		 * Do the callback directly.  This is ok when the 		 * callback routine does very little (e.g. the 		 * /dev/crypto callback method just does a wakeup). 		 */
@@ -3907,7 +3928,7 @@ block|{
 name|u_int32_t
 name|hid
 init|=
-name|SESID2HID
+name|CRYPTO_SESID2HID
 argument_list|(
 name|crp
 operator|->
@@ -3965,7 +3986,7 @@ block|{
 comment|/* 					 * We stop on finding another op, 					 * regardless whether its for the same 					 * driver or not.  We could keep 					 * searching the queue but it might be 					 * better to just use a per-driver 					 * queue instead. 					 */
 if|if
 condition|(
-name|SESID2HID
+name|CRYPTO_SESID2HID
 argument_list|(
 name|submit
 operator|->
@@ -4040,7 +4061,7 @@ comment|/* 				 * The driver ran out of resources, mark the 				 * driver ``bloc
 comment|/* XXX validate sid again? */
 name|crypto_drivers
 index|[
-name|SESID2HID
+name|CRYPTO_SESID2HID
 argument_list|(
 name|submit
 operator|->
