@@ -1150,39 +1150,11 @@ name|cappage
 name|cap
 decl_stmt|;
 comment|/* capabilities page info */
-struct|struct
-block|{
-comment|/* subchannel info */
-name|u_int8_t
-name|void0
-decl_stmt|;
-name|u_int8_t
-name|audio_status
-decl_stmt|;
-name|u_int16_t
-name|data_length
-decl_stmt|;
-name|u_int8_t
-name|data_format
-decl_stmt|;
-name|u_int8_t
-name|control
-decl_stmt|;
-name|u_int8_t
-name|track
-decl_stmt|;
-name|u_int8_t
-name|indx
-decl_stmt|;
-name|u_int32_t
-name|abslba
-decl_stmt|;
-name|u_int32_t
-name|rellba
-decl_stmt|;
-block|}
+name|struct
+name|cd_sub_channel_info
 name|subchan
-struct|;
+decl_stmt|;
+comment|/* subchannel info */
 name|struct
 name|changer
 modifier|*
