@@ -145,7 +145,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* save are for old callslot entry*/
+comment|/* save area for old callslot entry*/
 end_comment
 
 begin_comment
