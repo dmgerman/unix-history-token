@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Created: Sat Mar 18 22:15:47 1995 ylo  * Code to connect to a remote host, and to perform the client side of the  * login (authentication) dialog.  *  * $FreeBSD$  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Code to connect to a remote host, and to perform the client side of the  * login (authentication) dialog.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
 begin_include
@@ -12,7 +12,15 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect1.c,v 1.3 2000/05/08 17:12:16 markus Exp $"
+literal|"$OpenBSD: sshconnect1.c,v 1.6 2000/09/07 20:27:54 deraadt Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -74,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"authfd.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"cipher.h"
 end_include
 
@@ -105,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"authfd.h"
 end_include
 
 begin_include
@@ -167,8 +175,6 @@ name|try_agent_authentication
 parameter_list|()
 block|{
 name|int
-name|status
-decl_stmt|,
 name|type
 decl_stmt|;
 name|char
@@ -190,13 +196,16 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|int
+name|plen
+decl_stmt|,
+name|clen
+decl_stmt|;
+name|Key
+modifier|*
+name|key
+decl_stmt|;
 name|BIGNUM
-modifier|*
-name|e
-decl_stmt|,
-modifier|*
-name|n
-decl_stmt|,
 modifier|*
 name|challenge
 decl_stmt|;
@@ -214,60 +223,50 @@ condition|)
 return|return
 literal|0
 return|;
-name|e
-operator|=
-name|BN_new
-argument_list|()
-expr_stmt|;
-name|n
-operator|=
-name|BN_new
-argument_list|()
-expr_stmt|;
 name|challenge
 operator|=
 name|BN_new
 argument_list|()
 expr_stmt|;
+name|key
+operator|=
+name|key_new
+argument_list|(
+name|KEY_RSA
+argument_list|)
+expr_stmt|;
 comment|/* Loop through identities served by the agent. */
 for|for
 control|(
-name|status
+name|key
 operator|=
 name|ssh_get_first_identity
 argument_list|(
 name|auth
 argument_list|,
-name|e
-argument_list|,
-name|n
-argument_list|,
 operator|&
 name|comment
+argument_list|,
+literal|1
 argument_list|)
 init|;
-name|status
+name|key
+operator|!=
+name|NULL
 condition|;
-name|status
+name|key
 operator|=
 name|ssh_get_next_identity
 argument_list|(
 name|auth
 argument_list|,
-name|e
-argument_list|,
-name|n
-argument_list|,
 operator|&
 name|comment
+argument_list|,
+literal|1
 argument_list|)
 control|)
 block|{
-name|int
-name|plen
-decl_stmt|,
-name|clen
-decl_stmt|;
 comment|/* Try this identity. */
 name|debug
 argument_list|(
@@ -289,6 +288,10 @@ argument_list|)
 expr_stmt|;
 name|packet_put_bignum
 argument_list|(
+name|key
+operator|->
+name|rsa
+operator|->
 name|n
 argument_list|)
 expr_stmt|;
@@ -318,6 +321,11 @@ block|{
 name|debug
 argument_list|(
 literal|"Server refused our key."
+argument_list|)
+expr_stmt|;
+name|key_free
+argument_list|(
+name|key
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -366,9 +374,7 @@ name|ssh_decrypt_challenge
 argument_list|(
 name|auth
 argument_list|,
-name|e
-argument_list|,
-name|n
+name|key
 argument_list|,
 name|challenge
 argument_list|,
@@ -380,7 +386,7 @@ name|response
 argument_list|)
 condition|)
 block|{
-comment|/* The agent failed to authenticate this identifier although it 			   advertised it supports this.  Just return a wrong value. */
+comment|/* 			 * The agent failed to authenticate this identifier 			 * although it advertised it supports this.  Just 			 * return a wrong value. 			 */
 name|log
 argument_list|(
 literal|"Authentication agent failed to decrypt challenge."
@@ -399,6 +405,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|key_free
+argument_list|(
+name|key
+argument_list|)
+expr_stmt|;
 name|debug
 argument_list|(
 literal|"Sending response to RSA challenge."
@@ -454,24 +465,14 @@ operator|==
 name|SSH_SMSG_SUCCESS
 condition|)
 block|{
-name|debug
-argument_list|(
-literal|"RSA authentication accepted by server."
-argument_list|)
-expr_stmt|;
-name|BN_clear_free
-argument_list|(
-name|e
-argument_list|)
-expr_stmt|;
-name|BN_clear_free
-argument_list|(
-name|n
-argument_list|)
-expr_stmt|;
 name|BN_clear_free
 argument_list|(
 name|challenge
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"RSA authentication accepted by server."
 argument_list|)
 expr_stmt|;
 return|return
@@ -493,16 +494,6 @@ name|type
 argument_list|)
 expr_stmt|;
 block|}
-name|BN_clear_free
-argument_list|(
-name|e
-argument_list|)
-expr_stmt|;
-name|BN_clear_free
-argument_list|(
-name|n
-argument_list|)
-expr_stmt|;
 name|BN_clear_free
 argument_list|(
 name|challenge

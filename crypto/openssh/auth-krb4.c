@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *    Dug Song<dugsong@UMICH.EDU>  *    Kerberos v4 authentication and ticket-passing routines.  *   * $FreeBSD$  */
+comment|/*  * Copyright (c) 1999 Dug Song.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -32,6 +32,22 @@ include|#
 directive|include
 file|"servconf.h"
 end_include
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$OpenBSD: auth-krb4.c,v 1.18 2000/09/07 20:27:49 deraadt Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -353,7 +369,7 @@ operator|==
 name|RD_AP_UNDEC
 condition|)
 block|{
-comment|/* 				 * Probably didn't have a srvtab on 				 * localhost. Allow login. 				 */
+comment|/* 				 * Probably didn't have a srvtab on 				 * localhost. Disallow login. 				 */
 name|log
 argument_list|(
 literal|"Kerberos V4 TGT for %s unverifiable, "
@@ -369,6 +385,9 @@ name|r
 index|]
 argument_list|)
 expr_stmt|;
+goto|goto
+name|kerberos_auth_failure
+goto|;
 block|}
 elseif|else
 if|if
@@ -403,7 +422,7 @@ operator|==
 name|KDC_PR_UNKNOWN
 condition|)
 block|{
-comment|/* 			 * Allow login if no rcmd service exists, but 			 * log the error. 			 */
+comment|/* 			 * Disallow login if no rcmd service exists, and 			 * log the error. 			 */
 name|log
 argument_list|(
 literal|"Kerberos V4 TGT for %s unverifiable: %s; %s.%s "
@@ -423,6 +442,9 @@ argument_list|,
 name|phost
 argument_list|)
 expr_stmt|;
+goto|goto
+name|kerberos_auth_failure
+goto|;
 block|}
 else|else
 block|{
@@ -594,7 +616,7 @@ name|ticket
 argument_list|,
 name|MAXPATHLEN
 argument_list|,
-literal|"%s%d_%d"
+literal|"%s%u_%d"
 argument_list|,
 name|tkt_root
 argument_list|,
