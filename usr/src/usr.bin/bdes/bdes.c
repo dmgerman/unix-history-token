@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bdes.c	5.3 (Berkeley) %G%"
+literal|"@(#)bdes.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,8 +123,45 @@ value|bzero((dest),(len))
 end_define
 
 begin_comment
-comment|/*  * these "hide" the calls to the primitive encryption routines  */
+comment|/* Hide the calls to the primitive encryption routines. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|FASTWAY
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FASTWAY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DES_KEY
+parameter_list|(
+name|buf
+parameter_list|)
+value|des_setkey(buf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DES_XFORM
+parameter_list|(
+name|buf
+parameter_list|)
+value|des_cipher(buf, buf, 0L, (inverse ? -1 : 1))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -149,6 +186,11 @@ value|{						\ 				char bits1[64];
 comment|/* bits of message */
 value|\ 				expand(buf, bits1);			\ 				encrypt(bits1, inverse);		\ 				compress(bits1, buf);			\ 			}
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * this does an error-checking write  */
@@ -2138,13 +2180,28 @@ literal|0200
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Make the key schedule 	 */
+comment|/* 	 * Make the key schedule.  If an error, the system probably does 	 * not have the encryption routines available. 	 */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|DES_KEY
 argument_list|(
 name|UBUFFER
 argument_list|(
 name|buf
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+condition|)
+name|err
+argument_list|(
+literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -5016,6 +5073,12 @@ block|}
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FASTWAY
+end_ifndef
+
 begin_comment
 comment|/*  * change from 8 bits/Uchar to 1 bit/Uchar  */
 end_comment
@@ -5219,6 +5282,11 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * message about usage  */
