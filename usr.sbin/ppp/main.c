@@ -1035,7 +1035,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"%s is depricated\n"
+literal|"%s is deprecated\n"
 argument_list|,
 name|argv
 index|[
@@ -1047,7 +1047,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s is depricated\n"
+literal|"%s is deprecated\n"
 argument_list|,
 name|argv
 index|[
