@@ -670,12 +670,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ICMP_PARAMPROB_ERRATPTR
+value|0
+end_define
+
+begin_comment
+comment|/* error at param ptr */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ICMP_PARAMPROB_OPTABSENT
 value|1
 end_define
 
 begin_comment
 comment|/* req. opt. absent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_PARAMPROB_LENGTH
+value|2
+end_define
+
+begin_comment
+comment|/* bad length */
 end_comment
 
 begin_define
