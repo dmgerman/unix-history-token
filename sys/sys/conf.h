@@ -220,6 +220,9 @@ decl_stmt|;
 name|u_long
 name|si_usecount
 decl_stmt|;
+name|u_long
+name|si_threadcount
+decl_stmt|;
 union|union
 block|{
 struct|struct
