@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sem.c	5.14 (Berkeley) %G%"
+literal|"@(#)sem.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +31,55 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"csh.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dir.h"
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"csh.h"
 end_include
 
 begin_include
@@ -154,11 +196,11 @@ literal|2
 index|]
 decl_stmt|;
 specifier|static
-name|sigmask_t
+name|sigset_t
 name|csigmask
 decl_stmt|;
 specifier|static
-name|sigmask_t
+name|sigset_t
 name|ocsigmask
 decl_stmt|;
 specifier|static
@@ -580,12 +622,7 @@ block|{
 comment|/* not a command */
 name|bifunc
 operator|=
-operator|(
-expr|struct
-name|biltins
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 comment|/* 	 * We fork only if we are timed, or are not the end of a parenthesized 	 * list and not a simple builtin function. Simple meaning one that is 	 * not pipedout, niced, nohupped, or&'d. It would be nice(?) to not 	 * fork in some of these cases. 	 */
@@ -789,7 +826,7 @@ name|oOLDSTD
 decl_stmt|,
 name|otpgrp
 decl_stmt|;
-name|sigmask_t
+name|sigset_t
 name|omask
 decl_stmt|;
 comment|/* 		 * Prepare for the vfork by saving everything that the child 		 * corrupts before it exec's. Note that in some signal 		 * implementations which keep the signal info in user space 		 * (e.g. Sun's) it will also be necessary to save and restore 		 * the current sigvec's for the signals the child touches 		 * before it exec's. 		 */
@@ -2248,11 +2285,7 @@ literal|0
 argument_list|,
 name|FIONCLEX
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2549,11 +2582,7 @@ literal|1
 argument_list|,
 name|FIONCLEX
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2606,11 +2635,7 @@ literal|2
 argument_list|,
 name|FIONCLEX
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

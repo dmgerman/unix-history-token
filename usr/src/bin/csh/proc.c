@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c	5.18 (Berkeley) %G%"
+literal|"@(#)proc.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,42 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_include
 include|#
@@ -50,12 +86,6 @@ begin_include
 include|#
 directive|include
 file|"extern.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
 end_include
 
 begin_define
@@ -464,12 +494,7 @@ name|pp
 operator|->
 name|p_etime
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|pp
@@ -940,7 +965,7 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-name|sigmask_t
+name|sigset_t
 name|omask
 decl_stmt|;
 name|neednote
@@ -1055,7 +1080,7 @@ decl_stmt|,
 modifier|*
 name|pp
 decl_stmt|;
-name|sigmask_t
+name|sigset_t
 name|omask
 decl_stmt|;
 comment|/*      * Here's where dead procs get flushed.      */
@@ -1212,7 +1237,7 @@ name|jobflags
 decl_stmt|,
 name|reason
 decl_stmt|;
-name|sigmask_t
+name|sigset_t
 name|omask
 decl_stmt|;
 while|while
@@ -1703,7 +1728,7 @@ name|process
 modifier|*
 name|pp
 decl_stmt|;
-name|sigmask_t
+name|sigset_t
 name|omask
 decl_stmt|;
 name|pjobs
@@ -1757,7 +1782,7 @@ operator|)
 name|sigpause
 argument_list|(
 operator|(
-name|sigmask_t
+name|sigset_t
 operator|)
 literal|0
 argument_list|)
@@ -2470,12 +2495,7 @@ name|pp
 operator|->
 name|p_btime
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -4590,7 +4610,7 @@ name|err1
 init|=
 literal|0
 decl_stmt|;
-name|sigmask_t
+name|sigset_t
 name|omask
 decl_stmt|;
 name|Char
@@ -5010,7 +5030,7 @@ name|process
 modifier|*
 name|np
 decl_stmt|;
-name|sigmask_t
+name|sigset_t
 name|omask
 decl_stmt|;
 name|long
@@ -5744,7 +5764,7 @@ decl_stmt|;
 name|int
 name|pgrp
 decl_stmt|;
-name|sigmask_t
+name|sigset_t
 name|omask
 decl_stmt|;
 comment|/*      * A child will be uninterruptible only under very special conditions.      * Remember that the semantics of '&' is implemented by disconnecting the      * process from the tty so signals do not need to ignored just for '&'.      * Thus signals are set to default action for children unless: we have had      * an "onintr -" (then specifically ignored) we are not playing with      * signals (inherit action)      */
@@ -6151,7 +6171,7 @@ decl_stmt|,
 name|pgrp
 decl_stmt|;
 block|{
-name|sigmask_t
+name|sigset_t
 name|omask
 init|=
 literal|0

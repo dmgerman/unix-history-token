@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	5.8 (Berkeley) %G%"
+literal|"@(#)err.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,15 +28,23 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|_h_tc_err
-end_define
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
-begin_comment
-comment|/* Don't redefine the errors	 */
-end_comment
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#

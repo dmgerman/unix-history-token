@@ -1,126 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.14 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.15 (Berkeley) %G%  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NLS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<locale.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<termios.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dirent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
-end_include
 
 begin_comment
 comment|/*  * Fundamental definitions which may vary from system to system.  *  *	BUFSIZ		The i/o buffering size; also limits word size  *	MAILINTVL	How often to mailcheck; more often is more expensive  */
@@ -318,17 +199,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|long
-name|sigmask_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* What a signal mask is */
-end_comment
-
-begin_typedef
-typedef|typedef
 name|void
 modifier|*
 name|ptr_t
@@ -338,7 +208,7 @@ end_typedef
 begin_include
 include|#
 directive|include
-file|"tc.const.h"
+file|"const.h"
 end_include
 
 begin_include
@@ -781,6 +651,18 @@ begin_comment
 comment|/* Temp name for<< shell files in /tmp */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
+end_include
+
 begin_decl_stmt
 name|struct
 name|timeval
@@ -989,6 +871,12 @@ begin_comment
 comment|/*  * Error control  *  * Errors in scanning and parsing set up an error message to be printed  * at the end and complete.  Other errors always cause a reset.  * Because of source commands and .cshrc we need nested error catches.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
 begin_decl_stmt
 name|jmp_buf
 name|reslab
@@ -1045,6 +933,12 @@ end_decl_stmt
 begin_comment
 comment|/* Label for an onintr transfer */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
 
 begin_decl_stmt
 name|sig_t
@@ -2504,6 +2398,12 @@ modifier|*
 name|STR_SHELLPATH
 decl_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_ifdef
 ifdef|#

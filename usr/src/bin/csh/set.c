@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)set.c	5.9 (Berkeley) %G%"
+literal|"@(#)set.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,18 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#
@@ -3865,7 +3877,7 @@ argument_list|(
 name|sigblock
 argument_list|(
 operator|(
-name|sigmask_t
+name|sigset_t
 operator|)
 literal|0
 argument_list|)

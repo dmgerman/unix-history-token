@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c	5.17 (Berkeley) %G%"
+literal|"@(#)func.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,48 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"csh.h"
 end_include
 
@@ -38,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|"extern.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -1998,7 +2046,7 @@ argument_list|(
 name|sigblock
 argument_list|(
 operator|(
-name|sigmask_t
+name|sigset_t
 operator|)
 literal|0
 argument_list|)
@@ -2188,7 +2236,7 @@ name|int
 name|i
 decl_stmt|;
 specifier|register
-name|sigmask_t
+name|sigset_t
 name|omask
 init|=
 literal|0
@@ -3614,7 +3662,7 @@ argument_list|(
 name|sigblock
 argument_list|(
 operator|(
-name|sigmask_t
+name|sigset_t
 operator|)
 literal|0
 argument_list|)
@@ -3859,7 +3907,7 @@ argument_list|(
 name|sigblock
 argument_list|(
 operator|(
-name|sigmask_t
+name|sigset_t
 operator|)
 literal|0
 argument_list|)

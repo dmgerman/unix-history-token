@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	5.14 (Berkeley) %G%"
+literal|"@(#)exec.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,48 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"csh.h"
 end_include
 
@@ -41,7 +83,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * System level search and execute of a command.  * We look in each directory for the specified command name.  * If the name contains a '/' then we execute only the full path name.  * If there is no search path then we execute only full path names.  */
+comment|/*  * System level search and execute of a command.  We look in each directory  * for the specified command name.  If the name contains a '/' then we  * execute only the full path name.  If there is no search path then we  * execute only full path names.  */
 end_comment
 
 begin_comment
@@ -595,7 +637,7 @@ operator|)
 name|sigsetmask
 argument_list|(
 operator|(
-name|sigmask_t
+name|sigset_t
 operator|)
 literal|0
 argument_list|)

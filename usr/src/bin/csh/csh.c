@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csh.c	5.24 (Berkeley) %G%"
+literal|"@(#)csh.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,19 +55,79 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"csh.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dir.h"
+file|"extern.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"extern.h"
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -1866,7 +1926,7 @@ name|osetintr
 init|=
 name|setintr
 decl_stmt|;
-name|sigmask_t
+name|sigset_t
 name|omask
 init|=
 name|sigblock
@@ -2551,7 +2611,7 @@ name|struct
 name|Bin
 name|saveB
 decl_stmt|;
-name|sigmask_t
+name|sigset_t
 name|omask
 decl_stmt|;
 name|jmp_buf
@@ -3286,7 +3346,7 @@ modifier|*
 modifier|*
 name|v
 decl_stmt|;
-name|sigmask_t
+name|sigset_t
 name|omask
 decl_stmt|;
 name|omask
@@ -3294,7 +3354,7 @@ operator|=
 name|sigblock
 argument_list|(
 operator|(
-name|sigmask_t
+name|sigset_t
 operator|)
 literal|0
 argument_list|)
@@ -3536,7 +3596,7 @@ argument_list|(
 name|sigblock
 argument_list|(
 operator|(
-name|sigmask_t
+name|sigset_t
 operator|)
 literal|0
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.14 (Berkeley) %G%"
+literal|"@(#)lex.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,48 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#
@@ -300,11 +342,7 @@ name|Char
 modifier|*
 name|exclp
 init|=
-operator|(
-name|Char
-operator|*
-operator|)
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -319,12 +357,7 @@ name|wordent
 modifier|*
 name|exclnxt
 init|=
-operator|(
-expr|struct
-name|wordent
-operator|*
-operator|)
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -351,11 +384,7 @@ name|Char
 modifier|*
 name|alvecp
 init|=
-operator|(
-name|Char
-operator|*
-operator|)
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
