@@ -2608,6 +2608,9 @@ condition|(
 name|oldrt
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|ND6_USE_RTSOCK
 name|defrouter_msg
 argument_list|(
 name|RTM_DELETE
@@ -2615,6 +2618,8 @@ argument_list|,
 name|oldrt
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|oldrt
