@@ -55,9 +55,20 @@ decl_stmt|,
 name|t
 decl_stmt|;
 comment|/* 	 * Compute x[n + 1] = (7^5 * x[n]) mod (2^31 - 1). 	 * From "Random number generators: good ones are hard to find", 	 * Park and Miller, Communications of the ACM, vol. 31, no. 10, 	 * October 1988, p. 1195. 	 */
+comment|/* Can't be initialized with 0, so use another value. */
+if|if
+condition|(
+operator|(
 name|x
 operator|=
 name|randseed
+operator|)
+operator|==
+literal|0
+condition|)
+name|x
+operator|=
+literal|123459876
 expr_stmt|;
 name|hi
 operator|=
@@ -84,7 +95,7 @@ expr_stmt|;
 if|if
 condition|(
 name|t
-operator|<=
+operator|<
 literal|0
 condition|)
 name|t
