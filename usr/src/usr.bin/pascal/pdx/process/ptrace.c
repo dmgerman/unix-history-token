@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ptrace.c	8.1 (Berkeley) %G%"
+literal|"@(#)ptrace.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1069,33 +1069,33 @@ name|rloc
 index|[]
 init|=
 block|{
-name|R0
+name|D0
 block|,
-name|R1
+name|D1
 block|,
-name|R2
+name|D2
 block|,
-name|R3
+name|D3
 block|,
-name|R4
+name|D4
 block|,
-name|R5
+name|D5
 block|,
-name|R6
+name|D6
 block|,
-name|R7
+name|D7
 block|,
-name|AR0
+name|A0
 block|,
-name|AR1
+name|A1
 block|,
-name|AR2
+name|A2
 block|,
-name|AR3
+name|A3
 block|,
-name|AR4
+name|A4
 block|,
-name|AR5
+name|A5
 block|,     }
 decl_stmt|;
 end_decl_stmt
@@ -1425,7 +1425,7 @@ name|pid
 argument_list|,
 name|regloc
 argument_list|(
-name|AR6
+name|A6
 argument_list|)
 argument_list|,
 literal|0
@@ -1695,7 +1695,7 @@ name|pid
 argument_list|,
 name|regloc
 argument_list|(
-name|AR6
+name|A6
 argument_list|)
 argument_list|,
 name|r
