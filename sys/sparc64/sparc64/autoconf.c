@@ -88,7 +88,7 @@ name|configure
 argument_list|,
 name|SI_SUB_CONFIGURE
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_THIRD
 argument_list|,
 name|configure
 argument_list|,
