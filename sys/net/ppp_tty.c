@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.35 1998/05/01 16:40:21 bde Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.36 1998/06/07 17:12:07 dfr Exp $ */
 end_comment
 
 begin_include
@@ -3236,7 +3236,14 @@ operator|->
 name|t_outq
 argument_list|)
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 name|putc
