@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_imphost.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)if_imphost.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -18,6 +18,10 @@ name|h_q
 decl_stmt|;
 comment|/* holding queue */
 name|u_short
+name|h_timer
+decl_stmt|;
+comment|/* used to stay off deletion */
+name|u_short
 name|h_imp
 decl_stmt|;
 comment|/* host's imp number */
@@ -26,17 +30,9 @@ name|h_host
 decl_stmt|;
 comment|/* host's number on imp */
 name|u_char
-name|h_unit
-decl_stmt|;
-comment|/* imp unit number */
-name|u_char
 name|h_qcnt
 decl_stmt|;
 comment|/* size of holding q */
-name|u_char
-name|h_timer
-decl_stmt|;
-comment|/* used to stay off deletion */
 name|u_char
 name|h_rfnm
 decl_stmt|;
@@ -50,7 +46,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * A host structure is kept around (even when there are no  * references to it) for a spell to avoid constant reallocation  * and also to reflect IMP status back to sites which aren't  * directly connected to the IMP.  When structures are marked  * free, a timer is started; when the timer expires the structure  * is scavenged.  */
+comment|/*  * A host structure is kept around (even when there are no  * references to it) for a spell to avoid constant reallocation  * and also to reflect IMP status back to sites which aren't  * directly connected to the IMP.  When structures are marked  * free, a timer is started; when the timer expires the structure  * is deallocated.  A structure may be reused before the timer expires.  * A structure holds a reference on the containing mbuf when it is marked  * HF_INUSE or its timer is running.  */
 end_comment
 
 begin_define
@@ -74,20 +70,6 @@ name|HF_UNREACH
 value|(1<<IMPTYPE_HOSTUNREACH)
 end_define
 
-begin_comment
-comment|/*  * Mark a host structure free  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|hostfree
-parameter_list|(
-name|hp
-parameter_list|)
-value|{ \ 	(hp)->h_flags&= ~HF_INUSE; \ }
-end_define
-
 begin_define
 define|#
 directive|define
@@ -100,7 +82,21 @@ comment|/* keep structure around awhile */
 end_comment
 
 begin_comment
-comment|/*  * Host structures, as seen inside an mbuf.  * Hashing on the host and imp is used to  * select an index into the first mbuf.  Collisions  * are then resolved by searching successive  * mbuf's at the same index.  Reclamation is done  * automatically at the time a structure is free'd.  */
+comment|/*  * Mark a host structure free  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|hostfree
+parameter_list|(
+name|hp
+parameter_list|)
+value|{ \ 	(hp)->h_flags&= ~HF_INUSE; \ 	(hp)->h_timer = HOSTTIMER; \ }
+end_define
+
+begin_comment
+comment|/*  * Host structures, as seen inside an mbuf.  * Hashing on the host and imp is used to  * select an index into the first mbuf.  Collisions  * are then resolved by searching successive  * mbuf's at the same index.  Reclamation is done  * automatically at the time a structure is freed.  */
 end_comment
 
 begin_define

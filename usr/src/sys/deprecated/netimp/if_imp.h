@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_imp.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)if_imp.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -102,6 +102,17 @@ comment|/* message length */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IMP_MAXHOSTMSG
+value|8
+end_define
+
+begin_comment
+comment|/* max messages in flight to a host */
+end_comment
 
 begin_define
 define|#
@@ -810,6 +821,17 @@ begin_comment
 comment|/* time to wait for RFNM for msg. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IMP_OTIMER
+value|(10*IFNET_SLOWHZ)
+end_define
+
+begin_comment
+comment|/* max output time unless blocked */
+end_comment
+
 begin_comment
 comment|/*  * Data structure shared between IMP protocol module and hardware  * interface driver.  Used to allow layering of IMP routines on top  * of varying device drivers.  */
 end_comment
@@ -842,15 +864,15 @@ comment|/* hardware init routine */
 name|int
 function_decl|(
 modifier|*
-name|ic_start
+name|ic_output
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* hardware start output routine */
+comment|/* hardware output routine */
 name|int
 function_decl|(
 modifier|*
-name|ic_stop
+name|ic_down
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -885,6 +907,30 @@ name|int
 name|imp_dropcnt
 decl_stmt|;
 comment|/* used during initialization */
+name|struct
+name|mbuf
+modifier|*
+name|imp_hosts
+decl_stmt|;
+comment|/* Head of host table hash chains. */
+name|struct
+name|mbuf
+modifier|*
+name|imp_hostq
+decl_stmt|;
+comment|/* current round-robin-output mark */
+name|u_int
+name|imp_hostent
+decl_stmt|;
+comment|/* current round-robin-output mark */
+name|int
+name|imp_msgready
+decl_stmt|;
+comment|/* number of messages ready to send */
+name|u_long
+name|imp_block
+decl_stmt|;
+comment|/* times imp blocked output */
 name|u_long
 name|imp_lostrfnm
 decl_stmt|;
