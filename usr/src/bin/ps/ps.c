@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.34 (Berkeley) %G%"
+literal|"@(#)ps.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -505,7 +505,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aCghjLlmO:o:p:rSsTt:uvwx"
+literal|"aCghjLlmO:o:p:rSTt:uvwx"
 argument_list|)
 operator|)
 operator|!=
