@@ -2490,7 +2490,7 @@ name|sprintf
 argument_list|(
 name|disk
 argument_list|,
-literal|"/dev/r%s"
+literal|"/dev/%s"
 argument_list|,
 name|diskname
 argument_list|)
