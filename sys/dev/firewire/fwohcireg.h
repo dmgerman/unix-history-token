@@ -76,6 +76,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|FW_DEVICE_UPD72870
+value|(0x00cd<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_DEVICE_UPD72874
+value|(0x00f2<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FW_DEVICE_TITSB22
 value|(0x8009<< 16)
 end_define
@@ -111,8 +125,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|FW_DEVICE_TIPCI4450
-value|(0x8011<< 16)
+name|FW_DEVICE_TITSB43AB23
+value|(0x8024<< 16)
 end_define
 
 begin_define
@@ -120,6 +134,20 @@ define|#
 directive|define
 name|FW_DEVICE_TIPCI4410A
 value|(0x8017<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_DEVICE_TIPCI4450
+value|(0x8011<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_DEVICE_TIPCI4451
+value|(0x8027<< 16)
 end_define
 
 begin_define
@@ -134,6 +162,13 @@ define|#
 directive|define
 name|FW_DEVICE_VT6306
 value|(0x3044<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_DEVICE_R5C551
+value|(0x0551<< 16)
 end_define
 
 begin_define
