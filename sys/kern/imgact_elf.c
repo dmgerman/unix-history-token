@@ -4202,6 +4202,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_ZERO
+operator||
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|status
