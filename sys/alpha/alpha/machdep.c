@@ -2132,7 +2132,7 @@ comment|/* 2 */
 literal|"Simulation"
 block|,
 comment|/* 3 */
-literal|"LCA Family"
+literal|"LCA (21066/21068)"
 block|,
 comment|/* 4 */
 literal|"EV5 (21164)"
