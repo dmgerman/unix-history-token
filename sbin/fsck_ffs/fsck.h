@@ -1107,6 +1107,16 @@ begin_comment
 comment|/* received a SIGINFO */
 end_comment
 
+begin_decl_stmt
+name|int
+name|got_sigalarm
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* received a SIGALRM */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1778,6 +1788,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|infohandler
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|alarmhandler
 parameter_list|(
 name|int
 name|sig

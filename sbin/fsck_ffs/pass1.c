@@ -417,6 +417,31 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|got_sigalarm
+condition|)
+block|{
+name|setproctitle
+argument_list|(
+literal|"%s p1 %d%%"
+argument_list|,
+name|cdevname
+argument_list|,
+name|c
+operator|*
+literal|100
+operator|/
+name|sblock
+operator|.
+name|fs_ncg
+argument_list|)
+expr_stmt|;
+name|got_sigalarm
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 		 * If we are using soft updates, then we can trust the 		 * cylinder group inode allocation maps to tell us which 		 * inodes are allocated. We will scan the used inode map 		 * to find the inodes that are really in use, and then 		 * read only those inodes in from disk. 		 */
 if|if
 condition|(
