@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.80 1998/09/25 18:06:53 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.92 1998/12/14 05:47:26 dillon Exp $ */
+comment|/*	$Id: if_de.c,v 1.93 1998/12/30 00:37:43 hoek Exp $ */
 end_comment
 
 begin_comment
@@ -16345,14 +16345,21 @@ name|defined
 argument_list|(
 name|IFF_ALLMULTI
 argument_list|)
+if|if
+condition|(
 name|sc
 operator|->
 name|tulip_if
 operator|.
 name|if_flags
-operator|&=
-operator|~
+operator|&
 name|IFF_ALLMULTI
+condition|)
+name|sc
+operator|->
+name|tulip_flags
+operator||=
+name|TULIP_ALLMULTI
 expr_stmt|;
 endif|#
 directive|endif
@@ -24812,6 +24819,12 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|tulip_addr_filter
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* reinit multicast filter */
 name|tulip_init
 argument_list|(
 name|sc
