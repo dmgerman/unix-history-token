@@ -7300,6 +7300,23 @@ operator|(
 literal|"ESS Technology Maestro 2E Audio controller"
 operator|)
 return|;
+comment|/* Aureal Inc.-- vendor 0x12eb */
+case|case
+literal|0x000112eb
+case|:
+return|return
+operator|(
+literal|"Aureal Vortex AU8820 Audio controller"
+operator|)
+return|;
+case|case
+literal|0x000212eb
+case|:
+return|return
+operator|(
+literal|"Aureal Vortex AU8830 Audio controller"
+operator|)
+return|;
 comment|/* Lucent -- Vendor 0x11c1 */
 case|case
 literal|0x044011c1
