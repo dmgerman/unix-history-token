@@ -10575,7 +10575,6 @@ name|TRUE
 expr_stmt|;
 block|}
 else|else
-block|{
 name|a2
 operator|->
 name|dx
@@ -10586,10 +10585,6 @@ name|dy
 operator|=
 literal|0
 expr_stmt|;
-name|mouse_move_delayed
-operator|++
-expr_stmt|;
-block|}
 block|}
 else|else
 name|mouse_move_delayed
