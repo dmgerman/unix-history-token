@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timer.c	5.5 (Berkeley) %G%"
+literal|"@(#)timer.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,10 +83,17 @@ init|=
 literal|1
 decl_stmt|,
 name|timetobroadcast
+decl_stmt|,
+name|changes
+init|=
+literal|0
 decl_stmt|;
 specifier|extern
 name|int
 name|externalinterfaces
+decl_stmt|;
+name|time_t
+name|now
 decl_stmt|;
 name|timeval
 operator|+=
@@ -227,6 +234,35 @@ name|rt_timer
 operator|>=
 name|EXPIRE_TIME
 condition|)
+block|{
+if|if
+condition|(
+name|traceactions
+operator|&&
+name|changes
+operator|++
+operator|==
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|time
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+name|curtime
+operator|=
+name|ctime
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+block|}
 name|rtchange
 argument_list|(
 name|rt
@@ -239,6 +275,7 @@ argument_list|,
 name|HOPCNT_INFINITY
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|rt
@@ -330,10 +367,6 @@ argument_list|(
 name|rt
 operator|->
 name|rt_metric
-operator|+
-name|rt
-operator|->
-name|rt_ifmetric
 argument_list|,
 name|HOPCNT_INFINITY
 argument_list|)
