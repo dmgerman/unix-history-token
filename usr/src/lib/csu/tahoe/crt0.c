@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crt0.c	5.2 (Berkeley) %G%"
+literal|"@(#)crt0.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,10 +262,8 @@ end_expr_stmt
 
 begin_block
 block|{
-name|monitor
-argument_list|(
-literal|0
-argument_list|)
+name|_mcleanup
+argument_list|()
 expr_stmt|;
 name|_cleanup
 argument_list|()
