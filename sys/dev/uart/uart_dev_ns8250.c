@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/uart/uart_dev_ns8250.h>
+file|<dev/ic/ns16550.h>
 end_include
 
 begin_include
