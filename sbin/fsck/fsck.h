@@ -396,6 +396,12 @@ block|}
 enum|;
 end_enum
 
+begin_decl_stmt
+name|ino_t
+name|cursnapshot
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|inodesc
@@ -421,6 +427,10 @@ name|ino_t
 name|id_parent
 decl_stmt|;
 comment|/* for DATA nodes, their parent */
+name|int
+name|id_lbn
+decl_stmt|;
+comment|/* logical block number of current block */
 name|ufs_daddr_t
 name|id_blkno
 decl_stmt|;
@@ -471,12 +481,31 @@ name|DATA
 value|1
 end_define
 
+begin_comment
+comment|/* a directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNAP
+value|2
+end_define
+
+begin_comment
+comment|/* a snapshot */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ADDR
-value|2
+value|3
 end_define
+
+begin_comment
+comment|/* anything but a directory or a snapshot */
+end_comment
 
 begin_comment
 comment|/*  * Linked list of duplicate blocks.  *  * The list is composed of two parts. The first part of the  * list (from duplist through the node pointed to by muldup)  * contains a single copy of each duplicate block that has been  * found. The second part of the list (from muldup to the end)  * contains duplicate blocks that have been found more than once.  * To check if a block has been found as a duplicate it is only  * necessary to search from duplist through muldup. To find the  * total number of times that a block has been found as a duplicate  * the entire list must be searched for occurences of the block  * in question. The following diagram shows a sample list where  * w (found twice), x (found once), y (found three times), and z  * (found once) are duplicate block numbers:  *  *    w -> y -> x -> z -> y -> w -> y  *    ^		     ^  *    |		     |  * duplist	  muldup  */
