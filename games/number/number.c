@@ -525,12 +525,13 @@ modifier|*
 name|line
 decl_stmt|;
 block|{
+name|int
 name|flen
-operator|,
+decl_stmt|,
 name|len
-operator|,
+decl_stmt|,
 name|rval
-expr_stmt|;
+decl_stmt|;
 name|char
 modifier|*
 name|p
