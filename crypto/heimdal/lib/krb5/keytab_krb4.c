@@ -9,16 +9,10 @@ directive|include
 file|"krb5_locl.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<krb.h>
-end_include
-
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: keytab_krb4.c,v 1.5 2000/01/06 08:04:58 assar Exp $"
+literal|"$Id: keytab_krb4.c,v 1.6 2000/12/15 17:10:40 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -933,6 +927,18 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+define|#
+directive|define
+name|ANAME_SZ
+value|40
+define|#
+directive|define
+name|INST_SZ
+value|40
+define|#
+directive|define
+name|REALM_SZ
+value|40
 name|char
 name|service
 index|[
@@ -1146,6 +1152,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|const
 name|krb5_kt_ops
 name|krb4_fkt_ops
 init|=

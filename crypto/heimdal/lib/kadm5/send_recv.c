@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: send_recv.c,v 1.7 1999/12/02 17:05:07 joda Exp $"
+literal|"$Id: send_recv.c,v 1.8 2000/07/11 16:00:58 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -45,6 +45,16 @@ name|krb5_storage
 modifier|*
 name|sock
 decl_stmt|;
+name|assert
+argument_list|(
+name|context
+operator|->
+name|sock
+operator|!=
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
 name|sp

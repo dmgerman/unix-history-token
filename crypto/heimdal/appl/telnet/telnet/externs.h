@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1988, 1990, 1993  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/* $Id: externs.h,v 1.18 1998/07/09 23:16:36 assar Exp $ */
+comment|/* $Id: externs.h,v 1.20 2000/11/15 23:01:29 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -756,6 +756,7 @@ name|char
 modifier|*
 name|telnet_getenv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|val
@@ -928,10 +929,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|long
+name|int
 name|sourceroute
 parameter_list|(
+name|struct
+name|addrinfo
+modifier|*
+name|ai
+parameter_list|,
 name|char
 modifier|*
 name|arg
@@ -943,7 +948,11 @@ name|cpp
 parameter_list|,
 name|int
 modifier|*
-name|lenp
+name|prototp
+parameter_list|,
+name|int
+modifier|*
+name|optp
 parameter_list|)
 function_decl|;
 end_function_decl

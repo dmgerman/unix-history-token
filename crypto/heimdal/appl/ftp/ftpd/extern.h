@@ -307,9 +307,6 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-ifdef|#
-directive|ifdef
-name|__GNUC__
 function_decl|__attribute__
 parameter_list|(
 function_decl|(format
@@ -321,13 +318,8 @@ operator|,
 function_decl|3
 end_function_decl
 
-begin_endif
-unit|)))
-endif|#
-directive|endif
-end_endif
-
 begin_empty_stmt
+unit|)))
 empty_stmt|;
 end_empty_stmt
 
@@ -361,9 +353,6 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-ifdef|#
-directive|ifdef
-name|__GNUC__
 function_decl|__attribute__
 parameter_list|(
 function_decl|(format
@@ -375,13 +364,8 @@ operator|,
 function_decl|2
 end_function_decl
 
-begin_endif
-unit|)))
-endif|#
-directive|endif
-end_endif
-
 begin_empty_stmt
+unit|)))
 empty_stmt|;
 end_empty_stmt
 
@@ -472,9 +456,6 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-ifdef|#
-directive|ifdef
-name|__GNUC__
 function_decl|__attribute__
 parameter_list|(
 function_decl|(format
@@ -486,13 +467,8 @@ operator|,
 function_decl|3
 end_function_decl
 
-begin_endif
-unit|)))
-endif|#
-directive|endif
-end_endif
-
 begin_empty_stmt
+unit|)))
 empty_stmt|;
 end_empty_stmt
 
@@ -530,9 +506,6 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-ifdef|#
-directive|ifdef
-name|__GNUC__
 function_decl|__attribute__
 parameter_list|(
 function_decl|(format
@@ -544,13 +517,8 @@ operator|,
 function_decl|2
 end_function_decl
 
-begin_endif
-unit|)))
-endif|#
-directive|endif
-end_endif
-
 begin_empty_stmt
+unit|)))
 empty_stmt|;
 end_empty_stmt
 

@@ -29,7 +29,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: telnet.c,v 1.27 2000/01/01 11:53:24 assar Exp $"
+literal|"$Id: telnet.c,v 1.28 2000/11/08 17:32:43 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2394,6 +2394,9 @@ modifier|*
 name|errp
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_TGETENT
 if|if
 condition|(
 name|tgetent
@@ -2443,6 +2446,34 @@ operator|-
 literal|1
 operator|)
 return|;
+else|#
+directive|else
+name|strlcpy
+argument_list|(
+name|termbuf
+argument_list|,
+name|tname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|termbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errp
+condition|)
+operator|*
+name|errp
+operator|=
+literal|1
+expr_stmt|;
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 

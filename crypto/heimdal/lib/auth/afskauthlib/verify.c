@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995-1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1995-2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifdef
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: verify.c,v 1.20 1999/12/02 16:58:37 joda Exp $"
+literal|"$Id: verify.c,v 1.24 2000/12/31 07:57:08 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -409,12 +409,34 @@ decl_stmt|;
 name|krb5_principal
 name|principal
 decl_stmt|;
+name|ret
+operator|=
 name|krb5_init_context
 argument_list|(
 operator|&
 name|context
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_AUTH
+operator||
+name|LOG_DEBUG
+argument_list|,
+literal|"krb5_init_context failed: %d"
+argument_list|,
+name|ret
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|ret
 operator|=
 name|krb5_parse_name
@@ -783,6 +805,11 @@ name|pag_set
 operator|=
 literal|1
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|pag_set
+condition|)
 name|krb5_afslog_uid_home
 argument_list|(
 name|context
@@ -802,7 +829,6 @@ operator|->
 name|pw_dir
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|out
@@ -937,6 +963,11 @@ name|pag_set
 operator|=
 literal|1
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|pag_set
+condition|)
 name|krb_afslog_uid_home
 argument_list|(
 literal|0
@@ -952,7 +983,6 @@ operator|->
 name|pw_dir
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -1026,6 +1056,23 @@ condition|)
 return|return
 literal|1
 return|;
+if|if
+condition|(
+operator|!
+name|pag_set
+operator|&&
+name|k_hasafs
+argument_list|()
+condition|)
+block|{
+name|k_setpag
+argument_list|()
+expr_stmt|;
+name|pag_set
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ret
@@ -1186,7 +1233,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|KRB5
-name|setenv
+name|esetenv
 argument_list|(
 literal|"KRB5CCNAME"
 argument_list|,
@@ -1200,7 +1247,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|KRB4
-name|setenv
+name|esetenv
 argument_list|(
 literal|"KRBTKFILE"
 argument_list|,

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_comment
-comment|/* $Id: gssapi.h,v 1.14 1999/12/02 17:05:03 joda Exp $ */
+comment|/* $Id: gssapi.h,v 1.20 2001/01/30 00:35:48 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -66,6 +66,13 @@ begin_typedef
 typedef|typedef
 name|u_int32_t
 name|OM_uint32
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|gss_uint32
 typedef|;
 end_typedef
 
@@ -191,6 +198,12 @@ name|krb5_keytab_data
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|krb5_ccache_data
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|int
@@ -219,6 +232,11 @@ name|usage
 decl_stmt|;
 name|gss_OID_set
 name|mechanisms
+decl_stmt|;
+name|struct
+name|krb5_ccache_data
+modifier|*
+name|ccache
 decl_stmt|;
 block|}
 name|gss_cred_id_t_desc
@@ -654,6 +672,20 @@ name|GSS_C_QOP_DEFAULT
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|GSS_KRB5_CONF_C_QOP_DES
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|GSS_KRB5_CONF_C_QOP_DES3_KD
+value|0x0200
+end_define
+
 begin_comment
 comment|/*  * Expiration time of 2^32-1 seconds means infinite lifetime for a  * credential or security context  */
 end_comment
@@ -699,7 +731,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The implementation must reserve static storage for a  * gss_OID_desc object containing the value  * {6, (void *)"\x2b\x06\x01\x05\x06\x02"},  * corresponding to an object-identifier value of  * {1(iso), 3(org), 6(dod), 1(internet), 5(security),  * 6(nametypes), 2(gss-host-based-services)}.  The constant  * GSS_C_NT_HOSTBASED_SERVICE should be initialized to point  * to that gss_OID_desc.  */
+comment|/*  * The implementation must reserve static storage for a  * gss_OID_desc object containing the value  * {6, (void *)"\x2b\x06\x01\x05\x06\x02"},  * corresponding to an object-identifier value of  * {iso(1) org(3) dod(6) internet(1) security(5)  * nametypes(6) gss-host-based-services(2)).  The constant  * GSS_C_NT_HOSTBASED_SERVICE_X should be initialized to point  * to that gss_OID_desc.  This is a deprecated OID value, and  * implementations wishing to support hostbased-service names  * should instead use the GSS_C_NT_HOSTBASED_SERVICE OID,  * defined below, to identify such names;  * GSS_C_NT_HOSTBASED_SERVICE_X should be accepted a synonym  * for GSS_C_NT_HOSTBASED_SERVICE when presented as an input  * parameter, but should not be emitted by GSS-API  * implementations  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|gss_OID
+name|GSS_C_NT_HOSTBASED_SERVICE_X
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * The implementation must reserve static storage for a  * gss_OID_desc object containing the value  * {10, (void *)"\x2a\x86\x48\x86\xf7\x12"  *              "\x01\x02\x01\x04"}, corresponding to an  * object-identifier value of {iso(1) member-body(2)  * Unites States(840) mit(113554) infosys(1) gssapi(2)  * generic(1) service_name(4)}.  The constant  * GSS_C_NT_HOSTBASED_SERVICE should be initialized  * to point to that gss_OID_desc.  */
 end_comment
 
 begin_decl_stmt
@@ -769,6 +812,17 @@ name|gss_OID
 name|GSS_KRB5_MECHANISM
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* for compatibility with MIT api */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|gss_mech_krb5
+value|GSS_KRB5_MECHANISM
+end_define
 
 begin_comment
 comment|/* Major status codes */
@@ -2262,6 +2316,25 @@ parameter_list|(
 name|char
 modifier|*
 name|identity
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|gss_krb5_copy_ccache
+parameter_list|(
+name|OM_uint32
+modifier|*
+name|minor
+parameter_list|,
+name|gss_cred_id_t
+name|cred
+parameter_list|,
+name|struct
+name|krb5_ccache_data
+modifier|*
+name|out
 parameter_list|)
 function_decl|;
 end_function_decl

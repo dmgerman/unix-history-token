@@ -114,6 +114,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|lineedit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use line-editing */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|debug
 decl_stmt|;
 end_decl_stmt
@@ -646,6 +657,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* used during socket creation */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|use_kerberos
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use Kerberos authentication */
 end_comment
 
 begin_comment

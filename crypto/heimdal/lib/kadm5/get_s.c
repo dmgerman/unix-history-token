@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_s.c,v 1.11 1999/12/26 19:38:23 assar Exp $"
+literal|"$Id: get_s.c,v 1.13 2000/06/19 16:11:31 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -357,7 +357,10 @@ condition|(
 name|mask
 operator|&
 name|KADM5_MAX_LIFE
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|ent
 operator|.
 name|max_life
@@ -371,6 +374,14 @@ name|ent
 operator|.
 name|max_life
 expr_stmt|;
+else|else
+name|out
+operator|->
+name|max_life
+operator|=
+name|INT_MAX
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|mask
@@ -451,7 +462,17 @@ name|mod_name
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|ent
+operator|.
+name|created_by
+operator|.
+name|principal
+operator|!=
+name|NULL
+condition|)
 name|ret
 operator|=
 name|krb5_copy_principal
@@ -471,6 +492,13 @@ name|out
 operator|->
 name|mod_name
 argument_list|)
+expr_stmt|;
+else|else
+name|out
+operator|->
+name|mod_name
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -587,7 +615,10 @@ condition|(
 name|mask
 operator|&
 name|KADM5_MAX_RLIFE
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|ent
 operator|.
 name|max_renew
@@ -601,6 +632,14 @@ name|ent
 operator|.
 name|max_renew
 expr_stmt|;
+else|else
+name|out
+operator|->
+name|max_renewable_life
+operator|=
+name|INT_MAX
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|mask
@@ -779,7 +818,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|pa_pw_salt
+name|KRB5_PADATA_PW_SALT
 expr_stmt|;
 comment|/* setup key */
 name|kd

@@ -433,23 +433,6 @@ directive|include
 file|"defs.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_ARPA_TELNET_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<arpa/telnet.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -559,12 +542,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"ext.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -581,6 +558,29 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ARPA_TELNET_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<arpa/telnet.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"ext.h"
+end_include
 
 begin_ifdef
 ifdef|#

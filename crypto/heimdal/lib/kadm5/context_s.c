@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: context_s.c,v 1.13 2000/01/06 21:40:08 assar Exp $"
+literal|"$Id: context_s.c,v 1.15 2000/05/12 15:22:33 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -47,7 +47,7 @@ name|SET
 argument_list|(
 name|c
 argument_list|,
-name|chpass_principal
+name|chpass_principal_with_key
 argument_list|)
 expr_stmt|;
 name|SET
@@ -185,6 +185,19 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+operator|*
+name|variable
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+operator|*
+name|variable
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|krb5_config_get_string
@@ -740,8 +753,11 @@ name|config
 operator|.
 name|acl_file
 operator|=
+name|strdup
+argument_list|(
 name|HDB_DB_DIR
 literal|"/kadmind.acl"
+argument_list|)
 expr_stmt|;
 name|ctx
 operator|->
@@ -749,8 +765,11 @@ name|config
 operator|.
 name|stash_file
 operator|=
+name|strdup
+argument_list|(
 name|HDB_DB_DIR
 literal|"/m-key"
+argument_list|)
 expr_stmt|;
 name|ctx
 operator|->
@@ -758,8 +777,11 @@ name|log_context
 operator|.
 name|log_file
 operator|=
+name|strdup
+argument_list|(
 name|HDB_DB_DIR
 literal|"/log"
+argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(

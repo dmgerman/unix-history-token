@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: state.c,v 1.13 1999/05/13 23:12:50 assar Exp $"
+literal|"$Id: state.c,v 1.14 2000/10/02 05:06:02 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3024,7 +3024,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|setenv
+name|esetenv
 argument_list|(
 literal|"DISPLAY"
 argument_list|,
@@ -3558,7 +3558,7 @@ if|if
 condition|(
 name|valp
 condition|)
-name|setenv
+name|esetenv
 argument_list|(
 name|varp
 argument_list|,
@@ -3622,7 +3622,7 @@ if|if
 condition|(
 name|valp
 condition|)
-name|setenv
+name|esetenv
 argument_list|(
 name|varp
 argument_list|,

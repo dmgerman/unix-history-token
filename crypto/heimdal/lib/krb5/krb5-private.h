@@ -97,6 +97,7 @@ name|_krb5_crc_update
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|p
@@ -147,6 +148,9 @@ name|nonce
 operator|,
 name|krb5_boolean
 name|allow_server_mismatch
+operator|,
+name|krb5_boolean
+name|ignore_cname
 operator|,
 name|krb5_decrypt_proc
 name|decrypt_proc

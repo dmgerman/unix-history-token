@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rd_rep.c,v 1.19 1999/12/02 17:05:12 joda Exp $"
+literal|"$Id: rd_rep.c,v 1.20 2000/08/18 06:49:03 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -123,6 +123,8 @@ goto|goto
 name|out
 goto|;
 block|}
+name|ret
+operator|=
 name|krb5_crypto_init
 argument_list|(
 name|context
@@ -137,6 +139,13 @@ operator|&
 name|crypto
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+goto|goto
+name|out
+goto|;
 name|ret
 operator|=
 name|krb5_decrypt_EncryptedData

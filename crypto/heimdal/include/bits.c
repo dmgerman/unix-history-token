@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_ifdef
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bits.c,v 1.16 1999/12/02 17:04:57 joda Exp $"
+literal|"$Id: bits.c,v 1.18 2000/08/27 05:42:46 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -52,60 +52,6 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_function
-specifier|static
-name|void
-name|my_strupr
-parameter_list|(
-name|char
-modifier|*
-name|s
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|p
-init|=
-name|s
-decl_stmt|;
-while|while
-condition|(
-operator|*
-name|p
-condition|)
-block|{
-if|if
-condition|(
-name|islower
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|p
-argument_list|)
-condition|)
-operator|*
-name|p
-operator|=
-name|toupper
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|p
-argument_list|)
-expr_stmt|;
-name|p
-operator|++
-expr_stmt|;
-block|}
-block|}
-end_function
-
 begin_define
 define|#
 directive|define
@@ -114,8 +60,94 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|{								\     int b = 0; TYPE x = 1, zero = 0; char *pre = "u_";		\     char tmp[128], tmp2[128];					\     while(x){ x<<= 1; b++; if(x< zero) pre=""; }		\     if(b>= len){						\         int tabs;						\ 	sprintf(tmp, "%sint%d_t" , pre, len);			\ 	sprintf(tmp2, "typedef %s %s;", #TYPE, tmp);		\ 	my_strupr(tmp);						\ 	tabs = 5 - strlen(tmp2) / 8;				\         fprintf(f, "%s", tmp2);					\ 	while(tabs--> 0) fprintf(f, "\t");			\ 	fprintf(f, "/* %2d bits */\n", b);			\         return;                                                 \     }								\ }
+value|{								\     int b = 0; TYPE x = 1, zero = 0; char *pre = "u";		\     char tmp[128], tmp2[128];					\     while(x){ x<<= 1; b++; if(x< zero) pre=""; }		\     if(b>= len){						\         int tabs;						\ 	sprintf(tmp, "%sint%d_t" , pre, len);			\ 	sprintf(tmp2, "typedef %s %s;", #TYPE, tmp);		\ 	tabs = 5 - strlen(tmp2) / 8;				\         fprintf(f, "%s", tmp2);					\ 	while(tabs--> 0) fprintf(f, "\t");			\ 	fprintf(f, "/* %2d bits */\n", b);			\         return;                                                 \     }								\ }
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE___ATTRIBUTE__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__attribute__
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+specifier|static
+name|void
+name|try_signed
+parameter_list|(
+name|FILE
+modifier|*
+name|f
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(unused
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|try_unsigned
+parameter_list|(
+name|FILE
+modifier|*
+name|f
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(unused
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|static
+name|int
+name|print_bt
+parameter_list|(
+name|FILE
+modifier|*
+name|f
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(unused
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 begin_function
 specifier|static
@@ -435,7 +467,7 @@ argument_list|)
 argument_list|,
 literal|""
 argument_list|,
-literal|"$Id: bits.c,v 1.16 1999/12/02 17:04:57 joda Exp $"
+literal|"$Id: bits.c,v 1.18 2000/08/27 05:42:46 assar Exp $"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -614,7 +646,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|HAVE_U_INT8_T
+name|HAVE_UINT8_T
 name|flag
 operator|=
 name|print_bt
@@ -633,10 +665,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_INT8_T */
+comment|/* HAVE_UINT8_T */
 ifndef|#
 directive|ifndef
-name|HAVE_U_INT16_T
+name|HAVE_UINT16_T
 name|flag
 operator|=
 name|print_bt
@@ -655,10 +687,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_U_INT16_T */
+comment|/* HAVE_UINT16_T */
 ifndef|#
 directive|ifndef
-name|HAVE_U_INT32_T
+name|HAVE_UINT32_T
 name|flag
 operator|=
 name|print_bt
@@ -677,6 +709,85 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* HAVE_UINT32_T */
+if|#
+directive|if
+literal|0
+ifndef|#
+directive|ifndef
+name|HAVE_UINT64_T
+block|flag = print_bt(f, flag);     try_unsigned (f, 64);
+endif|#
+directive|endif
+comment|/* HAVE_UINT64_T */
+endif|#
+directive|endif
+define|#
+directive|define
+name|X
+parameter_list|(
+name|S
+parameter_list|)
+value|fprintf(f, "typedef uint" #S "_t u_int" #S "_t;\n")
+ifndef|#
+directive|ifndef
+name|HAVE_U_INT8_T
+name|flag
+operator|=
+name|print_bt
+argument_list|(
+name|f
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+name|X
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_U_INT8_T */
+ifndef|#
+directive|ifndef
+name|HAVE_U_INT16_T
+name|flag
+operator|=
+name|print_bt
+argument_list|(
+name|f
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+name|X
+argument_list|(
+literal|16
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_U_INT16_T */
+ifndef|#
+directive|ifndef
+name|HAVE_U_INT32_T
+name|flag
+operator|=
+name|print_bt
+argument_list|(
+name|f
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+name|X
+argument_list|(
+literal|32
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* HAVE_U_INT32_T */
 if|#
 directive|if
@@ -684,7 +795,7 @@ literal|0
 ifndef|#
 directive|ifndef
 name|HAVE_U_INT64_T
-block|flag = print_bt(f, flag);     try_unsigned (f, 64);
+block|flag = print_bt(f, flag);     X(64);
 endif|#
 directive|endif
 comment|/* HAVE_U_INT64_T */

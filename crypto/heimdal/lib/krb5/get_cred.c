@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_cred.c,v 1.75 1999/12/02 17:05:09 joda Exp $"
+literal|"$Id: get_cred.c,v 1.82 2001/01/19 04:29:44 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -203,6 +203,8 @@ operator|->
 name|padata_value
 argument_list|,
 name|KRB5_KU_TGS_REQ_AUTH_CKSUM
+argument_list|,
+name|KRB5_KU_TGS_REQ_AUTH
 argument_list|)
 expr_stmt|;
 name|out
@@ -223,7 +225,7 @@ name|padata
 operator|->
 name|padata_type
 operator|=
-name|pa_tgs_req
+name|KRB5_PADATA_TGS_REQ
 expr_stmt|;
 return|return
 literal|0
@@ -669,6 +671,7 @@ goto|goto
 name|fail
 goto|;
 block|}
+comment|/* some versions of some code might require that the client be        present in TGS-REQs, but this is clearly against the spec */
 name|ret
 operator|=
 name|copy_PrincipalName
@@ -1086,6 +1089,7 @@ if|if
 condition|(
 name|ret
 condition|)
+comment|/* XXX - don't free addresses? */
 name|free_TGS_REQ
 argument_list|(
 name|t
@@ -1240,6 +1244,8 @@ decl_stmt|;
 name|krb5_crypto
 name|crypto
 decl_stmt|;
+name|ret
+operator|=
 name|krb5_crypto_init
 argument_list|(
 name|context
@@ -1252,6 +1258,13 @@ operator|&
 name|crypto
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
 name|ret
 operator|=
 name|krb5_decrypt_EncryptedData
@@ -1288,6 +1301,8 @@ name|subkey
 condition|)
 block|{
 comment|/* DCE compat -- try to decrypt with subkey */
+name|ret
+operator|=
 name|krb5_crypto_init
 argument_list|(
 name|context
@@ -1304,6 +1319,13 @@ operator|&
 name|crypto
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
 name|ret
 operator|=
 name|krb5_decrypt_EncryptedData
@@ -1893,6 +1915,12 @@ argument_list|,
 name|nonce
 argument_list|,
 name|TRUE
+argument_list|,
+name|flags
+operator|.
+name|b
+operator|.
+name|request_anonymous
 argument_list|,
 name|decrypt_tkt_with_subkey
 argument_list|,
@@ -2503,10 +2531,12 @@ name|tgt
 decl_stmt|,
 name|tmp_creds
 decl_stmt|;
-name|krb5_realm
+name|krb5_const_realm
 name|client_realm
 decl_stmt|,
 name|server_realm
+decl_stmt|,
+name|try_realm
 decl_stmt|;
 operator|*
 name|out_creds
@@ -2573,6 +2603,33 @@ condition|)
 return|return
 name|ret
 return|;
+name|try_realm
+operator|=
+name|krb5_config_get_string
+argument_list|(
+name|context
+argument_list|,
+name|NULL
+argument_list|,
+literal|"libdefaults"
+argument_list|,
+literal|"capath"
+argument_list|,
+name|server_realm
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|try_realm
+operator|==
+name|NULL
+condition|)
+name|try_realm
+operator|=
+name|client_realm
+expr_stmt|;
 name|ret
 operator|=
 name|krb5_make_principal
@@ -2584,7 +2641,7 @@ name|tmp_creds
 operator|.
 name|server
 argument_list|,
-name|client_realm
+name|try_realm
 argument_list|,
 name|KRB5_TGS_NAME
 argument_list|,
@@ -2693,12 +2750,19 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
 name|free
 argument_list|(
 operator|*
 name|out_creds
 argument_list|)
 expr_stmt|;
+operator|*
+name|out_creds
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 name|krb5_free_creds_contents
 argument_list|(
@@ -2758,15 +2822,6 @@ block|{
 name|general_string
 name|tgt_inst
 decl_stmt|;
-name|krb5_kdc_flags
-name|f
-decl_stmt|;
-name|f
-operator|.
-name|i
-operator|=
-literal|0
-expr_stmt|;
 name|ret
 operator|=
 name|get_cred_from_kdc_flags
@@ -3039,12 +3094,19 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
 name|free
 argument_list|(
 operator|*
 name|out_creds
 argument_list|)
 expr_stmt|;
+operator|*
+name|out_creds
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 name|krb5_free_creds
 argument_list|(
@@ -3147,11 +3209,19 @@ modifier|*
 modifier|*
 name|tgts
 decl_stmt|;
+name|krb5_creds
+modifier|*
+name|res_creds
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
 operator|*
 name|out_creds
+operator|=
+name|NULL
+expr_stmt|;
+name|res_creds
 operator|=
 name|calloc
 argument_list|(
@@ -3160,15 +3230,13 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-operator|*
-name|out_creds
+name|res_creds
 argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|out_creds
+name|res_creds
 operator|==
 name|NULL
 condition|)
@@ -3195,8 +3263,7 @@ literal|0
 argument_list|,
 name|in_creds
 argument_list|,
-operator|*
-name|out_creds
+name|res_creds
 argument_list|)
 expr_stmt|;
 if|if
@@ -3205,13 +3272,19 @@ name|ret
 operator|==
 literal|0
 condition|)
+block|{
+operator|*
+name|out_creds
+operator|=
+name|res_creds
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 name|free
 argument_list|(
-operator|*
-name|out_creds
+name|res_creds
 argument_list|)
 expr_stmt|;
 if|if

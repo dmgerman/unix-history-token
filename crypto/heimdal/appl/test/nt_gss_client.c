@@ -24,7 +24,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: nt_gss_client.c,v 1.3 1999/12/04 18:16:19 assar Exp $"
+literal|"$Id: nt_gss_client.c,v 1.4 2000/08/09 20:53:07 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -58,7 +58,7 @@ name|remote
 decl_stmt|,
 name|local
 decl_stmt|;
-name|int
+name|socklen_t
 name|addrlen
 decl_stmt|;
 name|int

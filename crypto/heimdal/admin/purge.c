@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: purge.c,v 1.1 2000/01/02 05:06:50 assar Exp $"
+literal|"$Id: purge.c,v 1.3 2000/06/29 08:31:47 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -313,16 +313,14 @@ name|help_flag
 init|=
 literal|0
 decl_stmt|;
+name|char
+modifier|*
+name|age_str
+init|=
+literal|"1 week"
+decl_stmt|;
 name|int
 name|age
-init|=
-literal|7
-operator|*
-literal|24
-operator|*
-literal|60
-operator|*
-literal|60
 decl_stmt|;
 name|struct
 name|getargs
@@ -335,7 +333,7 @@ literal|"age"
 block|,
 literal|0
 block|,
-name|arg_integer
+name|arg_string
 block|,
 name|NULL
 block|,
@@ -398,7 +396,7 @@ operator|.
 name|value
 operator|=
 operator|&
-name|age
+name|age_str
 expr_stmt|;
 name|args
 index|[
@@ -463,6 +461,35 @@ return|return
 literal|0
 return|;
 block|}
+name|age
+operator|=
+name|parse_time
+argument_list|(
+name|age_str
+argument_list|,
+literal|"s"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|age
+operator|<
+literal|0
+condition|)
+block|{
+name|krb5_warnx
+argument_list|(
+name|context
+argument_list|,
+literal|"unparasable time `%s'"
+argument_list|,
+name|age_str
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|ret
 operator|=
 name|krb5_kt_start_seq_get
@@ -486,7 +513,9 @@ name|context
 argument_list|,
 name|ret
 argument_list|,
-literal|"krb5_kt_start_seq_get"
+literal|"krb5_kt_start_seq_get %s"
+argument_list|,
+name|keytab_string
 argument_list|)
 expr_stmt|;
 return|return
@@ -580,7 +609,9 @@ name|context
 argument_list|,
 name|ret
 argument_list|,
-literal|"krb5_kt_start_seq_get"
+literal|"krb5_kt_start_seq_get, %s"
+argument_list|,
+name|keytab_string
 argument_list|)
 expr_stmt|;
 return|return

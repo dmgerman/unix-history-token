@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: authenc.c,v 1.9 1999/09/05 19:14:50 assar Exp $"
+literal|"$Id: authenc.c,v 1.10 2000/11/15 23:20:43 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -153,21 +153,12 @@ name|char
 modifier|*
 name|telnet_getenv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|val
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|getenv
-argument_list|(
-specifier|const
-name|char
-operator|*
-argument_list|)
-decl_stmt|;
 return|return
 operator|(
 name|getenv

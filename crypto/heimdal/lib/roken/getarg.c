@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getarg.c,v 1.34 2000/02/13 21:06:43 assar Exp $"
+literal|"$Id: getarg.c,v 1.37 2000/12/25 17:03:15 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -32,6 +32,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -140,7 +152,8 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|longp
@@ -164,6 +177,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|arg
@@ -207,6 +221,19 @@ condition|)
 name|s
 operator|=
 literal|"string"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|arg
+operator|->
+name|type
+operator|==
+name|arg_strings
+condition|)
+name|s
+operator|=
+literal|"strings"
 expr_stmt|;
 elseif|else
 if|if
@@ -2739,9 +2766,15 @@ name|optarg
 operator|==
 name|NULL
 condition|)
+block|{
+operator|--
+operator|*
+name|optind
+expr_stmt|;
 return|return
 name|ARG_ERR_NO_ARG
 return|;
+block|}
 if|if
 condition|(
 name|args

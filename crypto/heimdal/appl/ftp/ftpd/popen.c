@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: popen.c,v 1.19 1999/09/16 20:38:45 assar Exp $"
+literal|"$Id: popen.c,v 1.22 2001/02/05 07:51:51 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -151,13 +151,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"extern.h"
+file|<roken.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<roken.h>
+file|"extern.h"
 end_include
 
 begin_comment
@@ -299,6 +299,20 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|MAXARGS
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXGLOBS
+value|1000
+end_define
+
 begin_function
 name|FILE
 modifier|*
@@ -347,13 +361,13 @@ decl_stmt|,
 modifier|*
 name|argv
 index|[
-literal|100
+name|MAXARGS
 index|]
 decl_stmt|,
 modifier|*
 name|gargv
 index|[
-literal|1000
+name|MAXGLOBS
 index|]
 decl_stmt|;
 name|char
@@ -447,6 +461,11 @@ name|cp
 operator|=
 name|program
 init|;
+name|argc
+operator|<
+name|MAXARGS
+operator|-
+literal|1
 condition|;
 name|cp
 operator|=
@@ -476,6 +495,15 @@ operator|)
 condition|)
 break|break;
 block|}
+name|argv
+index|[
+name|MAXARGS
+operator|-
+literal|1
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 name|gargv
 index|[
 literal|0
@@ -506,6 +534,12 @@ name|argv
 index|[
 name|argc
 index|]
+operator|&&
+name|gargc
+operator|<
+name|MAXGLOBS
+operator|-
+literal|1
 condition|;
 name|argc
 operator|++
@@ -582,6 +616,12 @@ name|gl_pathv
 init|;
 operator|*
 name|pop
+operator|&&
+name|gargc
+operator|<
+name|MAXGLOBS
+operator|-
+literal|1
 condition|;
 name|pop
 operator|++
