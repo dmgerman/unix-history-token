@@ -4994,7 +4994,7 @@ block|{
 name|TRACE
 argument_list|(
 operator|(
-literal|"Not printing status, rootshell=%d, job=0x%x\n"
+literal|"Not printing status, rootshell=%d, job=%p\n"
 operator|,
 name|rootshell
 operator|,

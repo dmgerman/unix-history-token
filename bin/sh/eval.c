@@ -2548,7 +2548,7 @@ expr_stmt|;
 name|TRACE
 argument_list|(
 operator|(
-literal|"evalbackcmd done: fd=%d buf=0x%x nleft=%d jp=0x%x\n"
+literal|"evalbackcmd done: fd=%d buf=%p nleft=%d jp=%p\n"
 operator|,
 name|result
 operator|->
