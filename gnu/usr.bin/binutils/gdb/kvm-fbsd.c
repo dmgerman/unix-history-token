@@ -2101,7 +2101,7 @@ operator|)
 operator|&
 name|pcbp
 operator|->
-name|pcb_fp
+name|pcb_ufp
 argument_list|)
 expr_stmt|;
 name|supply_register
@@ -2125,7 +2125,7 @@ argument_list|(
 operator|&
 name|pcbp
 operator|->
-name|pcb_fp
+name|pcb_ufp
 argument_list|,
 name|SPARC_INTREG_SIZE
 argument_list|)
