@@ -121,11 +121,11 @@ name|newwin
 argument_list|(
 name|form
 operator|->
-name|nlines
+name|height
 argument_list|,
 name|form
 operator|->
-name|ncols
+name|width
 argument_list|,
 name|form
 operator|->

@@ -88,10 +88,10 @@ modifier|*
 name|field
 decl_stmt|;
 name|int
-name|nlines
+name|height
 decl_stmt|;
 name|int
-name|ncols
+name|width
 decl_stmt|;
 name|int
 name|y
