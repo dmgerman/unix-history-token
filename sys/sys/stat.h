@@ -27,9 +27,53 @@ directive|include
 file|<sys/_types.h>
 end_include
 
-begin_comment
-comment|/* XXX missing blkcnt_t, blksize_t. */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_BLKSIZE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__blksize_t
+name|blksize_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_BLKSIZE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_BLKCNT_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__blkcnt_t
+name|blkcnt_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_BLKCNT_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -435,7 +479,7 @@ name|st_atime
 decl_stmt|;
 comment|/* time of last access */
 name|long
-name|st_atimensec
+name|__st_atimensec
 decl_stmt|;
 comment|/* nsec of last access */
 name|time_t
@@ -443,7 +487,7 @@ name|st_mtime
 decl_stmt|;
 comment|/* time of last data modification */
 name|long
-name|st_mtimensec
+name|__st_mtimensec
 decl_stmt|;
 comment|/* nsec of last data modification */
 name|time_t
@@ -451,7 +495,7 @@ name|st_ctime
 decl_stmt|;
 comment|/* time of last file status change */
 name|long
-name|st_ctimensec
+name|__st_ctimensec
 decl_stmt|;
 comment|/* nsec of last file status change */
 endif|#
@@ -460,11 +504,11 @@ name|off_t
 name|st_size
 decl_stmt|;
 comment|/* file size, in bytes */
-name|__int64_t
+name|blkcnt_t
 name|st_blocks
 decl_stmt|;
 comment|/* blocks allocated for file */
-name|__uint32_t
+name|blksize_t
 name|st_blksize
 decl_stmt|;
 comment|/* optimal blocksize for I/O */
@@ -649,11 +693,11 @@ name|off_t
 name|st_size
 decl_stmt|;
 comment|/* file size, in bytes */
-name|__int64_t
+name|blkcnt_t
 name|st_blocks
 decl_stmt|;
 comment|/* blocks allocated for file */
-name|__uint32_t
+name|blksize_t
 name|st_blksize
 decl_stmt|;
 comment|/* optimal blocksize for I/O */
@@ -1217,7 +1261,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__XSI_VISIBLE
+name|__BSD_VISIBLE
 end_if
 
 begin_define
@@ -1622,10 +1666,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|struct
 name|stat
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1661,6 +1707,44 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_MKNOD_DECLARED
+argument_list|)
+operator|&&
+name|__XSI_VISIBLE
+end_if
+
+begin_function_decl
+name|int
+name|mknod
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|mode_t
+parameter_list|,
+name|dev_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|_MKNOD_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|int
 name|stat
@@ -1668,10 +1752,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|struct
 name|stat
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -3552,6 +3552,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MKNOD_DECLARED
+end_ifndef
+
 begin_function_decl
 name|int
 name|mknod
@@ -3566,6 +3572,17 @@ name|dev_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|_MKNOD_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

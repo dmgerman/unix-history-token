@@ -33,6 +33,28 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|__uint32_t
+name|__blksize_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* file block size */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__int64_t
+name|__blkcnt_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* file block count */
+end_comment
+
+begin_typedef
+typedef|typedef
 name|__int32_t
 name|__clockid_t
 typedef|;
