@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.26 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	5.27 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.26 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	5.27 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1840,7 +1840,11 @@ name|message
 argument_list|(
 name|Arpa_TSyserr
 argument_list|,
-literal|"reply: read error"
+literal|"reply: read error from %s"
+argument_list|,
+name|mci
+operator|->
+name|mci_host
 argument_list|)
 expr_stmt|;
 comment|/* if debugging, pause so we can see state */
@@ -1859,6 +1863,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|0
+condition|)
 name|syslog
 argument_list|(
 name|LOG_INFO
