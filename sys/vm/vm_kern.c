@@ -351,8 +351,6 @@ decl_stmt|;
 name|vm_offset_t
 name|i
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|size
 operator|=
 name|round_page
