@@ -4753,7 +4753,7 @@ name|VG_DONTLOADIN
 operator||
 name|VG_DONTVALIDFN
 argument_list|,
-name|curproc
+name|curthread
 argument_list|,
 operator|&
 name|nvp
