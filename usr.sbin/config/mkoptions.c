@@ -899,7 +899,12 @@ break|break;
 if|if
 condition|(
 operator|!
-name|seen
+name|eq
+argument_list|(
+name|inw
+argument_list|,
+name|name
+argument_list|)
 operator|&&
 operator|!
 name|ol
