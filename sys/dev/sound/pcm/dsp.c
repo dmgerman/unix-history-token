@@ -21,6 +21,12 @@ directive|include
 file|<dev/sound/pcm/sound.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|OLDPCM_IOCTL
+end_define
+
 begin_function_decl
 specifier|static
 name|int
@@ -1232,6 +1238,8 @@ name|chn_setblocksize
 argument_list|(
 name|wrch
 argument_list|,
+literal|2
+argument_list|,
 name|p
 operator|->
 name|play_size
@@ -1244,6 +1252,8 @@ condition|)
 name|chn_setblocksize
 argument_list|(
 name|rdch
+argument_list|,
+literal|2
 argument_list|,
 name|p
 operator|->
@@ -2218,9 +2228,9 @@ operator|&
 name|AFMT_STEREO
 operator|)
 condition|?
-literal|1
+literal|2
 else|:
-literal|0
+literal|1
 expr_stmt|;
 block|}
 else|else
