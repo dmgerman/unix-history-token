@@ -44,23 +44,17 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
 begin_comment
 comment|/*  * The following variables are used by the hardclock() routine in the  * kern_clock.c module and are described in that module.   */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|timeval
-name|time
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* kernel time variable */
 end_comment
 
 begin_decl_stmt
