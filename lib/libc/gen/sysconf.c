@@ -1267,7 +1267,6 @@ operator|(
 name|value
 operator|)
 return|;
-break|break;
 default|default:
 name|errno
 operator|=
