@@ -1145,15 +1145,9 @@ block|{
 comment|/* it is termination of a do while */
 name|ps
 operator|.
-name|p_stack
-index|[
-operator|--
-name|ps
-operator|.
 name|tos
-index|]
-operator|=
-name|stmt
+operator|-=
+literal|2
 expr_stmt|;
 break|break;
 block|}
