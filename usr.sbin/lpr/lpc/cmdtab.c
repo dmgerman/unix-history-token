@@ -129,6 +129,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|setstatushelp
+index|[]
+init|=
+literal|"set the status message of a queue, requires\n"
+literal|"\t\t\"-msg\" before the text of the new message"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|starthelp
 index|[]
 init|=
@@ -181,16 +191,23 @@ literal|"enable everything and restart spooling daemon"
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Use some abbreviations so entries won't need to wrap */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PR
-value|1
+value|LPC_PRIVCMD
 end_define
 
-begin_comment
-comment|/* a privileged command */
-end_comment
+begin_define
+define|#
+directive|define
+name|M
+value|LPC_MSGOPT
+end_define
 
 begin_decl_stmt
 name|struct
@@ -329,6 +346,20 @@ block|,
 literal|0
 block|,
 name|status
+block|}
+block|,
+block|{
+literal|"setstatus"
+block|,
+name|setstatushelp
+block|,
+name|PR
+operator||
+name|M
+block|,
+name|setstatus_gi
+block|,
+name|setstatus_q
 block|}
 block|,
 block|{
