@@ -39,7 +39,7 @@ file|<sys/ioccom.h>
 end_include
 
 begin_comment
-comment|/*  * Theese are snoop io controls  * SNPSTTY accepts 'struct snptty' as input.  * If ever type or  unit set to -1,snoop device  * detached from its current tty.  */
+comment|/*  * These are snoop io controls  * SNPSTTY accepts 'struct snptty' as input.  * If ever type or  unit set to -1,snoop device  * detached from its current tty.  */
 end_comment
 
 begin_define
@@ -57,7 +57,7 @@ value|_IOR('T', 89, dev_t)
 end_define
 
 begin_comment
-comment|/*  * Theese values would be returned by FIONREAD ioctl  * instead of number of characters in buffer in case  * of specific errors.  */
+comment|/*  * These values would be returned by FIONREAD ioctl  * instead of number of characters in buffer in case  * of specific errors.  */
 end_comment
 
 begin_define
