@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* %G% (Berkeley) @(#)curses.h	1.4 */
+comment|/* %G% (Berkeley) @(#)curses.h	1.5 */
 end_comment
 
 begin_ifndef
@@ -724,7 +724,7 @@ name|y
 parameter_list|,
 name|x
 parameter_list|)
-value|mvwinch(win,y,x)
+value|mvwinch(stdscr,y,x)
 end_define
 
 begin_comment
