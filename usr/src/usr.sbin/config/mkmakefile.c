@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.34 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -363,6 +363,24 @@ literal|64
 block|}
 block|,
 comment|/* MACHINE_I386 */
+block|{
+literal|8
+block|,
+literal|2
+block|,
+literal|64
+block|}
+block|,
+comment|/* MACHINE_MIPS */
+block|{
+literal|8
+block|,
+literal|2
+block|,
+literal|64
+block|}
+block|,
+comment|/* MACHINE_PMAX */
 block|}
 struct|;
 end_struct
@@ -2952,6 +2970,8 @@ operator|->
 name|f_next
 init|;
 name|fl
+operator|&&
+name|fl
 operator|->
 name|f_type
 operator|==
@@ -3024,7 +3044,9 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"swapgeneric.o: ../%s/swapgeneric.c\n"
+literal|"swapgeneric.o: $S/%s/%s/swapgeneric.c\n"
+argument_list|,
+name|machinename
 argument_list|,
 name|machinename
 argument_list|)
