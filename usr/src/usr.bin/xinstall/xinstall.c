@@ -750,7 +750,6 @@ name|C
 operator|=
 name|rindex
 argument_list|(
-operator|*
 name|from_name
 argument_list|,
 literal|'/'
