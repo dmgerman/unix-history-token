@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.80 1998/09/25 18:06:53 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.98 1999/01/29 11:31:45 bde Exp $ */
+comment|/*	$Id: if_de.c,v 1.99 1999/03/01 16:54:28 luigi Exp $ */
 end_comment
 
 begin_comment
@@ -448,6 +448,12 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
 
 begin_include
 include|#
@@ -26353,6 +26359,26 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|300000
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_maxlen
+operator|=
+name|ifqmaxlen
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
