@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.42 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4970,6 +4970,11 @@ name|buf
 index|[
 name|MAXLINE
 index|]
+decl_stmt|,
+name|ebuf
+index|[
+literal|100
+index|]
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -5107,6 +5112,21 @@ name|q
 operator|++
 expr_stmt|;
 comment|/* decode priority name */
+if|if
+condition|(
+operator|*
+name|buf
+operator|==
+literal|'*'
+condition|)
+name|pri
+operator|=
+name|LOG_PRIMASK
+operator|+
+literal|1
+expr_stmt|;
+else|else
+block|{
 name|pri
 operator|=
 name|decode
@@ -5123,18 +5143,12 @@ operator|<
 literal|0
 condition|)
 block|{
-name|char
-name|xbuf
-index|[
-literal|200
-index|]
-decl_stmt|;
 operator|(
 name|void
 operator|)
 name|sprintf
 argument_list|(
-name|xbuf
+name|ebuf
 argument_list|,
 literal|"unknown priority name \"%s\""
 argument_list|,
@@ -5143,10 +5157,11 @@ argument_list|)
 expr_stmt|;
 name|logerror
 argument_list|(
-name|xbuf
+name|ebuf
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 comment|/* scan facilities */
 while|while
@@ -5243,18 +5258,12 @@ operator|<
 literal|0
 condition|)
 block|{
-name|char
-name|xbuf
-index|[
-literal|200
-index|]
-decl_stmt|;
 operator|(
 name|void
 operator|)
 name|sprintf
 argument_list|(
-name|xbuf
+name|ebuf
 argument_list|,
 literal|"unknown facility name \"%s\""
 argument_list|,
@@ -5263,7 +5272,7 @@ argument_list|)
 expr_stmt|;
 name|logerror
 argument_list|(
-name|xbuf
+name|ebuf
 argument_list|)
 expr_stmt|;
 return|return;
