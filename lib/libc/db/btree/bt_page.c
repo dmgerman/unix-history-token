@@ -105,6 +105,13 @@ name|h
 operator|->
 name|pgno
 expr_stmt|;
+name|F_SET
+argument_list|(
+name|t
+argument_list|,
+name|B_METADIRTY
+argument_list|)
+expr_stmt|;
 comment|/* Make sure the page gets written back. */
 return|return
 operator|(
@@ -191,6 +198,13 @@ operator|=
 name|h
 operator|->
 name|nextpg
+expr_stmt|;
+name|F_SET
+argument_list|(
+name|t
+argument_list|,
+name|B_METADIRTY
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
