@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)wd.c	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)wd.c	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -385,52 +385,48 @@ block|{
 literal|512
 block|,
 comment|/* sector size */
-literal|17
+literal|36
 block|,
 comment|/* # of sectors per track */
 literal|15
 block|,
 comment|/* # of tracks per cylinder */
-literal|918
+literal|1224
 block|,
 comment|/* # of cylinders per unit */
-literal|17
+literal|36
 operator|*
 literal|15
 block|,
 comment|/* # of sectors per cylinder */
-literal|918
+literal|1224
 operator|*
 literal|15
 operator|*
-literal|17
+literal|36
 block|,
 comment|/* # of sectors per unit */
 literal|0
 comment|/* write precomp cylinder (none) */
 block|}
 block|,
-literal|7560
+literal|21600
 block|,
 literal|0
 block|,
 comment|/* A=root filesystem */
-literal|7560
+literal|21600
 block|,
-literal|56
+literal|40
 block|,
-literal|123930
+literal|660890
 block|,
 literal|0
 block|,
 comment|/* C=whole disk */
-literal|0
+literal|216000
 block|,
-literal|0
-block|,
-literal|7560
-block|,
-literal|861
+literal|80
 block|,
 literal|0
 block|,
@@ -440,9 +436,13 @@ literal|0
 block|,
 literal|0
 block|,
-literal|101115
+literal|0
 block|,
-literal|112
+literal|0
+block|,
+literal|399600
+block|,
+literal|480
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -724,7 +724,7 @@ name|outb
 argument_list|(
 literal|0x3f6
 argument_list|,
-literal|0
+literal|8
 argument_list|)
 expr_stmt|;
 block|}
@@ -1050,7 +1050,7 @@ index|]
 expr_stmt|;
 name|s
 operator|=
-name|splbio
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|disksort
@@ -1217,6 +1217,12 @@ end_block
 begin_comment
 comment|/*  * Controller startup routine.  This does the calculation, and starts  * a single-sector read or write operation.  Called to start a transfer,  * or from the interrupt routine to continue a multi-sector transfer.  * RESTRICTIONS:  * 1.	The transfer length must be an exact multiple of the sector size.  */
 end_comment
+
+begin_expr_stmt
+specifier|static
+name|wd_sebyse
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 name|wdstart
@@ -1470,11 +1476,18 @@ name|dprintf
 argument_list|(
 name|DDSK
 argument_list|,
-literal|" %d)"
+literal|" %d)%x"
 argument_list|,
 name|du
 operator|->
 name|dk_skip
+argument_list|,
+name|inb
+argument_list|(
+name|wdc
+operator|+
+name|wd_altsts
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1528,8 +1541,6 @@ operator|=
 name|blknum
 operator|%
 name|secpertrk
-operator|+
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1556,16 +1567,18 @@ operator|.
 name|cyloff
 expr_stmt|;
 comment|/*  	 * See if the current block is in the bad block list. 	 * (If we have one, and not formatting.) 	 */
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
+name|DISKSTATE
+argument_list|(
 name|du
 operator|->
 name|dk_state
+argument_list|)
 operator|==
 name|OPEN
+operator|&&
+name|wd_sebyse
 condition|)
 for|for
 control|(
@@ -1701,8 +1714,11 @@ directive|endif
 break|break;
 block|}
 block|}
-endif|#
-directive|endif
+name|sector
+operator|+=
+literal|1
+expr_stmt|;
+comment|/* sectors begin with 1, not 0 */
 name|wdtab
 operator|.
 name|b_active
@@ -1710,6 +1726,56 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* mark controller active */
+if|if
+condition|(
+name|du
+operator|->
+name|dk_skip
+operator|==
+literal|0
+operator|||
+name|wd_sebyse
+condition|)
+block|{
+if|if
+condition|(
+name|wdtab
+operator|.
+name|b_errcnt
+operator|&&
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+operator|)
+operator|==
+literal|0
+condition|)
+name|du
+operator|->
+name|dk_bc
+operator|+=
+literal|512
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|inb
+argument_list|(
+name|wdc
+operator|+
+name|wd_status
+argument_list|)
+operator|&
+name|WDCS_BUSY
+operator|)
+operator|!=
+literal|0
+condition|)
+empty_stmt|;
+comment|/*while ((inb(wdc+wd_status)& WDCS_DRQ)) inb(wdc+wd_data);*/
 name|outb
 argument_list|(
 name|wdc
@@ -1721,6 +1787,10 @@ argument_list|)
 expr_stmt|;
 comment|/*wr(wdc+wd_precomp, du->dk_dd.dk_precompcyl / 4);*/
 comment|/*if (bp->b_flags& B_FORMAT) { 		wr(wdc+wd_sector, du->dk_dd.dk_gap3); 		wr(wdc+wd_seccnt, du->dk_dd.dk_nsectors); 	} else {*/
+if|if
+condition|(
+name|wd_sebyse
+condition|)
 name|outb
 argument_list|(
 name|wdc
@@ -1728,6 +1798,26 @@ operator|+
 name|wd_seccnt
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|outb
+argument_list|(
+name|wdc
+operator|+
+name|wd_seccnt
+argument_list|,
+operator|(
+operator|(
+name|du
+operator|->
+name|dk_bc
+operator|+
+literal|511
+operator|)
+operator|/
+literal|512
+operator|)
 argument_list|)
 expr_stmt|;
 name|outb
@@ -1820,19 +1910,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|WDDEBUG
-if|if
-condition|(
-name|du
-operator|->
-name|dk_skip
-operator|==
-literal|0
-condition|)
 name|dprintf
 argument_list|(
 name|DDSK
 argument_list|,
-literal|"sector %d cylin %d head %d addr %x\n"
+literal|"sector %d cylin %d head %d addr %x sts %x\n"
 argument_list|,
 name|sector
 argument_list|,
@@ -1841,10 +1923,18 @@ argument_list|,
 name|head
 argument_list|,
 name|addr
+argument_list|,
+name|inb
+argument_list|(
+name|wdc
+operator|+
+name|wd_altsts
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 comment|/* If this is a read operation, just go away until it's done.	*/
 if|if
 condition|(
@@ -1876,37 +1966,23 @@ argument_list|()
 expr_stmt|;
 comment|/* So compiler won't optimize out */
 comment|/* ASSUMES CONTIGUOUS MEMORY */
-block|{
-specifier|register
-name|buff_addr
-expr_stmt|;
-name|buff_addr
-operator|=
-name|addr
-expr_stmt|;
-name|buff_addr
-operator|+=
-operator|(
-name|du
-operator|->
-name|dk_skip
-operator|*
-literal|512
-operator|)
-comment|/*& CLOFSET*/
-expr_stmt|;
 name|outsw
 argument_list|(
 name|wdc
 operator|+
 name|wd_data
 argument_list|,
-name|buff_addr
+name|addr
+operator|+
+name|du
+operator|->
+name|dk_skip
+operator|*
+literal|512
 argument_list|,
 literal|256
 argument_list|)
 expr_stmt|;
-block|}
 name|du
 operator|->
 name|dk_bc
@@ -1977,6 +2053,15 @@ decl_stmt|;
 name|char
 name|partch
 decl_stmt|;
+specifier|static
+name|shit
+index|[
+literal|32
+index|]
+expr_stmt|;
+specifier|static
+name|wd_haderror
+expr_stmt|;
 comment|/* Shouldn't need this, but it may be a slow controller.	*/
 while|while
 condition|(
@@ -1987,7 +2072,7 @@ name|inb
 argument_list|(
 name|wdc
 operator|+
-name|wd_altsts
+name|wd_status
 argument_list|)
 operator|)
 operator|&
@@ -2097,19 +2182,6 @@ name|WDCS_ECCCOR
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|WDDEBUG
-name|printf
-argument_list|(
-literal|"error %x\n"
-argument_list|,
-name|wd_errstat
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*if (bp->b_flags& B_FORMAT) { 			du->dk_status = status; 			du->dk_error = wdp->wd_error; 			bp->b_flags |= B_ERROR; 			goto done; 		}*/
 name|wd_errstat
 operator|=
 name|inb
@@ -2120,6 +2192,36 @@ name|wd_error
 argument_list|)
 expr_stmt|;
 comment|/* save error status */
+ifdef|#
+directive|ifdef
+name|WDDEBUG
+name|printf
+argument_list|(
+literal|"status %x error %x\n"
+argument_list|,
+name|status
+argument_list|,
+name|wd_errstat
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|wd_sebyse
+operator|==
+literal|0
+condition|)
+block|{
+name|wd_haderror
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|outt
+goto|;
+block|}
+comment|/*if (bp->b_flags& B_FORMAT) { 			du->dk_status = status; 			du->dk_error = wdp->wd_error; 			bp->b_flags |= B_ERROR; 			goto done; 		}*/
 name|wd_errsector
 operator|=
 operator|(
@@ -2198,12 +2300,15 @@ name|b_errcnt
 operator|<
 name|RETRIES
 condition|)
+block|{
 name|wdtab
 operator|.
 name|b_active
 operator|=
 literal|0
 expr_stmt|;
+comment|/*while ((inb(wdc+wd_status)& WDCS_DRQ)) 				insw(wdc+wd_data,&shit, sizeof(shit)/2);*/
+block|}
 else|else
 block|{
 name|printf
@@ -2274,6 +2379,8 @@ name|wd_errbn
 argument_list|)
 expr_stmt|;
 block|}
+name|outt
+label|:
 comment|/* 	 * If this was a successful read operation, fetch the data. 	 */
 if|if
 condition|(
@@ -2309,13 +2416,11 @@ name|min
 argument_list|(
 literal|256
 argument_list|,
-operator|(
 name|du
 operator|->
 name|dk_bc
 operator|/
 literal|2
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Ready to receive data?	*/
@@ -2491,6 +2596,10 @@ operator|->
 name|dk_bc
 operator|>
 literal|0
+operator|&&
+name|wd_haderror
+operator|==
+literal|0
 condition|)
 block|{
 name|wdstart
@@ -2499,9 +2608,43 @@ expr_stmt|;
 return|return;
 comment|/* next chunk is started */
 block|}
+elseif|else
+if|if
+condition|(
+name|wd_haderror
+operator|&&
+name|wd_sebyse
+operator|==
+literal|0
+condition|)
+block|{
+name|du
+operator|->
+name|dk_skip
+operator|=
+literal|0
+expr_stmt|;
+name|wd_haderror
+operator|=
+literal|0
+expr_stmt|;
+name|wd_sebyse
+operator|=
+literal|1
+expr_stmt|;
+name|wdstart
+argument_list|()
+expr_stmt|;
+return|return;
+comment|/* redo xfer sector by sector */
+block|}
 block|}
 name|done
 label|:
+name|wd_sebyse
+operator|=
+literal|0
+expr_stmt|;
 comment|/* done with this transfer, with or without error */
 name|wdtab
 operator|.
@@ -2832,9 +2975,6 @@ goto|goto
 name|done
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* 	 * Read bad sector table into memory. 	 */
 name|i
 operator|=
@@ -2985,6 +3125,10 @@ operator|.
 name|b_addr
 operator|)
 expr_stmt|;
+define|#
+directive|define
+name|DKBAD_MAGIC
+value|0x4321
 if|if
 condition|(
 operator|(
@@ -3061,16 +3205,6 @@ operator|=
 name|OPENRAW
 expr_stmt|;
 block|}
-else|#
-directive|else
-name|du
-operator|->
-name|dk_state
-operator|=
-name|OPEN
-expr_stmt|;
-endif|#
-directive|endif
 name|done
 label|:
 name|bp
@@ -3369,6 +3503,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|cyloffset
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 		 * Read in sector 0 to get the pack label and geometry. 		 */
 name|outb
 argument_list|(
@@ -4153,7 +4291,7 @@ name|val
 expr_stmt|;
 return|return
 operator|(
-literal|12144
+literal|21600
 operator|)
 return|;
 ifdef|#
