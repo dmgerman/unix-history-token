@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpr.c	4.25 (Berkeley) %G%"
+literal|"@(#)lpr.c	4.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1929,6 +1929,30 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nc
+operator|==
+literal|0
+operator|&&
+name|nr
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"%s: %s: empty input file\n"
+argument_list|,
+name|name
+argument_list|,
+name|f
+condition|?
+name|n
+else|:
+literal|"stdin"
+argument_list|)
+expr_stmt|;
+else|else
 name|nact
 operator|++
 expr_stmt|;
@@ -2585,6 +2609,31 @@ block|{
 name|printf
 argument_list|(
 literal|"%s: %s is a directory\n"
+argument_list|,
+name|name
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|statb
+operator|.
+name|st_size
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: %s is an empty file\n"
 argument_list|,
 name|name
 argument_list|,
