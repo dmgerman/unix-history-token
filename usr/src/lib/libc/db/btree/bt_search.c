@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_search.c	5.1 (Berkeley) %G%"
+literal|"@(#)bt_search.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -474,15 +474,9 @@ name|_bt_binsrch
 argument_list|(
 name|t
 argument_list|,
-operator|&
-operator|(
 name|key
 operator|->
 name|data
-index|[
-literal|0
-index|]
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 *  At this point, the binary search terminated because the endpoints 	 *  got too close together, or we have a match.  Figure out which 	 *  case applies and decide what to do based on the page type. 	 */
