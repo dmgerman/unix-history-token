@@ -383,6 +383,49 @@ name|SAL_OS_BOOT_RENDEZ
 value|2
 end_define
 
+begin_comment
+comment|/* SAL_GET_STATE_INFO, SAL_GET_STATE_INFO_SIZE types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAL_INFO_MCA
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAL_INFO_INIT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAL_INFO_CMC
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAL_INFO_CPE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAL_INFO_TYPES
+value|4
+end_define
+
+begin_comment
+comment|/* number of types we know about */
+end_comment
+
 begin_struct
 struct|struct
 name|ia64_sal_result
@@ -425,6 +468,14 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_decl_stmt
+specifier|extern
+name|sal_entry_t
+modifier|*
+name|ia64_sal_entry
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|void
@@ -437,14 +488,6 @@ name|saltab
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|sal_entry_t
-modifier|*
-name|ia64_sal_entry
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
