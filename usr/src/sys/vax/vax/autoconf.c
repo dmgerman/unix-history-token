@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3046,9 +3046,6 @@ argument_list|()
 decl_stmt|;
 name|caddr_t
 name|ualloc
-decl_stmt|,
-name|zmemall
-argument_list|()
 decl_stmt|;
 specifier|extern
 name|int
@@ -3269,13 +3266,21 @@ expr_stmt|;
 comment|/* 	 * Grab some memory to record the umem address space we allocate, 	 * so we can be sure not to place two devices at the same address. 	 * 	 * We could use just 1/8 of this (we only want a 1 bit flag) but 	 * we are going to give it back anyway, and that would make the 	 * code here bigger (which we can't give back), so ... 	 * 	 * One day, someone will make a unibus with something other than 	 * an 8K i/o address space,& screw this totally. 	 */
 name|ualloc
 operator|=
-name|zmemall
+operator|(
+name|caddr_t
+operator|)
+name|malloc
 argument_list|(
-name|memall
-argument_list|,
+name|ctob
+argument_list|(
 literal|8
 operator|*
 literal|1024
+argument_list|)
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3290,6 +3295,18 @@ condition|)
 name|panic
 argument_list|(
 literal|"no mem for unifind"
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|ualloc
+argument_list|,
+name|ctob
+argument_list|(
+literal|8
+operator|*
+literal|1024
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Map the first page of UNIBUS i/o 	 * space to the first page of memory 	 * for devices which will need to dma 	 * output to produce an interrupt. 	 */
@@ -4380,13 +4397,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|wmemfree
+name|free
 argument_list|(
 name|ualloc
 argument_list|,
-literal|8
-operator|*
-literal|1024
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	1.13	87/04/02	*/
+comment|/*	autoconf.c	1.14	87/06/22	*/
 end_comment
 
 begin_comment
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"reboot.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"malloc.h"
 end_include
 
 begin_include
@@ -607,9 +613,6 @@ argument_list|()
 decl_stmt|;
 name|caddr_t
 name|valloc
-decl_stmt|,
-name|zmemall
-argument_list|()
 decl_stmt|;
 specifier|extern
 name|long
@@ -709,14 +712,19 @@ expr_stmt|;
 comment|/* 	 * Grab some memory to record the address space we allocate, 	 * so we can be sure not to place two devices at the same address. 	 * 	 * We could use just 1/8 of this (we only want a 1 bit flag) but 	 * we are going to give it back anyway, and that would make the 	 * code here bigger (which we can't give back), so ... 	 */
 name|valloc
 operator|=
-name|zmemall
+operator|(
+name|caddr_t
+operator|)
+name|malloc
 argument_list|(
-name|memall
-argument_list|,
 name|ctob
 argument_list|(
 name|VBIOSIZE
 argument_list|)
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -731,6 +739,16 @@ condition|)
 name|panic
 argument_list|(
 literal|"no mem for vbafind"
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|valloc
+argument_list|,
+name|ctob
+argument_list|(
+name|VBIOSIZE
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check each VERSAbus mass storage controller. 	 * For each one which is potentially on this vba, 	 * see if it is really there, and if it is record it and 	 * then go looking for slaves. 	 */
@@ -1567,14 +1585,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|wmemfree
+name|free
 argument_list|(
 name|valloc
 argument_list|,
-name|ctob
-argument_list|(
-name|VBIOSIZE
-argument_list|)
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
