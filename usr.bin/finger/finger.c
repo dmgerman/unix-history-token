@@ -195,7 +195,7 @@ begin_decl_stmt
 name|sa_family_t
 name|family
 init|=
-name|PF_UNSPEC
+name|AF_INET
 decl_stmt|;
 end_decl_stmt
 
