@@ -925,20 +925,6 @@ name|ACT_MAX
 value|64
 end_define
 
-begin_define
-define|#
-directive|define
-name|PFCLUSTER_BEHIND
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|PFCLUSTER_AHEAD
-value|3
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
