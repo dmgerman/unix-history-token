@@ -1208,6 +1208,7 @@ name|int
 name|prev_flags
 decl_stmt|;
 specifier|static
+name|signed
 name|char
 name|prev_conn
 init|=
