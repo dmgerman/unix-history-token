@@ -613,6 +613,22 @@ argument_list|)
 condition|)
 comment|/* ignore this */
 empty_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"--"
+argument_list|)
+condition|)
+comment|/* ... and this */
+empty_stmt|;
 else|else
 name|syslog
 argument_list|(
@@ -2910,6 +2926,14 @@ name|callout_nfree
 operator|++
 expr_stmt|;
 block|}
+name|callout_tab
+operator|=
+operator|(
+name|callout_t
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 name|unblocksig
 argument_list|()
 expr_stmt|;
