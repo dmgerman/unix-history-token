@@ -9,14 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char sccsid[] = "@(#)pw_util.c	8.3 (Berkeley) 4/2/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)pw_util.c	8.3 (Berkeley) 4/2/94"
+literal|"$Id: pw_util.c,v 1.9 1997/10/27 07:53:19 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
