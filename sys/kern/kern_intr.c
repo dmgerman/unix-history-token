@@ -468,6 +468,16 @@ name|ih
 operator|->
 name|ih_pri
 expr_stmt|;
+name|p
+operator|->
+name|p_pri
+operator|.
+name|pri_native
+operator|=
+name|ih
+operator|->
+name|ih_pri
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ih

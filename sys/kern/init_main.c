@@ -1093,7 +1093,7 @@ name|p_pri
 operator|.
 name|pri_native
 operator|=
-name|PRI_MAX
+name|PUSER
 expr_stmt|;
 name|p
 operator|->
