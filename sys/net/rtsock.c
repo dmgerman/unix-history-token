@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -4796,13 +4802,18 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|jailed
+argument_list|(
 name|curproc
 operator|->
-name|p_prison
+name|p_ucred
+argument_list|)
 operator|&&
 name|prison_if
 argument_list|(
 name|curproc
+operator|->
+name|p_ucred
 argument_list|,
 name|ifa
 operator|->

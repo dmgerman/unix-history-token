@@ -928,26 +928,6 @@ name|proc
 struct_decl|;
 end_struct_decl
 
-begin_decl_stmt
-name|int
-name|prison_if
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-name|p
-operator|,
-expr|struct
-name|sockaddr
-operator|*
-name|sa
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* XXX - this should go away soon. */
 end_comment

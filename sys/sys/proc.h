@@ -731,12 +731,6 @@ name|p_sysent
 decl_stmt|;
 comment|/* (b) System call dispatch information. */
 name|struct
-name|prison
-modifier|*
-name|p_prison
-decl_stmt|;
-comment|/* (b?) jail(4). */
-name|struct
 name|pargs
 modifier|*
 name|p_args
@@ -2317,13 +2311,11 @@ name|p_can
 name|__P
 argument_list|(
 operator|(
-specifier|const
 expr|struct
 name|proc
 operator|*
 name|p1
 operator|,
-specifier|const
 expr|struct
 name|proc
 operator|*

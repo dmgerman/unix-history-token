@@ -1366,7 +1366,6 @@ name|suser
 name|__P
 argument_list|(
 operator|(
-specifier|const
 expr|struct
 name|proc
 operator|*
@@ -1381,13 +1380,11 @@ name|suser_xxx
 name|__P
 argument_list|(
 operator|(
-specifier|const
 expr|struct
 name|ucred
 operator|*
 name|cred
 operator|,
-specifier|const
 expr|struct
 name|proc
 operator|*

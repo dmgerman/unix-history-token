@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -4803,13 +4809,18 @@ name|ifa_addr
 decl_stmt|;
 if|if
 condition|(
+name|jailed
+argument_list|(
 name|curproc
 operator|->
-name|p_prison
+name|p_ucred
+argument_list|)
 operator|&&
 name|prison_if
 argument_list|(
 name|curproc
+operator|->
+name|p_ucred
 argument_list|,
 name|sa
 argument_list|)

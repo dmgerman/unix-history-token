@@ -768,9 +768,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|jailed
+argument_list|(
 name|p
 operator|->
-name|p_prison
+name|p_ucred
+argument_list|)
 condition|)
 name|ps
 operator|+=
@@ -791,7 +794,9 @@ literal|" %s"
 argument_list|,
 name|p
 operator|->
-name|p_prison
+name|p_ucred
+operator|->
+name|cr_prison
 operator|->
 name|pr_host
 argument_list|)

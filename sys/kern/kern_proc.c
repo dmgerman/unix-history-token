@@ -93,6 +93,12 @@ directive|include
 file|<vm/vm_zone.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/jail.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -2400,6 +2406,22 @@ operator|=
 name|p
 operator|->
 name|p_flag
+expr_stmt|;
+comment|/* If jailed(p->p_ucred), emulate the old P_JAILED flag. */
+if|if
+condition|(
+name|jailed
+argument_list|(
+name|p
+operator|->
+name|p_ucred
+argument_list|)
+condition|)
+name|kp
+operator|->
+name|ki_flag
+operator||=
+name|P_JAILED
 expr_stmt|;
 name|kp
 operator|->

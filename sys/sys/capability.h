@@ -551,12 +551,10 @@ begin_function_decl
 name|int
 name|cap_check
 parameter_list|(
-specifier|const
 name|struct
 name|ucred
 modifier|*
 parameter_list|,
-specifier|const
 name|struct
 name|proc
 modifier|*

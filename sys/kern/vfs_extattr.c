@@ -148,6 +148,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/limits.h>
 end_include
 
@@ -3141,9 +3147,12 @@ name|nd
 decl_stmt|;
 if|if
 condition|(
+name|jailed
+argument_list|(
 name|p
 operator|->
-name|p_prison
+name|p_ucred
+argument_list|)
 operator|&&
 operator|!
 name|prison_quotas

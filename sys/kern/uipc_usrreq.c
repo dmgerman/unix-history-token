@@ -130,6 +130,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_zone.h>
 end_include
 
@@ -3546,9 +3552,12 @@ block|{
 if|if
 condition|(
 operator|!
+name|jailed
+argument_list|(
 name|p
 operator|->
-name|p_prison
+name|p_ucred
+argument_list|)
 condition|)
 return|return
 operator|(

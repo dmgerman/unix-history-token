@@ -1191,13 +1191,15 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Don't jail it */
 name|p
 operator|->
-name|p_prison
+name|p_ucred
+operator|->
+name|cr_prison
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
+comment|/* Don't jail it. */
 comment|/* Create procsig. */
 name|p
 operator|->

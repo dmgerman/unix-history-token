@@ -710,11 +710,14 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+name|jailed
+argument_list|(
 name|req
 operator|->
 name|p
 operator|->
-name|p_prison
+name|p_ucred
+argument_list|)
 condition|)
 block|{
 if|if
@@ -741,7 +744,9 @@ name|req
 operator|->
 name|p
 operator|->
-name|p_prison
+name|p_ucred
+operator|->
+name|cr_prison
 operator|->
 name|pr_host
 argument_list|,
@@ -750,7 +755,9 @@ name|req
 operator|->
 name|p
 operator|->
-name|p_prison
+name|p_ucred
+operator|->
+name|cr_prison
 operator|->
 name|pr_host
 argument_list|,

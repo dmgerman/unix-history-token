@@ -55,6 +55,12 @@ name|cr_uidinfo
 decl_stmt|;
 comment|/* per uid resource consumption */
 name|struct
+name|prison
+modifier|*
+name|cr_prison
+decl_stmt|;
+comment|/* jail(4) */
+name|struct
 name|mtx
 name|cr_mtx
 decl_stmt|;

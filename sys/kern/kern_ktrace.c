@@ -81,6 +81,12 @@ directive|include
 file|<sys/syslog.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/jail.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -2588,7 +2594,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return true if caller has permission to set the ktracing state  * of target.  Essentially, the target can't possess any  * more permissions than the caller.  KTRFAC_ROOT signifies that  * root previously set the tracing status on the target process, and  * so, only root may further change it.  *  * XXX: These checks are stronger than for ptrace()  *  * TODO: check groups.  use caller effective gid.  */
+comment|/*  * Return true if caller has permission to set the ktracing state  * of target.  Essentially, the target can't possess any  * more permissions than the caller.  KTRFAC_ROOT signifies that  * root previously set the tracing status on the target process, and  * so, only root may further change it.  *  * XXX: These checks are stronger than for ptrace()  * XXX: This check should be p_can(... P_CAN_DEBUG ...);  *  * TODO: check groups.  use caller effective gid.  */
 end_comment
 
 begin_function
@@ -2634,12 +2640,15 @@ name|p_cred
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|PRISON_CHECK
+name|prison_check
 argument_list|(
 name|callp
+operator|->
+name|p_ucred
 argument_list|,
 name|targetp
+operator|->
+name|p_ucred
 argument_list|)
 condition|)
 return|return

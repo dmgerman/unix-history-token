@@ -555,9 +555,12 @@ operator|)
 return|;
 if|if
 condition|(
+name|jailed
+argument_list|(
 name|p
 operator|->
-name|p_prison
+name|p_ucred
+argument_list|)
 operator|&&
 name|jail_socket_unixiproute_only
 operator|&&
