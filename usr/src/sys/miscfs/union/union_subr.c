@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 Jan-Simon Pendry  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_subr.c	8.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 Jan-Simon Pendry  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_subr.c	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -896,6 +896,7 @@ name|vnode
 modifier|*
 name|undvp
 decl_stmt|;
+comment|/* parent union vnode */
 name|struct
 name|vnode
 modifier|*
@@ -1757,6 +1758,23 @@ name|VNOVAL
 expr_stmt|;
 name|un
 operator|->
+name|un_pvp
+operator|=
+name|undvp
+expr_stmt|;
+if|if
+condition|(
+name|undvp
+operator|!=
+name|NULLVP
+condition|)
+name|VREF
+argument_list|(
+name|undvp
+argument_list|)
+expr_stmt|;
+name|un
+operator|->
 name|un_openl
 operator|=
 literal|0
@@ -1996,6 +2014,21 @@ name|un_cache
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|un
+operator|->
+name|un_pvp
+operator|!=
+name|NULLVP
+condition|)
+name|vrele
+argument_list|(
+name|un
+operator|->
+name|un_pvp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|un
