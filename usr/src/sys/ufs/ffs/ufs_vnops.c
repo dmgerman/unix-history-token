@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.81 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.82 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2846,12 +2846,17 @@ begin_function
 name|int
 name|ufs_link
 parameter_list|(
-name|vp
-parameter_list|,
 name|tdvp
+parameter_list|,
+name|vp
 parameter_list|,
 name|cnp
 parameter_list|)
+name|struct
+name|vnode
+modifier|*
+name|tdvp
+decl_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -2859,11 +2864,6 @@ modifier|*
 name|vp
 decl_stmt|;
 comment|/* source vnode */
-name|struct
-name|vnode
-modifier|*
-name|tdvp
-decl_stmt|;
 name|struct
 name|componentname
 modifier|*
