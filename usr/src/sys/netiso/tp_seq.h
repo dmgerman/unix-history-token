@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_seq.h,v 5.1 88/10/12 12:20:59 root Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_seq.h,v $  *	@(#)tp_seq.h	7.3 (Berkeley) %G% *  *  * These macros perform sequence number arithmetic modulo (2**7 or 2**31).  * The relevant fields in the tpcb are:  *  	tp_seqmask : the mask of bits that define the sequence space.  *  	tp_seqbit  : 1 + tp_seqmask  *  	tp_seqhalf : tp_seqbit / 2 or half the sequence space (rounded up)  * Not exactly fast, but at least it's maintainable.  */
+comment|/*   * ARGO TP  *  * $Header: tp_seq.h,v 5.1 88/10/12 12:20:59 root Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_seq.h,v $  *	@(#)tp_seq.h	7.4 (Berkeley) %G% *  *  * These macros perform sequence number arithmetic modulo (2**7 or 2**31).  * The relevant fields in the tpcb are:  *  	tp_seqmask : the mask of bits that define the sequence space.  *  	tp_seqbit  : 1 + tp_seqmask  *  	tp_seqhalf : tp_seqbit / 2 or half the sequence space (rounded up)  * Not exactly fast, but at least it's maintainable.  */
 end_comment
 
 begin_ifndef
@@ -94,6 +94,34 @@ name|operand
 parameter_list|)
 define|\
 value|( ((int)((seq)-(operand))< 0)\ ? ((-(int)((seq)-(operand)))< (int)(tpcb)->tp_seqhalf)\ : !(((int)(seq)-(operand))< (int)(tpcb)->tp_seqhalf))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEQ_MIN
+parameter_list|(
+name|tpcb
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|( SEQ_GT(tpcb, a, b) ? b : a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEQ_MAX
+parameter_list|(
+name|tpcb
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|( SEQ_GT(tpcb, a, b) ? a : b)
 end_define
 
 begin_define
