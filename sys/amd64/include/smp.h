@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.35 1998/02/25 03:56:15 dyson Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.36 1998/03/03 19:44:34 tegge Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -378,12 +378,6 @@ name|started_cpus
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BETTER_CLOCK
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|unsigned
@@ -399,11 +393,6 @@ name|int
 name|checkstate_need_ast
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* global data in apic_ipl.s */
@@ -910,6 +899,20 @@ end_endif
 begin_comment
 comment|/* BETTER_CLOCK */
 end_comment
+
+begin_decl_stmt
+name|void
+name|forward_signal
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* global data in mpapic.c */
