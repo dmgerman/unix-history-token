@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)div.c	5.1 (Berkeley) %G%"
+literal|"@(#)div.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,10 +47,6 @@ begin_comment
 comment|/* div_t */
 end_comment
 
-begin_comment
-comment|/*  * I AM NOT SURE THIS IS COMPLETELY PORTABLE  * (or that it is even right)  */
-end_comment
-
 begin_function
 name|div_t
 name|div
@@ -68,29 +64,6 @@ block|{
 name|div_t
 name|r
 decl_stmt|;
-comment|/* avoid deep thought */
-if|if
-condition|(
-name|num
-operator|>
-literal|0
-operator|&&
-name|denom
-operator|<
-literal|0
-condition|)
-block|{
-name|num
-operator|=
-operator|-
-name|num
-expr_stmt|;
-name|denom
-operator|=
-operator|-
-name|denom
-expr_stmt|;
-block|}
 name|r
 operator|.
 name|quot
@@ -107,24 +80,17 @@ name|num
 operator|%
 name|denom
 expr_stmt|;
+comment|/* 	 * The ANSI standard says that |r.quot|<= |n/d|, where 	 * n/d is to be computed in infinite precision.  In other 	 * words, we should always truncate the quotient towards 	 * 0, never -infinity. 	 * 	 * Machine division and remainer may work either way when 	 * one or both of n or d is negative.  If only one is 	 * negative and r.quot has been truncated towards -inf, 	 * r.rem will have the same sign as denom and the opposite 	 * sign of num; if both are negative and r.quot has been 	 * truncated towards -inf, r.rem will be positive (will 	 * have the opposite sign of num).  These are considered 	 * `wrong'. 	 * 	 * If both are num and denom are positive, r will always 	 * be positive. 	 * 	 * This all boils down to: 	 *	if num>= 0, but r.rem< 0, we got the wrong answer. 	 * In that case, to get the right answer, add 1 to r.quot and 	 * subtract denom from r.rem. 	 */
 if|if
 condition|(
 name|num
-operator|<
+operator|>=
 literal|0
 operator|&&
-name|denom
-operator|>
-literal|0
-condition|)
-block|{
-comment|/* 		 * Machine division and remainer may work either way.  The 		 * ANSI standard says that |r.quot|< |n/d| (where n/d 		 * computed in infinite precision).  If the remainder is 		 * positive, we got the `wrong' answer, so fix it. 		 */
-if|if
-condition|(
 name|r
 operator|.
 name|rem
-operator|>
+operator|<
 literal|0
 condition|)
 block|{
@@ -139,7 +105,6 @@ name|rem
 operator|-=
 name|denom
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(

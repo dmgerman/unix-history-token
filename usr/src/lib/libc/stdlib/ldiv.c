@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ldiv.c	5.1 (Berkeley) %G%"
+literal|"@(#)ldiv.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,10 +47,6 @@ begin_comment
 comment|/* ldiv_t */
 end_comment
 
-begin_comment
-comment|/*  * I AM NOT SURE THIS IS COMPLETELY PORTABLE  * (or that it is even right)  */
-end_comment
-
 begin_function
 name|ldiv_t
 name|ldiv
@@ -69,28 +65,6 @@ name|ldiv_t
 name|r
 decl_stmt|;
 comment|/* see div.c for comments */
-if|if
-condition|(
-name|num
-operator|>
-literal|0
-operator|&&
-name|denom
-operator|<
-literal|0
-condition|)
-block|{
-name|num
-operator|=
-operator|-
-name|num
-expr_stmt|;
-name|denom
-operator|=
-operator|-
-name|denom
-expr_stmt|;
-block|}
 name|r
 operator|.
 name|quot
@@ -110,20 +84,13 @@ expr_stmt|;
 if|if
 condition|(
 name|num
-operator|<
+operator|>=
 literal|0
 operator|&&
-name|denom
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
 name|r
 operator|.
 name|rem
-operator|>
+operator|<
 literal|0
 condition|)
 block|{
@@ -138,7 +105,6 @@ name|rem
 operator|-=
 name|denom
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
