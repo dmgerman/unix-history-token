@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	6.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	6.30 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5837,12 +5837,6 @@ name|s
 init|=
 name|splhigh
 argument_list|()
-decl_stmt|;
-specifier|extern
-name|int
-name|adjtimedelta
-decl_stmt|,
-name|tickadj
 decl_stmt|;
 specifier|static
 name|struct

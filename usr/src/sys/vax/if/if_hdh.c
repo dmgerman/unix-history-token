@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_hdh.c	6.6 (Berkeley) %G% */
+comment|/*	@(#)if_hdh.c	6.7 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -2618,11 +2618,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 name|cnt
 operator|=
@@ -2685,11 +2681,6 @@ operator|+
 name|HDHEOS
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_block
 

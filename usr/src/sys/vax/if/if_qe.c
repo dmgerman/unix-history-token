@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_qe.c	6.2 (Berkeley) %G% */
+comment|/*	@(#)if_qe.c	6.3 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -453,7 +453,7 @@ decl_stmt|,
 name|qeattach
 argument_list|()
 decl_stmt|,
-name|qeint
+name|qeintr
 argument_list|()
 decl_stmt|,
 name|qewatch
@@ -666,7 +666,7 @@ name|cvec
 expr_stmt|;
 name|qeintr
 argument_list|(
-name|i
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -707,6 +707,9 @@ name|uballoc
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|sc
 operator|->
 name|setup_pkt
@@ -734,6 +737,9 @@ name|uballoc
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|sc
 operator|->
 name|rring
@@ -778,11 +784,16 @@ name|sc
 operator|->
 name|tring
 argument_list|,
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|sc
 operator|->
 name|setupaddr
 operator|&
 name|mask
+argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -798,11 +809,16 @@ name|sc
 operator|->
 name|rring
 argument_list|,
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|sc
 operator|->
 name|setupaddr
 operator|&
 name|mask
+argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1005,6 +1021,10 @@ name|ubarelse
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|sc
 operator|->
@@ -1428,6 +1448,9 @@ name|uballoc
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|sc
 operator|->
 name|rring
@@ -1470,6 +1493,9 @@ name|uballoc
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|sc
 operator|->
 name|setup_pkt
@@ -1574,6 +1600,10 @@ index|[
 name|i
 index|]
 argument_list|,
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|sc
 operator|->
 name|qe_ifr
@@ -1584,6 +1614,7 @@ operator|.
 name|ifrw_info
 operator|&
 name|mask
+argument_list|)
 argument_list|,
 name|MAXPACKETSIZE
 argument_list|)
@@ -1630,6 +1661,9 @@ index|[
 name|i
 index|]
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|NULL
 argument_list|,
 literal|0
@@ -1739,6 +1773,9 @@ index|[
 name|i
 index|]
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|NULL
 argument_list|,
 literal|0
@@ -2286,19 +2323,27 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-operator|!
+name|qewatchrun
+operator|==
+literal|0
+condition|)
+block|{
 name|qewatchrun
 operator|++
-condition|)
+expr_stmt|;
 name|timeout
 argument_list|(
 name|qewatch
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 literal|0
 argument_list|,
 name|QE_TIMEO
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * See if the xmit list is invalid. 		 */
 if|if
 condition|(
@@ -2635,12 +2680,6 @@ name|rp
 operator|->
 name|qe_status1
 expr_stmt|;
-name|status2
-operator|=
-name|rp
-operator|->
-name|qe_status2
-expr_stmt|;
 name|setupflag
 operator|=
 name|rp
@@ -2670,6 +2709,9 @@ expr_stmt|;
 comment|/* 		 * Init the buffer descriptor 		 */
 name|bzero
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|rp
 argument_list|,
 sizeof|sizeof
@@ -2928,6 +2970,9 @@ name|qe_status2
 expr_stmt|;
 name|bzero
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|rp
 argument_list|,
 sizeof|sizeof
@@ -4102,9 +4147,7 @@ literal|0
 condition|)
 name|qerestart
 argument_list|(
-name|ifp
-operator|->
-name|if_unit
+name|sc
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4166,30 +4209,6 @@ name|qe_softc
 index|[
 name|unit
 index|]
-decl_stmt|;
-name|struct
-name|uba_device
-modifier|*
-name|ui
-init|=
-name|qeinfo
-index|[
-name|unit
-index|]
-decl_stmt|;
-name|struct
-name|qedevice
-modifier|*
-name|addr
-init|=
-operator|(
-expr|struct
-name|qedevice
-operator|*
-operator|)
-name|ui
-operator|->
-name|ui_addr
 decl_stmt|;
 specifier|register
 name|int
@@ -4268,7 +4287,7 @@ name|qeinitdesc
 argument_list|(
 name|rp
 argument_list|,
-name|buf
+name|addr
 argument_list|,
 name|len
 argument_list|)
@@ -4281,14 +4300,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
+name|caddr_t
 name|addr
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* mapped address	*/
+comment|/* mapped address */
 end_comment
 
 begin_decl_stmt
@@ -4302,6 +4320,9 @@ block|{
 comment|/* 	 * clear the entire descriptor 	 */
 name|bzero
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|rp
 argument_list|,
 sizeof|sizeof
@@ -4432,10 +4453,19 @@ expr_stmt|;
 comment|/* 	 * Duplicate the first half. 	 */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|sc
 operator|->
 name|setup_pkt
+index|[
+literal|0
+index|]
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|sc
 operator|->
 name|setup_pkt
@@ -4965,6 +4995,9 @@ name|timeout
 argument_list|(
 name|qewatch
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 literal|0
 argument_list|,
 name|QE_TIMEO

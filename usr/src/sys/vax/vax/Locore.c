@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)Locore.c	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)Locore.c	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2166,6 +2166,36 @@ block|{ }
 end_block
 
 begin_macro
+name|splsoftclock
+argument_list|()
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_macro
+name|splnet
+argument_list|()
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_macro
 name|spl4
 argument_list|()
 end_macro
@@ -2196,7 +2226,67 @@ block|}
 end_block
 
 begin_macro
+name|splbio
+argument_list|()
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_macro
+name|spltty
+argument_list|()
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_macro
 name|spl6
+argument_list|()
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/* not currently used */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_macro
+name|splclock
 argument_list|()
 end_macro
 
@@ -2212,6 +2302,21 @@ end_block
 
 begin_macro
 name|spl7
+argument_list|()
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_macro
+name|splhigh
 argument_list|()
 end_macro
 

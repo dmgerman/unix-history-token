@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_error.c	6.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_error.c	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1003,6 +1003,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_function
 name|u_long
 name|nstime
@@ -1056,6 +1062,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|ns_echo
@@ -1190,7 +1201,10 @@ name|ns_cksum
 argument_list|(
 name|m
 argument_list|,
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 operator|(
 name|ntohs
@@ -1207,7 +1221,7 @@ literal|1
 operator|)
 operator|+
 literal|1
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

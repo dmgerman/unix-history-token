@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.c	6.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.c	6.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3053,6 +3053,9 @@ name|off
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|vv
 operator|->
 name|vh_info
@@ -3865,6 +3868,9 @@ argument_list|)
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|short
+operator|)
 name|RING_IP
 argument_list|)
 expr_stmt|;
@@ -3883,6 +3889,9 @@ operator|)
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|m
 operator|->
 name|m_len
@@ -4099,6 +4108,9 @@ name|vh_info
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|off
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns.h	6.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns.h	6.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -451,15 +451,17 @@ name|defined
 argument_list|(
 name|vax
 argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
+operator|&&
 operator|!
 name|defined
 argument_list|(
-name|INET
+name|ntohl
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|lint
 argument_list|)
 end_if
 
@@ -512,6 +514,48 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|ntohl
+argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+operator|)
+end_if
+
+begin_decl_stmt
+name|u_short
+name|ntohs
+argument_list|()
+decl_stmt|,
+name|htons
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_long
+name|ntohl
+argument_list|()
+decl_stmt|,
+name|htonl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -532,7 +576,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|union
 name|ns_host
 name|ns_thishost
@@ -540,7 +583,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|union
 name|ns_host
 name|ns_zerohost
@@ -548,7 +590,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|union
 name|ns_host
 name|ns_broadhost
@@ -556,7 +597,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|union
 name|ns_net
 name|ns_zeronet
@@ -564,7 +604,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|union
 name|ns_net
 name|ns_broadnet

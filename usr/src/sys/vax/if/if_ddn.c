@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_ddn.c	6.5 (Berkeley) %G% */
+comment|/*	@(#)if_ddn.c	6.6 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -888,6 +888,11 @@ expr_stmt|;
 name|br
 operator|=
 name|cvec
+expr_stmt|;
+name|ddnintr
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -3885,6 +3890,9 @@ argument_list|,
 name|caddr_t
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|convert_ip_addr
 argument_list|(
 name|ds
@@ -5592,6 +5600,9 @@ name|lcn
 operator|*
 literal|2
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 index|[
 literal|2
@@ -5609,6 +5620,9 @@ name|ds
 argument_list|,
 name|CLEARVC
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 index|[
 literal|2
@@ -5662,6 +5676,9 @@ name|ds
 argument_list|,
 name|CLEARLC
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 index|[
 literal|1
@@ -5732,6 +5749,9 @@ name|ds
 argument_list|,
 name|CLEARVC
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 index|[
 literal|1
@@ -5752,6 +5772,9 @@ name|ds
 argument_list|,
 name|RESET_ACK
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 index|[
 literal|1
@@ -5905,10 +5928,19 @@ return|;
 comment|/*   return false if not */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|p
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|cb_called_addr
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|cnt
 argument_list|)
 expr_stmt|;
@@ -5940,10 +5972,19 @@ return|;
 comment|/*   return false if not */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|p
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|cb_calling_addr
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|cnt
 argument_list|)
 expr_stmt|;
@@ -5975,10 +6016,19 @@ return|;
 comment|/*   return false if not */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|p
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|cb_protocol
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|cnt
 argument_list|)
 expr_stmt|;
@@ -6010,10 +6060,19 @@ return|;
 comment|/*   return false if not */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|p
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|cb_facilities
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|cnt
 argument_list|)
 expr_stmt|;
@@ -6169,6 +6228,9 @@ name|ds
 argument_list|,
 name|CLEARLC
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dc
 operator|->
 name|dc_lcn

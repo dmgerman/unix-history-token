@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_var.h	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_var.h	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Interface address, internet version.  One of these structures  * is allocated for each interface with an internet address.  * The ifaddr structure contains the protocol-independent part  * of the structure and is assumed to be first.  */
+comment|/*  * Interface address, Internet version.  One of these structures  * is allocated for each interface with an Internet address.  * The ifaddr structure contains the protocol-independent part  * of the structure and is assumed to be first.  */
 end_comment
 
 begin_struct
@@ -117,6 +117,17 @@ name|in_iaonnetof
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|struct
+name|ifqueue
+name|ipintrq
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ip packet input queue */
+end_comment
 
 begin_endif
 endif|#
