@@ -3756,10 +3756,46 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|DPRINTF
 argument_list|(
 operator|(
 literal|" wIndex=%04x type=%d name='%s' unit='%s' "
+literal|"min=%d max=%d\n"
+operator|,
+name|mc
+operator|->
+name|wIndex
+operator|,
+name|mc
+operator|->
+name|type
+operator|,
+name|mc
+operator|->
+name|ctl
+operator|,
+name|mc
+operator|->
+name|minval
+operator|,
+name|mc
+operator|->
+name|maxval
+operator|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|DPRINTF
+argument_list|(
+operator|(
+literal|" wIndex=%04x type=%d ctl='%d' "
 literal|"min=%d max=%d\n"
 operator|,
 name|mc
@@ -3788,6 +3824,8 @@ name|maxval
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 endif|#
 directive|endif
