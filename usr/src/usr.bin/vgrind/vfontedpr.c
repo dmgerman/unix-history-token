@@ -63,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|NLANG
-value|3
+value|4
 end_define
 
 begin_comment
