@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|4.4
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -2571,6 +2571,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|int
+name|i
+decl_stmt|;
 comment|/* child -- set up input& exec mailer */
 comment|/* make diagnostic output be standard output */
 operator|(
@@ -2818,10 +2821,49 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		**  We have to be careful with vfork - we can't mung up the 		**  memory but we don't want the mailer to inherit any extra 		**  open files.  Chances are the mailer won't 		**  care about an extra file, but then again you never know. 		**  Actually, we would like to close(fileno(pwf)), but it's 		**  declared static so we can't.  But if we fclose(pwf), which 		**  is what endpwent does, it closes it in the parent too and 		**  the next getpwnam will be slower.  If you have a weird 		**  mailer that chokes on the extra file you should do the 		**  endpwent().			-MRH 		** 		**  Similar comments apply to log.  However, openlog is 		**  clever enough to set the FIOCLEX mode on the file, 		**  so it will be closed automatically on the exec. 		*/
-name|closeall
-argument_list|()
+comment|/* arrange for all the files to be closed */
+for|for
+control|(
+name|i
+operator|=
+literal|3
+init|;
+name|i
+operator|<
+literal|50
+condition|;
+name|i
+operator|++
+control|)
+ifdef|#
+directive|ifdef
+name|FIOCLEX
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+name|i
+argument_list|,
+name|FIOCLEX
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|FIOCLEX
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|FIOCLEX
 comment|/* try to execute the mailer */
 name|execv
 argument_list|(
@@ -2832,8 +2874,21 @@ argument_list|,
 name|pvp
 argument_list|)
 expr_stmt|;
-comment|/* syserr fails because log is closed */
-comment|/* syserr("Cannot exec %s", m->m_mailer); */
+ifdef|#
+directive|ifdef
+name|FIOCLEX
+name|syserr
+argument_list|(
+literal|"Cannot exec %s"
+argument_list|,
+name|m
+operator|->
+name|m_mailer
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+else|FIOCLEX
 name|printf
 argument_list|(
 literal|"Cannot exec '%s' errno=%d\n"
@@ -2853,6 +2908,9 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|FIOCLEX
 name|_exit
 argument_list|(
 name|EX_UNAVAILABLE

@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|4.6
+literal|4.7
 operator|%
 name|G
 operator|%
@@ -654,11 +654,29 @@ begin_comment
 comment|/* make sure we have a clean slate */
 end_comment
 
-begin_expr_stmt
-name|closeall
-argument_list|()
+begin_for
+for|for
+control|(
+name|i
+operator|=
+literal|3
+init|;
+name|i
+operator|<
+literal|50
+condition|;
+name|i
+operator|++
+control|)
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|i
+argument_list|)
 expr_stmt|;
-end_expr_stmt
+end_for
 
 begin_ifdef
 ifdef|#
