@@ -246,13 +246,6 @@ name|AH_MAXSUMSIZE
 value|(512 / 8)
 end_define
 
-begin_define
-define|#
-directive|define
-name|AH_MAXSUMSIZE
-value|16
-end_define
-
 begin_decl_stmt
 specifier|extern
 specifier|const
