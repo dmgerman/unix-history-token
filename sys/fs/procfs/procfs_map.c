@@ -24,6 +24,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/filedesc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -37,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -133,6 +151,13 @@ name|mebuffer
 index|[
 name|MEBUFFERSIZE
 index|]
+decl_stmt|;
+name|char
+modifier|*
+name|fullpath
+decl_stmt|,
+modifier|*
+name|freepath
 decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
@@ -370,6 +395,14 @@ name|lobj
 operator|=
 name|tobj
 expr_stmt|;
+name|freepath
+operator|=
+name|NULL
+expr_stmt|;
+name|fullpath
+operator|=
+literal|"-"
+expr_stmt|;
 if|if
 condition|(
 name|lobj
@@ -397,6 +430,33 @@ case|:
 name|type
 operator|=
 literal|"vnode"
+expr_stmt|;
+name|vn_fullpath
+argument_list|(
+name|td
+argument_list|,
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|)
+name|lobj
+operator|->
+name|handle
+argument_list|,
+operator|&
+name|fullpath
+argument_list|,
+operator|&
+name|freepath
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"string: %s\n"
+argument_list|,
+name|fullpath
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -462,7 +522,7 @@ argument_list|,
 sizeof|sizeof
 name|mebuffer
 argument_list|,
-literal|"0x%lx 0x%lx %d %d %p %s%s%s %d %d 0x%x %s %s %s\n"
+literal|"0x%lx 0x%lx %d %d %p %s%s%s %d %d 0x%x %s %s %s %s\n"
 argument_list|,
 operator|(
 name|u_long
@@ -551,6 +611,21 @@ else|:
 literal|"NNC"
 argument_list|,
 name|type
+argument_list|,
+name|fullpath
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|freepath
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|freepath
+argument_list|,
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 name|len
