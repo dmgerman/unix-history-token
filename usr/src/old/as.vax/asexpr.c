@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asexpr.c	5.2 (Berkeley) %G%"
+literal|"@(#)asexpr.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1652,7 +1652,11 @@ case|case
 name|NAME
 case|:
 name|exprisname
-operator|++
+operator|=
+operator|(
+name|int
+operator|)
+name|np
 expr_stmt|;
 name|locxp
 operator|->
