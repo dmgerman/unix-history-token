@@ -1074,8 +1074,6 @@ operator||
 name|IP_ALLOWBROADCAST
 operator||
 name|IP_RAWOUTPUT
-operator||
-name|IP_SOCKINMRCVIF
 argument_list|,
 name|inp
 operator|->
