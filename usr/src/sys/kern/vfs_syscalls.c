@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_syscalls.c	4.19	82/03/12	*/
+comment|/*	vfs_syscalls.c	4.20	82/03/16	*/
 end_comment
 
 begin_include
@@ -858,6 +858,13 @@ name|EEXIST
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
+condition|)
+return|return;
 name|ip
 operator|=
 name|maknode
