@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)library.c	5.1 (Berkeley) %G%"
+literal|"@(#)library.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -326,7 +326,7 @@ argument_list|(
 operator|&
 name|tstatfsp
 argument_list|,
-literal|0
+name|MNT_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
