@@ -5338,14 +5338,25 @@ modifier|*
 name|last
 parameter_list|)
 block|{
-if|#
-directive|if
+if|if
+condition|(
+name|last
+operator|->
+name|tv_sec
+operator|==
+name|time_second
+condition|)
+return|return
+operator|(
 literal|0
-block|static struct timeval errinterval = { 0, 250000 };
-comment|/* 0.25 s*/
-block|return (ratecheck(last,&errinterval));
-endif|#
-directive|endif
+operator|)
+return|;
+name|last
+operator|->
+name|tv_sec
+operator|=
+name|time_second
+expr_stmt|;
 return|return
 operator|(
 literal|1
