@@ -1052,7 +1052,8 @@ name|ioc_vol
 modifier|*
 name|level
 parameter_list|,
-name|int
+name|unsigned
+name|long
 name|action
 parameter_list|)
 block|{
@@ -1479,7 +1480,8 @@ parameter_list|,
 name|int
 name|controller
 parameter_list|,
-name|int
+name|unsigned
+name|long
 name|command
 parameter_list|)
 block|{

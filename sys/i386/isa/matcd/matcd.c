@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.34 1998/06/17 13:54:58 bde Exp $ */
+comment|/* $Id: matcd.c,v 1.35 1998/07/04 22:30:20 julian Exp $ */
 end_comment
 
 begin_comment
@@ -1287,7 +1287,8 @@ name|ioc_vol
 modifier|*
 name|volume
 parameter_list|,
-name|int
+name|unsigned
+name|long
 name|action
 parameter_list|)
 function_decl|;
@@ -1329,7 +1330,8 @@ parameter_list|,
 name|int
 name|controller
 parameter_list|,
-name|int
+name|unsigned
+name|long
 name|command
 parameter_list|)
 function_decl|;
@@ -3475,7 +3477,7 @@ directive|ifdef
 name|DEBUGIOCTL
 name|printf
 argument_list|(
-literal|"matcd%d: ioctl %x cdrive %x parms "
+literal|"matcd%d: ioctl %lx cdrive %x parms "
 argument_list|,
 name|ldrive
 argument_list|,
