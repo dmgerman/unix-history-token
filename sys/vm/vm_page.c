@@ -1794,8 +1794,6 @@ decl_stmt|;
 name|vm_page_t
 name|root
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -1813,6 +1811,18 @@ operator|==
 name|NULL
 condition|)
 return|return;
+if|if
+condition|(
+operator|!
+name|VM_OBJECT_LOCKED
+argument_list|(
+name|m
+operator|->
+name|object
+argument_list|)
+condition|)
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3109,8 +3119,6 @@ name|m
 operator|->
 name|object
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
