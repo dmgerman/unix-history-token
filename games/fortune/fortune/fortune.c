@@ -730,10 +730,6 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
 name|index
 argument_list|()
 decl_stmt|,
