@@ -73,13 +73,12 @@ decl_stmt|;
 name|uint32_t
 name|hdr_crc_table
 decl_stmt|;
+name|char
+name|padding
+index|[]
+decl_stmt|;
+comment|/* XXX: struct not a multiple of 8. */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
 struct|;
 end_struct
 
