@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.15 (Berkeley) %G%"
+literal|"@(#)input.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -607,6 +607,39 @@ condition|(
 name|ifp
 condition|)
 block|{
+if|if
+condition|(
+name|ifp
+operator|->
+name|int_flags
+operator|&
+name|IFF_PASSIVE
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"bogus input (from passive interface, %s)"
+argument_list|,
+operator|(
+operator|*
+name|afswitch
+index|[
+name|from
+operator|->
+name|sa_family
+index|]
+operator|.
+name|af_format
+operator|)
+operator|(
+name|from
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|rt
 operator|=
 name|rtfind
@@ -1103,7 +1136,19 @@ name|from
 argument_list|)
 condition|)
 continue|continue;
-comment|/* 				 * Look for an equivalent route that includes 				 * this one before adding this route. 				 */
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|n
+operator|->
+name|rip_metric
+operator|<
+name|HOPCNT_INFINITY
+condition|)
+block|{
+comment|/* 				     * Look for an equivalent route that 				     * includes this one before adding 				     * this route. 				     */
 name|rt
 operator|=
 name|rtfind
@@ -1129,14 +1174,6 @@ name|rt_router
 argument_list|)
 condition|)
 continue|continue;
-if|if
-condition|(
-name|n
-operator|->
-name|rip_metric
-operator|<
-name|HOPCNT_INFINITY
-condition|)
 name|rtadd
 argument_list|(
 operator|&
@@ -1153,9 +1190,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 continue|continue;
 block|}
-comment|/* 			 * Update if from gateway and different, 			 * shorter, or getting stale and equivalent. 			 */
+comment|/* 			 * Update if from gateway and different, 			 * shorter, or equivalent but old route 			 * is getting stale. 			 */
 if|if
 condition|(
 name|equal
@@ -1190,6 +1228,12 @@ name|n
 operator|->
 name|rip_metric
 argument_list|)
+expr_stmt|;
+name|rt
+operator|->
+name|rt_timer
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1241,6 +1285,14 @@ operator|||
 operator|(
 name|rt
 operator|->
+name|rt_metric
+operator|==
+name|n
+operator|->
+name|rip_metric
+operator|&&
+name|rt
+operator|->
 name|rt_timer
 operator|>
 operator|(
@@ -1248,14 +1300,6 @@ name|EXPIRE_TIME
 operator|/
 literal|2
 operator|)
-operator|&&
-name|rt
-operator|->
-name|rt_metric
-operator|==
-name|n
-operator|->
-name|rip_metric
 operator|&&
 operator|(
 name|unsigned
