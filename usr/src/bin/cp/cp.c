@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.29 (Berkeley) %G%"
+literal|"@(#)cp.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,6 +296,9 @@ name|FTS
 modifier|*
 name|ftsp
 decl_stmt|;
+name|int
+name|hflag
+decl_stmt|;
 comment|/* 	 * The utility cp(1) is used by mv(1) -- except for usage statements, 	 * print the "called as" program name. 	 */
 name|progname
 operator|=
@@ -317,7 +320,9 @@ else|:
 operator|*
 name|argv
 expr_stmt|;
-comment|/*          * Symbolic link handling is as follows:          * 1.  Follow all symbolic links on the argument line.          * 2.  Otherwise, don't follow symbolic links UNLESS options -h           *     (in conjuction with -R) or -r (for backward compatibility) are           *     set.          */
+comment|/*          * Symbolic link handling is as follows:          * 1.  Follow all symbolic links on the argument line.          * 2.  Otherwise, don't follow symbolic links UNLESS options -h           *     (in conjuction with -R) or -r (for backward compatibility) are           *     set, in which case follow all symbolic links, or when the -H          *     option is set (in conjuction with -R), in which case follow           *     all symbolic links on the command line.          *           */
+name|hflag
+operator|=
 name|rflag
 operator|=
 name|orflag
@@ -328,7 +333,7 @@ name|fts_options
 operator|=
 name|FTS_NOCHDIR
 operator||
-name|FTS_PHYSICAL
+name|FTS_LOGICAL
 expr_stmt|;
 while|while
 condition|(
@@ -374,14 +379,9 @@ break|break;
 case|case
 literal|'h'
 case|:
-name|fts_options
-operator|&=
-operator|~
-name|FTS_PHYSICAL
-expr_stmt|;
-name|fts_options
-operator||=
-name|FTS_LOGICAL
+name|hflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -409,6 +409,15 @@ break|break;
 case|case
 literal|'R'
 case|:
+name|fts_options
+operator|&=
+operator|~
+name|FTS_LOGICAL
+expr_stmt|;
+name|fts_options
+operator||=
+name|FTS_PHYSICAL
+expr_stmt|;
 name|rflag
 operator|=
 literal|1
@@ -457,6 +466,21 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|hflag
+condition|)
+block|{
+name|fts_options
+operator|&=
+operator|~
+name|FTS_PHYSICAL
+expr_stmt|;
+name|fts_options
+operator||=
+name|FTS_LOGICAL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|rflag
@@ -1232,7 +1256,6 @@ if|if
 condition|(
 name|rflag
 condition|)
-block|{
 name|copy_special
 argument_list|(
 name|curr
@@ -1243,8 +1266,7 @@ operator|!
 name|dne
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
+else|else
 name|copy_file
 argument_list|(
 name|curr
@@ -1260,7 +1282,6 @@ if|if
 condition|(
 name|rflag
 condition|)
-block|{
 name|copy_fifo
 argument_list|(
 name|curr
@@ -1271,8 +1292,7 @@ operator|!
 name|dne
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
+else|else
 name|copy_file
 argument_list|(
 name|curr
