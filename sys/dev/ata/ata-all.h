@@ -1166,15 +1166,15 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* ATAPI command block */
-name|u_int8_t
-name|sense_key
-decl_stmt|;
-comment|/* ATAPI request sense key */
 name|struct
 name|atapi_sense
 name|sense_data
 decl_stmt|;
 comment|/* ATAPI request sense data */
+name|u_int8_t
+name|sense_key
+decl_stmt|;
+comment|/* ATAPI request sense key */
 block|}
 name|atapi
 struct|;
