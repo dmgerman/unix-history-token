@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.100 (Berkeley) %G%"
+literal|"@(#)conf.c	8.101 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -229,6 +229,10 @@ block|,
 name|H_FORCE
 operator||
 name|H_ACHECK
+block|,
+literal|"content-transfer-encoding"
+block|,
+name|H_CTE
 block|,
 name|NULL
 block|,

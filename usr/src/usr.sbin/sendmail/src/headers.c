@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.34 (Berkeley) %G%"
+literal|"@(#)headers.c	8.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -375,7 +375,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"header match, hi_flags=%o\n"
+literal|"header match, hi_flags=%x\n"
 argument_list|,
 name|hi
 operator|->
@@ -3782,6 +3782,44 @@ condition|)
 name|printf
 argument_list|(
 literal|" (skipped (receipt))\n"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* suppress Content-Transfer-Encoding: if we are MIMEing */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|H_CTE
+argument_list|,
+name|h
+operator|->
+name|h_flags
+argument_list|)
+operator|&&
+name|bitset
+argument_list|(
+name|MCIF_CVT8TO7
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|34
+argument_list|,
+literal|11
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" (skipped (content-transfer-encoding))\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
