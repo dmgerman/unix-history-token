@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chap.c,v 1.8 1995/07/04 12:32:26 paulus Exp $"
+literal|"$Id: chap.c,v 1.4 1995/10/31 21:20:55 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<md5.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pppd.h"
 end_include
 
@@ -68,12 +74,6 @@ begin_include
 include|#
 directive|include
 file|"chap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"md5.h"
 end_include
 
 begin_decl_stmt
@@ -1258,6 +1258,13 @@ decl_stmt|;
 name|MD5_CTX
 name|mdContext
 decl_stmt|;
+name|unsigned
+name|char
+name|digest
+index|[
+literal|16
+index|]
+decl_stmt|;
 name|CHAPDEBUG
 argument_list|(
 operator|(
@@ -1532,14 +1539,14 @@ argument_list|)
 expr_stmt|;
 name|MD5Final
 argument_list|(
+name|digest
+argument_list|,
 operator|&
 name|mdContext
 argument_list|)
 expr_stmt|;
 name|BCOPY
 argument_list|(
-name|mdContext
-operator|.
 name|digest
 argument_list|,
 name|cstate
@@ -1640,6 +1647,13 @@ index|]
 decl_stmt|;
 name|MD5_CTX
 name|mdContext
+decl_stmt|;
+name|unsigned
+name|char
+name|digest
+index|[
+literal|16
+index|]
 decl_stmt|;
 name|u_char
 name|msg
@@ -1967,6 +1981,8 @@ argument_list|)
 expr_stmt|;
 name|MD5Final
 argument_list|(
+name|digest
+argument_list|,
 operator|&
 name|mdContext
 argument_list|)
@@ -1976,8 +1992,6 @@ if|if
 condition|(
 name|memcmp
 argument_list|(
-name|mdContext
-operator|.
 name|digest
 argument_list|,
 name|remmd

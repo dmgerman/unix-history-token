@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: auth.c,v 1.17 1995/08/16 01:37:22 paulus Exp $"
+literal|"$Id: auth.c,v 1.5 1995/10/31 21:20:45 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -504,24 +510,6 @@ argument_list|(
 operator|(
 expr|struct
 name|wordlist
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|crypt
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
 operator|*
 operator|)
 argument_list|)

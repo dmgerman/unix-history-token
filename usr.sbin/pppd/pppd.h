@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pppd.h - PPP daemon global declarations.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pppd.h,v 1.8 1995/04/26 06:46:31 paulus Exp $  */
+comment|/*  * pppd.h - PPP daemon global declarations.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pppd.h,v 1.4 1995/10/31 21:21:42 peter Exp $  */
 end_comment
 
 begin_comment
@@ -302,6 +302,28 @@ end_decl_stmt
 
 begin_comment
 comment|/* IP netmask to set on interface */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int32_t
+name|dns1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Primary DNS server */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int32_t
+name|dns2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Secondary DNS server */
 end_comment
 
 begin_decl_stmt
