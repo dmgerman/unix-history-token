@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diff.c 4.1 %G%"
+literal|"@(#)diff.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,14 +46,6 @@ name|PR
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-name|_sobuf
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|main
 parameter_list|(
@@ -90,13 +82,6 @@ expr_stmt|;
 name|diffargv
 operator|=
 name|argv
-expr_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|_sobuf
-argument_list|)
 expr_stmt|;
 name|argc
 operator|--

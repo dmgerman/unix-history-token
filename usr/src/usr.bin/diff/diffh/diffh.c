@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffh.c 4.1 %G%"
+literal|"@(#)diffh.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -499,18 +499,6 @@ modifier|*
 name|dopen
 parameter_list|()
 function_decl|;
-specifier|extern
-name|char
-name|_sobuf
-index|[]
-decl_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|_sobuf
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|*
