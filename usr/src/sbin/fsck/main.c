@@ -847,7 +847,7 @@ name|cs_nbfree
 expr_stmt|;
 name|pwarn
 argument_list|(
-literal|"%d files, %d used, %d free (%d frags, %d blocks)\n"
+literal|"%d files, %d used, %d free "
 argument_list|,
 name|n_files
 argument_list|,
@@ -860,10 +860,28 @@ operator|.
 name|fs_frag
 operator|*
 name|n_bfree
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"(%d frags, %d blocks, %.1f%% fragmentation)\n"
 argument_list|,
 name|n_ffree
 argument_list|,
 name|n_bfree
+argument_list|,
+call|(
+name|float
+call|)
+argument_list|(
+name|n_ffree
+operator|*
+literal|100
+argument_list|)
+operator|/
+name|sblock
+operator|.
+name|fs_dsize
 argument_list|)
 expr_stmt|;
 if|if
