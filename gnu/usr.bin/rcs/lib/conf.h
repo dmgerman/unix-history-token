@@ -4,7 +4,7 @@ comment|/* RCS compile-time configuration */
 end_comment
 
 begin_comment
-comment|/* $Id: conf.sh,v 5.14 1991/11/20 18:21:10 eggert Exp $ */
+comment|/* $Id: conf.sh,v 5.14.0.1 1993/03/25 04:24:49 eggert Exp $ */
 end_comment
 
 begin_comment
@@ -424,12 +424,9 @@ begin_comment
 comment|/* typedef int pid_t; */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|int
-name|sig_atomic_t
-typedef|;
-end_typedef
+begin_comment
+comment|/* typedef int sig_atomic_t; */
+end_comment
 
 begin_comment
 comment|/* typedef unsigned size_t; */
@@ -849,7 +846,7 @@ begin_define
 define|#
 directive|define
 name|has_fchmod
-value|0
+value|1
 end_define
 
 begin_comment
@@ -959,7 +956,7 @@ begin_define
 define|#
 directive|define
 name|has_mmap
-value|0
+value|1
 end_define
 
 begin_comment
@@ -1116,7 +1113,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|ssize_t
+name|size_t
 name|fread_type
 typedef|;
 end_typedef
@@ -1220,7 +1217,7 @@ begin_define
 define|#
 directive|define
 name|has_vfork
-value|0
+value|1
 end_define
 
 begin_comment
@@ -1264,7 +1261,7 @@ begin_define
 define|#
 directive|define
 name|has_waitpid
-value|0
+value|1
 end_define
 
 begin_comment
@@ -1321,7 +1318,7 @@ begin_define
 define|#
 directive|define
 name|large_memory
-value|0
+value|1
 end_define
 
 begin_comment
@@ -1397,6 +1394,17 @@ end_define
 
 begin_comment
 comment|/* name of 'diff3' program */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIFF3_A
+value|1
+end_define
+
+begin_comment
+comment|/* Does diff3 have an -A option?  */
 end_comment
 
 begin_define
