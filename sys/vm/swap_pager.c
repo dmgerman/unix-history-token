@@ -2407,6 +2407,18 @@ name|bp
 operator|->
 name|bio_bcount
 expr_stmt|;
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+operator|&
+name|bp
+operator|->
+name|bio_driver1
+operator|=
+literal|0
+expr_stmt|;
 name|start
 operator|=
 name|bp
@@ -5575,7 +5587,7 @@ operator|&
 operator|(
 name|bp
 operator|->
-name|bio_caller1
+name|bio_driver1
 operator|)
 expr_stmt|;
 if|if
@@ -5753,7 +5765,7 @@ operator|&
 operator|(
 name|bp
 operator|->
-name|bio_caller1
+name|bio_driver1
 operator|)
 expr_stmt|;
 name|nbp
@@ -5956,7 +5968,7 @@ operator|&
 operator|(
 name|bp
 operator|->
-name|bio_caller1
+name|bio_driver1
 operator|)
 expr_stmt|;
 name|s
