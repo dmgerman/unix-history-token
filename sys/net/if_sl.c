@@ -1415,6 +1415,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sldestroy
 parameter_list|(

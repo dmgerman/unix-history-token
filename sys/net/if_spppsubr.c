@@ -11207,6 +11207,7 @@ comment|/*  * Change the state of a control protocol in the state automaton.  * 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sppp_cp_change_state
 parameter_list|(
@@ -19456,6 +19457,7 @@ comment|/*  * Handle incoming CHAP packets.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sppp_chap_input
 parameter_list|(

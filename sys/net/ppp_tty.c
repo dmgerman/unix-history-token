@@ -3554,6 +3554,7 @@ comment|/*  * Start output on async tty interface.  If the transmit queue  * has
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|pppstart
 parameter_list|(

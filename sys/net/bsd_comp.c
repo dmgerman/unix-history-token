@@ -1913,6 +1913,7 @@ comment|/*  * compress a packet  *	One change from the BSD compress command is t
 end_comment
 
 begin_function
+specifier|static
 name|int
 comment|/* new slen */
 name|bsd_compress
@@ -3334,6 +3335,7 @@ comment|/*  * Decompress "BSD Compress".  *  * Because of patent problems, we re
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bsd_decompress
 parameter_list|(

@@ -1618,27 +1618,34 @@ begin_comment
 comment|/*  * Defragmenter. Returns mbuf if last packet found, else  * NULL. frees imcoming mbuf as necessary.  */
 end_comment
 
-begin_function
+begin_expr_stmt
+specifier|static
 name|__inline
-name|struct
+expr|struct
 name|mbuf
-modifier|*
+operator|*
 name|arc_defrag
-parameter_list|(
-name|ifp
-parameter_list|,
-name|m
-parameter_list|)
-name|struct
+argument_list|(
+argument|ifp
+argument_list|,
+argument|m
+argument_list|)
+expr|struct
 name|ifnet
-modifier|*
+operator|*
 name|ifp
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|struct
 name|arc_header
@@ -2154,7 +2161,7 @@ return|return
 name|NULL
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * return 1 if Packet Header Definition Standard, else 0.  * For now: old IP, old ARP aren't obviously. Lacking correct information,  * we guess that besides new IP and new ARP also IPX and APPLETALK are PHDS.  * (Apple and Novell corporations were involved, among others, in PHDS work).  * Easiest is to assume that everybody else uses that, too.  */

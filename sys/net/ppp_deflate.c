@@ -494,6 +494,7 @@ comment|/*  * Space allocation and freeing routines for use by zlib routines.  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 modifier|*
 name|z_alloc
@@ -541,6 +542,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|z_free
 parameter_list|(
@@ -1017,6 +1019,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|z_compress
 parameter_list|(
@@ -2325,6 +2328,7 @@ comment|/*  * Decompress a Deflate-compressed packet.  *  * Because of patent pr
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|z_decompress
 parameter_list|(

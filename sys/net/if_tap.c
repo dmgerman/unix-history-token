@@ -2432,6 +2432,7 @@ comment|/*  * tapifioctl  *  * Process an ioctl request on network interface  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tapifioctl
 parameter_list|(
