@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: print.c,v 1.26 1998/05/25 05:07:18 steve Exp $"
+literal|"$Id: print.c,v 1.27 1998/05/28 09:29:43 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2321,9 +2321,6 @@ name|VAR
 modifier|*
 name|v
 decl_stmt|;
-name|int64_t
-name|sec
-decl_stmt|;
 name|long
 name|secs
 decl_stmt|;
@@ -2362,7 +2359,11 @@ operator|.
 name|u_valid
 condition|)
 block|{
-name|sec
+name|secs
+operator|=
+literal|0
+expr_stmt|;
+name|psecs
 operator|=
 literal|0
 expr_stmt|;
@@ -2370,7 +2371,7 @@ block|}
 else|else
 block|{
 comment|/* 		 * This counts time spent handling interrupts.  We could 		 * fix this, but it is not 100% trivial (and interrupt 		 * time fractions only work on the sparc anyway).	XXX 		 */
-name|sec
+name|secs
 operator|=
 name|KI_PROC
 argument_list|(
@@ -2378,15 +2379,27 @@ name|k
 argument_list|)
 operator|->
 name|p_runtime
+operator|/
+literal|1000000
+expr_stmt|;
+name|psecs
+operator|=
+name|KI_PROC
+argument_list|(
+name|k
+argument_list|)
+operator|->
+name|p_runtime
+operator|%
+literal|1000000
 expr_stmt|;
 if|if
 condition|(
 name|sumrusage
 condition|)
 block|{
-name|sec
+name|secs
 operator|+=
-operator|(
 name|k
 operator|->
 name|ki_u
@@ -2406,14 +2419,8 @@ operator|.
 name|ru_stime
 operator|.
 name|tv_sec
-operator|)
-operator|*
-operator|(
-name|int64_t
-operator|)
-literal|1000000
 expr_stmt|;
-name|sec
+name|psecs
 operator|+=
 name|k
 operator|->
@@ -2436,12 +2443,11 @@ operator|.
 name|tv_usec
 expr_stmt|;
 block|}
-block|}
-comment|/* 	 * round and scale to 100's 	 */
-name|sec
+comment|/* 		 * round and scale to 100's 		 */
+name|psecs
 operator|=
 operator|(
-name|sec
+name|psecs
 operator|+
 literal|5000
 operator|)
@@ -2449,17 +2455,18 @@ operator|/
 literal|10000
 expr_stmt|;
 name|secs
-operator|=
-name|sec
+operator|+=
+name|psecs
 operator|/
 literal|100
 expr_stmt|;
 name|psecs
 operator|=
-name|sec
+name|psecs
 operator|%
 literal|100
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
