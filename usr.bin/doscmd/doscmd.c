@@ -1781,6 +1781,11 @@ operator|>=
 name|ecnt
 condition|)
 block|{
+name|put_dosenv
+argument_list|(
+literal|"PATH=C:\\"
+argument_list|)
+expr_stmt|;
 name|dos_path
 operator|=
 name|envs
@@ -1791,11 +1796,6 @@ literal|1
 index|]
 operator|+
 literal|5
-expr_stmt|;
-name|put_dosenv
-argument_list|(
-literal|"PATH=C:\\"
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* if no PROMPT, default to 'DOS>' */
