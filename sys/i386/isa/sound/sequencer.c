@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/chr_drv/sound/sequencer.c  *   * The sequencer personality manager.  *   * (C) 1992  Hannu Savolainen (hsavolai@cs.helsinki.fi) See COPYING for further  * details. Should be distributed with this file.  */
+comment|/*  * linux/kernel/chr_drv/sound/sequencer.c  *   * The sequencer personality manager.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
 
 begin_define
@@ -420,6 +420,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sequencer_midi_output
 parameter_list|(
@@ -508,6 +509,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sequencer_midi_input
 parameter_list|(
@@ -972,6 +974,10 @@ argument_list|(
 name|dev
 argument_list|,
 name|mode
+argument_list|,
+name|sequencer_midi_input
+argument_list|,
+name|sequencer_midi_output
 argument_list|)
 operator|)
 operator|<
@@ -2186,6 +2192,10 @@ argument_list|(
 name|i
 argument_list|,
 name|mode
+argument_list|,
+name|sequencer_midi_input
+argument_list|,
+name|sequencer_midi_output
 argument_list|)
 operator|)
 operator|>=
@@ -3048,6 +3058,10 @@ argument_list|(
 name|midi_dev
 argument_list|,
 name|mode
+argument_list|,
+name|sequencer_midi_input
+argument_list|,
+name|sequencer_midi_output
 argument_list|)
 operator|)
 operator|<
@@ -4647,34 +4661,6 @@ block|{
 return|return
 name|mem_start
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|sequencer_midi_input
-parameter_list|(
-name|int
-name|dev
-parameter_list|,
-name|unsigned
-name|char
-name|data
-parameter_list|)
-block|{
-return|return;
-block|}
-end_function
-
-begin_function
-name|void
-name|sequencer_midi_output
-parameter_list|(
-name|int
-name|dev
-parameter_list|)
-block|{
-return|return;
 block|}
 end_function
 

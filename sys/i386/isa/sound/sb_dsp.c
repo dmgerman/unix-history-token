@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/chr_drv/sound/sb_dsp.c  *   * The low level driver for the SoundBlaster DS chips.  *   * (C) 1992  Hannu Savolainen (hsavolai@cs.helsinki.fi) See COPYING for further  * details. Should be distributed with this file.  *   * The mixer support is based on the SB-BSD 1.5 driver by (C) Steve Haehnichen  *<shaehnic@ucsd.edu>  */
+comment|/*  * linux/kernel/chr_drv/sound/sb_dsp.c  *   * The low level driver for the SoundBlaster DS chips.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The mixer support is based on the SB-BSD 1.5 driver by (C) Steve Haehnichen  *<shaehnic@ucsd.edu>  */
 end_comment
 
 begin_include
@@ -4241,6 +4241,30 @@ name|dev
 parameter_list|,
 name|int
 name|mode
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|input
+function_decl|)
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|unsigned
+name|char
+name|data
+parameter_list|)
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|output
+function_decl|)
+parameter_list|(
+name|int
+name|dev
+parameter_list|)
 parameter_list|)
 block|{
 name|int
@@ -4274,6 +4298,12 @@ operator|!
 name|duplex_midi
 condition|)
 block|{
+if|if
+condition|(
+name|num_midis
+operator|==
+literal|1
+condition|)
 name|printk
 argument_list|(
 literal|"SoundBlaster: Midi input not currently supported\n"
@@ -5054,11 +5084,6 @@ directive|endif
 name|sb_dsp_ok
 operator|=
 literal|1
-expr_stmt|;
-name|printk
-argument_list|(
-literal|"\n"
-argument_list|)
 expr_stmt|;
 return|return
 name|mem_start

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/chr_drv/sound/opl3.c  *   * A low level driver for Yamaha YM3812 and OPL-3 -chips  *   * (C) 1992  Hannu Savolainen (hsavolai@cs.helsinki.fi) See COPYING for further  * details. Should be distributed with this file.  */
+comment|/*  * linux/kernel/chr_drv/sound/opl3.c  *   * A low level driver for Yamaha YM3812 and OPL-3 -chips  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
 
 begin_comment
@@ -2206,6 +2206,8 @@ block|{
 name|unsigned
 name|char
 name|data
+decl_stmt|,
+name|fpc
 decl_stmt|;
 name|int
 name|block
@@ -2709,7 +2711,29 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Set Feedback/Connection */
-comment|/* Connect the voice to both stereo channels */
+name|fpc
+operator|=
+name|instr
+operator|->
+name|operators
+index|[
+literal|10
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|fpc
+operator|&
+literal|0x30
+operator|)
+condition|)
+name|fpc
+operator||=
+literal|0x30
+expr_stmt|;
+comment|/* Ensure that at least one chn is enabled */
 name|opl3_command
 argument_list|(
 name|map
@@ -2722,14 +2746,7 @@ name|map
 operator|->
 name|voice_num
 argument_list|,
-name|instr
-operator|->
-name|operators
-index|[
-literal|10
-index|]
-operator||
-literal|0x30
+name|fpc
 argument_list|)
 expr_stmt|;
 comment|/*    * If the voice is a 4 OP one, initialize the operators 3 and 4 also    */
@@ -2945,7 +2962,31 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Set Feedback/Connection */
-comment|/* Connect the voice to both stereo channels */
+name|fpc
+operator|=
+name|instr
+operator|->
+name|operators
+index|[
+name|OFFS_4OP
+operator|+
+literal|10
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|fpc
+operator|&
+literal|0x30
+operator|)
+condition|)
+name|fpc
+operator||=
+literal|0x30
+expr_stmt|;
+comment|/* Ensure that at least one chn is enabled */
 name|opl3_command
 argument_list|(
 name|map
@@ -2960,16 +3001,7 @@ name|voice_num
 operator|+
 literal|3
 argument_list|,
-name|instr
-operator|->
-name|operators
-index|[
-name|OFFS_4OP
-operator|+
-literal|10
-index|]
-operator||
-literal|0x30
+name|fpc
 argument_list|)
 expr_stmt|;
 block|}
@@ -4635,11 +4667,6 @@ name|channel
 operator|=
 operator|-
 literal|1
-expr_stmt|;
-name|printk
-argument_list|(
-literal|"\n"
-argument_list|)
 expr_stmt|;
 return|return
 name|mem_start
