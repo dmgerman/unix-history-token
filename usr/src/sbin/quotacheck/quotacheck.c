@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotacheck.c	8.4 (Berkeley) %G%"
+literal|"@(#)quotacheck.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include

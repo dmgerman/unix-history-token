@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)repquota.c	8.1 (Berkeley) %G%"
+literal|"@(#)repquota.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
