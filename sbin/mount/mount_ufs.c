@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_ufs.c	8.2 (Berkeley) 3/27/94"
+literal|"@(#)mount_ufs.c	8.4 (Berkeley) 4/26/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/ufs/ufsmount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mntopts.h"
 end_include
 
@@ -134,6 +140,8 @@ block|,
 name|MOPT_SYNC
 block|,
 name|MOPT_UPDATE
+block|,
+name|MOPT_FORCE
 block|,
 block|{
 name|NULL
@@ -221,6 +229,8 @@ name|mopts
 argument_list|,
 operator|&
 name|mntflags
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -306,7 +316,7 @@ if|if
 condition|(
 name|mount
 argument_list|(
-name|MOUNT_UFS
+literal|"ufs"
 argument_list|,
 name|fs_name
 argument_list|,
