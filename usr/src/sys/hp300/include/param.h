@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machparam.h 1.11 89/08/14$  *  *	@(#)param.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machparam.h 1.11 89/08/14$  *  *	@(#)param.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -154,6 +154,10 @@ directive|define
 name|CLSIZELOG2
 value|0
 end_define
+
+begin_comment
+comment|/* NOTE: SSIZE, SINCR and UPAGES must be multiples of CLSIZE */
+end_comment
 
 begin_define
 define|#
@@ -410,7 +414,7 @@ value|((unsigned)(db)<< DEV_BSHIFT)
 end_define
 
 begin_comment
-comment|/*  * Map a ``block device block'' to a file system block.  * This should be device dependent, and will be if we  * add an entry to cdevsw/bdevsw for that purpose.  * For now though just use DEV_BSIZE.  */
+comment|/*  * Map a ``block device block'' to a file system block.  * This should be device dependent, and should use the bsize  * field from the disk label.  * For now though just use DEV_BSIZE.  */
 end_comment
 
 begin_define
@@ -508,27 +512,170 @@ value|((unsigned)(x)<< PGSHIFT)
 end_define
 
 begin_comment
-comment|/*  * Macros to decode processor status word.  */
+comment|/*  * spl functions; all but spl0 are done in-line  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/psl.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|_spl
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|({ \         register int _spl_r; \ \         asm __volatile ("clrl %0; movew sr,%0; movew %1,sr" : \                 "&=d" (_spl_r) : "di" (s)); \         _spl_r; \ })
+end_define
+
+begin_comment
+comment|/* spl0 requires checking for software interrupts */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USERMODE
-parameter_list|(
-name|ps
-parameter_list|)
-value|(((ps)& PSL_S) == 0)
+name|spl1
+parameter_list|()
+value|_spl(PSL_S|PSL_IPL1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BASEPRI
+name|spl2
+parameter_list|()
+value|_spl(PSL_S|PSL_IPL2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|spl3
+parameter_list|()
+value|_spl(PSL_S|PSL_IPL3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|spl4
+parameter_list|()
+value|_spl(PSL_S|PSL_IPL4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|spl5
+parameter_list|()
+value|_spl(PSL_S|PSL_IPL5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|spl6
+parameter_list|()
+value|_spl(PSL_S|PSL_IPL6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|spl7
+parameter_list|()
+value|_spl(PSL_S|PSL_IPL7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|splsoftclock
+parameter_list|()
+value|spl1()
+end_define
+
+begin_define
+define|#
+directive|define
+name|splnet
+parameter_list|()
+value|spl1()
+end_define
+
+begin_define
+define|#
+directive|define
+name|splbio
+parameter_list|()
+value|spl5()
+end_define
+
+begin_define
+define|#
+directive|define
+name|splimp
+parameter_list|()
+value|spl5()
+end_define
+
+begin_define
+define|#
+directive|define
+name|spltty
+parameter_list|()
+value|spl5()
+end_define
+
+begin_define
+define|#
+directive|define
+name|splclock
+parameter_list|()
+value|spl6()
+end_define
+
+begin_define
+define|#
+directive|define
+name|splvm
+parameter_list|()
+value|spl6()
+end_define
+
+begin_define
+define|#
+directive|define
+name|splhigh
+parameter_list|()
+value|spl7()
+end_define
+
+begin_define
+define|#
+directive|define
+name|splsched
+parameter_list|()
+value|spl7()
+end_define
+
+begin_comment
+comment|/* watch out for side effects */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|splx
 parameter_list|(
-name|ps
+name|s
 parameter_list|)
-value|(((ps)& PSL_IPL7) == 0)
+value|(s& PSL_IPL ? _spl(s) : spl0())
 end_define
 
 begin_ifdef
@@ -611,7 +758,7 @@ parameter_list|(
 name|v
 parameter_list|)
 define|\
-value|((u.u_pcb.pcb_flags&PCB_HPUXMMAP)&& ((unsigned)(v)&HPMMMASK) != HPMMMASK)
+value|((curproc->p_addr->u_pcb.pcb_flags&PCB_HPUXMMAP)&& ((unsigned)(v)&HPMMMASK) != HPMMMASK)
 end_define
 
 begin_define
