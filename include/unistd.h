@@ -1001,7 +1001,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+name|__const
 name|char
 modifier|*
 name|crypt_get_format
