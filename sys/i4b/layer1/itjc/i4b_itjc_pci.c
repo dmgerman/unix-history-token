@@ -4666,6 +4666,7 @@ name|filled
 expr_stmt|;
 name|done
 label|:
+return|return;
 block|}
 end_function
 
@@ -5893,6 +5894,7 @@ comment|/* FALL TRHU */
 case|case
 literal|0
 case|:
+break|break;
 block|}
 name|itjc_scp
 index|[

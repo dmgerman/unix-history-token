@@ -3402,6 +3402,7 @@ expr_stmt|;
 block|}
 name|j1
 label|:
+return|return;
 block|}
 end_function
 
@@ -3983,6 +3984,7 @@ literal|0x10
 expr_stmt|;
 name|j0
 label|:
+return|return;
 block|}
 end_function
 
@@ -4268,6 +4270,7 @@ literal|0xc0
 expr_stmt|;
 name|j1
 label|:
+return|return;
 block|}
 end_function
 
