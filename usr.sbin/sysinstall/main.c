@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated for what's essentially a complete rewrite.  *  * $Id: main.c,v 1.26 1996/09/08 01:39:24 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated for what's essentially a complete rewrite.  *  * $Id: main.c,v 1.27 1996/09/15 23:55:23 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
 end_include
 
 begin_function
@@ -317,7 +323,106 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If we have a compiled-in startup config file name, look for it and try to load it on startup */
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|Attribs
+name|attrs
+index|[
+literal|512
+index|]
+decl_stmt|;
+name|bzero
+argument_list|(
+name|attrs
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|attrs
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+name|open
+argument_list|(
+literal|"install.cfg"
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"Loading pre-configuration file"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|attr_parse
+argument_list|(
+name|attrs
+argument_list|,
+name|fd
+argument_list|)
+argument_list|)
+operator|==
+name|DITEM_SUCCESS
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+operator|*
+name|attrs
+index|[
+name|i
+index|]
+operator|.
+name|name
+condition|;
+name|i
+operator|++
+control|)
+name|variable_set2
+argument_list|(
+name|attrs
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|attrs
+index|[
+name|i
+index|]
+operator|.
+name|value
+argument_list|)
+expr_stmt|;
+block|}
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
 if|#
 directive|if
 name|defined
@@ -326,11 +431,13 @@ name|LOAD_CONFIG_FILE
 argument_list|)
 else|else
 block|{
+comment|/* If we have a compiled-in startup config file name on 	       the floppy, look for it and try to load it on startup */
 specifier|extern
 name|char
 modifier|*
 name|distWanted
 decl_stmt|;
+comment|/* Tell mediaSetFloppy() to try floppy now */
 name|distWanted
 operator|=
 operator|(
@@ -339,7 +446,6 @@ operator|*
 operator|)
 literal|1
 expr_stmt|;
-comment|/* Tell mediaSetFloppy() to try floppy now */
 comment|/* Try to open the floppy drive if we can do that first */
 if|if
 condition|(
@@ -384,13 +490,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|Attribs
-name|attrs
-index|[
-literal|512
-index|]
-decl_stmt|;
-comment|/* Don't have more than this many attrs in one file, ok? :-) */
 name|msgNotify
 argument_list|(
 literal|"Loading %s pre-configuration file"
@@ -422,6 +521,7 @@ name|i
 operator|=
 literal|0
 init|;
+operator|*
 name|attrs
 index|[
 name|i
@@ -471,6 +571,7 @@ block|}
 block|}
 endif|#
 directive|endif
+block|}
 comment|/* Begin user dialog at outer menu */
 name|dialog_clear
 argument_list|()
