@@ -133,9 +133,7 @@ name|struct
 name|open_file
 modifier|*
 parameter_list|,
-name|void
-modifier|*
-name|vdev
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -149,14 +147,6 @@ name|struct
 name|open_file
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|net_ioctl
-parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -228,11 +218,12 @@ name|open_file
 modifier|*
 name|f
 parameter_list|,
-name|void
-modifier|*
-name|vdev
+modifier|...
 parameter_list|)
 block|{
+name|va_list
+name|args
+decl_stmt|;
 name|char
 modifier|*
 name|devname
@@ -243,9 +234,27 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|va_start
+argument_list|(
+name|args
+argument_list|,
+name|f
+argument_list|)
+expr_stmt|;
 name|devname
 operator|=
-name|vdev
+name|va_arg
+argument_list|(
+name|args
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|args
+argument_list|)
 expr_stmt|;
 comment|/* On first open, do netif open, mount, etc. */
 if|if
@@ -462,17 +471,6 @@ end_function
 
 begin_function
 name|int
-name|net_ioctl
-parameter_list|()
-block|{
-return|return
-name|EIO
-return|;
-block|}
-end_function
-
-begin_function
-name|int
 name|net_strategy
 parameter_list|()
 block|{
@@ -520,6 +518,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+specifier|extern
+name|n_long
+name|ip_convertaddr
+parameter_list|(
+name|char
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static

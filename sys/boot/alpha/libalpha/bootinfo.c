@@ -63,6 +63,19 @@ directive|include
 file|"bootstrap.h"
 end_include
 
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|alpha_fmtdev
+parameter_list|(
+name|void
+modifier|*
+name|vdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Copy the environment into the load area starting at (addr).  * Each variable is formatted as<name>=<value>, with a single nul  * separating each variable, and a double nul terminating the environment.  */
 end_comment

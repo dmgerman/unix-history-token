@@ -237,15 +237,11 @@ name|struct
 name|mddt_cluster
 modifier|*
 name|memc
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|i
-decl_stmt|;
-name|unsigned
-name|long
-name|total
-init|=
-literal|0
 decl_stmt|;
 name|unsigned
 name|long
@@ -425,7 +421,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|void
@@ -738,6 +734,9 @@ name|interact
 argument_list|()
 expr_stmt|;
 comment|/* doesn't return */
+return|return
+literal|0
+return|;
 block|}
 end_function
 
