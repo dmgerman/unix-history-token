@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.89 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.90 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3060,6 +3060,30 @@ name|VSYSTEM
 operator|)
 condition|)
 continue|continue;
+comment|/* 		 * If WRITECLOSE is set, only flush out regular file 		 * vnodes open for writing. 		 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|WRITECLOSE
+operator|)
+operator|&&
+operator|(
+name|vp
+operator|->
+name|v_writecount
+operator|==
+literal|0
+operator|||
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VREG
+operator|)
+condition|)
+continue|continue;
 comment|/* 		 * With v_usecount == 0, all we need to do is clear 		 * out the vnode data structures and we are done. 		 */
 if|if
 condition|(
@@ -3077,7 +3101,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * For block or character devices, revert to an 		 * anonymous device. For all other files, just kill them. 		 */
+comment|/* 		 * If FORCECLOSE is set, forcibly close the vnode. 		 * For block or character devices, revert to an 		 * anonymous device. For all other files, just kill them. 		 */
 if|if
 condition|(
 name|flags
