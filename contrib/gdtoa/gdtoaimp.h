@@ -95,7 +95,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"spinlock.h"
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_ifdef
@@ -1228,7 +1240,7 @@ define|#
 directive|define
 name|MULTIPLE_THREADS
 specifier|extern
-name|spinlock_t
+name|pthread_mutex_t
 name|__gdtoa_locks
 index|[
 literal|2
@@ -1240,14 +1252,14 @@ name|ACQUIRE_DTOA_LOCK
 parameter_list|(
 name|n
 parameter_list|)
-value|do {		\ 	if (__isthreaded)			\ 		_SPINLOCK(&__gdtoa_locks[n]);	\ } while(0)
+value|do {				\ 	if (__isthreaded)					\ 		_pthread_mutex_lock(&__gdtoa_locks[n]);		\ } while(0)
 define|#
 directive|define
 name|FREE_DTOA_LOCK
 parameter_list|(
 name|n
 parameter_list|)
-value|do {		\ 	if (__isthreaded)			\ 		_SPINUNLOCK(&__gdtoa_locks[n]);	\ } while(0)
+value|do {				\ 	if (__isthreaded)					\ 		_pthread_mutex_unlock(&__gdtoa_locks[n]);	\ } while(0)
 define|#
 directive|define
 name|Kmax

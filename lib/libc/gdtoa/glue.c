@@ -6,15 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"spinlock.h"
+file|<pthread.h>
 end_include
 
 begin_decl_stmt
-name|spinlock_t
+name|pthread_mutex_t
 name|__gdtoa_locks
-index|[
-literal|2
-index|]
+index|[]
+init|=
+block|{
+name|PTHREAD_MUTEX_INITIALIZER
+block|,
+name|PTHREAD_MUTEX_INITIALIZER
+block|}
 decl_stmt|;
 end_decl_stmt
 
