@@ -1492,6 +1492,8 @@ argument_list|(
 literal|0
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the current process pointer (curproc) before 	 * any possible traps/probes to simplify trap processing. 	 */

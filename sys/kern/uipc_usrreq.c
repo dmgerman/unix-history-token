@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -974,6 +980,9 @@ name|socket
 modifier|*
 name|so2
 decl_stmt|;
+name|u_long
+name|newhiwat
+decl_stmt|;
 if|if
 condition|(
 name|unp
@@ -1085,6 +1094,8 @@ operator|->
 name|so_rcv
 operator|.
 name|sb_cc
+argument_list|,
+name|RLIM_INFINITY
 argument_list|)
 expr_stmt|;
 name|unp
@@ -1173,6 +1184,9 @@ name|struct
 name|socket
 modifier|*
 name|so2
+decl_stmt|;
+name|u_long
+name|newhiwat
 decl_stmt|;
 if|if
 condition|(
@@ -1564,6 +1578,8 @@ operator|->
 name|so_rcv
 operator|.
 name|sb_cc
+argument_list|,
+name|RLIM_INFINITY
 argument_list|)
 expr_stmt|;
 name|unp
