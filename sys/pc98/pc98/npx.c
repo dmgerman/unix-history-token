@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)npx.c	7.2 (Berkeley) 5/12/91  *	$Id: npx.c,v 1.45 1999/05/09 04:38:27 kato Exp $  */
+comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)npx.c	7.2 (Berkeley) 5/12/91  *	$Id: npx.c,v 1.46 1999/05/11 16:29:21 luoqi Exp $  */
 end_comment
 
 begin_include
@@ -761,6 +761,17 @@ name|npx_irq13
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|npx_irq
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* irq number */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -818,6 +829,26 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMP
+if|if
+condition|(
+name|resource_int_value
+argument_list|(
+literal|"npx"
+argument_list|,
+literal|0
+argument_list|,
+literal|"irq"
+argument_list|,
+operator|&
+name|npx_irq
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|npx_irq
+operator|=
+literal|13
+expr_stmt|;
 return|return
 name|npx_probe1
 argument_list|(
@@ -848,25 +879,32 @@ name|gate_descriptor
 name|save_idt_npxtrap
 decl_stmt|;
 comment|/* 	 * This routine is now just a wrapper for npxprobe1(), to install 	 * special npx interrupt and trap handlers, to enable npx interrupts 	 * and to disable other interrupts.  Someday isa_configure() will 	 * install suitable handlers and run with interrupts enabled so we 	 * won't need to do so much here. 	 */
-ifdef|#
-directive|ifdef
-name|PC98
+if|if
+condition|(
+name|resource_int_value
+argument_list|(
+literal|"npx"
+argument_list|,
+literal|0
+argument_list|,
+literal|"irq"
+argument_list|,
+operator|&
+name|npx_irq
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|npx_irq
+operator|=
+literal|8
+expr_stmt|;
 name|npx_intrno
 operator|=
 name|NRSVIDT
 operator|+
-name|NPXIRQ
+name|npx_irq
 expr_stmt|;
-else|#
-directive|else
-name|npx_intrno
-operator|=
-name|NRSVIDT
-operator|+
-literal|13
-expr_stmt|;
-endif|#
-directive|endif
 name|save_eflags
 operator|=
 name|read_eflags
@@ -956,7 +994,7 @@ operator|(
 literal|1
 operator|<<
 operator|(
-name|NPXIRQ
+name|npx_irq
 operator|-
 literal|8
 operator|)
@@ -986,7 +1024,7 @@ operator|(
 literal|1
 operator|<<
 operator|(
-literal|13
+name|npx_irq
 operator|-
 literal|8
 operator|)
@@ -1412,30 +1450,15 @@ name|npx_irq13
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 				 * npxattach would be too late to set npx0_imask. 				 */
-ifdef|#
-directive|ifdef
-name|PC98
+comment|/* 				 * npxattach would be too late to set npx0_imask 				 */
 name|npx0_imask
 operator||=
 operator|(
 literal|1
 operator|<<
-name|NPXIRQ
+name|npx_irq
 operator|)
 expr_stmt|;
-else|#
-directive|else
-name|npx0_imask
-operator||=
-operator|(
-literal|1
-operator|<<
-literal|13
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 				 * We allocate these resources permanently, 				 * so there is no need to keep track of them. 				 */
 name|rid
 operator|=
@@ -1512,9 +1535,9 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-literal|13
+name|npx_irq
 argument_list|,
-literal|13
+name|npx_irq
 argument_list|,
 literal|1
 argument_list|,
