@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ts.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ts.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -493,9 +493,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|int
-name|a
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -561,9 +558,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|numuba
-argument_list|,
-operator|&
-name|a
 argument_list|)
 expr_stmt|;
 name|i
@@ -725,7 +719,7 @@ argument_list|(
 literal|20000
 argument_list|)
 expr_stmt|;
-comment|/* should have interrupted by now */
+comment|/* 	 * The controller should have interrupted by now, but some do not, 	 * even if the delays above are extended to many seconds.  If the 	 * vector is still unknown, we assume the drive is present at 	 * the usual vector. 	 */
 if|if
 condition|(
 name|cvec
@@ -736,15 +730,25 @@ name|cvec
 operator|==
 literal|0x200
 condition|)
-comment|/* no interrupt */
-name|ubarelse
-argument_list|(
-name|numuba
-argument_list|,
+block|{
+name|cvec
+operator|=
+operator|(
+name|int
+operator|)
+name|reg
 operator|&
-name|a
-argument_list|)
+literal|7
+condition|?
+literal|0260
+else|:
+literal|0224
 expr_stmt|;
+name|br
+operator|=
+literal|0x15
+expr_stmt|;
+block|}
 return|return
 operator|(
 sizeof|sizeof
@@ -767,8 +771,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|uban
-argument_list|,
-name|a
 argument_list|)
 specifier|register
 expr|struct
@@ -781,9 +783,6 @@ end_expr_stmt
 begin_decl_stmt
 name|int
 name|uban
-decl_stmt|,
-modifier|*
-name|a
 decl_stmt|;
 end_decl_stmt
 
@@ -816,17 +815,6 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|a
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|a
-operator|=
-name|i
 expr_stmt|;
 name|i
 operator|=
@@ -3836,12 +3824,6 @@ name|ts11
 index|]
 argument_list|,
 name|uban
-argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-name|NULL
 argument_list|)
 expr_stmt|;
 operator|(
