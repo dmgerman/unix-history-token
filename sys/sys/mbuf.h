@@ -763,7 +763,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|do { \ 	  	if (--mclrefcnt[mtocl(p)] == 0) { \ 			((union mcluster *)(p))->mcl_next = mclfree; \ 			mclfree = (union mcluster *)(p); \ 			mbstat.m_clfree++; \ 	  	} \ 	  } while (0)
+value|do { \ 	  	if (--mclrefcnt[mtocl(p)] == 0) { \ 			((union mcluster *)(p))->mcl_next = mclfree; \ 			mclfree = (union mcluster *)(p); \ 			mbstat.m_clfree++; \ 	  	} \ 	} while (0)
 end_define
 
 begin_define
