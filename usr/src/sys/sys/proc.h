@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -239,6 +239,10 @@ name|p_dsize
 decl_stmt|;
 comment|/* size of data space (clicks) */
 name|size_t
+name|p_mmsize
+decl_stmt|;
+comment|/* size of mapmem beyond p_dsize (clicks) */
+name|size_t
 name|p_ssize
 decl_stmt|;
 comment|/* copy of stack size (clicks) */
@@ -346,12 +350,6 @@ name|struct
 name|itimerval
 name|p_realtimer
 decl_stmt|;
-name|struct
-name|quota
-modifier|*
-name|p_quota
-decl_stmt|;
-comment|/* quotas for this process */
 name|int
 name|p_traceflag
 decl_stmt|;
@@ -1037,6 +1035,17 @@ end_define
 
 begin_comment
 comment|/* locked in core after swap error XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHPUX
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* HP-UX process (HPUXCOMPAT) */
 end_comment
 
 begin_define
