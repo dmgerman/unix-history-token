@@ -75,6 +75,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/memrange.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -192,7 +204,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/mpapic.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/psl.h>
 end_include
 
 begin_include
@@ -2173,12 +2203,6 @@ operator|)
 name|PTD
 argument_list|)
 expr_stmt|;
-name|putmtrr
-argument_list|()
-expr_stmt|;
-name|pmap_setvidram
-argument_list|()
-expr_stmt|;
 name|invltlb
 argument_list|()
 expr_stmt|;
@@ -2340,12 +2364,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* APIC_IO */
-name|getmtrr
-argument_list|()
-expr_stmt|;
-name|pmap_setvidram
-argument_list|()
-expr_stmt|;
 name|POSTCODE
 argument_list|(
 name|MP_ENABLE_POST
@@ -2542,6 +2560,25 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* install an inter-CPU IPI for all-CPU rendezvous */
+name|setidt
+argument_list|(
+name|XRENDEZVOUS_OFFSET
+argument_list|,
+name|Xrendezvous
+argument_list|,
+name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
+argument_list|,
+name|GSEL
+argument_list|(
+name|GCODE_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* install an inter-CPU IPI for forcing an additional software trap */
 name|setidt
 argument_list|(
@@ -7178,6 +7215,12 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* USE_CLOCKLOCK */
+comment|/* lock around the MP rendezvous */
+specifier|static
+name|struct
+name|simplelock
+name|smp_rv_lock
+decl_stmt|;
 specifier|static
 name|void
 name|init_locks
@@ -7283,6 +7326,12 @@ operator|*
 operator|)
 operator|&
 name|cpl_lock
+argument_list|)
+expr_stmt|;
+name|s_lock_init
+argument_list|(
+operator|&
+name|smp_rv_lock
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -9170,11 +9219,12 @@ literal|"cpuid mismatch! boom!!"
 argument_list|)
 expr_stmt|;
 block|}
-name|getmtrr
-argument_list|()
-expr_stmt|;
 comment|/* Init local apic for irq's */
 name|apic_initialize
+argument_list|()
+expr_stmt|;
+comment|/* Set memory range attributes for this CPU to match the BSP */
+name|mem_range_AP_init
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Activate smp_invltlb, although strictly speaking, this isn't 	 * quite correct yet.  We should have a bitfield for cpus willing 	 * to accept TLB flush IPI's or something and sync them. 	 */

@@ -6821,12 +6821,6 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|int i; 		int reqmapmem;
-endif|#
-directive|endif
 if|if
 condition|(
 name|type
@@ -6839,20 +6833,6 @@ operator|=
 literal|"SVGA controller"
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|reqmapmem = PCI_MAPMEM; 		for (i = 0; i< tag->nummaps; i++) { 			pcimap *m =&tag->map[i]; 			if (m->type& PCI_MAPMEMP) 				reqmapmem |= PCI_MAPMEMP; 		}  		for (i = 0; i< tag->nummaps; i++) { 			unsigned mapaddr; 			pcimap *m =&tag->map[i]; 			mapaddr = (m->base>> 12); 			if (m->type == reqmapmem) { 				pmap_setdevram(m->base, (1<< m->ln2size)); 			} 		}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__i386__
-name|pmap_setvidram
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|len
 operator|=
 name|strlen

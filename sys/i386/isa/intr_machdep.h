@@ -689,11 +689,14 @@ name|Xcpustop
 decl_stmt|,
 comment|/* CPU stops& waits for another CPU to restart it */
 name|Xspuriousint
+decl_stmt|,
+comment|/* handle APIC "spurious INTs" */
+name|Xrendezvous
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* handle APIC "spurious INTs" */
+comment|/* handle CPU rendezvous */
 end_comment
 
 begin_ifdef
