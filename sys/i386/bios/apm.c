@@ -451,6 +451,26 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|apm_debug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|APM_DPRINT
+parameter_list|(
+name|args
+modifier|...
+parameter_list|)
+value|do	{					\ 	if (apm_debug) {						\ 		printf(args);						\ 	}								\ } while (0)
+end_define
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -487,6 +507,27 @@ operator|&
 name|apm_standby_delay
 argument_list|,
 literal|1
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|apm_debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|apm_debug
+argument_list|,
+literal|0
 argument_list|,
 literal|""
 argument_list|)
@@ -544,10 +585,7 @@ name|apm_func
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
-name|printf
+name|APM_DPRINT
 argument_list|(
 literal|"apm_bioscall: function 0x%x is not supported in v%d.%d\n"
 argument_list|,
@@ -562,8 +600,6 @@ operator|->
 name|minorversion
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 operator|-
@@ -1331,8 +1367,78 @@ if|if
 condition|(
 name|apm_bioscall
 argument_list|()
+operator|==
+literal|0
 condition|)
 block|{
+return|return
+literal|0
+return|;
+block|}
+comment|/* If failed, then try to blank all display devices instead. */
+name|sc
+operator|->
+name|bios
+operator|.
+name|r
+operator|.
+name|eax
+operator|=
+operator|(
+name|APM_BIOS
+operator|<<
+literal|8
+operator|)
+operator||
+name|APM_SETPWSTATE
+expr_stmt|;
+name|sc
+operator|->
+name|bios
+operator|.
+name|r
+operator|.
+name|ebx
+operator|=
+name|PMDV_DISPALL
+expr_stmt|;
+comment|/* all display devices */
+name|sc
+operator|->
+name|bios
+operator|.
+name|r
+operator|.
+name|ecx
+operator|=
+name|newstate
+condition|?
+name|PMST_APMENABLED
+else|:
+name|PMST_SUSPEND
+expr_stmt|;
+name|sc
+operator|->
+name|bios
+operator|.
+name|r
+operator|.
+name|edx
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|apm_bioscall
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+literal|0
+return|;
+block|}
 name|printf
 argument_list|(
 literal|"Display off failure: errcode = %d\n"
@@ -1354,10 +1460,6 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|1
-return|;
-block|}
-return|return
-literal|0
 return|;
 block|}
 end_function
@@ -1512,10 +1614,7 @@ decl_stmt|,
 modifier|*
 name|prev
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
-name|printf
+name|APM_DPRINT
 argument_list|(
 literal|"Add hook \"%s\"\n"
 argument_list|,
@@ -1524,8 +1623,6 @@ operator|->
 name|ah_name
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|s
 operator|=
 name|splhigh
@@ -1772,10 +1869,7 @@ operator|->
 name|ah_next
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
-name|printf
+name|APM_DPRINT
 argument_list|(
 literal|"Execute APM hook \"%s.\"\n"
 argument_list|,
@@ -1784,8 +1878,6 @@ operator|->
 name|ah_name
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -2501,16 +2593,11 @@ name|apm_bioscall
 argument_list|()
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
-name|printf
+name|APM_DPRINT
 argument_list|(
 literal|"apm_lastreq_rejected: failed\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|1
 return|;
@@ -3308,16 +3395,11 @@ init|=
 operator|&
 name|apm_softc
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
-name|printf
+name|APM_DPRINT
 argument_list|(
 literal|"called apm_event_enable()\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sc
@@ -3360,16 +3442,11 @@ init|=
 operator|&
 name|apm_softc
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
-name|printf
+name|APM_DPRINT
 argument_list|(
 literal|"called apm_event_disable()\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sc
@@ -4258,27 +4335,13 @@ init|=
 operator|&
 name|apm_softc
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
 define|#
 directive|define
 name|OPMEV_DEBUGMESSAGE
 parameter_list|(
 name|symbol
 parameter_list|)
-value|case symbol: \ 	printf("Received APM Event: " #symbol "\n");
-else|#
-directive|else
-define|#
-directive|define
-name|OPMEV_DEBUGMESSAGE
-parameter_list|(
-name|symbol
-parameter_list|)
-value|case symbol:
-endif|#
-directive|endif
+value|case symbol:				\ 	APM_DPRINT("Received APM Event: " #symbol "\n");
 do|do
 block|{
 name|apm_event
@@ -4656,18 +4719,23 @@ name|always_halt_cpu
 operator|=
 literal|1
 expr_stmt|;
-comment|/* print bootstrap messages */
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
-name|printf
+name|getenv_int
 argument_list|(
-literal|"apm: APM BIOS version %04x\n"
+literal|"debug.apm_debug"
+argument_list|,
+operator|&
+name|apm_debug
+argument_list|)
+expr_stmt|;
+comment|/* print bootstrap messages */
+name|APM_DPRINT
+argument_list|(
+literal|"apm: APM BIOS version %04lx\n"
 argument_list|,
 name|apm_version
 argument_list|)
 expr_stmt|;
-name|printf
+name|APM_DPRINT
 argument_list|(
 literal|"apm: Code16 0x%08x, Data 0x%08x\n"
 argument_list|,
@@ -4692,7 +4760,7 @@ operator|.
 name|base
 argument_list|)
 expr_stmt|;
-name|printf
+name|APM_DPRINT
 argument_list|(
 literal|"apm: Code entry 0x%08x, Idling CPU %s, Management %s\n"
 argument_list|,
@@ -4718,7 +4786,7 @@ name|disabled
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|APM_DPRINT
 argument_list|(
 literal|"apm: CS_limit=0x%x, DS_limit=0x%x\n"
 argument_list|,
@@ -4743,9 +4811,6 @@ operator|.
 name|limit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* APM_DEBUG */
 comment|/*          * In one test, apm bios version was 1.02; an attempt to register          * a 1.04 driver resulted in a 1.00 connection!  Registering a          * 1.02 driver resulted in a 1.02 connection.          */
 name|drv_version
 operator|=
@@ -4844,9 +4909,6 @@ operator|->
 name|minorversion
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
 if|if
 condition|(
 name|sc
@@ -4860,7 +4922,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|APM_DPRINT
 argument_list|(
 literal|"apm: Engaged control %s\n"
 argument_list|,
@@ -4873,11 +4935,11 @@ name|disengaged
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-name|printf
+name|device_printf
 argument_list|(
-literal|"apm: found APM BIOS v%ld.%ld, connected at v%d.%d\n"
+name|dev
+argument_list|,
+literal|"found APM BIOS v%ld.%ld, connected at v%d.%d\n"
 argument_list|,
 operator|(
 operator|(
@@ -4932,10 +4994,7 @@ operator|->
 name|minorversion
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
-name|printf
+name|APM_DPRINT
 argument_list|(
 literal|"apm: Slow Idling CPU %s\n"
 argument_list|,
@@ -4947,8 +5006,6 @@ name|slow_idle_cpu
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* enable power management */
 if|if
 condition|(
@@ -4965,10 +5022,7 @@ literal|1
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
-name|printf
+name|APM_DPRINT
 argument_list|(
 literal|"apm: *Warning* enable function failed! [%x]\n"
 argument_list|,
@@ -4987,8 +5041,6 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 comment|/* engage power managment (APM 1.1 or later) */
@@ -5018,10 +5070,7 @@ literal|1
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
-name|printf
+name|APM_DPRINT
 argument_list|(
 literal|"apm: *Warning* engage function failed err=[%x]"
 argument_list|,
@@ -5040,13 +5089,11 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-name|printf
+name|APM_DPRINT
 argument_list|(
 literal|" (Docked or using external power?).\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 comment|/* default suspend hook */
@@ -5481,18 +5528,13 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
-name|printf
+name|APM_DPRINT
 argument_list|(
-literal|"APM ioctl: cmd = 0x%x\n"
+literal|"APM ioctl: cmd = 0x%lx\n"
 argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|cmd
@@ -6260,10 +6302,7 @@ index|]
 operator|=
 name|enabled
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
-name|printf
+name|APM_DPRINT
 argument_list|(
 literal|"apmwrite: event 0x%x %s\n"
 argument_list|,
@@ -6275,8 +6314,6 @@ name|enabled
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|uio
 operator|->
