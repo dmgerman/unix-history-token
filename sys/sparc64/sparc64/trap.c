@@ -100,7 +100,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/intr_machdep.h>
 end_include
 
 begin_include
@@ -232,6 +244,8 @@ literal|"fast data access mmu miss"
 block|,
 literal|"fast data access protection"
 block|,
+literal|"clock"
+block|,
 literal|"bad spill"
 block|,
 literal|"bad fill"
@@ -260,7 +274,13 @@ modifier|*
 name|p
 decl_stmt|;
 name|int
+name|error
+decl_stmt|;
+name|int
 name|ucode
+decl_stmt|;
+name|int
+name|type
 decl_stmt|;
 name|int
 name|sig
@@ -300,13 +320,31 @@ argument_list|(
 name|curproc
 argument_list|)
 expr_stmt|;
-name|ucode
+name|type
 operator|=
+name|T_TYPE
+argument_list|(
 name|tf
 operator|->
 name|tf_type
+argument_list|)
+expr_stmt|;
+name|ucode
+operator|=
+name|type
 expr_stmt|;
 comment|/* XXX */
+if|if
+condition|(
+operator|(
+name|type
+operator|&
+name|T_KERNEL
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -325,11 +363,10 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+block|}
 switch|switch
 condition|(
-name|tf
-operator|->
-name|tf_type
+name|type
 condition|)
 block|{
 case|case
@@ -356,6 +393,64 @@ name|trapsig
 goto|;
 block|}
 break|break;
+case|case
+name|T_IMMU_MISS
+case|:
+case|case
+name|T_DMMU_MISS
+case|:
+case|case
+name|T_DMMU_PROT
+case|:
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|trap_mmu_fault
+argument_list|(
+name|p
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+goto|goto
+name|user
+goto|;
+break|break;
+case|case
+name|T_INTR
+case|:
+name|intr_dispatch
+argument_list|(
+name|T_LEVEL
+argument_list|(
+name|tf
+operator|->
+name|tf_type
+argument_list|)
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+goto|goto
+name|user
+goto|;
 ifdef|#
 directive|ifdef
 name|DDB
@@ -389,14 +484,30 @@ name|T_DMMU_PROT
 operator||
 name|T_KERNEL
 case|:
-if|if
-condition|(
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
 name|trap_mmu_fault
 argument_list|(
 name|p
 argument_list|,
 name|tf
 argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|==
 literal|0
 condition|)
@@ -404,6 +515,26 @@ goto|goto
 name|out
 goto|;
 break|break;
+case|case
+name|T_INTR
+operator||
+name|T_KERNEL
+case|:
+name|intr_dispatch
+argument_list|(
+name|T_LEVEL
+argument_list|(
+name|tf
+operator|->
+name|tf_type
+argument_list|)
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 default|default:
 break|break;
 block|}
@@ -413,9 +544,7 @@ literal|"trap: %s"
 argument_list|,
 name|trap_msg
 index|[
-name|tf
-operator|->
-name|tf_type
+name|type
 operator|&
 operator|~
 name|T_KERNEL
@@ -453,9 +582,7 @@ call|)
 argument_list|(
 name|sig
 argument_list|,
-name|tf
-operator|->
-name|tf_type
+name|type
 argument_list|)
 expr_stmt|;
 name|trapsignal
@@ -536,9 +663,6 @@ name|vm_prot_t
 name|type
 decl_stmt|;
 name|int
-name|flags
-decl_stmt|;
-name|int
 name|rv
 decl_stmt|;
 name|KASSERT
@@ -553,6 +677,10 @@ operator|(
 literal|"trap_dmmu_miss: vmspace NULL"
 operator|)
 argument_list|)
+expr_stmt|;
+name|type
+operator|=
+literal|0
 expr_stmt|;
 name|rv
 operator|=
@@ -585,7 +713,7 @@ name|T_DMMU_MISS
 operator||
 name|T_KERNEL
 case|:
-comment|/* 		 * If the context is not nucleus, this is a fault on 		 * non-kernel virtual memory. 		 */
+comment|/* 		 * If the context is nucleus this is a soft fault on kernel 		 * memory, just fault in the pages. 		 */
 if|if
 condition|(
 name|TLB_TAR_CTX
@@ -594,9 +722,28 @@ name|mf
 operator|->
 name|mf_tar
 argument_list|)
-operator|!=
+operator|==
 name|TLB_CTX_KERNEL
-operator|&&
+condition|)
+block|{
+name|rv
+operator|=
+name|vm_fault
+argument_list|(
+name|kernel_map
+argument_list|,
+name|va
+argument_list|,
+name|VM_PROT_READ
+argument_list|,
+name|VM_FAULT_NORMAL
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+comment|/* 		 * Don't allow kernel mode faults on user memory unless 		 * pcb_onfault is set. 		 */
+if|if
+condition|(
 name|PCPU_GET
 argument_list|(
 name|curpcb
@@ -607,6 +754,13 @@ operator|==
 name|NULL
 condition|)
 break|break;
+comment|/* Fallthrough. */
+case|case
+name|T_IMMU_MISS
+case|:
+case|case
+name|T_DMMU_MISS
+case|:
 comment|/* 		 * First try the tsb.  The primary tsb was already searched. 		 */
 name|vm
 operator|=
@@ -640,14 +794,24 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * Not found, call the vm system. 		 */
-comment|/* 		 * XXX!!! 		 */
+if|if
+condition|(
+name|tf
+operator|->
+name|tf_type
+operator|==
+name|T_IMMU_MISS
+condition|)
+name|type
+operator|=
+name|VM_PROT_EXECUTE
+operator||
+name|VM_PROT_READ
+expr_stmt|;
+else|else
 name|type
 operator|=
 name|VM_PROT_READ
-expr_stmt|;
-name|flags
-operator|=
-name|VM_FAULT_NORMAL
 expr_stmt|;
 comment|/* 		 * Keep the process from being swapped out at this critical 		 * time. 		 */
 name|PROC_LOCK
@@ -695,7 +859,7 @@ name|va
 argument_list|,
 name|type
 argument_list|,
-name|flags
+name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Now the process can be swapped again. 		 */
@@ -720,7 +884,7 @@ name|T_DMMU_PROT
 operator||
 name|T_KERNEL
 case|:
-comment|/* 		 * If the context is not nucleus, this is a fault on 		 * non-kernel virtual memory. 		 */
+comment|/* 		 * Protection faults should not happen on kernel memory. 		 */
 if|if
 condition|(
 name|TLB_TAR_CTX
@@ -729,9 +893,13 @@ name|mf
 operator|->
 name|mf_tar
 argument_list|)
-operator|!=
+operator|==
 name|TLB_CTX_KERNEL
-operator|&&
+condition|)
+break|break;
+comment|/* 		 * Don't allow kernel mode faults on user memory unless 		 * pcb_onfault is set. 		 */
+if|if
+condition|(
 name|PCPU_GET
 argument_list|(
 name|curpcb
@@ -742,6 +910,10 @@ operator|==
 name|NULL
 condition|)
 break|break;
+comment|/* Fallthrough. */
+case|case
+name|T_DMMU_PROT
+case|:
 comment|/* 		 * Only look in the tsb.  Write access to an unmapped page 		 * causes a miss first, so the page must have already been 		 * brought in by vm_fault, we just need to find the tte and 		 * update the write bit.  XXX How do we tell them vm system 		 * that we are now writing? 		 */
 name|vm
 operator|=
@@ -805,12 +977,24 @@ operator|->
 name|pcb_onfault
 operator|!=
 name|NULL
+operator|&&
+name|TLB_TAR_CTX
+argument_list|(
+name|mf
+operator|->
+name|mf_tar
+argument_list|)
+operator|!=
+name|TLB_CTX_KERNEL
 condition|)
 block|{
 name|tf
 operator|->
 name|tf_tpc
 operator|=
+operator|(
+name|u_long
+operator|)
 name|PCPU_GET
 argument_list|(
 name|curpcb
