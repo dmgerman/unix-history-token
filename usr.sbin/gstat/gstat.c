@@ -1297,7 +1297,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: gstat [-c] [-I interval]\n"
+literal|"usage: gstat [-cd] [-I interval]\n"
 argument_list|)
 expr_stmt|;
 name|exit
