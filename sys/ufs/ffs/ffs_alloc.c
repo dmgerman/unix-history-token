@@ -6850,11 +6850,16 @@ name|u_int8_t
 modifier|*
 name|blksfree
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+endif|#
+directive|endif
 name|fs
 operator|=
 name|ip
