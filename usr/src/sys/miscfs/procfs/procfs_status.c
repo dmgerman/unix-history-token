@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_status.c	8.2 (Berkeley) %G%  *  * From:  *	$Id: procfs_status.c,v 3.1 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_status.c	8.3 (Berkeley) %G%  *  * From:  *	$Id: procfs_status.c,v 3.1 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_include
@@ -398,7 +398,7 @@ name|sprintf
 argument_list|(
 name|ps
 argument_list|,
-literal|" %d %d"
+literal|" %d,%d"
 argument_list|,
 name|p
 operator|->
@@ -424,7 +424,7 @@ name|sprintf
 argument_list|(
 name|ps
 argument_list|,
-literal|" -1 -1"
+literal|" -1,-1"
 argument_list|)
 expr_stmt|;
 block|{
@@ -457,7 +457,7 @@ name|sprintf
 argument_list|(
 name|ps
 argument_list|,
-literal|" %d %d %d %d"
+literal|" %d,%d %d,%d"
 argument_list|,
 name|ut
 operator|.
@@ -514,7 +514,7 @@ name|sprintf
 argument_list|(
 name|ps
 argument_list|,
-literal|" %d %d"
+literal|" %d"
 argument_list|,
 name|cr
 operator|->
@@ -546,7 +546,7 @@ name|sprintf
 argument_list|(
 name|ps
 argument_list|,
-literal|" %d"
+literal|",%d"
 argument_list|,
 name|cr
 operator|->
