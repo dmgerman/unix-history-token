@@ -1029,6 +1029,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Delete any return object (Especially if ImplicitReturn is enabled) */
+if|if
+condition|(
+name|Pinfo
+operator|.
+name|ReturnObject
+condition|)
+block|{
+name|AcpiUtRemoveReference
+argument_list|(
+name|Pinfo
+operator|.
+name|ReturnObject
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Count of successful INIs */
 name|Info
 operator|->
