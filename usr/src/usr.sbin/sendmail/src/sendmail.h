@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.34 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.33		%G%"
+literal|"@(#)sendmail.h	8.34		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1360,6 +1360,10 @@ name|long
 name|e_msgsize
 decl_stmt|;
 comment|/* size of the message in bytes */
+name|long
+name|e_flags
+decl_stmt|;
+comment|/* flags, see below */
 name|int
 name|e_nrcpts
 decl_stmt|;
@@ -1368,10 +1372,6 @@ name|short
 name|e_class
 decl_stmt|;
 comment|/* msg class (priority, junk, etc.) */
-name|short
-name|e_flags
-decl_stmt|;
-comment|/* flags, see below */
 name|short
 name|e_hopcount
 decl_stmt|;
@@ -1519,7 +1519,7 @@ begin_define
 define|#
 directive|define
 name|EF_OLDSTYLE
-value|000001
+value|0x0000001
 end_define
 
 begin_comment
@@ -1530,7 +1530,7 @@ begin_define
 define|#
 directive|define
 name|EF_INQUEUE
-value|000002
+value|0x0000002
 end_define
 
 begin_comment
@@ -1541,7 +1541,7 @@ begin_define
 define|#
 directive|define
 name|EF_CLRQUEUE
-value|000010
+value|0x0000008
 end_define
 
 begin_comment
@@ -1552,7 +1552,7 @@ begin_define
 define|#
 directive|define
 name|EF_SENDRECEIPT
-value|000020
+value|0x0000010
 end_define
 
 begin_comment
@@ -1563,7 +1563,7 @@ begin_define
 define|#
 directive|define
 name|EF_FATALERRS
-value|000040
+value|0x0000020
 end_define
 
 begin_comment
@@ -1574,7 +1574,7 @@ begin_define
 define|#
 directive|define
 name|EF_KEEPQUEUE
-value|000100
+value|0x0000040
 end_define
 
 begin_comment
@@ -1585,7 +1585,7 @@ begin_define
 define|#
 directive|define
 name|EF_RESPONSE
-value|000200
+value|0x0000080
 end_define
 
 begin_comment
@@ -1596,7 +1596,7 @@ begin_define
 define|#
 directive|define
 name|EF_RESENT
-value|000400
+value|0x0000100
 end_define
 
 begin_comment
@@ -1607,7 +1607,7 @@ begin_define
 define|#
 directive|define
 name|EF_VRFYONLY
-value|001000
+value|0x0000200
 end_define
 
 begin_comment
@@ -1618,7 +1618,7 @@ begin_define
 define|#
 directive|define
 name|EF_WARNING
-value|002000
+value|0x0000400
 end_define
 
 begin_comment
@@ -1629,7 +1629,7 @@ begin_define
 define|#
 directive|define
 name|EF_QUEUERUN
-value|004000
+value|0x0000800
 end_define
 
 begin_comment
@@ -1640,7 +1640,7 @@ begin_define
 define|#
 directive|define
 name|EF_GLOBALERRS
-value|010000
+value|0x0001000
 end_define
 
 begin_comment
@@ -1651,7 +1651,7 @@ begin_define
 define|#
 directive|define
 name|EF_PM_NOTIFY
-value|020000
+value|0x0002000
 end_define
 
 begin_comment
@@ -1662,11 +1662,22 @@ begin_define
 define|#
 directive|define
 name|EF_METOO
-value|040000
+value|0x0004000
 end_define
 
 begin_comment
 comment|/* send to me too */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_LOGSENDER
+value|0x0008000
+end_define
+
+begin_comment
+comment|/* need to log the sender */
 end_comment
 
 begin_decl_stmt
