@@ -1519,6 +1519,9 @@ name|int
 name|psf_interrupted
 decl_stmt|;
 name|int
+name|psf_timeout
+decl_stmt|;
+name|int
 name|psf_signo
 decl_stmt|;
 name|enum
