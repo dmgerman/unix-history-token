@@ -1339,13 +1339,13 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* don't be confusing */
+name|free_sd
+argument_list|(
 name|sd
 operator|->
-name|state
-operator|=
-name|sd_down
+name|sdno
+argument_list|)
 expr_stmt|;
-comment|/* make it down */
 name|throw_rude_remark
 argument_list|(
 name|ENOSPC
@@ -1462,7 +1462,23 @@ name|sectors
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* no luck, */
+name|sd
+operator|->
+name|driveoffset
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* don't be confusing */
+name|free_sd
+argument_list|(
+name|sd
+operator|->
+name|sdno
+argument_list|)
+expr_stmt|;
 name|throw_rude_remark
 argument_list|(
 name|ENOSPC
@@ -1481,6 +1497,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sfe
@@ -1726,6 +1743,14 @@ operator|<
 literal|0
 condition|)
 comment|/* 	     * Didn't find anything.  Although the drive has 	     * enough space, it's too fragmented 	     */
+block|{
+name|free_sd
+argument_list|(
+name|sd
+operator|->
+name|sdno
+argument_list|)
+expr_stmt|;
 name|throw_rude_remark
 argument_list|(
 name|ENOSPC
@@ -1743,6 +1768,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1821,7 +1847,23 @@ name|sd
 operator|->
 name|driveoffset
 condition|)
+block|{
 comment|/* starts after the beginning of sd area */
+name|sd
+operator|->
+name|driveoffset
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* don't be confusing */
+name|free_sd
+argument_list|(
+name|sd
+operator|->
+name|sdno
+argument_list|)
+expr_stmt|;
 name|throw_rude_remark
 argument_list|(
 name|ENOSPC
@@ -1839,6 +1881,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * We've found the space, and we can allocate it. 		 * We don't need to say that to the subdisk, which 		 * already knows about it.  We need to tell it to 		 * the free list, though.  We have four possibilities: 		 * 		 * 1.  The subdisk exactly eats up the entry.  That's the 		 *     same as above. 		 * 2.  The subdisk starts at the beginning and leaves space 		 *     at the end. 		 * 3.  The subdisk starts after the beginning and leaves 		 *     space at the end as well: we end up with another 		 *     fragment. 		 * 4.  The subdisk leaves space at the beginning and finishes 		 *     at the end. 		 */
 name|drive
 operator|->
@@ -3089,6 +3132,7 @@ operator|-
 literal|1
 operator|)
 comment|/* we're not the last block in the free list */
+comment|/* and the subdisk ends at the start of the next block */
 operator|&&
 operator|(
 name|sdend
@@ -3106,7 +3150,6 @@ name|offset
 operator|)
 condition|)
 block|{
-comment|/* and the subdisk ends at the start of the 																			   * next block */
 name|drive
 operator|->
 name|freelist
@@ -3115,6 +3158,7 @@ name|fe
 index|]
 operator|.
 name|sectors
+comment|/* 1a: merge all three blocks */
 operator|=
 name|drive
 operator|->
@@ -3127,7 +3171,6 @@ index|]
 operator|.
 name|sectors
 expr_stmt|;
-comment|/* 1a: merge all three blocks */
 if|if
 condition|(
 name|fe
@@ -3224,6 +3267,7 @@ operator|->
 name|freelist_entries
 operator|)
 comment|/* we're not the last block in the free list */
+comment|/* and the subdisk ends at the start of this block: case 4 */
 operator|&&
 operator|(
 name|sdend
@@ -3239,7 +3283,6 @@ name|offset
 operator|)
 condition|)
 block|{
-comment|/* and the subdisk ends at the start of 																		   * this block: case 4 */
 name|drive
 operator|->
 name|freelist
@@ -3416,6 +3459,25 @@ operator|->
 name|sectors
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sd
+operator|->
+name|plexno
+operator|>=
+literal|0
+condition|)
+name|PLEX
+index|[
+name|sd
+operator|->
+name|plexno
+index|]
+operator|.
+name|subdisks
+operator|--
+expr_stmt|;
+comment|/* one less subdisk */
 name|bzero
 argument_list|(
 name|sd
@@ -7718,8 +7780,15 @@ operator|->
 name|subdisks
 operator|--
 expr_stmt|;
-comment|/* 	     * removing a subdisk from a striped or 	     * RAID-5 plex really tears the hell out 	     * of the structure, and it needs to be 	     * reinitialized 	     */
-comment|/* 	     * XXX Think about this.  Maybe we should just 	     * leave a hole 	     */
+name|sd
+operator|->
+name|plexno
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* disown the subdisk */
+comment|/* 	     * removing a subdisk from a striped or 	     * RAID-5 plex really tears the hell out of 	     * the structure, and it needs to be 	     * reinitialized. 	     */
 if|if
 condition|(
 name|plex
@@ -8541,6 +8610,7 @@ operator|->
 name|volno
 index|]
 expr_stmt|;
+comment|/* 	 * If we're newly born, 	 * and the volume isn't, 	 * and it has other plexes, 	 * and we didn't read this mess from disk, 	 * we were added later. 	 */
 if|if
 condition|(
 operator|(
@@ -8550,7 +8620,6 @@ name|flags
 operator|&
 name|VF_NEWBORN
 operator|)
-comment|/* we're newly born */
 operator|&&
 operator|(
 operator|(
@@ -8563,7 +8632,6 @@ operator|)
 operator|==
 literal|0
 operator|)
-comment|/* and the volume isn't */
 operator|&&
 operator|(
 name|vol
@@ -8572,7 +8640,6 @@ name|plexes
 operator|>
 literal|0
 operator|)
-comment|/* and it has other plexes, */
 operator|&&
 operator|(
 name|diskconfig
@@ -8581,12 +8648,10 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* and we didn't read this mess from disk */
 name|added_plex
 operator|=
 literal|1
 expr_stmt|;
-comment|/* we were added later */
 name|state
 operator|=
 name|plex_down
@@ -8713,6 +8778,7 @@ argument_list|(
 name|plex
 operator|->
 name|length
+comment|/* are we exact? */
 operator|%
 operator|(
 operator|(
@@ -8726,7 +8792,6 @@ name|data_sds
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* are we exact? */
 if|if
 condition|(
 name|remainder
