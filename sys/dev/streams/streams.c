@@ -1649,6 +1649,9 @@ name|sun_path
 operator|,
 name|p
 operator|,
+operator|(
+name|int
+operator|)
 name|e
 operator|->
 name|dev
