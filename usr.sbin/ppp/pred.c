@@ -1686,6 +1686,8 @@ name|CCP_NEG_PRED1
 block|,
 name|Pred1DispOpts
 block|,
+name|ccp_IsUsable
+block|,
 block|{
 name|Pred1SetOptsInput
 block|,

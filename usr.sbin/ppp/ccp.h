@@ -417,6 +417,18 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* Use result immediately !  */
+name|int
+function_decl|(
+modifier|*
+name|Usable
+function_decl|)
+parameter_list|(
+name|struct
+name|fsm
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Ok to negotiate ? */
 struct|struct
 block|{
 name|int
@@ -725,6 +737,18 @@ name|ccp_SetOpenMode
 parameter_list|(
 name|struct
 name|ccp
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ccp_IsUsable
+parameter_list|(
+name|struct
+name|fsm
 modifier|*
 parameter_list|)
 function_decl|;
