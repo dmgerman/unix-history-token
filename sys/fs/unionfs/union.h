@@ -66,6 +66,10 @@ name|int
 name|um_op
 decl_stmt|;
 comment|/* Operation mode */
+name|dev_t
+name|um_upperdev
+decl_stmt|;
+comment|/* Upper root node fsid[0]*/
 block|}
 struct|;
 end_struct
