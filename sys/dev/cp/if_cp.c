@@ -6000,7 +6000,6 @@ operator|)
 name|data
 argument_list|)
 operator|&&
-operator|!
 name|PP_FR
 condition|)
 block|{
