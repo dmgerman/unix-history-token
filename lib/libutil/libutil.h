@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Peter Wemm<peter@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the author  *    Peter Wemm.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * $Id: libutil.h,v 1.8 1997/05/12 10:36:13 brian Exp $  */
+comment|/*  * Copyright (c) 1995 Peter Wemm<peter@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the author  *    Peter Wemm.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * $Id: libutil.h,v 1.9 1997/05/19 10:04:15 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -286,7 +286,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|UU_LOCK_SEEK_ERR
+name|UU_LOCK_CREAT_ERR
 value|(-3)
 end_define
 
@@ -295,6 +295,20 @@ define|#
 directive|define
 name|UU_LOCK_WRITE_ERR
 value|(-4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UU_LOCK_LINK_ERR
+value|(-5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UU_LOCK_TRY_ERR
+value|(-6)
 end_define
 
 begin_endif
