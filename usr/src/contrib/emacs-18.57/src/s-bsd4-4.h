@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions file for GNU Emacs running on bsd 4.3    Copyright (C) 1985, 1986 Free Software Foundation, Inc.  This file is part of GNU Emacs.  GNU Emacs is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GNU Emacs is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Emacs; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Definitions file for GNU Emacs running on bsd 4.4    Copyright (C) 1985, 1986 Free Software Foundation, Inc.  This file is part of GNU Emacs.  GNU Emacs is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GNU Emacs is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Emacs; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
-comment|/* This is brutal but we must get BIG_ENDIAN/LITTLE_ENDIAN defined now    so we can be careful not to override the value in the m- file.    Defining BIG_ENDIAN/LITTLE_ENDIAN with no value in that file will    break, e.g. sys/wait.h.  */
+comment|/* Unfortunately, 4.4 and emacs have conflicting uses of BIG_ENDIAN    and LITTLE_ENDIAN.  Emacs assumes BIG_ENDIAN will be defined for    big endian machines and not defined for little endian machines.    endian.h in 4.4 defines both as values with BYTE_ORDER taking on    the appropriate one.  I see no way to reconcile the two.  Just    using the values from endian.h will break a little endian machine    since BIG_ENDIAN is also defined.  Undef'ing the values from    endian.h (in the m- file) and redefining only one won't work since,    for example, wait.h requires both be defined and have values.    At the current time this is not a problem as we can hack around    it.  Emacs' only use of BIG_ENDIAN is in lisp.h and then only    if NO_UNION_TYPE is not defined.  By ensuring that NO_UNION_TYPE    is defined, we avoid the issue.  We also include endian.h now to    make sure that the m- file doesn't override the correct value (in    the big endian case).  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_UNION_TYPE
+end_define
 
 begin_ifndef
 ifndef|#
