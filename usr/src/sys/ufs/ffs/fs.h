@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	fs.h	4.3	82/10/10	*/
+comment|/*	fs.h	4.4	82/10/17	*/
 end_comment
 
 begin_comment
@@ -577,7 +577,7 @@ name|long
 name|cg_magic
 decl_stmt|;
 comment|/* magic number */
-name|char
+name|u_char
 name|cg_free
 index|[
 literal|1
