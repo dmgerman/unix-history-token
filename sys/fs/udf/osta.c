@@ -17,12 +17,6 @@ begin_comment
 comment|/***********************************************************************  * OSTA compliant Unicode compression, uncompression routines.  * Copyright 1995 Micro Design International, Inc.  * Written by Jason M. Rinn.  * Micro Design International gives permission for the free use of the  * following source code.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
-
 begin_comment
 comment|/***********************************************************************  * Takes an OSTA CS0 compressed unicode name, and converts  * it to Unicode.  * The Unicode output will be in the byte order  * that the local compiler uses for 16-bit values.  * NOTE: This routine only performs error checking on the compID.  * It is up to the user to ensure that the unicode buffer is large  * enough, and that the compressed unicode name is correct.  *  * RETURN VALUE  *  * The number of unicode characters which were uncompressed.  * A -1 is returned if the compression ID is invalid.  */
 end_comment
