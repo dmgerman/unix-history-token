@@ -78,6 +78,22 @@ name|optarg
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|strchr
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+end_if
+
 begin_function_decl
 specifier|extern
 name|char
@@ -86,6 +102,11 @@ name|strrchr
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static

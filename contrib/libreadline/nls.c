@@ -208,6 +208,8 @@ literal|"iso885910"
 block|,
 literal|"koi8r"
 block|,
+literal|"koi8-r"
+block|,
 literal|0
 block|}
 decl_stmt|;

@@ -957,7 +957,7 @@ name|c
 operator|!=
 name|CTRL
 argument_list|(
-literal|'g'
+literal|'G'
 argument_list|)
 condition|)
 block|{
@@ -1074,6 +1074,15 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+if|#
+directive|if
+literal|0
+comment|/* delete character from search string. */
+block|case -3: 	  if (search_string_index == 0) 	    ding (); 	  else 	    { 	      search_string[--search_string_index] = '\0';
+comment|/* This is tricky.  To do this right, we need to keep a 		 stack of search positions for the current search, with 		 sentinels marking the beginning and end. */
+block|} 	  break;
+endif|#
+directive|endif
 default|default:
 comment|/* Add character to search string and continue search. */
 if|if

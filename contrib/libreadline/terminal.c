@@ -1864,6 +1864,41 @@ begin_comment
 comment|/* A function for the use of tputs () */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MINIX
+end_ifdef
+
+begin_function
+name|void
+name|_rl_output_character_function
+parameter_list|(
+name|c
+parameter_list|)
+name|int
+name|c
+decl_stmt|;
+block|{
+name|putc
+argument_list|(
+name|c
+argument_list|,
+name|_rl_out_stream
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !_MINIX */
+end_comment
+
 begin_function
 name|int
 name|_rl_output_character_function
@@ -1884,6 +1919,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_MINIX */
+end_comment
 
 begin_comment
 comment|/* Write COUNT characters from STRING to the output stream. */
@@ -2166,28 +2210,6 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_function
-specifier|static
-name|int
-name|outchar
-parameter_list|(
-name|c
-parameter_list|)
-name|int
-name|c
-decl_stmt|;
-block|{
-return|return
-name|putc
-argument_list|(
-name|c
-argument_list|,
-name|rl_outstream
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
 name|void
 name|_rl_enable_meta_key
 parameter_list|()
@@ -2204,7 +2226,7 @@ name|term_mm
 argument_list|,
 literal|1
 argument_list|,
-name|outchar
+name|_rl_output_character_function
 argument_list|)
 expr_stmt|;
 block|}
@@ -2232,7 +2254,7 @@ name|term_ks
 argument_list|,
 literal|1
 argument_list|,
-name|outchar
+name|_rl_output_character_function
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2249,7 +2271,7 @@ name|term_ke
 argument_list|,
 literal|1
 argument_list|,
-name|outchar
+name|_rl_output_character_function
 argument_list|)
 expr_stmt|;
 block|}

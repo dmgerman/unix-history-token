@@ -107,7 +107,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* A keymap contains one entry for each key in the ASCII set.    Each entry consists of a type and a pointer.    POINTER is the address of a function to run, or the    address of a keymap to indirect through.    TYPE says which kind of thing POINTER is. */
+comment|/* A keymap contains one entry for each key in the ASCII set.    Each entry consists of a type and a pointer.    FUNCTION is the address of a function to run, or the    address of a keymap to indirect through.    TYPE says which kind of thing FUNCTION is. */
 end_comment
 
 begin_typedef
