@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.5 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -449,9 +449,9 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-name|struct
-name|hostent
-name|hostent
+name|char
+modifier|*
+name|hostname
 decl_stmt|;
 name|short
 name|port
@@ -783,9 +783,9 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
-literal|"connect: %m"
+literal|"connect second port: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -839,19 +839,15 @@ expr_stmt|;
 if|if
 condition|(
 name|hp
-operator|==
-literal|0
 condition|)
-block|{
-comment|/* 		 * Only the name is used below 		 */
-name|hp
+name|hostname
 operator|=
-operator|&
-name|hostent
-expr_stmt|;
 name|hp
 operator|->
 name|h_name
+expr_stmt|;
+else|else
+name|hostname
 operator|=
 name|inet_ntoa
 argument_list|(
@@ -860,7 +856,6 @@ operator|->
 name|sin_addr
 argument_list|)
 expr_stmt|;
-block|}
 name|getstr
 argument_list|(
 name|remuser
@@ -978,9 +973,7 @@ literal|'\0'
 operator|&&
 name|ruserok
 argument_list|(
-name|hp
-operator|->
-name|h_name
+name|hostname
 argument_list|,
 name|pwd
 operator|->
