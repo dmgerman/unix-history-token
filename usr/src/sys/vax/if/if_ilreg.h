@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ilreg.h	4.1	82/05/21	*/
+comment|/*	if_ilreg.h	4.2	82/06/23	*/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|IL_EUA
-value|0xC000
+value|0xc000
 end_define
 
 begin_comment
@@ -112,11 +112,11 @@ begin_define
 define|#
 directive|define
 name|IL_BITS
-value|"\10\10CDONE\7CIE\6RDONE\5RIE"
+value|"\20\10CDONE\7CIE\6RDONE\5RIE"
 end_define
 
 begin_comment
-comment|/* Command definitions */
+comment|/* command definitions */
 end_comment
 
 begin_define
@@ -329,72 +329,287 @@ comment|/* Reset */
 end_comment
 
 begin_comment
-comment|/*  * Error codes  */
+comment|/*  * Error codes found in the status bits of the csr.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ILERR_SUCCESS
+value|0
+end_define
+
+begin_comment
+comment|/* command successful */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILERR_RETRIES
+value|1
+end_define
+
+begin_comment
+comment|/* " " with retries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILERR_BADCMD
+value|2
+end_define
+
+begin_comment
+comment|/* illegal command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILERR_INVCMD
+value|3
+end_define
+
+begin_comment
+comment|/* invalid command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILERR_RECVERR
+value|4
+end_define
+
+begin_comment
+comment|/* receiver error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILERR_BUFSIZ
+value|5
+end_define
+
+begin_comment
+comment|/* buffer size too big */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILERR_FRAMESIZ
+value|6
+end_define
+
+begin_comment
+comment|/* frame size too small */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILERR_COLLISIONS
+value|8
+end_define
+
+begin_comment
+comment|/* excessive collisions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILERR_BUFALIGNMENT
+value|10
+end_define
+
+begin_comment
+comment|/* buffer not word aligned */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILERR_NXM
+value|15
+end_define
+
+begin_comment
+comment|/* non-existent memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NILERRS
+value|16
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ILERRS
+end_ifdef
 
 begin_decl_stmt
 name|char
 modifier|*
 name|ilerrs
-index|[]
+index|[
+name|NILERRS
+index|]
 init|=
 block|{
 literal|"success"
 block|,
-comment|/* 0 */
+comment|/*  0 */
 literal|"success with retries"
 block|,
-comment|/* 01 */
+comment|/*  1 */
 literal|"illegal command"
 block|,
-comment|/* 02 */
+comment|/*  2 */
 literal|"inappropriate command"
 block|,
-comment|/* 03 */
+comment|/*  3 */
 literal|"failure"
 block|,
-comment|/* 04 */
+comment|/*  4 */
 literal|"buffer size exceeded"
 block|,
-comment|/* 05 */
+comment|/*  5 */
 literal|"frame too small"
 block|,
-comment|/* 06 */
+comment|/*  6 */
 literal|0
 block|,
-comment|/* 07 */
+comment|/*  7 */
 literal|"excessive collisions"
 block|,
-comment|/* 010 */
+comment|/*  8 */
 literal|0
 block|,
-comment|/* 011 */
+comment|/*  9 */
 literal|"buffer alignment error"
 block|,
-comment|/* 012 */
+comment|/* 10 */
 literal|0
 block|,
-comment|/* 013 */
+comment|/* 11 */
 literal|0
 block|,
-comment|/* 014 */
+comment|/* 12 */
 literal|0
 block|,
-comment|/* 015 */
+comment|/* 13 */
 literal|0
 block|,
-comment|/* 016 */
+comment|/* 14 */
 literal|"non-existent memory"
-comment|/* 017 */
+comment|/* 15 */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Diagnostics codes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILDIAG_SUCCESS
+value|0
+end_define
+
+begin_comment
+comment|/* no problems */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILDIAG_CHKSUMERR
+value|1
+end_define
+
+begin_comment
+comment|/* ROM/RAM checksum error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILDIAG_DMAERR
+value|2
+end_define
+
+begin_comment
+comment|/* DMA not working */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILDIAG_XMITERR
+value|3
+end_define
+
+begin_comment
+comment|/* xmit circuitry failure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILDIAG_RECVERR
+value|4
+end_define
+
+begin_comment
+comment|/* rcvr circuitry failure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILDIAG_LOOPBACK
+value|5
+end_define
+
+begin_comment
+comment|/* loopback test failed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NILDIAGS
+value|6
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ILDIAGS
+end_ifdef
 
 begin_decl_stmt
 name|char
 modifier|*
 name|ildiag
-index|[]
+index|[
+name|NILDIAGS
+index|]
 init|=
 block|{
 literal|"success"
@@ -418,6 +633,48 @@ comment|/* 5 */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Frame status bits, returned in frame status byte  * at the top of each received packet.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILFSTAT_C
+value|0x1
+end_define
+
+begin_comment
+comment|/* CRC error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILFSTAT_A
+value|0x2
+end_define
+
+begin_comment
+comment|/* alignment error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILFSTAT_L
+value|0x4
+end_define
+
+begin_comment
+comment|/* 1+ frames lost just before */
+end_comment
 
 end_unit
 
