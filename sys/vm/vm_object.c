@@ -489,6 +489,9 @@ operator|->
 name|can_persist
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 specifier|register
 name|vm_page_t
 name|p
@@ -570,6 +573,9 @@ name|listq
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* DIAGNOSTIC */
 name|queue_enter
 argument_list|(
 operator|&
