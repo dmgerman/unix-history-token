@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.36 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.37 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.36 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.37 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1670,13 +1670,45 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+ifdef|#
+directive|ifdef
+name|__STDC__
 name|msize
 operator|=
-name|atol
+name|strtoul
 argument_list|(
 name|vp
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|NULL
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|msize
+operator|=
+name|strtol
+argument_list|(
+name|vp
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|NULL
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if
