@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_nat.c,v 1.2 1998/03/21 11:34:17 peter Exp $"
+literal|"@(#)$Id: ip_nat.c,v 1.3 1998/06/20 18:37:50 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1028,6 +1028,12 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|300003
+operator|)
 name|u_long
 name|cmd
 decl_stmt|;

@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_fil.c,v 1.4 1998/06/08 06:04:12 bde Exp $"
+literal|"@(#)$Id: ip_fil.c,v 1.5 1998/06/20 18:37:50 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -870,6 +870,12 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|300003
+operator|)
 end_if
 
 begin_decl_stmt
@@ -3255,6 +3261,12 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|300003
+operator|)
 name|u_long
 name|req
 decl_stmt|;
