@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	3.3	%H%	*/
+comment|/*	user.h	3.4	%H%	*/
 end_comment
 
 begin_ifdef
@@ -438,6 +438,13 @@ define|#
 directive|define
 name|RESTARTSYS
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIMULATERTI
+value|2
 end_define
 
 begin_comment
