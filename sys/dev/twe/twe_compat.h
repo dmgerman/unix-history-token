@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2003 Paul Saab  * Copyright (c) 2003 Vinod Kashyap  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -27,6 +27,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/cons.h>
 end_include
 
 begin_include
@@ -80,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devicestat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus_pio.h>
 end_include
 
@@ -98,7 +110,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
 end_include
 
 begin_include
@@ -122,6 +152,10 @@ ifdef|#
 directive|ifdef
 name|TWE_OVERRIDE
 end_ifdef
+
+begin_comment
+comment|/* public symbols defined in twe.c */
+end_comment
 
 begin_define
 define|#
@@ -154,8 +188,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|twe_submit_bio
-value|Xtwe_submit_bio
+name|twe_startio
+value|Xtwe_startio
+end_define
+
+begin_define
+define|#
+directive|define
+name|twe_dump_blocks
+value|Xtwe_dump_blocks
 end_define
 
 begin_define
@@ -163,20 +204,6 @@ define|#
 directive|define
 name|twe_ioctl
 value|Xtwe_ioctl
-end_define
-
-begin_define
-define|#
-directive|define
-name|twe_describe_controller
-value|Xtwe_describe_controller
-end_define
-
-begin_define
-define|#
-directive|define
-name|twe_print_controller
-value|Xtwe_print_controller
 end_define
 
 begin_define
@@ -196,8 +223,47 @@ end_define
 begin_define
 define|#
 directive|define
+name|twe_describe_controller
+value|Xtwe_describe_controller
+end_define
+
+begin_define
+define|#
+directive|define
+name|twe_describe_code
+value|Xtwe_describe_code
+end_define
+
+begin_define
+define|#
+directive|define
+name|twe_print_controller
+value|Xtwe_print_controller
+end_define
+
+begin_comment
+comment|/* public symbols defined in twe_freebsd.c */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|twe_attach_drive
 value|Xtwe_attach_drive
+end_define
+
+begin_define
+define|#
+directive|define
+name|twe_clear_pci_parity_error
+value|Xtwe_clear_pci_parity_error
+end_define
+
+begin_define
+define|#
+directive|define
+name|twe_clear_pci_abort
+value|Xtwe_clear_pci_abort
 end_define
 
 begin_define
@@ -217,13 +283,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|twe_free_request
-value|Xtwe_free_request
-end_define
-
-begin_define
-define|#
-directive|define
 name|twe_map_request
 value|Xtwe_map_request
 end_define
@@ -235,12 +294,9 @@ name|twe_unmap_request
 value|Xtwe_unmap_request
 end_define
 
-begin_define
-define|#
-directive|define
-name|twe_describe_code
-value|Xtwe_describe_code
-end_define
+begin_comment
+comment|/* public symbols defined in twe_tables.h */
+end_comment
 
 begin_define
 define|#
@@ -273,15 +329,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|TWE_DRIVER_NAME
-value|Xtwe
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWED_DRIVER_NAME
-value|Xtwed
+name|twe_table_opcode
+value|Xtwe_table_opcode
 end_define
 
 begin_define
@@ -296,19 +345,9 @@ else|#
 directive|else
 end_else
 
-begin_define
-define|#
-directive|define
-name|TWE_DRIVER_NAME
-value|twe
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWED_DRIVER_NAME
-value|twed
-end_define
+begin_comment
+comment|/* TWE_OVERRIDE */
+end_comment
 
 begin_define
 define|#
@@ -321,6 +360,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* TWE_OVERRIDE */
+end_comment
 
 begin_comment
 comment|/*   * Wrappers for bus-space actions  */
@@ -489,6 +532,12 @@ begin_comment
 comment|/* old buf style */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FREEBSD_4
+end_define
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -606,7 +655,7 @@ name|TWE_BIO_UNIT
 parameter_list|(
 name|bp
 parameter_list|)
-value|*(int *)((bp)->b_dev->si_drv2)
+value|((struct twed_softc *)(TWE_BIO_SOFTC(bp)))->twed_drive->td_twe_unit
 end_define
 
 begin_define
@@ -799,7 +848,7 @@ name|TWE_BIO_UNIT
 parameter_list|(
 name|bp
 parameter_list|)
-value|*(int *)((bp)->bio_dev->si_drv2)
+value|((struct twed_softc *)(TWE_BIO_SOFTC(bp)))->twed_drive->td_twe_unit
 end_define
 
 begin_define

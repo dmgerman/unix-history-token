@@ -1,7 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2003 Paul Saab  * Copyright (c) 2003 Vinod Kashyap  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
+
+begin_comment
+comment|/*  * The scheme for the driver version is:  *<major change>.<external release>.<3ware internal release>.<development release>  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TWE_DRIVER_VERSION_STRING
+value|"1.40.01.000"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWE_CDEV_MAJOR
+value|146
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWED_CDEV_MAJOR
+value|147
+end_define
 
 begin_ifdef
 ifdef|#
@@ -91,8 +116,13 @@ name|int
 name|td_sectors
 decl_stmt|;
 name|int
-name|td_unit
+name|td_sys_unit
 decl_stmt|;
+comment|/* Unit #, as seen by the system 				     (the 0 in twed0, the 1 in twed1 etc.) */
+name|int
+name|td_twe_unit
+decl_stmt|;
+comment|/* Unit #, as seen by us, and our ctlr 				     (index into sc->twe_drive[]) */
 comment|/* unit state and type */
 name|u_int8_t
 name|td_state
@@ -104,6 +134,59 @@ comment|/* handle for attached driver */
 name|device_t
 name|td_disk
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Disk device softc  */
+end_comment
+
+begin_struct
+struct|struct
+name|twed_softc
+block|{
+name|device_t
+name|twed_dev
+decl_stmt|;
+name|dev_t
+name|twed_dev_t
+decl_stmt|;
+name|struct
+name|twe_softc
+modifier|*
+name|twed_controller
+decl_stmt|;
+comment|/* parent device softc */
+name|struct
+name|twe_drive
+modifier|*
+name|twed_drive
+decl_stmt|;
+comment|/* drive data in parent softc */
+name|struct
+name|disk
+name|twed_disk
+decl_stmt|;
+comment|/* generic disk handle */
+name|struct
+name|devstat
+name|twed_stats
+decl_stmt|;
+comment|/* accounting */
+name|struct
+name|disklabel
+name|twed_label
+decl_stmt|;
+comment|/* synthetic label */
+name|int
+name|twed_flags
+decl_stmt|;
+define|#
+directive|define
+name|TWED_OPEN
+value|(1<<0)
+comment|/* drive is open (can't shut down) */
 block|}
 struct|;
 end_struct
@@ -167,6 +250,11 @@ directive|define
 name|TWE_CMD_COMPLETE
 value|2
 comment|/* completed by controller (maybe with error) */
+define|#
+directive|define
+name|TWE_CMD_ERROR
+value|3
+comment|/* encountered error, even before submission to controller */
 name|int
 name|tr_flags
 decl_stmt|;
@@ -188,6 +276,16 @@ directive|define
 name|TWE_CMD_SLEEPER
 value|(1<<3)
 comment|/* owner is sleeping on this command */
+define|#
+directive|define
+name|TWE_CMD_MAPPED
+value|(1<<4)
+comment|/* cmd has been mapped */
+define|#
+directive|define
+name|TWE_CMD_IN_PROGRESS
+value|(1<<5)
+comment|/* bus_dmamap_load returned EINPROGRESS */
 name|void
 function_decl|(
 modifier|*
@@ -316,6 +414,10 @@ directive|define
 name|TWE_STATE_SUSPEND
 value|(1<<3)
 comment|/* controller is suspended */
+define|#
+directive|define
+name|TWE_STATE_FRZN
+value|(1<<4)
 name|int
 name|twe_host_id
 decl_stmt|;
@@ -421,6 +523,19 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|twe_start
+parameter_list|(
+name|struct
+name|twe_request
+modifier|*
+name|tr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|twe_dump_blocks
 parameter_list|(
 name|struct
@@ -488,6 +603,23 @@ end_comment
 
 begin_function_decl
 specifier|extern
+name|char
+modifier|*
+name|twe_describe_code
+parameter_list|(
+name|struct
+name|twe_code_lookup
+modifier|*
+name|table
+parameter_list|,
+name|u_int32_t
+name|code
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|twe_print_controller
 parameter_list|(
@@ -535,7 +667,7 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|twe_attach_drive
 parameter_list|(
 name|struct
@@ -552,12 +684,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* attach drive when found in twe_add_unit */
+comment|/* attach drive when found in twe_init */
 end_comment
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|twe_detach_drive
 parameter_list|(
 name|struct
@@ -638,24 +770,7 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|void
-name|twe_free_request
-parameter_list|(
-name|struct
-name|twe_request
-modifier|*
-name|tr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* free request structure */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
+name|int
 name|twe_map_request
 parameter_list|(
 name|struct
@@ -713,7 +828,8 @@ name|sc
 parameter_list|,
 name|qname
 parameter_list|)
-value|(sc)->twe_qstat[qname].q_length--
+define|\
+value|do {							\ 	    struct twe_qstat *qs =&(sc)->twe_qstat[qname];	\ 								\ 	    qs->q_length--;					\ 	    if (qs->q_length< qs->q_min)			\ 		qs->q_min = qs->q_length;			\ 	} while(0)
 end_define
 
 begin_define
@@ -726,7 +842,7 @@ parameter_list|,
 name|qname
 parameter_list|)
 define|\
-value|do {					\ 	    sc->twe_qstat[qname].q_length = 0;	\ 	    sc->twe_qstat[qname].q_max = 0;	\ 	} while(0)
+value|do {						\ 	    sc->twe_qstat[qname].q_length = 0;		\ 	    sc->twe_qstat[qname].q_max = 0;		\ 	    sc->twe_qstat[qname].q_min = 0xFFFFFFFF;	\ 	} while(0)
 end_define
 
 begin_define

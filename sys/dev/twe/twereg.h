@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2003 Paul Saab  * Copyright (c) 2003 Vinod Kashyap  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -306,7 +306,7 @@ begin_define
 define|#
 directive|define
 name|TWE_DEVICE_NAME
-value|"3ware Storage Controller"
+value|"3ware 7000 series Storage Controller"
 end_define
 
 begin_define
@@ -707,11 +707,12 @@ name|u_int32_t
 name|length
 decl_stmt|;
 block|}
-name|TWE_SG_Entry
 name|__attribute__
 typedef|((
 name|packed
-typedef|));
+typedef|))
+name|TWE_SG_Entry
+typedef|;
 end_typedef
 
 begin_typedef
@@ -758,11 +759,12 @@ name|u_int32_t
 name|response_queue_pointer
 decl_stmt|;
 block|}
-name|TWE_Command_INITCONNECTION
 name|__attribute__
 typedef|((
 name|packed
-typedef|));
+typedef|))
+name|TWE_Command_INITCONNECTION
+typedef|;
 end_typedef
 
 begin_typedef
@@ -815,11 +817,12 @@ name|TWE_MAX_SGL_LENGTH
 index|]
 decl_stmt|;
 block|}
-name|TWE_Command_IO
 name|__attribute__
 typedef|((
 name|packed
-typedef|));
+typedef|))
+name|TWE_Command_IO
+typedef|;
 end_typedef
 
 begin_typedef
@@ -881,11 +884,12 @@ name|u_int8_t
 name|aport
 decl_stmt|;
 block|}
-name|TWE_Command_HOTSWAP
 name|__attribute__
 typedef|((
 name|packed
-typedef|));
+typedef|))
+name|TWE_Command_HOTSWAP
+typedef|;
 end_typedef
 
 begin_typedef
@@ -946,11 +950,12 @@ name|u_int16_t
 name|persistence
 decl_stmt|;
 block|}
-name|TWE_Command_SETATAFEATURE
 name|__attribute__
 typedef|((
 name|packed
-typedef|));
+typedef|))
+name|TWE_Command_SETATAFEATURE
+typedef|;
 end_typedef
 
 begin_typedef
@@ -995,11 +1000,12 @@ name|target_status
 decl_stmt|;
 comment|/* set low byte to target request's ID */
 block|}
-name|TWE_Command_CHECKSTATUS
 name|__attribute__
 typedef|((
 name|packed
-typedef|));
+typedef|))
+name|TWE_Command_CHECKSTATUS
+typedef|;
 end_typedef
 
 begin_typedef
@@ -1049,11 +1055,12 @@ name|TWE_MAX_SGL_LENGTH
 index|]
 decl_stmt|;
 block|}
-name|TWE_Command_PARAM
 name|__attribute__
 typedef|((
 name|packed
-typedef|));
+typedef|))
+name|TWE_Command_PARAM
+typedef|;
 end_typedef
 
 begin_typedef
@@ -1128,11 +1135,12 @@ name|logical_subunit
 decl_stmt|;
 comment|/* for RAID10 rebuild of logical subunit */
 block|}
-name|TWE_Command_REBUILDUNIT
 name|__attribute__
 typedef|((
 name|packed
-typedef|));
+typedef|))
+name|TWE_Command_REBUILDUNIT
+typedef|;
 end_typedef
 
 begin_typedef
@@ -1168,6 +1176,9 @@ decl_stmt|;
 name|u_int8_t
 name|status
 decl_stmt|;
+name|u_int8_t
+name|flags
+decl_stmt|;
 name|u_int16_t
 name|param
 decl_stmt|;
@@ -1199,11 +1210,12 @@ name|TWE_MAX_ATA_SGL_LENGTH
 index|]
 decl_stmt|;
 block|}
-name|TWE_Command_ATA
 name|__attribute__
 typedef|((
 name|packed
-typedef|));
+typedef|))
+name|TWE_Command_ATA
+typedef|;
 end_typedef
 
 begin_typedef
@@ -1268,11 +1280,12 @@ name|count
 decl_stmt|;
 comment|/* block count, parameter count, message credits */
 block|}
-name|TWE_Command_Generic
 name|__attribute__
 typedef|((
 name|packed
-typedef|));
+typedef|))
+name|TWE_Command_Generic
+typedef|;
 end_typedef
 
 begin_comment
@@ -2217,11 +2230,12 @@ name|block_count
 decl_stmt|;
 comment|/* actual drive size if configuration == 0x0f, otherwise less DCB size */
 block|}
-name|TWE_Unit_Descriptor
 name|__attribute__
 typedef|((
 name|packed
-typedef|));
+typedef|))
+name|TWE_Unit_Descriptor
+typedef|;
 end_typedef
 
 begin_typedef
@@ -2249,11 +2263,12 @@ literal|6
 index|]
 decl_stmt|;
 block|}
-name|TWE_Mirror_Descriptor
 name|__attribute__
 typedef|((
 name|packed
-typedef|));
+typedef|))
+name|TWE_Mirror_Descriptor
+typedef|;
 end_typedef
 
 begin_typedef
@@ -2329,11 +2344,12 @@ index|]
 decl_stmt|;
 comment|/* subunit descriptors, in RAID10 mode is [mirunit][subunit] */
 block|}
-name|TWE_Array_Descriptor
 name|__attribute__
 typedef|((
 name|packed
-typedef|));
+typedef|))
+name|TWE_Array_Descriptor
+typedef|;
 end_typedef
 
 begin_typedef
@@ -2356,11 +2372,12 @@ literal|0
 index|]
 decl_stmt|;
 block|}
-name|TWE_Param
 name|__attribute__
 typedef|((
 name|packed
-typedef|));
+typedef|))
+name|TWE_Param
+typedef|;
 end_typedef
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2003 Paul Saab  * Copyright (c) 2003 Vinod Kashyap  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
@@ -19,18 +19,6 @@ directive|include
 file|<dev/twe/twereg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/twe/tweio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/twe/twevar.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -41,6 +29,18 @@ begin_include
 include|#
 directive|include
 file|<dev/twe/twe_tables.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/twe/tweio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/twe/twevar.h>
 end_include
 
 begin_comment
@@ -292,7 +292,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|twe_add_unit
 parameter_list|(
 name|struct
@@ -308,7 +308,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|twe_del_unit
 parameter_list|(
 name|struct
@@ -325,19 +325,6 @@ end_function_decl
 begin_comment
 comment|/*  * Command I/O to controller.  */
 end_comment
-
-begin_function_decl
-specifier|static
-name|int
-name|twe_start
-parameter_list|(
-name|struct
-name|twe_request
-modifier|*
-name|tr
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -517,7 +504,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int16_t
 name|twe_dequeue_aen
 parameter_list|(
 name|struct
@@ -904,7 +891,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|twe_add_unit
 parameter_list|(
 name|struct
@@ -942,6 +929,11 @@ name|TWE_Unit_Descriptor
 modifier|*
 name|ud
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|unit
@@ -952,7 +944,11 @@ name|unit
 operator|>
 name|TWE_MAX_UNITS
 condition|)
-return|return;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/*      * The controller is in a safe state, so try to find drives attached to it.      */
 if|if
 condition|(
@@ -983,7 +979,11 @@ argument_list|,
 literal|"can't detect attached units\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 block|}
 name|dr
 operator|=
@@ -1010,9 +1010,15 @@ operator|&
 name|TWE_PARAM_UNITSTATUS_Online
 operator|)
 condition|)
+block|{
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 name|table
 operator|=
 name|TWE_PARAM_UNITINFO
@@ -1045,6 +1051,10 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|EIO
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -1075,6 +1085,10 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|EIO
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -1102,6 +1116,10 @@ literal|"error fetching descriptor size for unit %d\n"
 argument_list|,
 name|unit
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EIO
 expr_stmt|;
 goto|goto
 name|out
@@ -1139,6 +1157,10 @@ literal|"error fetching descriptor for unit %d\n"
 argument_list|,
 name|unit
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EIO
 expr_stmt|;
 goto|goto
 name|out
@@ -1220,10 +1242,12 @@ operator|)
 expr_stmt|;
 name|dr
 operator|->
-name|td_unit
+name|td_twe_unit
 operator|=
 name|unit
 expr_stmt|;
+name|error
+operator|=
 name|twe_attach_drive
 argument_list|(
 name|sc
@@ -1259,12 +1283,17 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|twe_del_unit
 parameter_list|(
 name|struct
@@ -1276,6 +1305,9 @@ name|int
 name|unit
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|unit
@@ -1283,10 +1315,34 @@ operator|<
 literal|0
 operator|||
 name|unit
-operator|>
+operator|>=
 name|TWE_MAX_UNITS
 condition|)
-return|return;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
+name|sc
+operator|->
+name|twe_drive
+index|[
+name|unit
+index|]
+operator|.
+name|td_disk
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+name|error
+operator|=
 name|twe_detach_drive
 argument_list|(
 name|sc
@@ -1294,6 +1350,11 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
@@ -1504,10 +1565,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|/********************************************************************************  * Pull as much work off the softc's work queue as possible and give it to the  * controller.  */
 end_comment
@@ -1543,6 +1600,15 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|twe_state
+operator|&
+name|TWE_STATE_FRZN
+condition|)
+return|return;
 comment|/* spin until something prevents us from doing any work */
 for|for
 control|(
@@ -1730,12 +1796,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* map the command so the controller can work with it */
-name|twe_map_request
-argument_list|(
-name|tr
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* did we find something to do? */
 if|if
@@ -1745,10 +1805,10 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/* try to give command to controller */
+comment|/* try to map and submit the command to controller */
 name|error
 operator|=
-name|twe_start
+name|twe_map_request
 argument_list|(
 name|tr
 argument_list|)
@@ -1760,30 +1820,72 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|tr
+operator|->
+name|tr_status
+operator|=
+name|TWE_CMD_ERROR
+expr_stmt|;
 if|if
 condition|(
-name|error
-operator|==
-name|EBUSY
+name|tr
+operator|->
+name|tr_private
+operator|!=
+name|NULL
 condition|)
 block|{
-name|twe_requeue_ready
+name|bp
+operator|=
+operator|(
+name|twe_bio
+operator|*
+operator|)
+operator|(
+name|tr
+operator|->
+name|tr_private
+operator|)
+expr_stmt|;
+name|TWE_BIO_SET_ERROR
+argument_list|(
+name|bp
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+name|tr
+operator|->
+name|tr_private
+operator|=
+name|NULL
+expr_stmt|;
+name|twed_intr
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|twe_release_request
 argument_list|(
 name|tr
 argument_list|)
 expr_stmt|;
-comment|/* try it again later */
-break|break;
-comment|/* don't try anything more for now */
 block|}
-comment|/* we don't support any other return from twe_start */
-name|twe_panic
+elseif|else
+if|if
+condition|(
+name|tr
+operator|->
+name|tr_flags
+operator|&
+name|TWE_CMD_SLEEPER
+condition|)
+name|wakeup_one
 argument_list|(
-name|sc
-argument_list|,
-literal|"twe_start returned nonsense"
+name|tr
 argument_list|)
 expr_stmt|;
+comment|/* wakeup the sleeping owner */
 block|}
 block|}
 block|}
@@ -1916,11 +2018,6 @@ name|lba
 operator|=
 name|lba
 expr_stmt|;
-name|twe_map_request
-argument_list|(
-name|tr
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|twe_immediate_request
@@ -2035,12 +2132,14 @@ name|void
 modifier|*
 name|data
 decl_stmt|;
-name|int
+name|unsigned
+name|short
 modifier|*
-name|arg
+name|aen_code
 init|=
 operator|(
-name|int
+name|unsigned
+name|short
 operator|*
 operator|)
 name|addr
@@ -2084,7 +2183,7 @@ argument_list|)
 condition|)
 name|tsleep
 argument_list|(
-name|NULL
+name|sc
 argument_list|,
 name|PPAUSE
 argument_list|,
@@ -2223,16 +2322,20 @@ name|TWE_CMD_DATAOUT
 expr_stmt|;
 block|}
 comment|/* run the command */
-name|twe_map_request
-argument_list|(
-name|tr
-argument_list|)
-expr_stmt|;
+name|error
+operator|=
 name|twe_wait_request
 argument_list|(
 name|tr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|cmd_done
+goto|;
 comment|/* copy the command out again */
 name|bcopy
 argument_list|(
@@ -2379,7 +2482,7 @@ case|case
 name|TWEIO_AEN_POLL
 case|:
 operator|*
-name|arg
+name|aen_code
 operator|=
 name|twe_dequeue_aen
 argument_list|(
@@ -2400,7 +2503,7 @@ while|while
 condition|(
 operator|(
 operator|*
-name|arg
+name|aen_code
 operator|=
 name|twe_dequeue_aen
 argument_list|(
@@ -2653,6 +2756,8 @@ break|break;
 case|case
 name|TWEIO_ADD_UNIT
 case|:
+name|error
+operator|=
 name|twe_add_unit
 argument_list|(
 name|sc
@@ -2666,6 +2771,8 @@ break|break;
 case|case
 name|TWEIO_DEL_UNIT
 case|:
+name|error
+operator|=
 name|twe_del_unit
 argument_list|(
 name|sc
@@ -3164,12 +3271,6 @@ name|param_count
 operator|=
 literal|1
 expr_stmt|;
-comment|/* map the command/data into controller-visible space */
-name|twe_map_request
-argument_list|(
-name|tr
-argument_list|)
-expr_stmt|;
 comment|/* fill in the outbound parameter data */
 name|param
 operator|->
@@ -3223,6 +3324,10 @@ goto|goto
 name|err
 goto|;
 block|}
+else|else
+goto|goto
+name|err
+goto|;
 name|twe_release_request
 argument_list|(
 name|tr
@@ -3244,7 +3349,7 @@ name|func
 expr_stmt|;
 name|error
 operator|=
-name|twe_start
+name|twe_map_request
 argument_list|(
 name|tr
 argument_list|)
@@ -3533,12 +3638,6 @@ name|param_count
 operator|=
 literal|1
 expr_stmt|;
-comment|/* map the command/data into controller-visible space */
-name|twe_map_request
-argument_list|(
-name|tr
-argument_list|)
-expr_stmt|;
 comment|/* fill in the outbound parameter data */
 name|param
 operator|->
@@ -3729,22 +3828,10 @@ name|response_queue_pointer
 operator|=
 literal|0
 expr_stmt|;
-comment|/* map the command into controller-visible space */
-name|twe_map_request
-argument_list|(
-name|tr
-argument_list|)
-expr_stmt|;
 comment|/* submit the command */
 name|error
 operator|=
 name|twe_immediate_request
-argument_list|(
-name|tr
-argument_list|)
-expr_stmt|;
-comment|/* XXX check command result? */
-name|twe_unmap_request
 argument_list|(
 name|tr
 argument_list|)
@@ -3856,7 +3943,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|tr
+operator|->
+name|tr_status
+operator|!=
+name|TWE_CMD_COMPLETE
 operator|)
 return|;
 block|}
@@ -3885,16 +3976,12 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|(
 name|error
 operator|=
-name|twe_start
+name|twe_map_request
 argument_list|(
 name|tr
 argument_list|)
@@ -3988,6 +4075,16 @@ condition|)
 block|{
 if|if
 condition|(
+name|tr
+operator|->
+name|tr_command
+operator|.
+name|generic
+operator|.
+name|status
+condition|)
+if|if
+condition|(
 name|twe_report_request
 argument_list|(
 name|tr
@@ -4058,7 +4155,7 @@ decl_stmt|;
 comment|/*      * Sleep for a short period to allow AENs to be signalled.      */
 name|tsleep
 argument_list|(
-name|NULL
+name|sc
 argument_list|,
 name|PRIBIO
 argument_list|,
@@ -4217,7 +4314,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|twe_start
 parameter_list|(
@@ -5179,14 +5275,7 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/*      * We don't use this, rather we try to submit commands when we receive      * them, and when other commands have completed.  Mask it so we don't get      * another one.      */
-name|twe_printf
-argument_list|(
-name|sc
-argument_list|,
-literal|"command interrupt\n"
-argument_list|)
-expr_stmt|;
+comment|/*      * We don't use this, rather we try to submit commands when we receive      * them, and when other commands have completed.  Mask it so we don't get      * another one.     twe_printf(sc, "command interrupt\n");      */
 name|TWE_CONTROL
 argument_list|(
 name|sc
@@ -5585,7 +5674,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|u_int16_t
 name|twe_dequeue_aen
 parameter_list|(
 name|struct
@@ -5594,7 +5683,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
+name|u_int16_t
 name|result
 decl_stmt|;
 name|debug_called
@@ -6011,7 +6100,7 @@ name|sc
 argument_list|,
 name|TWE_PARAM_VERSION
 argument_list|,
-name|TWE_PARAM_VERSION_Mon
+name|TWE_PARAM_VERSION_FW
 argument_list|,
 literal|16
 argument_list|,
@@ -6029,13 +6118,53 @@ name|sc
 argument_list|,
 name|TWE_PARAM_VERSION
 argument_list|,
-name|TWE_PARAM_VERSION_FW
+name|TWE_PARAM_VERSION_BIOS
 argument_list|,
 literal|16
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+index|[
+literal|0
+index|]
+operator|&&
+name|p
+index|[
+literal|1
+index|]
+condition|)
+name|twe_printf
+argument_list|(
+name|sc
+argument_list|,
+literal|"%d ports, Firmware %.16s, BIOS %.16s\n"
+argument_list|,
+name|ports
+argument_list|,
+name|p
+index|[
+literal|0
+index|]
+operator|->
+name|data
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+operator|->
+name|data
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|p
 index|[
 literal|2
@@ -6047,7 +6176,7 @@ name|sc
 argument_list|,
 name|TWE_PARAM_VERSION
 argument_list|,
-name|TWE_PARAM_VERSION_BIOS
+name|TWE_PARAM_VERSION_Mon
 argument_list|,
 literal|16
 argument_list|,
@@ -6108,32 +6237,27 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|twe_printf
-argument_list|(
-name|sc
-argument_list|,
-literal|"%d ports, Firmware %.16s, BIOS %.16s\n"
-argument_list|,
-name|ports
-argument_list|,
-name|p
-index|[
-literal|1
-index|]
-operator|->
-name|data
-argument_list|,
+if|if
+condition|(
 name|p
 index|[
 literal|2
 index|]
-operator|->
-name|data
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
+operator|&&
+name|p
+index|[
+literal|3
+index|]
+operator|&&
+name|p
+index|[
+literal|4
+index|]
+operator|&&
+name|p
+index|[
+literal|5
+index|]
 condition|)
 name|twe_printf
 argument_list|(
@@ -6143,7 +6267,7 @@ literal|"Monitor %.16s, PCB %.8s, Achip %.8s, Pchip %.8s\n"
 argument_list|,
 name|p
 index|[
-literal|0
+literal|2
 index|]
 operator|->
 name|data
@@ -6170,26 +6294,13 @@ operator|->
 name|data
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
+if|if
+condition|(
 name|p
 index|[
-literal|0
+literal|2
 index|]
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|p
-index|[
-literal|1
-index|]
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
+condition|)
 name|free
 argument_list|(
 name|p
@@ -6200,6 +6311,13 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+index|[
+literal|3
+index|]
+condition|)
 name|free
 argument_list|(
 name|p
@@ -6210,6 +6328,13 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+index|[
+literal|4
+index|]
+condition|)
 name|free
 argument_list|(
 name|p
@@ -6220,11 +6345,53 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+index|[
+literal|5
+index|]
+condition|)
 name|free
 argument_list|(
 name|p
 index|[
 literal|5
+index|]
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|p
+index|[
+literal|0
+index|]
+condition|)
+name|free
+argument_list|(
+name|p
+index|[
+literal|0
+index|]
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+index|[
+literal|1
+index|]
+condition|)
+name|free
+argument_list|(
+name|p
+index|[
+literal|1
 index|]
 argument_list|,
 name|M_DEVBUF
@@ -6371,6 +6538,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|p
+index|[
+literal|0
+index|]
+condition|)
 name|free
 argument_list|(
 name|p
@@ -6382,6 +6556,81 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/********************************************************************************  * Look up a text description of a numeric code and return a pointer to same.  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|twe_describe_code
+parameter_list|(
+name|struct
+name|twe_code_lookup
+modifier|*
+name|table
+parameter_list|,
+name|u_int32_t
+name|code
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|table
+index|[
+name|i
+index|]
+operator|.
+name|string
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|table
+index|[
+name|i
+index|]
+operator|.
+name|code
+operator|==
+name|code
+condition|)
+return|return
+operator|(
+name|table
+index|[
+name|i
+index|]
+operator|.
+name|string
+operator|)
+return|;
+return|return
+operator|(
+name|table
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|.
+name|string
+operator|)
+return|;
 block|}
 end_function
 
@@ -6864,7 +7113,7 @@ name|twe_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"command returned with controller rest request\n"
+literal|"command returned with controller reset request\n"
 argument_list|)
 expr_stmt|;
 name|twe_reset
@@ -7130,14 +7379,14 @@ name|twe_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"          current  max\n"
+literal|"          current  max    min\n"
 argument_list|)
 expr_stmt|;
 name|twe_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"free      %04d     %04d\n"
+literal|"free      %04d     %04d   %04d\n"
 argument_list|,
 name|sc
 operator|->
@@ -7156,13 +7405,22 @@ name|TWEQ_FREE
 index|]
 operator|.
 name|q_max
+argument_list|,
+name|sc
+operator|->
+name|twe_qstat
+index|[
+name|TWEQ_FREE
+index|]
+operator|.
+name|q_min
 argument_list|)
 expr_stmt|;
 name|twe_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"ready     %04d     %04d\n"
+literal|"ready     %04d     %04d   %04d\n"
 argument_list|,
 name|sc
 operator|->
@@ -7181,13 +7439,22 @@ name|TWEQ_READY
 index|]
 operator|.
 name|q_max
+argument_list|,
+name|sc
+operator|->
+name|twe_qstat
+index|[
+name|TWEQ_READY
+index|]
+operator|.
+name|q_min
 argument_list|)
 expr_stmt|;
 name|twe_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"busy      %04d     %04d\n"
+literal|"busy      %04d     %04d   %04d\n"
 argument_list|,
 name|sc
 operator|->
@@ -7206,13 +7473,22 @@ name|TWEQ_BUSY
 index|]
 operator|.
 name|q_max
+argument_list|,
+name|sc
+operator|->
+name|twe_qstat
+index|[
+name|TWEQ_BUSY
+index|]
+operator|.
+name|q_min
 argument_list|)
 expr_stmt|;
 name|twe_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"complete  %04d     %04d\n"
+literal|"complete  %04d     %04d   %04d\n"
 argument_list|,
 name|sc
 operator|->
@@ -7231,13 +7507,22 @@ name|TWEQ_COMPLETE
 index|]
 operator|.
 name|q_max
+argument_list|,
+name|sc
+operator|->
+name|twe_qstat
+index|[
+name|TWEQ_COMPLETE
+index|]
+operator|.
+name|q_min
 argument_list|)
 expr_stmt|;
 name|twe_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"bioq      %04d     %04d\n"
+literal|"bioq      %04d     %04d   %04d\n"
 argument_list|,
 name|sc
 operator|->
@@ -7256,6 +7541,15 @@ name|TWEQ_BIO
 index|]
 operator|.
 name|q_max
+argument_list|,
+name|sc
+operator|->
+name|twe_qstat
+index|[
+name|TWEQ_BIO
+index|]
+operator|.
+name|q_min
 argument_list|)
 expr_stmt|;
 name|twe_printf
