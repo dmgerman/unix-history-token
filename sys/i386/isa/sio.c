@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.48 1994/05/30 15:44:10 ache Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.49 1994/05/30 22:53:41 ache Exp $  */
 end_comment
 
 begin_include
@@ -1583,6 +1583,22 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|COM_MULTIPORT
+name|struct
+name|isa_device
+modifier|*
+name|mdev
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* COM_MULTIPORT */
+name|struct
+name|isa_device
+modifier|*
+name|tdev
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1651,11 +1667,6 @@ name|dev
 argument_list|)
 condition|)
 block|{
-name|struct
-name|isa_device
-modifier|*
-name|mdev
-decl_stmt|;
 name|mdev
 operator|=
 name|find_isadev
@@ -1694,6 +1705,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 endif|#
 directive|endif
@@ -1849,6 +1866,33 @@ argument_list|,
 name|mcr_image
 argument_list|)
 expr_stmt|;
+name|tdev
+operator|=
+name|dev
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COM_MULTIPORT
+if|if
+condition|(
+name|COM_ISMULTIPORT
+argument_list|(
+name|dev
+argument_list|)
+operator|&&
+operator|!
+name|COM_NOMASTER
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+name|tdev
+operator|=
+name|mdev
+expr_stmt|;
+endif|#
+directive|endif
+comment|/*COM_MULTIPORT*/
 comment|/* 	 * Check that 	 *	o the CFCR, IER and MCR in UART hold the values written to them 	 *	  (the values happen to be all distinct - this is good for 	 *	  avoiding false positive tests from bus echoes). 	 *	o an output interrupt is generated and its vector is correct. 	 *	o the interrupt goes away when the IIR in the UART is read. 	 */
 if|if
 condition|(
@@ -1897,7 +1941,7 @@ operator|||
 operator|!
 name|isa_irq_pending
 argument_list|(
-name|dev
+name|tdev
 argument_list|)
 operator|&&
 name|FAIL
@@ -1925,7 +1969,7 @@ argument_list|)
 operator|||
 name|isa_irq_pending
 argument_list|(
-name|dev
+name|tdev
 argument_list|)
 operator|&&
 name|FAIL
@@ -1993,7 +2037,7 @@ argument_list|)
 operator|||
 name|isa_irq_pending
 argument_list|(
-name|dev
+name|tdev
 argument_list|)
 operator|&&
 name|FAIL
@@ -2601,42 +2645,7 @@ name|COM_NOMASTER
 argument_list|(
 name|isdp
 argument_list|)
-condition|)
-block|{
-name|struct
-name|isa_device
-modifier|*
-name|mdev
-decl_stmt|;
-name|mdev
-operator|=
-name|find_isadev
-argument_list|(
-name|isa_devtab_tty
-argument_list|,
-operator|&
-name|siodriver
-argument_list|,
-name|COM_MPMASTER
-argument_list|(
-name|isdp
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mdev
-operator|==
-name|NULL
-condition|)
-name|printf
-argument_list|(
-literal|" master not found"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
+operator|&&
 name|COM_MPMASTER
 argument_list|(
 name|isdp
@@ -2649,7 +2658,6 @@ argument_list|(
 literal|" master"
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|")"
