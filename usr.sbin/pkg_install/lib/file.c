@@ -1122,7 +1122,7 @@ literal|".tgz"
 block|,
 literal|".tar"
 block|,
-literal|".tbz2"
+literal|".tbz"
 block|,
 name|NULL
 block|}
