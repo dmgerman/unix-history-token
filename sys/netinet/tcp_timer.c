@@ -1257,6 +1257,13 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|tw
+operator|->
+name|tw_inpcb
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tw
