@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)imsg.c	5.3 (Berkeley) %G%"
+literal|"@(#)imsg.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,6 +99,12 @@ name|msg
 init|=
 name|amsg
 decl_stmt|;
+specifier|register
+name|int
+name|nchars
+init|=
+literal|0
+decl_stmt|;
 name|int
 name|foundsync
 init|=
@@ -139,6 +145,17 @@ condition|)
 return|return
 name|FAIL
 return|;
+name|DEBUG
+argument_list|(
+literal|9
+argument_list|,
+literal|"\t%o"
+argument_list|,
+name|c
+operator|&
+literal|0377
+argument_list|)
+expr_stmt|;
 name|c
 operator|&=
 literal|0177
@@ -188,6 +205,10 @@ operator|&
 literal|0377
 argument_list|)
 expr_stmt|;
+name|c
+operator|&=
+literal|0177
+expr_stmt|;
 if|if
 condition|(
 name|c
@@ -210,6 +231,10 @@ expr_stmt|;
 name|msg
 operator|=
 name|amsg
+expr_stmt|;
+name|nchars
+operator|=
+literal|0
 expr_stmt|;
 name|foundsync
 operator|=
@@ -267,6 +292,28 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
+comment|/* MAXFULLNAME should really be passed in as a parameter */
+if|if
+condition|(
+name|nchars
+operator|++
+operator|>
+name|MAXFULLNAME
+condition|)
+block|{
+name|DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"buffer overrun in imsg"
+argument_list|,
+name|CNULL
+argument_list|)
+expr_stmt|;
+return|return
+name|FAIL
+return|;
+block|}
 name|fflush
 argument_list|(
 name|stderr
