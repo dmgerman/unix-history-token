@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ic/i8259.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/icu.h>
 end_include
 
@@ -166,7 +172,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* XXX: Magic numbers */
+comment|/*  * Determine the base master and slave modes not including auto EOI support.  * All machines that FreeBSD supports use 8086 mode.  */
 end_comment
 
 begin_ifdef
@@ -175,22 +181,23 @@ directive|ifdef
 name|PC98
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AUTO_EOI_1
-end_ifdef
+begin_comment
+comment|/*  * PC-98 machines do not support auto EOI on the second PIC.  Also, it  * seems that PC-98 machine PICs use buffered mode, and the master PIC  * uses special fully nested mode.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|MASTER_MODE
-value|0x1f
+name|BASE_MASTER_MODE
+value|(ICW4_SFNM | ICW4_BUF | ICW4_MS | ICW4_8086)
 end_define
 
-begin_comment
-comment|/* Master auto EOI, 8086 mode */
-end_comment
+begin_define
+define|#
+directive|define
+name|BASE_SLAVE_MODE
+value|(ICW4_BUF | ICW4_8086)
+end_define
 
 begin_else
 else|#
@@ -200,37 +207,24 @@ end_else
 begin_define
 define|#
 directive|define
-name|MASTER_MODE
-value|0x1d
+name|BASE_MASTER_MODE
+value|ICW4_8086
 end_define
 
-begin_comment
-comment|/* Master 8086 mode */
-end_comment
+begin_define
+define|#
+directive|define
+name|BASE_SLAVE_MODE
+value|ICW4_8086
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|SLAVE_MODE
-value|9
-end_define
-
 begin_comment
-comment|/* 8086 mode */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* IBM-PC */
+comment|/* Enable automatic EOI if requested. */
 end_comment
 
 begin_ifdef
@@ -243,7 +237,7 @@ begin_define
 define|#
 directive|define
 name|MASTER_MODE
-value|(ICW4_8086 | ICW4_AEOI)
+value|(BASE_MASTER_MODE | ICW4_AEOI)
 end_define
 
 begin_else
@@ -255,7 +249,7 @@ begin_define
 define|#
 directive|define
 name|MASTER_MODE
-value|ICW4_8086
+value|BASE_MASTER_MODE
 end_define
 
 begin_endif
@@ -273,7 +267,7 @@ begin_define
 define|#
 directive|define
 name|SLAVE_MODE
-value|(ICW4_8086 | ICW4_AEOI)
+value|(BASE_SLAVE_MODE | ICW4_AEOI)
 end_define
 
 begin_else
@@ -285,22 +279,13 @@ begin_define
 define|#
 directive|define
 name|SLAVE_MODE
-value|ICW4_8086
+value|BASE_SLAVE_MODE
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PC98 */
-end_comment
 
 begin_function_decl
 specifier|static
