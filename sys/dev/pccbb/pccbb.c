@@ -5176,7 +5176,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|mtx_lock
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
