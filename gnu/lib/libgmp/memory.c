@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Memory allocation routines.  Copyright (C) 1991 Free Software Foundation, Inc.  This file is part of the GNU MP Library.  The GNU MP Library is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  The GNU MP Library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with the GNU MP Library; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Memory allocation routines.  Copyright (C) 1991, 1993, 1994 Free Software Foundation, Inc.  This file is part of the GNU MP Library.  The GNU MP Library is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  The GNU MP Library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with the GNU MP Library; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_include
@@ -38,11 +38,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|__STDC__
-end_ifdef
+end_if
 
 begin_function_decl
 name|void
@@ -151,8 +151,8 @@ end_comment
 begin_function
 name|void
 modifier|*
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|__STDC__
 name|_mp_default_allocate
 parameter_list|(
@@ -191,7 +191,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"cannot allocate in libmp"
+literal|"cannot allocate in gmp"
 argument_list|)
 expr_stmt|;
 name|abort
@@ -207,8 +207,8 @@ end_function
 begin_function
 name|void
 modifier|*
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|__STDC__
 name|_mp_default_reallocate
 parameter_list|(
@@ -267,7 +267,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"cannot allocate in libmp"
+literal|"cannot allocate in gmp"
 argument_list|)
 expr_stmt|;
 name|abort
@@ -282,8 +282,8 @@ end_function
 
 begin_function
 name|void
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|__STDC__
 name|_mp_default_free
 parameter_list|(
