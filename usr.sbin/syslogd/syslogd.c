@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.7 1995/10/12 17:18:39 wollman Exp $"
+literal|"$Id: syslogd.c,v 1.8 1995/11/14 23:39:39 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,17 @@ end_define
 
 begin_comment
 comment|/* interval for checking flush, mark */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTYMSGTIME
+value|1
+end_define
+
+begin_comment
+comment|/* timeout passed to ttymsg */
 end_comment
 
 begin_include
@@ -782,6 +793,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|SecureMode
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* when true, speak only unix domain socks */
+end_comment
+
+begin_decl_stmt
+name|int
 name|created_lsock
 init|=
 literal|0
@@ -1072,8 +1095,6 @@ decl_stmt|,
 name|klogm
 decl_stmt|,
 name|len
-decl_stmt|,
-name|noudp
 decl_stmt|;
 name|struct
 name|sockaddr_un
@@ -1102,10 +1123,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|noudp
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1117,7 +1134,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"df:Im:p:"
+literal|"dsf:Im:p:"
 argument_list|)
 operator|)
 operator|!=
@@ -1146,15 +1163,6 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
-literal|'I'
-case|:
-comment|/* disable logging from UDP packets */
-name|noudp
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
 literal|'m'
 case|:
 comment|/* mark interval */
@@ -1175,6 +1183,18 @@ comment|/* path */
 name|LogName
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'I'
+case|:
+comment|/* backwards compatible w/FreeBSD */
+case|case
+literal|'s'
+case|:
+comment|/* no network mode */
+name|SecureMode
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -1496,13 +1516,13 @@ name|created_lsock
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|SecureMode
+condition|)
 name|finet
 operator|=
-name|noudp
-condition|?
-operator|-
-literal|1
-else|:
 name|socket
 argument_list|(
 name|AF_INET
@@ -1511,6 +1531,12 @@ name|SOCK_DGRAM
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+else|else
+name|finet
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|inetm
 operator|=
@@ -2079,7 +2105,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: syslogd [-di] [-f conffile] [-m markinterval]"
+literal|"usage: syslogd [-ds] [-f conffile] [-m markinterval]"
 literal|" [-p logpath]\n"
 argument_list|)
 expr_stmt|;
@@ -3120,6 +3146,12 @@ name|f_repeatcount
 operator|=
 literal|0
 expr_stmt|;
+name|f
+operator|->
+name|f_prevpri
+operator|=
+name|pri
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3165,12 +3197,6 @@ operator|->
 name|f_prevlen
 operator|=
 name|msglen
-expr_stmt|;
-name|f
-operator|->
-name|f_prevpri
-operator|=
-name|pri
 expr_stmt|;
 operator|(
 name|void
@@ -3589,6 +3615,13 @@ name|MAXLINE
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|finet
+operator|>=
+literal|0
+operator|)
+operator|&&
+operator|(
 name|sendto
 argument_list|(
 name|finet
@@ -3626,6 +3659,7 @@ argument_list|)
 argument_list|)
 operator|!=
 name|l
+operator|)
 condition|)
 block|{
 name|int
@@ -4092,9 +4126,7 @@ literal|6
 argument_list|,
 name|line
 argument_list|,
-literal|60
-operator|*
-literal|5
+name|TTYMSGTIME
 argument_list|)
 operator|)
 operator|!=
@@ -4180,9 +4212,7 @@ literal|6
 argument_list|,
 name|line
 argument_list|,
-literal|60
-operator|*
-literal|5
+name|TTYMSGTIME
 argument_list|)
 operator|)
 operator|!=
