@@ -782,6 +782,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MOUSE_PROTO_JOGDIAL
+value|16
+end_define
+
+begin_comment
+comment|/* Vaio's JogDial */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MOUSE_RES_UNKNOWN
 value|(-1)
 end_define

@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/spicreg.h>
 end_include
 
@@ -1078,7 +1084,7 @@ expr_stmt|;
 block|}
 comment|/* 	 * This is an ugly hack. It is necessary until ACPI works correctly. 	 * 	 * The SPIC consists of 2 registers. They are mapped onto I/O by the 	 * PIIX4's General Device 10 function. There is also an interrupt 	 * control port at a somewhat magic location, but this first pass is 	 * polled. 	 * 	 * So the first thing we need to do is map the G10 space in. 	 * 	 */
 comment|/* Enable ACPI mode to get Fn key events */
-comment|/* XXX This may slow down your VAIO if ACPI is not supported in the kernel. 	outb(0xb2, 0xf0); 	*/
+comment|/* XXX This may slow down your VAIO if ACPI is not supported in the kernel. 	outb(0xb2, 0xf0); 	 */
 name|device_printf
 argument_list|(
 name|dev
@@ -1698,15 +1704,6 @@ name|param
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|0x0c
-case|:
-comment|/* We must ignore these type of event for C1VP... */
-case|case
-literal|0x70
-case|:
-comment|/* Closing/Opening the lid on C1VP */
-break|break;
 default|default:
 name|printf
 argument_list|(
@@ -1816,9 +1813,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|thread
+name|proc
 modifier|*
-name|td
+name|p
 parameter_list|)
 block|{
 name|struct
@@ -1886,9 +1883,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|thread
+name|proc
 modifier|*
-name|td
+name|p
 parameter_list|)
 block|{
 name|struct
@@ -2136,9 +2133,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|thread
+name|proc
 modifier|*
-name|td
+name|p
 parameter_list|)
 block|{
 name|struct
@@ -2173,15 +2170,20 @@ name|int
 name|events
 parameter_list|,
 name|struct
-name|thread
+name|proc
 modifier|*
-name|td
+name|p
 parameter_list|)
 block|{
 name|struct
 name|spic_softc
 modifier|*
 name|sc
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p1
 decl_stmt|;
 name|int
 name|revents
@@ -2232,17 +2234,58 @@ name|POLLRDNORM
 operator|)
 expr_stmt|;
 else|else
-name|selrecord
-argument_list|(
-name|td
-argument_list|,
-operator|&
+block|{
+if|if
+condition|(
 name|sc
 operator|->
 name|sc_rsel
+operator|.
+name|si_pid
+operator|&&
+operator|(
+name|p1
+operator|=
+name|pfind
+argument_list|(
+name|sc
+operator|->
+name|sc_rsel
+operator|.
+name|si_pid
 argument_list|)
+operator|)
+operator|&&
+name|p1
+operator|->
+name|p_wchan
+operator|==
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|selwait
+condition|)
+name|sc
+operator|->
+name|sc_rsel
+operator|.
+name|si_flags
+operator|=
+name|SI_COLL
 expr_stmt|;
-comment|/* Who shall we wake? */
+else|else
+name|sc
+operator|->
+name|sc_rsel
+operator|.
+name|si_pid
+operator|=
+name|p
+operator|->
+name|p_pid
+expr_stmt|;
+block|}
 block|}
 name|splx
 argument_list|(
