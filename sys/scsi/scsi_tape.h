@@ -4,11 +4,15 @@ comment|/*  * SCSI tape interface description  */
 end_comment
 
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with   * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id$  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with   * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  */
 end_comment
 
 begin_comment
-comment|/*  * SCSI command format  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_tape.h,v 1.7 93/08/26 21:09:32 julian Exp Locker: julian $  */
+end_comment
+
+begin_comment
+comment|/*  * SCSI command formats  */
 end_comment
 
 begin_struct
@@ -423,6 +427,17 @@ directive|define
 name|HALFINCH_6250
 value|0x03
 end_define
+
+begin_define
+define|#
+directive|define
+name|QIC_11
+value|0x04
+end_define
+
+begin_comment
+comment|/* from Archive 150S Theory of Op. XXX	*/
+end_comment
 
 begin_define
 define|#

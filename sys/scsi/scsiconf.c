@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id$  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.c,v 1.6 93/08/26 21:09:39 julian Exp Locker: julian $  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"cd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sg.h"
 end_include
 
 begin_ifdef
@@ -1021,17 +1027,15 @@ expr_stmt|;
 block|}
 if|#
 directive|if
-name|NGENSCSI
+name|NSG
 operator|>
 literal|0
 comment|/***************************************************************\ 	* If available hook up the generic scsi driver, letting it	* 	* know which target is US. (i.e. illegal or at least special)	* 	\***************************************************************/
-name|genscsi_attach
+name|sg_attach
 argument_list|(
 name|unit
 argument_list|,
 name|scsi_addr
-argument_list|,
-literal|0
 argument_list|,
 name|scsi_switch
 argument_list|)
@@ -1903,7 +1907,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%s%d targ %d lun %d: type %d(%s) %s<%s%s%s> SCSI%d\n"
+literal|"%s%d targ %d lun %d: type %d(%s) %s SCSI%d\n"
 argument_list|,
 name|scsi_switch
 operator|->
@@ -1925,17 +1929,32 @@ literal|"removable"
 else|:
 literal|"fixed"
 argument_list|,
-name|manu
-argument_list|,
-name|model
-argument_list|,
-name|version
-argument_list|,
 name|inqbuf
 operator|.
 name|version
 operator|&
 name|SID_ANSII
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s%d targ %d lun %d:<%s%s%s>\n"
+argument_list|,
+name|scsi_switch
+operator|->
+name|name
+argument_list|,
+name|unit
+argument_list|,
+name|target
+argument_list|,
+name|lu
+argument_list|,
+name|manu
+argument_list|,
+name|model
+argument_list|,
+name|version
 argument_list|)
 expr_stmt|;
 if|if
@@ -1948,7 +1967,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d targ %d lun %d: qulaifier %d(%s)\n"
+literal|"%s%d targ %d lun %d: qualifier %d(%s)\n"
 argument_list|,
 name|scsi_switch
 operator|->
