@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  modified for EXT2FS support in Lites 1.1  *  *  Aug 1995, Godmar Back (gback@cs.utah.edu)  *  University of Utah, Department of Computer Science  */
-end_comment
-
-begin_comment
 comment|/*  *  linux/include/linux/ext2_fs_sb.h  *  * Copyright (C) 1992, 1993, 1994, 1995  * Remy Card (card@masi.ibp.fr)  * Laboratoire MASI - Institut Blaise Pascal  * Universite Pierre et Marie Curie (Paris VI)  *  *  from  *  *  linux/include/linux/minix_fs_sb.h  *  *  Copyright (C) 1991, 1992  Linus Torvalds  */
 end_comment
 
@@ -33,39 +29,6 @@ directive|define
 name|EXT2_MAX_GROUP_LOADED
 value|8
 end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LITES
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|buffer_head
-value|buf
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXMNTLEN
-value|512
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * second extended-fs super-block data in memory  */
@@ -184,26 +147,11 @@ decl_stmt|;
 name|int
 name|s_rename_lock
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|LITES
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 name|struct
 name|wait_queue
 modifier|*
 name|s_rename_wait
 decl_stmt|;
-endif|#
-directive|endif
 name|unsigned
 name|long
 name|s_mount_opt
@@ -220,57 +168,6 @@ name|unsigned
 name|short
 name|s_mount_state
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LITES
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-comment|/*  	   stuff that FFS keeps in its super block or that linux 	   has in its non-ext2 specific super block and which is 	   generally considered useful  	*/
-name|unsigned
-name|long
-name|s_blocksize
-decl_stmt|;
-name|unsigned
-name|long
-name|s_blocksize_bits
-decl_stmt|;
-name|unsigned
-name|int
-name|s_bshift
-decl_stmt|;
-comment|/* = log2(s_blocksize) */
-name|quad_t
-name|s_qbmask
-decl_stmt|;
-comment|/* = s_blocksize - 1 */
-name|unsigned
-name|int
-name|s_fsbtodb
-decl_stmt|;
-comment|/* shift to get disk block */
-name|char
-name|s_rd_only
-decl_stmt|;
-comment|/* read-only 		*/
-name|char
-name|s_dirt
-decl_stmt|;
-comment|/* fs modified flag */
-name|char
-name|fs_fsmnt
-index|[
-name|MAXMNTLEN
-index|]
-decl_stmt|;
-comment|/* name mounted on */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
