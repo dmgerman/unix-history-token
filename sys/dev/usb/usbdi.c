@@ -3586,29 +3586,6 @@ block|{
 name|usbd_request_handle
 name|reqh
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|for (;;) { 		reqh = SIMPLEQ_FIRST(&pipe->queue); 		if (reqh == 0) 			break;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-block|SIMPLEQ_REMOVE_HEAD(&pipe->queue, reqh, next);
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-block|SIMPLEQ_REMOVE_HEAD(&pipe->queue, next);
-endif|#
-directive|endif
-block|reqh->status = USBD_CANCELLED; 		if (reqh->callback) 			reqh->callback(reqh, reqh->priv, reqh->status); 	}
-else|#
-directive|else
 while|while
 condition|(
 operator|(
@@ -3669,9 +3646,35 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* XXX should the callback not be called something 		 * else than splusb? Create a new list of reqh and 		 * execute them after the while for example? 		 */
+name|reqh
+operator|->
+name|status
+operator|=
+name|USBD_CANCELLED
+expr_stmt|;
+if|if
+condition|(
+name|reqh
+operator|->
+name|callback
+condition|)
+name|reqh
+operator|->
+name|callback
+argument_list|(
+name|reqh
+argument_list|,
+name|reqh
+operator|->
+name|priv
+argument_list|,
+name|reqh
+operator|->
+name|status
+argument_list|)
+expr_stmt|;
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 name|USBD_NORMAL_COMPLETION
