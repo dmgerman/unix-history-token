@@ -70,29 +70,6 @@ name|EINVAL
 expr_stmt|;
 else|else
 block|{
-comment|/* 		 * Round guardsize up to the nearest multiple of 		 * _thr_page_size. 		 */
-if|if
-condition|(
-name|guardsize
-operator|%
-name|_thr_page_size
-operator|!=
-literal|0
-condition|)
-name|guardsize
-operator|=
-operator|(
-operator|(
-name|guardsize
-operator|/
-name|_thr_page_size
-operator|)
-operator|+
-literal|1
-operator|)
-operator|*
-name|_thr_page_size
-expr_stmt|;
 comment|/* Save the stack size. */
 operator|(
 operator|*
