@@ -428,12 +428,6 @@ condition|)
 block|{
 name|sc
 operator|->
-name|wi_prism2
-operator|=
-literal|1
-expr_stmt|;
-name|sc
-operator|->
 name|wi_bus_type
 operator|=
 name|pci_ids

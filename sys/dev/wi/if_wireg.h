@@ -1329,32 +1329,66 @@ name|WI_NIC_EVB2_SST
 value|0x8009
 define|#
 directive|define
-name|WI_NIC_3842
+name|WI_NIC_3842_EVA
 value|0x800A
-comment|/* 3482 Evaluation Board */
+comment|/* 3842 Evaluation Board */
 define|#
 directive|define
-name|WI_NIC_PRISM2_5
+name|WI_NIC_3842_PCMCIA_AMD
+value|0x800B
+comment|/* Prism2.5 PCMCIA */
+define|#
+directive|define
+name|WI_NIC_3842_PCMCIA_SST
 value|0x800C
 define|#
 directive|define
-name|WI_NIC_3874A
-value|0x8013
+name|WI_NIC_3842_PCMCIA_ATM
+value|0x800D
+define|#
+directive|define
+name|WI_NIC_3842_MINI_AMD
+value|0x8012
 comment|/* Prism2.5 Mini-PCI */
 define|#
 directive|define
-name|WI_NIC_37300P
-value|0x801a
+name|WI_NIC_3842_MINI_SST
+value|0x8013
 define|#
 directive|define
-name|WI_NIC_P3_SST
-value|0x801B
+name|WI_NIC_3842_MINI_ATM
+value|0x8014
+define|#
+directive|define
+name|WI_NIC_3842_PCI_AMD
+value|0x8016
+comment|/* Prism2.5 PCI-bridge */
+define|#
+directive|define
+name|WI_NIC_3842_PCI_SST
+value|0x8017
+define|#
+directive|define
+name|WI_NIC_3842_PCI_ATM
+value|0x8018
+define|#
+directive|define
+name|WI_NIC_P3_PCMCIA_AMD
+value|0x801A
 comment|/* Prism3 PCMCIA */
 define|#
 directive|define
-name|WI_NIC_P3_PCI
-value|0x8022
+name|WI_NIC_P3_PCMCIA_SST
+value|0x801B
+define|#
+directive|define
+name|WI_NIC_P3_MINI_AMD
+value|0x8021
 comment|/* Prism3 Mini-PCI */
+define|#
+directive|define
+name|WI_NIC_P3_MINI_SST
+value|0x8022
 block|}
 struct|;
 end_struct

@@ -308,6 +308,32 @@ modifier|*
 name|wi_intrhand
 decl_stmt|;
 name|int
+name|sc_firmware_type
+decl_stmt|;
+define|#
+directive|define
+name|WI_LUCENT
+value|0
+define|#
+directive|define
+name|WI_INTERSIL
+value|1
+define|#
+directive|define
+name|WI_SYMBOL
+value|2
+name|int
+name|sc_pri_firmware_ver
+decl_stmt|;
+comment|/* Primary firmware */
+name|int
+name|sc_sta_firmware_ver
+decl_stmt|;
+comment|/* Station firmware */
+name|int
+name|sc_enabled
+decl_stmt|;
+name|int
 name|wi_io_addr
 decl_stmt|;
 name|int
@@ -439,12 +465,6 @@ decl_stmt|;
 name|struct
 name|mtx
 name|wi_mtx
-decl_stmt|;
-name|int
-name|wi_prism2
-decl_stmt|;
-name|int
-name|wi_firmware_ver
 decl_stmt|;
 name|int
 name|wi_nic_type
