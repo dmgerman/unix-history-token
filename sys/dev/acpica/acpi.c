@@ -7940,7 +7940,7 @@ argument_list|(
 name|state
 argument_list|)
 expr_stmt|;
-comment|/* Inform all devices that we are going to sleep. */
+comment|/* 	 * Inform all devices that we are going to sleep.  If at least one 	 * device fails, DEVICE_SUSPEND() automatically resumes the tree. 	 * 	 * XXX Note that a better two-pass approach with a 'veto' pass 	 * followed by a "real thing" pass would be better, but the current 	 * bus interface does not provide for this. 	 */
 if|if
 condition|(
 name|DEVICE_SUSPEND
@@ -7950,19 +7950,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-comment|/* 	     * Re-wake the system. 	     * 	     * XXX note that a better two-pass approach with a 'veto' pass 	     *     followed by a "real thing" pass would be better, but the 	     *     current bus interface does not provide for this. 	     */
-name|DEVICE_RESUME
-argument_list|(
-name|root_bus
-argument_list|)
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_ERROR
 argument_list|)
 expr_stmt|;
-block|}
 name|status
 operator|=
 name|AcpiEnterSleepStatePrep
@@ -8038,6 +8030,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|ACPI_DISABLE_IRQS
+argument_list|()
+expr_stmt|;
 name|status
 operator|=
 name|AcpiEnterSleepState
