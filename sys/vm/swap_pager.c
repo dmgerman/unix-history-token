@@ -1200,7 +1200,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_ALLOC() -	allocate a new OBJT_SWAP VM object and instantiate  *			its metadata structures.  *  *	This routine is called from the mmap and fork code to create a new  *	OBJT_SWAP object.  We do this by creating an OBJT_DEFAULT object  *	and then converting it with swp_pager_meta_build().  *  *	This routine may block in vm_object_allocate() and create a named  *	object lookup race, so we must interlock.   We must also run at  *	splvm() for the object lookup to handle races with interrupts, but  *	we do not have to maintain splvm() in between the lookup and the  *	add because (I believe) it is not possible to attempt to create  *	a new swap object w/handle when a default object with that handle  *	already exists.  */
+comment|/*  * SWAP_PAGER_ALLOC() -	allocate a new OBJT_SWAP VM object and instantiate  *			its metadata structures.  *  *	This routine is called from the mmap and fork code to create a new  *	OBJT_SWAP object.  We do this by creating an OBJT_DEFAULT object  *	and then converting it with swp_pager_meta_build().  *  *	This routine may block in vm_object_allocate() and create a named  *	object lookup race, so we must interlock.   We must also run at  *	splvm() for the object lookup to handle races with interrupts, but  *	we do not have to maintain splvm() in between the lookup and the  *	add because (I believe) it is not possible to attempt to create  *	a new swap object w/handle when a default object with that handle  *	already exists.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -1225,7 +1225,11 @@ block|{
 name|vm_object_t
 name|object
 decl_stmt|;
-name|GIANT_REQUIRED
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1333,6 +1337,12 @@ name|SWAPBLK_NONE
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|object
