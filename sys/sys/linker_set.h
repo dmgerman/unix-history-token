@@ -39,7 +39,7 @@ parameter_list|,
 name|sym
 parameter_list|)
 define|\
-value|static void const * const __set_##set##_sym_##sym 		\ 	__attribute__((__section__("set_" #set),__unused__)) =&sym
+value|static void const * const __set_##set##_sym_##sym 		\ 	__section("set_" #set) __unused =&sym
 end_define
 
 begin_else

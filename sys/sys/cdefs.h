@@ -422,6 +422,18 @@ begin_define
 define|#
 directive|define
 name|__aligned
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__section
+parameter_list|(
+name|x
+parameter_list|)
 end_define
 
 begin_endif
@@ -471,11 +483,35 @@ directive|define
 name|__packed
 end_define
 
+begin_comment
+comment|/* XXX find this out, if we care */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|__aligned
+parameter_list|(
+name|x
+parameter_list|)
 end_define
+
+begin_comment
+comment|/* XXX find this out, if we care */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__section
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* XXX find this out, if we care */
+end_comment
 
 begin_endif
 endif|#
@@ -534,6 +570,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__attribute__((__aligned__(x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__section
+parameter_list|(
+name|x
+parameter_list|)
+value|__attribute__((__section__(x)))
 end_define
 
 begin_endif
