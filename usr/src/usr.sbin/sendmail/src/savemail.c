@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.23 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -288,7 +288,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"553 Cannot parse root!"
+literal|"553 Cannot parse Postmaster!"
 argument_list|)
 expr_stmt|;
 name|ExitStat
