@@ -1009,19 +1009,6 @@ name|SIZE_ASM_OP
 value|".size"
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|SET_ASM_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SET_ASM_OP
-value|".set"
-end_define
-
 begin_comment
 comment|/* This is how we tell the assembler that two symbols have the same value.  */
 end_comment
