@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: print.c,v 1.53.2.5 2002/02/09 03:23:19 mellon Exp $ Copyright (c) 1995-2001 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: print.c,v 1.53.2.6 2002/04/26 20:17:06 murray Exp $ Copyright (c) 1995-2001 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -6920,12 +6920,16 @@ name|errorp
 condition|)
 name|log_error
 argument_list|(
+literal|"%s"
+argument_list|,
 name|obuf
 argument_list|)
 expr_stmt|;
 else|else
 name|log_info
 argument_list|(
+literal|"%s"
+argument_list|,
 name|obuf
 argument_list|)
 expr_stmt|;

@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: parse.c,v 1.104.2.8 2002/01/10 19:37:51 mellon Exp $ Copyright (c) 1995-2001 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: parse.c,v 1.104.2.9 2002/04/27 05:30:02 murray Exp $ Copyright (c) 1995-2001 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -8920,6 +8920,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|!
 name|parse_semi
 argument_list|(
 name|cfile
@@ -9859,8 +9860,6 @@ operator|->
 name|name
 condition|)
 block|{
-name|badzone
-label|:
 name|parse_warn
 argument_list|(
 name|cfile
@@ -9868,6 +9867,8 @@ argument_list|,
 literal|"expecting hostname."
 argument_list|)
 expr_stmt|;
+name|badzone
+label|:
 operator|*
 name|lose
 operator|=
@@ -9932,9 +9933,18 @@ condition|(
 operator|!
 name|s
 condition|)
+block|{
+name|parse_warn
+argument_list|(
+name|cfile
+argument_list|,
+literal|"no trailing '.' on zone"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|badzone
 goto|;
+block|}
 name|strcpy
 argument_list|(
 name|s
@@ -10003,13 +10013,6 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
-if|if
-condition|(
-name|parse_semi
-argument_list|(
-name|cfile
-argument_list|)
-condition|)
 name|parse_warn
 argument_list|(
 name|cfile
