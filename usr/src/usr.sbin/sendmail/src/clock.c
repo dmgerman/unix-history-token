@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	6.3 (Berkeley) %G%"
+literal|"@(#)clock.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,27 @@ include|#
 directive|include
 file|<signal.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|sigmask
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|sigmask
+parameter_list|(
+name|s
+parameter_list|)
+value|(1<< ((s) - 1))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* **  SETEVENT -- set an event to happen at a specific time. ** **	Events are stored in a sorted list for fast processing. **	An event only applies to the process that set it. ** **	Parameters: **		intvl -- intvl until next event occurs. **		func -- function to call on event. **		arg -- argument to func on event. ** **	Returns: **		none. ** **	Side Effects: **		none. */

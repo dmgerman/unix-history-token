@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.36 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -467,6 +467,50 @@ begin_comment
 comment|/* need unsetenv(3) support */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOLARIS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LOCKF
+value|1
+end_define
+
+begin_comment
+comment|/* use System V lockf instead of flock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* need unsetenv(3) support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASUSTAT
+value|1
+end_define
+
+begin_comment
+comment|/* has the ustat(2) syscall */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -477,16 +521,6 @@ end_define
 begin_comment
 comment|/* has the statfs(2) syscall */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SOLARIS
-argument_list|)
-end_if
 
 begin_include
 include|#
