@@ -3992,7 +3992,7 @@ operator|)
 operator|(
 operator|(
 operator|(
-name|int
+name|long
 operator|)
 name|lnc_mem
 operator|+
@@ -4014,7 +4014,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|int
+name|long
 operator|)
 name|lnc_mem
 operator|&
@@ -4045,7 +4045,7 @@ operator|)
 operator|(
 operator|(
 operator|(
-name|int
+name|long
 operator|)
 name|lnc_mem
 operator|+
