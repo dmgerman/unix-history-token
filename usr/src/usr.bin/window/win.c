@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)win.c	3.24 (Berkeley) %G%"
+literal|"@(#)win.c	3.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,23 +39,6 @@ include|#
 directive|include
 file|"char.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|POSIX_TTY
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Higher level routines for dealing with windows.  *  * There are two types of windows: user window, and information window.  * User windows are the ones with a pty and shell.  Information windows  * are for displaying error messages, and other information.  *  * The windows are doubly linked in overlapping order and divided into  * two groups: foreground and normal.  Information  * windows are always foreground.  User windows can be either.  * Addwin() adds a window to the list at the top of one of the two groups.  * Deletewin() deletes a window.  Front() moves a window to the front  * of its group.  Wwopen(), wwadd(), and wwdelete() should never be called  * directly.  */
@@ -1279,12 +1262,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|w
-operator|->
-name|ww_stopped
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|w
@@ -1296,24 +1273,30 @@ operator|&&
 name|w
 operator|->
 name|ww_ispty
-condition|)
-operator|(
-name|void
-operator|)
-name|ioctl
+operator|&&
+name|wwstoptty
 argument_list|(
 name|w
 operator|->
 name|ww_pty
-argument_list|,
-name|TIOCSTOP
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"Can't stop output: %s."
+argument_list|,
+name|wwerror
+argument_list|()
+argument_list|)
+expr_stmt|;
+else|else
+name|w
+operator|->
+name|ww_stopped
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_block
@@ -1333,12 +1316,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|w
-operator|->
-name|ww_stopped
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|w
@@ -1350,24 +1327,30 @@ operator|&&
 name|w
 operator|->
 name|ww_ispty
-condition|)
-operator|(
-name|void
-operator|)
-name|ioctl
+operator|&&
+name|wwstarttty
 argument_list|(
 name|w
 operator|->
 name|ww_pty
-argument_list|,
-name|TIOCSTART
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"Can't start output: %s."
+argument_list|,
+name|wwerror
+argument_list|()
+argument_list|)
+expr_stmt|;
+else|else
+name|w
+operator|->
+name|ww_stopped
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_block

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwend.c	3.15 (Berkeley) %G%"
+literal|"@(#)wwend.c	3.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,9 +59,6 @@ literal|0
 argument_list|,
 operator|&
 name|wwoldtty
-argument_list|,
-operator|&
-name|wwnewtty
 argument_list|)
 expr_stmt|;
 block|}

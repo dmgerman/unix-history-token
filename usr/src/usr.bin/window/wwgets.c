@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwgets.c	3.15 (Berkeley) %G%"
+literal|"@(#)wwgets.c	3.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,9 +124,9 @@ condition|)
 name|wwiomux
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|POSIX_TTY
+ifdef|#
+directive|ifdef
+name|OLD_TTY
 if|if
 condition|(
 name|c
@@ -172,9 +172,9 @@ argument_list|)
 expr_stmt|;
 block|}
 elseif|else
-ifndef|#
-directive|ifndef
-name|POSIX_TTY
+ifdef|#
+directive|ifdef
+name|OLD_TTY
 if|if
 condition|(
 name|c
@@ -220,9 +220,9 @@ argument_list|)
 expr_stmt|;
 block|}
 elseif|else
-ifndef|#
-directive|ifndef
-name|POSIX_TTY
+ifdef|#
+directive|ifdef
+name|OLD_TTY
 if|if
 condition|(
 name|c

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwpty.c	3.18 (Berkeley) %G%"
+literal|"@(#)wwpty.c	3.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,11 +34,21 @@ directive|include
 file|"ww.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|POSIX_TTY
-end_ifdef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|OLD_TTY
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TIOCPKT
+argument_list|)
+end_if
 
 begin_include
 include|#

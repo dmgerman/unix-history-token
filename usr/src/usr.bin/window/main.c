@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.41 (Berkeley) %G%"
+literal|"@(#)main.c	3.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -414,9 +414,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|POSIX_TTY
+ifdef|#
+directive|ifdef
+name|OLD_TTY
 if|if
 condition|(
 name|debug
@@ -564,9 +564,6 @@ literal|0
 argument_list|,
 operator|&
 name|wwnewtty
-argument_list|,
-operator|&
-name|wwoldtty
 argument_list|)
 expr_stmt|;
 if|if

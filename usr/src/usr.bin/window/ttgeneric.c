@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttgeneric.c	3.45 (Berkeley) %G%"
+literal|"@(#)ttgeneric.c	3.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2014,47 +2014,10 @@ name|ts_str
 else|:
 literal|0
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|POSIX_TTY
 name|ospeed
 operator|=
-name|wwoldtty
-operator|.
-name|ww_sgttyb
-operator|.
-name|sg_ospeed
+name|wwospeed
 expr_stmt|;
-else|#
-directive|else
-ifdef|#
-directive|ifdef
-name|CBAUD
-name|ospeed
-operator|=
-name|wwoldtty
-operator|.
-name|ww_termios
-operator|.
-name|c_cflag
-operator|&
-name|CBAUD
-expr_stmt|;
-else|#
-directive|else
-name|ospeed
-operator|=
-name|wwoldtty
-operator|.
-name|ww_termios
-operator|.
-name|c_ospeed
-expr_stmt|;
-comment|/* XXX */
-endif|#
-directive|endif
-endif|#
-directive|endif
 name|gen_CM
 operator|=
 name|ttxgetstr
