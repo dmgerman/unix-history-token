@@ -24,6 +24,10 @@ name|CPP_CPU64_DEFAULT_SPEC
 value|"-D__sparc64__ -D__sparc_v9__ -D__arch64__"
 end_define
 
+begin_comment
+comment|/* Because we include sparc/sysv4.h.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -243,6 +247,16 @@ define|#
 directive|define
 name|SPARC_DEFAULT_CMODEL
 value|CM_MEDLOW
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANSFER_FROM_TRAMPOLINE
+define|\
+value|static int need_enable_exec_stack;					\   static void check_enabling(void) __attribute__ ((constructor));	\   static void check_enabling(void)					\   {									\     extern int sysctlbyname(const char *, void *, size_t *, void *, size_t);\     int prot = 0;							\     size_t len = sizeof(prot);						\ 									\     sysctlbyname ("kern.stackprot",&prot,&len, NULL, 0);		\     if (prot != 7)							\       need_enable_exec_stack = 1;					\   }									\   extern void __enable_execute_stack (void *);				\   void __enable_execute_stack (void *addr)				\   {									\     if (!need_enable_exec_stack)					\       return;								\     else {								\
+comment|/* 7 is PROT_READ | PROT_WRITE | PROT_EXEC */
+value|\       if (mprotect (addr, TRAMPOLINE_SIZE, 7)< 0)			\         perror ("mprotect of trampoline code");				\     }									\   }
 end_define
 
 begin_comment
