@@ -3939,6 +3939,13 @@ operator|=
 name|ks
 expr_stmt|;
 block|}
+name|ptek
+operator|=
+name|vtopte
+argument_list|(
+name|ks
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 for|for
