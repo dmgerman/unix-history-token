@@ -4,7 +4,7 @@ comment|/* example.c -- usage example of the zlib compression library  * Copyrig
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* @(#) $FreeBSD$ */
 end_comment
 
 begin_include
@@ -54,6 +54,44 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VMS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|RISCOS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TESTFILE
+value|"foo-gz"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TESTFILE
+value|"foo.gz"
+end_define
 
 begin_endif
 endif|#
@@ -486,6 +524,10 @@ name|printf
 argument_list|(
 literal|"uncompress(): %s\n"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|uncompr
 argument_list|)
 expr_stmt|;
@@ -514,13 +556,13 @@ name|char
 modifier|*
 name|out
 decl_stmt|;
-comment|/* output file */
+comment|/* compressed output file */
 specifier|const
 name|char
 modifier|*
 name|in
 decl_stmt|;
-comment|/* input file */
+comment|/* compressed input file */
 name|Byte
 modifier|*
 name|uncompr
@@ -783,6 +825,10 @@ name|printf
 argument_list|(
 literal|"gzread(): %s\n"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|uncompr
 argument_list|)
 expr_stmt|;
@@ -819,8 +865,14 @@ name|stderr
 argument_list|,
 literal|"gzseek error, pos=%ld, gztell=%ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pos
 argument_list|,
+operator|(
+name|long
+operator|)
 name|gztell
 argument_list|(
 name|file
@@ -944,6 +996,10 @@ name|printf
 argument_list|(
 literal|"gzgets() after gzseek: %s\n"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|uncompr
 argument_list|)
 expr_stmt|;
@@ -1368,6 +1424,10 @@ name|printf
 argument_list|(
 literal|"inflate(): %s\n"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|uncompr
 argument_list|)
 expr_stmt|;
@@ -2294,6 +2354,10 @@ name|printf
 argument_list|(
 literal|"after inflateSync(): hel%s\n"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|uncompr
 argument_list|)
 expr_stmt|;
@@ -2745,6 +2809,10 @@ name|printf
 argument_list|(
 literal|"inflate with dictionary: %s\n"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|uncompr
 argument_list|)
 expr_stmt|;
@@ -2931,7 +2999,7 @@ index|[
 literal|1
 index|]
 else|:
-literal|"foo.gz"
+name|TESTFILE
 operator|)
 argument_list|,
 operator|(
@@ -2944,7 +3012,7 @@ index|[
 literal|2
 index|]
 else|:
-literal|"foo.gz"
+name|TESTFILE
 operator|)
 argument_list|,
 name|uncompr

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inftrees.h -- header to use inftrees.c  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* inftrees.h -- header to use inftrees.c  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -39,35 +39,24 @@ comment|/* number of bits in this code or subcode */
 block|}
 name|what
 struct|;
-name|Bytef
-modifier|*
+name|uInt
 name|pad
 decl_stmt|;
 comment|/* pad structure to a power of 2 (4 bytes for */
 block|}
 name|word
 union|;
-comment|/*  16-bit, 8 bytes for 32-bit machines) */
-union|union
-block|{
+comment|/*  16-bit, 8 bytes for 32-bit int's) */
 name|uInt
-name|Base
+name|base
 decl_stmt|;
-comment|/* literal, length base, or distance base */
-name|inflate_huft
-modifier|*
-name|Next
-decl_stmt|;
-comment|/* pointer to next level of table */
-block|}
-name|more
-union|;
+comment|/* literal, length base, distance base,                            or table offset */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* Maximum size of dynamic tree.  The maximum found in a long but non-    exhaustive search was 1041 huft structures (875 for length/literals    and 166 for distances, the latter actually the result of an    exhaustive search).  The actual maximum is not known, but the    value below is more than safe. */
+comment|/* Maximum size of dynamic tree.  The maximum found in a long but non-    exhaustive search was 1004 huft structures (850 for length/literals    and 154 for distances, the latter actually the result of an    exhaustive search).  The actual maximum is not known, but the    value below is more than safe. */
 end_comment
 
 begin_define

@@ -8,7 +8,7 @@ comment|/* WARNING: this file should *not* be used by applications. It is    par
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* @(#) $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -329,11 +329,19 @@ name|OS_CODE
 value|0x00
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__TURBOC__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__BORLANDC__
+argument_list|)
+end_if
 
 begin_if
 if|#
@@ -571,6 +579,38 @@ name|OS_CODE
 value|0x07
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MWERKS__
+argument_list|)
+operator|&&
+name|__dest_os
+operator|!=
+name|__be_os
+operator|&&
+name|__dest_os
+operator|!=
+name|__win32_os
+end_if
+
+begin_include
+include|#
+directive|include
+file|<unix.h>
+end_include
+
+begin_comment
+comment|/* for fdopen */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -597,50 +637,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__MWERKS__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|fdopen
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|__dest_os
-operator|!=
-name|__be_os
-operator|&&
-name|__dest_os
-operator|!=
-name|__win32_os
-end_if
-
-begin_define
-define|#
-directive|define
-name|fdopen
-parameter_list|(
-name|fd
-parameter_list|,
-name|mode
-parameter_list|)
-value|NULL
-end_define
 
 begin_endif
 endif|#
@@ -738,7 +734,7 @@ argument_list|)
 operator|&&
 operator|(
 name|_MSC_VER
-operator|>=
+operator|>
 literal|600
 operator|)
 operator|)
@@ -1046,6 +1042,7 @@ name|Bytef
 operator|*
 name|dest
 operator|,
+specifier|const
 name|Bytef
 operator|*
 name|source
@@ -1064,10 +1061,12 @@ name|zmemcmp
 name|OF
 argument_list|(
 operator|(
+specifier|const
 name|Bytef
 operator|*
 name|s1
 operator|,
+specifier|const
 name|Bytef
 operator|*
 name|s2

@@ -4,7 +4,7 @@ comment|/* zconf.h -- configuration of the zlib compression library  * Copyright
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* @(#) $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -561,7 +561,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Borland C incorrectly complains about missing returns: */
+comment|/* Old Borland C incorrectly complains about missing returns: */
 end_comment
 
 begin_if
@@ -571,6 +571,12 @@ name|defined
 argument_list|(
 name|__BORLANDC__
 argument_list|)
+operator|&&
+operator|(
+name|__BORLANDC__
+operator|<
+literal|0x500
+operator|)
 end_if
 
 begin_define
@@ -760,7 +766,7 @@ begin_define
 define|#
 directive|define
 name|FAR
-value|__far
+value|_far
 end_define
 
 begin_else
@@ -822,7 +828,7 @@ begin_define
 define|#
 directive|define
 name|FAR
-value|__far
+value|_far
 end_define
 
 begin_endif
@@ -842,7 +848,15 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
+name|defined
+argument_list|(
+name|ZLIB_DLL
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|_WINDOWS
@@ -851,12 +865,6 @@ operator|||
 name|defined
 argument_list|(
 name|WINDOWS
-argument_list|)
-operator|)
-operator|&&
-name|defined
-argument_list|(
-name|ZLIB_DLL
 argument_list|)
 end_if
 
@@ -920,10 +928,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -932,7 +940,51 @@ name|defined
 argument_list|(
 name|__BORLANDC__
 argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__BORLANDC__
+operator|>=
+literal|0x0500
+operator|)
 operator|&&
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<windows.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ZEXPORT
+value|__declspec(dllexport) WINAPI
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZEXPORTRVA
+value|__declspec(dllexport) WINAPIV
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|_Windows
@@ -958,6 +1010,51 @@ name|ZEXPORTVA
 value|_export
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BEOS__
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ZLIB_DLL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ZEXTERN
+value|extern __declspec(dllexport)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -966,8 +1063,42 @@ end_else
 begin_define
 define|#
 directive|define
+name|ZEXTERN
+value|extern __declspec(dllimport)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ZEXPORT
+end_ifndef
+
+begin_define
+define|#
+directive|define
 name|ZEXPORT
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ZEXPORTVA
+end_ifndef
 
 begin_define
 define|#
@@ -979,6 +1110,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ZEXTERN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ZEXTERN
+value|extern
+end_define
 
 begin_endif
 endif|#
@@ -1002,6 +1146,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|MACOS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TARGET_OS_MAC
+argument_list|)
+end_if
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -1013,6 +1173,11 @@ end_typedef
 begin_comment
 comment|/* 8 bits */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -1038,22 +1203,14 @@ begin_comment
 comment|/* 32 bits or more */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__BORLANDC__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|SMALL_MEDIUM
-argument_list|)
-end_if
+end_ifdef
 
 begin_comment
-comment|/* Borland C/C++ ignores FAR inside typedef */
+comment|/* Borland C/C++ and some old MSC versions ignore FAR inside typedef */
 end_comment
 
 begin_define
@@ -1189,13 +1346,6 @@ begin_comment
 comment|/* for SEEK_* and off_t */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|z_off_t
-value|off_t
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -1229,16 +1379,25 @@ begin_comment
 comment|/* Seek from current position.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SEEK_END
+value|2
+end_define
+
+begin_comment
+comment|/* Set file pointer to EOF plus "offset" */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|z_off_t
-end_ifndef
+begin_comment
+comment|/*  * This is hard-configured for FreeBSD, since zlib doesn't actually support  * using the system off_t for offsets unless off_t is no longer than long.  */
+end_comment
 
 begin_define
 define|#
@@ -1246,11 +1405,6 @@ directive|define
 name|z_off_t
 value|long
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* MVS linker does not support external names larger than 8 bytes */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inffixed.h -- table for decoding fixed codes  * Generated automatically by the maketree.c program  */
+comment|/* inffixed.h -- table for decoding fixed codes  * Generated automatically by the maketree.c program  *  * $FreeBSD$  */
 end_comment
 
 begin_comment

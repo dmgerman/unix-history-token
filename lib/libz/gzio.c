@@ -4,7 +4,7 @@ comment|/* gzio.c -- IO on .gz files  * Copyright (C) 1995-1998 Jean-loup Gailly
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* @(#) $FreeBSD$ */
 end_comment
 
 begin_include
@@ -34,6 +34,34 @@ begin_comment
 comment|/* for buggy compilers */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|Z_BUFSIZE
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MAXSEG_64K
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|Z_BUFSIZE
+value|4096
+end_define
+
+begin_comment
+comment|/* minimize memory usage for 16-bit DOS */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -41,12 +69,33 @@ name|Z_BUFSIZE
 value|16384
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|Z_PRINTF_BUFSIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|Z_PRINTF_BUFSIZE
 value|4096
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -866,7 +915,7 @@ operator|-
 name|MAX_WBITS
 argument_list|)
 expr_stmt|;
-comment|/* windowBits is passed< 0 to tell that there is no zlib header */
+comment|/* windowBits is passed< 0 to tell that there is no zlib header.          * Note that in this case inflate *requires* an extra "dummy" byte          * after the compressed stream in order to complete decompression and          * return Z_STREAM_END. Here the gzip CRC32 ensures that 4 bytes are          * present after the compressed stream.          */
 if|if
 condition|(
 name|err
@@ -2232,6 +2281,18 @@ name|uLong
 operator|)
 name|len
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+name|s
+operator|->
+name|z_eof
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|int
@@ -2397,17 +2458,6 @@ operator|!=
 name|s
 operator|->
 name|crc
-operator|||
-name|getLong
-argument_list|(
-name|s
-argument_list|)
-operator|!=
-name|s
-operator|->
-name|stream
-operator|.
-name|total_out
 condition|)
 block|{
 name|s
@@ -2419,7 +2469,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Check for concatenated .gz files: */
+operator|(
+name|void
+operator|)
+name|getLong
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* The uncompressed length returned by above getlong() may                  * be different from s->stream.total_out) in case of 		 * concatenated .gz files. Check for such files: 		 */
 name|check_header
 argument_list|(
 name|s
@@ -3359,8 +3417,8 @@ argument_list|(
 name|file
 argument_list|,
 operator|(
-specifier|const
-name|voidp
+name|char
+operator|*
 operator|)
 name|s
 argument_list|,
@@ -3773,7 +3831,7 @@ name|s
 operator|->
 name|stream
 operator|.
-name|total_out
+name|total_in
 expr_stmt|;
 block|}
 if|if
@@ -4188,6 +4246,19 @@ name|s
 operator|->
 name|inbuf
 expr_stmt|;
+name|s
+operator|->
+name|crc
+operator|=
+name|crc32
+argument_list|(
+literal|0L
+argument_list|,
+name|Z_NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|s
@@ -4373,7 +4444,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ===========================================================================    Reads a long in LSB order from the given gz_stream. Sets  */
+comment|/* ===========================================================================    Reads a long in LSB order from the given gz_stream. Sets z_err in case    of error. */
 end_comment
 
 begin_function

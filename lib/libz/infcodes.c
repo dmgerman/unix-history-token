@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infcodes.c -- process literals and length/distance pairs  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* infcodes.c -- process literals and length/distance pairs  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -42,20 +42,6 @@ end_include
 begin_comment
 comment|/* simplify the use of the inflate_huft type with some defines */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|base
-value|more.Base
-end_define
-
-begin_define
-define|#
-directive|define
-name|next
-value|more.Next
-end_define
 
 begin_define
 define|#
@@ -672,8 +658,10 @@ operator|.
 name|tree
 operator|=
 name|t
+operator|+
+name|t
 operator|->
-name|next
+name|base
 expr_stmt|;
 break|break;
 block|}
@@ -929,8 +917,10 @@ operator|.
 name|tree
 operator|=
 name|t
+operator|+
+name|t
 operator|->
-name|next
+name|base
 expr_stmt|;
 break|break;
 block|}
@@ -1209,6 +1199,33 @@ case|case
 name|WASH
 case|:
 comment|/* o: got eob, possibly more output */
+if|if
+condition|(
+name|k
+operator|>
+literal|7
+condition|)
+comment|/* return unused byte, if any */
+block|{
+name|Assert
+argument_list|(
+argument|k<
+literal|16
+argument_list|,
+literal|"inflate_codes grabbed too many bytes"
+argument_list|)
+name|k
+operator|-=
+literal|8
+expr_stmt|;
+name|n
+operator|++
+expr_stmt|;
+name|p
+operator|--
+expr_stmt|;
+comment|/* can always return one */
+block|}
 name|FLUSH
 if|if
 condition|(

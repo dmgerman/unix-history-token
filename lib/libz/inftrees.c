@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -15,13 +15,44 @@ directive|include
 file|"inftrees.h"
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BUILDFIXED
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|STDC
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BUILDFIXED
+end_define
+
+begin_comment
+comment|/* non ANSI compilers may not accept inffixed.h */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|const
 name|char
 name|inflate_copyright
 index|[]
 init|=
-literal|" inflate 1.1.1 Copyright 1995-1998 Mark Adler "
+literal|" inflate 1.1.3 Copyright 1995-1998 Mark Adler "
 decl_stmt|;
 end_decl_stmt
 
@@ -47,20 +78,6 @@ end_comment
 begin_comment
 comment|/* simplify the use of the inflate_huft type with some defines */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|base
-value|more.Base
-end_define
-
-begin_define
-define|#
-directive|define
-name|next
-value|more.Next
-end_define
 
 begin_define
 define|#
@@ -1185,24 +1202,6 @@ name|hn
 operator|+=
 name|z
 expr_stmt|;
-if|if
-condition|(
-name|t
-operator|!=
-name|Z_NULL
-condition|)
-comment|/* first table is returned result */
-block|{
-operator|*
-name|t
-operator|=
-name|q
-expr_stmt|;
-name|t
-operator|=
-name|Z_NULL
-expr_stmt|;
-block|}
 comment|/* connect to last table, if there is one */
 if|if
 condition|(
@@ -1237,13 +1236,6 @@ operator|)
 name|j
 expr_stmt|;
 comment|/* bits in this table */
-name|r
-operator|.
-name|next
-operator|=
-name|q
-expr_stmt|;
-comment|/* pointer to this table */
 name|j
 operator|=
 name|i
@@ -1254,7 +1246,27 @@ operator|-
 name|l
 operator|)
 expr_stmt|;
-comment|/* (get around Turbo C bug) */
+name|r
+operator|.
+name|base
+operator|=
+call|(
+name|uInt
+call|)
+argument_list|(
+name|q
+operator|-
+name|u
+index|[
+name|h
+operator|-
+literal|1
+index|]
+operator|-
+name|j
+argument_list|)
+expr_stmt|;
+comment|/* offset to this table */
 name|u
 index|[
 name|h
@@ -1269,6 +1281,13 @@ name|r
 expr_stmt|;
 comment|/* connect to last table */
 block|}
+else|else
+operator|*
+name|t
+operator|=
+name|q
+expr_stmt|;
+comment|/* first table is returned result */
 block|}
 comment|/* set up table entry in r */
 name|r
@@ -2038,6 +2057,12 @@ unit|}
 comment|/* build fixed tables only once--keep them here */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUILDFIXED
+end_ifdef
+
 begin_decl_stmt
 unit|local
 name|int
@@ -2051,7 +2076,7 @@ begin_define
 define|#
 directive|define
 name|FIXEDH
-value|424
+value|544
 end_define
 
 begin_comment
@@ -2098,6 +2123,22 @@ name|fixed_td
 decl_stmt|;
 end_decl_stmt
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"inffixed.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|inflate_trees_fixed
@@ -2141,7 +2182,10 @@ name|z
 decl_stmt|;
 comment|/* for memory allocation */
 block|{
-comment|/* build fixed tables if not already (multiple overlapped executions ok) */
+ifdef|#
+directive|ifdef
+name|BUILDFIXED
+comment|/* build fixed tables if not already */
 if|if
 condition|(
 operator|!
@@ -2306,7 +2350,7 @@ literal|8
 expr_stmt|;
 name|fixed_bl
 operator|=
-literal|7
+literal|9
 expr_stmt|;
 name|huft_build
 argument_list|(
@@ -2405,6 +2449,8 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 operator|*
 name|bl
 operator|=

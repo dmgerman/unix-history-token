@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inffast.c -- process literals and length/distance pairs fast  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* inffast.c -- process literals and length/distance pairs fast  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -61,20 +61,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|base
-value|more.Base
-end_define
-
-begin_define
-define|#
-directive|define
-name|next
-value|more.Next
-end_define
-
-begin_define
-define|#
-directive|define
 name|exop
 value|word.what.Exop
 end_define
@@ -104,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|UNGRAB
-value|{n+=(c=k>>3);p-=c;k&=7;}
+value|{c=z->avail_in-n;c=(k>>3)<c?k>>3:c;n+=c;p-=c;k-=c<<3;}
 end_define
 
 begin_comment
@@ -590,15 +576,18 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|t
+operator|+=
+name|t
+operator|->
+name|base
+expr_stmt|;
 name|e
 operator|=
 operator|(
 name|t
-operator|=
-name|t
-operator|->
-name|next
-operator|+
+operator|+=
 operator|(
 operator|(
 name|uInt
@@ -614,6 +603,7 @@ operator|)
 operator|->
 name|exop
 expr_stmt|;
+block|}
 else|else
 block|{
 name|z
@@ -651,6 +641,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|t
+operator|+=
+name|t
+operator|->
+name|base
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -658,11 +654,7 @@ name|e
 operator|=
 operator|(
 name|t
-operator|=
-name|t
-operator|->
-name|next
-operator|+
+operator|+=
 operator|(
 operator|(
 name|uInt
