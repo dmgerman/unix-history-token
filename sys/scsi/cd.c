@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.86 1997/09/21 22:02:59 gibbs Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.87 1997/12/02 21:06:58 phk Exp $  */
 end_comment
 
 begin_include
@@ -1339,6 +1339,9 @@ name|scsi_data
 modifier|*
 name|cd
 decl_stmt|;
+name|int
+name|n
+decl_stmt|;
 name|unit
 operator|=
 name|CDUNIT
@@ -1487,6 +1490,41 @@ operator||=
 name|SDEV_OPEN
 expr_stmt|;
 comment|/* unit attn errors are now errors */
+comment|/* 	 * Some drives take a long time to become ready after a disk swap 	 * and report 'Not Ready' rather than 'Unit in the Process of Getting 	 * Ready' while doing so; attempts to mount during this period will 	 * return ENXIO.  Give them some time to come up. 	 */
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|scsi_test_unit_ready
+argument_list|(
+name|sc_link
+argument_list|,
+name|SCSI_SILENT
+argument_list|)
+operator|&&
+name|n
+operator|!=
+literal|12
+condition|;
+name|n
+operator|++
+control|)
+name|tsleep
+argument_list|(
+name|cd
+argument_list|,
+name|PRIBIO
+operator||
+name|PCATCH
+argument_list|,
+literal|"cdrdy"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+comment|/* If still not ready, give up */
 if|if
 condition|(
 name|scsi_test_unit_ready
