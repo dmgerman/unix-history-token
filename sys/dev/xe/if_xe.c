@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998, 1999 Scott Mitchell  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_xe.c,v 1.14 1999/02/22 14:16:14 root Exp $  */
+comment|/*-  * Copyright (c) 1998, 1999 Scott Mitchell  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_xe.c,v 1.15 1999/03/05 12:11:40 root Exp $  */
 end_comment
 
 begin_comment
@@ -1121,6 +1121,35 @@ begin_comment
 comment|/*  * PCMCIA driver hooks  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PCCARD_MODULE
+end_ifdef
+
+begin_expr_stmt
+name|PCCARD_MODULE
+argument_list|(
+name|xe
+argument_list|,
+name|xe_card_init
+argument_list|,
+name|xe_card_unload
+argument_list|,
+name|xe_card_intr
+argument_list|,
+literal|0
+argument_list|,
+name|net_imask
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1128,6 +1157,7 @@ name|pccard_device
 name|xe_info
 init|=
 block|{
+comment|/* For pre 3.1-STABLE code */
 literal|"xe"
 block|,
 name|xe_card_init
@@ -1153,6 +1183,15 @@ name|xe_info
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PCCARD_MODULE */
+end_comment
 
 begin_comment
 comment|/*  * ISA driver hooks.  I'd like to do without these but the kernel config stuff   * seems to require them.  */
@@ -3288,9 +3327,11 @@ operator|->
 name|if_bpf
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: sending output packet to BPF\n"
@@ -4392,9 +4433,11 @@ operator|->
 name|if_bpf
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: passing input packet to BPF\n"
