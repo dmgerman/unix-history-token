@@ -1494,7 +1494,7 @@ block|,
 block|{
 literal|0x0B
 block|,
-literal|"Primary DOS with 32 bit FAT"
+literal|"Primary DOS or Windows 95 with 32 bit FAT"
 block|}
 block|,
 block|{
