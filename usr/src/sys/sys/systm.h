@@ -1,17 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)systm.h	7.13 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*  * Random set of variables used by more than one routine.  */
+comment|/*-  * Copyright (c) 1982, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)systm.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|char
+modifier|*
+name|panicstr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* panic message */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
 name|version
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -19,27 +27,30 @@ begin_comment
 comment|/* system version */
 end_comment
 
-begin_comment
-comment|/*  * Nblkdev is the number of entries (rows) in the block switch.  * Used in bounds checking on major device numbers.  */
-end_comment
-
 begin_decl_stmt
+specifier|extern
 name|int
 name|nblkdev
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Number of character switch entries.  */
+comment|/* number of entries in bdevsw */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|nchrdev
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* number of entries in cdevsw */
+end_comment
+
 begin_decl_stmt
+specifier|extern
 name|int
 name|nswdev
 decl_stmt|;
@@ -50,46 +61,7 @@ comment|/* number of swap devices */
 end_comment
 
 begin_decl_stmt
-name|char
-name|kmapwnt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* kernel map want flag */
-end_comment
-
-begin_decl_stmt
-name|u_char
-name|curpri
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* priority of current process */
-end_comment
-
-begin_decl_stmt
-name|int
-name|maxmem
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* actual max memory per process */
-end_comment
-
-begin_decl_stmt
-name|int
-name|physmem
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* physical memory on this CPU */
-end_comment
-
-begin_decl_stmt
+specifier|extern
 name|int
 name|nswap
 decl_stmt|;
@@ -102,99 +74,68 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|selwait
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* select timeout address */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|kmapwnt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* kernel map want flag */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|curpri
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* priority of current process */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|maxmem
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max memory per process */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|physmem
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* physical memory */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|intstack
 index|[]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* stack for interrupts */
-end_comment
-
-begin_decl_stmt
-name|dev_t
-name|rootdev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* device of the root */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-name|rootvp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* vnode of root filesystem */
-end_comment
-
-begin_decl_stmt
-name|dev_t
-name|dumpdev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* device to take dumps on */
-end_comment
-
-begin_decl_stmt
-name|long
-name|dumplo
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* offset into dumpdev */
-end_comment
-
-begin_decl_stmt
-name|dev_t
-name|swapdev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* swapping device */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-name|swapdev_vp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* vnode equivalent to above */
-end_comment
-
-begin_decl_stmt
-name|dev_t
-name|argdev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* device for argument lists */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-name|argdev_vp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* vnode equivalent to above */
+comment|/* interrupt stack */
 end_comment
 
 begin_decl_stmt
@@ -217,11 +158,101 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* its size */
+comment|/* size of icode */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|dev_t
+name|dumpdev
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * Structure of the system-entry table  */
+comment|/* dump device */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|long
+name|dumplo
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* offset into dumpdev */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|dev_t
+name|rootdev
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* root device */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vnode
+modifier|*
+name|rootvp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* vnode equivalent to above */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|dev_t
+name|swapdev
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* swapping device */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vnode
+modifier|*
+name|swapdev_vp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* vnode equivalent to above */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|dev_t
+name|argdev
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* argument lists device */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vnode
+modifier|*
+name|argdev_vp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* vnode equivalent to above */
 end_comment
 
 begin_struct
@@ -229,10 +260,11 @@ specifier|extern
 struct|struct
 name|sysent
 block|{
+comment|/* system call table */
 name|int
 name|sy_narg
 decl_stmt|;
-comment|/* total number of arguments */
+comment|/* number of arguments */
 name|int
 function_decl|(
 modifier|*
@@ -240,29 +272,12 @@ name|sy_call
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* handler */
+comment|/* implementing function */
 block|}
 name|sysent
 index|[]
 struct|;
 end_struct
-
-begin_decl_stmt
-name|char
-modifier|*
-name|panicstr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|boothowto
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* reboot flags, from console subsystem */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -271,6 +286,7 @@ name|KADB
 end_ifdef
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|bootesym
@@ -287,10 +303,15 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|extern
 name|int
-name|selwait
+name|boothowto
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* reboot flags, from console subsystem */
+end_comment
 
 begin_comment
 comment|/* casts to keep lint happy */
@@ -319,20 +340,8 @@ value|_remque((caddr_t)q)
 end_define
 
 begin_comment
-comment|/*  * General function declarations  */
+comment|/*  * General function prototypes.  */
 end_comment
-
-begin_decl_stmt
-name|int
-name|nullop
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -384,6 +393,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|nullop
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|seltrue
 name|__P
 argument_list|(
@@ -398,32 +419,6 @@ expr|struct
 name|proc
 operator|*
 name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|panic
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|tablefull
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -465,6 +460,19 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|panic
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|printf
 name|__P
 argument_list|(
@@ -474,6 +482,19 @@ name|char
 operator|*
 operator|,
 operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|tablefull
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -500,18 +521,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|bcopy
+name|int
+name|bcmp
 name|__P
 argument_list|(
 operator|(
 name|void
 operator|*
-name|from
+name|str1
 operator|,
 name|void
 operator|*
-name|to
+name|str2
 operator|,
 name|u_int
 name|len
@@ -522,7 +543,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|ovbcopy
+name|bcopy
 name|__P
 argument_list|(
 operator|(
@@ -559,18 +580,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|bcmp
+name|void
+name|ovbcopy
 name|__P
 argument_list|(
 operator|(
 name|void
 operator|*
-name|str1
+name|from
 operator|,
 name|void
 operator|*
-name|str2
+name|to
 operator|,
 name|u_int
 name|len
@@ -595,24 +616,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|copystr
+name|copyin
 name|__P
 argument_list|(
 operator|(
 name|void
 operator|*
-name|kfaddr
+name|udaddr
 operator|,
 name|void
 operator|*
-name|kdaddr
+name|kaddr
 operator|,
 name|u_int
 name|len
-operator|,
-name|u_int
-operator|*
-name|done
 operator|)
 argument_list|)
 decl_stmt|;
@@ -645,6 +662,27 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|copyout
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|kaddr
+operator|,
+name|void
+operator|*
+name|udaddr
+operator|,
+name|u_int
+name|len
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|copyoutstr
 name|__P
 argument_list|(
@@ -670,41 +708,24 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|copyin
+name|copystr
 name|__P
 argument_list|(
 operator|(
 name|void
 operator|*
-name|udaddr
+name|kfaddr
 operator|,
 name|void
 operator|*
-name|kaddr
+name|kdaddr
 operator|,
 name|u_int
 name|len
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|copyout
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-name|kaddr
-operator|,
-name|void
-operator|*
-name|udaddr
 operator|,
 name|u_int
-name|len
+operator|*
+name|done
 operator|)
 argument_list|)
 decl_stmt|;
@@ -751,6 +772,34 @@ end_endif
 
 begin_decl_stmt
 name|int
+name|fuiword
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|base
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|fuword
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|base
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|subyte
 name|__P
 argument_list|(
@@ -785,27 +834,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|fuword
+name|suiword
 name|__P
 argument_list|(
 operator|(
 name|void
 operator|*
 name|base
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+operator|,
 name|int
-name|fuiword
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-name|base
+name|word
 operator|)
 argument_list|)
 decl_stmt|;
@@ -830,16 +868,32 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|suiword
+name|ffs
 name|__P
 argument_list|(
 operator|(
-name|void
-operator|*
-name|base
-operator|,
+name|long
+name|value
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
-name|word
+name|locc
+name|__P
+argument_list|(
+operator|(
+name|int
+name|mask
+operator|,
+name|char
+operator|*
+name|cp
+operator|,
+name|unsigned
+name|size
 operator|)
 argument_list|)
 decl_stmt|;
@@ -884,39 +938,6 @@ operator|,
 name|char
 operator|*
 name|cp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|locc
-name|__P
-argument_list|(
-operator|(
-name|int
-name|mask
-operator|,
-name|char
-operator|*
-name|cp
-operator|,
-name|unsigned
-name|size
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ffs
-name|__P
-argument_list|(
-operator|(
-name|long
-name|value
 operator|)
 argument_list|)
 decl_stmt|;
