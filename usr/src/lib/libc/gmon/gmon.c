@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	1.1 (Berkeley) %G%"
+literal|"@(#)gmon.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -436,7 +436,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"mcount: mon.out2"
+literal|"mcount: dmon.out"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -650,7 +650,12 @@ modifier|*
 name|top
 decl_stmt|;
 comment|/* r9 */
-comment|/* !!! if you add anything, you have to fix the pushr and popr !!! */
+specifier|static
+name|int
+name|profiling
+init|=
+literal|0
+decl_stmt|;
 asm|asm( "	forgot to run ex script on monitor.s" );
 asm|asm( "#define r11 r5" );
 asm|asm( "#define r10 r4" );
@@ -673,7 +678,7 @@ expr_stmt|;
 else|#
 directive|else
 else|not lint
-comment|/* 	 *	we've pushed the old r11, r10, and r9, 	 *	so the return address for a plain old jsb 	 *	which should be at 0(sp) is now at 12(sp) 	 */
+comment|/* 	 *	find the return address for mcount, 	 *	and the return address for mcount's caller. 	 */
 asm|asm("	movl (sp), r11");
 comment|/* selfpc = ... (jsb frame) */
 asm|asm("	movl 16(fp), r10");
@@ -681,9 +686,11 @@ comment|/* frompcindex =     (calls frame) */
 endif|#
 directive|endif
 endif|not lint
-comment|/*      *	check that we are profiling      */
+comment|/* 	 *	check that we are profiling 	 */
 if|if
 condition|(
+name|profiling
+operator|||
 name|tos
 operator|==
 literal|0
@@ -691,6 +698,34 @@ condition|)
 block|{
 goto|goto
 name|out
+goto|;
+block|}
+name|profiling
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 	 *	check that frompcindex is a reasonable pc value. 	 *	for example:	signal catchers get called from the stack, 	 *			not from text space.  too bad. 	 */
+if|if
+condition|(
+operator|(
+name|char
+operator|*
+operator|)
+name|frompcindex
+operator|<
+name|s_lowpc
+operator|||
+operator|(
+name|char
+operator|*
+operator|)
+name|frompcindex
+operator|>
+name|s_highpc
+condition|)
+block|{
+goto|goto
+name|done
 goto|;
 block|}
 name|frompcindex
@@ -787,7 +822,7 @@ block|}
 for|for
 control|(
 init|;
-comment|/*break*/
+comment|/* goto done */
 condition|;
 name|top
 operator|=
@@ -814,7 +849,9 @@ operator|->
 name|count
 operator|++
 expr_stmt|;
-break|break;
+goto|goto
+name|done
+goto|;
 block|}
 if|if
 condition|(
@@ -876,9 +913,18 @@ name|link
 operator|=
 literal|0
 expr_stmt|;
-break|break;
+goto|goto
+name|done
+goto|;
 block|}
 block|}
+name|done
+label|:
+name|profiling
+operator|=
+literal|0
+expr_stmt|;
+comment|/* and fall through */
 name|out
 label|:
 asm|asm( "	rsb" );
