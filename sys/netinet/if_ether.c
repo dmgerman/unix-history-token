@@ -1064,7 +1064,7 @@ operator|!=
 name|AF_LINK
 operator|)
 condition|?
-literal|" (sa_family != AF_LINK)"
+literal|" (!AF_LINK)"
 else|:
 literal|""
 argument_list|)
