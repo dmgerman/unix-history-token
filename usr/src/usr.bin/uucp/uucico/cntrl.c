@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cntrl.c	5.5 (Berkeley) %G%"
+literal|"@(#)cntrl.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|willturn
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|HaveSentHup
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -152,22 +160,17 @@ argument_list|()
 decl_stmt|,
 name|omsg
 argument_list|()
+decl_stmt|,
+name|nullf
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BSDTCP
+name|TCPIP
 end_ifdef
-
-begin_function_decl
-specifier|extern
-name|int
-name|tnullf
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -194,7 +197,7 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|BSDTCP
+endif|TCPIP
 end_endif
 
 begin_ifdef
@@ -251,10 +254,10 @@ init|=
 block|{
 ifdef|#
 directive|ifdef
-name|BSDTCP
+name|TCPIP
 literal|'t'
 block|,
-name|tnullf
+name|nullf
 block|,
 name|trdmsg
 block|,
@@ -264,11 +267,11 @@ name|trddata
 block|,
 name|twrdata
 block|,
-name|tnullf
+name|nullf
 block|,
 endif|#
 directive|endif
-endif|BSDTCP
+endif|TCPIP
 ifdef|#
 directive|ifdef
 name|PAD
@@ -373,21 +376,28 @@ operator|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|int
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|Turnon
-argument_list|)
-argument_list|()
-decl_stmt|,
-argument_list|(
-operator|*
-name|Turnoff
-argument_list|)
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+function_decl|)
+parameter_list|()
+init|=
+name|nullf
+operator|,
+parameter_list|(
+function_decl|*Turnoff
+end_function_decl
+
+begin_expr_stmt
+unit|)
+operator|(
+operator|)
+operator|=
+name|nullf
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -757,19 +767,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
-name|nXQTs
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of uuxqts started */
-end_comment
-
-begin_decl_stmt
-specifier|static
 name|char
 name|send_or_receive
 decl_stmt|;
@@ -1012,6 +1009,13 @@ name|RESET
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|HaveSentHup
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
 begin_label
 name|top
 label|:
@@ -1064,7 +1068,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|setline
+name|setupline
 argument_list|(
 name|RESET
 argument_list|)
@@ -1087,6 +1091,8 @@ expr_stmt|;
 if|if
 condition|(
 name|Debug
+operator|>
+literal|4
 condition|)
 name|logent
 argument_list|(
@@ -1488,6 +1494,11 @@ argument_list|,
 name|_FAILED
 argument_list|)
 expr_stmt|;
+name|TransferSucceeded
+operator|=
+literal|1
+expr_stmt|;
+comment|/* else will keep sending */
 name|USRF
 argument_list|(
 name|USR_LOCACC
@@ -1555,6 +1566,11 @@ name|fp
 operator|=
 name|NULL
 expr_stmt|;
+name|TransferSucceeded
+operator|=
+literal|1
+expr_stmt|;
+comment|/* else will keep sending */
 name|logent
 argument_list|(
 literal|"DENIED"
@@ -1585,7 +1601,7 @@ goto|goto
 name|top
 goto|;
 block|}
-name|setline
+name|setupline
 argument_list|(
 name|SNDFILE
 argument_list|)
@@ -1642,6 +1658,11 @@ argument_list|,
 literal|"ACCESS"
 argument_list|)
 expr_stmt|;
+name|TransferSucceeded
+operator|=
+literal|1
+expr_stmt|;
+comment|/* else will keep trying */
 name|USRF
 argument_list|(
 name|USR_LOCACC
@@ -1715,7 +1736,7 @@ goto|goto
 name|top
 goto|;
 block|}
-name|setline
+name|setupline
 argument_list|(
 name|RCVFILE
 argument_list|)
@@ -1824,15 +1845,6 @@ argument_list|,
 name|CNULL
 argument_list|)
 expr_stmt|;
-name|TransferSucceeded
-operator|=
-name|msg
-index|[
-literal|1
-index|]
-operator|==
-literal|'Y'
-expr_stmt|;
 if|if
 condition|(
 name|msg
@@ -1926,6 +1938,12 @@ goto|goto
 name|process
 goto|;
 block|}
+else|else
+name|TransferSucceeded
+operator|=
+literal|1
+expr_stmt|;
+comment|/* He had his chance */
 block|}
 if|if
 condition|(
@@ -1936,11 +1954,17 @@ index|]
 operator|==
 literal|'Y'
 condition|)
+block|{
 name|USRF
 argument_list|(
 name|USR_COK
 argument_list|)
 expr_stmt|;
+name|TransferSucceeded
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|role
@@ -2055,6 +2079,10 @@ literal|"HUP:\n"
 argument_list|,
 name|CNULL
 argument_list|)
+expr_stmt|;
+name|HaveSentHup
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -3997,6 +4025,9 @@ literal|"%s %o"
 argument_list|,
 name|YES
 argument_list|,
+operator|(
+name|int
+operator|)
 name|stbuf
 operator|.
 name|st_mode
@@ -4825,26 +4856,42 @@ control|)
 block|{
 ifdef|#
 directive|ifdef
-name|BSDTCP
+name|TCPIP
+comment|/* Only use 't' on TCP/IP */
 if|if
 condition|(
-operator|!
-name|IsTcpIp
-operator|&&
 name|p
 operator|->
 name|P_id
 operator|==
 literal|'t'
+operator|&&
+name|strcmp
+argument_list|(
+literal|"TCP"
+argument_list|,
+name|Flds
+index|[
+name|F_LINE
+index|]
+argument_list|)
 condition|)
-comment|/* Only use 't' on TCP/IP */
 continue|continue;
 endif|#
 directive|endif
-endif|BSDTCP
+endif|TCPIP
+ifdef|#
+directive|ifdef
+name|PAD
 comment|/* only use 'f' protocol on PAD */
 if|if
 condition|(
+name|p
+operator|->
+name|P_id
+operator|==
+literal|'f'
+operator|&&
 name|strcmp
 argument_list|(
 literal|"PAD"
@@ -4854,14 +4901,11 @@ index|[
 name|F_LINE
 index|]
 argument_list|)
-operator|&&
-name|p
-operator|->
-name|P_id
-operator|==
-literal|'f'
 condition|)
 continue|continue;
+endif|#
+directive|endif
+endif|PAD
 if|if
 condition|(
 name|index
@@ -5314,6 +5358,19 @@ name|CNULL
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+end_block
+
+begin_macro
+name|nullf
+argument_list|()
+end_macro
+
+begin_block
+block|{
+return|return
+name|SUCCESS
+return|;
 block|}
 end_block
 
