@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local_passwd.c	5.4 (Berkeley) %G%"
+literal|"@(#)local_passwd.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -524,7 +524,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|'_'
+name|_PASSWORD_EFMT1
 expr_stmt|;
 name|to64
 argument_list|(
