@@ -1814,9 +1814,6 @@ decl_stmt|;
 block|{
 name|struct
 name|linux_sigcontext
-modifier|*
-name|scp
-decl_stmt|,
 name|context
 decl_stmt|;
 specifier|register
@@ -1862,15 +1859,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * The trampoline code hands us the context. 	 * It is unsafe to keep track of it ourselves, in the event that a 	 * program jumps out of a signal handler. 	 */
-name|scp
-operator|=
-name|SCARG
-argument_list|(
-name|args
-argument_list|,
-name|scp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|copyin
@@ -1878,6 +1866,8 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
+name|args
+operator|->
 name|scp
 argument_list|,
 operator|&
@@ -1885,8 +1875,7 @@ name|context
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|*
-name|scp
+name|context
 argument_list|)
 argument_list|)
 operator|!=
