@@ -495,10 +495,7 @@ name|ofp
 argument_list|,
 literal|"KERN_IDENT=%s\n"
 argument_list|,
-name|raisestr
-argument_list|(
 name|ident
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|SLIST_FOREACH
