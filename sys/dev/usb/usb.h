@@ -1607,14 +1607,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|UPROTO_MASS_BULK
+name|UPROTO_MASS_BBB
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|UPROTO_MASS_BULK_P
+name|UPROTO_MASS_BBB_P
 value|80
 end_define
 
