@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socketvar.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socketvar.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -127,7 +127,7 @@ comment|/* flags, see below */
 name|short
 name|sb_timeo
 decl_stmt|;
-comment|/* timeout (not used yet) */
+comment|/* timeout for read/write */
 block|}
 name|so_rcv
 struct|,
@@ -137,7 +137,7 @@ define|#
 directive|define
 name|SB_MAX
 value|(64*1024)
-comment|/* max chars in sockbuf (default) */
+comment|/* default for max chars in sockbuf */
 define|#
 directive|define
 name|SB_LOCK
