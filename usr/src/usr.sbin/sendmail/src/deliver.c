@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.64
+literal|3.65
 operator|%
 name|G
 operator|%
@@ -329,10 +329,6 @@ directive|endif
 endif|DEBUG
 end_endif
 
-begin_comment
-comment|/* 	**  Do initial argv setup. 	**	Insert the mailer name.  Notice that $x expansion is 	**	NOT done on the mailer name.  Then, if the mailer has 	**	a picky -f flag, we insert it as appropriate.  This 	**	code does not check for 'pv' overflow; this places a 	**	manifest lower limit of 4 for MAXPV. 	*/
-end_comment
-
 begin_expr_stmt
 name|m
 operator|=
@@ -350,6 +346,77 @@ operator|->
 name|q_host
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* 	**  If this mailer is expensive, and if we don't want to make 	**  connections now, just mark these addresses and return. 	**	This is useful if we want to batch connections to 	**	reduce load.  This will cause the messages to be 	**	queued up, and a daemon will come along to send the 	**	messages later. 	**		This should be on a per-mailer basis. 	*/
+end_comment
+
+begin_if
+if|if
+condition|(
+name|NoConnect
+operator|&&
+operator|!
+name|QueueRun
+operator|&&
+name|bitset
+argument_list|(
+name|M_EXPENSIVE
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+block|{
+name|QueueUp
+operator|=
+name|TRUE
+expr_stmt|;
+for|for
+control|(
+init|;
+name|to
+operator|!=
+name|NULL
+condition|;
+name|to
+operator|=
+name|to
+operator|->
+name|q_next
+control|)
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QDONTSEND
+argument_list|,
+name|to
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+name|to
+operator|->
+name|q_flags
+operator||=
+name|QQUEUEUP
+operator||
+name|QDONTSEND
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_if
+
+begin_comment
+comment|/* 	**  Do initial argv setup. 	**	Insert the mailer name.  Notice that $x expansion is 	**	NOT done on the mailer name.  Then, if the mailer has 	**	a picky -f flag, we insert it as appropriate.  This 	**	code does not check for 'pv' overflow; this places a 	**	manifest lower limit of 4 for MAXPV. 	**		We rewrite the from address here, being careful 	**		to also rewrite it again using ruleset 2 to 	**		eliminate redundancies. 	*/
+end_comment
 
 begin_comment
 comment|/* rewrite from address, using rewriting rules */

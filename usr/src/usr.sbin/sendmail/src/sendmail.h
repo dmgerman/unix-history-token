@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.58		%G%"
+literal|"@(#)sendmail.h	3.59		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -570,6 +570,17 @@ end_define
 
 begin_comment
 comment|/* this wants an ugly UUCP from line */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_EXPENSIVE
+value|000200000
+end_define
+
+begin_comment
+comment|/* it costs to use this mailer.... */
 end_comment
 
 begin_define
@@ -1523,6 +1534,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* spaces (not commas) delimit addresses */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|NoConnect
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't connect to non-local mailers */
 end_comment
 
 begin_decl_stmt

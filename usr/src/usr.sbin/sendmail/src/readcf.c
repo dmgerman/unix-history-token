@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.19
+literal|3.20
 operator|%
 name|G
 operator|%
@@ -1472,6 +1472,10 @@ block|,
 literal|'U'
 block|,
 name|M_UGLYUUCP
+block|,
+literal|'e'
+block|,
+name|M_EXPENSIVE
 block|,
 literal|'\0'
 block|,

@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.61
+literal|3.62
 operator|%
 name|G
 operator|%
@@ -927,6 +927,21 @@ directive|endif
 endif|SMTP
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|QUEUE
+case|case
+literal|'c'
+case|:
+comment|/* don't connect to non-local mailers */
+name|NoConnect
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+endif|QUEUE
 case|case
 literal|'s'
 case|:
