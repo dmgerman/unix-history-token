@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.96 1999/07/30 08:24:19 msmith Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.97 1999/07/30 19:34:58 msmith Exp $  */
 end_comment
 
 begin_include
@@ -3517,9 +3517,7 @@ name|code16
 operator|.
 name|limit
 operator|=
-name|vmf
-operator|.
-name|vmf_si
+literal|0xffff
 expr_stmt|;
 name|sc
 operator|->
@@ -3551,9 +3549,7 @@ name|data
 operator|.
 name|limit
 operator|=
-name|vmf
-operator|.
-name|vmf_di
+literal|0xffff
 expr_stmt|;
 name|sc
 operator|->
@@ -3645,9 +3641,7 @@ name|code16
 operator|.
 name|limit
 operator|=
-name|vmf
-operator|.
-name|vmf_si
+literal|0xffff
 expr_stmt|;
 name|sc
 operator|->
@@ -3679,9 +3673,7 @@ name|data
 operator|.
 name|limit
 operator|=
-name|vmf
-operator|.
-name|vmf_di
+literal|0xffff
 expr_stmt|;
 name|sc
 operator|->
@@ -3698,39 +3690,6 @@ operator|->
 name|connectmode
 operator|=
 name|APM_PROT16CONNECT
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|apm_version
-operator|==
-literal|0x100
-condition|)
-block|{
-comment|/* APM v1.0 does not set SI/DI */
-name|sc
-operator|->
-name|bios
-operator|.
-name|seg
-operator|.
-name|code16
-operator|.
-name|limit
-operator|=
-literal|0xffff
-expr_stmt|;
-name|sc
-operator|->
-name|bios
-operator|.
-name|seg
-operator|.
-name|data
-operator|.
-name|limit
-operator|=
-literal|0xffff
 expr_stmt|;
 block|}
 return|return
