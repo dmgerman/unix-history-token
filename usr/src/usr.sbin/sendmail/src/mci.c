@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.8 (Berkeley) %G%"
+literal|"@(#)mci.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1169,7 +1169,7 @@ name|logit
 condition|)
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 literal|"%s"
 argument_list|,
