@@ -3544,6 +3544,11 @@ name|haskqglobal
 argument_list|)
 expr_stmt|;
 block|}
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|KQ_LOCK
 argument_list|(
 name|kq
@@ -3580,11 +3585,6 @@ name|kn_filter
 condition|)
 break|break;
 block|}
-name|FILEDESC_UNLOCK
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
