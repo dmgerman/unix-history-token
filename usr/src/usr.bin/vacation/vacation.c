@@ -1,4 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* **  Vacation **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)vacation.c	5.1 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -29,18 +55,8 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)vacation.c	4.3		%G%"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* **  VACATION -- return a message to the sender when on vacation. ** **	This program could be invoked as a message receiver **	when someone is on vacation.  It returns a message **	specified by the user to whoever sent the mail, taking **	care not to return a message too often to prevent **	"I am on vacation" loops. ** **	Positional Parameters: **		the user to collect the vacation message from. ** **	Flag Parameters: **		-I	initialize the database. ** **	Side Effects: **		A message is sent back to the sender. ** **	Author: **		Eric Allman **		UCB/INGRES */
+comment|/* **  VACATION -- return a message to the sender when on vacation. ** **	This program could be invoked as a message receiver **	when someone is on vacation.  It returns a message **	specified by the user to whoever sent the mail, taking **	care not to return a message too often to prevent **	"I am on vacation" loops. ** **	Positional Parameters: **		the user to collect the vacation message from. ** **	Flag Parameters: **		-I	initialize the database. **		-d	turn on debugging. ** **	Side Effects: **		A message is sent back to the sender. ** **	Author: **		Eric Allman **		UCB/INGRES */
 end_comment
 
 begin_typedef
