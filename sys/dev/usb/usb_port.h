@@ -109,26 +109,6 @@ begin_comment
 comment|/* base device */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USB_MODULE
-parameter_list|(
-name|name
-parameter_list|,
-name|driver
-parameter_list|,
-name|devclass
-parameter_list|)
-define|\
-value|DRIVER_MODULE((name), "usb", (driver), (devclass), usb_driver_load, 0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * General  *  */
 end_comment
