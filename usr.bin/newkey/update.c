@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: update.c,v 1.2 1997/07/29 06:54:16 charnier Exp $"
+literal|"$Id: update.c,v 1.3 1998/02/20 04:38:20 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -733,19 +733,6 @@ goto|goto
 name|error2
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|VFORK
-switch|switch
-condition|(
-name|pid
-operator|=
-name|vfork
-argument_list|()
-condition|)
-block|{
-else|#
-directive|else
 switch|switch
 condition|(
 name|pid
@@ -754,8 +741,6 @@ name|fork
 argument_list|()
 condition|)
 block|{
-endif|#
-directive|endif
 case|case
 operator|-
 literal|1

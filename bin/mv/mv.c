@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mv.c,v 1.20 1998/06/09 03:39:38 imp Exp $"
+literal|"$Id: mv.c,v 1.21 1998/06/28 21:00:04 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1548,7 +1548,7 @@ condition|(
 operator|(
 name|pid
 operator|=
-name|vfork
+name|fork
 argument_list|()
 operator|)
 operator|==

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: pw_util.c,v 1.9 1997/10/27 07:53:19 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -552,7 +552,7 @@ operator|!
 operator|(
 name|pid
 operator|=
-name|vfork
+name|fork
 argument_list|()
 operator|)
 condition|)
@@ -730,7 +730,7 @@ operator|!
 operator|(
 name|editpid
 operator|=
-name|vfork
+name|fork
 argument_list|()
 operator|)
 condition|)

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: time.c,v 1.10 1998/07/28 10:08:16 des Exp $"
+literal|"$Id: time.c,v 1.11 1998/08/24 10:16:59 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -383,7 +383,7 @@ switch|switch
 condition|(
 name|pid
 operator|=
-name|vfork
+name|fork
 argument_list|()
 condition|)
 block|{

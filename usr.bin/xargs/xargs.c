@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xargs.c,v 1.5 1997/08/27 06:26:23 charnier Exp $"
+literal|"$Id: xargs.c,v 1.6 1998/06/17 12:58:43 jkoshy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1056,7 +1056,7 @@ switch|switch
 condition|(
 name|pid
 operator|=
-name|vfork
+name|fork
 argument_list|()
 condition|)
 block|{
@@ -1068,7 +1068,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"vfork"
+literal|"fork"
 argument_list|)
 expr_stmt|;
 case|case

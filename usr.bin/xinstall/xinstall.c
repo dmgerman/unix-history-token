@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.31 1998/01/20 13:52:32 bde Exp $"
+literal|"$Id: xinstall.c,v 1.32 1998/06/02 12:00:07 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3031,7 +3031,7 @@ name|status
 decl_stmt|;
 switch|switch
 condition|(
-name|vfork
+name|fork
 argument_list|()
 condition|)
 block|{

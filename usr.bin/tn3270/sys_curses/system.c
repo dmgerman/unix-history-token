@@ -3220,7 +3220,7 @@ if|if
 condition|(
 name|shell_pid
 operator|=
-name|vfork
+name|fork
 argument_list|()
 condition|)
 block|{
@@ -3234,7 +3234,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"vfork"
+literal|"fork"
 argument_list|)
 expr_stmt|;
 operator|(

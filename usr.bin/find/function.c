@@ -980,7 +980,7 @@ switch|switch
 condition|(
 name|pid
 operator|=
-name|vfork
+name|fork
 argument_list|()
 condition|)
 block|{
@@ -1551,7 +1551,7 @@ switch|switch
 condition|(
 name|pid
 operator|=
-name|vfork
+name|fork
 argument_list|()
 condition|)
 block|{

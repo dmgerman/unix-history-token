@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: setup.c,v 1.7 1998/01/05 07:30:25 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,7 +115,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * setup_and_wait() is called to start a process.  All it really does  * is vfork(), set itself up to stop on exec or exit, and then exec  * the given command.  At that point, the child process stops, and  * the parent can wake up and deal with it.  */
+comment|/*  * setup_and_wait() is called to start a process.  All it really does  * is fork(), set itself up to stop on exec or exit, and then exec  * the given command.  At that point, the child process stops, and  * the parent can wake up and deal with it.  */
 end_comment
 
 begin_function
@@ -149,7 +149,7 @@ name|flags
 decl_stmt|;
 name|pid
 operator|=
-name|vfork
+name|fork
 argument_list|()
 expr_stmt|;
 if|if
@@ -164,7 +164,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"vfork failed"
+literal|"fork failed"
 argument_list|)
 expr_stmt|;
 block|}
