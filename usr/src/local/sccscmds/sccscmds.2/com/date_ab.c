@@ -17,7 +17,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)date_ab.c	4.5	%G%"
+literal|"@(#)date_ab.c	4.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,7 +32,7 @@ name|dysize
 parameter_list|(
 name|year
 parameter_list|)
-value|(isleap(year) ? DAYS_PER_LYEAR : DAYS_PER_NYEAR)
+value|(isleap(year) ? DAYSPERLYEAR : DAYSPERNYEAR)
 end_define
 
 begin_decl_stmt
