@@ -3259,6 +3259,12 @@ argument_list|(
 name|ep
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Nflag
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -3308,6 +3314,7 @@ operator|.
 name|flags
 argument_list|)
 expr_stmt|;
+block|}
 name|ep
 operator|->
 name|e_flags
