@@ -207,11 +207,11 @@ directive|include
 file|<utmp.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_PAM
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_PAM
+end_ifdef
 
 begin_include
 include|#
@@ -225,10 +225,20 @@ directive|include
 file|<security/pam_misc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* USE_PAM */
+end_comment
 
 begin_include
 include|#
@@ -434,11 +444,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_PAM
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_PAM
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -481,10 +491,40 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|pam_handle_t
+modifier|*
+name|pamh
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+modifier|*
+name|environ_pam
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PAM_END
+value|{ \ 	if ((e = pam_setcred(pamh, PAM_DELETE_CRED)) != PAM_SUCCESS) \ 		syslog(LOG_ERR, "pam_setcred: %s", pam_strerror(pamh, e)); \ 	if ((e = pam_close_session(pamh,0)) != PAM_SUCCESS) \ 		syslog(LOG_ERR, "pam_close_session: %s", pam_strerror(pamh, e)); \ 	if ((e = pam_end(pamh, e)) != PAM_SUCCESS) \ 		syslog(LOG_ERR, "pam_end: %s", pam_strerror(pamh, e)); \ }
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* USE_PAM */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -639,26 +679,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_PAM
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-modifier|*
-name|environ_pam
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|main
@@ -777,6 +797,18 @@ name|lc
 init|=
 name|NULL
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_PAM
+name|pid_t
+name|pid
+decl_stmt|;
+name|int
+name|e
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* USE_PAM */
 operator|(
 name|void
 operator|)
@@ -1537,9 +1569,9 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_PAM
+ifdef|#
+directive|ifdef
+name|USE_PAM
 comment|/* 		 * Try to authenticate using PAM.  If a PAM system error 		 * occurs, perhaps because of a botched configuration, 		 * then fall back to using traditional Unix authentication. 		 */
 if|if
 condition|(
@@ -1555,7 +1587,7 @@ literal|1
 condition|)
 endif|#
 directive|endif
-comment|/* NO_PAM */
+comment|/* USE_PAM */
 name|rval
 operator|=
 name|auth_traditional
@@ -1573,9 +1605,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_PAM
+ifdef|#
+directive|ifdef
+name|USE_PAM
 comment|/* 		 * PAM authentication may have changed "pwd" to the 		 * entry for the template user.  Check again to see if 		 * this is a root login after all. 		 */
 if|if
 condition|(
@@ -1595,7 +1627,7 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NO_PAM */
+comment|/* USE_PAM */
 name|ttycheck
 label|:
 comment|/* 		 * If trying to log in as root without Kerberos, 		 * but with insecure terminal, refuse the login attempt. 		 */
@@ -2668,10 +2700,22 @@ name|environ
 operator|=
 name|envinit
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_PAM
+ifdef|#
+directive|ifdef
+name|USE_PAM
 comment|/* 	 * Add any environmental variables that the 	 * PAM modules may have set. 	 */
+if|if
+condition|(
+name|pamh
+condition|)
+block|{
+name|environ_pam
+operator|=
+name|pam_getenvlist
+argument_list|(
+name|pamh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|environ_pam
@@ -2679,8 +2723,197 @@ condition|)
 name|export_pam_environment
 argument_list|()
 expr_stmt|;
+block|}
 endif|#
 directive|endif
+comment|/* USE_PAM */
+comment|/* 	 * PAM modules might add supplementary groups during pam_setcred(). 	 */
+if|if
+condition|(
+name|setusercontext
+argument_list|(
+name|lc
+argument_list|,
+name|pwd
+argument_list|,
+name|pwd
+operator|->
+name|pw_uid
+argument_list|,
+name|LOGIN_SETGROUP
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"setusercontext() failed - exiting"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|USE_PAM
+if|if
+condition|(
+name|pamh
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|e
+operator|=
+name|pam_open_session
+argument_list|(
+name|pamh
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|!=
+name|PAM_SUCCESS
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"pam_open_session: %s"
+argument_list|,
+name|pam_strerror
+argument_list|(
+name|pamh
+argument_list|,
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|e
+operator|=
+name|pam_setcred
+argument_list|(
+name|pamh
+argument_list|,
+name|PAM_ESTABLISH_CRED
+argument_list|)
+operator|)
+operator|!=
+name|PAM_SUCCESS
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"pam_setcred: %s"
+argument_list|,
+name|pam_strerror
+argument_list|(
+name|pamh
+argument_list|,
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 * We must fork() before setuid() because we need to call 		 * pam_close_session() as root. 		 */
+name|pid
+operator|=
+name|fork
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|pid
+operator|<
+literal|0
+condition|)
+block|{
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"fork"
+argument_list|)
+expr_stmt|;
+name|PAM_END
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|pid
+condition|)
+block|{
+comment|/* parent - wait for child to finish, then cleanup 			   session */
+name|wait
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|PAM_END
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|(
+name|e
+operator|=
+name|pam_end
+argument_list|(
+name|pamh
+argument_list|,
+name|PAM_DATA_SILENT
+argument_list|)
+operator|)
+operator|!=
+name|PAM_SUCCESS
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"pam_end: %s"
+argument_list|,
+name|pam_strerror
+argument_list|(
+name|pamh
+argument_list|,
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* USE_PAM */
 comment|/* 	 * We don't need to be root anymore, so 	 * set the user and session context 	 */
 if|if
 condition|(
@@ -2722,7 +2955,11 @@ argument_list|,
 name|LOGIN_SETALL
 operator|&
 operator|~
+operator|(
 name|LOGIN_SETLOGIN
+operator||
+name|LOGIN_SETGROUP
+operator|)
 argument_list|)
 operator|!=
 literal|0
@@ -3165,6 +3402,10 @@ name|shell
 argument_list|,
 name|tbuf
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -3294,11 +3535,11 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_PAM
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_PAM
+end_ifdef
 
 begin_comment
 comment|/*  * Attempt to authenticate the user using PAM.  Returns 0 if the user is  * authenticated, or 1 if not authenticated.  If some sort of PAM system  * error occurs (e.g., the "/etc/pam.conf" file is missing) then this  * function returns -1.  This can be used as an indication that we should  * fall back to a different authentication mechanism.  */
@@ -3310,12 +3551,6 @@ name|int
 name|auth_pam
 parameter_list|()
 block|{
-name|pam_handle_t
-modifier|*
-name|pamh
-init|=
-name|NULL
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -3542,42 +3777,6 @@ name|e
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|e
-operator|=
-name|pam_setcred
-argument_list|(
-name|pamh
-argument_list|,
-name|PAM_ESTABLISH_CRED
-argument_list|)
-operator|)
-operator|!=
-name|PAM_SUCCESS
-condition|)
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"Couldn't establish credentials: %s"
-argument_list|,
-name|pam_strerror
-argument_list|(
-name|pamh
-argument_list|,
-name|e
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|environ_pam
-operator|=
-name|pam_getenvlist
-argument_list|(
-name|pamh
-argument_list|)
-expr_stmt|;
 name|rval
 operator|=
 literal|0
@@ -3602,7 +3801,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"auth_pam: %s"
+literal|"pam_authenticate: %s"
 argument_list|,
 name|pam_strerror
 argument_list|(
@@ -3619,6 +3818,86 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|rval
+operator|==
+literal|0
+condition|)
+block|{
+name|e
+operator|=
+name|pam_acct_mgmt
+argument_list|(
+name|pamh
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|==
+name|PAM_NEW_AUTHTOK_REQD
+condition|)
+block|{
+name|e
+operator|=
+name|pam_chauthtok
+argument_list|(
+name|pamh
+argument_list|,
+name|PAM_CHANGE_EXPIRED_AUTHTOK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|!=
+name|PAM_SUCCESS
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"pam_chauthtok: %s"
+argument_list|,
+name|pam_strerror
+argument_list|(
+name|pamh
+argument_list|,
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|rval
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|e
+operator|!=
+name|PAM_SUCCESS
+condition|)
+block|{
+name|rval
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|rval
+operator|!=
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -3649,10 +3928,10 @@ name|e
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|rval
+block|}
+name|pamh
 operator|=
-operator|-
-literal|1
+name|NULL
 expr_stmt|;
 block|}
 return|return
@@ -3865,7 +4144,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NO_PAM */
+comment|/* USE_PAM */
 end_comment
 
 begin_function
