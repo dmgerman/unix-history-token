@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)zsvar.h	7.2 (Berkeley) %G%  *  * from: $Header: zsvar.h,v 1.4 92/06/17 05:35:54 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)zsvar.h	7.3 (Berkeley) %G%  *  * from: $Header: zsvar.h,v 1.7 92/11/26 01:28:04 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
-comment|/*  * Software state, per zs channel.  *  * The receive ring size and type are carefully chosen to make the  * zs hardware interrupt handler go fast.  We need 8 bits for the  * received character and 8 bits for the corresponding RR1 status.  * The character is known to be in the upper byte of the pair.  */
+comment|/*  * Software state, per zs channel.  *  * The zs chip has insufficient buffering, so we provide a software  * buffer using a two-level interrupt scheme.  The hardware (high priority)  * interrupt simply grabs the `cause' of the interrupt and stuffs it into  * a ring buffer.  It then schedules a software interrupt; the latter  * empties the ring as fast as it can, hoping to avoid overflow.  *  * Interrupts can happen because of:  *	- received data;  *	- transmit pseudo-DMA done; and  *	- status change.  * These are all stored together in the (single) ring.  The size of the  * ring is a power of two, to make % operations fast.  Since we need two  * bits to distinguish the interrupt type, and up to 16 for the received  * data plus RR1 status, we use 32 bits per ring entry.  *  * When the value is a character + RR1 status, the character is in the  * upper 8 bits of the RR1 status.  */
 end_comment
 
 begin_define
@@ -14,11 +14,88 @@ name|ZLRB_RING_SIZE
 value|256
 end_define
 
+begin_comment
+comment|/* ZS line ring buffer size */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ZLRB_RING_MASK
 value|255
+end_define
+
+begin_comment
+comment|/* mask for same */
+end_comment
+
+begin_comment
+comment|/* 0 is reserved (means "no interrupt") */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZRING_RINT
+value|1
+end_define
+
+begin_comment
+comment|/* receive data interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZRING_XINT
+value|2
+end_define
+
+begin_comment
+comment|/* transmit done interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZRING_SINT
+value|3
+end_define
+
+begin_comment
+comment|/* status change interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZRING_TYPE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZRING_VALUE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZRING_MAKE
+parameter_list|(
+name|t
+parameter_list|,
+name|v
+parameter_list|)
+value|((t) | (v)<< 8)
 end_define
 
 begin_struct
@@ -48,7 +125,7 @@ modifier|*
 name|cs_ttyp
 decl_stmt|;
 comment|/* ### */
-comment|/* 	 * We must keep a copy of the write registers as they are 	 * mostly write-only and we sometimes need to set and clear 	 * individual bits (e.g., in WR3).  Not all of these are 	 * needed but 16 bytes is cheap and this makes the addressing 	 * simpler.  Unfortunately, we can only write to some registers 	 * when the chip is not actually transmitting, so whenever 	 * we are expecting a `transmit done' interrupt the wreg array 	 * is allowed to `get ahead' of the current values.  In a 	 * few places we must change the current value of a register, 	 * rather than (or in addition to) the pending value; for these 	 * cs_creg[] contains the current value. 	 */
+comment|/* 	 * We must keep a copy of the write registers as they are 	 * mostly write-only and we sometimes need to set and clear 	 * individual bits (e.g., in WR3).  Not all of these are 	 * needed but 16 bytes is cheap and this makes the addressing 	 * simpler.  Unfortunately, we can only write to some registers 	 * when the chip is not actually transmitting, so whenever 	 * we are expecting a `transmit done' interrupt the preg array 	 * is allowed to `get ahead' of the current values.  In a 	 * few places we must change the current value of a register, 	 * rather than (or in addition to) the pending value; for these 	 * cs_creg[] contains the current value. 	 */
 name|u_char
 name|cs_creg
 index|[
@@ -67,6 +144,39 @@ name|u_char
 name|cs_heldchange
 decl_stmt|;
 comment|/* change pending (creg != preg) */
+name|u_char
+name|cs_rr0
+decl_stmt|;
+comment|/* last rr0 processed */
+comment|/* pure software data, per channel */
+name|char
+name|cs_softcar
+decl_stmt|;
+comment|/* software carrier */
+name|char
+name|cs_conk
+decl_stmt|;
+comment|/* is console keyboard, decode L1-A */
+name|char
+name|cs_brkabort
+decl_stmt|;
+comment|/* abort (as if via L1-A) on BREAK */
+name|char
+name|cs_kgdb
+decl_stmt|;
+comment|/* enter debugger on frame char */
+name|char
+name|cs_consio
+decl_stmt|;
+comment|/* port does /dev/console I/O */
+name|char
+name|cs_xxx
+decl_stmt|;
+comment|/* (spare) */
+name|int
+name|cs_speed
+decl_stmt|;
+comment|/* default baud rate (from ROM) */
 comment|/* 	 * The transmit byte count and address are used for pseudo-DMA 	 * output in the hardware interrupt code.  PDMA can be suspended 	 * to get pending changes done; heldtbc is used for this.  It can 	 * also be stopped for ^S; this sets TS_TTSTOP in tp->t_state. 	 */
 name|int
 name|cs_tbc
@@ -89,56 +199,23 @@ name|long
 name|cs_fotime
 decl_stmt|;
 comment|/* time of last fifo overrun */
-comment|/* pure software data, per channel */
-name|int
-name|cs_speed
-decl_stmt|;
-comment|/* default baud rate (from ROM) */
-name|char
-name|cs_softcar
-decl_stmt|;
-comment|/* software carrier */
-name|char
-name|cs_conk
-decl_stmt|;
-comment|/* is console keyboard, decode L1-A */
-name|char
-name|cs_brkabort
-decl_stmt|;
-comment|/* abort (as if via L1-A) on BREAK */
-name|char
-name|cs_kgdb
-decl_stmt|;
-comment|/* enter debugger on frame char */
-name|char
-name|cs_consio
-decl_stmt|;
-comment|/* port does /dev/console I/O */
-comment|/* 	 * Status change interrupts merely copy the new status and 	 * schedule a software interrupt to deal with it.  To make 	 * checking easier, cs_rr0 is guaranteed nonzero on status 	 * changes.  cs_txint indicates a software transmit interrupt 	 * (a txint where cs_tbc was 0).  A software receive interrupt 	 * is implicit in cs_rbget != cs_rbput. 	 */
-name|u_char
-name|cs_txint
-decl_stmt|;
-comment|/* software tx interrupt */
-name|u_short
-name|cs_rr0
-decl_stmt|;
-comment|/* rr0 | 0x100, after change */
+comment|/* 	 * The ring buffer. 	 */
 name|u_int
 name|cs_rbget
 decl_stmt|;
-comment|/* receive ring buffer `get' index */
+comment|/* ring buffer `get' index */
 specifier|volatile
 name|u_int
 name|cs_rbput
 decl_stmt|;
-comment|/* receive ring buffer `put' index */
-name|u_short
+comment|/* ring buffer `put' index */
+name|int
 name|cs_rbuf
 index|[
 name|ZLRB_RING_SIZE
 index|]
 decl_stmt|;
-comment|/* packed data: (char<< 8) + rr1 */
+comment|/* type, value pairs */
 block|}
 struct|;
 end_struct
