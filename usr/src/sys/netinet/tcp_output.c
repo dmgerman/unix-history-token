@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.31	82/01/19	*/
+comment|/*	tcp_output.c	4.32	82/03/12	*/
 end_comment
 
 begin_include
@@ -241,6 +241,8 @@ name|int
 name|off
 decl_stmt|,
 name|flags
+decl_stmt|,
+name|win
 decl_stmt|;
 specifier|register
 name|struct
@@ -253,11 +255,6 @@ name|struct
 name|tcpiphdr
 modifier|*
 name|ti
-decl_stmt|;
-name|int
-name|win
-decl_stmt|,
-name|force
 decl_stmt|;
 name|u_char
 modifier|*
@@ -311,7 +308,11 @@ name|len
 operator|<
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* past FIN */
 if|if
 condition|(

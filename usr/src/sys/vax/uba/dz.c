@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.33	82/02/08	*/
+comment|/*	dz.c	4.34	82/03/12	*/
 end_comment
 
 begin_include
@@ -1424,8 +1424,6 @@ name|dzaddr
 decl_stmt|;
 name|int
 name|dz
-decl_stmt|,
-name|s
 decl_stmt|;
 name|unit
 operator|=
