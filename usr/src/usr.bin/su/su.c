@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.2 (Berkeley) %G%"
+literal|"@(#)su.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,6 +255,15 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+name|openlog
+argument_list|(
+literal|"su"
+argument_list|,
+name|LOG_ODELAY
+argument_list|,
+name|LOG_AUTH
+argument_list|)
+expr_stmt|;
 name|again
 label|:
 if|if
@@ -578,18 +587,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|openlog
-argument_list|(
-literal|"su"
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
-name|LOG_SECURITY
+name|LOG_CRIT
 argument_list|,
 literal|"BAD SU %s on %s"
 argument_list|,
@@ -623,18 +623,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|openlog
-argument_list|(
-literal|"su"
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
-name|LOG_SECURITY
+name|LOG_NOTICE
 argument_list|,
 literal|"%s on %s"
 argument_list|,

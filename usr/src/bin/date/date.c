@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	4.10 (Berkeley) %G%"
+literal|"@(#)date.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -398,6 +398,15 @@ decl_stmt|,
 name|bytehostorder
 argument_list|()
 decl_stmt|;
+name|openlog
+argument_list|(
+literal|"date"
+argument_list|,
+name|LOG_ODELAY
+argument_list|,
+name|LOG_AUTH
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -505,7 +514,7 @@ literal|"root"
 expr_stmt|;
 name|syslog
 argument_list|(
-name|LOG_SECURITY
+name|LOG_NOTICE
 argument_list|,
 literal|"date: set by %s"
 argument_list|,

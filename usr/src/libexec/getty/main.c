@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -825,7 +825,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_FAIL
+name|LOG_ERR
 argument_list|,
 literal|"%s: %m"
 argument_list|,
