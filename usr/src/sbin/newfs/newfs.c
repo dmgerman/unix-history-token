@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.33 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,14 +255,14 @@ comment|/* desired fs_cpg */
 end_comment
 
 begin_comment
-comment|/*  * MINFREE gives the minimum acceptable percentage of file system  * blocks which may be free. If the freelist drops below this level  * only the superuser may continue to allocate blocks. This may  * be set to 0 if no reserve of free blocks is deemed necessary,  * however throughput drops by fifty percent if the file system  * is run at between 90% and 100% full; thus the default value of  * fs_minfree is 10%. With 10% free space, fragmentation is not a  * problem, so we choose to optimize for time.  */
+comment|/*  * MINFREE gives the minimum acceptable percentage of file system  * blocks which may be free. If the freelist drops below this level  * only the superuser may continue to allocate blocks. This may  * be set to 0 if no reserve of free blocks is deemed necessary,  * however throughput drops by fifty percent if the file system  * is run at between 95% and 100% full; thus the default value of  * fs_minfree is 5%. With 5% free space, fragmentation is not a  * problem, so we choose to optimize for time.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MINFREE
-value|10
+value|5
 end_define
 
 begin_define
@@ -281,17 +281,6 @@ define|#
 directive|define
 name|ROTDELAY
 value|4
-end_define
-
-begin_comment
-comment|/*  * MAXCONTIG sets the default for the maximum number of blocks  * that may be allocated sequentially. Since UNIX drivers are  * not capable of scheduling multi-block transfers, this defaults  * to 1 (ie no contiguous blocks are allocated).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXCONTIG
-value|1
 end_define
 
 begin_comment
@@ -352,6 +341,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* run without writing file system */
+end_comment
+
+begin_decl_stmt
+name|int
+name|Oflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* format as an 4.3BSD file system */
 end_comment
 
 begin_decl_stmt
@@ -598,7 +597,7 @@ begin_decl_stmt
 name|int
 name|maxcontig
 init|=
-name|MAXCONTIG
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -867,7 +866,7 @@ expr_stmt|;
 block|}
 name|opstring
 operator|=
-literal|"F:NS:T:a:b:c:d:e:f:i:k:l:m:n:o:p:r:s:t:u:x:"
+literal|"F:NOS:T:a:b:c:d:e:f:i:k:l:m:n:o:p:r:s:t:u:x:"
 expr_stmt|;
 if|if
 condition|(
@@ -929,6 +928,13 @@ case|case
 literal|'N'
 case|:
 name|Nflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'O'
+case|:
+name|Oflag
 operator|++
 expr_stmt|;
 break|break;
@@ -2256,6 +2262,29 @@ name|fsize
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Maxcontig sets the default for the maximum number of blocks 	 * that may be allocated sequentially. With filesystem clustering 	 * it is possible to allocate contiguous blocks up to the maximum 	 * transfer size permitted by the controller or buffering. 	 */
+if|if
+condition|(
+name|maxcontig
+operator|==
+literal|0
+condition|)
+name|maxcontig
+operator|=
+name|MAX
+argument_list|(
+literal|1
+argument_list|,
+name|MIN
+argument_list|(
+name|MAXPHYS
+argument_list|,
+name|MAXBSIZE
+argument_list|)
+operator|/
+name|bsize
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|density
