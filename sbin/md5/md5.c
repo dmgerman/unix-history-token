@@ -1,20 +1,48 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: md5.c,v 1.11 1997/12/29 03:40:37 steve Exp $  *  * Derived from:  */
-end_comment
-
-begin_comment
-comment|/*  * MDDRIVER.C - test driver for MD2, MD4 and MD5  */
+comment|/*  * Derived from:  *  * MDDRIVER.C - test driver for MD2, MD4 and MD5  */
 end_comment
 
 begin_comment
 comment|/*  *  Copyright (C) 1990-2, RSA Data Security, Inc. Created 1990. All  *  rights reserved.  *  *  RSA Data Security, Inc. makes no representations concerning either  *  the merchantability of this software or the suitability of this  *  software for any particular purpose. It is provided "as is"  *  without express or implied warranty of any kind.  *  *  These notices must be retained in any copies of any part of this  *  documentation and/or software.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -27,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -264,8 +286,10 @@ condition|(
 operator|!
 name|p
 condition|)
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|argv
 index|[
 name|optind
@@ -677,18 +701,13 @@ name|stdout
 argument_list|)
 operator|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"stdout"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|MD5Update
 argument_list|(
 operator|&
