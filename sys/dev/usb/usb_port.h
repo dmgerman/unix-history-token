@@ -929,6 +929,13 @@ name|usb_proc_ptr
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|uio_procp
+value|uio_td
+end_define
+
 begin_comment
 comment|/* XXX Change this when FreeBSD has memset */
 end_comment

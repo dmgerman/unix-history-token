@@ -6761,7 +6761,7 @@ name|UIO_READ
 expr_stmt|;
 name|uio
 operator|.
-name|uio_td
+name|uio_procp
 operator|=
 name|p
 expr_stmt|;
@@ -7051,7 +7051,7 @@ name|UIO_WRITE
 expr_stmt|;
 name|uio
 operator|.
-name|uio_td
+name|uio_procp
 operator|=
 name|p
 expr_stmt|;

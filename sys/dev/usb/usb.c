@@ -51,12 +51,6 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/kthread.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -120,6 +114,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/kthread.h>
+end_include
 
 begin_include
 include|#
@@ -2146,7 +2146,7 @@ name|UIO_WRITE
 expr_stmt|;
 name|uio
 operator|.
-name|uio_td
+name|uio_procp
 operator|=
 name|p
 expr_stmt|;
