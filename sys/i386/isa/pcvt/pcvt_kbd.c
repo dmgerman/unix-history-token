@@ -3439,19 +3439,17 @@ comment|/* the keyboard fifo or from the 8042 keyboard controller	*/
 if|if
 condition|(
 operator|(
-operator|(
 name|noblock
-operator|)
 operator|&&
-operator|(
 name|pcvt_kbd_count
-operator|)
 operator|)
 operator|||
 operator|(
 operator|(
 operator|!
 name|noblock
+operator|||
+name|kbd_polling
 operator|)
 operator|&&
 operator|(
@@ -3469,6 +3467,8 @@ if|if
 condition|(
 operator|!
 name|noblock
+operator|||
+name|kbd_polling
 condition|)
 comment|/* source = 8042 */
 block|{
@@ -4500,19 +4500,17 @@ comment|/* the keyboard fifo or from the 8042 keyboard controller	*/
 if|if
 condition|(
 operator|(
-operator|(
 name|noblock
-operator|)
 operator|&&
-operator|(
 name|pcvt_kbd_count
-operator|)
 operator|)
 operator|||
 operator|(
 operator|(
 operator|!
 name|noblock
+operator|||
+name|kbd_polling
 operator|)
 operator|&&
 operator|(
@@ -4530,6 +4528,8 @@ if|if
 condition|(
 operator|!
 name|noblock
+operator|||
+name|kbd_polling
 condition|)
 comment|/* source = 8042 */
 block|{
@@ -4862,7 +4862,7 @@ operator|||
 name|altgr_down
 operator|)
 condition|)
-name|cpu_reset
+name|shutdown_nice
 argument_list|()
 expr_stmt|;
 endif|#

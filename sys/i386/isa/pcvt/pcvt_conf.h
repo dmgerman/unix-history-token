@@ -2376,6 +2376,14 @@ begin_comment
 comment|/*---------------------------------------------------------------------------*  *	Kernel messages attribute definitions  *	These define the foreground and background attributes used to  *	emphasize messages from the kernel on color and mono displays.  *---------------------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+name|COLOR_KERNEL_FG
+end_if
+
 begin_comment
 comment|/* color displays		*/
 end_comment
@@ -2391,6 +2399,19 @@ begin_comment
 comment|/* kernel messages, foreground	*/
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+name|COLOR_KERNEL_BG
+end_if
+
 begin_define
 define|#
 directive|define
@@ -2401,6 +2422,19 @@ end_define
 begin_comment
 comment|/* kernel messages, background	*/
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+name|MONO_KERNEL_FG
+end_if
 
 begin_comment
 comment|/* monochrome displays		*/
@@ -2417,6 +2451,19 @@ begin_comment
 comment|/* kernel messages, foreground	*/
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+name|MONO_KERNEL_BG
+end_if
+
 begin_define
 define|#
 directive|define
@@ -2427,6 +2474,11 @@ end_define
 begin_comment
 comment|/* kernel messages, background	*/
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*---------------------------------- E O F ----------------------------------*/

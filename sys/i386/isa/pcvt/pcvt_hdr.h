@@ -8976,7 +8976,7 @@ directive|define
 name|PCVT_KBD_DELAY
 parameter_list|()
 define|\
-value|{ u_char x = inb(0x84); } \ 	{ u_char x = inb(0x84); } \ 	{ u_char x = inb(0x84); } \ 	{ u_char x = inb(0x84); } \ 	{ u_char x = inb(0x84); } \ 	{ u_char x = inb(0x84); }
+value|{ (void)inb(0x84); } \ 	{ (void)inb(0x84); } \ 	{ (void)inb(0x84); } \ 	{ (void)inb(0x84); } \ 	{ (void)inb(0x84); } \ 	{ (void)inb(0x84); }
 end_define
 
 begin_else
