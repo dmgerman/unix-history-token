@@ -723,6 +723,7 @@ name|SEMU
 parameter_list|(
 name|ix
 parameter_list|)
+define|\
 value|((struct sem_undo *)(((intptr_t)semu)+ix * seminfo.semusz))
 end_define
 
@@ -1039,7 +1040,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1162,17 +1162,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sem
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"sem is NULL"
-argument_list|)
-expr_stmt|;
 name|sema
 operator|=
 name|malloc
@@ -1192,17 +1181,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sema
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"sema is NULL"
-argument_list|)
-expr_stmt|;
 name|semu
 operator|=
 name|malloc
@@ -1218,17 +1196,6 @@ argument_list|,
 name|M_SEM
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|semu
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"semu is NULL"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1284,7 +1251,6 @@ name|i
 operator|++
 control|)
 block|{
-specifier|register
 name|struct
 name|sem_undo
 modifier|*
@@ -1630,17 +1596,14 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|struct
 name|sem_undo
 modifier|*
 name|suptr
 decl_stmt|;
-specifier|register
 name|struct
 name|sem_undo
 modifier|*
@@ -1847,7 +1810,6 @@ name|semnum
 parameter_list|,
 name|adjval
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -1877,13 +1839,11 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
-specifier|register
 name|struct
 name|sem_undo
 modifier|*
 name|suptr
 decl_stmt|;
-specifier|register
 name|struct
 name|undo
 modifier|*
@@ -2220,7 +2180,6 @@ decl_stmt|,
 name|semnum
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|sem_undo
 modifier|*
@@ -2243,7 +2202,6 @@ operator|->
 name|un_next
 control|)
 block|{
-specifier|register
 name|struct
 name|undo
 modifier|*
@@ -2257,7 +2215,6 @@ index|[
 literal|0
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|i
 init|=
@@ -2402,7 +2359,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|__semctl_args
 modifier|*
@@ -2463,7 +2419,6 @@ name|struct
 name|semid_ds
 name|sbuf
 decl_stmt|;
-specifier|register
 name|struct
 name|semid_ds
 modifier|*
@@ -3775,7 +3730,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|semget_args
 modifier|*
@@ -4467,7 +4421,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|semop_args
 modifier|*
@@ -4495,13 +4448,11 @@ name|sops
 init|=
 name|NULL
 decl_stmt|;
-specifier|register
 name|struct
 name|semid_ds
 modifier|*
 name|semaptr
 decl_stmt|;
-specifier|register
 name|struct
 name|sembuf
 modifier|*
@@ -4509,7 +4460,6 @@ name|sopptr
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|struct
 name|sem
 modifier|*
@@ -5690,13 +5640,11 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|sem_undo
 modifier|*
 name|suptr
 decl_stmt|;
-specifier|register
 name|struct
 name|sem_undo
 modifier|*
