@@ -9423,6 +9423,13 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/*  * This is called once the rest of the system is up and running and we're  * ready to let the AP's out of the pen.  */
+specifier|extern
+name|void
+name|enable_sse
+argument_list|(
+name|void
+argument_list|)
+decl_stmt|;
 name|void
 name|ap_init
 parameter_list|(
@@ -9529,6 +9536,10 @@ name|npxinit
 argument_list|(
 name|__INITIAL_NPXCW__
 argument_list|)
+expr_stmt|;
+comment|/* set up SSE registers */
+name|enable_sse
+argument_list|()
 expr_stmt|;
 comment|/* A quick check from sanity claus */
 name|apic_id

@@ -532,7 +532,7 @@ name|p_addr
 operator|->
 name|u_pcb
 operator|.
-name|pcb_savefpu
+name|pcb_save
 argument_list|)
 expr_stmt|;
 name|critical_exit

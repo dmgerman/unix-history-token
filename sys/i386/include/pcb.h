@@ -74,11 +74,14 @@ modifier|*
 name|pcb_ldt
 decl_stmt|;
 comment|/* per process (user) LDT */
-name|struct
-name|save87
-name|pcb_savefpu
+name|union
+name|savefpu
+name|pcb_save
 decl_stmt|;
-comment|/* floating point state for 287/387 */
+define|#
+directive|define
+name|pcb_savefpu
+value|pcb_save.sv_87
 name|u_char
 name|pcb_flags
 decl_stmt|;

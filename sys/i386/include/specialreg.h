@@ -396,6 +396,20 @@ name|CPUID_CMOV
 value|0x8000
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPUID_FXSR
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_XMM
+value|0x02000000
+end_define
+
 begin_comment
 comment|/*  * Model-specific registers for the i386 family  */
 end_comment
