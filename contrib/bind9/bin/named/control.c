@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: control.c,v 1.7.2.2.2.10 2004/03/22 01:52:22 marka Exp $ */
+comment|/* $Id: control.c,v 1.7.2.2.2.10.4.1 2004/09/20 01:00:00 marka Exp $ */
 end_comment
 
 begin_include
@@ -623,6 +623,13 @@ argument_list|(
 name|command
 argument_list|,
 name|NS_COMMAND_UNFREEZE
+argument_list|)
+operator|||
+name|command_compare
+argument_list|(
+name|command
+argument_list|,
+name|NS_COMMAND_THAW
 argument_list|)
 condition|)
 block|{
