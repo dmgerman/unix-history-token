@@ -341,10 +341,10 @@ operator|)
 return|;
 name|cdp
 operator|=
-name|cdevsw
-index|[
-name|maj
-index|]
+name|devsw
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
