@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	1.32 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	1.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2280,7 +2280,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${C2} %ss | ../%s/asm |"
+literal|"\t${C2} %ss | ../%s/inline/inline |"
 argument_list|,
 name|tp
 argument_list|,
@@ -2349,7 +2349,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${C2} -i %ss | ../%s/asm |"
+literal|"\t${C2} -i %ss | ../%s/inline/inline |"
 argument_list|,
 name|tp
 argument_list|,
@@ -2453,7 +2453,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t../%s/asm %ss | ${AS} -o %so\n"
+literal|"\t../%s/inline/inline %ss | ${AS} -o %so\n"
 argument_list|,
 name|machinename
 argument_list|,
@@ -2684,7 +2684,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|" ../%s/asm"
+literal|" ../%s/inline/inline"
 argument_list|,
 name|machinename
 argument_list|)
@@ -2965,7 +2965,14 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${C2} swapgeneric.s | ../%s/asm"
+literal|"\t${C2} swapgeneric.s | "
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"../%s/inline/inline"
 argument_list|,
 name|machinename
 argument_list|)
