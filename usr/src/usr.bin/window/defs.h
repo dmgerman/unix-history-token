@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)defs.h	3.1 83/08/11	  */
+comment|/*  *	@(#)defs.h	3.2 83/08/18	  */
 end_comment
 
 begin_include
@@ -166,6 +166,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* the window for framing */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|ww
+modifier|*
+name|boxwin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the window for the box */
 end_comment
 
 begin_decl_stmt

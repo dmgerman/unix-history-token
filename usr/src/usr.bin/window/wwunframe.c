@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwunframe.c	3.5 83/08/16"
+literal|"@(#)wwunframe.c	3.6 83/08/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,39 @@ operator|*
 name|w
 expr_stmt|;
 end_expr_stmt
+
+begin_block
+block|{
+name|wwunframe1
+argument_list|(
+name|w
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
+name|wwunframe1
+argument_list|(
+name|w
+argument_list|,
+name|dofmap
+argument_list|)
+specifier|register
+expr|struct
+name|ww
+operator|*
+name|w
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|char
+name|dofmap
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -150,6 +183,10 @@ operator|++
 operator||=
 name|WWM_GLS
 expr_stmt|;
+if|if
+condition|(
+name|dofmap
+condition|)
 operator|*
 name|fmap
 operator|++

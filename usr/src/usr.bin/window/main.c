@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.2 83/08/17"
+literal|"@(#)main.c	3.3 83/08/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -407,6 +407,50 @@ operator|&
 name|wwhead
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|boxwin
+operator|=
+name|wwopen
+argument_list|(
+name|WWO_GLASS
+argument_list|,
+name|wwnrow
+argument_list|,
+name|wwncol
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|wwflush
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't open box window.\r\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 name|curwin
 operator|=
 name|cmdwin
