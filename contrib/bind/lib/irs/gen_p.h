@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1996,1999 by Internet Software Consortium.  *  * Per
 end_comment
 
 begin_comment
-comment|/*  * $Id: gen_p.h,v 1.10 1999/01/18 07:46:50 vixie Exp $  */
+comment|/*  * $Id: gen_p.h,v 1.11 2001/05/29 05:48:39 marka Exp $  */
 end_comment
 
 begin_comment
@@ -189,7 +189,6 @@ begin_struct
 struct|struct
 name|gen_p
 block|{
-specifier|const
 name|char
 modifier|*
 name|options

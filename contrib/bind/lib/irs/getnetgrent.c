@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetgrent.c,v 1.14 1999/10/07 20:44:03 vixie Exp $"
+literal|"$Id: getnetgrent.c,v 1.15 2001/05/29 05:48:49 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -239,16 +239,19 @@ begin_function
 name|int
 name|getnetgrent
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|host
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|user
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -473,16 +476,19 @@ begin_function
 name|int
 name|getnetgrent_p
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|host
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|user
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*

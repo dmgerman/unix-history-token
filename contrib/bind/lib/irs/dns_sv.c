@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_sv.c,v 1.19 2000/03/30 22:53:56 vixie Exp $"
+literal|"$Id: dns_sv.c,v 1.20 2001/05/29 05:48:33 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -288,6 +288,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SV_RES_SETGET
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|struct
@@ -326,6 +332,11 @@ parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -539,6 +550,23 @@ name|minimize
 operator|=
 name|sv_minimize
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SV_RES_SETGET
+name|sv
+operator|->
+name|res_get
+operator|=
+name|sv_res_get
+expr_stmt|;
+name|sv
+operator|->
+name|res_set
+operator|=
+name|sv_res_set
+expr_stmt|;
+else|#
+directive|else
 name|sv
 operator|->
 name|res_get
@@ -553,6 +581,8 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* sv_res_set; */
+endif|#
+directive|endif
 return|return
 operator|(
 name|sv
@@ -906,6 +936,11 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|ENODEV
@@ -929,6 +964,11 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 comment|/* NOOP */
 block|}
 end_function
@@ -1052,6 +1092,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -1107,6 +1151,8 @@ name|p
 index|[
 name|proto_len
 index|]
+operator|&
+literal|0xff
 argument_list|)
 condition|)
 continue|continue;
@@ -1158,6 +1204,8 @@ name|isspace
 argument_list|(
 operator|*
 name|p
+operator|&
+literal|0xff
 argument_list|)
 condition|)
 name|p
@@ -1194,6 +1242,8 @@ name|isspace
 argument_list|(
 operator|*
 name|p
+operator|&
+literal|0xff
 argument_list|)
 condition|)
 name|p
@@ -1239,6 +1289,8 @@ name|isspace
 argument_list|(
 operator|*
 name|p
+operator|&
+literal|0xff
 argument_list|)
 condition|)
 name|p
@@ -1347,6 +1399,8 @@ name|isspace
 argument_list|(
 operator|*
 name|p
+operator|&
+literal|0xff
 argument_list|)
 condition|)
 name|p
@@ -1489,9 +1543,20 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 comment|/* NOOP */
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SV_RES_SETGET
+end_ifdef
 
 begin_function
 specifier|static
@@ -1604,6 +1669,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

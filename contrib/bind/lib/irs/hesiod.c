@@ -21,7 +21,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: hesiod.c,v 1.21 2000/02/28 14:51:08 vixie Exp $"
+literal|"$Id: hesiod.c,v 1.22 2001/05/29 05:48:55 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1180,6 +1180,11 @@ modifier|*
 modifier|*
 name|p
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|p

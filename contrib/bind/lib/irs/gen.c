@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gen.c,v 1.25 1999/10/13 16:39:29 vixie Exp $"
+literal|"$Id: gen.c,v 1.26 2001/05/29 05:48:35 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2416,12 +2416,20 @@ name|line
 init|;
 name|isascii
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|tmp
 argument_list|)
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|tmp
 argument_list|)

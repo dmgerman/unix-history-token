@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: assertions.c,v 8.3 1999/01/08 19:25:14 vixie Exp $"
+literal|"$Id: assertions.c,v 8.4 2001/05/29 05:49:22 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,7 @@ specifier|static
 name|void
 name|default_assertion_failed
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -93,6 +94,7 @@ name|int
 parameter_list|,
 name|assertion_type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -140,6 +142,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|assertion_type_to_text
@@ -148,6 +151,7 @@ name|assertion_type
 name|type
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|result
@@ -212,6 +216,7 @@ specifier|static
 name|void
 name|default_assertion_failed
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|file
@@ -222,6 +227,7 @@ parameter_list|,
 name|assertion_type
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|cond

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_date.c,v 1.2 1999/10/13 16:39:35 vixie Exp $"
+literal|"$Id: ns_date.c,v 1.3 2001/05/29 05:49:34 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -599,10 +599,16 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 name|buf
 index|[
 name|i
 index|]
+argument_list|)
 argument_list|)
 condition|)
 operator|*

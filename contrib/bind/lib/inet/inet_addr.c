@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_addr.c,v 8.11 1999/10/13 16:39:25 vixie Exp $"
+literal|"$Id: inet_addr.c,v 8.12 2001/05/29 05:48:18 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,6 +204,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -284,6 +288,10 @@ argument_list|)
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -348,6 +356,10 @@ argument_list|)
 operator|&&
 name|isxdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -368,6 +380,10 @@ operator|-
 operator|(
 name|islower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|?
@@ -449,6 +465,10 @@ operator|||
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 operator|)

@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_timers.c,v 1.30 2001/02/12 23:13:48 marka Exp $"
+literal|"$Id: ev_timers.c,v 1.32 2001/11/01 05:35:47 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -916,7 +916,7 @@ argument_list|)
 operator|!=
 name|del
 condition|)
-name|ERR
+name|EV_ERR
 argument_list|(
 name|ENOENT
 argument_list|)
@@ -1058,7 +1058,7 @@ argument_list|)
 operator|!=
 name|timer
 condition|)
-name|ERR
+name|EV_ERR
 argument_list|(
 name|ENOENT
 argument_list|)
@@ -1524,6 +1524,11 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|heap_new
@@ -1678,6 +1683,11 @@ name|t
 init|=
 name|what
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|uap
+argument_list|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|t
@@ -1799,6 +1809,16 @@ name|struct
 name|timespec
 name|idle
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|due
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|inter
+argument_list|)
+expr_stmt|;
 name|idle
 operator|=
 name|evSubTime

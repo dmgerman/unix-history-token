@@ -22,13 +22,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMBOL_FREE_KEY
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
 name|SYMBOL_FREE_VALUE
 value|0x02
 end_define
@@ -183,6 +176,7 @@ name|define_symbol
 parameter_list|(
 name|symbol_table
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,

@@ -41,7 +41,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irpd.c,v 1.10 2000/12/23 08:14:33 vixie Exp $"
+literal|"$Id: irpd.c,v 1.13 2001/09/25 04:50:17 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -360,7 +360,7 @@ parameter_list|,
 name|respcode
 parameter_list|)
 define|\
-value|do{ if ((nd)->field == 0) {					     \ 		(nd)->field = (*(nd)->irs->field ## _map)(nd->irs);	     \ 	        if ((nd)->field == 0) {					     \ 		    char *msg = "net_data " #field " initialization failed"; \ 		    ctl_response(sess, respcode, msg, CTL_EXIT, NULL,	     \ 			         NULL, NULL, NULL, 0);			     \ 		    return;						     \                 }							     \ 	    }								     \  	} while (0)
+value|do{ if ((nd)->field == 0) {					     \ 		(nd)->field = (*(nd)->irs->field ## _map)(nd->irs);	     \ 	        if ((nd)->field == 0) {					     \ 		    const char *msg = "net_data " #field " initialization failed"; \ 		    ctl_response(sess, respcode, msg, CTL_EXIT, NULL,	     \ 			         NULL, NULL, NULL, 0);			     \ 		    return;						     \                 }							     \ 	    }								     \  	} while (0)
 end_define
 
 begin_comment
@@ -525,6 +525,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -565,6 +566,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -605,6 +607,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -645,6 +648,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -685,6 +689,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -725,6 +730,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -765,6 +771,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -805,6 +812,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -845,6 +853,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -885,6 +894,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -925,6 +935,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -965,6 +976,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1005,6 +1017,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1045,6 +1058,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1085,6 +1099,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1125,6 +1140,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1165,6 +1181,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1205,6 +1222,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1245,6 +1263,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1285,6 +1304,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1325,6 +1345,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1365,6 +1386,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1405,6 +1427,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1445,6 +1468,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1485,6 +1509,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1525,6 +1550,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1565,6 +1591,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1605,6 +1632,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1645,6 +1673,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1685,6 +1714,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1725,6 +1755,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1765,6 +1796,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1805,6 +1837,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -1952,30 +1985,40 @@ block|{
 literal|"gethostbyname"
 block|,
 name|irpd_gethostbyname
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"gethostbyname2"
 block|,
 name|irpd_gethostbyname2
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"gethostbyaddr"
 block|,
 name|irpd_gethostbyaddr
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"gethostent"
 block|,
 name|irpd_gethostent
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"sethostent"
 block|,
 name|irpd_sethostent
+block|,
+name|NULL
 block|}
 block|,
 ifdef|#
@@ -1985,24 +2028,32 @@ block|{
 literal|"getpwnam"
 block|,
 name|irpd_getpwnam
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"getpwuid"
 block|,
 name|irpd_getpwuid
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"getpwent"
 block|,
 name|irpd_getpwent
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"setpwent"
 block|,
 name|irpd_setpwent
+block|,
+name|NULL
 block|}
 block|,
 endif|#
@@ -2011,24 +2062,32 @@ block|{
 literal|"getnetbyname"
 block|,
 name|irpd_getnetbyname
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"getnetbyaddr"
 block|,
 name|irpd_getnetbyaddr
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"getnetent"
 block|,
 name|irpd_getnetent
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"setnetent"
 block|,
 name|irpd_setnetent
+block|,
+name|NULL
 block|}
 block|,
 ifdef|#
@@ -2038,24 +2097,32 @@ block|{
 literal|"getgrnam"
 block|,
 name|irpd_getgrnam
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"getgrgid"
 block|,
 name|irpd_getgrgid
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"getgrent"
 block|,
 name|irpd_getgrent
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"setgrent"
 block|,
 name|irpd_setgrent
+block|,
+name|NULL
 block|}
 block|,
 endif|#
@@ -2064,90 +2131,120 @@ block|{
 literal|"getservbyname"
 block|,
 name|irpd_getservbyname
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"getservbyport"
 block|,
 name|irpd_getservbyport
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"getservent"
 block|,
 name|irpd_getservent
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"setservent"
 block|,
 name|irpd_setservent
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"getprotobyname"
 block|,
 name|irpd_getprotobyname
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"getprotobynumber"
 block|,
 name|irpd_getprotobynumber
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"getprotoent"
 block|,
 name|irpd_getprotoent
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"setprotoent"
 block|,
 name|irpd_setprotoent
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"getnetgrent"
 block|,
 name|irpd_getnetgrent
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"innetgr"
 block|,
 name|irpd_innetgr
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"setnetgrent"
 block|,
 name|irpd_setnetgrent
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"endnetgrent"
 block|,
 name|irpd_endnetgrent
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"quit"
 block|,
 name|irpd_quit
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"help"
 block|,
 name|irpd_help
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|""
 block|,
 name|irpd_accept
+block|,
+name|NULL
 block|}
 block|,
 comment|/* For connection setups. */
@@ -2156,9 +2253,13 @@ block|{
 literal|"abort"
 block|,
 name|irpd_abort
+block|,
+name|NULL
 block|}
 block|,
 block|{
+name|NULL
+block|,
 name|NULL
 block|,
 name|NULL
@@ -2172,6 +2273,7 @@ comment|/*  * An empty string causes the library to use the compiled in  * defau
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|conffile
@@ -2234,6 +2336,7 @@ index|[
 literal|0
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|sockname
@@ -2622,7 +2725,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * simple_response(struct ctl_sess *sess, u_int code, char *msg);  *	Send back a simple, one-line response to the client.  */
+comment|/*  * static void  * simple_response(struct ctl_sess *sess, u_int code, const char *msg);  *	Send back a simple, one-line response to the client.  */
 end_comment
 
 begin_function
@@ -2638,6 +2741,7 @@ parameter_list|,
 name|u_int
 name|code
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -2892,7 +2996,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_gethostbyname(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		      const struct ctl_verb *verb, const char *rest,  *		      u_int respflags, void *respctx, void *uctx);  *	Implementation of the GETHOSTBYNAME verb.  */
+comment|/*  * static void  * irpd_gethostbyname(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		      const struct ctl_verb *verb, const char *rest,  *		      u_int respflags, const void *respctx, void *uctx);  *	Implementation of the GETHOSTBYNAME verb.  */
 end_comment
 
 begin_function
@@ -2924,6 +3028,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -2954,6 +3059,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -3087,7 +3217,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_gethostbyname2(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		       const struct ctl_verb *verb, const char *rest,  *		       u_int respflags, void *respctx, void *uctx);  *	Implementation of the GETHOSTBYNAME2 verb.  */
+comment|/*  * static void  * irpd_gethostbyname2(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		       const struct ctl_verb *verb, const char *rest,  *		       u_int respflags, const void *respctx, void *uctx);  *	Implementation of the GETHOSTBYNAME2 verb.  */
 end_comment
 
 begin_function
@@ -3119,6 +3249,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -3152,6 +3283,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -3349,7 +3505,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_gethostbyaddr(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		      const struct ctl_verb *verb, const char *rest,  *		      u_int respflags, void *respctx, void *uctx);  *	Implementation of the GETHOSTBYADDR verb.  */
+comment|/*  * static void  * irpd_gethostbyaddr(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		      const struct ctl_verb *verb, const char *rest,  *		      u_int respflags, const void *respctx, void *uctx);  *	Implementation of the GETHOSTBYADDR verb.  */
 end_comment
 
 begin_function
@@ -3381,6 +3537,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -3428,6 +3585,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -3693,7 +3875,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_gethostent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		   const struct ctl_verb *verb, const char *rest,  *		   u_int respflags, void *respctx, void *uctx);  *	Implementation of the GETHOSTENT verb  */
+comment|/*  * static void  * irpd_gethostent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		   const struct ctl_verb *verb, const char *rest,  *		   u_int respflags, const void *respctx, void *uctx);  *	Implementation of the GETHOSTENT verb  */
 end_comment
 
 begin_function
@@ -3725,6 +3907,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -3749,6 +3932,36 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -3785,7 +3998,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_sethostent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		   const struct ctl_verb *verb, const char *rest,  *		   u_int respflags, void *respctx, void *uctx);  *	Implementation of the SETHOSTENT verb  */
+comment|/*  * static void  * irpd_sethostent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		   const struct ctl_verb *verb, const char *rest,  *		   u_int respflags, const void *respctx, void *uctx);  *	Implementation of the SETHOSTENT verb  */
 end_comment
 
 begin_function
@@ -3817,6 +4030,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -3836,6 +4050,36 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -4009,7 +4253,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_getpwnam(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, void *respctx, void *uctx);  *	Implementation of the GETPWNAM verb  */
+comment|/*  * static void  * irpd_getpwnam(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, const void *respctx, void *uctx);  *	Implementation of the GETPWNAM verb  */
 end_comment
 
 begin_function
@@ -4041,6 +4285,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -4076,6 +4321,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -4214,7 +4484,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_getpwuid(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, void *respctx, void *uctx);  *	Implementation of the GETPWUID verb.  */
+comment|/*  * static void  * irpd_getpwuid(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, const void *respctx, void *uctx);  *	Implementation of the GETPWUID verb.  */
 end_comment
 
 begin_function
@@ -4246,6 +4516,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -4281,6 +4552,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -4491,7 +4787,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_getpwent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, void *respctx, void *uctx);  *	Implemtnation of the GETPWENT verb.   */
+comment|/*  * static void  * irpd_getpwent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, const void *respctx, void *uctx);  *	Implemtnation of the GETPWENT verb.   */
 end_comment
 
 begin_function
@@ -4523,6 +4819,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -4547,6 +4844,36 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -4583,7 +4910,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_setpwent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, void *respctx, void *uctx);  *	Implemtnation of the SETPWENT verb.  */
+comment|/*  * static void  * irpd_setpwent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, const void *respctx, void *uctx);  *	Implemtnation of the SETPWENT verb.  */
 end_comment
 
 begin_function
@@ -4615,6 +4942,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -4634,6 +4962,36 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -4807,7 +5165,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_getnetbyname(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		     const struct ctl_verb *verb, const char *rest,  *		     u_int respflags, void *respctx, void *uctx);  *	Implementation of GETNETBYNAME verb.  */
+comment|/*  * static void  * irpd_getnetbyname(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		     const struct ctl_verb *verb, const char *rest,  *		     u_int respflags, const void *respctx, void *uctx);  *	Implementation of GETNETBYNAME verb.  */
 end_comment
 
 begin_function
@@ -4839,6 +5197,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -4879,6 +5238,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -5046,7 +5430,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_getnetbyaddr(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		     const struct ctl_verb *verb, const char *rest,  *		     u_int respflags, void *respctx, void *uctx);  */
+comment|/*  * static void  * irpd_getnetbyaddr(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		     const struct ctl_verb *verb, const char *rest,  *		     u_int respflags, const void *respctx, void *uctx);  */
 end_comment
 
 begin_function
@@ -5078,6 +5462,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -5130,6 +5515,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -5443,7 +5853,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_getnetent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		  const struct ctl_verb *verb, const char *rest,  *		  u_int respflags, void *respctx, void *uctx);  *	Implementation of the GETNETENT verb.  */
+comment|/*  * static void  * irpd_getnetent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		  const struct ctl_verb *verb, const char *rest,  *		  u_int respflags, const void *respctx, void *uctx);  *	Implementation of the GETNETENT verb.  */
 end_comment
 
 begin_function
@@ -5475,6 +5885,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -5504,6 +5915,36 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -5568,7 +6009,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_setnetent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		  const struct ctl_verb *verb, const char *rest,  *		  u_int respflags, void *respctx, void *uctx);  *	Implementation of the SETNETENT verb.  */
+comment|/*  * static void  * irpd_setnetent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		  const struct ctl_verb *verb, const char *rest,  *		  u_int respflags, const void *respctx, void *uctx);  *	Implementation of the SETNETENT verb.  */
 end_comment
 
 begin_function
@@ -5600,6 +6041,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -5619,6 +6061,36 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -5792,7 +6264,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_getgrnam(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, void *respctx, void *uctx);  *	Implementation of the GETGRNAM verb.  */
+comment|/*  * static void  * irpd_getgrnam(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, const void *respctx, void *uctx);  *	Implementation of the GETGRNAM verb.  */
 end_comment
 
 begin_function
@@ -5824,6 +6296,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -5859,6 +6332,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -5997,7 +6495,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_getgrgid(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, void *respctx, void *uctx);  *	Implentation of the GETGRGID verb.  */
+comment|/*  * static void  * irpd_getgrgid(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, const void *respctx, void *uctx);  *	Implentation of the GETGRGID verb.  */
 end_comment
 
 begin_function
@@ -6029,6 +6527,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -6064,6 +6563,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -6274,7 +6798,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_getgrent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, void *respctx, void *uctx);  *	Implementation of the GETGRENT verb.  */
+comment|/*  * static void  * irpd_getgrent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, const void *respctx, void *uctx);  *	Implementation of the GETGRENT verb.  */
 end_comment
 
 begin_function
@@ -6306,6 +6830,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -6330,6 +6855,36 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -6366,7 +6921,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_setgrent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, void *respctx, void *uctx);  *	Implementation of the SETGRENT verb.  */
+comment|/*  * static void  * irpd_setgrent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		 const struct ctl_verb *verb, const char *rest,  *		 u_int respflags, const void *respctx, void *uctx);  *	Implementation of the SETGRENT verb.  */
 end_comment
 
 begin_function
@@ -6398,6 +6953,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -6417,6 +6973,36 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -6614,6 +7200,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -6655,6 +7242,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -6858,7 +7470,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_getservbyport(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		      const struct ctl_verb *verb, const char *rest,  *		      u_int respflags, void *respctx, void *uctx);  *	Handle the GETSERVBYPORT verb.  */
+comment|/*  * static void  * irpd_getservbyport(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		      const struct ctl_verb *verb, const char *rest,  *		      u_int respflags, const void *respctx, void *uctx);  *	Handle the GETSERVBYPORT verb.  */
 end_comment
 
 begin_function
@@ -6890,6 +7502,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -6931,6 +7544,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -7215,7 +7853,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_getservent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		   const struct ctl_verb *verb, const char *rest,  *		   u_int respflags, void *respctx, void *uctx);  *	Handle the GETSERVENT verb.  */
+comment|/*  * static void  * irpd_getservent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		   const struct ctl_verb *verb, const char *rest,  *		   u_int respflags, const void *respctx, void *uctx);  *	Handle the GETSERVENT verb.  */
 end_comment
 
 begin_function
@@ -7247,6 +7885,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -7271,6 +7910,36 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -7307,7 +7976,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_setservent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		   const struct ctl_verb *verb, const char *rest,  *		   u_int respflags, void *respctx, void *uctx);  *	Handle the SETSERVENT verb.  */
+comment|/*  * static void  * irpd_setservent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		   const struct ctl_verb *verb, const char *rest,  *		   u_int respflags, const void *respctx, void *uctx);  *	Handle the SETSERVENT verb.  */
 end_comment
 
 begin_function
@@ -7339,6 +8008,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -7358,6 +8028,36 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -7525,7 +8225,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_getprotobyname(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		       const struct ctl_verb *verb, const char *rest,  *		       u_int respflags, void *respctx, void *uctx);  *	Handle the GETPROTOBYNAME verb.  */
+comment|/*  * static void  * irpd_getprotobyname(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		       const struct ctl_verb *verb, const char *rest,  *		       u_int respflags, const void *respctx, void *uctx);  *	Handle the GETPROTOBYNAME verb.  */
 end_comment
 
 begin_function
@@ -7557,6 +8257,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -7592,6 +8293,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -7730,7 +8456,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_getprotobynumber(struct ctl_sctx *ctx,  *			 struct ctl_sess *sess, const struct ctl_verb *verb,  *			 const char *rest, u_int respflags, void *respctx,  *			 void *uctx);  *	Handle the GETPROTOBYNUMBER verb.  */
+comment|/*  * static void  * irpd_getprotobynumber(struct ctl_sctx *ctx,  *			 struct ctl_sess *sess, const struct ctl_verb *verb,  *			 const char *rest, u_int respflags, const void *respctx,  *			 void *uctx);  *	Handle the GETPROTOBYNUMBER verb.  */
 end_comment
 
 begin_function
@@ -7762,6 +8488,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -7797,6 +8524,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -8007,7 +8759,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_getprotoent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		    const struct ctl_verb *verb, const char *rest,  *		    u_int respflags, void *respctx, void *uctx);  *	Handle the GETPROTOENT verb.  */
+comment|/*  * static void  * irpd_getprotoent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		    const struct ctl_verb *verb, const char *rest,  *		    u_int respflags, const void *respctx, void *uctx);  *	Handle the GETPROTOENT verb.  */
 end_comment
 
 begin_function
@@ -8039,6 +8791,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -8063,6 +8816,36 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -8099,7 +8882,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_setprotoent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		    const struct ctl_verb *verb, const char *rest,  *		    u_int respflags, void *respctx, void *uctx);  *	Handle the SETPROTOENT verb.  */
+comment|/*  * static void  * irpd_setprotoent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		    const struct ctl_verb *verb, const char *rest,  *		    u_int respflags, const void *respctx, void *uctx);  *	Handle the SETPROTOENT verb.  */
 end_comment
 
 begin_function
@@ -8131,6 +8914,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -8150,6 +8934,36 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -8202,14 +9016,17 @@ name|ctl_sess
 modifier|*
 name|sess
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|host
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|user
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|domain
@@ -8308,7 +9125,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_getnetgrent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		    const struct ctl_verb *verb, const char *rest,  *		    u_int respflags, void *respctx, void *uctx);  *	Handle the GETNETGRENT verb.   */
+comment|/*  * static void  * irpd_getnetgrent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		    const struct ctl_verb *verb, const char *rest,  *		    u_int respflags, const void *respctx, void *uctx);  *	Handle the GETNETGRENT verb.   */
 end_comment
 
 begin_function
@@ -8340,6 +9157,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -8359,6 +9177,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -8403,6 +9246,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+specifier|const
 name|char
 modifier|*
 name|host
@@ -8461,7 +9305,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_innetgr(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		const struct ctl_verb *verb, const char *rest,  *		u_int respflags, void *respctx, void *uctx);  *	Handle the INNETGR verb.  */
+comment|/*  * static void  * irpd_innetgr(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		const struct ctl_verb *verb, const char *rest,  *		u_int respflags, const void *respctx, void *uctx);  *	Handle the INNETGR verb.  */
 end_comment
 
 begin_function
@@ -8493,6 +9337,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -8517,18 +9362,46 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|host
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|user
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|domain
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -8800,7 +9673,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_setnetgrent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		    const struct ctl_verb *verb, const char *rest,  *		    u_int respflags, void *respctx, void *uctx);  *	Handle the SETNETGRENT verb.  */
+comment|/*  * static void  * irpd_setnetgrent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		    const struct ctl_verb *verb, const char *rest,  *		    u_int respflags, const void *respctx, void *uctx);  *	Handle the SETNETGRENT verb.  */
 end_comment
 
 begin_function
@@ -8832,6 +9705,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -8856,6 +9730,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -8929,7 +9828,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_endnetgrent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		    const struct ctl_verb *verb, const char *rest,  *		    u_int respflags, void *respctx, void *uctx);  *	Handle the ENDNETGRENT verb.  */
+comment|/*  * static void  * irpd_endnetgrent(struct ctl_sctx *ctx, struct ctl_sess *sess,  *		    const struct ctl_verb *verb, const char *rest,  *		    u_int respflags, const void *respctx, void *uctx);  *	Handle the ENDNETGRENT verb.  */
 end_comment
 
 begin_function
@@ -8961,6 +9860,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -8980,6 +9880,31 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|netdata
@@ -9043,7 +9968,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_quit(struct ctl_sctx *ctx, struct ctl_sess *sess,  *	     const struct ctl_verb *verb, const char *rest,  *	     u_int respflags, void *respctx, void *uctx);  *	Handle the QUIT verb.  */
+comment|/*  * static void  * irpd_quit(struct ctl_sctx *ctx, struct ctl_sess *sess,  *	     const struct ctl_verb *verb, const char *rest,  *	     u_int respflags, const void *respctx, void *uctx);  *	Handle the QUIT verb.  */
 end_comment
 
 begin_function
@@ -9075,6 +10000,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -9084,6 +10010,36 @@ modifier|*
 name|uctx
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|ctl_response
 argument_list|(
 name|sess
@@ -9109,7 +10065,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_help(struct ctl_sctx *ctx, struct ctl_sess *sess,  *	     const struct ctl_verb *verb, const char *rest,  *	     u_int respflags, void *respctx, void *uctx);  *	Handle the HELP verb.  */
+comment|/*  * static void  * irpd_help(struct ctl_sctx *ctx, struct ctl_sess *sess,  *	     const struct ctl_verb *verb, const char *rest,  *	     u_int respflags, const void *respctx, void *uctx);  *	Handle the HELP verb.  */
 end_comment
 
 begin_function
@@ -9141,6 +10097,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -9151,6 +10108,36 @@ name|uctx
 parameter_list|)
 block|{
 comment|/* XXX	should make this do something better (like include required 	 *	arguments. 	 */
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 name|ctl_sendhelp
 argument_list|(
 name|sess
@@ -9162,7 +10149,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_accept(struct ctl_sctx *ctx, struct ctl_sess *sess,  *	       const struct ctl_verb *verb, const char *rest,  *	       u_int respflags, void *respctx, void *uctx);  *	Handle a new connection.  */
+comment|/*  * static void  * irpd_accept(struct ctl_sctx *ctx, struct ctl_sess *sess,  *	       const struct ctl_verb *verb, const char *rest,  *	       u_int respflags, const void *respctx, void *uctx);  *	Handle a new connection.  */
 end_comment
 
 begin_function
@@ -9194,6 +10181,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -9203,6 +10191,7 @@ modifier|*
 name|uctx
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -9224,12 +10213,38 @@ decl_stmt|;
 name|int
 name|response
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|respmsg
 init|=
 name|NULL
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sa
@@ -9261,6 +10276,7 @@ operator|==
 name|AF_INET
 condition|)
 block|{
+specifier|const
 name|struct
 name|sockaddr_in
 modifier|*
@@ -9269,10 +10285,12 @@ init|=
 name|respctx
 decl_stmt|;
 specifier|static
+name|unsigned
 name|long
 name|localhost
 decl_stmt|;
 specifier|static
+name|unsigned
 name|long
 name|zero
 decl_stmt|;
@@ -9508,7 +10526,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void  * irpd_abort(struct ctl_sctx *ctx, struct ctl_sess *sess,  *	      const struct ctl_verb *verb, const char *rest,  *	      u_int respflags, void *respctx, void *uctx);  *	Handle a dropped connection.  */
+comment|/*  * static void  * irpd_abort(struct ctl_sctx *ctx, struct ctl_sess *sess,  *	      const struct ctl_verb *verb, const char *rest,  *	      u_int respflags, const void *respctx, void *uctx);  *	Handle a dropped connection.  */
 end_comment
 
 begin_function
@@ -9540,6 +10558,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -9559,6 +10578,36 @@ argument_list|(
 name|sess
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|verb
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|rest
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respflags
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|respctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uctx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|netdata
@@ -9597,6 +10646,16 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|sess
+argument_list|)
+expr_stmt|;
 name|release_buffer
 argument_list|(
 name|uap
@@ -9710,14 +10769,17 @@ argument_list|,
 name|ap
 argument_list|)
 operator|>
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|buffer
 argument_list|)
 operator|-
 literal|1
-operator|)
+argument_list|)
 condition|)
 block|{
 name|syslog
@@ -9725,6 +10787,11 @@ argument_list|(
 name|LOG_CRIT
 argument_list|,
 literal|"Buffer overrun in logger"
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 name|abort
@@ -10165,18 +11232,17 @@ operator|==
 literal|'\0'
 condition|)
 break|break;
+name|DE_CONST
+argument_list|(
+name|p
+argument_list|,
 name|iovs
 index|[
 name|c
 index|]
 operator|.
 name|iov_base
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|p
+argument_list|)
 expr_stmt|;
 while|while
 condition|(

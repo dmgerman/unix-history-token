@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_connects.c,v 8.27 2000/11/14 01:10:37 vixie Exp $"
+literal|"$Id: ev_connects.c,v 8.32 2001/07/03 13:26:35 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -245,6 +251,33 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_FIONBIO_IOCTL
+name|int
+name|on
+init|=
+literal|1
+decl_stmt|;
+name|OK
+argument_list|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|FIONBIO
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|on
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|OK
 argument_list|(
 name|fcntl
@@ -259,6 +292,8 @@ name|PORT_NONBLOCK
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|new
 operator|->
 name|flags
@@ -408,6 +443,7 @@ parameter_list|,
 name|int
 name|fd
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|ra
@@ -742,6 +778,36 @@ operator|)
 return|;
 block|}
 else|else
+block|{
+ifdef|#
+directive|ifdef
+name|USE_FIONBIO_IOCTL
+name|int
+name|on
+init|=
+literal|1
+decl_stmt|;
+name|OK
+argument_list|(
+name|ioctl
+argument_list|(
+name|this
+operator|->
+name|fd
+argument_list|,
+name|FIONBIO
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|on
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|OK
 argument_list|(
 name|fcntl
@@ -758,6 +824,9 @@ name|PORT_NONBLOCK
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+block|}
 block|}
 comment|/* Unlink from ctx->conns. */
 if|if
@@ -1410,7 +1479,8 @@ name|ra
 union|;
 name|int
 name|new
-decl_stmt|,
+decl_stmt|;
+name|ISC_SOCKLEN_T
 name|lalen
 init|=
 literal|0
@@ -1620,7 +1690,7 @@ name|la
 union|,
 name|ra
 union|;
-name|int
+name|ISC_SOCKLEN_T
 name|lalen
 decl_stmt|,
 name|ralen
@@ -1646,9 +1716,14 @@ name|socket_errno
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|ISC_SOCKLEN_T
 name|optlen
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|evmask
+argument_list|)
+expr_stmt|;
 name|lalen
 operator|=
 sizeof|sizeof

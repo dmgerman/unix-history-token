@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkservdb.c,v 1.9 2001/01/26 06:54:11 vixie Exp $"
+literal|"$Id: mkservdb.c,v 1.10 2001/06/18 14:42:46 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -293,18 +293,21 @@ decl_stmt|;
 name|DBT
 name|data
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|filename
 init|=
 name|_PATH_SERVICES
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|tmpdatabase
 init|=
 name|_PATH_SERVICES_DB_TMP
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|database
@@ -932,6 +935,9 @@ operator|)
 operator|-
 name|dbuf
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 name|dbuf
 condition|)

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_glue.c,v 8.20 2001/02/16 04:46:14 marka Exp $"
+literal|"$Id: ns_glue.c,v 8.24 2002/01/07 02:54:37 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -774,6 +774,7 @@ begin_function
 name|void
 name|ns_assertion_failed
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|file
@@ -784,6 +785,7 @@ parameter_list|,
 name|assertion_type
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|cond
@@ -1175,6 +1177,7 @@ operator|==
 name|EINTR
 condition|)
 do|;
+comment|/* 	 * Tru64 UNIX V5.1 can return a spurious EINVAL after connect() 	 * failures. 	 */
 if|if
 condition|(
 name|s
@@ -1184,6 +1187,10 @@ operator|&&
 name|errno
 operator|!=
 name|EBADF
+operator|&&
+name|errno
+operator|!=
+name|EINVAL
 condition|)
 name|ns_info
 argument_list|(
@@ -1428,6 +1435,7 @@ end_function
 
 begin_function
 name|void
+modifier|*
 name|__freestr
 parameter_list|(
 name|char
@@ -1444,6 +1452,11 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
@@ -1654,7 +1667,11 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
@@ -1682,6 +1699,7 @@ parameter_list|,
 name|int
 name|needpanic
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -1793,6 +1811,7 @@ parameter_list|,
 name|int
 name|needpanic
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -1876,12 +1895,14 @@ end_function
 
 begin_function
 name|void
+modifier|*
 name|__freestr_record
 parameter_list|(
 name|char
 modifier|*
 name|str
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -1939,10 +1960,16 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|checked_ctime
@@ -1953,6 +1980,7 @@ modifier|*
 name|t
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|ctime_result
@@ -1996,6 +2024,7 @@ comment|/*  * Since the fields in a "struct timeval" are longs, and the argument
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|ctimel

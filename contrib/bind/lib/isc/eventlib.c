@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: eventlib.c,v 1.45 2000/02/04 07:25:39 vixie Exp $"
+literal|"$Id: eventlib.c,v 1.46 2001/11/01 05:35:48 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -850,7 +850,7 @@ name|x
 operator|!=
 literal|1
 condition|)
-name|ERR
+name|EV_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -1200,7 +1200,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|ERR
+name|EV_ERR
 argument_list|(
 name|ENOENT
 argument_list|)
@@ -1723,7 +1723,7 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
-name|ERR
+name|EV_ERR
 argument_list|(
 name|pselect_errno
 argument_list|)
@@ -1750,7 +1750,7 @@ operator|&
 name|EV_POLL
 operator|)
 condition|)
-name|ERR
+name|EV_ERR
 argument_list|(
 name|EWOULDBLOCK
 argument_list|)

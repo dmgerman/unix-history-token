@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: skip.c,v 8.5 1999/10/13 16:39:20 vixie Exp $"
+literal|"$Id: skip.c,v 8.7 2001/06/20 12:30:35 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,11 +90,29 @@ directive|include
 file|"port_after.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"res.h"
+end_include
+
 begin_function_decl
+specifier|static
+name|unsigned
 name|char
 modifier|*
 name|res_skip_rr
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|cp
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|eom
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -106,6 +124,7 @@ comment|/*  ********************************************************************
 end_comment
 
 begin_function
+name|unsigned
 name|char
 modifier|*
 name|res_skip
@@ -116,6 +135,7 @@ name|numFieldsToSkip
 parameter_list|,
 name|eom
 parameter_list|)
+name|unsigned
 name|char
 modifier|*
 name|msg
@@ -123,12 +143,14 @@ decl_stmt|;
 name|int
 name|numFieldsToSkip
 decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|eom
 decl_stmt|;
 block|{
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|cp
@@ -194,16 +216,8 @@ name|tmp
 operator|=
 name|dn_skipname
 argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|)
 name|cp
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|eom
 argument_list|)
 expr_stmt|;
@@ -440,6 +454,8 @@ comment|/*  ********************************************************************
 end_comment
 
 begin_function
+specifier|static
+name|unsigned
 name|char
 modifier|*
 name|res_skip_rr
@@ -448,10 +464,12 @@ name|cp
 parameter_list|,
 name|eom
 parameter_list|)
+name|unsigned
 name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|eom
@@ -470,16 +488,8 @@ name|tmp
 operator|=
 name|dn_skipname
 argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|)
 name|cp
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|eom
 argument_list|)
 operator|)
@@ -531,10 +541,6 @@ name|dlen
 operator|=
 name|ns_get16
 argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|)
 name|cp
 argument_list|)
 expr_stmt|;

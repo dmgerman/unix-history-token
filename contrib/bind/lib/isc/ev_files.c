@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_files.c,v 1.19 1999/10/07 20:44:04 vixie Exp $"
+literal|"$Id: ev_files.c,v 1.21 2001/11/01 05:35:46 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -193,7 +199,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|ERR
+name|EV_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -206,7 +212,7 @@ name|ctx
 operator|->
 name|highestFD
 condition|)
-name|ERR
+name|EV_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -263,6 +269,33 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|USE_FIONBIO_IOCTL
+name|int
+name|on
+init|=
+literal|1
+decl_stmt|;
+name|OK
+argument_list|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|FIONBIO
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|on
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|OK
 argument_list|(
 name|fcntl
@@ -277,6 +310,8 @@ name|PORT_NONBLOCK
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|FD_CLR
 argument_list|(
 name|fd
@@ -307,7 +342,7 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-name|ERR
+name|EV_ERR
 argument_list|(
 name|ETOOMANYREFS
 argument_list|)
@@ -664,7 +699,7 @@ name|errno
 operator|!=
 name|EBADF
 condition|)
-name|ERR
+name|EV_ERR
 argument_list|(
 name|errno
 argument_list|)
@@ -805,6 +840,35 @@ literal|1
 condition|)
 block|{
 comment|/* 		 * Note that we won't return an error status to the caller if 		 * this fcntl() fails since (a) we've already done the work 		 * and (b) the caller didn't ask us anything about O_NONBLOCK. 		 */
+ifdef|#
+directive|ifdef
+name|USE_FIONBIO_IOCTL
+name|int
+name|off
+init|=
+literal|1
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+name|del
+operator|->
+name|fd
+argument_list|,
+name|FIONBIO
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|off
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 operator|(
 name|void
 operator|)
@@ -822,6 +886,8 @@ operator|~
 name|PORT_NONBLOCK
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * Now find all other uses of this descriptor and OR together an event 	 * mask so that we don't turn off {rd,wr,ex}Next bits that some other 	 * file event is using.  As an optimization, stop if the event mask 	 * fills. 	 */
 name|eventmask

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp_ho.c,v 8.2 1999/10/13 16:39:31 vixie Exp $"
+literal|"$Id: irp_ho.c,v 8.3 2001/05/29 05:48:59 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -382,6 +382,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|struct
+name|addrinfo
+modifier|*
+name|ho_addrinfo
+parameter_list|(
+name|struct
+name|irs_ho
+modifier|*
+name|this
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|struct
+name|addrinfo
+modifier|*
+name|pai
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Public. */
 end_comment
@@ -548,6 +574,12 @@ operator|->
 name|minimize
 operator|=
 name|ho_minimize
+expr_stmt|;
+name|ho
+operator|->
+name|addrinfo
+operator|=
+name|ho_addrinfo
 expr_stmt|;
 return|return
 operator|(
@@ -1680,6 +1712,57 @@ name|h_addr_list
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* dummy */
+end_comment
+
+begin_function
+specifier|static
+name|struct
+name|addrinfo
+modifier|*
+name|ho_addrinfo
+parameter_list|(
+name|struct
+name|irs_ho
+modifier|*
+name|this
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|struct
+name|addrinfo
+modifier|*
+name|pai
+parameter_list|)
+block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|pai
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 

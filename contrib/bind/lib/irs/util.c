@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: util.c,v 1.11 2000/02/04 08:28:33 vixie Exp $"
+literal|"$Id: util.c,v 1.12 2001/05/29 05:49:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -370,6 +370,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|gid_t
+operator|)
 name|grp
 operator|->
 name|gr_gid

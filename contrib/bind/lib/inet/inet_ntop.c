@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_ntop.c,v 1.10 2001/01/25 20:21:10 vixie Exp $"
+literal|"$Id: inet_ntop.c,v 1.11 2001/09/27 15:12:57 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -765,6 +765,21 @@ operator|.
 name|len
 operator|==
 literal|6
+operator|||
+operator|(
+name|best
+operator|.
+name|len
+operator|==
+literal|7
+operator|&&
+name|words
+index|[
+literal|7
+index|]
+operator|!=
+literal|0x0001
+operator|)
 operator|||
 operator|(
 name|best

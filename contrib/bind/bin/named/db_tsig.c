@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_tsig.c,v 8.6 2000/04/21 06:54:04 vixie Exp $"
+literal|"$Id: db_tsig.c,v 8.8 2002/05/21 02:34:32 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,6 +205,7 @@ value|"hmac-md5"
 end_define
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|tsig_alg_name
@@ -290,8 +291,6 @@ block|{
 name|server_info
 name|si
 init|=
-name|si
-operator|=
 name|find_server
 argument_list|(
 name|addr

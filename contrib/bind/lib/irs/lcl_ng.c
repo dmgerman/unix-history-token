@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lcl_ng.c,v 1.16 1999/10/13 16:39:32 vixie Exp $"
+literal|"$Id: lcl_ng.c,v 1.17 2001/05/29 05:49:05 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|"irs_p.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lcl_p.h"
 end_include
 
 begin_comment
@@ -306,14 +312,17 @@ name|struct
 name|irs_ng
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -433,6 +442,11 @@ name|pvt
 modifier|*
 name|pvt
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -844,16 +858,19 @@ name|irs_ng
 modifier|*
 name|this
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|host
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|user
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -976,6 +993,7 @@ modifier|*
 name|domain
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|ng_host
@@ -1879,6 +1897,8 @@ name|spos
 decl_stmt|,
 modifier|*
 name|linep
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|olinep
