@@ -238,7 +238,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_priority
+name|p_pri
+operator|.
+name|pri_level
 operator|>
 name|PZERO
 operator|||
@@ -706,7 +708,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_priority
+name|p_pri
+operator|.
+name|pri_level
 operator|<=
 name|PZERO
 condition|)

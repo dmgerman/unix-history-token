@@ -50,12 +50,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priority.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rtprio.h>
 end_include
 
 begin_comment
-comment|/* For struct rtprio. */
+comment|/* XXX */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/runq.h>
+end_include
 
 begin_include
 include|#
@@ -694,18 +706,11 @@ name|int
 name|p_magic
 decl_stmt|;
 comment|/* (b) Magic number. */
-name|u_char
-name|p_priority
+name|struct
+name|priority
+name|p_pri
 decl_stmt|;
 comment|/* (j) Process priority. */
-name|u_char
-name|p_usrpri
-decl_stmt|;
-comment|/* (j) User priority based on p_cpu and p_nice. */
-name|u_char
-name|p_nativepri
-decl_stmt|;
-comment|/* (j) Priority before propagation. */
 name|char
 name|p_nice
 decl_stmt|;
@@ -731,11 +736,6 @@ modifier|*
 name|p_sysent
 decl_stmt|;
 comment|/* (b) System call dispatch information. */
-name|struct
-name|rtprio
-name|p_rtprio
-decl_stmt|;
-comment|/* (j) Realtime priority. */
 name|struct
 name|prison
 modifier|*
@@ -1937,6 +1937,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|procqueue
+argument_list|,
+name|proc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1990,63 +2000,6 @@ begin_comment
 comment|/* Process slot for syncer (sic). */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NQS
-value|32
-end_define
-
-begin_comment
-comment|/* 32 run queues. */
-end_comment
-
-begin_expr_stmt
-name|TAILQ_HEAD
-argument_list|(
-name|rq
-argument_list|,
-name|proc
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|rq
-name|itqueues
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|rq
-name|rtqueues
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|rq
-name|queues
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|rq
-name|idqueues
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -2068,7 +2021,7 @@ parameter_list|(
 name|e
 parameter_list|)
 define|\
-value|min((e), INVERSE_ESTCPU_WEIGHT * (NICE_WEIGHT * (PRIO_MAX - PRIO_MIN) - \ 	     PPQ) + INVERSE_ESTCPU_WEIGHT - 1)
+value|min((e), INVERSE_ESTCPU_WEIGHT * (NICE_WEIGHT * (PRIO_MAX - PRIO_MIN) - \ 	     RQ_PPQ) + INVERSE_ESTCPU_WEIGHT - 1)
 end_define
 
 begin_define
@@ -2091,17 +2044,6 @@ end_define
 
 begin_comment
 comment|/* Priorities per nice level. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPQ
-value|(128 / NQS)
-end_define
-
-begin_comment
-comment|/* Priorities per queue. */
 end_comment
 
 begin_struct_decl
@@ -2436,7 +2378,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int32_t
+name|int
 name|procrunnable
 name|__P
 argument_list|(

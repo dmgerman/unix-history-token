@@ -242,7 +242,7 @@ name|p
 parameter_list|,
 name|pri
 parameter_list|)
-value|(p)->p_priority = (pri)
+value|(p)->p_pri.pri_level = (pri)
 end_define
 
 begin_comment
@@ -560,7 +560,9 @@ name|pri
 init|=
 name|p
 operator|->
-name|p_priority
+name|p_pri
+operator|.
+name|pri_level
 decl_stmt|;
 name|struct
 name|mtx
@@ -642,7 +644,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_priority
+name|p_pri
+operator|.
+name|pri_level
 operator|<=
 name|pri
 condition|)
@@ -656,10 +660,6 @@ name|pri
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If lock holder is actually running, just bump priority. 		 */
-ifdef|#
-directive|ifdef
-name|SMP
-comment|/* 		 * For SMP, we can check the p_oncpu field to see if we are 		 * running. 		 */
 if|if
 condition|(
 name|p
@@ -686,25 +686,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-else|#
-directive|else
-comment|/* 		 * For UP, we check to see if p is curproc (this shouldn't 		 * ever happen however as it would mean we are in a deadlock.) 		 */
-if|if
-condition|(
-name|p
-operator|==
-name|curproc
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"Deadlock detected"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-endif|#
-directive|endif
 comment|/* 		 * If on run queue move to new run queue, and 		 * quit. 		 */
 if|if
 condition|(
@@ -715,19 +696,6 @@ operator|==
 name|SRUN
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"XXX: moving proc %d(%s) to a new run queue\n"
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|,
-name|p
-operator|->
-name|p_comm
-argument_list|)
-expr_stmt|;
 name|MPASS
 argument_list|(
 name|p
@@ -793,23 +761,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"XXX: process %d(%s) is blocked on %s\n"
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|,
-name|p
-operator|->
-name|p_comm
-argument_list|,
-name|m
-operator|->
-name|mtx_description
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Check if the proc needs to be moved up on 		 * the blocked chain 		 */
 if|if
 condition|(
@@ -824,11 +775,6 @@ name|mtx_blocked
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"XXX: process at head of run queue\n"
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 name|p1
@@ -837,7 +783,7 @@ name|TAILQ_PREV
 argument_list|(
 name|p
 argument_list|,
-name|rq
+name|procqueue
 argument_list|,
 name|p_procq
 argument_list|)
@@ -846,24 +792,13 @@ if|if
 condition|(
 name|p1
 operator|->
-name|p_priority
+name|p_pri
+operator|.
+name|pri_level
 operator|<=
 name|pri
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"XXX: previous process %d(%s) has higher priority\n"
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|,
-name|p
-operator|->
-name|p_comm
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * Remove proc from blocked chain and determine where 		 * it should be moved up to.  Since we know that p1 has 		 * a lower priority than p, we know that at least one 		 * process in the chain has a lower priority and that 		 * p1 will thus not be NULL after the loop. 		 */
@@ -901,7 +836,9 @@ if|if
 condition|(
 name|p1
 operator|->
-name|p_priority
+name|p_pri
+operator|.
+name|pri_level
 operator|>
 name|pri
 condition|)
@@ -1213,11 +1150,15 @@ expr_stmt|;
 comment|/* 	 * Save our priority. Even though p_nativepri is protected by 	 * sched_lock, we don't obtain it here as it can be expensive. 	 * Since this is the only place p_nativepri is set, and since two 	 * CPUs will not be executing the same process concurrently, we know 	 * that no other CPU is going to be messing with this. Also, 	 * p_nativepri is only read when we are blocked on a mutex, so that 	 * can't be happening right now either. 	 */
 name|p
 operator|->
-name|p_nativepri
+name|p_pri
+operator|.
+name|pri_native
 operator|=
 name|p
 operator|->
-name|p_priority
+name|p_pri
+operator|.
+name|pri_level
 expr_stmt|;
 while|while
 condition|(
@@ -1306,11 +1247,15 @@ if|if
 condition|(
 name|p1
 operator|->
-name|p_priority
+name|p_pri
+operator|.
+name|pri_level
 operator|<
 name|p
 operator|->
-name|p_priority
+name|p_pri
+operator|.
+name|pri_level
 condition|)
 name|SET_PRIO
 argument_list|(
@@ -1318,7 +1263,9 @@ name|p
 argument_list|,
 name|p1
 operator|->
-name|p_priority
+name|p_pri
+operator|.
+name|pri_level
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
@@ -1514,11 +1461,15 @@ if|if
 condition|(
 name|p1
 operator|->
-name|p_priority
+name|p_pri
+operator|.
+name|pri_level
 operator|>
 name|p
 operator|->
-name|p_priority
+name|p_pri
+operator|.
+name|pri_level
 condition|)
 break|break;
 if|if
@@ -1569,12 +1520,11 @@ name|p_stat
 operator|=
 name|SMTX
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|propagate_priority(p);
-endif|#
-directive|endif
+name|propagate_priority
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2032,7 +1982,7 @@ argument_list|)
 expr_stmt|;
 name|pri
 operator|=
-name|MAXPRI
+name|PRI_MAX
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -2054,7 +2004,9 @@ operator|->
 name|mtx_blocked
 argument_list|)
 operator|->
-name|p_priority
+name|p_pri
+operator|.
+name|pri_level
 decl_stmt|;
 if|if
 condition|(
@@ -2073,13 +2025,17 @@ name|pri
 operator|>
 name|p
 operator|->
-name|p_nativepri
+name|p_pri
+operator|.
+name|pri_native
 condition|)
 name|pri
 operator|=
 name|p
 operator|->
-name|p_nativepri
+name|p_pri
+operator|.
+name|pri_native
 expr_stmt|;
 name|SET_PRIO
 argument_list|(
@@ -2144,7 +2100,9 @@ literal|0
 operator|&&
 name|p1
 operator|->
-name|p_priority
+name|p_pri
+operator|.
+name|pri_level
 operator|<
 name|pri
 condition|)

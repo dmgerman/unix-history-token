@@ -1666,11 +1666,15 @@ argument_list|()
 expr_stmt|;
 name|p
 operator|->
-name|p_priority
+name|p_pri
+operator|.
+name|pri_level
 operator|=
 name|p
 operator|->
-name|p_usrpri
+name|p_pri
+operator|.
+name|pri_user
 expr_stmt|;
 name|setrunqueue
 argument_list|(

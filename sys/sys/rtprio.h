@@ -15,6 +15,12 @@ directive|define
 name|_SYS_RTPRIO_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/priority.h>
+end_include
+
 begin_comment
 comment|/*  * Process realtime-priority specifications to rtprio.  */
 end_comment
@@ -26,19 +32,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RTP_PRIO_ITHREAD
-value|1
-end_define
-
-begin_comment
-comment|/* interrupt thread */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|RTP_PRIO_REALTIME
-value|2
+value|PRI_REALTIME
 end_define
 
 begin_comment
@@ -49,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|RTP_PRIO_NORMAL
-value|3
+value|PRI_TIMESHARE
 end_define
 
 begin_comment
@@ -60,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|RTP_PRIO_IDLE
-value|4
+value|PRI_IDLE
 end_define
 
 begin_comment
@@ -75,14 +70,14 @@ begin_define
 define|#
 directive|define
 name|RTP_PRIO_FIFO_BIT
-value|4
+value|PRI_FIFO_BIT
 end_define
 
 begin_define
 define|#
 directive|define
 name|RTP_PRIO_FIFO
-value|(RTP_PRIO_REALTIME | RTP_PRIO_FIFO_BIT)
+value|PRI_FIFO
 end_define
 
 begin_define
@@ -92,7 +87,7 @@ name|RTP_PRIO_BASE
 parameter_list|(
 name|P
 parameter_list|)
-value|((P)& ~RTP_PRIO_FIFO_BIT)
+value|PRI_BASE(P)
 end_define
 
 begin_define
@@ -102,7 +97,7 @@ name|RTP_PRIO_IS_REALTIME
 parameter_list|(
 name|P
 parameter_list|)
-value|(RTP_PRIO_BASE(P) == RTP_PRIO_REALTIME)
+value|PRI_IS_REALTIME(P)
 end_define
 
 begin_define
@@ -112,7 +107,7 @@ name|RTP_PRIO_NEED_RR
 parameter_list|(
 name|P
 parameter_list|)
-value|((P) != RTP_PRIO_FIFO)
+value|PRI_NEED_RR(P)
 end_define
 
 begin_comment
@@ -166,7 +161,7 @@ name|LOCORE
 end_ifndef
 
 begin_comment
-comment|/*  * Scheduling class information.  This is strictly speaking not only  * for real-time processes.  We should replace it with two variables:  * class and priority.  At the moment we use prio here for real-time  * and interrupt processes, and for others we use proc.p_pri.  FIXME.  */
+comment|/*  * Scheduling class information.  */
 end_comment
 
 begin_struct
@@ -184,128 +179,51 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_function_decl
+name|int
+name|rtp_to_pri
+parameter_list|(
+name|struct
+name|rtprio
+modifier|*
+parameter_list|,
+name|struct
+name|priority
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pri_to_rtp
+parameter_list|(
+name|struct
+name|priority
+modifier|*
+parameter_list|,
+name|struct
+name|rtprio
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Interrupt thread priorities, after BSD/OS.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PI_REALTIME
-value|1
-end_define
-
-begin_comment
-comment|/* very high priority (clock) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PI_AV
-value|2
-end_define
-
-begin_comment
-comment|/* Audio/video devices */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PI_TTYHIGH
-value|3
-end_define
-
-begin_comment
-comment|/* High priority tty's (small FIFOs) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PI_TAPE
-value|4
-end_define
-
-begin_comment
-comment|/* Tape devices (high for streaming) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PI_NET
-value|5
-end_define
-
-begin_comment
-comment|/* Network interfaces */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PI_DISK
-value|6
-end_define
-
-begin_comment
-comment|/* Disks and SCSI */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PI_TTYLOW
-value|7
-end_define
-
-begin_comment
-comment|/* Ttys with big buffers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PI_DISKLOW
-value|8
-end_define
-
-begin_comment
-comment|/* Disks that do programmed I/O */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PI_DULL
-value|9
-end_define
-
-begin_comment
-comment|/* We don't know or care */
-end_comment
-
-begin_comment
-comment|/* Soft interrupt threads */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PI_SOFT
-value|15
-end_define
-
-begin_comment
-comment|/* All soft interrupts */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

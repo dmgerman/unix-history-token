@@ -420,14 +420,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|vm_page_zero_idle
-argument_list|()
-operator|!=
+if|#
+directive|if
 literal|0
-condition|)
-continue|continue;
+block|if (vm_page_zero_idle() != 0) 				continue;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__i386__

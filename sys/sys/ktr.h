@@ -277,6 +277,17 @@ begin_comment
 comment|/* checks done in the idle process */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KTR_RUNQ
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Run queue */
+end_comment
+
 begin_comment
 comment|/*  * Trace classes which can be assigned to particular use at compile time  * These must remain in high 22 as some assembly code counts on it  */
 end_comment

@@ -174,7 +174,7 @@ begin_define
 define|#
 directive|define
 name|KINFO_PROC_SIZE
-value|904
+value|912
 end_define
 
 begin_comment
@@ -190,7 +190,7 @@ begin_define
 define|#
 directive|define
 name|KINFO_PROC_SIZE
-value|640
+value|644
 end_define
 
 begin_comment
@@ -432,18 +432,6 @@ name|int
 name|ki_traceflag
 decl_stmt|;
 comment|/* Kernel trace points */
-name|u_char
-name|ki_priority
-decl_stmt|;
-comment|/* Process priority */
-name|u_char
-name|ki_usrpri
-decl_stmt|;
-comment|/* User-priority based on p_cpu */
-name|u_char
-name|ki_nativepri
-decl_stmt|;
-comment|/* Priority before propogation */
 name|char
 name|ki_stat
 decl_stmt|;
@@ -512,11 +500,6 @@ index|]
 decl_stmt|;
 comment|/* spare string space */
 name|struct
-name|rtprio
-name|ki_rtprio
-decl_stmt|;
-comment|/* Realtime priority */
-name|struct
 name|rusage
 name|ki_rusage
 decl_stmt|;
@@ -525,10 +508,15 @@ name|long
 name|ki_sflag
 decl_stmt|;
 comment|/* PS_* flags */
+name|struct
+name|priority
+name|ki_pri
+decl_stmt|;
+comment|/* process priority */
 name|long
 name|ki_spare
 index|[
-literal|24
+literal|25
 index|]
 decl_stmt|;
 comment|/* spare constants */

@@ -337,7 +337,7 @@ begin_define
 define|#
 directive|define
 name|TTIPRI
-value|25
+value|(PSOCK + 1)
 end_define
 
 begin_comment
@@ -348,7 +348,7 @@ begin_define
 define|#
 directive|define
 name|TTOPRI
-value|26
+value|(PSOCK + 2)
 end_define
 
 begin_comment

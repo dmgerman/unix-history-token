@@ -5371,7 +5371,9 @@ name|vp
 argument_list|,
 name|p
 operator|->
-name|p_usrpri
+name|p_pri
+operator|.
+name|pri_user
 argument_list|,
 literal|"nap"
 argument_list|,
@@ -5527,7 +5529,9 @@ name|vp
 argument_list|,
 name|p
 operator|->
-name|p_usrpri
+name|p_pri
+operator|.
+name|pri_user
 argument_list|,
 literal|"nap"
 argument_list|,

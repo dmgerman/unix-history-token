@@ -1524,5 +1524,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|<sys/user.h>
+end_include
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug_sizeof
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|kinfo_proc
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|kinfo_proc
+argument_list|)
+argument_list|,
+literal|"sizeof(struct kinfo_proc)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

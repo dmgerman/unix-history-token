@@ -1657,13 +1657,13 @@ case|:
 comment|/* 			 * do not swapout a realtime process 			 */
 if|if
 condition|(
-name|RTP_PRIO_IS_REALTIME
+name|PRI_IS_REALTIME
 argument_list|(
 name|p
 operator|->
-name|p_rtprio
+name|p_pri
 operator|.
-name|type
+name|pri_class
 argument_list|)
 condition|)
 block|{
@@ -1682,9 +1682,9 @@ operator|(
 operator|(
 name|p
 operator|->
-name|p_priority
-operator|&
-literal|0x7f
+name|p_pri
+operator|.
+name|pri_level
 operator|)
 operator|<
 name|PSOCK

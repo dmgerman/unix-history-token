@@ -412,7 +412,7 @@ name|tsleep
 argument_list|(
 name|NULL
 argument_list|,
-literal|0
+name|PZERO
 argument_list|,
 literal|"acpislp"
 argument_list|,
