@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.11	%G%	*/
+comment|/*	dz.c	4.12	%G%	*/
 end_comment
 
 begin_include
@@ -16,6 +16,16 @@ name|NDZ11
 operator|>
 literal|0
 end_if
+
+begin_define
+define|#
+directive|define
+name|DELAY
+parameter_list|(
+name|i
+parameter_list|)
+value|{ register int j = i; while (--j> 0); }
+end_define
 
 begin_comment
 comment|/*  *  DZ-11 Driver  */
@@ -105,17 +115,6 @@ directive|include
 file|"../h/mx.h"
 end_include
 
-begin_comment
-comment|/*  * When running dz's using only SAE (silo alarm) on input  * it is necessary to call dzrint() at clock interrupt time.  * This is unsafe unless spl5()s in tty code are changed to  * spl6()s to block clock interrupts.  Note that the dh driver  * currently in use works the same way as the dz, even though  * we could try to more intelligently manage its silo.  * Thus don't take this out if you have no dz's unless you  * change clock.c and dhtimer().  *  * SHOULD RATHER QUEUE SOFTWARE INTERRUPT AT CLOCK TIME.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|spl5
-value|spl6
-end_define
-
 begin_decl_stmt
 name|int
 name|dzcntrlr
@@ -160,15 +159,6 @@ block|{
 name|dzcntrlr
 block|,
 name|dzslave
-block|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-literal|0
 block|,
 literal|0
 block|,
@@ -518,10 +508,13 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|int
-name|i
+name|br
+decl_stmt|,
+name|cvec
 decl_stmt|;
-comment|/* NB: NOT REGISTER */
+specifier|register
 name|struct
 name|device
 modifier|*
@@ -549,20 +542,11 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* enable any line */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|1000000
-condition|;
-name|i
-operator|++
-control|)
-empty_stmt|;
+name|DELAY
+argument_list|(
+literal|100000
+argument_list|)
+expr_stmt|;
 name|dzaddr
 operator|->
 name|dzcsr
@@ -570,7 +554,18 @@ operator|=
 name|CLR
 expr_stmt|;
 comment|/* reset everything */
-asm|asm("cmpl r10,$0x200;beql 1f;subl2 $4,r10;1:;");
+if|if
+condition|(
+name|cvec
+operator|&&
+name|cvec
+operator|!=
+literal|0x200
+condition|)
+name|cvec
+operator|-=
+literal|4
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -1286,28 +1281,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|s
-operator|=
-name|spl6
-argument_list|()
-expr_stmt|;
-comment|/* see comment in clock.c */
-comment|/* as long as we are here, service them all */
-for|for
-control|(
-name|unit
-operator|=
-literal|0
-init|;
-name|unit
-operator|<
-name|NDZ
-condition|;
-name|unit
-operator|+=
-literal|8
-control|)
-block|{
 if|if
 condition|(
 operator|(
@@ -1316,17 +1289,19 @@ operator|&
 operator|(
 literal|1
 operator|<<
-operator|(
-name|unit
-operator|>>
-literal|3
-operator|)
+name|dz
 operator|)
 operator|)
 operator|==
 literal|0
 condition|)
-continue|continue;
+return|return;
+name|unit
+operator|=
+name|dz
+operator|*
+literal|8
+expr_stmt|;
 name|dzaddr
 operator|=
 name|dzpdma
@@ -1529,12 +1504,6 @@ name|tp
 operator|)
 expr_stmt|;
 block|}
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -1969,10 +1938,9 @@ name|s
 expr_stmt|;
 name|s
 operator|=
-name|spl6
+name|spl5
 argument_list|()
 expr_stmt|;
-comment|/* block the clock */
 name|dp
 operator|=
 operator|(
@@ -2430,7 +2398,7 @@ name|t_addr
 expr_stmt|;
 name|s
 operator|=
-name|spl6
+name|spl5
 argument_list|()
 expr_stmt|;
 if|if
@@ -2772,9 +2740,25 @@ block|}
 name|dztimer
 argument_list|()
 block|{
+name|int
+name|dz
+decl_stmt|;
+for|for
+control|(
+name|dz
+operator|=
+literal|0
+init|;
+name|dz
+operator|<
+name|NDZ11
+condition|;
+name|dz
+operator|++
+control|)
 name|dzrint
 argument_list|(
-literal|0
+name|dz
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.14	81/02/15	*/
+comment|/*	dh.c	4.15	81/02/16	*/
 end_comment
 
 begin_include
@@ -17,8 +17,18 @@ operator|>
 literal|0
 end_if
 
+begin_define
+define|#
+directive|define
+name|DELAY
+parameter_list|(
+name|i
+parameter_list|)
+value|{ register int j = i; while (--j> 0); }
+end_define
+
 begin_comment
-comment|/*  * DH-11 driver  *  * DOESNT HANDLE EXTENDED ADDRESS BITS.  */
+comment|/*  * DH-11 driver  * DOESNT HANDLE EXTENDED ADDRESS BITS.  */
 end_comment
 
 begin_include
@@ -93,21 +103,6 @@ directive|include
 file|"../h/mx.h"
 end_include
 
-begin_comment
-comment|/* This is to block the clock because we are using the silos */
-end_comment
-
-begin_comment
-comment|/* SHOULD RATHER QUEUE SOFTWARE INTERRUPT AT CLOCK TIME */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|spl5
-value|spl6
-end_define
-
 begin_define
 define|#
 directive|define
@@ -117,7 +112,7 @@ name|x
 parameter_list|,
 name|uban
 parameter_list|)
-value|(cbase[uban] + (short)((x)-(char *)cfree))
+value|(cbase[uban] + ((x)-(char *)cfree))
 end_define
 
 begin_decl_stmt
@@ -168,15 +163,6 @@ name|dhcntrlr
 block|,
 name|dhslave
 block|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-literal|0
-block|,
 literal|0
 block|,
 literal|0
@@ -205,12 +191,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|dhact
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|dhisilo
 decl_stmt|;
 end_decl_stmt
 
@@ -313,78 +293,162 @@ name|HDUPLX
 value|040000
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAINT
-value|01000
-end_define
+begin_comment
+comment|/* Bits in dhcsr */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|IENAB
-value|030100
-end_define
-
-begin_define
-define|#
-directive|define
-name|NXM
-value|02000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLRNXM
-value|0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|PERROR
-value|010000
-end_define
-
-begin_define
-define|#
-directive|define
-name|FRERROR
-value|020000
-end_define
-
-begin_define
-define|#
-directive|define
-name|OVERRUN
-value|040000
-end_define
-
-begin_define
-define|#
-directive|define
-name|XINT
+name|DH_TI
 value|0100000
 end_define
 
-begin_define
-define|#
-directive|define
-name|RINT
-value|0100
-end_define
+begin_comment
+comment|/* transmit interrupt */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SSPEED
-value|7
+name|DH_SI
+value|0040000
 end_define
 
 begin_comment
-comment|/* standard speed: 300 baud */
+comment|/* storage interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DH_TIE
+value|0020000
+end_define
+
+begin_comment
+comment|/* transmit interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DH_SIE
+value|0010000
+end_define
+
+begin_comment
+comment|/* storage interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DH_MC
+value|0004000
+end_define
+
+begin_comment
+comment|/* master clear */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DH_NXM
+value|0002000
+end_define
+
+begin_comment
+comment|/* non-existant memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DH_MM
+value|0001000
+end_define
+
+begin_comment
+comment|/* maintenance mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DH_CNI
+value|0000400
+end_define
+
+begin_comment
+comment|/* clear non-existant memory interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DH_RI
+value|0000200
+end_define
+
+begin_comment
+comment|/* receiver interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DH_RIE
+value|0000100
+end_define
+
+begin_comment
+comment|/* receiver interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DH_IE
+value|(DH_TIE|DH_SIE|DH_RIE)
+end_define
+
+begin_comment
+comment|/* Bits in dhrcr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DH_PE
+value|010000
+end_define
+
+begin_comment
+comment|/* parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DH_FE
+value|020000
+end_define
+
+begin_comment
+comment|/* framing error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DH_DO
+value|040000
+end_define
+
+begin_comment
+comment|/* data overrun */
 end_comment
 
 begin_comment
@@ -394,7 +458,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TURNON
+name|DM_ON
 value|03
 end_define
 
@@ -405,7 +469,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TURNOFF
+name|DM_OFF
 value|01
 end_define
 
@@ -416,7 +480,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DTR
+name|DM_DTR
 value|02
 end_define
 
@@ -427,7 +491,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RQS
+name|DM_RQS
 value|04
 end_define
 
@@ -457,38 +521,49 @@ block|{
 name|short
 name|dhcsr
 decl_stmt|;
+comment|/* control-status register */
 name|char
 name|dhcsrl
 decl_stmt|;
+comment|/* low byte for line select */
 block|}
 name|un
 union|;
 name|short
-name|dhnxch
+name|dhrcr
 decl_stmt|;
+comment|/* receive character register */
 name|short
 name|dhlpr
 decl_stmt|;
-name|unsigned
-name|short
+comment|/* line parameter register */
+name|u_short
 name|dhcar
 decl_stmt|;
+comment|/* current address register */
 name|short
 name|dhbcr
 decl_stmt|;
-name|unsigned
-name|short
+comment|/* byte count register */
+name|u_short
 name|dhbar
 decl_stmt|;
+comment|/* buffer active register */
 name|short
 name|dhbreak
 decl_stmt|;
+comment|/* break control register */
 name|short
 name|dhsilo
 decl_stmt|;
+comment|/* silo status register */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Routine for configuration to force a dh to interrupt.  * Set to transmit at 9600 baud, and cause a transmitter interrupt.  */
+end_comment
 
 begin_macro
 name|dhcntrlr
@@ -515,6 +590,13 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|int
+name|br
+decl_stmt|,
+name|cvec
+decl_stmt|;
+specifier|register
 name|struct
 name|device
 modifier|*
@@ -536,7 +618,32 @@ name|un
 operator|.
 name|dhcsr
 operator|=
-name|IENAB
+name|DH_TIE
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+name|dhaddr
+operator|->
+name|dhlpr
+operator|=
+operator|(
+name|B9600
+operator|<<
+literal|10
+operator|)
+operator||
+operator|(
+name|B9600
+operator|<<
+literal|6
+operator|)
+operator||
+name|BITS7
+operator||
+name|PENABLE
 expr_stmt|;
 name|dhaddr
 operator|->
@@ -547,31 +654,22 @@ literal|1
 expr_stmt|;
 name|dhaddr
 operator|->
-name|dhbar
-operator|=
-literal|1
-expr_stmt|;
-name|dhaddr
-operator|->
 name|dhcar
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
-name|i
+name|dhaddr
+operator|->
+name|dhbar
 operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|1000000
-condition|;
-name|i
-operator|++
-control|)
-empty_stmt|;
-comment|/* we should have had an interrupt */
+literal|1
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100000
+argument_list|)
+expr_stmt|;
+comment|/* wait 1/10'th of a sec for interrupt */
 name|dhaddr
 operator|->
 name|un
@@ -580,9 +678,30 @@ name|dhcsr
 operator|=
 literal|0
 expr_stmt|;
-asm|asm("cmpl r10,$0x200;beql 1f;subl2 $4,r10;1:;");
+if|if
+condition|(
+name|cvec
+operator|&&
+name|cvec
+operator|!=
+literal|0x200
+condition|)
+name|cvec
+operator|-=
+literal|4
+expr_stmt|;
+comment|/* transmit -> receive */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Routine called to init slave tables.  */
+end_comment
 
 begin_macro
 name|dhslave
@@ -611,7 +730,7 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* could fill in local tables for the dh here */
+comment|/* no tables to set up */
 block|}
 end_block
 
@@ -819,29 +938,44 @@ operator|->
 name|ui_ubanum
 index|]
 operator|=
-operator|(
-name|short
-operator|)
 name|dh_ubinfo
 index|[
 name|ui
 operator|->
 name|ui_ubanum
 index|]
+operator|&
+literal|0x3ffff
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dhact
+operator|&
+operator|(
+literal|1
+operator|<<
+name|dh
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|addr
 operator|->
 name|un
 operator|.
 name|dhcsr
 operator||=
-name|IENAB
+name|DH_IE
+expr_stmt|;
+name|addr
+operator|->
+name|dhsilo
+operator|=
+literal|16
 expr_stmt|;
 name|dhact
 operator||=
@@ -850,6 +984,12 @@ literal|1
 operator|<<
 name|dh
 operator|)
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -882,13 +1022,13 @@ name|tp
 operator|->
 name|t_ispeed
 operator|=
-name|SSPEED
+name|B300
 expr_stmt|;
 name|tp
 operator|->
 name|t_ospeed
 operator|=
-name|SSPEED
+name|B300
 expr_stmt|;
 name|tp
 operator|->
@@ -1025,7 +1165,6 @@ operator|(
 name|tp
 operator|)
 expr_stmt|;
-comment|/* 	 * Turn of the break bit in case somebody did a TIOCSBRK without 	 * a TIOCCBRK. 	 */
 operator|(
 operator|(
 expr|struct
@@ -1074,7 +1213,7 @@ name|dmctl
 argument_list|(
 name|unit
 argument_list|,
-name|TURNOFF
+name|DM_OFF
 argument_list|,
 name|DMSET
 argument_list|)
@@ -1244,12 +1383,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|s
-operator|=
-name|spl6
-argument_list|()
-expr_stmt|;
-comment|/* see comment in clock.c */
 name|ui
 operator|=
 name|dhinfo
@@ -1257,6 +1390,23 @@ index|[
 name|dh
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|ui
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"stray dhrint %d\n"
+argument_list|,
+name|dh
+argument_list|)
+expr_stmt|;
+asm|asm("halt");
+return|return;
+block|}
 name|addr
 operator|=
 operator|(
@@ -1285,7 +1435,7 @@ name|c
 operator|=
 name|addr
 operator|->
-name|dhnxch
+name|dhrcr
 operator|)
 operator|<
 literal|0
@@ -1346,7 +1496,7 @@ if|if
 condition|(
 name|c
 operator|&
-name|PERROR
+name|DH_PE
 condition|)
 if|if
 condition|(
@@ -1383,7 +1533,7 @@ if|if
 condition|(
 name|c
 operator|&
-name|OVERRUN
+name|DH_DO
 condition|)
 name|printf
 argument_list|(
@@ -1394,7 +1544,7 @@ if|if
 condition|(
 name|c
 operator|&
-name|FRERROR
+name|DH_FE
 condition|)
 comment|/* break */
 if|if
@@ -1411,20 +1561,12 @@ literal|0
 expr_stmt|;
 comment|/* null (for getty) */
 else|else
-ifdef|#
-directive|ifdef
-name|IIASA
-continue|continue;
-else|#
-directive|else
 name|c
 operator|=
 name|tun
 operator|.
 name|t_intrc
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|tp
@@ -1465,11 +1607,6 @@ name|tp
 operator|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -1652,9 +1789,9 @@ name|dmctl
 argument_list|(
 name|unit
 argument_list|,
-name|DTR
+name|DM_DTR
 operator||
-name|RQS
+name|DM_RQS
 argument_list|,
 name|DMBIS
 argument_list|)
@@ -1667,9 +1804,9 @@ name|dmctl
 argument_list|(
 name|unit
 argument_list|,
-name|DTR
+name|DM_DTR
 operator||
-name|RQS
+name|DM_RQS
 argument_list|,
 name|DMBIC
 argument_list|)
@@ -1758,9 +1895,8 @@ operator|&
 literal|017
 operator|)
 operator||
-name|IENAB
+name|DH_IE
 expr_stmt|;
-comment|/* 	 * Hang up line? 	 */
 if|if
 condition|(
 operator|(
@@ -1782,7 +1918,7 @@ name|dmctl
 argument_list|(
 name|unit
 argument_list|,
-name|TURNOFF
+name|DM_OFF
 argument_list|,
 name|DMSET
 argument_list|)
@@ -1956,12 +2092,6 @@ expr_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|s
-operator|=
-name|spl6
-argument_list|()
-expr_stmt|;
-comment|/* block the clock */
 name|ui
 operator|=
 name|dhinfo
@@ -1980,6 +2110,35 @@ name|ui
 operator|->
 name|ui_addr
 expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|->
+name|un
+operator|.
+name|dhcsr
+operator|&
+name|DH_NXM
+condition|)
+block|{
+name|addr
+operator|->
+name|un
+operator|.
+name|dhcsr
+operator||=
+name|DH_CNI
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"dh%d NXM\n"
+argument_list|,
+name|ui
+operator|->
+name|ui_ctlr
+argument_list|)
+expr_stmt|;
+block|}
 name|addr
 operator|->
 name|un
@@ -1990,34 +2149,8 @@ operator|(
 name|short
 operator|)
 operator|~
-name|XINT
+name|DH_TI
 expr_stmt|;
-if|if
-condition|(
-name|addr
-operator|->
-name|un
-operator|.
-name|dhcsr
-operator|&
-name|NXM
-condition|)
-block|{
-asm|asm("halt");
-name|addr
-operator|->
-name|un
-operator|.
-name|dhcsr
-operator||=
-name|CLRNXM
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"dh clr NXM\n"
-argument_list|)
-expr_stmt|;
-block|}
 name|sbar
 operator|=
 operator|&
@@ -2121,7 +2254,7 @@ operator|&
 literal|017
 operator|)
 operator||
-name|IENAB
+name|DH_IE
 expr_stmt|;
 name|ndflush
 argument_list|(
@@ -2130,12 +2263,7 @@ name|tp
 operator|->
 name|t_outq
 argument_list|,
-operator|(
-name|int
-operator|)
-operator|(
-name|short
-operator|)
+comment|/* SHOULD PASTE ON 16&17 BITS HERE */
 name|addr
 operator|->
 name|dhcar
@@ -2184,11 +2312,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -2438,6 +2561,7 @@ condition|(
 name|nch
 condition|)
 block|{
+comment|/* SHOULD PASTE ON BITS 16&17 HERE */
 name|addr
 operator|->
 name|un
@@ -2450,7 +2574,7 @@ operator|&
 literal|017
 operator|)
 operator||
-name|IENAB
+name|DH_IE
 expr_stmt|;
 name|addr
 operator|->
@@ -2520,7 +2644,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Stop output on a line.  * Assume call is made at spl6.  */
+comment|/*  * Stop output on a line.  */
 end_comment
 
 begin_comment
@@ -2602,7 +2726,7 @@ operator|&
 literal|017
 operator|)
 operator||
-name|IENAB
+name|DH_IE
 expr_stmt|;
 if|if
 condition|(
@@ -2635,128 +2759,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-block|}
-end_block
-
-begin_decl_stmt
-name|int
-name|dhsilo
-init|=
-literal|16
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Silo control is fixed strategy  * here, paralleling only option available  * on DZ-11.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_macro
-name|dhtimer
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|register
-name|int
-name|dh
-decl_stmt|;
-specifier|register
-name|struct
-name|device
-modifier|*
-name|addr
-decl_stmt|;
-specifier|register
-name|struct
-name|uba_dinfo
-modifier|*
-name|ui
-decl_stmt|;
-name|dh
-operator|=
-literal|0
-expr_stmt|;
-do|do
-block|{
-name|ui
-operator|=
-name|dhinfo
-index|[
-name|dh
-index|]
-expr_stmt|;
-name|addr
-operator|=
-operator|(
-expr|struct
-name|device
-operator|*
-operator|)
-name|ui
-operator|->
-name|ui_addr
-expr_stmt|;
-if|if
-condition|(
-name|dhact
-operator|&
-operator|(
-literal|1
-operator|<<
-name|dh
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|dhisilo
-operator|&
-operator|(
-literal|1
-operator|<<
-name|dh
-operator|)
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|addr
-operator|->
-name|dhsilo
-operator|=
-name|dhsilo
-expr_stmt|;
-name|dhisilo
-operator||=
-literal|1
-operator|<<
-name|dh
-expr_stmt|;
-block|}
-name|dhrint
-argument_list|(
-name|dh
-argument_list|)
-expr_stmt|;
-block|}
-name|dh
-operator|++
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|dh
-operator|<
-name|NDH11
-condition|)
-do|;
 block|}
 end_block
 
@@ -2859,11 +2861,6 @@ index|]
 operator|&
 literal|0x3ffff
 expr_stmt|;
-name|dhisilo
-operator|=
-literal|0
-expr_stmt|;
-comment|/* conservative */
 name|dh
 operator|=
 literal|0
@@ -2923,7 +2920,22 @@ name|un
 operator|.
 name|dhcsr
 operator||=
-name|IENAB
+name|DH_IE
+expr_stmt|;
+operator|(
+operator|(
+expr|struct
+name|device
+operator|*
+operator|)
+name|ui
+operator|->
+name|ui_addr
+operator|)
+operator|->
+name|dhsilo
+operator|=
+literal|16
 expr_stmt|;
 name|unit
 operator|=
@@ -2975,7 +2987,7 @@ name|dmctl
 argument_list|(
 name|unit
 argument_list|,
-name|TURNON
+name|DM_ON
 argument_list|,
 name|DMSET
 argument_list|)
@@ -3000,6 +3012,38 @@ block|}
 block|}
 name|dhtimer
 argument_list|()
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|dhtimer
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|int
+name|dh
+decl_stmt|;
+for|for
+control|(
+name|dh
+operator|=
+literal|0
+init|;
+name|dh
+operator|<
+name|NDH11
+condition|;
+name|dh
+operator|++
+control|)
+name|dhrint
+argument_list|(
+name|dh
+argument_list|)
 expr_stmt|;
 block|}
 end_block
