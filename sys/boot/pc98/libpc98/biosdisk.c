@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: biosdisk.c,v 1.1.2.2 1999/03/11 10:26:20 kato Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
 end_comment
 
 begin_comment
@@ -257,8 +257,9 @@ ifdef|#
 directive|ifdef
 name|PC98
 name|int
-name|bd_drive
+name|bd_da_unit
 decl_stmt|;
+comment|/* kernel unit number for da */
 endif|#
 directive|endif
 block|}
@@ -661,7 +662,7 @@ ifdef|#
 directive|ifdef
 name|PC98
 name|int
-name|hd_drive
+name|da_drive
 init|=
 literal|0
 decl_stmt|,
@@ -761,6 +762,25 @@ block|{
 if|if
 condition|(
 operator|(
+operator|(
+name|unit
+operator|&
+literal|0xf0
+operator|)
+operator|==
+literal|0x90
+operator|&&
+operator|(
+name|unit
+operator|&
+literal|0x0f
+operator|)
+operator|<
+literal|4
+operator|)
+operator|||
+operator|(
+operator|(
 name|unit
 operator|&
 literal|0xf0
@@ -775,6 +795,7 @@ literal|0x0f
 operator|)
 operator|<
 literal|6
+operator|)
 condition|)
 continue|continue;
 comment|/* Target IDs are not contiguous. */
@@ -793,21 +814,6 @@ operator|&
 name|BD_FLOPPY
 condition|)
 block|{
-name|bdinfo
-index|[
-name|nbdinfo
-index|]
-operator|.
-name|bd_drive
-operator|=
-literal|'A'
-operator|+
-operator|(
-name|unit
-operator|&
-literal|0xf
-operator|)
-expr_stmt|;
 comment|/* available 1.44MB access? */
 if|if
 condition|(
@@ -869,29 +875,36 @@ expr_stmt|;
 block|}
 block|}
 else|else
+block|{
+if|if
+condition|(
+operator|(
+name|unit
+operator|&
+literal|0xa0
+operator|)
+operator|==
+literal|0xa0
+condition|)
 name|bdinfo
 index|[
 name|nbdinfo
 index|]
 operator|.
-name|bd_drive
+name|bd_da_unit
 operator|=
-literal|'C'
-operator|+
-name|hd_drive
+name|da_drive
 operator|++
 expr_stmt|;
+block|}
 comment|/* XXX we need "disk aliases" to make this simpler */
 name|printf
 argument_list|(
 literal|"BIOS drive %c: is disk%d\n"
 argument_list|,
-name|bdinfo
-index|[
+literal|'A'
+operator|+
 name|nbdinfo
-index|]
-operator|.
-name|bd_drive
 argument_list|,
 name|nbdinfo
 argument_list|)
@@ -1277,12 +1290,9 @@ literal|"    disk%d:   BIOS drive %c:\n"
 argument_list|,
 name|i
 argument_list|,
-name|bdinfo
-index|[
+literal|'A'
+operator|+
 name|i
-index|]
-operator|.
-name|bd_drive
 argument_list|)
 expr_stmt|;
 else|#
@@ -5202,13 +5212,38 @@ block|{
 ifdef|#
 directive|ifdef
 name|PC98
+if|if
+condition|(
+operator|(
+name|biosdev
+operator|&
+literal|0xf0
+operator|)
+operator|==
+literal|0xa0
+condition|)
+name|unit
+operator|=
+name|bdinfo
+index|[
+name|dev
+operator|->
+name|d_kind
+operator|.
+name|biosdisk
+operator|.
+name|unit
+index|]
+operator|.
+name|bd_da_unit
+expr_stmt|;
+else|else
 name|unit
 operator|=
 name|biosdev
 operator|&
 literal|0xf
 expr_stmt|;
-comment|/* allow for #wd compenstation in da case */
 else|#
 directive|else
 name|unit
