@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf.c 1.28 89/08/14$  *  *	@(#)grf.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf.c 1.28 89/08/14$  *  *	@(#)grf.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1458,6 +1458,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|error
+decl_stmt|;
+specifier|extern
+name|char
+name|devioc
+index|[]
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1641,6 +1649,38 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|=
+name|tsleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|gp
+operator|->
+name|g_flags
+argument_list|,
+operator|(
+name|PZERO
+operator|+
+literal|1
+operator|)
+operator||
+name|PCATCH
+argument_list|,
+name|devioc
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 do|while
 condition|(

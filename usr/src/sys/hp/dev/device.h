@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)device.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)device.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -289,42 +289,63 @@ begin_define
 define|#
 directive|define
 name|BITMAP
-value|0x01
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|NET
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|COMM
-value|0x03
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|FPA
-value|0x04
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|MISC
-value|0x05
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
 name|KEYBOARD
-value|0x06
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMMDCA
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMMDCM
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMMDCL
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPORT
+value|10
 end_define
 
 begin_ifdef
