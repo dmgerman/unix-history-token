@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: shutdown.c,v 1.13 1998/08/03 06:22:43 charnier Exp $"
+literal|"$Id: shutdown.c,v 1.14 1998/12/10 23:54:02 msmith Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -649,20 +649,18 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|doreboot
 operator|+
 name|dohalt
 operator|+
 name|dopower
-operator|)
 operator|>
 literal|1
 condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"incompatible switches -h, -p  and -r"
+literal|"incompatible switches -h, -p and -r"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -2433,7 +2431,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: shutdown [-hknr] shutdowntime [ message ]\n"
+literal|"usage: shutdown [-] [-hknpr] time [warning-message ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
