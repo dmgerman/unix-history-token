@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.28 (Berkeley) %G%"
+literal|"@(#)glob.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -439,6 +439,11 @@ operator|*
 name|s
 operator|!=
 literal|'/'
+operator|&&
+operator|*
+name|s
+operator|!=
+literal|':'
 operator|&&
 name|b
 operator|<
