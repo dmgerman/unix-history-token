@@ -858,7 +858,7 @@ operator|==
 name|SRUN
 argument_list|,
 operator|(
-literal|"runq_chose: process %d(%s) in state %d"
+literal|"runq_choose: process %d(%s) in state %d"
 operator|,
 name|p
 operator|->
