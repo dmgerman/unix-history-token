@@ -468,53 +468,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"card.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NCARD
-operator|>
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX should die XXX */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/select.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pccard/cardinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pccard/slot.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -4744,31 +4697,9 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|name
-operator|=
-name|pccard_get_name
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|name
-argument_list|,
-literal|"sio"
-argument_list|)
-condition|)
-return|return
-name|ENXIO
-return|;
 comment|/* Do not probe IRQ - pccardd has not arranged for it yet */
+comment|/* XXX Actually it has been asigned to you, but isn't activated   */
+comment|/* XXX until you specifically activate the resource for your use. */
 name|SET_FLAG
 argument_list|(
 name|dev
@@ -4815,7 +4746,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|sio_pccard_detach
 parameter_list|(
 name|dev
@@ -4966,6 +4897,11 @@ literal|"unload,gone\n"
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
