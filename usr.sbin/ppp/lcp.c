@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.20 1997/05/24 17:32:38 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.21 1997/05/26 00:44:03 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
 end_comment
 
 begin_include
@@ -2961,7 +2961,7 @@ operator|.
 name|want_magic
 condition|)
 block|{
-comment|/* XXX: Shoud validate magic number */
+comment|/* Validate magic number */
 if|if
 condition|(
 name|magic
@@ -2970,21 +2970,39 @@ name|LcpInfo
 operator|.
 name|want_magic
 condition|)
-name|logprintf
+block|{
+name|LogPrintf
 argument_list|(
-literal|"magic is same!! %x, %x, %x\n"
+name|LOG_LCP_BIT
+argument_list|,
+literal|"Magic is same (%08x)\n"
 argument_list|,
 name|magic
-argument_list|,
+argument_list|)
+expr_stmt|;
 name|LcpInfo
 operator|.
 name|want_magic
+operator|=
+name|GenerateMagic
+argument_list|()
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|cp
 argument_list|,
-name|LcpInfo
-operator|.
-name|his_magic
+name|nakp
+argument_list|,
+literal|6
 argument_list|)
 expr_stmt|;
+name|nakp
+operator|+=
+literal|6
+expr_stmt|;
+block|}
+else|else
+block|{
 name|LcpInfo
 operator|.
 name|his_magic
@@ -3004,6 +3022,7 @@ name|ackp
 operator|+=
 name|length
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
