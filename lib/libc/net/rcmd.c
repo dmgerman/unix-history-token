@@ -1413,10 +1413,6 @@ name|setgroups
 argument_list|(
 literal|1
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|sgid
 argument_list|)
