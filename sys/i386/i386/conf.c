@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) UNIX System Laboratories, Inc.  All or some portions
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.40 1994/11/01 01:47:22 pst Exp $  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.41 1994/11/03 17:49:01 pst Exp $  */
 end_comment
 
 begin_include
@@ -3456,6 +3456,134 @@ name|nullreset
 value|(d_reset_t *)nullop
 end_define
 
+begin_include
+include|#
+directive|include
+file|"cx.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NCX
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|d_open_t
+name|cxopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
+name|cxclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
+name|cxread
+decl_stmt|,
+name|cxwrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|cxioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
+name|cxselect
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_stop_t
+name|cxstop
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tty
+modifier|*
+name|cx_tty
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|cxopen
+value|(d_open_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|cxclose
+value|(d_close_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|cxread
+value|(d_rdwr_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|cxwrite
+value|(d_rdwr_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|cxioctl
+value|(d_ioctl_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|cxstop
+value|(d_stop_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|cxselect
+value|(d_select_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|cx_tty
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* open, close, read, write, ioctl, stop, reset, ttys, select, mmap, strat */
 end_comment
@@ -4590,7 +4718,33 @@ name|nommap
 block|,
 name|NULL
 block|}
+block|,
+block|{
+name|cxopen
+block|,
+name|cxclose
+block|,
+name|cxread
+block|,
+name|cxwrite
+block|,
+comment|/*42*/
+name|cxioctl
+block|,
+name|cxstop
+block|,
+name|noreset
+block|,
+name|cx_tty
+block|,
+comment|/* cronyx-sigma */
+name|cxselect
+block|,
+name|nommap
+block|,
+name|NULL
 block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
