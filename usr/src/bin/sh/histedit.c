@@ -1724,7 +1724,7 @@ name|history
 argument_list|(
 name|hist
 argument_list|,
-name|H_NEXT_STR
+name|H_PREV_STR
 argument_list|,
 name|str
 argument_list|)
