@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.15 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1119,6 +1119,31 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+name|fs
+operator|->
+name|lfs_bfree
+operator|+=
+operator|(
+name|sup
+operator|->
+name|su_nsums
+operator|*
+name|LFS_SUMMARY_SIZE
+operator|/
+name|DEV_BSIZE
+operator|)
+operator|+
+name|sup
+operator|->
+name|su_ninos
+operator|*
+name|btodb
+argument_list|(
+name|fs
+operator|->
+name|lfs_bsize
+argument_list|)
+expr_stmt|;
 name|sup
 operator|->
 name|su_flags
@@ -1129,6 +1154,18 @@ expr_stmt|;
 name|sup
 operator|->
 name|su_nbytes
+operator|=
+literal|0
+expr_stmt|;
+name|sup
+operator|->
+name|su_ninos
+operator|=
+literal|0
+expr_stmt|;
+name|sup
+operator|->
+name|su_nsums
 operator|=
 literal|0
 expr_stmt|;
@@ -1160,6 +1197,15 @@ name|LFS_UBWRITE
 argument_list|(
 name|bp
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Count all the blocks in the segment as being free again. 	 */
+name|fs
+operator|->
+name|lfs_bfree
+operator|+=
+name|fs
+operator|->
+name|lfs_ssize
 expr_stmt|;
 return|return
 operator|(
