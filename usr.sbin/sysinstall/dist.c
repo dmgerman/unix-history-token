@@ -3521,8 +3521,8 @@ elseif|else
 if|if
 condition|(
 name|fp
-operator|>
-literal|0
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -3725,8 +3725,8 @@ elseif|else
 if|if
 condition|(
 name|fp
-operator|>
-literal|0
+operator|!=
+name|NULL
 condition|)
 block|{
 name|char
