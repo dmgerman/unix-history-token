@@ -3488,6 +3488,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+comment|/* destroy the device for the control endpoint */
 name|dev
 operator|=
 name|makedev
@@ -3507,11 +3508,33 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|vp
+operator|=
+name|SLIST_FIRST
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|si_hlist
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+condition|)
+name|VOP_REVOKE
+argument_list|(
+name|vp
+argument_list|,
+name|REVOKEALL
+argument_list|)
+expr_stmt|;
 name|destroy_dev
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* destroy all devices for the other (existing) endpoints as well */
 for|for
 control|(
 name|endptno
