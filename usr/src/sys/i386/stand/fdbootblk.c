@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)fdbootblk.c	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)fdbootblk.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * fdbootblk.s:  *	Written 10/6/90 by William F. Jolitz  *	Initial block boot for AT/386 with typical stupid NEC controller  *	Works only with 3.5 inch diskettes that have 16 or greater sectors/side  *  *	Goal is to read in sucessive 7.5Kbytes of bootstrap to  *	execute.  *  *	No attempt is made to handle disk errors.  */
-end_comment
-
-begin_comment
-comment|/*#include "/sys/i386/isa/isa.h" #include "/sys/i386/isa/fdreg.h"*/
+comment|/*  * Initial block boot for AT/386 with typical stupid NEC controller.  Works  * only with 3.5 inch diskettes that have 16 or greater sectors/side.  Goal  * is to read in sucessive 7.5Kbytes of bootstrap to execute.  No attempt  * is made to handle disk errors.  */
 end_comment
 
 begin_define
@@ -33,6 +29,10 @@ value|0x70400
 end_define
 
 begin_comment
+comment|/* Gas does not know about 16 bit opcodes... */
+end_comment
+
+begin_comment
 comment|/* step 0 force descriptors to bottom of address space */
 end_comment
 
@@ -40,25 +40,46 @@ begin_expr_stmt
 operator|.
 name|byte
 literal|0xfa
-operator|,
+operator|#
+name|cli
+operator|.
+name|byte
 literal|0xb8
 operator|,
 literal|0x30
 operator|,
 literal|0x00
+operator|#
+name|mov
+name|$0x0030
 operator|,
+operator|%
+name|ax
+operator|.
+name|byte
 literal|0x8e
 operator|,
 literal|0xd0
+operator|#
+name|mov
+operator|%
+name|ax
 operator|,
+operator|%
+name|ss
+operator|.
+name|byte
 literal|0xbc
 operator|,
 literal|0x00
 operator|,
 literal|0x01
 operator|#
-name|ll
-name|fb
+name|mov
+name|$0x0100
+operator|,
+operator|%
+name|sp
 name|xorl
 operator|%
 name|eax
@@ -80,21 +101,33 @@ name|es
 comment|/* step 1 load new descriptor table */
 operator|.
 name|byte
-literal|0x2E
+literal|0x2e
+operator|#
+name|seg
+name|cs
+operator|.
+name|byte
+literal|0x0f
 operator|,
-literal|0x0F
-operator|,
-literal|1
+literal|0x01
 operator|,
 literal|0x16
+operator|#
+name|lgdt
+name|DS
+operator|:
+name|d16
 operator|.
 name|word
 name|BIOSRELOC
 operator|+
 literal|0x4a
 operator|#
+index|[
+name|BIOSRELOC
+operator|+
 name|GDTptr
-empty|# word aword cs lgdt GDTptr
+index|]
 comment|/* step 2 turn on protected mode */
 name|smsw
 operator|%
@@ -110,9 +143,9 @@ name|ax
 name|jmp
 literal|1f
 name|nop
-comment|/* step 3  reload segment descriptors */
 literal|1
 operator|:
+comment|/* step 3  reload segment descriptors */
 name|xorl
 operator|%
 name|eax
@@ -150,11 +183,16 @@ name|$
 name|BIOSRELOC
 operator|+
 literal|0x59
-comment|/* would be nice if .-RELOC+0x7c00 worked */
-comment|/* Global Descriptor Table contains three descriptors:   * 0x00: Null: not used   * 0x08: Code: code segment starts at 0 and extents for 4 gigabytes   * 0x10: Data: data segment starts at 0 and extends for 4 gigabytes   *		(overlays code)   */
+operator|#
+index|[
+name|BIOSRELOC
+operator|+
+name|reloc
+index|]
+comment|/*    * Global Descriptor Table contains three descriptors:   * 0x00: Null: not used   * 0x08: Code: code segment starts at 0 and extents for 4 gigabytes   * 0x10: Data: data segment starts at 0 and extends for 4 gigabytes   *		(overlays code)   */
 name|GDT
 operator|:
-name|NullDesc
+name|NullDsc
 operator|:
 operator|.
 name|word
@@ -171,7 +209,7 @@ name|descriptor
 operator|-
 name|not
 name|used
-name|CodeDesc
+name|CodeDsc
 operator|:
 operator|.
 name|word
@@ -253,7 +291,7 @@ literal|31
 operator|:
 literal|24
 operator|)
-name|DataDesc
+name|DataDsc
 operator|:
 operator|.
 name|word
@@ -337,7 +375,7 @@ literal|31
 operator|:
 literal|24
 operator|)
-comment|/* Global Descriptor Table pointer  *  contains 6-byte pointer information for LGDT  */
+comment|/*   * Global Descriptor Table pointer  *  contains 6-byte pointer information for LGDT  */
 name|GDTptr
 operator|:
 operator|.
@@ -363,28 +401,26 @@ name|BIOSRELOC
 operator|+
 literal|0x32
 operator|#
+index|[
+name|BIOSRELOC
+operator|+
 name|GDT
-operator|--
-name|arrgh
-operator|,
-name|gas
-name|again
-operator|!
+index|]
 name|readcmd
 operator|:
 operator|.
 name|byte
 literal|0xe6
 operator|,
-literal|0
+literal|0x00
 operator|,
-literal|0
+literal|0x00
 operator|,
-literal|0
+literal|0x00
 operator|,
-literal|0
+literal|0x00
 operator|,
-literal|2
+literal|0x02
 operator|,
 literal|18
 operator|,
