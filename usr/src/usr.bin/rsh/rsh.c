@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	5.17 (Berkeley) %G%"
+literal|"@(#)rsh.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -394,13 +394,13 @@ name|KERBEROS
 define|#
 directive|define
 name|OPTIONS
-value|"8Ldek:l:nwx"
+value|"8KLdek:l:nwx"
 else|#
 directive|else
 define|#
 directive|define
 name|OPTIONS
-value|"8Ldel:w"
+value|"8KLdel:nw"
 endif|#
 directive|endif
 while|while
@@ -429,6 +429,19 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'K'
+case|:
+ifdef|#
+directive|ifdef
+name|KERBEROS
+name|use_kerberos
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
 case|case
 literal|'L'
 case|:
@@ -479,6 +492,8 @@ name|REALM_SZ
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 literal|'n'
 case|:
@@ -487,6 +502,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|KERBEROS
 case|case
 literal|'x'
 case|:
@@ -659,6 +677,15 @@ directive|ifdef
 name|KERBEROS
 name|sp
 operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|use_kerberos
+condition|)
+block|{
+name|sp
+operator|=
 name|getservbyname
 argument_list|(
 operator|(
@@ -694,29 +721,25 @@ else|:
 literal|"kshell"
 argument_list|)
 expr_stmt|;
-name|sp
-operator|=
-name|getservbyname
-argument_list|(
-literal|"shell"
-argument_list|,
-literal|"tcp"
-argument_list|)
-expr_stmt|;
 block|}
-else|#
-directive|else
-name|sp
-operator|=
-name|getservbyname
-argument_list|(
-literal|"shell"
-argument_list|,
-literal|"tcp"
-argument_list|)
-expr_stmt|;
+block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|sp
+operator|==
+name|NULL
+condition|)
+name|sp
+operator|=
+name|getservbyname
+argument_list|(
+literal|"shell"
+argument_list|,
+literal|"tcp"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sp
