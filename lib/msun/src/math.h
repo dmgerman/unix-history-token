@@ -1362,16 +1362,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isinf
-argument_list|(
-name|double
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|isnanf
 argument_list|(
 name|float
