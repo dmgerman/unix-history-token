@@ -19,25 +19,12 @@ directive|define
 name|_STDBOOL_H_
 end_define
 
-begin_comment
-comment|/* `_Bool' type must promote to `int' or `unsigned int' */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|false
-init|=
-literal|0
-block|,
-name|true
-init|=
-literal|1
-block|}
-name|_Bool
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|__bool_true_false_are_defined
+value|1
+end_define
 
 begin_comment
 comment|/* And those constants must also be available as macros */
@@ -47,14 +34,14 @@ begin_define
 define|#
 directive|define
 name|false
-value|false
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|true
-value|true
+value|1
 end_define
 
 begin_comment
@@ -66,17 +53,6 @@ define|#
 directive|define
 name|bool
 value|_Bool
-end_define
-
-begin_comment
-comment|/* Inform that everything is fine */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__bool_true_false_are_defined
-value|1
 end_define
 
 begin_if
