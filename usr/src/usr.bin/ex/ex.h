@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex.h	7.2	%G%  */
+comment|/* sccs id:	@(#)ex.h	7.3	%G%  */
 end_comment
 
 begin_ifdef
@@ -74,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|var
-value|var
+value|extern
 end_define
 
 begin_endif
