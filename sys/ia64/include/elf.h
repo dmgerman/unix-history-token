@@ -397,6 +397,35 @@ value|0xff000000
 end_define
 
 begin_comment
+comment|/*  * Segment types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_IA_64_ARCHEXT
+value|0x70000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_IA_64_UNWIND
+value|0x70000001
+end_define
+
+begin_comment
+comment|/*  * Segment attributes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_IA_64_NORECOV
+value|0x80000000
+end_define
+
+begin_comment
 comment|/*  * Section types.  */
 end_comment
 
