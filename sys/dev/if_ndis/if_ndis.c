@@ -4639,10 +4639,8 @@ name|ac_if
 expr_stmt|;
 name|irql
 operator|=
-name|FASTCALL1
+name|KeRaiseIrql
 argument_list|(
-name|hal_raise_irql
-argument_list|,
 name|DISPATCH_LEVEL
 argument_list|)
 expr_stmt|;
@@ -4651,10 +4649,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|FASTCALL1
+name|KeLowerIrql
 argument_list|(
-name|hal_lower_irql
-argument_list|,
 name|irql
 argument_list|)
 expr_stmt|;

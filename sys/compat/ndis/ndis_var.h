@@ -4219,6 +4219,12 @@ name|ndis_work_item
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_struct
 struct|struct
 name|ndis_buffer
@@ -4263,6 +4269,11 @@ name|ndis_buffer
 name|ndis_buffer
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct

@@ -72,7 +72,7 @@ name|__BEGIN_DECLS
 name|__fastcall
 specifier|extern
 name|uint8_t
-name|hal_lock
+name|KfAcquireSpinLock
 argument_list|(
 name|REGARGS1
 argument_list|(
@@ -87,7 +87,7 @@ end_decl_stmt
 begin_decl_stmt
 name|__fastcall
 name|void
-name|hal_unlock
+name|KfReleaseSpinLock
 argument_list|(
 name|REGARGS2
 argument_list|(
@@ -103,7 +103,7 @@ begin_decl_stmt
 name|__fastcall
 specifier|extern
 name|uint8_t
-name|hal_raise_irql
+name|KfRaiseIrql
 argument_list|(
 name|REGARGS1
 argument_list|(
@@ -117,7 +117,7 @@ begin_decl_stmt
 name|__fastcall
 specifier|extern
 name|void
-name|hal_lower_irql
+name|KfLowerIrql
 argument_list|(
 name|REGARGS1
 argument_list|(
@@ -131,7 +131,7 @@ begin_function_decl
 name|__stdcall
 specifier|extern
 name|uint8_t
-name|hal_irql
+name|KeGetCurrentIrql
 parameter_list|(
 name|void
 parameter_list|)

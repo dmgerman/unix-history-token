@@ -2016,6 +2016,35 @@ begin_comment
 comment|/* __i386__ */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FUNC
+value|void(*)(void)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMPORT_FUNC
+parameter_list|(
+name|x
+parameter_list|)
+value|{ #x, (FUNC)x }
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMPORT_FUNC_MAP
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|{ #x, (FUNC)y }
+end_define
+
 begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
