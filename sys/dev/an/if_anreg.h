@@ -941,108 +941,6 @@ name|AN_DEF_SSID
 value|"tsunami"
 end_define
 
-begin_comment
-comment|/*  * Receive frame structure.  */
-end_comment
-
-begin_struct
-struct|struct
-name|an_rxframe
-block|{
-name|u_int32_t
-name|an_rx_time
-decl_stmt|;
-comment|/* 0x00 */
-name|u_int16_t
-name|an_rx_status
-decl_stmt|;
-comment|/* 0x04 */
-name|u_int16_t
-name|an_rx_payload_len
-decl_stmt|;
-comment|/* 0x06 */
-name|u_int8_t
-name|an_rsvd0
-decl_stmt|;
-comment|/* 0x08 */
-name|u_int8_t
-name|an_rx_signal_strength
-decl_stmt|;
-comment|/* 0x09 */
-name|u_int8_t
-name|an_rx_rate
-decl_stmt|;
-comment|/* 0x0A */
-name|u_int8_t
-name|an_rx_chan
-decl_stmt|;
-comment|/* 0x0B */
-name|u_int8_t
-name|an_rx_assoc_cnt
-decl_stmt|;
-comment|/* 0x0C */
-name|u_int8_t
-name|an_rsvd1
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* 0x0D */
-name|u_int8_t
-name|an_plcp_hdr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* 0x10 */
-name|u_int16_t
-name|an_frame_ctl
-decl_stmt|;
-comment|/* 0x14 */
-name|u_int16_t
-name|an_duration
-decl_stmt|;
-comment|/* 0x16 */
-name|u_int8_t
-name|an_addr1
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* 0x18 */
-name|u_int8_t
-name|an_addr2
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* 0x1E */
-name|u_int8_t
-name|an_addr3
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* 0x24 */
-name|u_int16_t
-name|an_seq_ctl
-decl_stmt|;
-comment|/* 0x2A */
-name|u_int8_t
-name|an_addr4
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* 0x2C */
-name|u_int16_t
-name|an_gaplen
-decl_stmt|;
-comment|/* 0x32 */
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -1145,11 +1043,17 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* 0x2C */
-name|u_int16_t
+name|u_int8_t
 name|an_gaplen
 decl_stmt|;
 comment|/* 0x32 */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1625,6 +1529,10 @@ name|buf_802_11
 index|[
 name|MCLBYTES
 index|]
+decl_stmt|;
+name|struct
+name|an_req
+name|areq
 decl_stmt|;
 block|}
 struct|;

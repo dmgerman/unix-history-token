@@ -1358,6 +1358,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AN_AUTHTYPE_LEAP
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
 name|AN_PSAVE_NONE
 value|0x0000
 end_define
@@ -1832,6 +1839,10 @@ name|u_int16_t
 name|an_req_hw_support
 decl_stmt|;
 comment|/* 0x80 */
+name|u_int16_t
+name|an_unknown
+decl_stmt|;
+comment|/* 0x82 */
 block|}
 struct|;
 end_struct
@@ -2087,6 +2098,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AN_STATUS_OPMODE_LEAP
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
 name|AN_STATUS_OPMODE_ERROR
 value|0x8000
 end_define
@@ -2129,6 +2147,194 @@ literal|13
 index|]
 decl_stmt|;
 comment|/* 0x0C */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Receive frame structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|an_rxframe
+block|{
+name|u_int32_t
+name|an_rx_time
+decl_stmt|;
+comment|/* 0x00 */
+name|u_int16_t
+name|an_rx_status
+decl_stmt|;
+comment|/* 0x04 */
+name|u_int16_t
+name|an_rx_payload_len
+decl_stmt|;
+comment|/* 0x06 */
+name|u_int8_t
+name|an_rsvd0
+decl_stmt|;
+comment|/* 0x08 */
+name|u_int8_t
+name|an_rx_signal_strength
+decl_stmt|;
+comment|/* 0x09 */
+name|u_int8_t
+name|an_rx_rate
+decl_stmt|;
+comment|/* 0x0A */
+name|u_int8_t
+name|an_rx_chan
+decl_stmt|;
+comment|/* 0x0B */
+name|u_int8_t
+name|an_rx_assoc_cnt
+decl_stmt|;
+comment|/* 0x0C */
+name|u_int8_t
+name|an_rsvd1
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* 0x0D */
+name|u_int8_t
+name|an_plcp_hdr
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* 0x10 */
+name|u_int16_t
+name|an_frame_ctl
+decl_stmt|;
+comment|/* 0x14 */
+name|u_int16_t
+name|an_duration
+decl_stmt|;
+comment|/* 0x16 */
+name|u_int8_t
+name|an_addr1
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* 0x18 */
+name|u_int8_t
+name|an_addr2
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* 0x1E */
+name|u_int8_t
+name|an_addr3
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* 0x24 */
+name|u_int16_t
+name|an_seq_ctl
+decl_stmt|;
+comment|/* 0x2A */
+name|u_int8_t
+name|an_addr4
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* 0x2C */
+name|u_int8_t
+name|an_gaplen
+decl_stmt|;
+comment|/* 0x32 */
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
+struct|;
+end_struct
+
+begin_comment
+comment|/* Do not modify this unless you are modifying LEAP itself */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LEAP_USERNAME_MAX
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|LEAP_PASSWORD_MAX
+value|32
+end_define
+
+begin_comment
+comment|/*  * LEAP Username  */
+end_comment
+
+begin_struct
+struct|struct
+name|an_ltv_leap_username
+block|{
+name|u_int16_t
+name|an_len
+decl_stmt|;
+comment|/* 0x00 */
+name|u_int16_t
+name|an_type
+decl_stmt|;
+comment|/* 0xXX */
+name|u_int16_t
+name|an_username_len
+decl_stmt|;
+comment|/* 0x02 */
+name|u_int8_t
+name|an_username
+index|[
+name|LEAP_USERNAME_MAX
+index|]
+decl_stmt|;
+comment|/* 0x04 */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * LEAP Password  */
+end_comment
+
+begin_struct
+struct|struct
+name|an_ltv_leap_password
+block|{
+name|u_int16_t
+name|an_len
+decl_stmt|;
+comment|/* 0x00 */
+name|u_int16_t
+name|an_type
+decl_stmt|;
+comment|/* 0xXX */
+name|u_int16_t
+name|an_password_len
+decl_stmt|;
+comment|/* 0x02 */
+name|u_int8_t
+name|an_password
+index|[
+name|LEAP_PASSWORD_MAX
+index|]
+decl_stmt|;
+comment|/* 0x04 */
 block|}
 struct|;
 end_struct
@@ -2470,8 +2676,303 @@ value|120
 end_define
 
 begin_comment
-comment|/* Just something for now */
+comment|/* Has been allocated at tcpdump.org */
 end_comment
+
+begin_comment
+comment|/*  * from the Linux driver from Cisco ... no copyright header.  * Removed duplicated information that already existed in the FreeBSD driver  * provides emulation of the Cisco extensions to the Linux Aironet driver.  */
+end_comment
+
+begin_comment
+comment|/*  * Ioctl constants to be used in airo_ioctl.command  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIROGCAP
+value|0
+end_define
+
+begin_comment
+comment|/* Capability rid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIROGCFG
+value|1
+end_define
+
+begin_comment
+comment|/* USED A LOT  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIROGSLIST
+value|2
+end_define
+
+begin_comment
+comment|/* System ID list  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIROGVLIST
+value|3
+end_define
+
+begin_comment
+comment|/* List of specified AP's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIROGDRVNAM
+value|4
+end_define
+
+begin_comment
+comment|/* NOTUSED */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIROGEHTENC
+value|5
+end_define
+
+begin_comment
+comment|/* NOTUSED */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIROGWEPKTMP
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROGWEPKNV
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROGSTAT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROGSTATSC32
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROGSTATSD32
+value|10
+end_define
+
+begin_comment
+comment|/*  * Leave gap of 40 commands after AIROGSTATSD32  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIROPCAP
+value|AIROGSTATSD32	+ 40
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROPVLIST
+value|AIROPCAP	+ 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROPSLIST
+value|AIROPVLIST	+ 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROPCFG
+value|AIROPSLIST	+ 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROPSIDS
+value|AIROPCFG	+ 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROPAPLIST
+value|AIROPSIDS	+ 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROPMACON
+value|AIROPAPLIST	+ 1
+end_define
+
+begin_comment
+comment|/* Enable mac  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIROPMACOFF
+value|AIROPMACON	+ 1
+end_define
+
+begin_comment
+comment|/* Disable mac */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIROPSTCLR
+value|AIROPMACOFF	+ 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROPWEPKEY
+value|AIROPSTCLR	+ 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROPWEPKEYNV
+value|AIROPWEPKEY	+ 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROPLEAPPWD
+value|AIROPWEPKEYNV	+ 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROPLEAPUSR
+value|AIROPLEAPPWD	+ 1
+end_define
+
+begin_comment
+comment|/*  * Another gap of 40 commands before flash codes  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIROFLSHRST
+value|AIROPWEPKEYNV	+ 40
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROFLSHGCHR
+value|AIROFLSHRST	+ 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROFLSHSTFL
+value|AIROFLSHGCHR	+ 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROFLSHPCHR
+value|AIROFLSHSTFL	+ 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIROFLPUTBUF
+value|AIROFLSHPCHR	+ 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIRORESTART
+value|AIROFLPUTBUF	+ 1
+end_define
+
+begin_comment
+comment|/*  * Struct to enable up to 65535 ioctl's  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIROMAGIC
+value|0xa55a
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|aironet_ioctl
+block|{
+name|unsigned
+name|short
+name|command
+decl_stmt|;
+comment|/* What to do */
+name|unsigned
+name|short
+name|len
+decl_stmt|;
+comment|/* Len of data */
+name|unsigned
+name|char
+modifier|*
+name|data
+decl_stmt|;
+comment|/* d-data */
+block|}
+name|airo_ioctl
+typedef|;
+end_typedef
 
 begin_endif
 endif|#

@@ -622,6 +622,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCGPRIVATE_0
+value|_IOWR('i', 80, struct ifreq)
+end_define
+
+begin_comment
+comment|/* Linux Private + 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGPRIVATE_1
+value|_IOWR('i', 81, struct ifreq)
+end_define
+
+begin_comment
+comment|/* Linux Private + 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCIFCREATE
 value|_IOWR('i', 122, struct ifreq)
 end_define
