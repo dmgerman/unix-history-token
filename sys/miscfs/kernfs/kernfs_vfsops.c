@@ -226,7 +226,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|u_int
+name|size_t
 name|size
 decl_stmt|;
 name|struct
