@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_sysvec.c,v 1.26 1998/02/13 07:34:52 bde Exp $  */
+comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_sysvec.c,v 1.27 1998/04/13 17:49:51 sos Exp $  */
 end_comment
 
 begin_comment
@@ -651,6 +651,63 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * If FreeBSD& Linux have a difference of opinion about what a trap  * means, deal with it here.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|translate_traps
+parameter_list|(
+name|int
+name|signal
+parameter_list|,
+name|int
+name|trap_code
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|signal
+condition|)
+block|{
+case|case
+name|SIGBUS
+case|:
+switch|switch
+condition|(
+name|trap_code
+condition|)
+block|{
+case|case
+name|T_PROTFLT
+case|:
+case|case
+name|T_TSSFLT
+case|:
+case|case
+name|T_DOUBLEFLT
+case|:
+case|case
+name|T_PAGEFLT
+case|:
+return|return
+name|SIGSEGV
+return|;
+default|default:
+return|return
+name|signal
+return|;
+block|}
+default|default:
+return|return
+name|signal
+return|;
+block|}
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -2036,6 +2093,8 @@ name|ELAST
 block|,
 name|bsd_to_linux_errno
 block|,
+name|translate_traps
+block|,
 name|linux_fixup
 block|,
 name|linux_sendsig
@@ -2071,6 +2130,8 @@ block|,
 name|ELAST
 block|,
 name|bsd_to_linux_errno
+block|,
+name|translate_traps
 block|,
 name|elf_linux_fixup
 block|,

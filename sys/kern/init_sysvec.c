@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sysentvec for native FreeBSD a.out executable format.  *  * $Id: init_sysvec.c,v 1.4 1997/02/22 09:38:59 peter Exp $  */
+comment|/*  * sysentvec for native FreeBSD a.out executable format.  *  * $Id: init_sysvec.c,v 1.5 1997/08/02 14:31:26 bde Exp $  */
 end_comment
 
 begin_include
@@ -42,6 +42,8 @@ block|{
 name|SYS_MAXSYSCALL
 block|,
 name|sysent
+block|,
+literal|0
 block|,
 literal|0
 block|,
