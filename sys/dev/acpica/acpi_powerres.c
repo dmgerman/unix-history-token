@@ -2271,7 +2271,7 @@ block|}
 comment|/* We could cache this if we trusted it not to change under us */
 name|status
 operator|=
-name|acpi_EvaluateInteger
+name|acpi_GetInteger
 argument_list|(
 name|rp
 operator|->
@@ -2451,7 +2451,7 @@ block|}
 comment|/* We could cache this if we trusted it not to change under us */
 name|status
 operator|=
-name|acpi_EvaluateInteger
+name|acpi_GetInteger
 argument_list|(
 name|rp
 operator|->

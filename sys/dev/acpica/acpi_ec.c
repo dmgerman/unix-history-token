@@ -1200,7 +1200,7 @@ expr_stmt|;
 comment|/* 	 * Read the unit ID to check for duplicate attach and the 	 * global lock value to see if we should acquire it when 	 * accessing the EC. 	 */
 name|status
 operator|=
-name|acpi_EvaluateInteger
+name|acpi_GetInteger
 argument_list|(
 name|h
 argument_list|,
@@ -1223,7 +1223,7 @@ literal|0
 expr_stmt|;
 name|status
 operator|=
-name|acpi_EvaluateInteger
+name|acpi_GetInteger
 argument_list|(
 name|h
 argument_list|,
@@ -1247,7 +1247,7 @@ expr_stmt|;
 comment|/* 	 * Evaluate the _GPE method to find the GPE bit used by the EC to 	 * signal status (SCI).  Note that we don't handle the case where 	 * it can return a package instead of an int. 	 */
 name|status
 operator|=
-name|acpi_EvaluateInteger
+name|acpi_GetInteger
 argument_list|(
 name|h
 argument_list|,

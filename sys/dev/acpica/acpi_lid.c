@@ -490,7 +490,7 @@ expr_stmt|;
 comment|/*      * Evaluate _LID and check the return value, update lid status.      *	Zero:		The lid is closed      *	Non-zero:	The lid is open      */
 name|status
 operator|=
-name|acpi_EvaluateInteger
+name|acpi_GetInteger
 argument_list|(
 name|sc
 operator|->

@@ -501,7 +501,7 @@ end_comment
 begin_function_decl
 specifier|extern
 name|ACPI_STATUS
-name|acpi_EvaluateInteger
+name|acpi_GetInteger
 parameter_list|(
 name|ACPI_HANDLE
 name|handle
@@ -575,7 +575,7 @@ if|if
 condition|(
 name|ACPI_FAILURE
 argument_list|(
-name|acpi_EvaluateInteger
+name|acpi_GetInteger
 argument_list|(
 name|root
 argument_list|,
@@ -666,7 +666,7 @@ if|if
 condition|(
 name|ACPI_FAILURE
 argument_list|(
-name|acpi_EvaluateInteger
+name|acpi_GetInteger
 argument_list|(
 name|parent
 argument_list|,
@@ -875,7 +875,7 @@ if|if
 condition|(
 name|ACPI_FAILURE
 argument_list|(
-name|acpi_EvaluateInteger
+name|acpi_GetInteger
 argument_list|(
 name|rhandle
 argument_list|,

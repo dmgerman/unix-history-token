@@ -672,7 +672,7 @@ if|if
 condition|(
 name|ACPI_FAILURE
 argument_list|(
-name|acpi_EvaluateInteger
+name|acpi_GetInteger
 argument_list|(
 name|handle
 argument_list|,

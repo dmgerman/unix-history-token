@@ -580,7 +580,7 @@ expr_stmt|;
 comment|/*      * Get our base bus number by evaluating _BBN.      * If this doesn't work, we assume we're bus number 0.      *      * XXX note that it may also not exist in the case where we are       *     meant to use a private configuration space mechanism for this bus,      *     so we should dig out our resources and check to see if we have      *     anything like that.  How do we do this?      * XXX If we have the requisite information, and if we don't think the      *     default PCI configuration space handlers can deal with this bus,      *     we should attach our own handler.      * XXX invoke _REG on this for the PCI config space address space?      * XXX It seems many BIOS's with multiple Host-PCI bridges do not set      *     _BBN correctly.  They set _BBN to zero for all bridges.  Thus,      *     if _BBN is zero and pcib0 already exists, we try to read our      *     bus number from the configuration registers at address _ADR.      */
 name|status
 operator|=
-name|acpi_EvaluateInteger
+name|acpi_GetInteger
 argument_list|(
 name|sc
 operator|->
@@ -667,7 +667,7 @@ literal|0
 expr_stmt|;
 name|status
 operator|=
-name|acpi_EvaluateInteger
+name|acpi_GetInteger
 argument_list|(
 name|sc
 operator|->
@@ -827,7 +827,7 @@ name|ACPI_FAILURE
 argument_list|(
 name|status
 operator|=
-name|acpi_EvaluateInteger
+name|acpi_GetInteger
 argument_list|(
 name|sc
 operator|->
