@@ -3574,9 +3574,16 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"too few clusters for FAT%u"
+literal|"%u clusters too few clusters for FAT%u, need %u"
+argument_list|,
+name|cls
 argument_list|,
 name|fat
+argument_list|,
+name|mincls
+argument_list|(
+name|fat
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
