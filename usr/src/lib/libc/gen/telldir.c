@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telldir.c 4.3 %G%"
+literal|"@(#)telldir.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,11 @@ modifier|*
 name|dirp
 decl_stmt|;
 block|{
+specifier|extern
+name|long
+name|lseek
+parameter_list|()
+function_decl|;
 return|return
 operator|(
 name|lseek
