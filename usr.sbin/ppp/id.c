@@ -841,6 +841,9 @@ specifier|const
 name|char
 modifier|*
 name|device
+parameter_list|,
+name|int
+name|nologout
 parameter_list|)
 block|{
 name|struct
@@ -882,6 +885,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|nologout
+operator|||
 name|logout
 argument_list|(
 name|ut
