@@ -2168,6 +2168,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|g_topology_lock
+argument_list|()
+expr_stmt|;
 name|g_slice_config
 argument_list|(
 name|gp
