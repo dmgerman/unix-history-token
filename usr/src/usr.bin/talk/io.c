@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.7 (Berkeley) %G%"
+literal|"@(#)io.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -450,9 +450,34 @@ name|my_win
 operator|.
 name|x_win
 argument_list|,
-literal|"[%s]\n"
+literal|"[%s]"
 argument_list|,
 name|string
+argument_list|)
+expr_stmt|;
+name|wclrtoeol
+argument_list|(
+name|my_win
+operator|.
+name|x_win
+argument_list|)
+expr_stmt|;
+name|current_line
+operator|++
+expr_stmt|;
+name|wmove
+argument_list|(
+name|my_win
+operator|.
+name|x_win
+argument_list|,
+name|current_line
+operator|%
+name|my_win
+operator|.
+name|x_nlines
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|wrefresh
