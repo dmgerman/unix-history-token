@@ -217,6 +217,9 @@ operator|&&
 name|pwd
 operator|->
 name|pw_passwd
+index|[
+literal|0
+index|]
 operator|!=
 literal|'\0'
 condition|)
