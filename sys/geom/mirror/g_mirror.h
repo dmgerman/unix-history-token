@@ -559,6 +559,10 @@ name|struct
 name|g_mirror_device_sync
 name|sc_sync
 decl_stmt|;
+name|int
+name|sc_idle
+decl_stmt|;
+comment|/* DIRTY flags removed. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
