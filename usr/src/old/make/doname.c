@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)doname.c	4.4 (Berkeley) 84/12/23"
+literal|"@(#)doname.c	4.5 (Berkeley) 85/01/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"defs"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
 end_include
 
 begin_comment
@@ -156,6 +162,9 @@ name|pnamep
 decl_stmt|,
 modifier|*
 name|p1namep
+decl_stmt|,
+modifier|*
+name|cp
 decl_stmt|;
 name|char
 modifier|*
@@ -836,18 +845,31 @@ name|endloop
 goto|;
 block|}
 block|}
-name|setvar
-argument_list|(
-literal|"*"
-argument_list|,
+name|cp
+operator|=
 name|rindex
 argument_list|(
 name|prefix
 argument_list|,
 literal|'/'
 argument_list|)
-operator|+
-literal|1
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|++
+operator|==
+literal|0
+condition|)
+name|cp
+operator|=
+name|prefix
+expr_stmt|;
+name|setvar
+argument_list|(
+literal|"*"
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 block|}
