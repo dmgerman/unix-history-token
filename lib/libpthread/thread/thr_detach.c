@@ -122,9 +122,27 @@ expr_stmt|;
 comment|/* Set the return value for the woken thread: */
 name|joiner
 operator|->
+name|join_status
+operator|.
 name|error
 operator|=
 name|ESRCH
+expr_stmt|;
+name|joiner
+operator|->
+name|join_status
+operator|.
+name|ret
+operator|=
+name|NULL
+expr_stmt|;
+name|joiner
+operator|->
+name|join_status
+operator|.
+name|thread
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* 			 * Disconnect the joiner from the thread being detached: 			 */
 name|pthread

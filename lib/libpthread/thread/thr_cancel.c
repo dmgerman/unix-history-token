@@ -290,6 +290,14 @@ name|joiner
 operator|=
 name|NULL
 expr_stmt|;
+name|pthread
+operator|->
+name|join_status
+operator|.
+name|thread
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 name|pthread
 operator|->
