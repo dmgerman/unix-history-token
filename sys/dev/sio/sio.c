@@ -14508,11 +14508,10 @@ directive|if
 name|DDB
 operator|>
 literal|0
-name|sprintf
+name|siocnset
 argument_list|(
+operator|&
 name|gdbconsdev
-argument_list|,
-literal|"ttyd%d"
 argument_list|,
 name|unit
 argument_list|)
