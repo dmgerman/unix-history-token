@@ -17,6 +17,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_include
 include|#
 directive|include
@@ -125,15 +133,10 @@ directive|include
 file|"misc.h"
 end_include
 
-begin_comment
-comment|/* Flag indicating whether IPv4 or IPv6.  This can be set on the command line.    Default value is AF_UNSPEC means both IPv4 and IPv6. */
-end_comment
-
 begin_decl_stmt
+specifier|extern
 name|int
 name|IPv4or6
-init|=
-name|AF_UNSPEC
 decl_stmt|;
 end_decl_stmt
 
