@@ -258,6 +258,28 @@ begin_comment
 comment|/* Performance monitoring counter enable */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CR4_FXSR
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Fast FPU save/restore used by OS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CR4_XMM
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* enable SIMD/MMX2 to use except 16 */
+end_comment
+
 begin_comment
 comment|/*  * CPUID instruction features register  */
 end_comment
