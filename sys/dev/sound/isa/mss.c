@@ -55,6 +55,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MSS_BUFFSIZE
+value|(65536 - 256)
+end_define
+
+begin_define
+define|#
+directive|define
 name|abs
 parameter_list|(
 name|x
@@ -8536,7 +8543,7 @@ name|buffer
 operator|->
 name|bufsize
 operator|=
-name|DSP_BUFFSIZE
+name|MSS_BUFFSIZE
 expr_stmt|;
 if|if
 condition|(
