@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getlogin.c	5.5 (Berkeley) %G%"
+literal|"@(#)getlogin.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,21 @@ file|<utmp.h>
 end_include
 
 begin_decl_stmt
+name|int
+name|_logname_valid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* known to setlogin() */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|getlogin
+parameter_list|()
+block|{
 specifier|static
 name|char
 name|logname
@@ -71,28 +86,16 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|char
-modifier|*
-name|getlogin
-parameter_list|()
-block|{
-specifier|static
-name|int
-name|notcalled
-init|=
-literal|1
-decl_stmt|;
 if|if
 condition|(
-name|notcalled
+name|_logname_valid
+operator|==
+literal|0
 condition|)
 block|{
 if|if
 condition|(
-name|getlogname
+name|_getlogin
 argument_list|(
 name|logname
 argument_list|,
@@ -115,9 +118,9 @@ operator|)
 name|NULL
 operator|)
 return|;
-name|notcalled
+name|_logname_valid
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 return|return
@@ -188,7 +191,7 @@ literal|'\0'
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+name|s
 operator|)
 return|;
 block|}
