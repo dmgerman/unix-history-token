@@ -2743,6 +2743,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Preserve KAME behaviour: ENOENT can be returned 		 * when an SA acquire is in progress.  Don't propagate 		 * this to user-level; it confuses applications. 		 * 		 * XXX this will go away when the SADB is redone. 		 */
+if|if
+condition|(
+name|error
+operator|==
+name|ENOENT
+condition|)
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
