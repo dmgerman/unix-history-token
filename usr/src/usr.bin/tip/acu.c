@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acu.c	5.4 (Berkeley) %G%"
+literal|"@(#)acu.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,6 +130,20 @@ name|size
 argument_list|(
 name|CM
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|logent
+argument_list|(
+name|value
+argument_list|(
+name|HOST
+argument_list|)
+argument_list|,
+literal|""
+argument_list|,
+name|DV
+argument_list|,
+literal|"call completed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -663,7 +677,23 @@ condition|(
 operator|!
 name|conflag
 condition|)
+block|{
+name|logent
+argument_list|(
+name|value
+argument_list|(
+name|HOST
+argument_list|)
+argument_list|,
+literal|""
+argument_list|,
+name|DV
+argument_list|,
+literal|"call terminated"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|reason
