@@ -8742,6 +8742,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|byte_count
+operator|+=
+name|cnt
+expr_stmt|;
 name|offset
 operator|+=
 name|cnt
