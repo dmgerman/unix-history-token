@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -67,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -3414,7 +3414,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * find or allocate a struct uidinfo for a particular uid  * increases refcount on uidinfo struct returned.  * uifree() should be called on a struct uidinfo when released.  */
+comment|/*  * Find or allocate a struct uidinfo for a particular uid.  * Increase refcount on uidinfo struct returned.  * uifree() should be called on a struct uidinfo when released.  */
 end_comment
 
 begin_function
@@ -3484,7 +3484,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * place another refcount on a uidinfo struct  */
+comment|/*  * Place another refcount on a uidinfo struct.  */
 end_comment
 
 begin_function
@@ -3528,7 +3528,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * subtract one from the refcount in the struct uidinfo, if 0 free it  * since uidinfo structs have a long lifetime we use a  * opportunistic refcounting scheme to avoid locking the lookup hash  * for each release.  *  * if the refcount hits 0 we need to free the structure  * which means we need to lock the hash.  * optimal case:  *   After locking the struct and lowering the refcount, we find  *   that we don't need to free, simply unlock and return  * suboptimal case:  *   refcount lowering results in need to free, bump the count  *   back up, loose the lock and aquire the locks in the proper  *	 order to try again.  */
+comment|/*-  * Since uidinfo structs have a long lifetime, we use an  * opportunistic refcounting scheme to avoid locking the lookup hash  * for each release.  *  * If the refcount hits 0, we need to free the structure,  * which means we need to lock the hash.  * Optimal case:  *   After locking the struct and lowering the refcount, if we find  *   that we don't need to free, simply unlock and return.  * Suboptimal case:  *   If refcount lowering results in need to free, bump the count  *   back up, loose the lock and aquire the locks in the proper  *   order to try again.  */
 end_comment
 
 begin_function
@@ -3543,7 +3543,7 @@ modifier|*
 name|uip
 decl_stmt|;
 block|{
-comment|/* 	 * try for optimal, recucing the refcount doesn't make us free it. 	 */
+comment|/* Prepare for optimal case. */
 name|mtx_enter
 argument_list|(
 operator|&
@@ -3576,7 +3576,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * ok, we need to free, before we release the mutex to get 	 * the lock ordering correct we need to 	 * backout our change to the refcount so that no one else 	 * races to free it. 	 */
+comment|/* Prepare for suboptimal case. */
 name|uip
 operator|->
 name|ui_ref
@@ -3592,7 +3592,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* get the locks in order */
 name|mtx_enter
 argument_list|(
 operator|&
@@ -3611,7 +3610,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* 	 * it's possible that someone has referenced it after we dropped the 	 * initial lock, if so it's thier responsiblity to free it, but 	 * we still must remove one from the count because we backed out 	 * our change above. 	 */
+comment|/* 	 * We must subtract one from the count again because we backed out 	 * our initial subtraction before dropping the lock. 	 * Since another thread may have added a reference after we dropped the 	 * initial lock we have to test for zero again. 	 */
 if|if
 condition|(
 operator|--
@@ -3718,7 +3717,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
