@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gcos.c	4.1 (Berkeley) 81/02/28"
+literal|"@(#)gcos.c	4.2 (Berkeley) 85/04/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -823,14 +823,15 @@ end_block
 begin_macro
 name|exists
 argument_list|(
-argument|cp
+argument|p
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|struct
+name|nameblock
 modifier|*
-name|cp
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -839,6 +840,9 @@ block|{
 name|char
 modifier|*
 name|s
+decl_stmt|,
+modifier|*
+name|cp
 decl_stmt|,
 name|name
 index|[
@@ -857,6 +861,12 @@ literal|2
 index|]
 decl_stmt|;
 comment|/*    cheat about names with slashes -- try opening;    if it is openable, it exists, and assume it was made    at t=1 (long time ago); otherwise, assume it    does not exist */
+name|cp
+operator|=
+name|p
+operator|->
+name|namep
+expr_stmt|;
 for|for
 control|(
 name|s
