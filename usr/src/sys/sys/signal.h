@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -465,6 +465,50 @@ begin_comment
 comment|/* user defined signal 2 */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_ANSI_SOURCE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * Language spec sez we must list exactly one parameter, even though we  * actually supply three.  Ugh!  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIG_DFL
+value|(void (*)(int))0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIG_IGN
+value|(void (*)(int))1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIG_ERR
+value|(void (*)(int))-1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -485,6 +529,11 @@ directive|define
 name|SIG_ERR
 value|(void (*)())-1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
