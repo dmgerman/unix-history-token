@@ -1093,6 +1093,16 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|pci_link
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"Index  IRQ  Rtd  Ref  IRQs\n"
@@ -1231,6 +1241,16 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|pci_link
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Count the number of current resources so we know how big of 	 * a link array to allocate. 	 */
 name|status
 operator|=
@@ -1715,6 +1735,16 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|SMP
+name|ACPI_SERIAL_END
+argument_list|(
+name|pci_link
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -1722,6 +1752,16 @@ operator|)
 return|;
 name|fail
 label|:
+ifdef|#
+directive|ifdef
+name|SMP
+name|ACPI_SERIAL_END
+argument_list|(
+name|pci_link
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
