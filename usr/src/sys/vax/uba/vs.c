@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)vs.c	7.3 (MIT) %G% */
+comment|/* @(#)vs.c	7.4 (MIT) %G% */
 end_comment
 
 begin_comment
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"ioctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tsleep.h"
 end_include
 
 begin_include
@@ -1713,7 +1719,7 @@ name|fparm_all
 expr_stmt|;
 do|do
 block|{
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -1721,6 +1727,10 @@ operator|)
 name|vsp
 argument_list|,
 name|VSWAITPRI
+argument_list|,
+name|SLP_VS_WAIT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1852,7 +1862,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -1860,6 +1870,10 @@ operator|)
 name|vsp
 argument_list|,
 name|VSWAITPRI
+argument_list|,
+name|SLP_VS_USRWAIT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2072,7 +2086,8 @@ operator||
 name|VS_GO
 operator|)
 expr_stmt|;
-name|sleep
+comment|/* synchronous */
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -2080,9 +2095,12 @@ operator|)
 name|vsp
 argument_list|,
 name|VSWAITPRI
+argument_list|,
+name|SLP_VS_START
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/* synchronous */
 name|splx
 argument_list|(
 name|s
@@ -2134,7 +2152,7 @@ operator||
 name|VS_GO
 operator|)
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -2142,6 +2160,10 @@ operator|)
 name|vsp
 argument_list|,
 name|VSWAITPRI
+argument_list|,
+name|SLP_VS_ABORT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2195,7 +2217,7 @@ operator||
 name|VS_GO
 operator|)
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -2203,6 +2225,10 @@ operator|)
 name|vsp
 argument_list|,
 name|VSWAITPRI
+argument_list|,
+name|SLP_VS_PWRUP
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2271,7 +2297,7 @@ operator||
 name|VS_GO
 operator|)
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -2279,6 +2305,10 @@ operator|)
 name|vsp
 argument_list|,
 name|VSWAITPRI
+argument_list|,
+name|SLP_VS_IOBCTL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2332,7 +2362,7 @@ operator||
 name|VS_XMIT_ON
 operator|)
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -2340,6 +2370,10 @@ operator|)
 name|vsp
 argument_list|,
 name|VSWAITPRI
+argument_list|,
+name|SLP_VS_FIB
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2408,7 +2442,7 @@ operator||
 name|VS_GO
 operator|)
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -2416,6 +2450,10 @@ operator|)
 name|vsp
 argument_list|,
 name|VSWAITPRI
+argument_list|,
+name|SLP_VS_FIBRET
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|splx
@@ -4323,7 +4361,7 @@ name|VS_XMIT_ON
 operator|)
 expr_stmt|;
 comment|/* turn link on */
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -4331,6 +4369,10 @@ operator|)
 name|vsp
 argument_list|,
 name|VSWAITPRI
+argument_list|,
+name|SLP_VS_INITF
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|splx
@@ -4574,7 +4616,7 @@ operator||
 name|VS_GO
 operator|)
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -4582,6 +4624,10 @@ operator|)
 name|vsp
 argument_list|,
 name|VSWAITPRI
+argument_list|,
+name|SLP_VS_INITDEV
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|splx

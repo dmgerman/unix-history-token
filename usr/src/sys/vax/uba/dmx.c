@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmx.c	1.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmx.c	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -141,6 +141,12 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tsleep.h"
 end_include
 
 begin_include
@@ -646,7 +652,7 @@ name|t_state
 operator||=
 name|TS_WOPEN
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -657,6 +663,10 @@ operator|->
 name|t_rawq
 argument_list|,
 name|TTIPRI
+argument_list|,
+name|SLP_DMX_OPN
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

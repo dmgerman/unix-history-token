@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tm.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tm.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -121,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tsleep.h"
 end_include
 
 begin_include
@@ -387,12 +393,10 @@ name|int
 name|sc_softerrs
 decl_stmt|;
 comment|/* number of soft I/O errors since open */
-name|struct
-name|tty
-modifier|*
-name|sc_ttyp
+name|caddr_t
+name|sc_ctty
 decl_stmt|;
-comment|/* record user's tty for errors */
+comment|/* users controlling terminal (vnode) */
 block|}
 name|te_softc
 index|[
@@ -897,7 +901,7 @@ operator|&
 name|TMER_SDWN
 condition|)
 block|{
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -908,6 +912,10 @@ argument_list|,
 name|PZERO
 operator|+
 literal|1
+argument_list|,
+name|SLP_TM_OPN
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1081,11 +1089,30 @@ literal|0
 expr_stmt|;
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 operator|=
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|u
 operator|.
-name|u_ttyp
+name|u_procp
+operator|->
+name|p_flag
+operator|&
+name|SCTTY
+condition|?
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_session
+operator|->
+name|s_ttyvp
+else|:
+literal|0
+argument_list|)
 expr_stmt|;
 name|s
 operator|=
@@ -2895,14 +2922,14 @@ condition|)
 block|{
 if|if
 condition|(
-operator|++
 name|um
 operator|->
 name|um_tab
 operator|.
 name|b_errcnt
+operator|++
 operator|<
-literal|7
+literal|8
 condition|)
 block|{
 if|if
@@ -2940,6 +2967,7 @@ operator|->
 name|sc_blkno
 operator|++
 expr_stmt|;
+comment|/* force backspace */
 name|ubadone
 argument_list|(
 name|um
@@ -2982,7 +3010,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"te%d: hard error bn%d er=%b\n"
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 MICOM-Interlan, Inc., Boxborough Mass  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)np.c	7.3 (Berkeley) %G%  *  * From:  *	np.c version 1.5  *  *	This version retrieved: 8/18/86 @ 18:58:54  *	    This delta created: 8/18/86 @ 18:19:24  *  *	static		char	*SCCSID = "@(#)np.c	1.5";  *  */
+comment|/*  * Copyright (c) 1986 MICOM-Interlan, Inc., Boxborough Mass  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)np.c	7.4 (Berkeley) %G%  *  * From:  *	np.c version 1.5  *  *	This version retrieved: 8/18/86 @ 18:58:54  *	    This delta created: 8/18/86 @ 18:19:24  *  *	static		char	*SCCSID = "@(#)np.c	1.5";  *  */
 end_comment
 
 begin_comment
@@ -36,61 +36,67 @@ end_if
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubavar.h"
+file|"ubavar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/signal.h"
+file|"signal.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dir.h"
+file|"dir.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/user.h"
+file|"user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/proc.h"
+file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/uio.h"
+file|"uio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/errno.h"
+file|"errno.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tsleep.h"
 end_include
 
 begin_include
@@ -3179,7 +3185,7 @@ name|NpState
 operator||=
 name|ICPAVAIL
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -3190,6 +3196,10 @@ argument_list|,
 name|PZERO
 operator|+
 literal|1
+argument_list|,
+name|SLP_NP_SLP
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -7917,7 +7927,7 @@ name|reqtab
 operator|->
 name|reqcnt
 condition|)
-name|sleep
+name|tsleep
 argument_list|(
 call|(
 name|caddr_t
@@ -7932,6 +7942,10 @@ argument_list|,
 name|PZERO
 operator|+
 literal|1
+argument_list|,
+name|SLP_NP_SLP
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -7987,7 +8001,7 @@ name|reqcnt
 argument_list|)
 expr_stmt|;
 block|}
-name|sleep
+name|tsleep
 argument_list|(
 call|(
 name|caddr_t
@@ -8002,6 +8016,10 @@ argument_list|,
 name|PZERO
 operator|+
 literal|1
+argument_list|,
+name|SLP_NP_SLP
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

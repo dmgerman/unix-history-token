@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ut.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ut.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -109,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tsleep.h"
 end_include
 
 begin_include
@@ -395,12 +401,10 @@ name|short
 name|sc_tact
 decl_stmt|;
 comment|/* timeout is active flag */
-name|struct
-name|tty
-modifier|*
-name|sc_ttyp
+name|caddr_t
+name|sc_ctty
 decl_stmt|;
-comment|/* record user's tty for errors */
+comment|/* user's controlling tty (vnode) */
 name|int
 name|sc_blks
 decl_stmt|;
@@ -810,7 +814,7 @@ operator|&
 name|UTDS_PIP
 condition|)
 block|{
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -821,6 +825,10 @@ argument_list|,
 name|PZERO
 operator|+
 literal|1
+argument_list|,
+name|SLP_UT_OPN
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -986,11 +994,30 @@ name|dens
 expr_stmt|;
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 operator|=
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|u
 operator|.
-name|u_ttyp
+name|u_procp
+operator|->
+name|p_flag
+operator|&
+name|SCTTY
+condition|?
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_session
+operator|->
+name|s_ttyvp
+else|:
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* 	 * For 6250 bpi take exclusive use of the UNIBUS. 	 */
 name|ui
@@ -2733,7 +2760,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"ut%d: soft error bn%d cs1=%b er=%b cs2=%b ds=%b\n"
 argument_list|,
@@ -2932,7 +2959,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"ut%d: hard error bn%d cs1=%b er=%b cs2=%b ds=%b\n"
 argument_list|,
