@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1995 Jan-Simon Pendry  * Copyright (c) 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs_vnops.c	8.18 (Berkeley) 5/21/95  *  *	$Id: procfs_vnops.c,v 1.67 1999/04/30 13:04:21 phk Exp $  */
+comment|/*  * Copyright (c) 1993, 1995 Jan-Simon Pendry  * Copyright (c) 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs_vnops.c	8.18 (Berkeley) 5/21/95  *  *	$Id: procfs_vnops.c,v 1.68 1999/05/04 08:01:55 phk Exp $  */
 end_comment
 
 begin_comment
@@ -2907,7 +2907,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * readdir returns directory entries from pfsnode (vp).  *  * the strategy here with procfs is to generate a single  * directory entry at a time (struct pfsdent) and then  * copy that out to userland using uiomove.  a more efficent  * though more complex implementation, would try to minimize  * the number of calls to uiomove().  for procfs, this is  * hardly worth the added code complexity.  *  * this should just be done through read()  */
+comment|/*  * readdir() returns directory entries from pfsnode (vp).  *  * We generate just one directory entry at a time, as it would probably  * not pay off to buffer several entries locally to save uiomove calls.  */
 end_comment
 
 begin_function
@@ -2934,11 +2934,11 @@ operator|->
 name|a_uio
 decl_stmt|;
 name|struct
-name|pfsdent
+name|dirent
 name|d
 decl_stmt|;
 name|struct
-name|pfsdent
+name|dirent
 modifier|*
 name|dp
 init|=
@@ -2959,6 +2959,31 @@ name|i
 decl_stmt|,
 name|off
 decl_stmt|;
+specifier|static
+name|u_int
+name|delen
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|delen
+condition|)
+block|{
+name|d
+operator|.
+name|d_namlen
+operator|=
+name|PROCFS_NAMELEN
+expr_stmt|;
+name|delen
+operator|=
+name|GENERIC_DIRSIZ
+argument_list|(
+operator|&
+name|d
+argument_list|)
+expr_stmt|;
+block|}
 name|pfs
 operator|=
 name|VTOPFS
@@ -2989,12 +3014,9 @@ name|off
 operator|<
 literal|0
 operator|||
-operator|(
-name|u_int
-operator|)
 name|off
 operator|%
-name|UIO_MX
+name|delen
 operator|!=
 literal|0
 operator|||
@@ -3002,7 +3024,7 @@ name|uio
 operator|->
 name|uio_resid
 operator|<
-name|UIO_MX
+name|delen
 condition|)
 return|return
 operator|(
@@ -3019,12 +3041,9 @@ literal|0
 expr_stmt|;
 name|i
 operator|=
-operator|(
-name|u_int
-operator|)
 name|off
 operator|/
-name|UIO_MX
+name|delen
 expr_stmt|;
 switch|switch
 condition|(
@@ -3089,7 +3108,7 @@ name|uio
 operator|->
 name|uio_resid
 operator|>=
-name|UIO_MX
+name|delen
 operator|&&
 name|i
 operator|<
@@ -3125,7 +3144,7 @@ name|dp
 operator|->
 name|d_reclen
 operator|=
-name|UIO_MX
+name|delen
 expr_stmt|;
 name|dp
 operator|->
@@ -3187,7 +3206,7 @@ name|caddr_t
 operator|)
 name|dp
 argument_list|,
-name|UIO_MX
+name|delen
 argument_list|,
 name|uio
 argument_list|)
@@ -3238,7 +3257,7 @@ name|uio
 operator|->
 name|uio_resid
 operator|>=
-name|UIO_MX
+name|delen
 condition|;
 name|i
 operator|++
@@ -3255,14 +3274,14 @@ operator|*
 operator|)
 name|dp
 argument_list|,
-name|UIO_MX
+name|delen
 argument_list|)
 expr_stmt|;
 name|dp
 operator|->
 name|d_reclen
 operator|=
-name|UIO_MX
+name|delen
 expr_stmt|;
 switch|switch
 condition|(
@@ -3493,7 +3512,7 @@ name|caddr_t
 operator|)
 name|dp
 argument_list|,
-name|UIO_MX
+name|delen
 argument_list|,
 name|uio
 argument_list|)
@@ -3550,7 +3569,7 @@ name|uio_offset
 operator|=
 name|i
 operator|*
-name|UIO_MX
+name|delen
 expr_stmt|;
 return|return
 operator|(
