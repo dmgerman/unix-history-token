@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_1.c	2.6 84/01/19"
+literal|"@(#)pl_1.c	2.6 84/01/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -416,13 +416,12 @@ index|]
 expr_stmt|;
 name|ls
 operator|=
-name|cc
-operator|->
-name|ship
-operator|+
+name|SHIP
+argument_list|(
 name|cc
 operator|->
 name|vessels
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -734,9 +733,10 @@ name|player
 operator|=
 name|sp
 operator|-
-name|cc
-operator|->
-name|ship
+name|SHIP
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 else|else

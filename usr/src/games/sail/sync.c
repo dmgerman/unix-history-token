@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sync.c	2.3 83/12/17"
+literal|"@(#)sync.c	2.4 84/01/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|sync_bufp
+name|sync_bp
 init|=
 name|sync_buf
 decl_stmt|;
@@ -551,7 +551,7 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|sync_bufp
+name|sync_bp
 argument_list|,
 literal|"%d %d %d %s\n"
 argument_list|,
@@ -574,7 +574,7 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|sync_bufp
+name|sync_bp
 argument_list|,
 literal|"%d %d %d %d %d %d %d\n"
 argument_list|,
@@ -600,16 +600,16 @@ expr_stmt|;
 while|while
 condition|(
 operator|*
-name|sync_bufp
+name|sync_bp
 operator|++
 condition|)
 empty_stmt|;
-name|sync_bufp
+name|sync_bp
 operator|--
 expr_stmt|;
 if|if
 condition|(
-name|sync_bufp
+name|sync_bp
 operator|>=
 operator|&
 name|sync_buf
@@ -889,7 +889,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|sync_bufp
+name|sync_bp
 operator|!=
 name|sync_buf
 condition|)
@@ -924,7 +924,7 @@ argument_list|(
 name|sync_fp
 argument_list|)
 expr_stmt|;
-name|sync_bufp
+name|sync_bp
 operator|=
 name|sync_buf
 expr_stmt|;

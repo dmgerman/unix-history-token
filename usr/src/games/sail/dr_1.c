@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_1.c	2.7 84/01/19"
+literal|"@(#)dr_1.c	2.7 84/01/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,15 +129,12 @@ index|]
 expr_stmt|;
 name|ls
 operator|=
-operator|&
-name|cc
-operator|->
-name|ship
-index|[
+name|SHIP
+argument_list|(
 name|cc
 operator|->
 name|vessels
-index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
