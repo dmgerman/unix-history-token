@@ -1834,7 +1834,7 @@ parameter_list|,
 name|bs
 parameter_list|)
 define|\
-value|(((fsbs) != 0&& (fsbs)< (bs)) ? \ 		(num) / ((bs) / (fsbs)) : (num) * ((fsbs) / (bs)))
+value|(((fsbs) != 0&& (fsbs)< (bs)) ? \ 		(num) / (intmax_t)((bs) / (fsbs)) : \ 		(num) * (intmax_t)((fsbs) / (bs)))
 end_define
 
 begin_comment
