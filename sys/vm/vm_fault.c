@@ -1415,6 +1415,9 @@ literal|2
 operator|*
 name|VM_FAULT_READ
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 				 * note: partially valid pages cannot be  				 * included in the lookahead - NFS piecemeal 				 * writes will barf on it badly. 				 */
 for|for
 control|(
@@ -1534,6 +1537,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|ahead
 operator|+=
 name|behind
