@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)implog.c	5.11 (Berkeley) %G%"
+literal|"@(#)implog.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -590,12 +590,16 @@ condition|(
 name|host
 operator|>=
 literal|0
+operator|||
+name|imp
+operator|>=
+literal|0
 condition|)
 block|{
 name|long
 name|addr
 init|=
-name|ntohs
+name|ntohl
 argument_list|(
 name|from
 operator|.
