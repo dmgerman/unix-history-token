@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)terminal.c	5.2 (Berkeley) %G%"
+literal|"@(#)terminal.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -769,7 +769,11 @@ name|encrypt_output
 condition|)
 block|{
 name|encrypt_request_start
-argument_list|()
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|enc_passwd
 operator|=

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)state.c	5.9 (Berkeley) %G%"
+literal|"@(#)state.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3939,6 +3939,18 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|TELQUAL_NAME
+case|:
+name|auth_name
+argument_list|(
+name|subpointer
+argument_list|,
+name|SB_LEN
+argument_list|()
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 break|break;
 endif|#
@@ -4004,7 +4016,12 @@ case|case
 name|ENCRYPT_START
 case|:
 name|encrypt_start
+argument_list|(
+name|subpointer
+argument_list|,
+name|SB_LEN
 argument_list|()
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4018,7 +4035,12 @@ case|case
 name|ENCRYPT_REQSTART
 case|:
 name|encrypt_request_start
+argument_list|(
+name|subpointer
+argument_list|,
+name|SB_LEN
 argument_list|()
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4027,6 +4049,30 @@ case|:
 comment|/* 		 * We can always send an REQEND so that we cannot 		 * get stuck encrypting.  We should only get this 		 * if we have been able to get in the correct mode 		 * anyhow. 		 */
 name|encrypt_request_end
 argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|ENCRYPT_ENC_KEYID
+case|:
+name|encrypt_enc_keyid
+argument_list|(
+name|subpointer
+argument_list|,
+name|SB_LEN
+argument_list|()
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ENCRYPT_DEC_KEYID
+case|:
+name|encrypt_dec_keyid
+argument_list|(
+name|subpointer
+argument_list|,
+name|SB_LEN
+argument_list|()
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:

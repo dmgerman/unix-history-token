@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -447,6 +447,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'c'
+case|:
+name|skiprc
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'d'
 case|:
 name|debug
@@ -703,7 +711,14 @@ ifdef|#
 directive|ifdef
 name|ENCRYPT
 name|encrypt_auto
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|decrypt_auto
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 else|#
 directive|else

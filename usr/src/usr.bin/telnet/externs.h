@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)externs.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)externs.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -365,6 +365,9 @@ name|int
 name|autologin
 decl_stmt|,
 comment|/* Autologin enabled */
+name|skiprc
+decl_stmt|,
+comment|/* Don't process the ~/.telnetrc file */
 name|eight
 decl_stmt|,
 comment|/* use eight bit mode (binary in and/or out */

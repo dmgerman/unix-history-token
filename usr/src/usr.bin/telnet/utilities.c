@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.2 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1339,7 +1339,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|256
+literal|512
 index|]
 decl_stmt|;
 specifier|extern
@@ -2180,12 +2180,14 @@ argument_list|,
 literal|"%s|%s"
 argument_list|,
 operator|(
+operator|(
 name|pointer
 index|[
 literal|3
 index|]
 operator|&
 name|AUTH_WHO_MASK
+operator|)
 operator|==
 name|AUTH_WHO_CLIENT
 operator|)
@@ -2195,12 +2197,14 @@ else|:
 literal|"SERVER"
 argument_list|,
 operator|(
+operator|(
 name|pointer
 index|[
 literal|3
 index|]
 operator|&
 name|AUTH_HOW_MASK
+operator|)
 operator|==
 name|AUTH_HOW_MUTUAL
 operator|)
@@ -2323,12 +2327,14 @@ argument_list|,
 literal|"%s|%s "
 argument_list|,
 operator|(
+operator|(
 name|pointer
 index|[
 name|i
 index|]
 operator|&
 name|AUTH_WHO_MASK
+operator|)
 operator|==
 name|AUTH_WHO_CLIENT
 operator|)
@@ -2338,12 +2344,14 @@ else|:
 literal|"SERVER"
 argument_list|,
 operator|(
+operator|(
 name|pointer
 index|[
 name|i
 index|]
 operator|&
 name|AUTH_HOW_MASK
+operator|)
 operator|==
 name|AUTH_HOW_MUTUAL
 operator|)
@@ -2357,6 +2365,45 @@ operator|++
 name|i
 expr_stmt|;
 block|}
+break|break;
+case|case
+name|TELQUAL_NAME
+case|:
+name|i
+operator|=
+literal|2
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|NetTrace
+argument_list|,
+literal|" NAME \""
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|i
+operator|<
+name|length
+condition|)
+name|putc
+argument_list|(
+name|pointer
+index|[
+name|i
+operator|++
+index|]
+argument_list|,
+name|NetTrace
+argument_list|)
+expr_stmt|;
+name|putc
+argument_list|(
+literal|'"'
+argument_list|,
+name|NetTrace
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 for|for
@@ -2647,12 +2694,38 @@ operator|++
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|ENCRYPT_ENC_KEYID
+case|:
+name|fprintf
+argument_list|(
+name|NetTrace
+argument_list|,
+literal|" ENC_KEYID "
+argument_list|)
+expr_stmt|;
+goto|goto
+name|encommon
+goto|;
+case|case
+name|ENCRYPT_DEC_KEYID
+case|:
+name|fprintf
+argument_list|(
+name|NetTrace
+argument_list|,
+literal|" DEC_KEYID "
+argument_list|)
+expr_stmt|;
+goto|goto
+name|encommon
+goto|;
 default|default:
 name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|"%d (unknown)"
+literal|" %d (unknown)"
 argument_list|,
 name|pointer
 index|[
@@ -2660,6 +2733,8 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|encommon
+label|:
 for|for
 control|(
 name|i
