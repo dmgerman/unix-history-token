@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	4.7 %G%"
+literal|"@(#)msgs.c	4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2251,6 +2251,10 @@ condition|)
 name|sep
 operator|=
 literal|"Flushed"
+expr_stmt|;
+name|prevmsg
+operator|=
+name|msg
 expr_stmt|;
 break|break;
 case|case
