@@ -1260,6 +1260,20 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_struct
+struct|struct
+name|g_kerneldump
+block|{
+name|off_t
+name|offset
+decl_stmt|;
+name|off_t
+name|length
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
