@@ -3002,6 +3002,9 @@ modifier|*
 name|s
 parameter_list|)
 block|{
+name|int
+name|have_fmt
+decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
@@ -3015,6 +3018,18 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
+comment|/* 	 * If we have an 'o' option, then note it, since we don't want to do 	 * some types of munging. 	 */
+name|have_fmt
+operator|=
+name|index
+argument_list|(
+name|s
+argument_list|,
+literal|'o'
+argument_list|)
+operator|!=
+name|NULL
+expr_stmt|;
 name|len
 operator|=
 name|strlen
@@ -3190,6 +3205,9 @@ index|]
 operator|!=
 literal|'t'
 operator|)
+operator|&&
+operator|!
+name|have_fmt
 condition|)
 operator|*
 name|ns
