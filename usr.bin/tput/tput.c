@@ -325,12 +325,15 @@ argument_list|,
 literal|"longname"
 argument_list|)
 condition|)
+block|{
 name|prlongname
 argument_list|(
 name|tbuf
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
+break|break;
 case|case
 literal|'r'
 case|:
