@@ -946,8 +946,13 @@ argument_list|(
 literal|", not supported\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|BROKEN
 name|USB_ATTACH_ERROR_RETURN
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|printf
 argument_list|(
