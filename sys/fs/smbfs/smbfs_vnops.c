@@ -5271,9 +5271,12 @@ name|struct
 name|vattr
 name|vattr
 decl_stmt|;
-name|int
-name|vpid
-decl_stmt|;
+name|vhold
+argument_list|(
+operator|*
+name|vpp
+argument_list|)
+expr_stmt|;
 name|vp
 operator|=
 operator|*
@@ -5283,12 +5286,6 @@ name|mp_fixme
 argument_list|(
 literal|"Unlocked v_id access."
 argument_list|)
-expr_stmt|;
-name|vpid
-operator|=
-name|vp
-operator|->
-name|v_id
 expr_stmt|;
 if|if
 condition|(
@@ -5435,15 +5432,6 @@ name|killit
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|vpid
-operator|==
-name|vp
-operator|->
-name|v_id
-condition|)
-block|{
 name|error
 operator|=
 name|VOP_GETATTR
@@ -5460,7 +5448,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 			    * If the file type on the server is inconsistent 			    * with what it was when we created the vnode, 			    * kill the bogus vnode now and fall through to 			    * the code below to create a new one with the 			    * right type. 			    */
+comment|/* 			 * If the file type on the server is inconsistent 			 * with what it was when we created the vnode, 			 * kill the bogus vnode now and fall through to 			 * the code below to create a new one with the 			 * right type. 			 */
 if|if
 condition|(
 name|error
@@ -5543,6 +5531,11 @@ argument_list|(
 literal|"use cached vnode\n"
 argument_list|)
 expr_stmt|;
+name|vdrop
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5554,7 +5547,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-block|}
 name|vput
 argument_list|(
 name|vp
@@ -5589,6 +5581,11 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+name|vdrop
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|vn_lock
