@@ -142,7 +142,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[addarc] %d arcs from %s to %s\n"
+literal|"[addarc] %ld arcs from %s to %s\n"
 argument_list|,
 name|count
 argument_list|,
@@ -188,7 +188,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[tally] hit %d += %d\n"
+literal|"[tally] hit %ld += %ld\n"
 argument_list|,
 name|arcp
 operator|->
@@ -573,7 +573,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[doarcs] pass %d, cycle(s) %d\n"
+literal|"[doarcs] pass %ld, cycle(s) %d\n"
 argument_list|,
 name|pass
 argument_list|,
@@ -1366,7 +1366,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" with %f %f %d/%d\n"
+literal|" with %f %f %ld/%ld\n"
 argument_list|,
 name|childp
 operator|->
@@ -3246,7 +3246,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s delete %s arc: %s (%d) -> %s from %d cycle(s)\n"
+literal|"%s delete %s arc: %s (%ld) -> %s from %u cycle(s)\n"
 argument_list|,
 literal|"[compresslist]"
 argument_list|,
@@ -3279,7 +3279,7 @@ directive|endif
 endif|DEBUG
 name|printf
 argument_list|(
-literal|"\t%s to %s with %d calls\n"
+literal|"\t%s to %s with %ld calls\n"
 argument_list|,
 name|maxarcp
 operator|->
@@ -3506,7 +3506,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\t(%d) -> %s\n"
+literal|"\t(%ld) -> %s\n"
 argument_list|,
 operator|(
 operator|*

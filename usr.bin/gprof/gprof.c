@@ -852,7 +852,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[getpfile] frompc 0x%x selfpc 0x%x count %d\n"
+literal|"[getpfile] frompc 0x%lx selfpc 0x%lx count %ld\n"
 argument_list|,
 name|arc
 operator|.
@@ -1089,7 +1089,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: profile clock rate (%d) %s (%d) in first gmon file\n"
+literal|"%s: profile clock rate (%d) %s (%ld) in first gmon file\n"
 argument_list|,
 name|filename
 argument_list|,
@@ -1183,7 +1183,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[openpfile] hdr.lpc 0x%x hdr.hpc 0x%x hdr.ncnt %d\n"
+literal|"[openpfile] hdr.lpc 0x%lx hdr.hpc 0x%lx hdr.ncnt %d\n"
 argument_list|,
 name|gmonhdr
 operator|.
@@ -1200,7 +1200,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[openpfile]   s_lowpc 0x%x   s_highpc 0x%x\n"
+literal|"[openpfile]   s_lowpc 0x%lx   s_highpc 0x%lx\n"
 argument_list|,
 name|s_lowpc
 argument_list|,
@@ -1209,7 +1209,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[openpfile]     lowpc 0x%x     highpc 0x%x\n"
+literal|"[openpfile]     lowpc 0x%lx     highpc 0x%lx\n"
 argument_list|,
 name|lowpc
 argument_list|,
@@ -1227,7 +1227,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[openpfile] sample rate %d\n"
+literal|"[openpfile] sample rate %ld\n"
 argument_list|,
 name|hz
 argument_list|)
@@ -1343,7 +1343,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[tally] arc from %s to %s traversed %d times\n"
+literal|"[tally] arc from %s to %s traversed %ld times\n"
 argument_list|,
 name|parentp
 operator|->
@@ -1595,7 +1595,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[dumpsum] frompc 0x%x selfpc 0x%x count %d\n"
+literal|"[dumpsum] frompc 0x%lx selfpc 0x%lx count %ld\n"
 argument_list|,
 name|arc
 operator|.
@@ -1977,7 +1977,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[asgnsamples] pcl 0x%x pch 0x%x ccnt %d\n"
+literal|"[asgnsamples] pcl 0x%lx pch 0x%lx ccnt %d\n"
 argument_list|,
 name|pcl
 argument_list|,
@@ -2081,7 +2081,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[asgnsamples] (0x%x->0x%x-0x%x) %s gets %f ticks %d overlap\n"
+literal|"[asgnsamples] (0x%lx->0x%lx-0x%lx) %s gets %f ticks %lu overlap\n"
 argument_list|,
 name|nl
 index|[
@@ -2326,7 +2326,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[alignentries] pushing svalue 0x%x to 0x%x\n"
+literal|"[alignentries] pushing svalue 0x%lx to 0x%lx\n"
 argument_list|,
 name|nlp
 operator|->

@@ -309,7 +309,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"[getnfile] 0X%08x\t%s\n"
+literal|"[getnfile] 0X%08lx\t%s\n"
 argument_list|,
 name|nl
 index|[
@@ -778,7 +778,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[getsymtab] %d %s 0x%08x\n"
+literal|"[getsymtab] %d %s 0x%08lx\n"
 argument_list|,
 name|nname
 argument_list|,

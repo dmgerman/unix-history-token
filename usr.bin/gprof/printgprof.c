@@ -361,11 +361,8 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\ngranularity: each sample hit covers %d byte(s)"
+literal|"\ngranularity: each sample hit covers %g byte(s)"
 argument_list|,
-operator|(
-name|long
-operator|)
 name|scale
 operator|*
 sizeof|sizeof
@@ -584,7 +581,7 @@ literal|10000000
 condition|)
 name|printf
 argument_list|(
-literal|" %8d %8.0f %8.0f  "
+literal|" %8ld %8.0f %8.0f  "
 argument_list|,
 name|np
 operator|->
@@ -630,7 +627,7 @@ literal|10000
 condition|)
 name|printf
 argument_list|(
-literal|" %8d %8.0f %8.0f  "
+literal|" %8ld %8.0f %8.0f  "
 argument_list|,
 name|np
 operator|->
@@ -670,7 +667,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" %8d %8.2f %8.2f  "
+literal|" %8ld %8.2f %8.2f  "
 argument_list|,
 name|np
 operator|->
@@ -755,11 +752,8 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\ngranularity: each sample hit covers %d byte(s)"
+literal|"\ngranularity: each sample hit covers %g byte(s)"
 argument_list|,
-operator|(
-name|long
-operator|)
 name|scale
 operator|*
 sizeof|sizeof
@@ -950,7 +944,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" %7d"
+literal|" %7ld"
 argument_list|,
 name|np
 operator|->
@@ -968,7 +962,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"+%-7d "
+literal|"+%-7ld "
 argument_list|,
 name|np
 operator|->
@@ -1546,7 +1540,7 @@ block|{
 comment|/* 		 *	selfcall or call among siblings 		 */
 name|printf
 argument_list|(
-literal|"%6.6s %5.5s %7.7s %11.11s %7d %7.7s     "
+literal|"%6.6s %5.5s %7.7s %11.11s %7ld %7.7s     "
 argument_list|,
 literal|""
 argument_list|,
@@ -1579,7 +1573,7 @@ block|{
 comment|/* 		 *	regular parent of child 		 */
 name|printf
 argument_list|(
-literal|"%6.6s %5.5s %7.2f %11.2f %7d/%-7d     "
+literal|"%6.6s %5.5s %7.2f %11.2f %7ld/%-7ld     "
 argument_list|,
 literal|""
 argument_list|,
@@ -1713,7 +1707,7 @@ block|{
 comment|/* 		 *	self call or call to sibling 		 */
 name|printf
 argument_list|(
-literal|"%6.6s %5.5s %7.7s %11.11s %7d %7.7s     "
+literal|"%6.6s %5.5s %7.7s %11.11s %7ld %7.7s     "
 argument_list|,
 literal|""
 argument_list|,
@@ -1746,7 +1740,7 @@ block|{
 comment|/* 		 *	regular child of parent 		 */
 name|printf
 argument_list|(
-literal|"%6.6s %5.5s %7.2f %11.2f %7d/%-7d     "
+literal|"%6.6s %5.5s %7.2f %11.2f %7ld/%-7ld     "
 argument_list|,
 literal|""
 argument_list|,
@@ -2237,7 +2231,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-6.6s %5.1f %7.2f %11.2f %7d"
+literal|"%-6.6s %5.1f %7.2f %11.2f %7ld"
 argument_list|,
 name|kirkbuffer
 argument_list|,
@@ -2283,7 +2277,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"+%-7d"
+literal|"+%-7ld"
 argument_list|,
 name|cyclep
 operator|->
@@ -2365,7 +2359,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"%6.6s %5.5s %7.2f %11.2f %7d"
+literal|"%6.6s %5.5s %7.2f %11.2f %7ld"
 argument_list|,
 literal|""
 argument_list|,
@@ -2399,7 +2393,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"+%-7d"
+literal|"+%-7ld"
 argument_list|,
 name|memberp
 operator|->
@@ -2772,7 +2766,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %f + %f %d/%d\n"
+literal|" %f + %f %ld/%ld\n"
 argument_list|,
 name|thisp
 operator|->
@@ -2813,7 +2807,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %f + %f %d/%d\n"
+literal|" %f + %f %ld/%ld\n"
 argument_list|,
 name|thatp
 operator|->
