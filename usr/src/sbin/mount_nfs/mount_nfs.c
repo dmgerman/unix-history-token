@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_nfs.c	5.6 (Berkeley) %G%"
+literal|"@(#)mount_nfs.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1306,7 +1306,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"mount: %s: %s\n"
+literal|"mount: %s: %s"
 argument_list|,
 name|name
 argument_list|,
@@ -1357,7 +1357,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"nqnfs 1: %s\n"
+literal|"nqnfs 1: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2443,7 +2443,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"nqnfs 2: %s\n"
+literal|"nqnfs 2: %s"
 argument_list|,
 name|strerror
 argument_list|(
