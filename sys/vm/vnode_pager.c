@@ -511,6 +511,19 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_usecount
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"vnode_pager_alloc: no vnode reference"
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Hold a reference to the vnode and initialize object data. 		 */
 name|vp
 operator|->
