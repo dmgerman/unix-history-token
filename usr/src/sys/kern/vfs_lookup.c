@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -940,6 +940,8 @@ argument_list|(
 name|dp
 argument_list|,
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 condition|)
 block|{
@@ -1186,6 +1188,17 @@ operator|.
 name|uio_segflg
 operator|=
 name|UIO_SYSSPACE
+expr_stmt|;
+name|auio
+operator|.
+name|uio_procp
+operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
 expr_stmt|;
 name|auio
 operator|.
