@@ -837,6 +837,20 @@ condition|)
 goto|goto
 name|out
 goto|;
+comment|/*      * XXX Call _INI if it exists.  ACPICA should do this but only handles      * Device objects for now.      */
+name|AcpiEvaluateObject
+argument_list|(
+name|sc
+operator|->
+name|tz_handle
+argument_list|,
+literal|"_INI"
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/*      * Register for any Notify events sent to this zone.      */
 name|AcpiInstallNotifyHandler
 argument_list|(
