@@ -279,12 +279,18 @@ block|{
 name|USB_VENDOR_KINGSTON
 block|,
 name|USB_PRODUCT_KINGSTON_KNU101TX
-block|, }
+block|}
 block|,
 block|{
 name|USB_VENDOR_ABOCOM
 block|,
 name|USB_PRODUCT_DLINK_DSB650TX_PNA
+block|}
+block|,
+block|{
+name|USB_VENDOR_IODATA
+block|,
+name|USB_PRODUCT_IODATA_USBETTX
 block|}
 block|,
 block|{
