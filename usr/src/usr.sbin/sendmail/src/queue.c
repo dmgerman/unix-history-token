@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.38 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.39 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.38 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.39 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -364,6 +364,8 @@ operator|==
 name|EEXIST
 condition|)
 continue|continue;
+name|notemp
+label|:
 name|syserr
 argument_list|(
 literal|"!queueup: cannot create temp file %s"
@@ -391,7 +393,21 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+name|sleep
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+condition|)
+goto|goto
+name|notemp
+goto|;
 name|tfp
 operator|=
 name|fdopen
