@@ -84,6 +84,12 @@ directive|include
 file|<i386/isa/bs/bsif.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -309,6 +315,8 @@ name|isa_driver
 name|bsdriver
 init|=
 block|{
+name|INTR_TYPE_CAM
+block|,
 name|bsprobe
 block|,
 name|bsattach
@@ -317,6 +325,16 @@ literal|"bs"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|bs
+argument_list|,
+name|bsdriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_if
 if|#

@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -142,6 +148,23 @@ include|#
 directive|include
 file|<i386/isa/isa_device.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDISA
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The dgb device requires the old isa compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -830,6 +853,8 @@ name|isa_driver
 name|dgbdriver
 init|=
 block|{
+name|INTR_TYPE_TTY
+block|,
 name|dgbprobe
 block|,
 name|dgbattach
@@ -840,6 +865,16 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|dgb
+argument_list|,
+name|dgbdriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

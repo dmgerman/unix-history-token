@@ -75,6 +75,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
@@ -2036,6 +2042,8 @@ name|isa_driver
 name|stldriver
 init|=
 block|{
+name|INTR_TYPE_TTY
+block|,
 name|stlprobe
 block|,
 name|stlattach
@@ -2044,6 +2052,16 @@ literal|"stl"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|stl
+argument_list|,
+name|stldriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*****************************************************************************/

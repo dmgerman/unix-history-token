@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/gsc.h>
 end_include
 
@@ -68,6 +74,23 @@ include|#
 directive|include
 file|<i386/isa/gscreg.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDISA
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The gsc device requires the old isa compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/***********************************************************************  *  * CONSTANTS& DEFINES  *  ***********************************************************************/
@@ -594,6 +617,8 @@ name|isa_driver
 name|gscdriver
 init|=
 block|{
+name|INTR_TYPE_TTY
+block|,
 name|gscprobe
 block|,
 name|gscattach
@@ -602,6 +627,16 @@ literal|"gsc"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|gsc
+argument_list|,
+name|gscdriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

@@ -35,6 +35,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
@@ -65,7 +71,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -1059,6 +1065,8 @@ name|isa_driver
 name|mcddriver
 init|=
 block|{
+name|INTR_TYPE_BIO
+block|,
 name|mcd_probe
 block|,
 name|mcd_attach
@@ -1067,6 +1075,16 @@ literal|"mcd"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|mcd
+argument_list|,
+name|mcddriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

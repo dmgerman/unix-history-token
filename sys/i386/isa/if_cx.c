@@ -91,6 +91,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -105,6 +111,23 @@ include|#
 directive|include
 file|<i386/isa/isa_device.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDISA
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The cx device requires the old isa compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1613,6 +1636,8 @@ name|isa_driver
 name|cxdriver
 init|=
 block|{
+name|INTR_TYPE_NET
+block|,
 name|cxprobe
 block|,
 name|cxattach
@@ -1621,6 +1646,16 @@ literal|"cx"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|cx
+argument_list|,
+name|cxdriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Process an ioctl request.  */

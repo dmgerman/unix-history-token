@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -82,6 +88,23 @@ include|#
 directive|include
 file|<i386/isa/wtreg.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDISA
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The wt device requires the old isa compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Uncomment this to enable internal device tracing.  */
@@ -1394,6 +1417,8 @@ name|isa_driver
 name|wtdriver
 init|=
 block|{
+name|INTR_TYPE_BIO
+block|,
 name|wtprobe
 block|,
 name|wtattach
@@ -1402,6 +1427,16 @@ literal|"wt"
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|wt
+argument_list|,
+name|wtdriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Open routine, called on every device open.  */

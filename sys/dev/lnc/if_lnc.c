@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sockio.h>
 end_include
 
@@ -83,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -150,6 +162,23 @@ include|#
 directive|include
 file|<dev/lnc/if_lncreg.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDISA
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The lnc device requires the old isa compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|lnc_softc_t
@@ -600,6 +629,8 @@ name|isa_driver
 name|lncdriver
 init|=
 block|{
+name|INTR_TYPE_NET
+block|,
 name|lnc_probe
 block|,
 name|lnc_attach
@@ -608,6 +639,16 @@ literal|"lnc"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|lnc
+argument_list|,
+name|lncdriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

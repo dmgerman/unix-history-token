@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -59,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -132,6 +144,23 @@ include|#
 directive|include
 file|<net/bpf.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDISA
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The le device requires the old isa compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Forward declarations */
@@ -1000,6 +1029,8 @@ name|isa_driver
 name|ledriver
 init|=
 block|{
+name|INTR_TYPE_NET
+block|,
 name|le_probe
 block|,
 name|le_attach
@@ -1008,6 +1039,16 @@ literal|"le"
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|le
+argument_list|,
+name|ledriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

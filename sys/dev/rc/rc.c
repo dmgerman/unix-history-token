@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -62,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/interrupt.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/interrupt.h>
 end_include
 
 begin_include
@@ -276,6 +282,8 @@ name|isa_driver
 name|rcdriver
 init|=
 block|{
+name|INTR_TYPE_TTY
+block|,
 name|rcprobe
 block|,
 name|rcattach
@@ -284,6 +292,16 @@ literal|"rc"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|rc
+argument_list|,
+name|rcdriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

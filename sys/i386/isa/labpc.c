@@ -64,6 +64,12 @@ directive|include
 file|<sys/conf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1103,6 +1109,8 @@ name|isa_driver
 name|labpcdriver
 init|=
 block|{
+name|INTR_TYPE_TTY
+block|,
 name|labpcprobe
 block|,
 name|labpcattach
@@ -1113,6 +1121,16 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|labpc
+argument_list|,
+name|labpcdriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

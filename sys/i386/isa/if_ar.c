@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -58,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -77,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<netgraph/netgraph.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -156,6 +162,23 @@ include|#
 directive|include
 file|<i386/isa/isa_device.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDISA
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The ar device requires the old isa compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -768,6 +791,8 @@ name|isa_driver
 name|ardriver
 init|=
 block|{
+name|INTR_TYPE_NET
+block|,
 name|arprobe
 block|,
 name|arattach_isa
@@ -776,6 +801,16 @@ literal|"ar"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|ar
+argument_list|,
+name|ardriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|struct

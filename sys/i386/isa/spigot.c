@@ -33,6 +33,9 @@ directive|include
 file|<sys/systm.h>
 include|#
 directive|include
+file|<sys/kernel.h>
+include|#
+directive|include
 file|<sys/conf.h>
 include|#
 directive|include
@@ -43,6 +46,9 @@ file|<sys/signalvar.h>
 include|#
 directive|include
 file|<sys/mman.h>
+include|#
+directive|include
+file|<sys/bus.h>
 include|#
 directive|include
 file|<machine/frame.h>
@@ -145,6 +151,8 @@ name|isa_driver
 name|spigotdriver
 init|=
 block|{
+name|INTR_TYPE_MISC
+block|,
 name|spigot_probe
 block|,
 name|spigot_attach
@@ -153,6 +161,16 @@ literal|"spigot"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|spigot
+argument_list|,
+name|spigotdriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

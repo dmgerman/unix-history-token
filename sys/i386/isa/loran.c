@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -3035,6 +3041,10 @@ name|isa_driver
 name|lorandriver
 init|=
 block|{
+name|INTR_TYPE_TTY
+operator||
+name|INTR_TYPE_FAST
+block|,
 name|loranprobe
 block|,
 name|loranattach
@@ -3043,6 +3053,16 @@ literal|"loran"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|loran
+argument_list|,
+name|lorandriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#

@@ -39,6 +39,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
@@ -63,7 +69,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -863,6 +869,8 @@ name|isa_driver
 name|scddriver
 init|=
 block|{
+name|INTR_TYPE_BIO
+block|,
 name|scd_probe
 block|,
 name|scd_attach
@@ -871,6 +879,16 @@ literal|"scd"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|scd
+argument_list|,
+name|scddriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* For canceling our timeout */

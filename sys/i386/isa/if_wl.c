@@ -67,6 +67,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sockio.h>
 end_include
 
@@ -97,7 +103,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -209,6 +215,23 @@ include|#
 directive|include
 file|<machine/if_wl_wavelan.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDISA
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The wl device requires the old isa compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -384,6 +407,8 @@ name|isa_driver
 name|wldriver
 init|=
 block|{
+name|INTR_TYPE_NET
+block|,
 name|wlprobe
 block|,
 name|wlattach
@@ -394,6 +419,16 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|wl
+argument_list|,
+name|wldriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * XXX  The Wavelan appears to be prone to dropping stuff if you talk to  * it too fast.  This disgusting hack inserts a delay after each packet  * is queued which helps avoid this behaviour on fast systems.  */

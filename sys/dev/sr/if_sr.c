@@ -125,6 +125,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -224,6 +230,23 @@ end_comment
 begin_comment
 comment|/* #define USE_MODEMCK */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDISA
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The sr device requires the old isa compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -925,6 +948,8 @@ name|isa_driver
 name|srdriver
 init|=
 block|{
+name|INTR_TYPE_NET
+block|,
 name|srprobe
 block|,
 name|srattach_isa
@@ -933,6 +958,16 @@ literal|"sr"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|sr
+argument_list|,
+name|srdriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Baud Rate table for Sync Mode.  * Each entry consists of 3 elements:  * Baud Rate (x100) , TMC, BR  *  * Baud Rate = FCLK / TMC / 2^BR  * Baud table for Crystal freq. of 9.8304 Mhz  */

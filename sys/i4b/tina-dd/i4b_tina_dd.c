@@ -115,6 +115,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/i4b_debug.h>
 end_include
 
@@ -176,6 +182,23 @@ directive|include
 file|<i4b/tina-dd/i4b_tina_ioctl.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDISA
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The tina device requires the old isa compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -225,6 +248,8 @@ name|isa_driver
 name|tinadriver
 init|=
 block|{
+name|INTR_TYPE_NET
+block|,
 name|tinaprobe
 block|,
 name|tinaattach
@@ -235,6 +260,16 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|tina
+argument_list|,
+name|tinadriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 specifier|static

@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sockio.h>
 end_include
 
@@ -71,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -120,6 +132,23 @@ include|#
 directive|include
 file|<i386/isa/if_elreg.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDISA
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The el device requires the old isa compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* For debugging convenience */
@@ -372,6 +401,8 @@ name|isa_driver
 name|eldriver
 init|=
 block|{
+name|INTR_TYPE_NET
+block|,
 name|el_probe
 block|,
 name|el_attach
@@ -380,6 +411,16 @@ literal|"el"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|el
+argument_list|,
+name|eldriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Probe routine.  See if the card is there and at the right place. */

@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sockio.h>
 end_include
 
@@ -47,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -166,6 +178,23 @@ include|#
 directive|include
 file|<i386/isa/intr_machdep.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDISA
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The rdp device requires the old isa compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -589,6 +618,8 @@ name|isa_driver
 name|rdpdriver
 init|=
 block|{
+name|INTR_TYPE_NET
+block|,
 name|rdp_probe
 block|,
 name|rdp_attach
@@ -600,6 +631,16 @@ comment|/* we wanna get a chance before lptN */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|rdp
+argument_list|,
+name|rdpdriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * REDP-specific functions.  *  * They are inlined, thus go first in this file.  Together with gcc's  * usual optimization, these functions probably come close to the  * packet driver's hand-optimized code. ;-)  *  * Comments are partially obtained from the packet driver as well.  * Some of the function names contain register names which don't make  * much sense for us, but i've kept them for easier reference in  * comparision to the packet driver.  *  * Some of the functions are currently not used by the driver; it's  * not quite clear whether we ever need them at all.  They are  * supposedly even slower than what is currently implemented as `slow'  * mode.  Right now, `fast' (default) mode is what the packet driver  * calls mode 0, slow mode is mode 3 (writing through lpt_control,  * reading twice).  *  * We should autoprobe the modi, as opposed to making them dependent  * on a kernel configuration flag.  */

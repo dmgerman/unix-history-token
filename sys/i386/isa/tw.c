@@ -61,13 +61,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/conf.h>
 end_include
 
 begin_include
@@ -92,6 +92,12 @@ begin_include
 include|#
 directive|include
 file|<sys/poll.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
 end_include
 
 begin_define
@@ -132,6 +138,23 @@ include|#
 directive|include
 file|<i386/isa/isa_device.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDISA
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The tw device requires the old isa compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Transmission is done by calling write() to send three byte packets of data.  * The first byte contains a four bit house code (0=A to 15=P).  * The second byte contains five bit unit/key code (0=unit 1 to 15=unit 16,  * 16=All Units Off to 31 = Status Request).  The third byte specifies  * the number of times the packet is to be transmitted without any  * gaps between successive transmissions.  Normally this is 2, as per  * the X-10 documentation, but sometimes (e.g. for bright and dim codes)  * it can be another value.  Each call to write can specify an arbitrary  * number of data bytes.  An incomplete packet is buffered until a subsequent  * call to write() provides data to complete it.  At most one packet will  * actually be processed in any call to write().  Successive calls to write()  * leave a three-cycle gap between transmissions, per the X-10 documentation.  *  * Reception is done using read().  * The driver produces a series of three-character packets.  * In each packet, the first character consists of flags,  * the second character is a four bit house code (0-15),  * and the third character is a five bit key/function code (0-31).  * The flags are the following:  */
@@ -305,6 +328,8 @@ name|isa_driver
 name|twdriver
 init|=
 block|{
+name|INTR_TYPE_TTY
+block|,
 name|twprobe
 block|,
 name|twattach
@@ -313,6 +338,16 @@ literal|"tw"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|tw
+argument_list|,
+name|twdriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
