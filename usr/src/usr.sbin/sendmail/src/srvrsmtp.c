@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.10 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.11 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.10 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.11 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2320,7 +2320,7 @@ case|:
 comment|/* noop -- do nothing */
 name|message
 argument_list|(
-literal|"200 OK"
+literal|"250 OK"
 argument_list|)
 expr_stmt|;
 break|break;
