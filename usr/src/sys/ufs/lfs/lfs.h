@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	8.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -139,7 +139,7 @@ name|u_int32_t
 name|fi_ino
 decl_stmt|;
 comment|/* inode number */
-name|daddr_t
+name|ufs_daddr_t
 name|fi_blocks
 index|[
 literal|1
@@ -219,7 +219,7 @@ name|u_int32_t
 name|lfs_uinodes
 decl_stmt|;
 comment|/* inodes in cache not yet on disk */
-name|daddr_t
+name|ufs_daddr_t
 name|lfs_idaddr
 decl_stmt|;
 comment|/* inode file disk address */
@@ -227,23 +227,23 @@ name|ino_t
 name|lfs_ifile
 decl_stmt|;
 comment|/* inode file inode number */
-name|daddr_t
+name|ufs_daddr_t
 name|lfs_lastseg
 decl_stmt|;
 comment|/* address of last segment written */
-name|daddr_t
+name|ufs_daddr_t
 name|lfs_nextseg
 decl_stmt|;
 comment|/* address of next segment to write */
-name|daddr_t
+name|ufs_daddr_t
 name|lfs_curseg
 decl_stmt|;
 comment|/* current segment being written */
-name|daddr_t
+name|ufs_daddr_t
 name|lfs_offset
 decl_stmt|;
 comment|/* offset in curseg for next partial */
-name|daddr_t
+name|ufs_daddr_t
 name|lfs_lastpseg
 decl_stmt|;
 comment|/* address of last partial written */
@@ -351,7 +351,7 @@ directive|define
 name|LFS_MAXNUMSB
 value|10
 comment|/* superblock disk offsets */
-name|daddr_t
+name|ufs_daddr_t
 name|lfs_sboffs
 index|[
 name|LFS_MAXNUMSB
@@ -562,7 +562,7 @@ directive|define
 name|LFS_UNUSED_DADDR
 value|0
 comment|/* out-of-band daddr */
-name|daddr_t
+name|ufs_daddr_t
 name|if_daddr
 decl_stmt|;
 comment|/* inode disk address */
@@ -642,7 +642,7 @@ name|u_int32_t
 name|ss_datasum
 decl_stmt|;
 comment|/* check sum of data */
-name|daddr_t
+name|ufs_daddr_t
 name|ss_next
 decl_stmt|;
 comment|/* next segment */
@@ -818,7 +818,7 @@ name|sn
 parameter_list|)
 comment|/* segment number to disk address */
 define|\
-value|((daddr_t)((sn) * ((fs)->lfs_ssize<< (fs)->lfs_fsbtodb) +	\ 	    (fs)->lfs_sboffs[0]))
+value|((ufs_daddr_t)((sn) * ((fs)->lfs_ssize<< (fs)->lfs_fsbtodb) +	\ 	    (fs)->lfs_sboffs[0]))
 end_define
 
 begin_comment
@@ -836,7 +836,7 @@ name|F
 parameter_list|,
 name|BP
 parameter_list|)
-value|{					\ 	VTOI((F)->lfs_ivnode)->i_flag |= IN_ACCESS;			\ 	if (bread((F)->lfs_ivnode,					\ 	    (daddr_t)0, (F)->lfs_bsize, NOCRED,&(BP)))			\ 		panic("lfs: ifile read");				\ 	(CP) = (CLEANERINFO *)(BP)->b_data;				\ }
+value|{					\ 	VTOI((F)->lfs_ivnode)->i_flag |= IN_ACCESS;			\ 	if (bread((F)->lfs_ivnode,					\ 	    (ufs_daddr_t)0, (F)->lfs_bsize, NOCRED,&(BP)))		\ 		panic("lfs: ifile read");				\ 	(CP) = (CLEANERINFO *)(BP)->b_data;				\ }
 end_define
 
 begin_comment
@@ -923,11 +923,11 @@ name|ino_t
 name|bi_inode
 decl_stmt|;
 comment|/* inode # */
-name|daddr_t
+name|ufs_daddr_t
 name|bi_lbn
 decl_stmt|;
 comment|/* logical block w/in file */
-name|daddr_t
+name|ufs_daddr_t
 name|bi_daddr
 decl_stmt|;
 comment|/* disk address of block */
@@ -1023,7 +1023,7 @@ name|u_int32_t
 name|seg_number
 decl_stmt|;
 comment|/* number of this segment */
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|start_lbp
 decl_stmt|;

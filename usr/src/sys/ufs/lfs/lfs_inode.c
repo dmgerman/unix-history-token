@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -453,7 +453,7 @@ name|int
 name|i
 decl_stmt|;
 specifier|register
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|daddrp
 decl_stmt|;
@@ -521,7 +521,7 @@ name|SEGUSE
 modifier|*
 name|sup
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|daddr
 decl_stmt|,
 name|lastblock
@@ -1096,7 +1096,7 @@ expr_stmt|;
 name|daddrp
 operator|=
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -1168,7 +1168,7 @@ block|{
 name|bzero
 argument_list|(
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -1189,7 +1189,7 @@ name|in_off
 operator|*
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 argument_list|)
 expr_stmt|;

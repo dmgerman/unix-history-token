@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	8.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -252,7 +252,7 @@ decl_stmt|;
 name|ino_t
 name|lastino
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|b_daddr
 decl_stmt|,
 name|v_daddr
@@ -475,7 +475,7 @@ argument_list|)
 operator|-
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 expr_stmt|;
 block|}
@@ -527,7 +527,7 @@ argument_list|)
 operator|-
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 expr_stmt|;
 name|INC_FINFO
@@ -891,7 +891,7 @@ argument_list|)
 operator|-
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 expr_stmt|;
 block|}
@@ -1098,7 +1098,7 @@ name|void
 modifier|*
 name|start
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|daddr
 decl_stmt|;
 name|int
@@ -2011,7 +2011,7 @@ decl_stmt|;
 name|ino_t
 name|ino
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|daddr
 decl_stmt|;
 name|struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -254,7 +254,7 @@ expr|struct
 name|inode
 operator|*
 operator|,
-name|daddr_t
+name|ufs_daddr_t
 operator|,
 name|time_t
 operator|)
@@ -359,7 +359,7 @@ name|buf
 operator|*
 operator|*
 operator|,
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|,
 specifier|register
@@ -1035,7 +1035,7 @@ name|SEGUSE
 modifier|*
 name|segusep
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|ibno
 decl_stmt|;
 name|CLEANERINFO
@@ -1507,7 +1507,7 @@ argument_list|)
 operator|-
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 expr_stmt|;
 operator|++
@@ -1662,7 +1662,7 @@ argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 operator|*
 operator|(
@@ -1703,7 +1703,7 @@ argument_list|)
 operator|-
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 expr_stmt|;
 operator|--
@@ -1767,7 +1767,7 @@ name|SEGUSE
 modifier|*
 name|sup
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|daddr
 decl_stmt|;
 name|ino_t
@@ -1836,7 +1836,7 @@ name|sum_bytes_left
 operator|<
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 condition|)
 operator|(
@@ -1963,7 +1963,7 @@ name|sum_bytes_left
 operator|-=
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 expr_stmt|;
 name|ndx
@@ -1972,7 +1972,7 @@ name|LFS_SUMMARY_SIZE
 operator|/
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 operator|-
 name|sp
@@ -1988,7 +1988,7 @@ literal|1
 expr_stmt|;
 operator|(
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 operator|(
@@ -2361,7 +2361,7 @@ name|sum_bytes_left
 operator|<
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 operator|||
 name|sp
@@ -2457,7 +2457,7 @@ argument_list|)
 operator|-
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 expr_stmt|;
 if|if
@@ -2515,7 +2515,7 @@ name|sum_bytes_left
 operator|-=
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 expr_stmt|;
 name|sp
@@ -2774,7 +2774,7 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|daddr
 decl_stmt|,
 name|lbn
@@ -3075,7 +3075,7 @@ expr_stmt|;
 block|}
 operator|(
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -5092,7 +5092,7 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|daddr
 decl_stmt|;
 name|size_t
@@ -5373,7 +5373,7 @@ modifier|*
 modifier|*
 name|bp_array
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|lb_array
 decl_stmt|;
