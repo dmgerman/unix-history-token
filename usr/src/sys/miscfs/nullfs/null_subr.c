@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_subr.c	8.2 (Berkeley) %G%  *  * $Id: lofs_subr.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_subr.c	8.3 (Berkeley) %G%  *  * $Id: lofs_subr.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
 end_comment
 
 begin_include
@@ -409,7 +409,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_UFS
+name|VT_NULL
 argument_list|,
 name|mp
 argument_list|,
@@ -423,7 +423,6 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* XXX: VT_NULL above */
 name|vp
 operator|=
 operator|*
