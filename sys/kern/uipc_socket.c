@@ -1469,6 +1469,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Attempt to free a socket.  This should really be sotryfree().  *  * We free the socket if the protocol is no longer interested in the socket,  * there's no file descriptor reference, and the refcount is 0.  While the  * calling macro sotryfree() tests the refcount, sofree() has to test it  * again as it's possible to race with an accept()ing thread if the socket is  * in an listen queue of a listen socket, as being in the listen queue  * doesn't elevate the reference count.  sofree() acquires the accept mutex  * early for this test in order to avoid that race.  */
+end_comment
+
 begin_function
 name|void
 name|sofree
@@ -1486,22 +1490,15 @@ name|socket
 modifier|*
 name|head
 decl_stmt|;
-name|KASSERT
+name|SOCK_UNLOCK
 argument_list|(
 name|so
-operator|->
-name|so_count
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"socket %p so_count not 0"
-operator|,
-name|so
-operator|)
 argument_list|)
 expr_stmt|;
-name|SOCK_LOCK_ASSERT
+name|ACCEPT_LOCK
+argument_list|()
+expr_stmt|;
+name|SOCK_LOCK
 argument_list|(
 name|so
 argument_list|)
@@ -1523,6 +1520,12 @@ name|SS_NOFDREF
 operator|)
 operator|==
 literal|0
+operator|||
+name|so
+operator|->
+name|so_count
+operator|!=
+literal|0
 condition|)
 block|{
 name|SOCK_UNLOCK
@@ -1530,16 +1533,11 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|ACCEPT_LOCK
+name|ACCEPT_UNLOCK
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
 name|head
 operator|=
 name|so
@@ -1622,6 +1620,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|ACCEPT_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -1695,6 +1698,11 @@ name|so_qstate
 operator|&
 name|SQ_INCOMP
 operator|)
+argument_list|)
+expr_stmt|;
+name|SOCK_UNLOCK
+argument_list|(
+name|so
 argument_list|)
 expr_stmt|;
 name|ACCEPT_UNLOCK
