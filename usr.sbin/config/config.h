@@ -135,43 +135,36 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CONFIGDEP
+name|NO_IMPLCT_RULE
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|NO_IMPLCT_RULE
+name|NO_OBJ
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|NO_OBJ
+name|BEFORE_DEPEND
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|BEFORE_DEPEND
+name|NEED_COUNT
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEED_COUNT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
 name|ISDUP
-value|32
+value|16
 end_define
 
 begin_struct
@@ -191,11 +184,6 @@ name|int
 name|d_count
 decl_stmt|;
 comment|/* device count */
-define|#
-directive|define
-name|QUES
-value|-1
-comment|/* -1 means '?' */
 define|#
 directive|define
 name|UNKNOWN
