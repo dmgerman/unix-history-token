@@ -1426,6 +1426,7 @@ operator|*
 operator|)
 name|buf
 expr_stmt|;
+comment|/* 	 * old tar format specifies the name always be null-terminated, 	 * but let's be robust to broken archives. 	 * the same applies to handling links below. 	 */
 name|arcn
 operator|->
 name|nlen
@@ -1440,11 +1441,21 @@ name|hd
 operator|->
 name|name
 argument_list|,
+name|MIN
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|hd
+operator|->
+name|name
+argument_list|)
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|arcn
 operator|->
 name|name
+argument_list|)
 argument_list|)
 operator|-
 literal|1
@@ -1700,11 +1711,21 @@ name|hd
 operator|->
 name|linkname
 argument_list|,
+name|MIN
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|hd
+operator|->
+name|linkname
+argument_list|)
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|arcn
 operator|->
 name|ln_name
+argument_list|)
 argument_list|)
 operator|-
 literal|1
@@ -1762,11 +1783,21 @@ name|hd
 operator|->
 name|linkname
 argument_list|,
+name|MIN
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|hd
+operator|->
+name|linkname
+argument_list|)
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|arcn
 operator|->
 name|ln_name
+argument_list|)
 argument_list|)
 operator|-
 literal|1
@@ -2130,7 +2161,7 @@ condition|(
 name|arcn
 operator|->
 name|ln_nlen
-operator|>
+operator|>=
 sizeof|sizeof
 argument_list|(
 name|hd
@@ -3224,6 +3255,15 @@ name|hd
 operator|->
 name|prefix
 argument_list|,
+name|MIN
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|hd
+operator|->
+name|prefix
+argument_list|)
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|arcn
@@ -3232,6 +3272,7 @@ name|name
 argument_list|)
 operator|-
 literal|2
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dest
@@ -3248,6 +3289,7 @@ name|cnt
 operator|++
 expr_stmt|;
 block|}
+comment|/* 	 * ustar format specifies the name may be unterminated 	 * if it fills the entire field.  this also applies to 	 * the prefix and the linkname. 	 */
 name|arcn
 operator|->
 name|nlen
@@ -3262,6 +3304,15 @@ name|hd
 operator|->
 name|name
 argument_list|,
+name|MIN
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|hd
+operator|->
+name|name
+argument_list|)
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|arcn
@@ -3270,6 +3321,9 @@ name|name
 argument_list|)
 operator|-
 name|cnt
+operator|-
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|arcn
@@ -3830,6 +3884,15 @@ name|hd
 operator|->
 name|linkname
 argument_list|,
+name|MIN
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|hd
+operator|->
+name|linkname
+argument_list|)
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|arcn
@@ -3838,6 +3901,7 @@ name|ln_name
 argument_list|)
 operator|-
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|arcn
@@ -4014,7 +4078,7 @@ operator|(
 name|arcn
 operator|->
 name|ln_nlen
-operator|>=
+operator|>
 sizeof|sizeof
 argument_list|(
 name|hd
@@ -4125,8 +4189,6 @@ name|hd
 operator|->
 name|prefix
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4153,7 +4215,7 @@ name|prefix
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * copy the name part. this may be the whole path or the part after 	 * the prefix 	 */
+comment|/* 	 * copy the name part. this may be the whole path or the part after 	 * the prefix.  both the name and prefix may fill the entire field. 	 */
 name|l_strncpy
 argument_list|(
 name|hd
@@ -4168,25 +4230,7 @@ name|hd
 operator|->
 name|name
 argument_list|)
-operator|-
-literal|1
 argument_list|)
-expr_stmt|;
-name|hd
-operator|->
-name|name
-index|[
-sizeof|sizeof
-argument_list|(
-name|hd
-operator|->
-name|name
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 comment|/* 	 * set the fields in the header that are type dependent 	 */
 switch|switch
@@ -4520,6 +4564,7 @@ name|typeflag
 operator|=
 name|LNKTYPE
 expr_stmt|;
+comment|/* the link name may occupy the entire field in ustar */
 name|l_strncpy
 argument_list|(
 name|hd
@@ -4536,25 +4581,7 @@ name|hd
 operator|->
 name|linkname
 argument_list|)
-operator|-
-literal|1
 argument_list|)
-expr_stmt|;
-name|hd
-operator|->
-name|linkname
-index|[
-sizeof|sizeof
-argument_list|(
-name|hd
-operator|->
-name|linkname
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|memset
 argument_list|(
@@ -5140,7 +5167,7 @@ comment|/* 	 * check to see if the file name is small enough to fit in the name 
 if|if
 condition|(
 name|len
-operator|<
+operator|<=
 name|TNMSZ
 condition|)
 return|return
@@ -5156,6 +5183,8 @@ operator|(
 name|TPFSZ
 operator|+
 name|TNMSZ
+operator|+
+literal|1
 operator|)
 condition|)
 return|return
@@ -5171,6 +5200,8 @@ operator|+
 name|len
 operator|-
 name|TNMSZ
+operator|-
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -5215,7 +5246,7 @@ if|if
 condition|(
 operator|(
 name|len
-operator|>=
+operator|>
 name|TPFSZ
 operator|)
 operator|||
