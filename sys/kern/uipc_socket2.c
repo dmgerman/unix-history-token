@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_socket2.c	8.1 (Berkeley) 6/10/93  *	$Id: uipc_socket2.c,v 1.46 1999/05/10 18:15:40 peter Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_socket2.c	8.1 (Berkeley) 6/10/93  *	$Id: uipc_socket2.c,v 1.47 1999/06/17 23:54:48 green Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_param.h"
+end_include
 
 begin_include
 include|#
@@ -20,6 +26,16 @@ include|#
 directive|include
 file|<sys/domain.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_comment
+comment|/* for maxfiles */
+end_comment
 
 begin_include
 include|#
@@ -80,6 +96,12 @@ include|#
 directive|include
 file|<sys/sysctl.h>
 end_include
+
+begin_decl_stmt
+name|int
+name|maxsockets
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Primitive routines for operating on sockets and socket buffers  */
@@ -4001,23 +4023,58 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|SYSCTL_INT
+begin_comment
+comment|/*  * Initialise maxsockets   */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|init_maxsockets
+parameter_list|(
+name|void
+modifier|*
+name|ignored
+parameter_list|)
+block|{
+name|TUNABLE_INT_FETCH
 argument_list|(
-name|_kern_ipc
-argument_list|,
-name|KIPC_NMBCLUSTERS
-argument_list|,
-name|nmbclusters
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|nmbclusters
+literal|"kern.ipc.maxsockets"
 argument_list|,
 literal|0
 argument_list|,
-literal|"Maximum number of mbuf clusters avaliable"
+name|maxsockets
+argument_list|)
+expr_stmt|;
+name|maxsockets
+operator|=
+name|imax
+argument_list|(
+name|maxsockets
+argument_list|,
+name|imax
+argument_list|(
+name|maxfiles
+argument_list|,
+name|nmbclusters
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|param
+argument_list|,
+name|SI_SUB_TUNABLES
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|init_maxsockets
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

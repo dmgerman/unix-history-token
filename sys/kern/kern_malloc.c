@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_malloc.c	8.3 (Berkeley) 1/4/94  * $Id: kern_malloc.c,v 1.55 1999/05/06 18:12:42 peter Exp $  */
+comment|/*  * Copyright (c) 1987, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_malloc.c	8.3 (Berkeley) 1/4/94  * $Id: kern_malloc.c,v 1.56 1999/05/12 11:11:27 bde Exp $  */
 end_comment
 
 begin_include
@@ -1910,7 +1910,7 @@ literal|"kmeminit: MAXALLOCSAVE too small"
 endif|#
 directive|endif
 comment|/* 	 * Try to auto-tune the kernel memory size, so that it is 	 * more applicable for a wider range of machine sizes. 	 * On an X86, a VM_KMEM_SIZE_SCALE value of 4 is good, while 	 * a VM_KMEM_SIZE of 12MB is a fair compromise.  The 	 * VM_KMEM_SIZE_MAX is dependent on the maximum KVA space 	 * available, and on an X86 with a total KVA space of 256MB, 	 * try to keep VM_KMEM_SIZE_MAX at 80MB or below. 	 * 	 * Note that the kmem_map is also used by the zone allocator, 	 * so make sure that there is enough space. 	 */
-name|vm_kmem_size
+name|xvm_kmem_size
 operator|=
 name|VM_KMEM_SIZE
 expr_stmt|;
@@ -1936,9 +1936,9 @@ operator|/
 name|VM_KMEM_SIZE_SCALE
 operator|)
 operator|>
-name|vm_kmem_size
+name|xvm_kmem_size
 condition|)
-name|vm_kmem_size
+name|xvm_kmem_size
 operator|=
 name|mem_size
 operator|/
@@ -1954,30 +1954,25 @@ name|VM_KMEM_SIZE_MAX
 argument_list|)
 if|if
 condition|(
-name|vm_kmem_size
+name|xvm_kmem_size
 operator|>=
 name|VM_KMEM_SIZE_MAX
 condition|)
-name|vm_kmem_size
+name|xvm_kmem_size
 operator|=
 name|VM_KMEM_SIZE_MAX
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* Allow final override from the kernel environment */
-if|if
-condition|(
-name|getenv_int
+name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"kern.vm.kmem.size"
 argument_list|,
-operator|&
 name|xvm_kmem_size
-argument_list|)
-condition|)
+argument_list|,
 name|vm_kmem_size
-operator|=
-name|xvm_kmem_size
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
