@@ -548,6 +548,9 @@ name|write_struct
 argument_list|(
 name|RPCBFILE
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_rpcblist_ptr
 argument_list|,
 operator|&
@@ -564,6 +567,9 @@ name|write_struct
 argument_list|(
 name|PMAPFILE
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_pmaplist_ptr
 argument_list|,
 operator|&
@@ -610,6 +616,9 @@ name|read_struct
 argument_list|(
 name|RPCBFILE
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_rpcblist_ptr
 argument_list|,
 operator|&
@@ -632,6 +641,9 @@ name|read_struct
 argument_list|(
 name|PMAPFILE
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_pmaplist_ptr
 argument_list|,
 operator|&
