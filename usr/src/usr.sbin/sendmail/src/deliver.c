@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.62 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.63 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3352,6 +3352,10 @@ condition|(
 name|ctladdr
 operator|==
 name|NULL
+operator|&&
+name|m
+operator|!=
+name|ProgMailer
 operator|&&
 name|bitset
 argument_list|(
