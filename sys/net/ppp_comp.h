@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ppp_comp.h - Definitions for doing PPP packet compression.  *  * Copyright (c) 1994 The Australian National University.  * All rights reserved.  *  * Permission to use, copy, modify, and distribute this software and its  * documentation is hereby granted, provided that the above copyright  * notice appears in all copies.  This software is provided without any  * warranty, express or implied. The Australian National University  * makes no representations about the suitability of this software for  * any purpose.  *  * IN NO EVENT SHALL THE AUSTRALIAN NATIONAL UNIVERSITY BE LIABLE TO ANY  * PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF  * THE AUSTRALIAN NATIONAL UNIVERSITY HAVE BEEN ADVISED OF THE POSSIBILITY  * OF SUCH DAMAGE.  *  * THE AUSTRALIAN NATIONAL UNIVERSITY SPECIFICALLY DISCLAIMS ANY WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS  * ON AN "AS IS" BASIS, AND THE AUSTRALIAN NATIONAL UNIVERSITY HAS NO  * OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS,  * OR MODIFICATIONS.  *  * From: Id: ppp-comp.h,v 1.7 1995/05/01 01:43:37 paulus Exp  * $Id$  */
+comment|/*  * ppp_comp.h - Definitions for doing PPP packet compression.  *  * Copyright (c) 1994 The Australian National University.  * All rights reserved.  *  * Permission to use, copy, modify, and distribute this software and its  * documentation is hereby granted, provided that the above copyright  * notice appears in all copies.  This software is provided without any  * warranty, express or implied. The Australian National University  * makes no representations about the suitability of this software for  * any purpose.  *  * IN NO EVENT SHALL THE AUSTRALIAN NATIONAL UNIVERSITY BE LIABLE TO ANY  * PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF  * THE AUSTRALIAN NATIONAL UNIVERSITY HAVE BEEN ADVISED OF THE POSSIBILITY  * OF SUCH DAMAGE.  *  * THE AUSTRALIAN NATIONAL UNIVERSITY SPECIFICALLY DISCLAIMS ANY WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS  * ON AN "AS IS" BASIS, AND THE AUSTRALIAN NATIONAL UNIVERSITY HAS NO  * OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS,  * OR MODIFICATIONS.  *  * $Id: ppp_comp.h,v 1.7 1998/06/20 16:28:02 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -40,6 +40,42 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DO_DEFLATE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DO_DEFLATE
+value|1
+end_define
+
+begin_comment
+comment|/* by default, include Deflate */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|DO_PREDICTOR_1
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DO_PREDICTOR_2
+value|0
+end_define
 
 begin_comment
 comment|/*  * Structure giving methods for compression/decompression.  */
@@ -595,6 +631,149 @@ end_define
 
 begin_comment
 comment|/* largest code size supported */
+end_comment
+
+begin_comment
+comment|/*  * Definitions for Deflate.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CI_DEFLATE
+value|26
+end_define
+
+begin_comment
+comment|/* config option for Deflate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CI_DEFLATE_DRAFT
+value|24
+end_define
+
+begin_comment
+comment|/* value used in original draft RFC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CILEN_DEFLATE
+value|4
+end_define
+
+begin_comment
+comment|/* length of its config option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFLATE_MIN_SIZE
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFLATE_MAX_SIZE
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFLATE_METHOD_VAL
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFLATE_SIZE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 4) + DEFLATE_MIN_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFLATE_METHOD
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x0F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFLATE_MAKE_OPT
+parameter_list|(
+name|w
+parameter_list|)
+value|((((w) - DEFLATE_MIN_SIZE)<< 4) \ 				 + DEFLATE_METHOD_VAL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFLATE_CHK_SEQUENCE
+value|0
+end_define
+
+begin_comment
+comment|/*  * Definitions for other, as yet unsupported, compression methods.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CI_PREDICTOR_1
+value|1
+end_define
+
+begin_comment
+comment|/* config option for Predictor-1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CILEN_PREDICTOR_1
+value|2
+end_define
+
+begin_comment
+comment|/* length of its config option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CI_PREDICTOR_2
+value|2
+end_define
+
+begin_comment
+comment|/* config option for Predictor-2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CILEN_PREDICTOR_2
+value|2
+end_define
+
+begin_comment
+comment|/* length of its config option */
 end_comment
 
 begin_endif

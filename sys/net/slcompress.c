@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)slcompress.c	8.2 (Berkeley) 4/16/94  * $Id: slcompress.c,v 1.7 1996/04/11 06:46:24 davidg Exp $  */
+comment|/*-  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)slcompress.c	8.2 (Berkeley) 4/16/94  * $Id: slcompress.c,v 1.11 1997/08/19 14:10:47 peter Exp $  */
 end_comment
 
 begin_comment
@@ -16,13 +16,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -174,6 +174,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|max_state
 operator|=
 name|MAX_STATES
@@ -195,6 +196,47 @@ name|comp
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Don't reset statistics */
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|comp
+operator|->
+name|tstate
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|comp
+operator|->
+name|tstate
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|comp
+operator|->
+name|rstate
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|comp
+operator|->
+name|rstate
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -298,7 +340,7 @@ name|ENCODE
 parameter_list|(
 name|n
 parameter_list|)
-value|{ \ 	if ((u_short)(n)>= 256) { \ 		*cp++ = 0; \ 		cp[1] = (n); \ 		cp[0] = (n)>> 8; \ 		cp += 2; \ 	} else { \ 		*cp++ = (n); \ 	} \ }
+value|{ \ 	if ((u_int16_t)(n)>= 256) { \ 		*cp++ = 0; \ 		cp[1] = (n); \ 		cp[0] = (n)>> 8; \ 		cp += 2; \ 	} else { \ 		*cp++ = (n); \ 	} \ }
 end_define
 
 begin_define
@@ -308,7 +350,7 @@ name|ENCODEZ
 parameter_list|(
 name|n
 parameter_list|)
-value|{ \ 	if ((u_short)(n)>= 256 || (u_short)(n) == 0) { \ 		*cp++ = 0; \ 		cp[1] = (n); \ 		cp[0] = (n)>> 8; \ 		cp += 2; \ 	} else { \ 		*cp++ = (n); \ 	} \ }
+value|{ \ 	if ((u_int16_t)(n)>= 256 || (u_int16_t)(n) == 0) { \ 		*cp++ = 0; \ 		cp[1] = (n); \ 		cp[0] = (n)>> 8; \ 		cp += 2; \ 	} else { \ 		*cp++ = (n); \ 	} \ }
 end_define
 
 begin_define
@@ -318,7 +360,7 @@ name|DECODEL
 parameter_list|(
 name|f
 parameter_list|)
-value|{ \ 	if (*cp == 0) {\ 		(f) = htonl(ntohl(f) + ((cp[1]<< 8) | cp[2])); \ 		cp += 3; \ 	} else { \ 		(f) = htonl(ntohl(f) + (u_long)*cp++); \ 	} \ }
+value|{ \ 	if (*cp == 0) {\ 		(f) = htonl(ntohl(f) + ((cp[1]<< 8) | cp[2])); \ 		cp += 3; \ 	} else { \ 		(f) = htonl(ntohl(f) + (u_int32_t)*cp++); \ 	} \ }
 end_define
 
 begin_define
@@ -328,7 +370,7 @@ name|DECODES
 parameter_list|(
 name|f
 parameter_list|)
-value|{ \ 	if (*cp == 0) {\ 		(f) = htons(ntohs(f) + ((cp[1]<< 8) | cp[2])); \ 		cp += 3; \ 	} else { \ 		(f) = htons(ntohs(f) + (u_long)*cp++); \ 	} \ }
+value|{ \ 	if (*cp == 0) {\ 		(f) = htons(ntohs(f) + ((cp[1]<< 8) | cp[2])); \ 		cp += 3; \ 	} else { \ 		(f) = htons(ntohs(f) + (u_int32_t)*cp++); \ 	} \ }
 end_define
 
 begin_define
@@ -338,7 +380,7 @@ name|DECODEU
 parameter_list|(
 name|f
 parameter_list|)
-value|{ \ 	if (*cp == 0) {\ 		(f) = htons((cp[1]<< 8) | cp[2]); \ 		cp += 3; \ 	} else { \ 		(f) = htons((u_long)*cp++); \ 	} \ }
+value|{ \ 	if (*cp == 0) {\ 		(f) = htons((cp[1]<< 8) | cp[2]); \ 		cp += 3; \ 	} else { \ 		(f) = htons((u_int32_t)*cp++); \ 	} \ }
 end_define
 
 begin_function
@@ -465,7 +507,7 @@ operator|)
 operator|&
 operator|(
 operator|(
-name|int
+name|int32_t
 operator|*
 operator|)
 name|ip
@@ -536,14 +578,14 @@ name|s_addr
 operator|||
 operator|*
 operator|(
-name|int
+name|int32_t
 operator|*
 operator|)
 name|th
 operator|!=
 operator|(
 operator|(
-name|int
+name|int32_t
 operator|*
 operator|)
 operator|&
@@ -625,14 +667,14 @@ name|s_addr
 operator|&&
 operator|*
 operator|(
-name|int
+name|int32_t
 operator|*
 operator|)
 name|th
 operator|==
 operator|(
 operator|(
-name|int
+name|int32_t
 operator|*
 operator|)
 operator|&
@@ -746,7 +788,7 @@ operator|)
 operator|&
 operator|(
 operator|(
-name|int
+name|int32_t
 operator|*
 operator|)
 operator|&
@@ -787,7 +829,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|ip
@@ -798,7 +840,7 @@ index|]
 operator|!=
 operator|(
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 operator|&
@@ -812,7 +854,7 @@ index|]
 operator|||
 operator|(
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|ip
@@ -823,7 +865,7 @@ index|]
 operator|!=
 operator|(
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 operator|&
@@ -837,7 +879,7 @@ index|]
 operator|||
 operator|(
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|ip
@@ -848,7 +890,7 @@ index|]
 operator|!=
 operator|(
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 operator|&
@@ -975,7 +1017,7 @@ goto|;
 name|deltaS
 operator|=
 call|(
-name|u_short
+name|u_int16_t
 call|)
 argument_list|(
 name|ntohs
@@ -1542,7 +1584,7 @@ comment|/* 	 * At this point, cp points to the first byte of data in the 	 * pac
 if|if
 condition|(
 operator|(
-name|int
+name|long
 operator|)
 name|cp
 operator|&
@@ -1567,7 +1609,7 @@ name|caddr_t
 call|)
 argument_list|(
 operator|(
-name|int
+name|long
 operator|)
 name|cp
 operator|&
@@ -1586,7 +1628,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|int
+name|long
 operator|)
 name|cp
 operator|&
@@ -1704,7 +1746,7 @@ modifier|*
 name|ip
 decl_stmt|;
 specifier|register
-name|u_short
+name|u_int16_t
 modifier|*
 name|bp
 decl_stmt|;
@@ -1823,6 +1865,10 @@ condition|(
 name|hlen
 operator|>
 name|MAX_HDR
+operator|||
+name|hlen
+operator|>
+name|buflen
 condition|)
 goto|goto
 name|bad
@@ -2269,7 +2315,7 @@ comment|/* recompute the ip header checksum */
 name|bp
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 operator|&

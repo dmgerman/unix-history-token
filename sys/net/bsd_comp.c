@@ -4,7 +4,7 @@ comment|/* Because this code is derived from the 4.3BSD compress source:  *  *  
 end_comment
 
 begin_comment
-comment|/*  * This version is for use with mbufs on BSD-derived systems.  *  * from: Id: bsd-comp.c,v 1.11 1995/07/04 03:35:11 paulus Exp  * $Id: bsd_comp.c,v 1.3 1995/10/31 20:51:22 peter Exp $  */
+comment|/*  * This version is for use with mbufs on BSD-derived systems.  *  * $Id: bsd_comp.c,v 1.10 1997/10/28 15:58:29 bde Exp $  */
 end_comment
 
 begin_include
@@ -16,13 +16,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -34,31 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/ppp_defs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_ppp.h>
 end_include
 
 begin_define
@@ -812,12 +788,6 @@ literal|0
 expr_stmt|;
 name|db
 operator|->
-name|incomp_count
-operator|=
-literal|0
-expr_stmt|;
-name|db
-operator|->
 name|checkpoint
 operator|=
 name|CHECK_GAP
@@ -1204,7 +1174,7 @@ decl_stmt|;
 if|if
 condition|(
 name|opt_len
-operator|!=
+operator|<
 name|CILEN_BSD_COMPRESS
 operator|||
 name|options
@@ -1671,7 +1641,7 @@ decl_stmt|;
 if|if
 condition|(
 name|opt_len
-operator|!=
+operator|<
 name|CILEN_BSD_COMPRESS
 operator|||
 name|options
@@ -1710,6 +1680,7 @@ name|db
 operator|->
 name|maxbits
 operator|||
+operator|(
 name|decomp
 operator|&&
 name|db
@@ -1717,6 +1688,7 @@ operator|->
 name|lens
 operator|==
 name|NULL
+operator|)
 condition|)
 return|return
 literal|0
@@ -2955,11 +2927,6 @@ condition|)
 return|return;
 name|db
 operator|->
-name|incomp_count
-operator|++
-expr_stmt|;
-name|db
-operator|->
 name|seqno
 operator|++
 expr_stmt|;
@@ -3971,6 +3938,7 @@ name|db
 operator|->
 name|maxmaxcode
 operator|||
+operator|(
 name|incode
 operator|>
 name|max_ent
@@ -3978,6 +3946,7 @@ operator|&&
 name|oldcode
 operator|==
 name|CLEAR
+operator|)
 condition|)
 block|{
 name|m_freem

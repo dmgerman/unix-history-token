@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	from Id: if_ppp.h,v 1.12 1995/04/24 02:40:23 paulus Exp	*/
-end_comment
-
-begin_comment
-comment|/*	$Id: if_ppp.h,v 1.5 1995/10/31 20:24:10 peter Exp $ */
-end_comment
-
-begin_comment
-comment|/*  * if_ppp.h - Point-to-Point Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * if_ppp.h - Point-to-Point Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: if_ppp.h,v 1.13 1997/10/18 09:02:39 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -655,6 +647,28 @@ end_define
 
 begin_comment
 comment|/* get idle time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPPIOCSPASS
+value|_IOW('t', 71, struct bpf_program)
+end_define
+
+begin_comment
+comment|/* set pass filter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPPIOCSACTIVE
+value|_IOW('t', 70, struct bpf_program)
+end_define
+
+begin_comment
+comment|/* set active filt */
 end_comment
 
 begin_comment
