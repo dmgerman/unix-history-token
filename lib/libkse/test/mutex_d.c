@@ -6193,6 +6193,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* This test relies on the concurrency level being 1. */
+name|pthread_setconcurrency
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize the thread attribute. 	 */
 name|assert
 argument_list|(
