@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.72 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.73 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1322,7 +1322,9 @@ operator|->
 name|lfs_bshift
 argument_list|)
 expr_stmt|;
-comment|/*  	 * XXX 	 * Currently, we don't know when we allocate an indirect block, so 	 * ip->i_blocks isn't getting incremented appropriately.  As a result, 	 * when we delete any indirect blocks, we get a bad number here. 	 */
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|ip
@@ -1331,12 +1333,13 @@ name|i_blocks
 operator|<
 literal|0
 condition|)
-name|ip
-operator|->
-name|i_blocks
-operator|=
-literal|0
+name|panic
+argument_list|(
+literal|"lfs_truncate: block count< 0"
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ip
 operator|->
 name|i_flag
