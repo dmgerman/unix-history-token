@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in.c	6.6	85/03/18	*/
+comment|/*	in.c	6.7	85/04/16	*/
 end_comment
 
 begin_include
@@ -1784,6 +1784,11 @@ name|ia_flags
 operator||=
 name|IFA_ROUTE
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
