@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: uniq.c,v 1.3 1997/08/21 06:51:10 charnier Exp $"
+literal|"$Id: uniq.c,v 1.4 1997/09/07 15:09:22 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_include
@@ -256,6 +262,16 @@ literal|0
 decl_stmt|,
 name|comp
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|obsolete
 argument_list|(
 name|argv
@@ -797,6 +813,10 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|str
 argument_list|)
@@ -980,6 +1000,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ap
 index|[
 literal|1
