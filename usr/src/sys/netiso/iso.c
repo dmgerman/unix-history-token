@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.c	7.16 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2235,14 +2235,14 @@ literal|"Didn't unlink isoifadr from list\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|IFAFREE
 argument_list|(
 operator|(
-name|caddr_t
-operator|)
+operator|&
 name|oia
-argument_list|,
-name|M_IFADDR
+operator|->
+name|ia_ifa
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2619,18 +2619,6 @@ operator|.
 name|ifa_flags
 operator||=
 name|RTF_CLONING
-expr_stmt|;
-name|ia
-operator|->
-name|ia_ifa
-operator|.
-name|ifa_llinfolen
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|llinfo_llc
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Add route for the network. 	 */
