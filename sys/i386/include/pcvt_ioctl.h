@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992, 2000 Hellmuth Michaelis  *  * Copyright (c) 19
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------  *  *	pcvt_ioctl.h	ioctl's for the VT220 video driver 'pcvt'  *	---------------------------------------------------------  *  *	Last Edit-Date: [Mon Mar 27 16:04:14 2000]  *  * $FreeBSD$  *   *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------  *  *	pcvt_ioctl.h	ioctl's for the VT220 video driver 'pcvt'  *	---------------------------------------------------------  *  *	Last Edit-Date: [Fri Mar 31 10:22:29 2000]  *  * $FreeBSD$  *   *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -2259,6 +2259,10 @@ define|#
 directive|define
 name|CONF_NO_LED_UPDATE
 value|0x00004000
+define|#
+directive|define
+name|CONF_GREENSAVER
+value|0x00008000
 block|}
 struct|;
 end_struct
