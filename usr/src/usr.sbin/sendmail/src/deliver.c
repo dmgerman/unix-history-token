@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.20 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -3229,9 +3235,6 @@ condition|;
 name|i
 operator|++
 control|)
-ifdef|#
-directive|ifdef
-name|FIOCLEX
 operator|(
 name|void
 operator|)
@@ -3244,20 +3247,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-else|FIOCLEX
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|FIOCLEX
 comment|/* try to execute the mailer */
 name|execve
 argument_list|(
@@ -3270,9 +3259,6 @@ argument_list|,
 name|UserEnviron
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FIOCLEX
 name|syserr
 argument_list|(
 literal|"Cannot exec %s"
@@ -3282,31 +3268,6 @@ operator|->
 name|m_mailer
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-else|FIOCLEX
-name|printf
-argument_list|(
-literal|"Cannot exec '%s' errno=%d\n"
-argument_list|,
-name|m
-operator|->
-name|m_mailer
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|FIOCLEX
 if|if
 condition|(
 name|m
