@@ -202,6 +202,23 @@ name|typestr
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|1
+condition|)
+block|{
+name|command_errmsg
+operator|=
+literal|"no filename specified"
+expr_stmt|;
+return|return
+operator|(
+name|CMD_ERROR
+operator|)
+return|;
+block|}
 while|while
 condition|(
 operator|(
