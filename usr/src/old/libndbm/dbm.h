@@ -25,6 +25,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Pre-define the page block size to be the old dbm size.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PBLKSIZ
+value|1024
+end_define
+
 begin_include
 include|#
 directive|include
