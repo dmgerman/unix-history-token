@@ -375,6 +375,8 @@ block|,
 literal|"PCnet-FAST+"
 block|,
 literal|"PCnet-Home"
+block|,
+literal|"PCnet-FAST III"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -5429,9 +5431,6 @@ return|;
 case|case
 name|Am79C972
 case|:
-case|case
-name|Am79C973
-case|:
 return|return
 operator|(
 name|PCnet_FASTplus
@@ -5443,6 +5442,17 @@ case|:
 return|return
 operator|(
 name|PCnet_Home
+operator|)
+return|;
+case|case
+name|Am79C973
+case|:
+case|case
+name|Am79C975
+case|:
+return|return
+operator|(
+name|PCnet_FAST_III
 operator|)
 return|;
 default|default:
