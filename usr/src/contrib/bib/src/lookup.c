@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lookup.c	2.4	%G%"
+literal|"@(#)lookup.c	2.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,18 @@ end_decl_stmt
 
 begin_comment
 comment|/*  print out file names                    */
+end_comment
+
+begin_decl_stmt
+name|int
+name|Aflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  print hits from All indexes 		*/
 end_comment
 
 begin_decl_stmt
@@ -146,6 +158,9 @@ index|[
 name|maxstr
 index|]
 decl_stmt|;
+name|int
+name|found
+decl_stmt|;
 name|strcpy
 argument_list|(
 name|BMACLIB
@@ -218,6 +233,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|found
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -316,7 +335,30 @@ name|refs
 operator|!=
 name|NULL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|refs
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|refs
+argument_list|)
+expr_stmt|;
+name|found
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Aflag
+condition|)
 break|break;
+block|}
 name|p
 operator|=
 name|one_index
@@ -332,37 +374,12 @@ name|q
 expr_stmt|;
 if|if
 condition|(
-name|refs
-operator|==
-name|NULL
-operator|||
-operator|*
-name|refs
-operator|==
-name|NULL
+operator|!
+name|found
 condition|)
 name|printf
 argument_list|(
 literal|"No references found.\n"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|refs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|refs
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|refs
 argument_list|)
 expr_stmt|;
 block|}
@@ -449,6 +466,13 @@ case|:
 name|common
 operator|=
 name|operand
+expr_stmt|;
+break|break;
+case|case
+literal|'A'
+case|:
+name|Aflag
+operator|++
 expr_stmt|;
 break|break;
 case|case
