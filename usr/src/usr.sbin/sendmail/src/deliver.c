@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.103 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.104 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5575,6 +5575,28 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+comment|/* 	**  If we are in SMTP opening state, send initial protocol. 	*/
+if|if
+condition|(
+name|clever
+operator|&&
+name|mci
+operator|->
+name|mci_state
+operator|!=
+name|MCIS_CLOSED
+condition|)
+block|{
+name|smtpinit
+argument_list|(
+name|m
+argument_list|,
+name|mci
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|bitset
@@ -5601,28 +5623,14 @@ name|mci_flags
 operator||=
 name|MCIF_CVT8TO7
 expr_stmt|;
-comment|/* 	**  If we are in SMTP opening state, send initial protocol. 	*/
-if|if
-condition|(
-name|clever
-operator|&&
+else|else
 name|mci
 operator|->
-name|mci_state
-operator|!=
-name|MCIS_CLOSED
-condition|)
-block|{
-name|smtpinit
-argument_list|(
-name|m
-argument_list|,
-name|mci
-argument_list|,
-name|e
-argument_list|)
+name|mci_flags
+operator|&=
+operator|~
+name|MCIF_CVT8TO7
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|tTd
