@@ -1267,22 +1267,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function
+begin_decl_stmt
 specifier|extern
 name|int
 name|_yp_check
 name|__P
-parameter_list|(
+argument_list|(
+operator|(
 name|char
-modifier|*
-modifier|*
-parameter_list|)
-end_function
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
