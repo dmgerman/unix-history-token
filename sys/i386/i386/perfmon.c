@@ -918,6 +918,8 @@ literal|16
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|ctl_shadow
 index|[
 literal|1
@@ -927,6 +929,7 @@ operator|(
 name|PMCF_E
 operator|<<
 literal|16
+operator|)
 operator|)
 condition|)
 name|newval
@@ -999,6 +1002,8 @@ name|P5FLAG_OS
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|ctl_shadow
 index|[
 literal|0
@@ -1008,6 +1013,7 @@ operator|(
 name|PMCF_E
 operator|<<
 literal|16
+operator|)
 operator|)
 condition|)
 name|newval
