@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hist.c	5.2 (Berkeley) %G%"
+literal|"@(#)hist.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -426,7 +426,7 @@ name|sigsetmask
 argument_list|(
 name|sigblock
 argument_list|(
-literal|0
+literal|0L
 argument_list|)
 operator|&
 operator|~

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c	5.3 (Berkeley) %G%"
+literal|"@(#)csh.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1970,7 +1970,8 @@ name|oldexit
 decl_stmt|;
 name|int
 name|reenter
-decl_stmt|,
+decl_stmt|;
+name|long
 name|omask
 decl_stmt|;
 if|if
@@ -2674,14 +2675,14 @@ modifier|*
 modifier|*
 name|v
 decl_stmt|;
-name|int
+name|long
 name|omask
 decl_stmt|;
 name|omask
 operator|=
 name|sigblock
 argument_list|(
-literal|0
+literal|0L
 argument_list|)
 expr_stmt|;
 if|if
@@ -2903,7 +2904,7 @@ name|sigsetmask
 argument_list|(
 name|sigblock
 argument_list|(
-literal|0
+literal|0L
 argument_list|)
 operator|&
 operator|~

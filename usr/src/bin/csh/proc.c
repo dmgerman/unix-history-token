@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	5.5 (Berkeley) %G%"
+literal|"@(#)proc.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -725,7 +725,8 @@ name|pp
 decl_stmt|;
 name|int
 name|flags
-decl_stmt|,
+decl_stmt|;
+name|long
 name|omask
 decl_stmt|;
 name|neednote
@@ -842,7 +843,7 @@ decl_stmt|,
 modifier|*
 name|pp
 decl_stmt|;
-name|int
+name|long
 name|omask
 decl_stmt|;
 comment|/* 	 * Here's where dead procs get flushed. 	 */
@@ -998,7 +999,8 @@ name|int
 name|jobflags
 decl_stmt|,
 name|reason
-decl_stmt|,
+decl_stmt|;
+name|long
 name|omask
 decl_stmt|;
 while|while
@@ -1120,7 +1122,7 @@ name|sigpause
 argument_list|(
 name|sigblock
 argument_list|(
-literal|0
+literal|0L
 argument_list|)
 operator|&
 operator|~
@@ -1362,7 +1364,7 @@ name|process
 modifier|*
 name|pp
 decl_stmt|;
-name|int
+name|long
 name|omask
 decl_stmt|;
 name|pjobs
@@ -1412,7 +1414,7 @@ condition|)
 block|{
 name|sigpause
 argument_list|(
-literal|0
+literal|0L
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4230,13 +4232,14 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|omask
-decl_stmt|,
 name|pid
 decl_stmt|,
 name|err
 init|=
 literal|0
+decl_stmt|;
+name|long
+name|omask
 decl_stmt|;
 name|char
 modifier|*
@@ -4581,11 +4584,12 @@ modifier|*
 name|np
 decl_stmt|;
 name|int
-name|omask
-decl_stmt|,
 name|jobflags
 init|=
 literal|0
+decl_stmt|;
+name|long
+name|omask
 decl_stmt|;
 name|omask
 operator|=
@@ -5316,7 +5320,8 @@ literal|0
 decl_stmt|;
 name|int
 name|pgrp
-decl_stmt|,
+decl_stmt|;
+name|long
 name|omask
 decl_stmt|;
 comment|/* 	 * A child will be uninterruptible only under very special 	 * conditions. Remember that the semantics of '&' is 	 * implemented by disconnecting the process from the tty so 	 * signals do not need to ignored just for '&'. 	 * Thus signals are set to default action for children unless: 	 *	we have had an "onintr -" (then specifically ignored) 	 *	we are not playing with signals (inherit action) 	 */

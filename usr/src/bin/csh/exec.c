@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)exec.c	5.2 (Berkeley) %G%"
+literal|"@(#)exec.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -442,7 +442,7 @@ name|void
 operator|)
 name|sigsetmask
 argument_list|(
-literal|0
+literal|0L
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If no path, no words in path, or a / in the filename 	 * then restrict the command search. 	 */
@@ -1146,18 +1146,8 @@ end_comment
 
 begin_macro
 name|dohash
-argument_list|(
-argument|v
-argument_list|)
+argument_list|()
 end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|v
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{

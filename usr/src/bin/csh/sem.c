@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sem.c	5.4 (Berkeley) %G%"
+literal|"@(#)sem.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -621,7 +621,7 @@ name|oOLDSTD
 decl_stmt|,
 name|otpgrp
 decl_stmt|;
-name|int
+name|long
 name|omask
 decl_stmt|;
 comment|/*  			 * Prepare for the vfork by saving everything 			 * that the child corrupts before it exec's. 			 * Note that in some signal implementations 			 * which keep the signal info in user space 			 * (e.g. Sun's) it will also be necessary to  			 * save and restore the current sigvec's for 			 * the signals the child touches before it 			 * exec's. 			 */

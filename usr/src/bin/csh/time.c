@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)time.c	5.4 (Berkeley) %G%"
+literal|"@(#)time.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -500,7 +500,7 @@ modifier|*
 name|cp
 decl_stmt|;
 specifier|register
-name|int
+name|long
 name|i
 decl_stmt|;
 specifier|register
@@ -514,7 +514,7 @@ argument_list|(
 literal|"time"
 argument_list|)
 decl_stmt|;
-name|int
+name|long
 name|ms
 init|=
 operator|(
@@ -648,14 +648,9 @@ literal|'E'
 case|:
 name|psecs
 argument_list|(
-call|(
-name|long
-call|)
-argument_list|(
 name|ms
 operator|/
 literal|100
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -702,7 +697,7 @@ name|ru_nswap
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|i
 argument_list|)
@@ -713,13 +708,13 @@ literal|'X'
 case|:
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|t
 operator|==
 literal|0
 condition|?
-literal|0
+literal|0L
 else|:
 operator|(
 name|r1
@@ -740,13 +735,13 @@ literal|'D'
 case|:
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|t
 operator|==
 literal|0
 condition|?
-literal|0
+literal|0L
 else|:
 operator|(
 name|r1
@@ -777,13 +772,13 @@ literal|'K'
 case|:
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|t
 operator|==
 literal|0
 condition|?
-literal|0
+literal|0L
 else|:
 operator|(
 operator|(
@@ -824,7 +819,7 @@ literal|'M'
 case|:
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|r1
 operator|->
@@ -839,7 +834,7 @@ literal|'F'
 case|:
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|r1
 operator|->
@@ -856,7 +851,7 @@ literal|'R'
 case|:
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|r1
 operator|->
@@ -873,7 +868,7 @@ literal|'I'
 case|:
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|r1
 operator|->
@@ -890,7 +885,7 @@ literal|'O'
 case|:
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|r1
 operator|->

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c	5.3 (Berkeley) %G%"
+literal|"@(#)func.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1906,7 +1906,7 @@ name|sigsetmask
 argument_list|(
 name|sigblock
 argument_list|(
-literal|0
+literal|0L
 argument_list|)
 operator|&
 operator|~
@@ -2100,7 +2100,9 @@ block|{
 specifier|register
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|long
 name|omask
 decl_stmt|;
 name|i
@@ -3353,7 +3355,7 @@ name|sigsetmask
 argument_list|(
 name|sigblock
 argument_list|(
-literal|0
+literal|0L
 argument_list|)
 operator|&
 operator|~
@@ -3589,7 +3591,7 @@ name|sigsetmask
 argument_list|(
 name|sigblock
 argument_list|(
-literal|0
+literal|0L
 argument_list|)
 operator|&
 operator|~

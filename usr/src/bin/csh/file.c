@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)file.c	5.6 (Berkeley) %G%"
+literal|"@(#)file.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,7 +301,7 @@ name|tty
 block|,
 name|tty_normal
 block|;
-name|int
+name|long
 name|omask
 block|;
 name|omask
@@ -421,7 +421,7 @@ name|tty
 decl_stmt|,
 name|tty_normal
 decl_stmt|;
-name|int
+name|long
 name|omask
 decl_stmt|;
 name|omask
@@ -1618,7 +1618,7 @@ name|FREE_ITEMS
 parameter_list|(
 name|items
 parameter_list|)
-value|{ \ 	int omask;\ \ 	omask = sigblock(sigmask(SIGINT));\ 	free_items(items);\ 	items = NULL;\ 	(void) sigsetmask(omask);\ }
+value|{ \ 	long omask;\ \ 	omask = sigblock(sigmask(SIGINT));\ 	free_items(items);\ 	items = NULL;\ 	(void) sigsetmask(omask);\ }
 end_define
 
 begin_comment
