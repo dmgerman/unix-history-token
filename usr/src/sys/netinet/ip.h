@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip.h	6.2	84/02/15	*/
+comment|/*	ip.h	6.3	84/05/22	*/
 end_comment
 
 begin_comment
@@ -417,7 +417,7 @@ begin_define
 define|#
 directive|define
 name|IPTTLDEC
-value|5
+value|1
 end_define
 
 begin_comment
