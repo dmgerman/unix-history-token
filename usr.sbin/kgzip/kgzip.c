@@ -867,7 +867,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kgzip [-cv] [-f format] [-l file] [-o filename] file\n"
+literal|"usage: kgzip [-cv] [-f format] [-l loader] [-o output] file\n"
 argument_list|)
 expr_stmt|;
 name|exit
