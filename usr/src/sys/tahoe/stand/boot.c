@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	boot.c	7.2	89/05/24	*/
+comment|/*	boot.c	7.3	90/06/22	*/
 end_comment
 
 begin_include
@@ -12,37 +12,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"inode.h"
+file|"sys/time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"fs.h"
+file|"sys/vnode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm.h"
+file|"ufs/inode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ufs/fs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/reboot.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"saio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"reboot.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	prf.c	1.5	89/04/25	*/
+comment|/*	prf.c	1.6	90/06/22	*/
 end_comment
 
 begin_comment
@@ -16,13 +16,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/cp.h"
+file|"tahoe/cp.h"
 end_include
 
 begin_comment

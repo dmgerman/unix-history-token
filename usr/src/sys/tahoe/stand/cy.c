@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cy.c	7.8	89/04/25	*/
+comment|/*	cy.c	7.9	90/06/22	*/
 end_comment
 
 begin_comment
@@ -22,19 +22,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"inode.h"
+file|"sys/time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"fs.h"
+file|"sys/vnode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ufs/inode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ufs/fs.h"
 end_include
 
 begin_include
@@ -52,13 +64,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../tahoevba/cyreg.h"
+file|"tahoevba/cyreg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoevba/vbaparam.h"
+file|"tahoevba/vbaparam.h"
 end_include
 
 begin_comment
