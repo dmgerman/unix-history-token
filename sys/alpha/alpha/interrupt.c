@@ -938,6 +938,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
 name|kdb_trap
 argument_list|(
 name|mces
@@ -951,6 +954,8 @@ argument_list|,
 name|framep
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|panic
 argument_list|(
 literal|"machine check"
