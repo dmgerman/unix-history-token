@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arff.c	5.4 (Berkeley) %G%"
+literal|"@(#)arff.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4383,7 +4383,7 @@ block|}
 if|if
 condition|(
 name|type
-operator|=
+operator|==
 literal|'r'
 condition|)
 name|printf
