@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	6.6 (Berkeley) %G%"
+literal|"@(#)ld.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -257,31 +257,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Ordinary 4.3bsd lacks these macros in a.out.h.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_TXTADDR
-parameter_list|(
-name|X
-parameter_list|)
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|N_DATADDR
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|(((x).a_magic==OMAGIC)? (N_TXTADDR(x)+(x).a_text) \     : (page_size+((N_TXTADDR(x)+(x).a_text-1)& ~(page_size-1))))
-end_define
 
 begin_ifdef
 ifdef|#
