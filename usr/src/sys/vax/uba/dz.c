@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.42	82/08/22	*/
+comment|/*	dz.c	4.43	82/09/12	*/
 end_comment
 
 begin_include
@@ -4184,8 +4184,16 @@ end_macro
 
 begin_block
 block|{
+specifier|register
 name|int
 name|dz
+decl_stmt|;
+specifier|register
+name|int
+name|s
+init|=
+name|spl5
+argument_list|()
 decl_stmt|;
 for|for
 control|(
@@ -4203,6 +4211,11 @@ control|)
 name|dzrint
 argument_list|(
 name|dz
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}

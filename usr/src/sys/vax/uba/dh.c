@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.49	82/08/22	*/
+comment|/*	dh.c	4.50	82/09/12	*/
 end_comment
 
 begin_include
@@ -3612,6 +3612,13 @@ specifier|register
 name|int
 name|dh
 decl_stmt|;
+specifier|register
+name|int
+name|s
+init|=
+name|spl5
+argument_list|()
+decl_stmt|;
 for|for
 control|(
 name|dh
@@ -3628,6 +3635,11 @@ control|)
 name|dhrint
 argument_list|(
 name|dh
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
