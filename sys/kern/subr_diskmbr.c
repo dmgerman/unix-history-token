@@ -1285,6 +1285,10 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"%s: invalid primary partition table: Dangerously Dedicated (ignored)\n"
