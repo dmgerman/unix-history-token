@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcs.c	5.1 (Berkeley) %G%"
+literal|"@(#)pcs.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -620,9 +620,6 @@ operator|=
 name|SINGLESTEP
 operator||
 name|NEW
-expr_stmt|;
-name|runcount
-operator|--
 expr_stmt|;
 name|execsig
 operator|=
