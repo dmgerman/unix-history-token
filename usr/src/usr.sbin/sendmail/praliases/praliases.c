@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)praliases.c	5.1	%G%"
+literal|"@(#)praliases.c	5.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -219,6 +219,10 @@ condition|)
 name|printf
 argument_list|(
 literal|"%s: No such key\n"
+argument_list|,
+name|key
+operator|.
+name|dptr
 argument_list|)
 expr_stmt|;
 else|else
