@@ -239,6 +239,10 @@ name|passivemode
 operator|=
 literal|0
 expr_stmt|;
+name|restricted_data_ports
+operator|=
+literal|1
+expr_stmt|;
 name|cp
 operator|=
 name|strrchr
@@ -294,7 +298,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dginptv"
+literal|"dginptvU"
 argument_list|)
 operator|)
 operator|!=
@@ -361,6 +365,14 @@ literal|'v'
 case|:
 name|verbose
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'U'
+case|:
+name|restricted_data_ports
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 default|default:

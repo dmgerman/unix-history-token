@@ -478,6 +478,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|restricthelp
+index|[]
+init|=
+literal|"toggle restriction of data port range"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|rmdirhelp
 index|[]
 init|=
@@ -1427,6 +1436,20 @@ block|,
 literal|1
 block|,
 name|restart
+block|}
+block|,
+block|{
+literal|"restrict"
+block|,
+name|restricthelp
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|setrestrict
 block|}
 block|,
 block|{
