@@ -2237,7 +2237,7 @@ name|feof
 parameter_list|(
 name|p
 parameter_list|)
-value|(!__isthreaded ? __sfeof(p) : feof(p))
+value|(!__isthreaded ? __sfeof(p) : (feof)(p))
 end_define
 
 begin_define
@@ -2247,7 +2247,7 @@ name|ferror
 parameter_list|(
 name|p
 parameter_list|)
-value|(!__isthreaded ? __sferror(p) : ferror(p))
+value|(!__isthreaded ? __sferror(p) : (ferror)(p))
 end_define
 
 begin_define
@@ -2257,7 +2257,7 @@ name|clearerr
 parameter_list|(
 name|p
 parameter_list|)
-value|(!__isthreaded ? __sclearerr(p) : clearerr(p))
+value|(!__isthreaded ? __sclearerr(p) : (clearerr)(p))
 end_define
 
 begin_if
@@ -2273,7 +2273,7 @@ name|fileno
 parameter_list|(
 name|p
 parameter_list|)
-value|(!__isthreaded ? __sfileno(p) : fileno(p))
+value|(!__isthreaded ? __sfileno(p) : (fileno)(p))
 end_define
 
 begin_endif
@@ -2288,7 +2288,7 @@ name|getc
 parameter_list|(
 name|fp
 parameter_list|)
-value|(!__isthreaded ? __sgetc(fp) : getc(fp))
+value|(!__isthreaded ? __sgetc(fp) : (getc)(fp))
 end_define
 
 begin_define
@@ -2300,7 +2300,7 @@ name|x
 parameter_list|,
 name|fp
 parameter_list|)
-value|(!__isthreaded ? __sputc(x, fp) : putc(x, fp))
+value|(!__isthreaded ? __sputc(x, fp) : (putc)(x, fp))
 end_define
 
 begin_define
