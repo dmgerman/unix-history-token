@@ -176,7 +176,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  *  * Lock reference:  *	f - freelist mutex  *	i - interlock  *	m - mntvnodes mutex  *	p - pollinfo lock  *	v - vnode lock  *  * XXX Not all fields are locked yet and some fields that are marked are not  * locked consistently.  This is a work in progress.  */
+comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  *  * Lock reference:  *	c - namecache mutex  *	f - freelist mutex  *	i - interlock  *	m - mntvnodes mutex  *	p - pollinfo lock  *	s - spechash mutex  *	S - syncer mutex  *	u - Only a reference to the vnode is needed to read.  *	v - vnode lock  *  * XXX Not all fields are locked yet and some fields that are marked are not  * locked consistently.  This is a work in progress.  */
 end_comment
 
 begin_struct
@@ -196,10 +196,6 @@ name|int
 name|v_usecount
 decl_stmt|;
 comment|/* i ref count of users */
-name|int
-name|v_writecount
-decl_stmt|;
-comment|/* i ref count of writers */
 name|long
 name|v_numoutput
 decl_stmt|;
@@ -214,26 +210,99 @@ name|int
 name|v_holdcnt
 decl_stmt|;
 comment|/* i page& buffer references */
+name|struct
+name|buflists
+name|v_cleanblkhd
+decl_stmt|;
+comment|/* i SORTED clean blocklist */
+name|struct
+name|buf
+modifier|*
+name|v_cleanblkroot
+decl_stmt|;
+comment|/* i clean buf splay tree  */
+name|struct
+name|buflists
+name|v_dirtyblkhd
+decl_stmt|;
+comment|/* i SORTED dirty blocklist */
+name|struct
+name|buf
+modifier|*
+name|v_dirtyblkroot
+decl_stmt|;
+comment|/* i dirty buf splay tree */
 name|u_long
 name|v_vflag
 decl_stmt|;
 comment|/* v vnode flags */
-name|u_long
-name|v_id
+name|int
+name|v_writecount
 decl_stmt|;
-comment|/* capability identifier */
+comment|/* v ref count of writers */
+name|struct
+name|vm_object
+modifier|*
+name|v_object
+decl_stmt|;
+comment|/* v Place to store VM object */
+name|daddr_t
+name|v_lastw
+decl_stmt|;
+comment|/* v last write (write cluster) */
+name|daddr_t
+name|v_cstart
+decl_stmt|;
+comment|/* v start block of cluster */
+name|daddr_t
+name|v_lasta
+decl_stmt|;
+comment|/* v last allocation (cluster) */
+name|int
+name|v_clen
+decl_stmt|;
+comment|/* v length of current cluster */
+union|union
+block|{
 name|struct
 name|mount
 modifier|*
-name|v_mount
+name|vu_mountedhere
 decl_stmt|;
-comment|/* ptr to vfs we are in */
-name|vop_t
+comment|/* v ptr to mounted vfs (VDIR) */
+name|struct
+name|socket
 modifier|*
-modifier|*
-name|v_op
+name|vu_socket
 decl_stmt|;
-comment|/* vnode operations vector */
+comment|/* v unix ipc (VSOCK) */
+struct|struct
+block|{
+name|struct
+name|specinfo
+modifier|*
+name|vu_specinfo
+decl_stmt|;
+comment|/* v device (VCHR, VBLK) */
+name|SLIST_ENTRY
+argument_list|(
+argument|vnode
+argument_list|)
+name|vu_specnext
+expr_stmt|;
+comment|/* s device aliases */
+block|}
+name|vu_spec
+struct|;
+name|struct
+name|fifoinfo
+modifier|*
+name|vu_fifoinfo
+decl_stmt|;
+comment|/* v fifo (VFIFO) */
+block|}
+name|v_un
+union|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|vnode
@@ -248,124 +317,52 @@ argument_list|)
 name|v_nmntvnodes
 expr_stmt|;
 comment|/* m vnodes for mount point */
-name|struct
-name|buflists
-name|v_cleanblkhd
-decl_stmt|;
-comment|/* SORTED clean blocklist */
-name|struct
-name|buf
-modifier|*
-name|v_cleanblkroot
-decl_stmt|;
-comment|/* clean buf splay tree root */
-name|struct
-name|buflists
-name|v_dirtyblkhd
-decl_stmt|;
-comment|/* SORTED dirty blocklist */
-name|struct
-name|buf
-modifier|*
-name|v_dirtyblkroot
-decl_stmt|;
-comment|/* dirty buf splay tree root */
 name|LIST_ENTRY
 argument_list|(
 argument|vnode
 argument_list|)
 name|v_synclist
 expr_stmt|;
-comment|/* vnodes with dirty buffers */
+comment|/* S dirty vnode list */
 name|enum
 name|vtype
 name|v_type
 decl_stmt|;
-comment|/* vnode type */
-union|union
-block|{
-name|struct
-name|mount
-modifier|*
-name|vu_mountedhere
-decl_stmt|;
-comment|/* ptr to mounted vfs (VDIR) */
-name|struct
-name|socket
-modifier|*
-name|vu_socket
-decl_stmt|;
-comment|/* unix ipc (VSOCK) */
-struct|struct
-block|{
-name|struct
-name|specinfo
-modifier|*
-name|vu_specinfo
-decl_stmt|;
-comment|/* device (VCHR, VBLK) */
-name|SLIST_ENTRY
-argument_list|(
-argument|vnode
-argument_list|)
-name|vu_specnext
-expr_stmt|;
-block|}
-name|vu_spec
-struct|;
-name|struct
-name|fifoinfo
-modifier|*
-name|vu_fifoinfo
-decl_stmt|;
-comment|/* fifo (VFIFO) */
-block|}
-name|v_un
-union|;
-name|daddr_t
-name|v_lastw
-decl_stmt|;
-comment|/* last write (write cluster) */
-name|daddr_t
-name|v_cstart
-decl_stmt|;
-comment|/* start block of cluster */
-name|daddr_t
-name|v_lasta
-decl_stmt|;
-comment|/* last allocation (cluster) */
-name|int
-name|v_clen
-decl_stmt|;
-comment|/* length of current cluster */
-name|struct
-name|vm_object
-modifier|*
-name|v_object
-decl_stmt|;
-comment|/* Place to store VM object */
-name|struct
-name|lock
-name|v_lock
-decl_stmt|;
-comment|/* used if fs don't have one */
-name|struct
-name|lock
-modifier|*
-name|v_vnlock
-decl_stmt|;
-comment|/* pointer to vnode lock */
+comment|/* u vnode type */
 specifier|const
 name|char
 modifier|*
 name|v_tag
 decl_stmt|;
-comment|/* type of underlying data */
+comment|/* u type of underlying data */
 name|void
 modifier|*
 name|v_data
 decl_stmt|;
-comment|/* private data for fs */
+comment|/* u private data for fs */
+name|struct
+name|lock
+name|v_lock
+decl_stmt|;
+comment|/* u used if fs don't have one */
+name|struct
+name|lock
+modifier|*
+name|v_vnlock
+decl_stmt|;
+comment|/* u pointer to vnode lock */
+name|vop_t
+modifier|*
+modifier|*
+name|v_op
+decl_stmt|;
+comment|/* u vnode operations vector */
+name|struct
+name|mount
+modifier|*
+name|v_mount
+decl_stmt|;
+comment|/* u ptr to vfs we are in */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -373,7 +370,7 @@ argument|namecache
 argument_list|)
 name|v_cache_src
 expr_stmt|;
-comment|/* Cache entries from us */
+comment|/* c Cache entries from us */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -381,17 +378,21 @@ argument|namecache
 argument_list|)
 name|v_cache_dst
 expr_stmt|;
-comment|/* Cache entries to us */
+comment|/* c Cache entries to us */
+name|u_long
+name|v_id
+decl_stmt|;
+comment|/* c capability identifier */
 name|struct
 name|vnode
 modifier|*
 name|v_dd
 decl_stmt|;
-comment|/* .. vnode */
+comment|/* c .. vnode */
 name|u_long
 name|v_ddid
 decl_stmt|;
-comment|/* .. capability identifier */
+comment|/* c .. capability identifier */
 name|struct
 name|vpollinfo
 modifier|*
