@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dd.c	8.1 (Berkeley) %G%"
+literal|"@(#)dd.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1177,8 +1177,16 @@ return|return;
 comment|/* 		 * Zero the buffer first if trying to recover from errors so 		 * lose the minimum amount of data.  If doing block operations 		 * use spaces. 		 */
 if|if
 condition|(
+operator|(
 name|flags
 operator|&
+operator|(
+name|C_NOERROR
+operator||
+name|C_SYNC
+operator|)
+operator|)
+operator|==
 operator|(
 name|C_NOERROR
 operator||
@@ -1576,6 +1584,45 @@ condition|)
 name|unblock_close
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ddflags
+operator|&
+name|C_OSYNC
+operator|&&
+name|out
+operator|.
+name|dbcnt
+operator|<
+name|out
+operator|.
+name|dbsz
+condition|)
+block|{
+name|bzero
+argument_list|(
+name|out
+operator|.
+name|dbp
+argument_list|,
+name|out
+operator|.
+name|dbsz
+operator|-
+name|out
+operator|.
+name|dbcnt
+argument_list|)
+expr_stmt|;
+name|out
+operator|.
+name|dbcnt
+operator|=
+name|out
+operator|.
+name|dbsz
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|out

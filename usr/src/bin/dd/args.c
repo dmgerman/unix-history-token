@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)args.c	8.1 (Berkeley) %G%"
+literal|"@(#)args.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -286,6 +286,8 @@ operator||
 name|C_IBS
 operator||
 name|C_OBS
+operator||
+name|C_OSYNC
 block|,
 literal|"cbs"
 block|,
@@ -1254,6 +1256,14 @@ block|,
 name|C_ASCII
 block|,
 name|a2ibm_32V
+block|,
+literal|"osync"
+block|,
+name|C_OSYNC
+block|,
+name|C_BS
+block|,
+name|NULL
 block|,
 literal|"swab"
 block|,
