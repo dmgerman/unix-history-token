@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.46 (Berkeley) %G%"
+literal|"@(#)main.c	6.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6103,14 +6103,11 @@ begin_comment
 comment|/* **  AUTH_WARNING -- specify authorization warning ** **	Parameters: **		e -- the current envelope. **		msg -- the text of the message. **		args -- arguments to the message. ** **	Returns: **		none. */
 end_comment
 
-begin_ifdef
+begin_function
+name|void
 ifdef|#
 directive|ifdef
 name|__STDC__
-end_ifdef
-
-begin_function
-name|void
 name|auth_warning
 parameter_list|(
 specifier|register

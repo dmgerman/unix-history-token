@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.10 (Berkeley) %G%"
+literal|"@(#)err.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -443,14 +443,11 @@ begin_comment
 comment|/*VARARGS2*/
 end_comment
 
-begin_ifdef
+begin_function
+name|void
 ifdef|#
 directive|ifdef
 name|__STDC__
-end_ifdef
-
-begin_function
-name|void
 name|message
 parameter_list|(
 name|char
@@ -525,14 +522,11 @@ begin_comment
 comment|/*VARARGS2*/
 end_comment
 
-begin_ifdef
+begin_function
+name|void
 ifdef|#
 directive|ifdef
 name|__STDC__
-end_ifdef
-
-begin_function
-name|void
 name|nmessage
 parameter_list|(
 name|char
