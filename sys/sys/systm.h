@@ -1810,6 +1810,31 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|caddr_t
+name|kern_timeout_callwheel_alloc
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+name|v
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|kern_timeout_callwheel_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Stubs for obsolete functions that used to be for interrupt  management */
 end_comment

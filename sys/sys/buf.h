@@ -2329,11 +2329,15 @@ end_struct_decl
 
 begin_decl_stmt
 name|caddr_t
-name|bufhashinit
+name|kern_vfs_bio_buffer_alloc
 name|__P
 argument_list|(
 operator|(
 name|caddr_t
+name|v
+operator|,
+name|int
+name|physmem_est
 operator|)
 argument_list|)
 decl_stmt|;
