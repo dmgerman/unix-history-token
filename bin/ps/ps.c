@@ -676,9 +676,6 @@ decl_stmt|,
 modifier|*
 name|memf
 decl_stmt|,
-modifier|*
-name|swapf
-decl_stmt|,
 name|errbuf
 index|[
 name|_POSIX2_LINE_MAX
@@ -824,8 +821,6 @@ name|memf
 operator|=
 name|nlistf
 operator|=
-name|swapf
-operator|=
 name|_PATH_DEVNULL
 expr_stmt|;
 while|while
@@ -845,7 +840,7 @@ name|defined
 argument_list|(
 name|LAZY_PS
 argument_list|)
-literal|"aCcefghjLlM:mN:O:o:p:rSTt:U:uvW:wxZ"
+literal|"aCcefghjLlM:mN:O:o:p:rSTt:U:uv:wxZ"
 argument_list|)
 operator|)
 operator|!=
@@ -854,7 +849,7 @@ literal|1
 condition|)
 else|#
 directive|else
-literal|"aCceghjLlM:mN:O:o:p:rSTt:U:uvW:wxZ"
+literal|"aCceghjLlM:mN:O:o:p:rSTt:U:uv:wxZ"
 block|)
 end_function
 
@@ -1332,18 +1327,6 @@ literal|'\0'
 expr_stmt|;
 break|break;
 case|case
-literal|'W'
-case|:
-name|swapf
-operator|=
-name|optarg
-expr_stmt|;
-name|dropgid
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
 literal|'w'
 case|:
 if|if
@@ -1453,17 +1436,6 @@ operator|=
 operator|*
 name|argv
 expr_stmt|;
-if|if
-condition|(
-operator|*
-operator|++
-name|argv
-condition|)
-name|swapf
-operator|=
-operator|*
-name|argv
-expr_stmt|;
 block|}
 block|}
 end_if
@@ -1507,7 +1479,7 @@ name|nlistf
 argument_list|,
 name|memf
 argument_list|,
-name|swapf
+name|NULL
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -3167,7 +3139,7 @@ name|strcspn
 argument_list|(
 name|s
 argument_list|,
-literal|"MNOoUW"
+literal|"MNOoU"
 argument_list|)
 operator|==
 name|len
@@ -3323,7 +3295,7 @@ literal|"%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: ps [-aChjlmrSTuvwx] [-O|o fmt] [-p pid] [-t tty] [-U user]"
 argument_list|,
-literal|"          [-M core] [-N system] [-W swap]"
+literal|"          [-M core] [-N system]"
 argument_list|,
 literal|"       ps [-L]"
 argument_list|)
