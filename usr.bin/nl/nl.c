@@ -507,7 +507,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note: this implementation strictly conforms to the XBD Utility 	 * Syntax Guidelines and does not permit the optional `file' operand 	 * to be intermingled with the options, which is defined in the 	 * XCU specification (Issue 5) but declared an obsolescent feature that 	 * will be removed from a future issue.  It shouldn't matter, though. 	 */
 while|while
 condition|(
 operator|(
