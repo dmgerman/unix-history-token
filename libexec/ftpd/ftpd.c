@@ -4557,9 +4557,6 @@ name|new
 init|=
 name|malloc
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|strlen
 argument_list|(
 name|s
@@ -5230,9 +5227,6 @@ name|login_attempts
 condition|)
 name|sleep
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|login_attempts
 argument_list|)
 expr_stmt|;
@@ -9664,9 +9658,6 @@ condition|)
 block|{
 name|sleep
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|swaitint
 argument_list|)
 expr_stmt|;
@@ -10074,9 +10065,6 @@ name|buf
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 name|blksize
 argument_list|)
 operator|)
@@ -10113,9 +10101,6 @@ name|filefd
 argument_list|,
 name|buf
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|blksize
 argument_list|)
 operator|)
