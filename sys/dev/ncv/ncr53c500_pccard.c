@@ -228,6 +228,20 @@ name|PCMCIA_CARD
 argument_list|(
 name|PANASONIC
 argument_list|,
+name|KXLC003
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|0xb4d00000
+block|}
+block|,
+comment|/* untested */
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|PANASONIC
+argument_list|,
 name|KXLC004
 argument_list|,
 literal|0
