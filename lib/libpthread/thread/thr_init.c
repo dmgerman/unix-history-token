@@ -235,6 +235,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|_thread_state_running
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -811,6 +818,11 @@ name|PANIC
 argument_list|(
 literal|"Failed loading mandatory references in _thread_init"
 argument_list|)
+expr_stmt|;
+comment|/* Pull debug symbols in for static binary */
+name|_thread_state_running
+operator|=
+name|PS_RUNNING
 expr_stmt|;
 comment|/* 	 * Check the size of the jump table to make sure it is preset 	 * with the correct number of entries. 	 */
 if|if
