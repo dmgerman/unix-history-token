@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)psdit.c	1.4 %G%	*/
+comment|/*	@(#)psdit.c	1.5 %G%	*/
 end_comment
 
 begin_ifndef
@@ -216,6 +216,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* minimum vertical motion */
+end_comment
+
+begin_decl_stmt
+name|int
+name|stipplefont
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current stipple font */
 end_comment
 
 begin_decl_stmt
@@ -1993,14 +2003,14 @@ argument_list|,
 literal|"%d"
 argument_list|,
 operator|&
-name|n
+name|stipplefont
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d Di\n"
+literal|"%d i\n"
 argument_list|,
-name|n
+name|stipplefont
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4804,6 +4814,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* set font */
+name|stipplefont
+operator|=
+literal|1
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"xi\n"
@@ -5207,7 +5221,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d s %d xH %d xS %d f\n"
+literal|"%d s %d xH %d xS %d f %d i\n"
 argument_list|,
 name|fontsize
 argument_list|,
@@ -5216,6 +5230,8 @@ argument_list|,
 name|fontslant
 argument_list|,
 name|font
+argument_list|,
+name|stipplefont
 argument_list|)
 expr_stmt|;
 if|if
