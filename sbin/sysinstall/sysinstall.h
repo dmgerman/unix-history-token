@@ -127,6 +127,30 @@ end_include
 begin_define
 define|#
 directive|define
+name|min
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)< (b) ? (a) : (b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|max
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)> (b) ? (a) : (b))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCRATCHSIZE
 value|1024
 end_define

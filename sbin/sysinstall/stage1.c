@@ -1113,7 +1113,7 @@ argument_list|,
 literal|"    Done"
 argument_list|)
 expr_stmt|;
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 if|if
@@ -1124,11 +1124,20 @@ literal|"FreeBSD Installation"
 argument_list|,
 name|scratch
 argument_list|,
-literal|10
+operator|-
+literal|1
 argument_list|,
-literal|75
+operator|-
+literal|1
 argument_list|,
+name|min
+argument_list|(
 literal|5
+argument_list|,
+name|no_disks
+operator|+
+literal|1
+argument_list|)
 argument_list|,
 name|no_disks
 operator|+
@@ -1140,7 +1149,7 @@ name|selection
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|sprintf
@@ -1393,6 +1402,9 @@ expr_stmt|;
 name|items
 operator|++
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|dialog_menu
@@ -1401,11 +1413,18 @@ literal|"FreeBSD Installation"
 argument_list|,
 name|scratch
 argument_list|,
-literal|10
+operator|-
+literal|1
 argument_list|,
-literal|75
+operator|-
+literal|1
 argument_list|,
+name|min
+argument_list|(
 literal|5
+argument_list|,
+name|items
+argument_list|)
 argument_list|,
 name|items
 argument_list|,
@@ -1415,7 +1434,7 @@ name|selection
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|sprintf
@@ -1679,6 +1698,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|dialog_menu
@@ -1687,9 +1709,11 @@ name|TITLE
 argument_list|,
 name|scratch
 argument_list|,
-literal|10
+operator|-
+literal|1
 argument_list|,
-literal|75
+operator|-
+literal|1
 argument_list|,
 literal|4
 argument_list|,
@@ -1708,7 +1732,7 @@ argument_list|,
 literal|"You did not select a valid partition"
 argument_list|)
 expr_stmt|;
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|AskAbort
