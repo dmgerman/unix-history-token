@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.33 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3089,7 +3089,7 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-name|CANONHOST
+name|MATCHZERO
 case|:
 comment|/* match zero tokens */
 continue|continue;
