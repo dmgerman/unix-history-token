@@ -26,7 +26,7 @@ comment|/* for __offsetof */
 end_comment
 
 begin_comment
-comment|/*  * This file defines four types of data structures: singly-linked lists,  * singly-linked tail queues, lists and tail queues.  *  * A singly-linked list is headed by a single forward pointer. The elements  * are singly linked for minimum space and pointer manipulation overhead at  * the expense of O(n) removal for arbitrary elements. New elements can be  * added to the list after an existing element or at the head of the list.  * Elements being removed from the head of the list should use the explicit  * macro for this purpose for optimum efficiency. A singly-linked list may  * only be traversed in the forward direction.  Singly-linked lists are ideal  * for applications with large datasets and few or no removals or for  * implementing a LIFO queue.  *  * A singly-linked tail queue is headed by a pair of pointers, one to the  * head of the list and the other to the tail of the list. The elements are  * singly linked for minimum space and pointer manipulation overhead at the  * expense of O(n) removal for arbitrary elements. New elements can be added  * to the list after an existing element, at the head of the list, or at the  * end of the list. Elements being removed from the head of the tail queue  * should use the explicit macro for this purpose for optimum efficiency.  * A singly-linked tail queue may only be traversed in the forward direction.  * Singly-linked tail queues are ideal for applications with large datasets  * and few or no removals or for implementing a FIFO queue.  *  * A list is headed by a single forward pointer (or an array of forward  * pointers for a hash table header). The elements are doubly linked  * so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before  * or after an existing element or at the head of the list. A list  * may only be traversed in the forward direction.  *  * A tail queue is headed by a pair of pointers, one to the head of the  * list and the other to the tail of the list. The elements are doubly  * linked so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before or  * after an existing element, at the head of the list, or at the end of  * the list. A tail queue may be traversed in either direction.  *  * For details on the use of these macros, see the queue(3) manual page.  *  *  *			SLIST	LIST	STAILQ	TAILQ  * _HEAD		+	+	+	+  * _HEAD_INITIALIZER	+	+	+	+  * _ENTRY		+	+	+	+  * _INIT		+	+	+	+  * _EMPTY		+	+	+	+  * _FIRST		+	+	+	+  * _NEXT		+	+	+	+  * _PREV		-	-	-	+  * _LAST		-	-	+	+  * _FOREACH		+	+	+	+  * _FOREACH_REVERSE	-	-	-	+  * _INSERT_HEAD		+	+	+	+  * _INSERT_BEFORE	-	+	-	+  * _INSERT_AFTER	+	+	+	+  * _INSERT_TAIL		-	-	+	+  * _REMOVE_HEAD		+	-	+	-  * _REMOVE		+	+	+	+  *  */
+comment|/*  * This file defines four types of data structures: singly-linked lists,  * singly-linked tail queues, lists and tail queues.  *  * A singly-linked list is headed by a single forward pointer. The elements  * are singly linked for minimum space and pointer manipulation overhead at  * the expense of O(n) removal for arbitrary elements. New elements can be  * added to the list after an existing element or at the head of the list.  * Elements being removed from the head of the list should use the explicit  * macro for this purpose for optimum efficiency. A singly-linked list may  * only be traversed in the forward direction.  Singly-linked lists are ideal  * for applications with large datasets and few or no removals or for  * implementing a LIFO queue.  *  * A singly-linked tail queue is headed by a pair of pointers, one to the  * head of the list and the other to the tail of the list. The elements are  * singly linked for minimum space and pointer manipulation overhead at the  * expense of O(n) removal for arbitrary elements. New elements can be added  * to the list after an existing element, at the head of the list, or at the  * end of the list. Elements being removed from the head of the tail queue  * should use the explicit macro for this purpose for optimum efficiency.  * A singly-linked tail queue may only be traversed in the forward direction.  * Singly-linked tail queues are ideal for applications with large datasets  * and few or no removals or for implementing a FIFO queue.  *  * A list is headed by a single forward pointer (or an array of forward  * pointers for a hash table header). The elements are doubly linked  * so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before  * or after an existing element or at the head of the list. A list  * may only be traversed in the forward direction.  *  * A tail queue is headed by a pair of pointers, one to the head of the  * list and the other to the tail of the list. The elements are doubly  * linked so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before or  * after an existing element, at the head of the list, or at the end of  * the list. A tail queue may be traversed in either direction.  *  * For details on the use of these macros, see the queue(3) manual page.  *  *  *			SLIST	LIST	STAILQ	TAILQ  * _HEAD		+	+	+	+  * _HEAD_INITIALIZER	+	+	+	+  * _ENTRY		+	+	+	+  * _INIT		+	+	+	+  * _EMPTY		+	+	+	+  * _FIRST		+	+	+	+  * _NEXT		+	+	+	+  * _PREV		-	-	-	+  * _LAST		-	-	+	+  * _FOREACH		+	+	+	+  * _FOREACH_REVERSE	-	-	-	+  * _INSERT_HEAD		+	+	+	+  * _INSERT_BEFORE	-	+	-	+  * _INSERT_AFTER	+	+	+	+  * _INSERT_TAIL		-	-	+	+  * _CONCAT		-	-	+	+  * _REMOVE_HEAD		+	-	+	-  * _REMOVE		+	+	+	+  *  */
 end_comment
 
 begin_comment
@@ -237,6 +237,18 @@ end_define
 begin_comment
 comment|/*  * Singly-linked Tail queue functions.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|STAILQ_CONCAT
+parameter_list|(
+name|head1
+parameter_list|,
+name|head2
+parameter_list|)
+value|do {				\ 	if (!STAILQ_EMPTY((head2))) {					\ 		*(head1)->stqh_last = (head2)->stqh_first;		\ 		(head1)->stqh_last = (head2)->stqh_last;		\ 		STAILQ_INIT((head2));					\ 	}								\ } while (0)
+end_define
 
 begin_define
 define|#
@@ -606,6 +618,20 @@ end_define
 begin_comment
 comment|/*  * Tail queue functions.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TAILQ_CONCAT
+parameter_list|(
+name|head1
+parameter_list|,
+name|head2
+parameter_list|,
+name|field
+parameter_list|)
+value|do {				\ 	if (!TAILQ_EMPTY(head2)) {					\ 		*(head1)->tqh_last = (head2)->tqh_first;		\ 		(head2)->tqh_first->field.tqe_prev = (head1)->tqh_last;	\ 		(head1)->tqh_last = (head2)->tqh_last;			\ 		TAILQ_INIT((head2));					\ 	}								\ } while (0)
+end_define
 
 begin_define
 define|#
