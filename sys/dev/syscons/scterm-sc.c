@@ -1882,7 +1882,7 @@ break|break;
 case|case
 literal|7
 case|:
-comment|/* reverse video */
+comment|/* reverse */
 name|tcp
 operator|->
 name|attr_mask
@@ -1905,7 +1905,7 @@ case|:
 case|case
 literal|31
 case|:
-comment|/* set fg color */
+comment|/* set ansi fg color */
 case|case
 literal|32
 case|:
@@ -1956,12 +1956,12 @@ break|break;
 case|case
 literal|39
 case|:
+comment|/* restore fg color back to normal */
 name|tcp
 operator|->
 name|attr_mask
 operator|&=
-operator|~
-name|FG_CHANGED
+name|BG_CHANGED
 expr_stmt|;
 name|tcp
 operator|->
@@ -1991,7 +1991,7 @@ case|:
 case|case
 literal|41
 case|:
-comment|/* set bg color */
+comment|/* set ansi bg color */
 case|case
 literal|42
 case|:
@@ -2042,12 +2042,18 @@ break|break;
 case|case
 literal|49
 case|:
+comment|/* restore bg color back to normal */
 name|tcp
 operator|->
 name|attr_mask
 operator|&=
-operator|~
-name|BG_CHANGED
+name|FG_CHANGED
+operator||
+name|BOLD_ATTR
+operator||
+name|UNDERLINE_ATTR
+operator||
+name|BLINK_ATTR
 expr_stmt|;
 name|tcp
 operator|->
@@ -2160,7 +2166,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* reset colors and attributes */
+comment|/* reset colors and attributes back to normal */
 name|tcp
 operator|->
 name|attr_mask
@@ -2290,7 +2296,7 @@ break|break;
 case|case
 literal|3
 case|:
-comment|/* set video attribute directly */
+comment|/* set adapter attribute directly */
 name|tcp
 operator|->
 name|attr_mask
@@ -2361,7 +2367,7 @@ break|break;
 case|case
 literal|5
 case|:
-comment|/* set ansi reverse video background */
+comment|/* set ansi reverse background */
 name|tcp
 operator|->
 name|rev_color
@@ -2393,7 +2399,7 @@ break|break;
 case|case
 literal|6
 case|:
-comment|/* set ansi reverse video foreground */
+comment|/* set ansi reverse foreground */
 name|tcp
 operator|->
 name|rev_color
@@ -2425,7 +2431,7 @@ break|break;
 case|case
 literal|7
 case|:
-comment|/* set reverse video attribute directly */
+comment|/* set adapter reverse attribute directly */
 name|tcp
 operator|->
 name|rev_color
@@ -2883,7 +2889,7 @@ break|break;
 case|case
 literal|'F'
 case|:
-comment|/* set foreground */
+comment|/* set adapter foreground */
 if|if
 condition|(
 name|tcp
@@ -2935,7 +2941,7 @@ break|break;
 case|case
 literal|'G'
 case|:
-comment|/* set background */
+comment|/* set adapter background */
 if|if
 condition|(
 name|tcp
@@ -2987,7 +2993,7 @@ break|break;
 case|case
 literal|'H'
 case|:
-comment|/* set reverse video foreground */
+comment|/* set adapter reverse foreground */
 if|if
 condition|(
 name|tcp
@@ -3026,7 +3032,7 @@ break|break;
 case|case
 literal|'I'
 case|:
-comment|/* set reverse video background */
+comment|/* set adapter reverse background */
 if|if
 condition|(
 name|tcp
