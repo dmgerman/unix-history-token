@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -240,6 +240,11 @@ decl_stmt|;
 name|struct
 name|proc
 modifier|*
+name|newproc
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
 modifier|*
 name|hash
 decl_stmt|;
@@ -375,7 +380,7 @@ return|;
 comment|/* Allocate new proc. */
 name|MALLOC
 argument_list|(
-name|p2
+name|newproc
 argument_list|,
 expr|struct
 name|proc
@@ -551,6 +556,10 @@ block|}
 comment|/* Link onto allproc (this should probably be delayed). */
 name|nprocs
 operator|++
+expr_stmt|;
+name|p2
+operator|=
+name|newproc
 expr_stmt|;
 name|p2
 operator|->
