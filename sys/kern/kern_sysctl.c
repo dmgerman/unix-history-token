@@ -4794,6 +4794,19 @@ operator|(
 name|EPERM
 operator|)
 return|;
+name|KASSERT
+argument_list|(
+name|req
+operator|->
+name|td
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"sysctl_root(): req->td == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Is this sysctl sensitive to securelevels? */
 if|if
 condition|(
@@ -4809,37 +4822,6 @@ operator|&
 name|CTLFLAG_SECURE
 operator|)
 condition|)
-block|{
-if|if
-condition|(
-name|req
-operator|->
-name|td
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|securelevel_gt
-argument_list|(
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-else|else
 block|{
 name|error
 operator|=
@@ -4864,7 +4846,6 @@ name|error
 operator|)
 return|;
 block|}
-block|}
 comment|/* Is this sysctl writable by only privileged users? */
 if|if
 condition|(
@@ -4880,15 +4861,6 @@ name|oid_kind
 operator|&
 name|CTLFLAG_ANYBODY
 operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|req
-operator|->
-name|td
-operator|!=
-name|NULL
 condition|)
 block|{
 name|int
@@ -4935,7 +4907,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(
