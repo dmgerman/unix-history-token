@@ -509,6 +509,14 @@ literal|"Hawking CB102 CardBus 10/100"
 block|}
 block|,
 block|{
+name|DC_VENDORID_PLANEX
+block|,
+name|DC_DEVICEID_FNW3602T
+block|,
+literal|"PlaneX FNW-3602-T CardBus 10/100"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0

@@ -4444,6 +4444,28 @@ value|0x1803
 end_define
 
 begin_comment
+comment|/*  * Planex vendor ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_VENDORID_PLANEX
+value|0x14ea
+end_define
+
+begin_comment
+comment|/*  * Planex device IDs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_FNW3602T
+value|0xab08
+end_define
+
+begin_comment
 comment|/*  * Not sure who this vendor should be, so we'll go with HAWKING until  * I can locate the right one.  */
 end_comment
 
