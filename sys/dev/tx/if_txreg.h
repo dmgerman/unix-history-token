@@ -131,6 +131,17 @@ name|ETHER_MAX_FRAME_LEN
 value|(ETHER_MAX_LEN + ETHER_CRC_LEN)
 end_define
 
+begin_define
+define|#
+directive|define
+name|EPIC_MAX_MTU
+value|1600
+end_define
+
+begin_comment
+comment|/* This is experiment-derived value */
+end_comment
+
 begin_comment
 comment|/* PCI aux configuration registers */
 end_comment
