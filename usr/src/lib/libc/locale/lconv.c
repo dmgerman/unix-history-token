@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lconv.c	5.2 (Berkeley) %G%"
+literal|"@(#)lconv.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,7 @@ file|<locale.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|char
 name|empty
 index|[]
