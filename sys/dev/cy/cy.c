@@ -2863,12 +2863,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|cdevsw_add
-argument_list|(
-operator|&
-name|sio_cdevsw
-argument_list|)
-expr_stmt|;
 name|swi_add
 argument_list|(
 operator|&
