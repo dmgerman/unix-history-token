@@ -6120,7 +6120,6 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|&
 name|tp
 operator|->
 name|t_template
@@ -6225,7 +6224,6 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|&
 name|tp
 operator|->
 name|t_template
