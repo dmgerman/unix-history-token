@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ptrace.c 1.3 %G%"
+literal|"@(#)ptrace.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,7 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/reg.h>
+file|<machine/reg.h>
 end_include
 
 begin_include
