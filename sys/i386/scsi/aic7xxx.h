@@ -377,7 +377,7 @@ name|SCB_QUEUED_FOR_DONE
 init|=
 literal|0x0040
 block|,
-name|SCB_PAGED_OUT
+name|SCB_RECOVERY_SCB
 init|=
 literal|0x0080
 block|,
