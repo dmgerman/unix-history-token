@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.4 (Berkeley) %G%"
+literal|"@(#)print.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,51 +154,21 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|long
-name|blocks
-decl_stmt|;
-comment|/* sum of blocks */
-specifier|register
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-operator|,
-name|blocks
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|num
-condition|;
-operator|++
-name|i
-control|)
-name|blocks
-operator|+=
-name|stats
-index|[
-name|i
-index|]
-operator|.
-name|lstat
-operator|.
-name|st_blocks
-expr_stmt|;
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"total %ld\n"
+literal|"total %lu\n"
 argument_list|,
-name|blocks
+name|stats
+index|[
+literal|0
+index|]
+operator|.
+name|lstat
+operator|.
+name|st_flags
 argument_list|)
 expr_stmt|;
 for|for
@@ -477,12 +447,6 @@ begin_block
 block|{
 specifier|extern
 name|int
-argument_list|(
-operator|*
-name|lengthfcn
-argument_list|)
-argument_list|()
-decl_stmt|,
 name|termwidth
 decl_stmt|;
 name|int
@@ -517,54 +481,17 @@ name|int
 name|chcnt
 decl_stmt|;
 comment|/* character count printed */
-comment|/* 	 * assume tabs every 8 columns WARNING: bad code (hard coded 	 * constants) follows: 	 */
-comment|/* figure out max width */
 name|maxlen
 operator|=
-operator|-
-literal|1
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
+name|stats
+index|[
 literal|0
-init|;
-name|i
-operator|<
-name|num
-condition|;
-operator|++
-name|i
-control|)
-block|{
-if|if
-condition|(
-name|maxlen
-operator|<
-name|lengthfcn
-argument_list|(
-name|stats
-index|[
-name|i
 index|]
 operator|.
-name|name
-argument_list|)
-condition|)
-name|maxlen
-operator|=
-name|lengthfcn
-argument_list|(
-name|stats
-index|[
-name|i
-index|]
+name|lstat
 operator|.
-name|name
-argument_list|)
+name|st_flags
 expr_stmt|;
-block|}
 comment|/* add fudge factors to max name length */
 if|if
 condition|(
