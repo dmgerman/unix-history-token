@@ -2830,7 +2830,7 @@ name|len
 argument_list|,
 name|e
 operator|->
-name|addr_type
+name|control
 operator|&
 literal|4
 condition|?
