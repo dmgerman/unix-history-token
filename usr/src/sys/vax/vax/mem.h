@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.h	4.2	81/02/19	*/
+comment|/*	mem.h	4.3	81/02/23	*/
 end_comment
 
 begin_comment
@@ -21,6 +21,36 @@ block|}
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+name|VAX780
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAXNMCR
+value|4
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAXNMCR
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -39,7 +69,7 @@ name|mcr
 modifier|*
 name|mcraddr
 index|[
-literal|4
+name|MAXNMCR
 index|]
 decl_stmt|;
 end_decl_stmt
