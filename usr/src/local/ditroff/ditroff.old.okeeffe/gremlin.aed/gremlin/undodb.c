@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* undodb.c -  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This file contains routines for recording (remembering) database  * activity to provide an undo capability for the gremlin picture editor.  */
+comment|/* @(#)undodb.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This file contains routines for recording (remembering) database  * activity to provide an undo capability for the gremlin picture editor.  */
 end_comment
 
 begin_include
@@ -82,9 +79,6 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_escape
-end_escape
 
 begin_macro
 name|UNRembAdd
@@ -259,9 +253,6 @@ end_block
 begin_comment
 comment|/* end RembDelete */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|UNRembMod
