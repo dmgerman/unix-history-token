@@ -575,7 +575,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"468EKLNS:X:acde:fFk:l:n:rs:t:xy"
+literal|"468EKLNS:X:acde:fFk:l:n:rs:t:uxy"
 name|IPSECOPT
 argument_list|)
 operator|)
@@ -592,6 +592,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'u'
+case|:
+name|family
+operator|=
+name|AF_UNIX
+expr_stmt|;
+break|break;
 case|case
 literal|'4'
 case|:
