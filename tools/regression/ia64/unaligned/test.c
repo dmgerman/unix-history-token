@@ -466,6 +466,34 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|void
+name|block_copy
+parameter_list|(
+name|void
+modifier|*
+name|dst
+parameter_list|,
+name|void
+modifier|*
+name|src
+parameter_list|,
+name|size_t
+name|sz
+parameter_list|)
+block|{
+name|memcpy
+argument_list|(
+name|dst
+argument_list|,
+name|src
+argument_list|,
+name|sz
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|()
@@ -480,7 +508,7 @@ name|ACCESS
 operator|==
 name|Load
 comment|/* 	 * LOAD 	 */
-name|memcpy
+name|block_copy
 argument_list|(
 name|misaligned
 argument_list|,
@@ -588,7 +616,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-name|memcpy
+name|block_copy
 argument_list|(
 name|aligned
 argument_list|,
