@@ -180,6 +180,33 @@ name|AIC_ISA_PORTSIZE
 value|0x20
 end_define
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|isa_pnp_id
+name|aic_ids
+index|[]
+init|=
+block|{
+block|{
+literal|0x15309004
+block|,
+literal|"Adaptec AHA-1530P"
+block|}
+block|,
+block|{
+literal|0x15209004
+block|,
+literal|"Adaptec AHA-1520P"
+block|}
+block|,
+block|{
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -577,10 +604,19 @@ name|porta
 decl_stmt|;
 if|if
 condition|(
-name|isa_get_vendorid
+name|ISA_PNP_PROBE
+argument_list|(
+name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|aic_ids
+argument_list|)
+operator|==
+name|ENXIO
 condition|)
 return|return
 operator|(
