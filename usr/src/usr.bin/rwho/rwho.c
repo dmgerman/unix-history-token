@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwho.c	4.9 (Berkeley) 85/05/07"
+literal|"@(#)rwho.c	4.10 (Berkeley) 85/05/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -631,7 +631,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|22
+name|BUFSIZ
 index|]
 decl_stmt|;
 operator|(
