@@ -6994,6 +6994,11 @@ argument_list|,
 name|SK_LED_GREEN_ON
 argument_list|)
 expr_stmt|;
+name|bus_generic_attach
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|fail
 label|:
 name|splx
