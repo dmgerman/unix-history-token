@@ -7873,6 +7873,13 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
 name|tw
 operator|=
 name|uma_zalloc
@@ -8202,7 +8209,7 @@ value|250000
 end_define
 
 begin_comment
-comment|/*  * Determine if the ISN we will generate has advanced beyond the last  * sequence number used by the previous connection.  If so, indicate  * that it is safe to recycle this tw socket by returning 1.  */
+comment|/*  * Determine if the ISN we will generate has advanced beyond the last  * sequence number used by the previous connection.  If so, indicate  * that it is safe to recycle this tw socket by returning 1.  *  * XXXRW: This function should assert the inpcb lock as it does multiple  * non-atomic reads from the tcptw, but is currently * called without it from  * in_pcb.c:in_pcblookup_local().  */
 end_comment
 
 begin_function
@@ -8316,6 +8323,11 @@ operator|=
 name|tw
 operator|->
 name|tw_inpcb
+expr_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
 expr_stmt|;
 name|tw
 operator|->
@@ -8472,6 +8484,11 @@ name|inc_isipv6
 decl_stmt|;
 endif|#
 directive|endif
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|m
 operator|=
 name|m_gethdr
