@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.52 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.53 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -565,7 +565,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Open a special file: Don't allow open if fs is mounted -nodev,  * and don't allow opens of block devices that are currently mounted.  * Otherwise, call device driver open function.  */
+comment|/*  * Open a special file.  */
 end_comment
 
 begin_comment
@@ -590,9 +590,11 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|vnode
+modifier|*
+name|bvp
+decl_stmt|,
 modifier|*
 name|vp
 init|=
@@ -601,6 +603,8 @@ operator|->
 name|a_vp
 decl_stmt|;
 name|dev_t
+name|bdev
+decl_stmt|,
 name|dev
 init|=
 operator|(
@@ -622,6 +626,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * Don't allow open if fs is mounted -nodev. 	 */
 if|if
 condition|(
 name|vp
@@ -667,6 +672,107 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+if|if
+condition|(
+name|ap
+operator|->
+name|a_cred
+operator|!=
+name|FSCRED
+operator|&&
+operator|(
+name|ap
+operator|->
+name|a_mode
+operator|&
+name|FWRITE
+operator|)
+condition|)
+block|{
+comment|/* 			 * When running in very secure mode, do not allow 			 * opens for writing of any disk character devices. 			 */
+if|if
+condition|(
+name|securelevel
+operator|>=
+literal|2
+operator|&&
+name|isdisk
+argument_list|(
+name|dev
+argument_list|,
+name|VCHR
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+comment|/* 			 * When running in secure mode, do not allow opens 			 * for writing of /dev/mem, /dev/kmem, or character 			 * devices whose corresponding block devices are 			 * currently mounted. 			 */
+if|if
+condition|(
+name|securelevel
+operator|>=
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|bdev
+operator|=
+name|chrtoblk
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+operator|!=
+name|NODEV
+operator|&&
+name|vfinddev
+argument_list|(
+name|bdev
+argument_list|,
+name|VBLK
+argument_list|,
+operator|&
+name|bvp
+argument_list|)
+operator|&&
+name|bvp
+operator|->
+name|v_usecount
+operator|>
+literal|0
+operator|&&
+operator|(
+name|error
+operator|=
+name|ufs_mountedon
+argument_list|(
+name|bvp
+argument_list|)
+operator|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|iskmemdev
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+block|}
+block|}
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -724,6 +830,40 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/* 		 * When running in very secure mode, do not allow 		 * opens for writing of any disk block devices. 		 */
+if|if
+condition|(
+name|securelevel
+operator|>=
+literal|2
+operator|&&
+name|ap
+operator|->
+name|a_cred
+operator|!=
+name|FSCRED
+operator|&&
+operator|(
+name|ap
+operator|->
+name|a_mode
+operator|&
+name|FWRITE
+operator|)
+operator|&&
+name|isdisk
+argument_list|(
+name|dev
+argument_list|,
+name|VBLK
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+comment|/* 		 * Do not allow opens of block devices that are 		 * currently mounted. 		 */
 if|if
 condition|(
 name|error
