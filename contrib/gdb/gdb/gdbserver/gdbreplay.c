@@ -3,6 +3,10 @@ begin_comment
 comment|/* Replay a remote debug session logfile for GDB.    Copyright 1996, 1998, 1999, 2000 Free Software Foundation, Inc.    Written by Fred Fish (fnf@cygnus.com) from pieces of gdbserver.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -69,6 +73,57 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Sort of a hack... */
 end_comment
@@ -92,6 +147,7 @@ comment|/* Print the system error message for errno, and also mention STRING    
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|perror_with_name
 parameter_list|(
@@ -266,6 +322,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|remote_close
 parameter_list|(
@@ -285,6 +342,7 @@ comment|/* Open a connection to a remote debugger.    NAME is the filename used 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|remote_open
 parameter_list|(
@@ -293,12 +351,17 @@ modifier|*
 name|name
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|HAVE_STRING_H
 specifier|extern
 name|char
 modifier|*
 name|strchr
 parameter_list|()
 function_decl|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -897,6 +960,7 @@ comment|/* Accept input from gdb and match with chars from fp (after skipping on
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|expect
 parameter_list|(
@@ -1001,6 +1065,7 @@ comment|/* Play data back to gdb from fp (after skipping leading blank) up until
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|play
 parameter_list|(
