@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: savemail.c,v 8.303 2004/01/14 02:56:51 ca Exp $"
+literal|"@(#)$Id: savemail.c,v 8.304 2004/10/06 21:36:06 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4998,6 +4998,20 @@ name|q_finalrcpt
 operator|!=
 name|NULL
 operator|&&
+if|#
+directive|if
+name|_FFR_PRIV_NOACTUALRECIPIENT
+operator|!
+name|bitset
+argument_list|(
+name|PRIV_NOACTUALRECIPIENT
+argument_list|,
+name|PrivacyFlags
+argument_list|)
+operator|&&
+endif|#
+directive|endif
+comment|/* _FFR_PRIV_NOACTUALRECIPIENT */
 name|strcmp
 argument_list|(
 name|actual

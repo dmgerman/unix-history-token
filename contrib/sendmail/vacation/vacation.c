@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: vacation.c,v 8.141 2002/11/01 16:49:40 ca Exp $"
+literal|"@(#)$Id: vacation.c,v 8.142 2004/11/02 18:25:33 ca Exp $"
 argument_list|)
 end_macro
 
@@ -292,6 +292,14 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|bool
+name|CloseMBDB
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -469,7 +477,7 @@ parameter_list|(
 name|excode
 parameter_list|)
 define|\
-value|{ \ 	eatmsg(); \ 	return excode; \ }
+value|{					\ 	eatmsg();			\ 	if (CloseMBDB)			\ 	{				\ 		sm_mbdb_terminate();	\ 		CloseMBDB = false;	\ 	}				\ 	return excode;			\ }
 end_define
 
 begin_define
@@ -480,7 +488,7 @@ parameter_list|(
 name|excode
 parameter_list|)
 define|\
-value|{ \ 	if (!initdb&& !list) \ 		eatmsg(); \ 	exit(excode); \ }
+value|{					\ 	if (!initdb&& !list)		\ 		eatmsg();		\ 	if (CloseMBDB)			\ 	{				\ 		sm_mbdb_terminate();	\ 		CloseMBDB = false;	\ 	}				\ 	exit(excode);			\ }
 end_define
 
 begin_function
@@ -1391,6 +1399,10 @@ name|err
 argument_list|)
 expr_stmt|;
 block|}
+name|CloseMBDB
+operator|=
+name|true
+expr_stmt|;
 name|err
 operator|=
 name|sm_mbdb_lookup

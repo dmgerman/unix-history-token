@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: recipient.c,v 8.336 2004/07/23 20:45:02 gshapiro Exp $"
+literal|"@(#)$Id: recipient.c,v 8.337 2004/08/03 19:57:23 ca Exp $"
 argument_list|)
 end_macro
 
@@ -23,7 +23,7 @@ name|includetimeout
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7545,7 +7545,12 @@ begin_function
 specifier|static
 name|void
 name|includetimeout
-parameter_list|()
+parameter_list|(
+name|ignore
+parameter_list|)
+name|int
+name|ignore
+decl_stmt|;
 block|{
 comment|/* 	**  NOTE: THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD 	**	ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE 	**	DOING. 	*/
 name|errno

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: control.c,v 8.125 2003/06/24 17:46:06 ca Exp $"
+literal|"@(#)$Id: control.c,v 8.126 2004/08/04 20:54:00 ca Exp $"
 argument_list|)
 end_macro
 
@@ -191,6 +191,19 @@ block|,
 name|CMDERROR
 block|}
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|controltimeout
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -797,7 +810,7 @@ name|controltimeout
 parameter_list|(
 name|timeout
 parameter_list|)
-name|time_t
+name|int
 name|timeout
 decl_stmt|;
 block|{

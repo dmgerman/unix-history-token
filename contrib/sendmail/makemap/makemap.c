@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002, 2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|copyright
 argument_list|,
-literal|"@(#) Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1992 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1992, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1998-2002, 2004 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1992 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1992, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 argument_list|)
 end_macro
 
@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: makemap.c,v 8.176 2002/06/27 23:41:04 gshapiro Exp $"
+literal|"@(#)$Id: makemap.c,v 8.177 2004/08/03 23:57:24 ca Exp $"
 argument_list|)
 end_macro
 
@@ -205,6 +205,20 @@ name|c
 parameter_list|)
 value|(sep == '\0' ? isascii(c)&& isspace(c) : (c) == sep)
 end_define
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static

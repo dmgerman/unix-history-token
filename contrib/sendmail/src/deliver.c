@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.976 2004/07/23 20:45:01 gshapiro Exp $"
+literal|"@(#)$Id: deliver.c,v 8.983 2005/01/07 17:43:22 ca Exp $"
 argument_list|)
 end_macro
 
@@ -90,29 +90,6 @@ comment|/* STARTTLS || SASL */
 end_comment
 
 begin_decl_stmt
-name|void
-name|markfailure
-name|__P
-argument_list|(
-operator|(
-name|ENVELOPE
-operator|*
-operator|,
-name|ADDRESS
-operator|*
-operator|,
-name|MCI
-operator|*
-operator|,
-name|int
-operator|,
-name|bool
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|deliver
@@ -155,7 +132,20 @@ name|mailfiletimeout
 name|__P
 argument_list|(
 operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
+name|endwaittimeout
+name|__P
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6246,7 +6236,7 @@ name|host
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		**  Strip one leading backslash if requested and the 		**  next character is alphanumerical (the latter can 		**  probably relaxed a bit, see RFC2821). 		*/
+comment|/* 		**  Strip all leading backslashes if requested and the 		**  next character is alphanumerical (the latter can 		**  probably relaxed a bit, see RFC2821). 		*/
 if|if
 condition|(
 name|bitnset
@@ -14900,7 +14890,12 @@ begin_function
 specifier|static
 name|void
 name|endwaittimeout
-parameter_list|()
+parameter_list|(
+name|ignore
+parameter_list|)
+name|int
+name|ignore
+decl_stmt|;
 block|{
 comment|/* 	**  NOTE: THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD 	**	ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE 	**	DOING. 	*/
 name|errno
@@ -14977,6 +14972,7 @@ name|mci_out
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -14989,6 +14985,13 @@ argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
+name|mci
+operator|->
+name|mci_out
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* copy any remaining input to transcript */
 if|if
 condition|(
@@ -15107,6 +15110,7 @@ name|mci_in
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -15123,12 +15127,9 @@ name|mci
 operator|->
 name|mci_in
 operator|=
-name|mci
-operator|->
-name|mci_out
-operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|mci
 operator|->
 name|mci_state
@@ -15771,6 +15772,10 @@ directive|endif
 comment|/* EHOSTUNREACH */
 if|if
 condition|(
+name|mci
+operator|!=
+name|NULL
+operator|&&
 name|mci
 operator|->
 name|mci_host
@@ -22726,7 +22731,12 @@ begin_function
 specifier|static
 name|void
 name|mailfiletimeout
-parameter_list|()
+parameter_list|(
+name|ignore
+parameter_list|)
+name|int
+name|ignore
+decl_stmt|;
 block|{
 comment|/* 	**  NOTE: THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD 	**	ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE 	**	DOING. 	*/
 name|errno

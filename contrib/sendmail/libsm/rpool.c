@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: rpool.c,v 1.27 2003/10/09 17:49:47 ca Exp $"
+literal|"@(#)$Id: rpool.c,v 1.28 2004/08/03 20:44:04 ca Exp $"
 argument_list|)
 end_macro
 
@@ -98,6 +98,40 @@ block|}
 name|SM_POOLHDR_T
 typedef|;
 end_typedef
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sm_rpool_allocblock_x
+name|__P
+argument_list|(
+operator|(
+name|SM_RPOOL_T
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sm_rpool_allocblock
+name|__P
+argument_list|(
+operator|(
+name|SM_RPOOL_T
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  Tune this later */

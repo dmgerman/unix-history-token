@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 8.254 2004/04/05 18:41:38 ca Exp $"
+literal|"@(#)$Id: collect.c,v 8.260 2004/11/30 23:29:15 ca Exp $"
 argument_list|)
 end_macro
 
@@ -23,7 +23,7 @@ name|collecttimeout
 name|__P
 argument_list|(
 operator|(
-name|time_t
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -911,7 +911,7 @@ name|bool
 name|ignrdot
 decl_stmt|;
 specifier|volatile
-name|time_t
+name|int
 name|dbto
 decl_stmt|;
 specifier|register
@@ -995,6 +995,9 @@ name|dbto
 operator|=
 name|smtpmode
 condition|?
+operator|(
+name|int
+operator|)
 name|TimeOuts
 operator|.
 name|to_datablock
@@ -1762,6 +1765,17 @@ name|MS_DISCARD
 case|:
 continue|continue;
 block|}
+name|SM_ASSERT
+argument_list|(
+name|mstate
+operator|==
+name|MS_UFROM
+operator|||
+name|mstate
+operator|==
+name|MS_HEADER
+argument_list|)
+expr_stmt|;
 comment|/* header -- buffer up */
 if|if
 condition|(
@@ -1780,13 +1794,6 @@ name|char
 modifier|*
 name|obuf
 decl_stmt|;
-if|if
-condition|(
-name|mstate
-operator|!=
-name|MS_HEADER
-condition|)
-break|break;
 comment|/* out of space for header */
 name|obuf
 operator|=
@@ -3356,7 +3363,7 @@ name|collecttimeout
 parameter_list|(
 name|timeout
 parameter_list|)
-name|time_t
+name|int
 name|timeout
 decl_stmt|;
 block|{

@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: bf.c,v 8.60 2004/04/14 18:12:49 ca Exp $"
+literal|"@(#)$Id: bf.c,v 8.61 2004/08/03 23:59:02 ca Exp $"
 argument_list|)
 end_macro
 
@@ -151,6 +151,34 @@ begin_decl_stmt
 specifier|static
 name|int
 name|sm_bfclose
+name|__P
+argument_list|(
+operator|(
+name|SM_FILE_T
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sm_bfcommit
+name|__P
+argument_list|(
+operator|(
+name|SM_FILE_T
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sm_bftruncate
 name|__P
 argument_list|(
 operator|(

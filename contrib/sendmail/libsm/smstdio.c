@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: smstdio.c,v 1.33 2004/03/03 19:14:51 ca Exp $"
+literal|"@(#)$Id: smstdio.c,v 1.34 2004/08/03 20:46:34 ca Exp $"
 argument_list|)
 end_macro
 
@@ -71,6 +71,20 @@ include|#
 directive|include
 file|"local.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|void
+name|setup
+name|__P
+argument_list|(
+operator|(
+name|SM_FILE_T
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ** Overall: **	This is a file type which implements a layer on top of the system **	stdio. fp->f_cookie is the FILE* of stdio. The cookie may be **	"bound late" because of the manner which Linux implements stdio. **	When binding late  (when fp->f_cookie==NULL) then the value of **	fp->f_ival is used (0, 1 or 2) to map to stdio's stdin, stdout or **	stderr. */

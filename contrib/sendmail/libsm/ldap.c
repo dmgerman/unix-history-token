@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2003 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2001-2004 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: ldap.c,v 1.59 2003/12/23 21:20:15 gshapiro Exp $"
+literal|"@(#)$Id: ldap.c,v 1.60 2004/08/03 20:42:21 ca Exp $"
 argument_list|)
 end_macro
 
@@ -146,6 +146,50 @@ name|__P
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|sm_ldap_has_objectclass
+name|__P
+argument_list|(
+operator|(
+name|SM_LDAP_STRUCT
+operator|*
+operator|,
+name|LDAPMessage
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|SM_LDAP_RECURSE_ENTRY
+modifier|*
+name|sm_ldap_add_recurse
+name|__P
+argument_list|(
+operator|(
+name|SM_LDAP_RECURSE_LIST
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|SM_RPOOL_T
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -407,6 +451,8 @@ name|bind_result
 decl_stmt|;
 name|int
 name|save_errno
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*

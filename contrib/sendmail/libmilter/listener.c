@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: listener.c,v 8.109 2004/02/04 22:55:59 ca Exp $"
+literal|"@(#)$Id: listener.c,v 8.111 2004/09/20 21:11:15 msk Exp $"
 argument_list|)
 end_macro
 
@@ -112,6 +112,21 @@ operator|,
 name|bool
 operator|,
 name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|mi_thread_handle_wrapper
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|*
 operator|)
 argument_list|)
@@ -309,6 +324,15 @@ block|}
 endif|#
 directive|endif
 comment|/* !SM_CONF_POLL */
+operator|(
+name|void
+operator|)
+name|smutex_unlock
+argument_list|(
+operator|&
+name|L_Mutex
+argument_list|)
+expr_stmt|;
 return|return
 name|MI_SUCCESS
 return|;
@@ -2074,6 +2098,7 @@ comment|/* **  MI_THREAD_HANDLE_WRAPPER -- small wrapper to handle session ** **
 end_comment
 
 begin_function
+specifier|static
 name|void
 modifier|*
 name|mi_thread_handle_wrapper
@@ -2500,15 +2525,6 @@ return|;
 name|clilen
 operator|=
 name|L_socksize
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|smutex_unlock
-argument_list|(
-operator|&
-name|L_Mutex
-argument_list|)
 expr_stmt|;
 while|while
 condition|(

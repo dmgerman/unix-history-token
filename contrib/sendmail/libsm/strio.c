@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2002, 2004 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: strio.c,v 1.42 2002/02/11 23:05:50 gshapiro Exp $"
+literal|"@(#)$Id: strio.c,v 1.43 2004/08/03 20:48:30 ca Exp $"
 argument_list|)
 end_macro
 
@@ -77,6 +77,41 @@ include|#
 directive|include
 file|"local.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sm_strsetmode
+name|__P
+argument_list|(
+operator|(
+name|SM_FILE_T
+operator|*
+operator|,
+specifier|const
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sm_strgetmode
+name|__P
+argument_list|(
+operator|(
+name|SM_FILE_T
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  Cookie structure for the "strio" file type */
@@ -950,6 +985,7 @@ comment|/* **  SM_STRSETMODE -- set mode info for the file ** **	 Note: changing
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|sm_strsetmode
 parameter_list|(

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: map.c,v 8.664 2004/06/28 17:46:13 ca Exp $"
+literal|"@(#)$Id: map.c,v 8.666 2004/08/17 16:50:19 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -19163,6 +19163,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Set in case needed in future code */
 name|attrssetup
 operator|=
 name|true
@@ -27464,6 +27465,52 @@ comment|/* move to type MAP */
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|static
+name|int
+name|parse_fields
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|regex_map_rewrite
+name|__P
+argument_list|(
+operator|(
+name|MAP
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|size_t
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static

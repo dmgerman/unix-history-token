@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.378 2004/05/18 20:01:54 ca Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.379 2004/08/06 22:19:36 ca Exp $"
 argument_list|)
 end_macro
 
@@ -9757,7 +9757,7 @@ name|sz
 operator|<=
 literal|0
 condition|)
-name|syserr
+name|usrerr
 argument_list|(
 literal|"cataddr: string too long"
 argument_list|)

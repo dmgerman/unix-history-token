@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002, 2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -52,7 +52,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: editmap.c,v 1.23 2002/03/28 17:49:33 gshapiro Exp $"
+literal|"@(#)$Id: editmap.c,v 1.24 2004/08/03 18:40:10 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -249,6 +249,20 @@ name|c
 parameter_list|)
 value|(isascii(c)&& isspace(c))
 end_define
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
