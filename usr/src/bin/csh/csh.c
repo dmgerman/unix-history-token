@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c	4.22 (Berkeley) %G%"
+literal|"@(#)csh.c	4.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -816,10 +816,18 @@ condition|(
 operator|!
 name|batch
 operator|&&
+operator|(
 name|uid
 operator|!=
 name|geteuid
 argument_list|()
+operator|||
+name|getgid
+argument_list|()
+operator|!=
+name|getegid
+argument_list|()
+operator|)
 condition|)
 block|{
 name|errno
