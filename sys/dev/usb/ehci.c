@@ -11472,6 +11472,7 @@ name|curlen
 operator|=
 name|len
 expr_stmt|;
+block|}
 elif|#
 directive|elif
 name|defined
@@ -11490,9 +11491,9 @@ name|curlen
 operator|=
 name|len
 expr_stmt|;
+block|}
 endif|#
 directive|endif
-block|}
 else|else
 block|{
 if|#
@@ -11954,6 +11955,9 @@ name|USBD_NOMEM
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|Static
 name|void
 name|ehci_free_sqtd_chain
@@ -12024,8 +12028,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/****************/
+end_comment
+
+begin_comment
 comment|/*  * Close a reqular pipe.  * Assumes that there are no pending transactions.  */
+end_comment
+
+begin_function
 name|void
 name|ehci_close_pipe
 parameter_list|(
@@ -12103,7 +12116,13 @@ name|sqh
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Abort a device request.  * If this routine is called at splusb() it guarantees that the request  * will be removed from the hardware scheduling and that the callback  * for it will be called with USBD_CANCELLED status.  * It's impossible to guarantee that the requested transfer will not  * have happened since the hardware runs concurrently.  * If the transaction has already happened we rely on the ordinary  * interrupt processing to process it.  * XXX This is most probably wrong.  */
+end_comment
+
+begin_function
 name|void
 name|ehci_abort_xfer
 parameter_list|(
@@ -12570,6 +12589,9 @@ undef|#
 directive|undef
 name|exfer
 block|}
+end_function
+
+begin_function
 name|void
 name|ehci_timeout
 parameter_list|(
@@ -12683,6 +12705,9 @@ name|abort_task
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|ehci_timeout_task
 parameter_list|(
@@ -12726,7 +12751,13 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/************************/
+end_comment
+
+begin_function
 name|Static
 name|usbd_status
 name|ehci_device_ctrl_transfer
@@ -12773,6 +12804,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|Static
 name|usbd_status
 name|ehci_device_ctrl_start
@@ -12877,6 +12911,9 @@ name|USBD_IN_PROGRESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|ehci_device_ctrl_done
 parameter_list|(
@@ -12991,7 +13028,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* Abort a device control request. */
+end_comment
+
+begin_function
 name|Static
 name|void
 name|ehci_device_ctrl_abort
@@ -13017,7 +13060,13 @@ name|USBD_CANCELLED
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* Close a device control pipe. */
+end_comment
+
+begin_function
 name|Static
 name|void
 name|ehci_device_ctrl_close
@@ -13060,6 +13109,9 @@ name|sc_async_head
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|usbd_status
 name|ehci_device_request
 parameter_list|(
@@ -13877,7 +13929,13 @@ undef|#
 directive|undef
 name|exfer
 block|}
+end_function
+
+begin_comment
 comment|/************************/
+end_comment
+
+begin_function
 name|Static
 name|usbd_status
 name|ehci_device_bulk_transfer
@@ -13924,6 +13982,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|usbd_status
 name|ehci_device_bulk_start
 parameter_list|(
@@ -14353,6 +14414,9 @@ undef|#
 directive|undef
 name|exfer
 block|}
+end_function
+
+begin_function
 name|Static
 name|void
 name|ehci_device_bulk_abort
@@ -14378,7 +14442,13 @@ name|USBD_CANCELLED
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Close a device bulk pipe.  */
+end_comment
+
+begin_function
 name|Static
 name|void
 name|ehci_device_bulk_close
@@ -14420,6 +14490,9 @@ name|sc_async_head
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|ehci_device_bulk_done
 parameter_list|(
@@ -14515,7 +14588,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/************************/
+end_comment
+
+begin_function
 name|Static
 name|usbd_status
 name|ehci_device_setintr
@@ -14611,6 +14690,9 @@ name|USBD_NORMAL_COMPLETION
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|Static
 name|usbd_status
 name|ehci_device_intr_transfer
@@ -14657,6 +14739,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|Static
 name|usbd_status
 name|ehci_device_intr_start
@@ -15081,6 +15166,9 @@ undef|#
 directive|undef
 name|exfer
 block|}
+end_function
+
+begin_function
 name|Static
 name|void
 name|ehci_device_intr_abort
@@ -15137,6 +15225,9 @@ name|USBD_CANCELLED
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|Static
 name|void
 name|ehci_device_intr_close
@@ -15200,6 +15291,9 @@ name|sqh
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|Static
 name|void
 name|ehci_device_intr_done
@@ -15531,7 +15625,13 @@ undef|#
 directive|undef
 name|exfer
 block|}
+end_function
+
+begin_comment
 comment|/************************/
+end_comment
+
+begin_function
 name|Static
 name|usbd_status
 name|ehci_device_isoc_transfer
@@ -15544,6 +15644,9 @@ return|return
 name|USBD_IOERROR
 return|;
 block|}
+end_function
+
+begin_function
 name|Static
 name|usbd_status
 name|ehci_device_isoc_start
@@ -15556,6 +15659,9 @@ return|return
 name|USBD_IOERROR
 return|;
 block|}
+end_function
+
+begin_function
 name|Static
 name|void
 name|ehci_device_isoc_abort
@@ -15564,6 +15670,9 @@ name|usbd_xfer_handle
 name|xfer
 parameter_list|)
 block|{ }
+end_function
+
+begin_function
 name|Static
 name|void
 name|ehci_device_isoc_close
@@ -15572,6 +15681,9 @@ name|usbd_pipe_handle
 name|pipe
 parameter_list|)
 block|{ }
+end_function
+
+begin_function
 name|Static
 name|void
 name|ehci_device_isoc_done
