@@ -239,7 +239,7 @@ comment|/* set to true when we see a case, so we will 				 * know what to do wit
 name|int
 name|sp_sw
 decl_stmt|;
-comment|/* when true, we are in the expressin of 				 * if(...), while(...), etc. */
+comment|/* when true, we are in the expression of 				 * if(...), while(...), etc. */
 name|int
 name|squest
 decl_stmt|;
@@ -1553,7 +1553,7 @@ expr_stmt|;
 break|break;
 block|}
 default|default:
-comment|/* it is the start of a normal statment */
+comment|/* it is the start of a normal statement */
 if|if
 condition|(
 name|flushed_nl
@@ -5206,7 +5206,7 @@ name|diag2
 argument_list|(
 literal|0
 argument_list|,
-literal|"Syntactically inconsistant #ifdef alternatives."
+literal|"Syntactically inconsistent #ifdef alternatives."
 argument_list|)
 expr_stmt|;
 endif|#

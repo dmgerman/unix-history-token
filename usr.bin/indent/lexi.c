@@ -1189,7 +1189,7 @@ name|last_u_d
 operator|=
 name|false
 expr_stmt|;
-comment|/* Operator after indentifier is binary */
+comment|/* Operator after identifier is binary */
 name|last_code
 operator|=
 name|ident
@@ -1685,7 +1685,7 @@ else|:
 name|newline
 operator|)
 expr_stmt|;
-comment|/* 	 * if data has been exausted, the newline is a dummy, and we should 	 * return code to stop 	 */
+comment|/* 	 * if data has been exhausted, the newline is a dummy, and we should 	 * return code to stop 	 */
 break|break;
 case|case
 literal|'\''

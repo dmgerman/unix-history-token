@@ -835,7 +835,7 @@ comment|/* set to true if the last token started in 				 * column 1 */
 name|int
 name|com_col
 decl_stmt|;
-comment|/* this is the column in which the current 				 * coment should start */
+comment|/* this is the column in which the current 				 * comment should start */
 name|int
 name|com_ind
 decl_stmt|;
@@ -907,7 +907,7 @@ comment|/* used to remember how to indent following 				 * statement */
 name|int
 name|paren_level
 decl_stmt|;
-comment|/* parenthesization level. used to indent 				 * within stmts */
+comment|/* parenthesization level. used to indent 				 * within statements */
 name|short
 name|paren_indents
 index|[
