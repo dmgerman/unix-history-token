@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	3.7	%H%	*/
+comment|/*	kern_clock.c	3.8	%H%	*/
 end_comment
 
 begin_include
@@ -722,7 +722,7 @@ name|psignal
 argument_list|(
 name|pp
 argument_list|,
-name|SIGCLK
+name|SIGALRM
 argument_list|)
 expr_stmt|;
 if|if
