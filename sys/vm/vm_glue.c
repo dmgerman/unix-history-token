@@ -1786,7 +1786,7 @@ name|pages
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__alpha
+name|__alpha__
 comment|/* 	 * Make sure we aren't fpcurthread. 	 */
 name|alpha_fpstate_save
 argument_list|(
@@ -2058,7 +2058,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__alpha
+name|__alpha__
 comment|/* 	 * The pcb may be at a different physical address now so cache the 	 * new address. 	 */
 name|td
 operator|->
