@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	1.3 (Lucasfilm) %G%"
+literal|"@(#)cmdtab.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,6 +188,40 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+name|int
+name|shownetstat
+argument_list|()
+decl_stmt|,
+name|fetchnetstat
+argument_list|()
+decl_stmt|,
+name|labelnetstat
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|initnetstat
+argument_list|()
+decl_stmt|,
+name|closenetstat
+argument_list|()
+decl_stmt|,
+name|cmdnetstat
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|WINDOW
+modifier|*
+name|opennetstat
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|struct
 name|cmdtab
 name|cmdtab
@@ -292,6 +326,26 @@ block|,
 name|cmdkre
 block|,
 literal|0
+block|}
+block|,
+block|{
+literal|"netstat"
+block|,
+name|shownetstat
+block|,
+name|fetchnetstat
+block|,
+name|labelnetstat
+block|,
+name|initnetstat
+block|,
+name|opennetstat
+block|,
+name|closenetstat
+block|,
+name|cmdnetstat
+block|,
+name|CF_LOADAV
 block|}
 block|,
 block|{
