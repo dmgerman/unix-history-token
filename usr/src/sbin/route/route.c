@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.38 (Berkeley) %G%"
+literal|"@(#)route.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,37 +255,6 @@ union|,
 name|so_ifp
 union|;
 end_union
-
-begin_decl_stmt
-name|union
-name|sockunion
-modifier|*
-name|so_addrs
-index|[]
-init|=
-block|{
-operator|&
-name|so_dst
-block|,
-operator|&
-name|so_gate
-block|,
-operator|&
-name|so_mask
-block|,
-operator|&
-name|so_genmask
-block|,
-operator|&
-name|so_ifp
-block|,
-operator|&
-name|so_ifa
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -5594,10 +5563,8 @@ literal|"   route to: %s\n"
 argument_list|,
 name|routename
 argument_list|(
-name|so_addrs
-index|[
-literal|0
-index|]
+operator|&
+name|so_dst
 argument_list|)
 argument_list|)
 expr_stmt|;
