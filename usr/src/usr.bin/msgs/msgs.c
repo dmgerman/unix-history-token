@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	5.1 (Berkeley) %G%"
+literal|"@(#)msgs.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -477,7 +477,7 @@ begin_decl_stmt
 name|int
 name|Lpp
 init|=
-name|NLINES
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1909,6 +1909,41 @@ condition|(
 name|totty
 condition|)
 block|{
+name|struct
+name|winsize
+name|win
+decl_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fileno
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|,
+name|TIOCGWINSZ
+argument_list|,
+operator|&
+name|win
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+name|Lpp
+operator|=
+name|win
+operator|.
+name|ws_row
+expr_stmt|;
+if|if
+condition|(
+name|Lpp
+operator|<=
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|tgetent
@@ -1939,6 +1974,7 @@ name|Lpp
 operator|=
 name|NLINES
 expr_stmt|;
+block|}
 block|}
 block|}
 endif|#
