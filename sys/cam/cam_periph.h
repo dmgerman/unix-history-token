@@ -29,6 +29,7 @@ name|_KERNEL
 end_ifdef
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|cam_periph
 modifier|*

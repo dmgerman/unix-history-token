@@ -1699,6 +1699,14 @@ comment|/* Current count of allocated ccbs */
 end_comment
 
 begin_decl_stmt
+name|struct
+name|cam_periph
+modifier|*
+name|xpt_periph
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|periph_init_t
 name|xpt_periph_init
