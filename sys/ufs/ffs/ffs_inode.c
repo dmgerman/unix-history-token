@@ -566,7 +566,7 @@ comment|/* index of triple indirect block */
 end_comment
 
 begin_comment
-comment|/*  * Truncate the inode oip to at most length size, freeing the  * disk blocks.  */
+comment|/*  * Truncate the inode ip to at most length size, freeing the  * disk blocks.  */
 end_comment
 
 begin_function
@@ -606,16 +606,9 @@ name|td
 decl_stmt|;
 block|{
 name|struct
-name|vnode
-modifier|*
-name|ovp
-init|=
-name|vp
-decl_stmt|;
-name|struct
 name|inode
 modifier|*
-name|oip
+name|ip
 decl_stmt|;
 name|ufs2_daddr_t
 name|bn
@@ -699,22 +692,22 @@ decl_stmt|;
 name|off_t
 name|osize
 decl_stmt|;
-name|oip
+name|ip
 operator|=
 name|VTOI
 argument_list|(
-name|ovp
+name|vp
 argument_list|)
 expr_stmt|;
 name|fs
 operator|=
-name|oip
+name|ip
 operator|->
 name|i_fs
 expr_stmt|;
 name|ump
 operator|=
-name|oip
+name|ip
 operator|->
 name|i_ump
 expr_stmt|;
@@ -764,12 +757,12 @@ name|softdepslowdown
 operator|=
 name|DOINGSOFTDEP
 argument_list|(
-name|ovp
+name|vp
 argument_list|)
 operator|&&
 name|softdep_slowdown
 argument_list|(
-name|ovp
+name|vp
 argument_list|)
 expr_stmt|;
 name|extblocks
@@ -780,7 +773,7 @@ name|datablocks
 operator|=
 name|DIP
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_blocks
 argument_list|)
@@ -793,7 +786,7 @@ name|fs_magic
 operator|==
 name|FS_UFS2_MAGIC
 operator|&&
-name|oip
+name|ip
 operator|->
 name|i_din2
 operator|->
@@ -810,7 +803,7 @@ name|fragroundup
 argument_list|(
 name|fs
 argument_list|,
-name|oip
+name|ip
 operator|->
 name|i_din2
 operator|->
@@ -840,7 +833,7 @@ if|if
 condition|(
 name|DOINGSOFTDEP
 argument_list|(
-name|ovp
+name|vp
 argument_list|)
 operator|&&
 name|softdepslowdown
@@ -865,7 +858,7 @@ condition|)
 block|{
 name|softdep_setup_freeblocks
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|length
 argument_list|,
@@ -903,7 +896,7 @@ name|error
 operator|=
 name|ffs_syncvnode
 argument_list|(
-name|ovp
+name|vp
 argument_list|,
 name|MNT_WAIT
 argument_list|)
@@ -918,13 +911,13 @@ operator|)
 return|;
 name|osize
 operator|=
-name|oip
+name|ip
 operator|->
 name|i_din2
 operator|->
 name|di_extsize
 expr_stmt|;
-name|oip
+name|ip
 operator|->
 name|i_din2
 operator|->
@@ -940,7 +933,7 @@ name|void
 operator|)
 name|chkdq
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 operator|-
 name|extblocks
@@ -954,7 +947,7 @@ endif|#
 directive|endif
 name|vinvalbuf
 argument_list|(
-name|ovp
+name|vp
 argument_list|,
 name|V_ALT
 argument_list|,
@@ -965,7 +958,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|oip
+name|ip
 operator|->
 name|i_din2
 operator|->
@@ -992,7 +985,7 @@ index|[
 name|i
 index|]
 operator|=
-name|oip
+name|ip
 operator|->
 name|i_din2
 operator|->
@@ -1001,7 +994,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|oip
+name|ip
 operator|->
 name|i_din2
 operator|->
@@ -1013,7 +1006,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|oip
+name|ip
 operator|->
 name|i_flag
 operator||=
@@ -1028,7 +1021,7 @@ name|error
 operator|=
 name|ffs_update
 argument_list|(
-name|ovp
+name|vp
 argument_list|,
 literal|1
 argument_list|)
@@ -1069,7 +1062,7 @@ name|ump
 argument_list|,
 name|fs
 argument_list|,
-name|oip
+name|ip
 operator|->
 name|i_devvp
 argument_list|,
@@ -1087,7 +1080,7 @@ argument_list|,
 name|i
 argument_list|)
 argument_list|,
-name|oip
+name|ip
 operator|->
 name|i_number
 argument_list|)
@@ -1125,18 +1118,18 @@ operator|)
 return|;
 if|if
 condition|(
-name|ovp
+name|vp
 operator|->
 name|v_type
 operator|==
 name|VLNK
 operator|&&
 operator|(
-name|oip
+name|ip
 operator|->
 name|i_size
 operator|<
-name|ovp
+name|vp
 operator|->
 name|v_mount
 operator|->
@@ -1168,18 +1161,18 @@ name|bzero
 argument_list|(
 name|SHORTLINK
 argument_list|(
-name|oip
+name|ip
 argument_list|)
 argument_list|,
 operator|(
 name|u_int
 operator|)
-name|oip
+name|ip
 operator|->
 name|i_size
 argument_list|)
 expr_stmt|;
-name|oip
+name|ip
 operator|->
 name|i_size
 operator|=
@@ -1187,14 +1180,14 @@ literal|0
 expr_stmt|;
 name|DIP_SET
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_size
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|oip
+name|ip
 operator|->
 name|i_flag
 operator||=
@@ -1208,7 +1201,7 @@ name|needextclean
 condition|)
 name|softdep_setup_freeblocks
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|length
 argument_list|,
@@ -1219,7 +1212,7 @@ return|return
 operator|(
 name|ffs_update
 argument_list|(
-name|ovp
+name|vp
 argument_list|,
 literal|1
 argument_list|)
@@ -1228,14 +1221,14 @@ return|;
 block|}
 if|if
 condition|(
-name|oip
+name|ip
 operator|->
 name|i_size
 operator|==
 name|length
 condition|)
 block|{
-name|oip
+name|ip
 operator|->
 name|i_flag
 operator||=
@@ -1249,7 +1242,7 @@ name|needextclean
 condition|)
 name|softdep_setup_freeblocks
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|length
 argument_list|,
@@ -1260,7 +1253,7 @@ return|return
 operator|(
 name|ffs_update
 argument_list|(
-name|ovp
+name|vp
 argument_list|,
 literal|0
 argument_list|)
@@ -1285,7 +1278,7 @@ name|error
 operator|=
 name|getinoquota
 argument_list|(
-name|oip
+name|ip
 argument_list|)
 expr_stmt|;
 if|if
@@ -1302,7 +1295,7 @@ directive|endif
 if|if
 condition|(
 operator|(
-name|oip
+name|ip
 operator|->
 name|i_flags
 operator|&
@@ -1313,22 +1306,22 @@ literal|0
 condition|)
 name|ffs_snapremove
 argument_list|(
-name|ovp
+name|vp
 argument_list|)
 expr_stmt|;
-name|ovp
+name|vp
 operator|->
 name|v_lasta
 operator|=
-name|ovp
+name|vp
 operator|->
 name|v_clen
 operator|=
-name|ovp
+name|vp
 operator|->
 name|v_cstart
 operator|=
-name|ovp
+name|vp
 operator|->
 name|v_lastw
 operator|=
@@ -1338,7 +1331,7 @@ if|if
 condition|(
 name|DOINGSOFTDEP
 argument_list|(
-name|ovp
+name|vp
 argument_list|)
 condition|)
 block|{
@@ -1359,7 +1352,7 @@ name|error
 operator|=
 name|ffs_syncvnode
 argument_list|(
-name|ovp
+name|vp
 argument_list|,
 name|MNT_WAIT
 argument_list|)
@@ -1379,7 +1372,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|oip
+name|ip
 operator|->
 name|i_flag
 operator|&
@@ -1407,7 +1400,7 @@ name|void
 operator|)
 name|chkdq
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 operator|-
 name|datablocks
@@ -1421,7 +1414,7 @@ endif|#
 directive|endif
 name|softdep_setup_freeblocks
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|length
 argument_list|,
@@ -1443,7 +1436,7 @@ argument_list|)
 expr_stmt|;
 name|vinvalbuf
 argument_list|(
-name|ovp
+name|vp
 argument_list|,
 name|needextclean
 condition|?
@@ -1465,7 +1458,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|oip
+name|ip
 operator|->
 name|i_flag
 operator||=
@@ -1477,7 +1470,7 @@ return|return
 operator|(
 name|ffs_update
 argument_list|(
-name|ovp
+name|vp
 argument_list|,
 literal|0
 argument_list|)
@@ -1487,7 +1480,7 @@ block|}
 block|}
 name|osize
 operator|=
-name|oip
+name|ip
 operator|->
 name|i_size
 expr_stmt|;
@@ -1501,7 +1494,7 @@ condition|)
 block|{
 name|vnode_pager_setsize
 argument_list|(
-name|ovp
+name|vp
 argument_list|,
 name|length
 argument_list|)
@@ -1514,7 +1507,7 @@ name|error
 operator|=
 name|UFS_BALLOC
 argument_list|(
-name|ovp
+name|vp
 argument_list|,
 name|length
 operator|-
@@ -1539,7 +1532,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|oip
+name|ip
 operator|->
 name|i_size
 operator|=
@@ -1547,7 +1540,7 @@ name|length
 expr_stmt|;
 name|DIP_SET
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_size
 argument_list|,
@@ -1587,7 +1580,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|oip
+name|ip
 operator|->
 name|i_flag
 operator||=
@@ -1599,7 +1592,7 @@ return|return
 operator|(
 name|ffs_update
 argument_list|(
-name|ovp
+name|vp
 argument_list|,
 literal|1
 argument_list|)
@@ -1623,7 +1616,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|oip
+name|ip
 operator|->
 name|i_size
 operator|=
@@ -1631,7 +1624,7 @@ name|length
 expr_stmt|;
 name|DIP_SET
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_size
 argument_list|,
@@ -1658,7 +1651,7 @@ name|error
 operator|=
 name|UFS_BALLOC
 argument_list|(
-name|ovp
+name|vp
 argument_list|,
 name|length
 operator|-
@@ -1690,7 +1683,7 @@ if|if
 condition|(
 name|DOINGSOFTDEP
 argument_list|(
-name|ovp
+name|vp
 argument_list|)
 operator|&&
 name|lbn
@@ -1718,7 +1711,7 @@ name|error
 operator|=
 name|ffs_syncvnode
 argument_list|(
-name|ovp
+name|vp
 argument_list|,
 name|MNT_WAIT
 argument_list|)
@@ -1731,7 +1724,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|oip
+name|ip
 operator|->
 name|i_size
 operator|=
@@ -1739,7 +1732,7 @@ name|length
 expr_stmt|;
 name|DIP_SET
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_size
 argument_list|,
@@ -1752,14 +1745,14 @@ name|blksize
 argument_list|(
 name|fs
 argument_list|,
-name|oip
+name|ip
 argument_list|,
 name|lbn
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ovp
+name|vp
 operator|->
 name|v_type
 operator|!=
@@ -1924,7 +1917,7 @@ index|]
 operator|=
 name|DIP
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_ib
 index|[
@@ -1944,7 +1937,7 @@ condition|)
 block|{
 name|DIP_SET
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_ib
 index|[
@@ -1985,7 +1978,7 @@ index|]
 operator|=
 name|DIP
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_db
 index|[
@@ -2001,7 +1994,7 @@ name|lastblock
 condition|)
 name|DIP_SET
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_db
 index|[
@@ -2012,7 +2005,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|oip
+name|ip
 operator|->
 name|i_flag
 operator||=
@@ -2024,7 +2017,7 @@ name|allerror
 operator|=
 name|ffs_update
 argument_list|(
-name|ovp
+name|vp
 argument_list|,
 literal|1
 argument_list|)
@@ -2051,7 +2044,7 @@ index|]
 operator|=
 name|DIP
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_db
 index|[
@@ -2061,7 +2054,7 @@ argument_list|)
 expr_stmt|;
 name|DIP_SET
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_db
 index|[
@@ -2098,7 +2091,7 @@ index|]
 operator|=
 name|DIP
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_ib
 index|[
@@ -2108,7 +2101,7 @@ argument_list|)
 expr_stmt|;
 name|DIP_SET
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_ib
 index|[
@@ -2124,7 +2117,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|oip
+name|ip
 operator|->
 name|i_size
 operator|=
@@ -2132,7 +2125,7 @@ name|osize
 expr_stmt|;
 name|DIP_SET
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_size
 argument_list|,
@@ -2143,7 +2136,7 @@ name|error
 operator|=
 name|vtruncbuf
 argument_list|(
-name|ovp
+name|vp
 argument_list|,
 name|cred
 argument_list|,
@@ -2236,7 +2229,7 @@ name|bn
 operator|=
 name|DIP
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_ib
 index|[
@@ -2255,7 +2248,7 @@ name|error
 operator|=
 name|ffs_indirtrunc
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|indir_lbn
 index|[
@@ -2304,7 +2297,7 @@ condition|)
 block|{
 name|DIP_SET
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_ib
 index|[
@@ -2320,7 +2313,7 @@ name|ump
 argument_list|,
 name|fs
 argument_list|,
-name|oip
+name|ip
 operator|->
 name|i_devvp
 argument_list|,
@@ -2330,7 +2323,7 @@ name|fs
 operator|->
 name|fs_bsize
 argument_list|,
-name|oip
+name|ip
 operator|->
 name|i_number
 argument_list|)
@@ -2378,7 +2371,7 @@ name|bn
 operator|=
 name|DIP
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_db
 index|[
@@ -2395,7 +2388,7 @@ condition|)
 continue|continue;
 name|DIP_SET
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_db
 index|[
@@ -2411,7 +2404,7 @@ name|blksize
 argument_list|(
 name|fs
 argument_list|,
-name|oip
+name|ip
 argument_list|,
 name|i
 argument_list|)
@@ -2422,7 +2415,7 @@ name|ump
 argument_list|,
 name|fs
 argument_list|,
-name|oip
+name|ip
 operator|->
 name|i_devvp
 argument_list|,
@@ -2430,7 +2423,7 @@ name|bn
 argument_list|,
 name|bsize
 argument_list|,
-name|oip
+name|ip
 operator|->
 name|i_number
 argument_list|)
@@ -2457,7 +2450,7 @@ name|bn
 operator|=
 name|DIP
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_db
 index|[
@@ -2484,12 +2477,12 @@ name|blksize
 argument_list|(
 name|fs
 argument_list|,
-name|oip
+name|ip
 argument_list|,
 name|lastblock
 argument_list|)
 expr_stmt|;
-name|oip
+name|ip
 operator|->
 name|i_size
 operator|=
@@ -2497,7 +2490,7 @@ name|length
 expr_stmt|;
 name|DIP_SET
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_size
 argument_list|,
@@ -2510,7 +2503,7 @@ name|blksize
 argument_list|(
 name|fs
 argument_list|,
-name|oip
+name|ip
 argument_list|,
 name|lastblock
 argument_list|)
@@ -2551,7 +2544,7 @@ name|ump
 argument_list|,
 name|fs
 argument_list|,
-name|oip
+name|ip
 operator|->
 name|i_devvp
 argument_list|,
@@ -2561,7 +2554,7 @@ name|oldspace
 operator|-
 name|newspace
 argument_list|,
-name|oip
+name|ip
 operator|->
 name|i_number
 argument_list|)
@@ -2606,7 +2599,7 @@ index|]
 operator|!=
 name|DIP
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_ib
 index|[
@@ -2641,7 +2634,7 @@ index|]
 operator|!=
 name|DIP
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_db
 index|[
@@ -2656,7 +2649,7 @@ argument_list|)
 expr_stmt|;
 name|VI_LOCK
 argument_list|(
-name|ovp
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -2672,7 +2665,7 @@ name|fs_magic
 operator|!=
 name|FS_UFS2_MAGIC
 operator|||
-name|oip
+name|ip
 operator|->
 name|i_din2
 operator|->
@@ -2710,14 +2703,14 @@ argument_list|)
 expr_stmt|;
 name|VI_UNLOCK
 argument_list|(
-name|ovp
+name|vp
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* DIAGNOSTIC */
 comment|/* 	 * Put back the real size. 	 */
-name|oip
+name|ip
 operator|->
 name|i_size
 operator|=
@@ -2725,7 +2718,7 @@ name|length
 expr_stmt|;
 name|DIP_SET
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_size
 argument_list|,
@@ -2734,13 +2727,13 @@ argument_list|)
 expr_stmt|;
 name|DIP_SET
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_blocks
 argument_list|,
 name|DIP
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_blocks
 argument_list|)
@@ -2752,7 +2745,7 @@ if|if
 condition|(
 name|DIP
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_blocks
 argument_list|)
@@ -2762,14 +2755,14 @@ condition|)
 comment|/* sanity */
 name|DIP_SET
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 name|i_blocks
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|oip
+name|ip
 operator|->
 name|i_flag
 operator||=
@@ -2783,7 +2776,7 @@ name|void
 operator|)
 name|chkdq
 argument_list|(
-name|oip
+name|ip
 argument_list|,
 operator|-
 name|blocksreleased
