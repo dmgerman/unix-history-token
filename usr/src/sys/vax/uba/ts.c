@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.21	82/01/17	*/
+comment|/*	ts.c	4.22	82/02/03	*/
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"ts.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"te.h"
 end_include
 
 begin_if
@@ -23,32 +17,8 @@ operator|>
 literal|0
 end_if
 
-begin_if
-if|#
-directive|if
-name|TSDEBUG
-end_if
-
-begin_define
-define|#
-directive|define
-name|printd
-value|if(tsdebug)printf
-end_define
-
-begin_decl_stmt
-name|int
-name|tsdebug
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * TS11 tape driver  *  * TODO:  *	test driver with more than one controller  *	test reset code  *	test dump code  *	test rewinds without hanging in driver  *	what happens if you offline tape during rewind?  *	test using file system on tape  */
+comment|/*  * TS11 tape driver  *  * TODO:  *	write dump code  */
 end_comment
 
 begin_include
@@ -229,7 +199,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|buf
-name|tsbuf
+name|tsutab
 index|[
 name|NTS
 index|]
@@ -342,7 +312,7 @@ name|struct
 name|ts_cmd
 name|sc_cmd
 decl_stmt|;
-comment|/* the command packet - ADDR MUST BE 0 MOD 4 */
+comment|/* the command packet */
 name|struct
 name|ts_sts
 name|sc_sts
@@ -353,10 +323,16 @@ name|ts_char
 name|sc_char
 decl_stmt|;
 comment|/* characteristics packet */
-name|u_short
-name|sc_uba
+name|struct
+name|ts_softc
+modifier|*
+name|sc_ubaddr
 decl_stmt|;
-comment|/* Unibus addr of cmd pkt for tsdb */
+comment|/* Unibus address of ts_softc structure */
+name|short
+name|sc_mapped
+decl_stmt|;
+comment|/* is ts_sfotc mapped in Unibus space? */
 block|}
 name|ts_softc
 index|[
@@ -364,18 +340,6 @@ name|NTS
 index|]
 struct|;
 end_struct
-
-begin_decl_stmt
-name|struct
-name|ts_softc
-modifier|*
-name|ts_ubaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Unibus address of ts_softc */
-end_comment
 
 begin_comment
 comment|/*  * States for um->um_tab.b_active, the per controller state flag.  * This is used to sequence control in the driver.  */
@@ -424,27 +388,6 @@ end_define
 begin_comment
 comment|/* sending a drive rewind */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|NTM
-operator|>
-literal|0
-end_if
-
-begin_comment
-comment|/* kludge... see tm.c */
-end_comment
-
-begin_extern
-extern|extern	havetm;
-end_extern
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Determine if there is a controller for  * a ts at address reg.  Our goal is to make the  * device interrupt.  */
@@ -498,25 +441,62 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Too hard to make it interrupt; don't try. 	 */
-if|#
-directive|if
-name|NTM
-operator|>
+operator|(
+operator|(
+expr|struct
+name|tsdevice
+operator|*
+operator|)
+name|reg
+operator|)
+operator|->
+name|tssr
+operator|=
 literal|0
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|havetm
+operator|(
+operator|(
+operator|(
+expr|struct
+name|tsdevice
+operator|*
+operator|)
+name|reg
+operator|)
+operator|->
+name|tssr
+operator|&
+name|TS_NBA
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-endif|#
-directive|endif
+comment|/* IT'S TOO HARD TO MAKE THIS THING INTERRUPT JUST TO FIND ITS VECTOR */
 name|cvec
 operator|=
+operator|(
+operator|(
+name|unsigned
+operator|)
+name|reg
+operator|)
+operator|&
+literal|07
+condition|?
+literal|0260
+else|:
 literal|0224
 expr_stmt|;
 name|br
@@ -719,28 +699,8 @@ name|u_error
 operator|=
 name|ENXIO
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TSDEBUG
-name|printd
-argument_list|(
-literal|"init failed\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|TSDEBUG
-name|printd
-argument_list|(
-literal|"init ok\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|tscommand
 argument_list|(
 name|dev
@@ -750,22 +710,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TSDEBUG
-name|printd
-argument_list|(
-literal|"sense xs0 %o\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_sts
-operator|.
-name|s_xs0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -1025,13 +969,13 @@ index|]
 decl_stmt|;
 specifier|register
 name|struct
-name|device
+name|tsdevice
 modifier|*
 name|addr
 init|=
 operator|(
 expr|struct
-name|device
+name|tsdevice
 operator|*
 operator|)
 name|um
@@ -1045,7 +989,9 @@ decl_stmt|;
 comment|/* 	 * Map the command and message packets into Unibus 	 * address space.  We do all the command and message 	 * packets at once to minimize the amount of Unibus 	 * mapping necessary. 	 */
 if|if
 condition|(
-name|ts_ubaddr
+name|sc
+operator|->
+name|sc_mapped
 operator|==
 literal|0
 condition|)
@@ -1062,7 +1008,7 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|ts_softc
+name|sc
 expr_stmt|;
 name|ctsbuf
 index|[
@@ -1073,7 +1019,8 @@ name|b_bcount
 operator|=
 sizeof|sizeof
 argument_list|(
-name|ts_softc
+operator|*
+name|sc
 argument_list|)
 expr_stmt|;
 name|i
@@ -1097,7 +1044,9 @@ name|i
 operator|&=
 literal|0777777
 expr_stmt|;
-name|ts_ubaddr
+name|sc
+operator|->
+name|sc_ubaddr
 operator|=
 operator|(
 expr|struct
@@ -1106,19 +1055,10 @@ operator|*
 operator|)
 name|i
 expr_stmt|;
-comment|/* MAKE SURE WE DON'T GET UNIBUS ADDRESS ZERO */
-if|if
-condition|(
-name|ts_ubaddr
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"ts%d: zero ubaddr\n"
-argument_list|,
-name|unit
-argument_list|)
+name|sc
+operator|->
+name|sc_mapped
+operator|++
 expr_stmt|;
 block|}
 comment|/* 	 * Now initialize the TS11 controller. 	 * Set the characteristics. 	 */
@@ -1153,32 +1093,13 @@ operator|(
 name|int
 operator|)
 operator|&
-name|ts_ubaddr
-index|[
-name|unit
-index|]
-operator|.
+name|sc
+operator|->
+name|sc_ubaddr
+operator|->
 name|sc_cmd
 expr_stmt|;
 comment|/* Unibus addr of cmd */
-if|if
-condition|(
-name|i
-operator|&
-literal|3
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"addr mod 4 != 0\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 name|sc
 operator|->
 name|sc_uba
@@ -1210,11 +1131,10 @@ operator|(
 name|int
 operator|)
 operator|&
-name|ts_ubaddr
-index|[
-name|unit
-index|]
-operator|.
+name|sc
+operator|->
+name|sc_ubaddr
+operator|->
 name|sc_sts
 expr_stmt|;
 name|sc
@@ -1253,11 +1173,10 @@ operator|(
 name|int
 operator|)
 operator|&
-name|ts_ubaddr
-index|[
-name|unit
-index|]
-operator|.
+name|sc
+operator|->
+name|sc_ubaddr
+operator|->
 name|sc_char
 expr_stmt|;
 name|sc
@@ -1307,7 +1226,6 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
-comment|/* 		printd("%o %o %o %o %o %o %o %o\n", addr->tssr, sc->sc_sts.s_sts, sc->sc_sts.s_len, sc->sc_sts.s_rbpcr, sc->sc_sts.s_xs0, sc->sc_sts.s_xs1,sc->sc_sts.s_xs1,sc->sc_sts.s_xs2,sc->sc_sts.s_xs3); */
 if|if
 condition|(
 name|addr
@@ -1444,22 +1362,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TSDEBUG
-name|printd
-argument_list|(
-literal|"command %o dev %x count %d\n"
-argument_list|,
-name|com
-argument_list|,
-name|dev
-argument_list|,
-name|count
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|bp
 operator|->
 name|b_dev
@@ -1588,18 +1490,18 @@ index|]
 operator|->
 name|ui_mi
 expr_stmt|;
-name|dp
-operator|=
-operator|&
-name|tsbuf
-index|[
-name|tsunit
-index|]
-expr_stmt|;
 name|s
 operator|=
 name|spl5
 argument_list|()
+expr_stmt|;
+name|dp
+operator|=
+operator|&
+name|tsutab
+index|[
+name|tsunit
+index|]
 expr_stmt|;
 if|if
 condition|(
@@ -1695,13 +1597,13 @@ name|bp
 decl_stmt|;
 specifier|register
 name|struct
-name|device
+name|tsdevice
 modifier|*
 name|addr
 init|=
 operator|(
 expr|struct
-name|device
+name|tsdevice
 operator|*
 operator|)
 name|um
@@ -1861,16 +1763,6 @@ name|bp
 operator|->
 name|b_repcnt
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TSDEBUG
-name|printd
-argument_list|(
-literal|"strat: do cmd\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 goto|goto
 name|dobpcmd
 goto|;
@@ -2051,24 +1943,6 @@ name|TS_IE
 operator||
 name|cmd
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TSDEBUG
-name|printd
-argument_list|(
-literal|"r/w %o size %d\n"
-argument_list|,
-name|tc
-operator|->
-name|c_cmd
-argument_list|,
-name|tc
-operator|->
-name|c_size
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -2088,22 +1962,6 @@ name|b_active
 operator|=
 name|SSEEK
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TSDEBUG
-name|printd
-argument_list|(
-literal|"seek blkno %d b_blkno %d\n"
-argument_list|,
-name|blkno
-argument_list|,
-name|bp
-operator|->
-name|b_blkno
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|blkno
@@ -2250,13 +2108,13 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|device
+name|tsdevice
 modifier|*
 name|addr
 init|=
 operator|(
 expr|struct
-name|device
+name|tsdevice
 operator|*
 operator|)
 name|um
@@ -2289,18 +2147,6 @@ name|um_ubinfo
 operator|&
 literal|0777777
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TSDEBUG
-name|printd
-argument_list|(
-literal|"dgo addr %o\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|sc_cmd
@@ -2376,7 +2222,7 @@ index|]
 decl_stmt|;
 specifier|register
 name|struct
-name|device
+name|tsdevice
 modifier|*
 name|addr
 decl_stmt|;
@@ -2392,16 +2238,6 @@ decl_stmt|;
 specifier|register
 name|state
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TSDEBUG
-name|printd
-argument_list|(
-literal|"intr\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -2432,7 +2268,7 @@ name|addr
 operator|=
 operator|(
 expr|struct
-name|device
+name|tsdevice
 operator|*
 operator|)
 name|tsdinfo
@@ -2477,16 +2313,6 @@ condition|)
 return|return;
 block|}
 comment|/* 	 * An operation completed... record status 	 */
-ifdef|#
-directive|ifdef
-name|TSDEBUG
-name|printd
-argument_list|(
-literal|"  ok1\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|=
 operator|&
@@ -3042,16 +2868,6 @@ argument_list|(
 name|um
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TSDEBUG
-name|printd
-argument_list|(
-literal|"  iodone\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|iodone
 argument_list|(
 name|bp
@@ -3457,6 +3273,18 @@ modifier|*
 name|um
 decl_stmt|;
 specifier|register
+name|struct
+name|uba_device
+modifier|*
+name|ui
+decl_stmt|;
+specifier|register
+name|struct
+name|buf
+modifier|*
+name|dp
+decl_stmt|;
+specifier|register
 name|ts11
 expr_stmt|;
 for|for
@@ -3528,6 +3356,17 @@ name|b_actl
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|ts_softc
+index|[
+name|ts11
+index|]
+operator|.
+name|sc_openf
+operator|>
+literal|0
+condition|)
 name|ts_softc
 index|[
 name|ts11
@@ -3564,6 +3403,86 @@ name|ubadone
 argument_list|(
 name|um
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|ui
+operator|=
+name|tsdinfo
+index|[
+name|ts11
+index|]
+operator|)
+operator|&&
+name|ui
+operator|->
+name|ui_mi
+operator|==
+name|um
+operator|&&
+name|ui
+operator|->
+name|ui_alive
+condition|)
+block|{
+name|dp
+operator|=
+operator|&
+name|tsutab
+index|[
+name|ts11
+index|]
+expr_stmt|;
+name|dp
+operator|->
+name|b_active
+operator|=
+literal|0
+expr_stmt|;
+name|dp
+operator|->
+name|b_forw
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_actf
+operator|==
+name|NULL
+condition|)
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_actf
+operator|=
+name|dp
+expr_stmt|;
+else|else
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_actl
+operator|->
+name|b_forw
+operator|=
+name|dp
+expr_stmt|;
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_actl
+operator|=
+name|dp
 expr_stmt|;
 block|}
 operator|(
@@ -3989,7 +3908,7 @@ name|up
 decl_stmt|;
 specifier|register
 name|struct
-name|device
+name|tsdevice
 modifier|*
 name|addr
 decl_stmt|;
@@ -4075,7 +3994,7 @@ name|addr
 operator|=
 operator|(
 expr|struct
-name|device
+name|tsdevice
 operator|*
 operator|)
 name|ui
@@ -4198,7 +4117,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|register
 name|struct
-name|device
+name|tsdevice
 modifier|*
 name|addr
 decl_stmt|;
@@ -4318,7 +4237,7 @@ name|addr
 argument_list|)
 specifier|register
 expr|struct
-name|device
+name|tsdevice
 operator|*
 name|addr
 expr_stmt|;
@@ -4359,7 +4278,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|device
+name|tsdevice
 modifier|*
 name|addr
 decl_stmt|;

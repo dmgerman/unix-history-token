@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.45	82/01/17	*/
+comment|/*	tm.c	4.46	82/02/03	*/
 end_comment
 
 begin_include
@@ -442,31 +442,6 @@ begin_comment
 comment|/* sending a drive rewind */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|NTS
-operator|>
-literal|0
-end_if
-
-begin_comment
-comment|/*  * Kludge to get around fact that we don't really  * check if a ts is there... if there are both tm's and ts's  * declared in the system, then this driver sets havetm to 1  * if it finds a tm, and ts just pretends there isn't a ts.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|havetm
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Determine if there is a controller for  * a tm at address reg.  Our goal is to make the  * device interrupt.  */
 end_comment
@@ -518,7 +493,7 @@ directive|endif
 operator|(
 operator|(
 expr|struct
-name|device
+name|tmdevice
 operator|*
 operator|)
 name|reg
@@ -540,7 +515,7 @@ operator|&
 operator|(
 operator|(
 expr|struct
-name|device
+name|tmdevice
 operator|*
 operator|)
 name|reg
@@ -630,17 +605,6 @@ end_decl_stmt
 
 begin_block
 block|{
-if|#
-directive|if
-name|NTS
-operator|>
-literal|0
-name|havetm
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Tetotm is used in TMUNIT to index the ctmbuf and rtmbuf 	 * arrays given a te unit number. 	 */
 name|tetotm
 index|[
@@ -1544,13 +1508,13 @@ name|dp
 decl_stmt|;
 specifier|register
 name|struct
-name|device
+name|tmdevice
 modifier|*
 name|addr
 init|=
 operator|(
 expr|struct
-name|device
+name|tmdevice
 operator|*
 operator|)
 name|um
@@ -1651,7 +1615,7 @@ name|addr
 operator|=
 operator|(
 expr|struct
-name|device
+name|tmdevice
 operator|*
 operator|)
 name|um
@@ -2283,13 +2247,13 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|device
+name|tmdevice
 modifier|*
 name|addr
 init|=
 operator|(
 expr|struct
-name|device
+name|tmdevice
 operator|*
 operator|)
 name|um
@@ -2374,7 +2338,7 @@ index|]
 decl_stmt|;
 specifier|register
 name|struct
-name|device
+name|tmdevice
 modifier|*
 name|addr
 decl_stmt|;
@@ -2424,7 +2388,7 @@ name|addr
 operator|=
 operator|(
 expr|struct
-name|device
+name|tmdevice
 operator|*
 operator|)
 name|tedinfo
@@ -3109,13 +3073,13 @@ argument_list|)
 decl_stmt|;
 specifier|register
 name|struct
-name|device
+name|tmdevice
 modifier|*
 name|addr
 init|=
 operator|(
 expr|struct
-name|device
+name|tmdevice
 operator|*
 operator|)
 name|tedinfo
@@ -3588,7 +3552,7 @@ block|}
 operator|(
 operator|(
 expr|struct
-name|device
+name|tmdevice
 operator|*
 operator|)
 operator|(
@@ -4145,7 +4109,7 @@ name|up
 decl_stmt|;
 specifier|register
 name|struct
-name|device
+name|tmdevice
 modifier|*
 name|addr
 decl_stmt|;
@@ -4231,7 +4195,7 @@ name|addr
 operator|=
 operator|(
 expr|struct
-name|device
+name|tmdevice
 operator|*
 operator|)
 name|ui
@@ -4358,7 +4322,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|register
 name|struct
-name|device
+name|tmdevice
 modifier|*
 name|addr
 decl_stmt|;
@@ -4473,7 +4437,7 @@ name|addr
 argument_list|)
 specifier|register
 expr|struct
-name|device
+name|tmdevice
 operator|*
 name|addr
 expr_stmt|;
@@ -4514,7 +4478,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|device
+name|tmdevice
 modifier|*
 name|addr
 decl_stmt|;
