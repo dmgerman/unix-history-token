@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.101
+literal|3.102
 operator|%
 name|G
 operator|%
@@ -439,16 +439,6 @@ operator|.
 name|e_putbody
 operator|=
 name|putbody
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MainEnvelope
-operator|.
-name|e_ctime
-operator|=
-name|curtime
-argument_list|()
 expr_stmt|;
 end_expr_stmt
 
@@ -1752,7 +1742,7 @@ endif|QUEUE
 end_endif
 
 begin_comment
-comment|/* give this transaction an id */
+comment|/* 	**  Give this envelope a reality. 	**	I.e., an id and a creation time. 	*/
 end_comment
 
 begin_expr_stmt
@@ -1765,6 +1755,16 @@ name|CurEnv
 argument_list|,
 literal|'\0'
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CurEnv
+operator|->
+name|e_ctime
+operator|=
+name|curtime
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 

@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.47
+literal|3.48
 operator|%
 name|G
 operator|%
@@ -87,6 +87,13 @@ modifier|*
 name|buildaddr
 parameter_list|()
 function_decl|;
+specifier|static
+name|char
+name|nbuf
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
 comment|/* 	**  Initialize and prescan address. 	*/
 name|CurEnv
 operator|->
@@ -136,7 +143,14 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 	**  Apply rewriting rules. 	*/
+comment|/* 	**  Apply rewriting rules. 	**	Ruleset 4 rewrites the address into a form that will 	**		be reflected in the outgoing message.  It must 	**		not resolve. 	**	Ruleset 0 does basic parsing.  It must resolve. 	*/
+name|rewrite
+argument_list|(
+name|pvp
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 name|rewrite
 argument_list|(
 name|pvp
@@ -2896,15 +2910,6 @@ argument_list|)
 decl_stmt|;
 name|char
 modifier|*
-name|oldx
-init|=
-name|macvalue
-argument_list|(
-literal|'x'
-argument_list|)
-decl_stmt|;
-name|char
-modifier|*
 name|oldg
 init|=
 name|macvalue
@@ -2926,17 +2931,21 @@ modifier|*
 name|pvp
 decl_stmt|;
 specifier|extern
-name|char
-modifier|*
-name|getxpart
-parameter_list|()
-function_decl|;
-specifier|extern
 name|ADDRESS
 modifier|*
 name|buildaddr
 parameter_list|()
 function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|crackaddr
+parameter_list|()
+function_decl|;
+name|char
+modifier|*
+name|fancy
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2959,60 +2968,16 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
-comment|/* 	**  See if this mailer wants the name to be rewritten.  There are 	**  many problems here, owing to the standards for doing replies. 	**  In general, these names should only be rewritten if we are 	**  sending to another host that runs sendmail. 	*/
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|M_RELRCPT
-argument_list|,
-name|m
-operator|->
-name|m_flags
-argument_list|)
-operator|&&
-operator|!
-name|force
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|12
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"remotename [ditto]\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
-return|return
-operator|(
-name|name
-operator|)
-return|;
-block|}
-comment|/* 	**  Do general rewriting of name. 	**	This will also take care of doing global name translation. 	*/
-name|define
-argument_list|(
-literal|'x'
-argument_list|,
-name|getxpart
+comment|/* 	**  First put this address into canonical form. 	**	First turn it into a macro. 	**	Then run it through ruleset 4. 	*/
+comment|/* save away the extraneous pretty stuff */
+name|fancy
+operator|=
+name|crackaddr
 argument_list|(
 name|name
 argument_list|)
-argument_list|)
 expr_stmt|;
+comment|/* now run through ruleset four */
 name|pvp
 operator|=
 name|prescan
@@ -3037,6 +3002,30 @@ name|rewrite
 argument_list|(
 name|pvp
 argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+comment|/* 	**  See if this mailer wants the name to be rewritten.  There are 	**  many problems here, owing to the standards for doing replies. 	**  In general, these names should only be rewritten if we are 	**  sending to another host that runs sendmail. 	*/
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|M_RELRCPT
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+operator|&&
+operator|!
+name|force
+condition|)
+block|{
+comment|/* 		**  Do general rewriting of name. 		**	This will also take care of doing global name 		**	translation. 		*/
+name|rewrite
+argument_list|(
+name|pvp
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -3047,22 +3036,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|*
-operator|*
-name|pvp
-operator|==
-name|CANONNET
-condition|)
-block|{
-comment|/* oops... resolved to something */
-return|return
-operator|(
-name|name
-operator|)
-return|;
-block|}
+comment|/* make the name relative to the receiving mailer */
 name|cataddr
 argument_list|(
 name|pvp
@@ -3073,7 +3047,6 @@ sizeof|sizeof
 name|lbuf
 argument_list|)
 expr_stmt|;
-comment|/* make the name relative to the receiving mailer */
 name|define
 argument_list|(
 literal|'f'
@@ -3129,6 +3102,8 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* now add any comment info we had before back */
 name|cataddr
 argument_list|(
 name|pvp
@@ -3139,7 +3114,6 @@ sizeof|sizeof
 name|lbuf
 argument_list|)
 expr_stmt|;
-comment|/* now add any comment info we had before back */
 name|define
 argument_list|(
 literal|'g'
@@ -3149,7 +3123,7 @@ argument_list|)
 expr_stmt|;
 name|expand
 argument_list|(
-literal|"$q"
+name|fancy
 argument_list|,
 name|buf
 argument_list|,
@@ -3177,13 +3151,6 @@ argument_list|(
 literal|'g'
 argument_list|,
 name|oldg
-argument_list|)
-expr_stmt|;
-name|define
-argument_list|(
-literal|'x'
-argument_list|,
-name|oldx
 argument_list|)
 expr_stmt|;
 ifdef|#

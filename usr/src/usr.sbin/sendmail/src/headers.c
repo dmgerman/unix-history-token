@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.28
+literal|3.29
 operator|%
 name|G
 operator|%
@@ -96,7 +96,7 @@ function_decl|;
 specifier|extern
 name|char
 modifier|*
-name|crackfrom
+name|crackaddr
 parameter_list|()
 function_decl|;
 specifier|extern
@@ -512,7 +512,7 @@ name|h_value
 operator|=
 name|newstr
 argument_list|(
-name|crackfrom
+name|crackaddr
 argument_list|(
 name|fvalue
 argument_list|)
@@ -1920,20 +1920,20 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  CRACKFROM -- parse the from line and turn it into a macro ** **	This doesn't actually parse the address -- it just extracts **	it and replaces it with "$g".  The parse is totally ad hoc **	and isn't even guaranteed to leave something syntactically **	identical to what it started with.  However, it does leave **	something semantically identical. ** **	The process is kind of strange.  There are a number of **	interesting cases: **		1.  comment<address> comment	==> comment<$g> comment **		2.  address			==> address **		3.  address (comment)		==> $g (comment) **		4.  (comment) address		==> (comment) $g **	And then there are the hard cases.... **		5.  add (comment) ress		==> $g (comment) **		6.  comment<address (comment)>	==> comment<$g (comment)> **		7.    .... etc .... ** **	Parameters: **		from -- the value part of the from line. ** **	Returns: **		a pointer to the new version. ** **	Side Effects: **		The $f and $x macros may be defined. ** **	Warning: **		The return value is saved in local storage and should **		be copied if it is to be reused. */
+comment|/* **  CRACKADDR -- parse an address and turn it into a macro ** **	This doesn't actually parse the address -- it just extracts **	it and replaces it with "$g".  The parse is totally ad hoc **	and isn't even guaranteed to leave something syntactically **	identical to what it started with.  However, it does leave **	something semantically identical. ** **	The process is kind of strange.  There are a number of **	interesting cases: **		1.  comment<address> comment	==> comment<$g> comment **		2.  address			==> address **		3.  address (comment)		==> $g (comment) **		4.  (comment) address		==> (comment) $g **	And then there are the hard cases.... **		5.  add (comment) ress		==> $g (comment) **		6.  comment<address (comment)>	==> comment<$g (comment)> **		7.    .... etc .... ** **	Parameters: **		addr -- the address to be cracked. ** **	Returns: **		a pointer to the new version. ** **	Side Effects: **		none. ** **	Warning: **		The return value is saved in local storage and should **		be copied if it is to be reused. */
 end_comment
 
 begin_function
 name|char
 modifier|*
-name|crackfrom
+name|crackaddr
 parameter_list|(
-name|from
+name|addr
 parameter_list|)
 specifier|register
 name|char
 modifier|*
-name|from
+name|addr
 decl_stmt|;
 block|{
 specifier|register
@@ -1978,9 +1978,9 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"crackfrom(%s)\n"
+literal|"crackaddr(%s)\n"
 argument_list|,
-name|from
+name|addr
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2002,7 +2002,7 @@ name|p
 operator|=
 name|index
 argument_list|(
-name|from
+name|addr
 argument_list|,
 literal|'<'
 argument_list|)
@@ -2014,7 +2014,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* copy the beginning of the from field to the buffer */
+comment|/* copy the beginning of the addr field to the buffer */
 operator|*
 name|p
 operator|=
@@ -2024,7 +2024,7 @@ name|strcpy
 argument_list|(
 name|buf
 argument_list|,
-name|from
+name|addr
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -2040,7 +2040,7 @@ operator|=
 literal|'<'
 expr_stmt|;
 comment|/* find the matching right angle bracket */
-name|from
+name|addr
 operator|=
 operator|++
 name|p
@@ -2114,7 +2114,7 @@ block|}
 comment|/* 	**  Now parse the real address part.  from points to the (null 	**  terminated) version of what we are inerested in; rhs points 	**  to the extra stuff at the end of the line, if any. 	*/
 name|p
 operator|=
-name|from
+name|addr
 expr_stmt|;
 comment|/* now strip out comments */
 name|bp
@@ -2294,7 +2294,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"crackfrom=>%s\n"
+literal|"crackaddr=>%s\n"
 argument_list|,
 name|buf
 argument_list|)
