@@ -2045,6 +2045,14 @@ operator||=
 name|EV_CLEAR
 expr_stmt|;
 comment|/* automatically set */
+name|kn
+operator|->
+name|kn_status
+operator|&=
+operator|~
+name|KN_DETACHED
+expr_stmt|;
+comment|/* knlist_add usually sets it */
 name|MALLOC
 argument_list|(
 name|calloutp
@@ -2153,6 +2161,13 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|kn
+operator|->
+name|kn_status
+operator||=
+name|KN_DETACHED
+expr_stmt|;
+comment|/* knlist_remove usually clears it */
 block|}
 end_function
 
