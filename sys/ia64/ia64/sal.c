@@ -388,6 +388,9 @@ operator|->
 name|sale_vector
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
 for|for
 control|(
 name|ipi
@@ -443,6 +446,8 @@ name|mp_hardware
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 block|}

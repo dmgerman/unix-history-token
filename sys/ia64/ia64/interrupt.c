@@ -187,6 +187,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -205,6 +211,11 @@ name|int
 name|mp_ipi_test
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|volatile
@@ -389,6 +400,9 @@ operator|)
 name|framep
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
 block|}
 elseif|else
 if|if
@@ -404,6 +418,8 @@ block|{
 name|mp_ipi_test
 operator|++
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|ia64_dispatch_intr
