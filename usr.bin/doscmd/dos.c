@@ -8721,7 +8721,7 @@ literal|"Redirection is %s\n"
 argument_list|,
 name|R_DL
 condition|?
-literal|"seperate jobs"
+literal|"separate jobs"
 else|:
 literal|"combined"
 argument_list|)

@@ -577,7 +577,7 @@ break|break;
 case|case
 literal|'l'
 case|:
-comment|/* seperate system and user time */
+comment|/* separate system and user time */
 name|lflag
 operator|=
 literal|1

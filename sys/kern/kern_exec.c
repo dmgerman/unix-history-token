@@ -2964,7 +2964,7 @@ name|destp
 operator|++
 expr_stmt|;
 block|}
-comment|/* a null vector table pointer seperates the argp's from the envp's */
+comment|/* a null vector table pointer separates the argp's from the envp's */
 name|suword
 argument_list|(
 name|vectp

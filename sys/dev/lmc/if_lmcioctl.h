@@ -739,7 +739,7 @@ comment|/* loopback enable RW */
 end_comment
 
 begin_comment
-comment|/*  * Some of the MII16 bits are mirrored in the MII17 register as well,  * but let's keep thing seperate for now, and get only the cable from  * the MII17.  */
+comment|/*  * Some of the MII16 bits are mirrored in the MII17 register as well,  * but let's keep thing separate for now, and get only the cable from  * the MII17.  */
 end_comment
 
 begin_define

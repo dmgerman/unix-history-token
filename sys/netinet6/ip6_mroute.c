@@ -5134,7 +5134,7 @@ name|m_pkthdr
 operator|.
 name|len
 decl_stmt|;
-comment|/*  * Macro to send packet on mif.  Since RSVP packets don't get counted on  * input, they shouldn't get counted on output, so statistics keeping is  * seperate.  */
+comment|/*  * Macro to send packet on mif.  Since RSVP packets don't get counted on  * input, they shouldn't get counted on output, so statistics keeping is  * separate.  */
 define|#
 directive|define
 name|MC6_SEND

@@ -1861,7 +1861,7 @@ operator|=
 literal|0x40
 expr_stmt|;
 block|}
-comment|/* set new state (tx / upstream)				      * 	 *								      * 	 * NOTE: HFC-S/SP and ISAC transmitters are always active when 	      * 	 * activated state is reached. The bytes sent to the S0-bus are all   * 	 * high impedance, so they do not disturb.			      * 	 * The HFC-1 has a seperate SIEMENS S0-device.			      */
+comment|/* set new state (tx / upstream)				      * 	 *								      * 	 * NOTE: HFC-S/SP and ISAC transmitters are always active when 	      * 	 * activated state is reached. The bytes sent to the S0-bus are all   * 	 * high impedance, so they do not disturb.			      * 	 * The HFC-1 has a separate SIEMENS S0-device.			      */
 if|if
 condition|(
 name|S_HFC

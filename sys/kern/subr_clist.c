@@ -2003,7 +2003,7 @@ argument_list|,
 name|numc
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Clear quote bits if they aren't known to be clear. 		 * The following could probably be made into a seperate 		 * "bitzero()" routine, but why bother? 		 */
+comment|/* 		 * Clear quote bits if they aren't known to be clear. 		 * The following could probably be made into a separate 		 * "bitzero()" routine, but why bother? 		 */
 if|if
 condition|(
 name|isset

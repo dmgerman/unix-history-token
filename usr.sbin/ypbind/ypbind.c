@@ -3227,7 +3227,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The right way to send RPC broadcasts.  * Use the clnt_broadcast() RPC service. Unfortunately, clnt_broadcast()  * blocks while waiting for replies, so we have to fork off seperate  * broadcaster processes that do the waiting and then transmit their  * results back to the parent for processing. We also have to remember  * to save the name of the domain we're trying to bind in a global  * variable since clnt_broadcast() provides no way to pass things to  * the 'eachresult' callback function.  */
+comment|/*  * The right way to send RPC broadcasts.  * Use the clnt_broadcast() RPC service. Unfortunately, clnt_broadcast()  * blocks while waiting for replies, so we have to fork off separate  * broadcaster processes that do the waiting and then transmit their  * results back to the parent for processing. We also have to remember  * to save the name of the domain we're trying to bind in a global  * variable since clnt_broadcast() provides no way to pass things to  * the 'eachresult' callback function.  */
 end_comment
 
 begin_function

@@ -1477,7 +1477,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * Address and size are now aligned. Build dma list 		 * using TX channel 0. Also, round length up to a word 		 * size which should only effect the last buffer in the 		 * chain. This works because the PDU length is maintained 		 * seperately and we're not really adjusting the buffer's 		 * idea of its length. 		 */
+comment|/* 		 * Address and size are now aligned. Build dma list 		 * using TX channel 0. Also, round length up to a word 		 * size which should only effect the last buffer in the 		 * chain. This works because the PDU length is maintained 		 * separately and we're not really adjusting the buffer's 		 * idea of its length. 		 */
 name|KB_DATASTART
 argument_list|(
 name|m

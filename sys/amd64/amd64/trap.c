@@ -3314,7 +3314,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* two seperate prints in case of a trap on an unmapped page */
+comment|/* two separate prints in case of a trap on an unmapped page */
 name|printf
 argument_list|(
 literal|"cpuid = %d; "
@@ -3758,7 +3758,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* two seperate prints in case of a trap on an unmapped page */
+comment|/* two separate prints in case of a trap on an unmapped page */
 name|printf
 argument_list|(
 literal|"cpuid = %d; "

@@ -2228,7 +2228,7 @@ argument_list|,
 name|objname
 argument_list|)
 expr_stmt|;
-comment|/* 	 * handle undefined-only format seperately (no space is 	 * left for symbol values, no type field is printed) 	 */
+comment|/* 	 * handle undefined-only format separately (no space is 	 * left for symbol values, no type field is printed) 	 */
 if|if
 condition|(
 name|print_only_undefined_symbols

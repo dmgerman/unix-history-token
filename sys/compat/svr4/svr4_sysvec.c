@@ -767,7 +767,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Search an alternate path before passing pathname arguments on  * to system calls. Useful for keeping a seperate 'emulation tree'.  *  * If cflag is set, we check if an attempt can be made to create  * the named file, i.e. we check if the directory it should  * be in exists.  *  * Code shamelessly stolen by Mark Newton from IBCS2 emulation code.  */
+comment|/*  * Search an alternate path before passing pathname arguments on  * to system calls. Useful for keeping a separate 'emulation tree'.  *  * If cflag is set, we check if an attempt can be made to create  * the named file, i.e. we check if the directory it should  * be in exists.  *  * Code shamelessly stolen by Mark Newton from IBCS2 emulation code.  */
 end_comment
 
 begin_function

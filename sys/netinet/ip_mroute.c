@@ -6706,7 +6706,7 @@ name|ip
 operator|->
 name|ip_len
 decl_stmt|;
-comment|/*  * Macro to send packet on vif.  Since RSVP packets don't get counted on  * input, they shouldn't get counted on output, so statistics keeping is  * seperate.  */
+comment|/*  * Macro to send packet on vif.  Since RSVP packets don't get counted on  * input, they shouldn't get counted on output, so statistics keeping is  * separate.  */
 define|#
 directive|define
 name|MC_SEND

@@ -2139,7 +2139,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* two seperate prints in case of an unmapped page and trap */
+comment|/* two separate prints in case of an unmapped page and trap */
 name|printf
 argument_list|(
 literal|"cpuid = %d; "

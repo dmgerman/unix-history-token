@@ -250,7 +250,7 @@ name|atari
 end_ifdef
 
 begin_comment
-comment|/*  * The boot sector on a gemdos fs is a little bit different from the msdos fs  * format. Currently there is no need to declare a seperate structure, the  * bootsector33 struct will do.  */
+comment|/*  * The boot sector on a gemdos fs is a little bit different from the msdos fs  * format. Currently there is no need to declare a separate structure, the  * bootsector33 struct will do.  */
 end_comment
 
 begin_if
