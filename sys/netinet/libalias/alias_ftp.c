@@ -403,10 +403,22 @@ argument_list|,
 name|dlen
 argument_list|)
 condition|)
+block|{
 name|ftp_message_type
 operator|=
 name|FTP_229_REPLY
 expr_stmt|;
+name|true_addr
+operator|.
+name|s_addr
+operator|=
+name|pip
+operator|->
+name|ip_src
+operator|.
+name|s_addr
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1892,10 +1904,6 @@ decl_stmt|;
 comment|/* Security checks. */
 if|if
 condition|(
-name|ftp_message_type
-operator|!=
-name|FTP_229_REPLY
-operator|&&
 name|pip
 operator|->
 name|ip_src
