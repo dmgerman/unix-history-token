@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)tt.h	3.11 %G%  */
+comment|/*  * @(#)tt.h	3.12 %G%  */
 end_comment
 
 begin_comment
@@ -295,7 +295,7 @@ name|ttputc
 parameter_list|(
 name|c
 parameter_list|)
-value|(tt_obp< tt_obe ? *tt_obp++ = (c) \ 				: (ttflush(), *tt_obp++ = (c)))
+value|(tt_obp< tt_obe ? (*tt_obp++ = (c)) \ 				: (ttflush(), *tt_obp++ = (c)))
 end_define
 
 end_unit
