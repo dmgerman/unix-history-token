@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	5.15 (Berkeley) %G%"
+literal|"@(#)rec_open.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,6 +227,18 @@ name|cachesize
 expr_stmt|;
 name|btopeninfo
 operator|.
+name|maxkeypage
+operator|=
+literal|0
+expr_stmt|;
+name|btopeninfo
+operator|.
+name|minkeypage
+operator|=
+literal|0
+expr_stmt|;
+name|btopeninfo
+operator|.
 name|psize
 operator|=
 literal|0
@@ -234,6 +246,12 @@ expr_stmt|;
 name|btopeninfo
 operator|.
 name|compare
+operator|=
+name|NULL
+expr_stmt|;
+name|btopeninfo
+operator|.
+name|prefix
 operator|=
 name|NULL
 expr_stmt|;
@@ -393,6 +411,7 @@ name|fname
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|lseek
@@ -433,12 +452,6 @@ name|BTF_RDONLY
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|O_RDWR
-case|:
-case|case
-name|O_WRONLY
-case|:
 default|default:
 goto|goto
 name|einval
@@ -513,9 +526,6 @@ case|case
 name|O_RDWR
 case|:
 break|break;
-case|case
-name|O_WRONLY
-case|:
 default|default:
 goto|goto
 name|einval
@@ -658,6 +668,7 @@ argument_list|,
 name|BTF_MEMMAPPED
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Use the recno routines. */
