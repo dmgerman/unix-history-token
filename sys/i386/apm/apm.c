@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.64 1997/11/10 14:38:08 nate Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.65 1997/11/12 04:12:43 jdp Exp $  */
 end_comment
 
 begin_include
@@ -705,6 +705,10 @@ name|ecx
 operator|=
 name|enable
 expr_stmt|;
+name|edx
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|apm_int
 argument_list|(
@@ -760,6 +764,10 @@ expr_stmt|;
 name|ecx
 operator|=
 name|version
+expr_stmt|;
+name|edx
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -828,6 +836,10 @@ name|ecx
 operator|=
 name|engage
 expr_stmt|;
+name|edx
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|apm_int
@@ -885,6 +897,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|ecx
+operator|=
+literal|0
+expr_stmt|;
+name|edx
 operator|=
 literal|0
 expr_stmt|;
@@ -954,6 +970,10 @@ expr_stmt|;
 name|ecx
 operator|=
 name|PMST_SUSPEND
+expr_stmt|;
+name|edx
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1044,6 +1064,10 @@ name|PMST_APMENABLED
 else|:
 name|PMST_SUSPEND
 expr_stmt|;
+name|edx
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|apm_int
@@ -1130,6 +1154,10 @@ expr_stmt|;
 name|ecx
 operator|=
 name|PMST_OFF
+expr_stmt|;
+name|edx
+operator|=
+literal|0
 expr_stmt|;
 name|apm_int
 argument_list|(
@@ -1942,6 +1970,11 @@ name|ecx
 operator|=
 literal|0
 expr_stmt|;
+name|edx
+operator|=
+literal|0xffff
+expr_stmt|;
+comment|/* default to unknown battery time */
 if|if
 condition|(
 name|apm_int
@@ -2138,6 +2171,8 @@ operator|)
 operator||
 name|APM_CPUIDLE
 expr_stmt|;
+name|edx
+operator|=
 name|ecx
 operator|=
 name|ebx
@@ -2227,6 +2262,8 @@ operator|)
 operator||
 name|APM_CPUBUSY
 expr_stmt|;
+name|edx
+operator|=
 name|ecx
 operator|=
 name|ebx
