@@ -82,7 +82,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"No form returned"
+literal|"No form `example' in example.frm returned"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -126,7 +126,7 @@ name|err
 argument_list|(
 literal|0
 argument_list|,
-literal|"No such form"
+literal|"No such form: example"
 argument_list|)
 expr_stmt|;
 else|else
@@ -228,7 +228,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"You're entries were:\n\n"
+literal|"Your entries were:\n\n"
 argument_list|)
 expr_stmt|;
 name|tuple
