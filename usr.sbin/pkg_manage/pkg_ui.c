@@ -52,6 +52,23 @@ name|p_inf
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Local prototypes  */
+end_comment
+
+begin_function_decl
+name|void
+name|install_pkgs_indir
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Functions  */
+end_comment
+
 begin_function
 name|void
 name|view_installed
@@ -666,6 +683,11 @@ argument_list|(
 name|PREVIEW_FS_HLP
 argument_list|)
 expr_stmt|;
+name|use_helpline
+argument_list|(
+literal|"Select package to preview"
+argument_list|)
+expr_stmt|;
 name|fname
 operator|=
 name|dialog_fselect
@@ -709,7 +731,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"preview_pkg: Could not allocate space fore tmp_file"
+literal|"preview_pkg: Could not allocate space for tmp_file\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -786,6 +808,11 @@ argument_list|(
 name|PREVIEW_FS_HLP
 argument_list|)
 expr_stmt|;
+name|use_helpline
+argument_list|(
+literal|"Select package to preview"
+argument_list|)
+expr_stmt|;
 name|fname
 operator|=
 name|dialog_fselect
@@ -829,6 +856,67 @@ name|install_batch
 parameter_list|(
 name|void
 parameter_list|)
+comment|/*  * Desc: Get the directory from which to list and install packages  */
+block|{
+name|int
+name|quit
+decl_stmt|;
+name|use_helpfile
+argument_list|(
+name|DS_INSTALL_HLP
+argument_list|)
+expr_stmt|;
+name|quit
+operator|=
+name|FALSE
+expr_stmt|;
+while|while
+condition|(
+operator|!
+name|quit
+condition|)
+block|{
+name|use_helpline
+argument_list|(
+literal|"Select directory where the pkg's reside"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dialog_dselect
+argument_list|(
+literal|"."
+argument_list|,
+literal|"*.tgz"
+argument_list|)
+condition|)
+block|{
+name|quit
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|install_pkgs_indir
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/* install_batch() */
+end_comment
+
+begin_function
+name|void
+name|install_pkgs_indir
+parameter_list|(
+name|void
+parameter_list|)
 comment|/*  * Desc: install several packages.   */
 block|{
 name|WINDOW
@@ -837,6 +925,9 @@ name|pkg_win
 decl_stmt|,
 modifier|*
 name|w
+decl_stmt|,
+modifier|*
+name|tmpwin
 decl_stmt|;
 name|DirList
 modifier|*
@@ -939,25 +1030,37 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-comment|/* first go to the directory where the packages are installed, then        list all packages in that directory with a short description of        the package. Pressing enter should give more info about a specific        package. */
-name|use_helpfile
+comment|/* list all packages in the current directory with a short description of        the package. Pressing enter should give more info about a specific        package. */
+comment|/* save current window */
+name|tmpwin
+operator|=
+name|dupwin
 argument_list|(
-name|DS_INSTALL_HLP
-argument_list|)
-expr_stmt|;
-name|use_helpline
-argument_list|(
-literal|"Select the directory where the pkg's reside"
+name|newscr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dialog_dselect
-argument_list|()
+name|tmpwin
+operator|==
+name|NULL
 condition|)
 block|{
-comment|/* cancel button was pressed */
-return|return;
+name|endwin
+argument_list|()
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\ninstall_pkgs_indir: dupwin(newscr) failed\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|use_helpline
 argument_list|(
@@ -2765,6 +2868,21 @@ expr_stmt|;
 name|delwin
 argument_list|(
 name|pkg_win
+argument_list|)
+expr_stmt|;
+name|touchwin
+argument_list|(
+name|tmpwin
+argument_list|)
+expr_stmt|;
+name|wrefresh
+argument_list|(
+name|tmpwin
+argument_list|)
+expr_stmt|;
+name|delwin
+argument_list|(
+name|tmpwin
 argument_list|)
 expr_stmt|;
 return|return;

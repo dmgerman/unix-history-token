@@ -278,6 +278,11 @@ name|execstr
 decl_stmt|,
 modifier|*
 name|tmp
+decl_stmt|,
+name|msg
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 name|int
 name|ret
@@ -432,9 +437,18 @@ argument_list|(
 literal|"use arrowkeys, PgUp, PgDn to move, press enter when done"
 argument_list|)
 expr_stmt|;
+name|sprintf
+argument_list|(
+name|msg
+argument_list|,
+literal|"Error output from %s"
+argument_list|,
+name|prog
+argument_list|)
+expr_stmt|;
 name|dialog_textbox
 argument_list|(
-literal|"Error output from pkg_add"
+name|msg
 argument_list|,
 name|fout
 argument_list|,
