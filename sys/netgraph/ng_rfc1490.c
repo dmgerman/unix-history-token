@@ -653,10 +653,13 @@ operator|->
 name|downlink
 condition|)
 block|{
+specifier|const
 name|u_char
 modifier|*
 name|start
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|u_char
 modifier|*
 name|ptr
 decl_stmt|;
@@ -698,6 +701,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
+specifier|const
 name|u_char
 operator|*
 argument_list|)
@@ -767,6 +771,7 @@ argument_list|(
 operator|*
 operator|(
 operator|(
+specifier|const
 name|u_int16_t
 operator|*
 operator|)

@@ -2425,11 +2425,13 @@ name|grelen
 decl_stmt|,
 name|extralen
 decl_stmt|;
+specifier|const
 name|struct
 name|greheader
 modifier|*
 name|gre
 decl_stmt|;
+specifier|const
 name|struct
 name|ip
 modifier|*
@@ -2571,6 +2573,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -2645,6 +2648,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -2654,12 +2658,14 @@ block|}
 name|gre
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|greheader
 operator|*
 operator|)
 operator|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2768,6 +2774,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -2776,12 +2783,14 @@ expr_stmt|;
 name|gre
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|greheader
 operator|*
 operator|)
 operator|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2842,6 +2851,7 @@ argument_list|(
 operator|*
 operator|(
 operator|(
+specifier|const
 name|u_int32_t
 operator|*
 operator|)

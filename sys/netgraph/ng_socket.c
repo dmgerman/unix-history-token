@@ -2275,6 +2275,7 @@ name|p
 operator|->
 name|p_fd
 decl_stmt|;
+specifier|const
 name|struct
 name|cmsghdr
 modifier|*
@@ -2284,6 +2285,7 @@ name|mtod
 argument_list|(
 name|control
 argument_list|,
+specifier|const
 expr|struct
 name|cmsghdr
 operator|*

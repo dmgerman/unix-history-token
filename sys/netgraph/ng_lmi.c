@@ -2539,6 +2539,7 @@ name|node
 operator|->
 name|private
 decl_stmt|;
+specifier|const
 name|u_char
 modifier|*
 name|data
@@ -2680,6 +2681,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
+specifier|const
 name|u_char
 operator|*
 argument_list|)
@@ -3289,6 +3291,7 @@ name|node
 operator|->
 name|private
 decl_stmt|;
+specifier|const
 name|u_char
 modifier|*
 name|data
@@ -3336,6 +3339,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
+specifier|const
 name|u_char
 operator|*
 argument_list|)
@@ -4238,6 +4242,7 @@ decl_stmt|;
 name|int
 name|loc
 decl_stmt|;
+specifier|const
 name|u_char
 modifier|*
 name|bp
@@ -4246,6 +4251,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
+specifier|const
 name|u_char
 operator|*
 argument_list|)
@@ -4404,6 +4410,7 @@ decl_stmt|;
 name|int
 name|loc
 decl_stmt|;
+specifier|const
 name|u_char
 modifier|*
 name|bp
@@ -4412,6 +4419,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
+specifier|const
 name|u_char
 operator|*
 argument_list|)
