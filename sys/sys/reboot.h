@@ -231,8 +231,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RB_PAUSE
+name|RB_RESERVED1
 value|0x40000
+end_define
+
+begin_comment
+comment|/* reserved for internal use of boot blocks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RB_RESERVED2
+value|0x80000
+end_define
+
+begin_comment
+comment|/* reserved for internal use of boot blocks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RB_PAUSE
+value|0x100000
 end_define
 
 begin_comment
@@ -435,10 +457,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !_SYS_REBOOT_H_ */
-end_comment
 
 end_unit
 
