@@ -3408,25 +3408,8 @@ name|gid_t
 name|gid
 decl_stmt|;
 comment|/* If UID/GID are already correct, return 0. */
-comment|/* TODO: Fix this; need to stat() to find on-disk GID<sigh> */
-if|if
-condition|(
-name|a
-operator|->
-name|user_uid
-operator|==
-name|archive_entry_stat
-argument_list|(
-name|entry
-argument_list|)
-operator|->
-name|st_uid
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+comment|/* XXX TODO: Fix this; as written, this fails to set GID a lot. 	 * Generally, we'll need to stat() to find on-disk GID<sigh> before 	 * deciding this. */
+comment|/* 	if (a->user_uid == archive_entry_stat(entry)->st_uid) 		return (0); */
 comment|/* Not changed. */
 if|if
 condition|(
