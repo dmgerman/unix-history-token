@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	6.7	85/05/27	*/
+comment|/*	kern_synch.c	6.8	85/06/02	*/
 end_comment
 
 begin_include
@@ -828,6 +828,7 @@ operator|>
 name|PZERO
 condition|)
 block|{
+comment|/* 		 * If we stop in issig(), wakeup may already have happened 		 * when we return (rp->p_wchan will then be 0). 		 */
 if|if
 condition|(
 name|ISSIG
@@ -1201,19 +1202,6 @@ name|p_link
 expr_stmt|;
 if|if
 condition|(
-name|p
-operator|->
-name|p_slptime
-operator|>
-literal|1
-condition|)
-name|updatepri
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|qp
 operator|->
 name|sq_tailp
@@ -1245,6 +1233,19 @@ name|SSLEEP
 condition|)
 block|{
 comment|/* OPTIMIZED INLINE EXPANSION OF setrun(p) */
+if|if
+condition|(
+name|p
+operator|->
+name|p_slptime
+operator|>
+literal|1
+condition|)
+name|updatepri
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_stat
