@@ -1465,10 +1465,7 @@ case|:
 comment|/* 			 * Page outside of range of object. Right now we 			 * essentially lose the changes by pretending it 			 * worked. 			 */
 name|pmap_clear_modify
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|mt
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|vm_page_undirty
@@ -1724,10 +1721,7 @@ argument_list|(
 name|map
 argument_list|)
 argument_list|,
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|p
-argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -1741,10 +1735,7 @@ name|actcount
 operator|=
 name|pmap_ts_referenced
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|p
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2686,10 +2677,7 @@ argument_list|)
 expr_stmt|;
 name|pmap_clear_reference
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Otherwise, if the page has been referenced while in the  		 * inactive queue, we bump the "activation count" upwards,  		 * making it less likely that the page will be added back to  		 * the inactive queue prematurely again.  Here we check the  		 * page tables (or emulated bits, if any), given the upper  		 * level VM system not knowing anything about existing  		 * references. 		 */
@@ -2714,10 +2702,7 @@ name|actcount
 operator|=
 name|pmap_ts_referenced
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -2764,10 +2749,7 @@ name|actcount
 operator|=
 name|pmap_ts_referenced
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|vm_page_activate
@@ -3575,10 +3557,7 @@ name|actcount
 operator|+=
 name|pmap_ts_referenced
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4465,10 +4444,7 @@ name|actcount
 operator|+=
 name|pmap_ts_referenced
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

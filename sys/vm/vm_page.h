@@ -102,6 +102,11 @@ name|vm_offset_t
 name|phys_addr
 decl_stmt|;
 comment|/* physical address of page */
+name|struct
+name|md_page
+name|md
+decl_stmt|;
+comment|/* machine dependant stuff */
 name|u_short
 name|queue
 decl_stmt|;
@@ -822,6 +827,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|vm_page_array_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of vm_page_t's */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|long
 name|first_page
 decl_stmt|;
@@ -1385,6 +1401,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|vm_page_t
+name|vm_add_new_page
+name|__P
+argument_list|(
+operator|(
+name|vm_offset_t
+name|pa
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|vm_page_unwire
 name|__P
@@ -1695,10 +1724,7 @@ condition|)
 block|{
 name|pmap_page_protect
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|mem
-argument_list|)
 argument_list|,
 name|VM_PROT_NONE
 argument_list|)
@@ -1734,10 +1760,7 @@ condition|)
 block|{
 name|pmap_page_protect
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|mem
-argument_list|)
 argument_list|,
 name|VM_PROT_READ
 argument_list|)

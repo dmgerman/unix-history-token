@@ -2430,12 +2430,9 @@ name|pmap
 argument_list|,
 name|vaddr
 argument_list|,
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|fs
 operator|.
 name|m
-argument_list|)
 argument_list|,
 name|prot
 argument_list|,
@@ -3195,10 +3192,7 @@ name|pmap
 argument_list|,
 name|vaddr
 argument_list|,
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|dst_m
-argument_list|)
 argument_list|,
 name|prot
 argument_list|,
