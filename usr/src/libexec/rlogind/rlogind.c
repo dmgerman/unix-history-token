@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.54 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.55 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,21 +51,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERBEROS
-end_ifdef
-
-begin_comment
-comment|/* From:  *	$Source: /mit/kerberos/ucb/mit/rlogind/RCS/rlogind.c,v $  *	$Header: rlogind.c,v 5.0 89/06/26 18:31:01 kfall Locked $  */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * remote login server:  *	\0  *	remuser\0  *	locuser\0  *	terminal_type/speed\0  *	data  *  * Automatic login protocol is done here, using login -f upon success,  * unless OLD_LOGIN is defined (then done in login, ala 4.2/4.3BSD).  */
@@ -357,7 +342,7 @@ name|cleanup
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -769,13 +754,6 @@ name|child
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|cleanup
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|int
 name|netf
@@ -1049,7 +1027,9 @@ argument|fatal(STDERR_FILENO, _PATH_LOGIN,
 literal|1
 argument|);
 comment|/*NOTREACHED*/
-argument|} 	ioctl(f, FIONBIO,&on); 	ioctl(master, FIONBIO,&on); 	ioctl(master, TIOCPKT,&on); 	signal(SIGCHLD, cleanup); 	protocol(f, master); 	signal(SIGCHLD, SIG_IGN); 	cleanup(); }  char	magic[
+argument|} 	ioctl(f, FIONBIO,&on); 	ioctl(master, FIONBIO,&on); 	ioctl(master, TIOCPKT,&on); 	signal(SIGCHLD, cleanup); 	protocol(f, master); 	signal(SIGCHLD, SIG_IGN); 	cleanup(
+literal|0
+argument|); }  char	magic[
 literal|2
 argument|] = {
 literal|0377
@@ -1220,7 +1200,7 @@ argument|if (!FD_ISSET(p,&ibits)) 					sleep(
 literal|5
 argument|); 				continue; 			} 			if (cc>
 literal|0
-argument|) { 				pcc -= cc; 				pbp += cc; 			} 		} 	} }  void cleanup() { 	char *p;  	p = line + sizeof(_PATH_DEV) -
+argument|) { 				pcc -= cc; 				pbp += cc; 			} 		} 	} }  void cleanup(signo) 	int signo; { 	char *p;  	p = line + sizeof(_PATH_DEV) -
 literal|1
 argument|; 	if (logout(p)) 		logwtmp(p,
 literal|""
