@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.27 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -323,7 +323,11 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
-break|break;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
 block|}
 name|argc
 operator|-=
@@ -573,6 +577,14 @@ decl_stmt|;
 name|char
 modifier|*
 name|hostname
+decl_stmt|,
+modifier|*
+name|errorstr
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
+name|errorhost
 decl_stmt|;
 name|short
 name|port
@@ -721,7 +733,11 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"malformed from address\n"
+literal|"malformed \"from\" address (af %d)\n"
+argument_list|,
+name|fromp
+operator|->
+name|sin_family
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1030,7 +1046,14 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"Connection received using IP options (ignored):%s"
+literal|"Connection received from %s using IP options (ignored):%s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|fromp
+operator|->
+name|sin_addr
+argument_list|)
 argument_list|,
 name|lbuf
 argument_list|)
@@ -1321,21 +1344,26 @@ name|hp
 condition|)
 block|{
 comment|/* 		 * If name returned by gethostbyaddr is in our domain, 		 * attempt to verify that we haven't been fooled by someone 		 * in a remote net; look up the name and check that this 		 * address corresponds to the name. 		 */
+ifdef|#
+directive|ifdef
+name|KERBEROS
+if|if
+condition|(
+operator|!
+name|use_kerberos
+condition|)
+endif|#
+directive|endif
 if|if
 condition|(
 name|check_all
 operator|||
-operator|(
-operator|!
-name|use_kerberos
-operator|&&
 name|local_domain
 argument_list|(
 name|hp
 operator|->
 name|h_name
 argument_list|)
-operator|)
 condition|)
 block|{
 name|strncpy
@@ -1366,6 +1394,10 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|errorhost
+operator|=
+name|remotehost
+expr_stmt|;
 name|hp
 operator|=
 name|gethostbyname
@@ -1389,14 +1421,17 @@ argument_list|,
 name|remotehost
 argument_list|)
 expr_stmt|;
-name|error
-argument_list|(
-literal|"Couldn't look up address for your host\n"
-argument_list|)
+name|errorstr
+operator|=
+literal|"Couldn't look up address for your host (%s)\n"
 expr_stmt|;
-name|exit
+name|hostname
+operator|=
+name|inet_ntoa
 argument_list|(
-literal|1
+name|fromp
+operator|->
+name|sin_addr
 argument_list|)
 expr_stmt|;
 block|}
@@ -1444,16 +1479,20 @@ operator|->
 name|h_name
 argument_list|)
 expr_stmt|;
-name|error
+name|errorstr
+operator|=
+literal|"Host address mismatch for %s\n"
+expr_stmt|;
+name|hostname
+operator|=
+name|inet_ntoa
 argument_list|(
-literal|"Host address mismatch\n"
+name|fromp
+operator|->
+name|sin_addr
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -1483,7 +1522,15 @@ name|sin_addr
 argument_list|)
 argument_list|)
 condition|)
+block|{
+name|hostname
+operator|=
+name|hp
+operator|->
+name|h_name
+expr_stmt|;
 break|break;
+block|}
 block|}
 else|#
 directive|else
@@ -1544,14 +1591,10 @@ block|}
 endif|#
 directive|endif
 block|}
-name|hostname
-operator|=
-name|hp
-operator|->
-name|h_name
-expr_stmt|;
 block|}
 else|else
+name|errorhost
+operator|=
 name|hostname
 operator|=
 name|inet_ntoa
@@ -1614,16 +1657,19 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|error
-argument_list|(
+if|if
+condition|(
+name|errorstr
+operator|==
+name|NULL
+condition|)
+name|errorstr
+operator|=
 literal|"Login incorrect.\n"
-argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 if|if
 condition|(
