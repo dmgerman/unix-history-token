@@ -1827,7 +1827,11 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
+name|use_ampm
+condition|?
 literal|"%l:%M%p"
+else|:
+literal|"%k:%M  "
 argument_list|,
 name|tp
 argument_list|)
@@ -1865,7 +1869,11 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
+name|use_ampm
+condition|?
 literal|"%a%I%p"
+else|:
+literal|"%a%H  "
 argument_list|,
 name|tp
 argument_list|)
