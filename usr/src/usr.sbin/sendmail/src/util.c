@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.8 (Berkeley) %G%"
+literal|"@(#)util.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1291,7 +1291,6 @@ name|st_uid
 operator|==
 name|uid
 operator|&&
-operator|!
 name|bitset
 argument_list|(
 name|S_IXUSR
@@ -1301,7 +1300,7 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-break|break;
+continue|continue;
 if|if
 condition|(
 name|stbuf
@@ -1401,7 +1400,6 @@ name|gp
 operator|!=
 name|NULL
 operator|&&
-operator|!
 name|bitset
 argument_list|(
 name|S_IXGRP
@@ -1411,7 +1409,7 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-break|break;
+continue|continue;
 block|}
 endif|#
 directive|endif
