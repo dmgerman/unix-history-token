@@ -123,6 +123,8 @@ decl_stmt|,
 name|interrupted
 decl_stmt|,
 name|save_is_interactive
+decl_stmt|,
+name|flush
 decl_stmt|;
 end_decl_stmt
 
@@ -185,6 +187,10 @@ name|interrupted
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|flush
+condition|)
 name|md_slurp
 argument_list|()
 expr_stmt|;

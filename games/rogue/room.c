@@ -75,6 +75,8 @@ decl_stmt|,
 name|no_skull
 decl_stmt|,
 name|ask_quit
+decl_stmt|,
+name|flush
 decl_stmt|;
 end_decl_stmt
 
@@ -99,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|NOPTS
-value|7
+value|8
 end_define
 
 begin_struct
@@ -129,6 +131,22 @@ name|NOPTS
 index|]
 init|=
 block|{
+block|{
+literal|"Flush typeahead during battle (\"flush\"): "
+block|,
+literal|1
+block|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+literal|0
+block|,
+operator|&
+name|flush
+block|}
+block|,
 block|{
 literal|"Show position only at end of run (\"jump\"): "
 block|,
