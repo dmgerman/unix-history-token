@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.4	%G%	*/
+comment|/*	param.h	4.5	%G%	*/
 end_comment
 
 begin_comment
@@ -477,7 +477,7 @@ begin_define
 define|#
 directive|define
 name|UPAGES
-value|8
+value|6
 end_define
 
 begin_comment
