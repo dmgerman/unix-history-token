@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.29	81/03/11	*/
+comment|/*	tm.c	4.30	81/03/21	*/
 end_comment
 
 begin_include
@@ -3841,22 +3841,11 @@ argument_list|)
 operator|->
 name|uh_physuba
 expr_stmt|;
-if|#
-directive|if
-name|VAX780
-if|if
-condition|(
-name|cpu
-operator|==
-name|VAX_780
-condition|)
 name|ubainit
 argument_list|(
 name|up
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|DELAY
 argument_list|(
 literal|1000000
