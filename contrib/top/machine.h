@@ -106,6 +106,10 @@ name|idle
 decl_stmt|;
 comment|/* show idle processes */
 name|int
+name|self
+decl_stmt|;
+comment|/* show self */
+name|int
 name|system
 decl_stmt|;
 comment|/* show system processes */

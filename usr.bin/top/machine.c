@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  * Order support hacked in from top-3.5beta6/machine/m_aix41.c  *   by Monte Mitzelfelt (for latest top see http://www.groupsys.com/topinfo/)  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *          Monte Mitzelfelt<monte@gonefishing.org>  *  * $Id: machine.c,v 1.3.2.4 1998/07/27 12:09:10 wosch Exp $  */
+comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  * Order support hacked in from top-3.5beta6/machine/m_aix41.c  *   by Monte Mitzelfelt (for latest top see http://www.groupsys.com/topinfo/)  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *          Monte Mitzelfelt<monte@gonefishing.org>  *  * $Id: machine.c,v 1.3.2.6 1998/08/07 18:39:02 wosch Exp $  */
 end_comment
 
 begin_include
@@ -2052,6 +2052,9 @@ name|int
 name|show_idle
 decl_stmt|;
 name|int
+name|show_self
+decl_stmt|;
+name|int
 name|show_system
 decl_stmt|;
 name|int
@@ -2147,6 +2150,12 @@ name|sel
 operator|->
 name|idle
 expr_stmt|;
+name|show_self
+operator|=
+name|sel
+operator|->
+name|self
+expr_stmt|;
 name|show_system
 operator|=
 name|sel
@@ -2231,6 +2240,17 @@ name|p_stat
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+operator|(
+name|show_self
+operator|!=
+name|PP
+argument_list|(
+name|pp
+argument_list|,
+name|p_pid
+argument_list|)
+operator|)
 operator|&&
 operator|(
 name|show_system
