@@ -2243,12 +2243,7 @@ argument_list|()
 expr_stmt|;
 name|scsi_low_bus_reset
 argument_list|(
-operator|(
-expr|struct
-name|scsi_low_softc
-operator|*
-operator|)
-name|sc
+name|slp
 argument_list|)
 expr_stmt|;
 name|ncvhw_select_register_0
