@@ -43,6 +43,8 @@ name|TYPE
 parameter_list|,
 name|OP
 parameter_list|,
+name|CONS
+parameter_list|,
 name|V
 parameter_list|)
 define|\
@@ -200,10 +202,12 @@ name|TYPE
 parameter_list|,
 name|OP
 parameter_list|,
+name|CONS
+parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 			 : "+m" (*p)			\ 			 : "ir" (V));			\ }
+value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 			 : "+m" (*p)			\ 			 : CONS (V));			\ }
 end_define
 
 begin_comment
@@ -424,7 +428,7 @@ value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)
 comment|/* 0 (result) */
 value|\ 	  "+m" (*p)
 comment|/* 1 */
-value|\ 	: : "cc", "memory");			 	\ 							\ 	return (res);					\ }							\ 							\
+value|\ 	: : "memory");				 	\ 							\ 	return (res);					\ }							\ 							\
 comment|/*							\  * The XCHG instruction asserts LOCK automagically.	\  */
 value|\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(SOP				\ 	: "+m" (*p),
 comment|/* 0 */
@@ -479,6 +483,8 @@ name|char
 operator|,
 literal|"orb %b1,%0"
 operator|,
+literal|"iq"
+operator|,
 name|v
 operator|)
 name|ATOMIC_ASM
@@ -488,6 +494,8 @@ argument_list|,
 argument|char
 argument_list|,
 literal|"andb %b1,%0"
+argument_list|,
+literal|"iq"
 argument_list|,
 argument|~v
 argument_list|)
@@ -499,6 +507,8 @@ argument|char
 argument_list|,
 literal|"addb %b1,%0"
 argument_list|,
+literal|"iq"
+argument_list|,
 argument|v
 argument_list|)
 name|ATOMIC_ASM
@@ -508,6 +518,8 @@ argument_list|,
 argument|char
 argument_list|,
 literal|"subb %b1,%0"
+argument_list|,
+literal|"iq"
 argument_list|,
 argument|v
 argument_list|)
@@ -519,6 +531,8 @@ argument|short
 argument_list|,
 literal|"orw %w1,%0"
 argument_list|,
+literal|"ir"
+argument_list|,
 argument|v
 argument_list|)
 name|ATOMIC_ASM
@@ -528,6 +542,8 @@ argument_list|,
 argument|short
 argument_list|,
 literal|"andw %w1,%0"
+argument_list|,
+literal|"ir"
 argument_list|,
 argument|~v
 argument_list|)
@@ -539,6 +555,8 @@ argument|short
 argument_list|,
 literal|"addw %w1,%0"
 argument_list|,
+literal|"ir"
+argument_list|,
 argument|v
 argument_list|)
 name|ATOMIC_ASM
@@ -549,6 +567,8 @@ argument|short
 argument_list|,
 literal|"subw %w1,%0"
 argument_list|,
+literal|"ir"
+argument_list|,
 argument|v
 argument_list|)
 name|ATOMIC_ASM
@@ -558,6 +578,8 @@ argument_list|,
 argument|int
 argument_list|,
 literal|"orl %1,%0"
+argument_list|,
+literal|"ir"
 argument_list|,
 argument|v
 argument_list|)
@@ -569,6 +591,8 @@ argument|int
 argument_list|,
 literal|"andl %1,%0"
 argument_list|,
+literal|"ir"
+argument_list|,
 argument|~v
 argument_list|)
 name|ATOMIC_ASM
@@ -579,6 +603,8 @@ argument|int
 argument_list|,
 literal|"addl %1,%0"
 argument_list|,
+literal|"ir"
+argument_list|,
 argument|v
 argument_list|)
 name|ATOMIC_ASM
@@ -588,6 +614,8 @@ argument_list|,
 argument|int
 argument_list|,
 literal|"subl %1,%0"
+argument_list|,
+literal|"ir"
 argument_list|,
 argument|v
 argument_list|)
@@ -599,6 +627,8 @@ argument|long
 argument_list|,
 literal|"orl %1,%0"
 argument_list|,
+literal|"ir"
+argument_list|,
 argument|v
 argument_list|)
 name|ATOMIC_ASM
@@ -608,6 +638,8 @@ argument_list|,
 argument|long
 argument_list|,
 literal|"andl %1,%0"
+argument_list|,
+literal|"ir"
 argument_list|,
 argument|~v
 argument_list|)
@@ -619,6 +651,8 @@ argument|long
 argument_list|,
 literal|"addl %1,%0"
 argument_list|,
+literal|"ir"
+argument_list|,
 argument|v
 argument_list|)
 name|ATOMIC_ASM
@@ -628,6 +662,8 @@ argument_list|,
 argument|long
 argument_list|,
 literal|"subl %1,%0"
+argument_list|,
+literal|"ir"
 argument_list|,
 argument|v
 argument_list|)
