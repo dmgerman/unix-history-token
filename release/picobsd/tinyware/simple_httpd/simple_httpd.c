@@ -126,11 +126,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
+modifier|*
 name|fetch_mode
-index|[
-literal|100
-index|]
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -156,7 +157,68 @@ begin_function_decl
 name|char
 modifier|*
 name|adate
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|init_servconnection
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|http_date
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|http_output
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|html
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|http_request
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|log_line
+parameter_list|(
+name|char
+modifier|*
+name|req
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|wait_connection
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -205,6 +267,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|http_404
@@ -222,6 +285,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|http_405
@@ -364,7 +428,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|socklen_t
 name|lg
 decl_stmt|;
 name|lg
@@ -468,7 +532,7 @@ name|buff
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|//return(buff);
+comment|/* return(buff); */
 block|}
 end_function
 
@@ -480,6 +544,7 @@ begin_function
 name|void
 name|http_output
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|html
@@ -747,6 +812,7 @@ decl_stmt|,
 modifier|*
 name|par
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -783,6 +849,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|strstr
@@ -791,6 +858,7 @@ name|req
 argument_list|,
 literal|"\n"
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|p
@@ -799,6 +867,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|strstr
@@ -807,6 +876,7 @@ name|req
 argument_list|,
 literal|"\r"
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|p
@@ -938,18 +1008,12 @@ expr_stmt|;
 if|if
 condition|(
 name|fetch_mode
-index|[
-literal|0
-index|]
 operator|!=
 name|NULL
 condition|)
-name|strcpy
-argument_list|(
 name|filename
-argument_list|,
+operator|=
 name|fetch_mode
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1000,6 +1064,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|par
 operator|=
 name|strstr
@@ -1008,6 +1073,7 @@ name|filename
 argument_list|,
 literal|"?"
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|*
@@ -1076,7 +1142,7 @@ argument_list|(
 name|con_sock
 argument_list|)
 expr_stmt|;
-comment|//printf("HTTP/1.0 200 OK\nContent-type: text/html\n\n\n");
+comment|/*printf("HTTP/1.0 200 OK\nContent-type: text/html\n\n\n");*/
 name|printf
 argument_list|(
 literal|"HTTP/1.0 200 OK\r\n"
@@ -1263,7 +1329,7 @@ index|]
 argument_list|)
 expr_stmt|;
 goto|goto
-name|end_request
+name|end_request2
 goto|;
 block|}
 comment|/* Is it a regular file? */
@@ -1295,7 +1361,7 @@ index|]
 argument_list|)
 expr_stmt|;
 goto|goto
-name|end_request
+name|end_request2
 goto|;
 block|}
 comment|/* Past this point we are serving either a GET or HEAD */
@@ -1489,6 +1555,7 @@ condition|)
 block|{
 while|while
 condition|(
+operator|(
 name|lg
 operator|=
 name|read
@@ -1499,6 +1566,9 @@ name|buff
 argument_list|,
 literal|8192
 argument_list|)
+operator|)
+operator|>
+literal|0
 condition|)
 name|write
 argument_list|(
@@ -1510,13 +1580,15 @@ name|lg
 argument_list|)
 expr_stmt|;
 block|}
-name|end_request
+name|end_request2
 label|:
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+name|end_request
+label|:
 name|close
 argument_list|(
 name|con_sock
@@ -1542,15 +1614,6 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
@@ -1682,12 +1745,9 @@ name|verbose
 operator|=
 literal|1
 expr_stmt|;
-name|strcpy
-argument_list|(
 name|fetch_mode
-argument_list|,
+operator|=
 name|optarg
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1780,9 +1840,6 @@ comment|/* Do we really have rights in the html directory? */
 if|if
 condition|(
 name|fetch_mode
-index|[
-literal|0
-index|]
 operator|==
 name|NULL
 condition|)
@@ -1872,9 +1929,6 @@ expr_stmt|;
 if|if
 condition|(
 name|fetch_mode
-index|[
-literal|0
-index|]
 operator|==
 name|NULL
 condition|)
@@ -1905,10 +1959,14 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|server_pid
 operator|=
 name|fork
 argument_list|()
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|wait3
@@ -1950,9 +2008,6 @@ block|}
 if|if
 condition|(
 name|fetch_mode
-index|[
-literal|0
-index|]
 operator|==
 name|NULL
 condition|)
@@ -2033,7 +2088,9 @@ begin_function
 name|char
 modifier|*
 name|adate
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|char
