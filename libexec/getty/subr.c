@@ -815,6 +815,14 @@ name|EVENP
 expr_stmt|;
 if|if
 condition|(
+name|NP
+condition|)
+name|f
+operator||=
+name|PASS8
+expr_stmt|;
+if|if
+condition|(
 name|UC
 condition|)
 name|f
