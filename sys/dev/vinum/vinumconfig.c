@@ -275,7 +275,7 @@ name|vinum_conf
 operator|.
 name|flags
 operator|&
-name|VF_DISKCONFIG
+name|VF_READING_CONFIG
 operator|)
 operator|)
 condition|)
@@ -417,7 +417,7 @@ name|vinum_conf
 operator|.
 name|flags
 operator|&
-name|VF_DISKCONFIG
+name|VF_READING_CONFIG
 operator|)
 comment|/* we're reading from disk, */
 operator|&&
@@ -941,7 +941,7 @@ name|vinum_conf
 operator|.
 name|flags
 operator|&
-name|VF_DISKCONFIG
+name|VF_READING_CONFIG
 operator|)
 operator|==
 literal|0
@@ -5025,7 +5025,7 @@ name|vinum_conf
 operator|.
 name|flags
 operator|&
-name|VF_DISKCONFIG
+name|VF_READING_CONFIG
 operator|)
 condition|)
 comment|/* reading from disk */
@@ -5093,7 +5093,7 @@ name|vinum_conf
 operator|.
 name|flags
 operator|&
-name|VF_DISKCONFIG
+name|VF_READING_CONFIG
 operator|)
 condition|)
 comment|/* reading from disk */
@@ -9074,7 +9074,11 @@ operator|.
 name|flags
 operator|&=
 operator|~
+operator|(
 name|VF_CONFIG_INCOMPLETE
+operator||
+name|VF_READING_CONFIG
+operator|)
 expr_stmt|;
 comment|/* we've finished our config */
 if|if
