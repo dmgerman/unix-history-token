@@ -317,13 +317,6 @@ decl_stmt|,
 name|j
 decl_stmt|;
 name|struct
-name|disk
-modifier|*
-name|old
-init|=
-name|NULL
-decl_stmt|;
-name|struct
 name|chunk
 modifier|*
 name|c1
