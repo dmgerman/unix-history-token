@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ace.c	1.6	86/01/21	*/
+comment|/*	if_ace.c	1.7	86/01/24	*/
 end_comment
 
 begin_comment
@@ -2584,6 +2584,8 @@ decl_stmt|,
 name|s
 decl_stmt|,
 name|error
+decl_stmt|,
+name|usetrailers
 decl_stmt|;
 name|u_char
 name|edst
@@ -2666,6 +2668,9 @@ operator|&
 name|idst
 argument_list|,
 name|edst
+argument_list|,
+operator|&
+name|usetrailers
 argument_list|)
 condition|)
 return|return
@@ -2735,15 +2740,7 @@ expr_stmt|;
 comment|/* need per host negotiation */
 if|if
 condition|(
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_NOTRAILERS
-operator|)
-operator|==
-literal|0
+name|usetrailers
 operator|&&
 name|off
 operator|>
