@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tail.c	5.1 (Berkeley) %G%"
+literal|"@(#)tail.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|LBIN
-value|8193
+value|32769
 end_define
 
 begin_undef
@@ -103,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|BUFSIZ
-value|LBIN-1
+value|8192
 end_define
 
 begin_decl_stmt
@@ -757,7 +757,9 @@ name|di
 operator|=
 name|bylines
 condition|?
-name|BUFSIZ
+name|LBIN
+operator|-
+literal|1
 else|:
 name|n
 expr_stmt|;
