@@ -332,6 +332,16 @@ literal|255
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|ACPI_SERIAL_DECL
+argument_list|(
+name|panasonic
+argument_list|,
+literal|"ACPI Panasonic extras"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Table of sysctl names and HKEY functions to call. */
 end_comment
@@ -866,6 +876,11 @@ operator|.
 name|handler
 expr_stmt|;
 comment|/* Get the current value from the appropriate function. */
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|panasonic
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|handler
@@ -886,11 +901,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 comment|/* Send the current value to the user and return if no new value. */
 name|error
 operator|=
@@ -918,11 +931,9 @@ name|newptr
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 comment|/* Set the new value via the appropriate function. */
 name|error
 operator|=
@@ -938,6 +949,13 @@ operator|&
 name|arg
 argument_list|)
 expr_stmt|;
+name|ACPI_SERIAL_END
+argument_list|(
+name|panasonic
+argument_list|)
+expr_stmt|;
+name|out
+label|:
 return|return
 operator|(
 name|error
@@ -968,6 +986,11 @@ decl_stmt|;
 name|ACPI_INTEGER
 name|ret
 decl_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|panasonic
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 operator|-
@@ -1069,6 +1092,11 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|panasonic
+argument_list|)
+expr_stmt|;
 name|obj
 index|[
 literal|0
@@ -1152,6 +1180,11 @@ modifier|*
 name|val
 parameter_list|)
 block|{
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|panasonic
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|op
@@ -1217,6 +1250,11 @@ modifier|*
 name|val
 parameter_list|)
 block|{
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|panasonic
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|op
@@ -1292,6 +1330,11 @@ modifier|*
 name|val
 parameter_list|)
 block|{
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|panasonic
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|op
@@ -1382,6 +1425,11 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|panasonic
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|ENXIO
@@ -1555,6 +1603,11 @@ block|{
 name|int
 name|arg
 decl_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|panasonic
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|key
@@ -1747,6 +1800,11 @@ block|{
 case|case
 literal|0x80
 case|:
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|panasonic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|acpi_panasonic_hkey_event
@@ -1784,6 +1842,11 @@ name|key
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_SERIAL_END
+argument_list|(
+name|panasonic
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|device_printf
