@@ -39,6 +39,18 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* These are two "secret" globals that can be fiddled to make a dialog  * come up someplace other than a "centered" calculation for X,Y  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|DialogX
+decl_stmt|,
+name|DialogY
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Do some initialization for dialog  */
 end_comment
 
@@ -141,6 +153,12 @@ directive|endif
 comment|/* Set screen to screen attribute */
 name|dialog_clear_norefresh
 argument_list|()
+expr_stmt|;
+name|DialogX
+operator|=
+name|DialogY
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
