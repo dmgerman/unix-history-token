@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_err[] = "@(#)err.c	1.14";  *  * file i/o error and initialization routines  */
+comment|/* char id_err[] = "@(#)err.c	1.15";  *  * file i/o error and initialization routines  */
 end_comment
 
 begin_include
