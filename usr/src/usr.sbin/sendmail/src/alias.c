@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	1.5	%G%"
+literal|"@(#)alias.c	1.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -585,12 +585,6 @@ name|q_user
 argument_list|)
 operator|+
 literal|1
-expr_stmt|;
-name|lhs
-operator|.
-name|dptr
-operator|=
-name|line
 expr_stmt|;
 name|rhs
 operator|=
