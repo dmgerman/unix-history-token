@@ -136,9 +136,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: truss [-fS] [-o file] -p pid"
+literal|"usage: truss [-fdDS] [-o file] -p pid"
 argument_list|,
-literal|"       truss [-fS] [-o file] command [args]"
+literal|"       truss [-fdDS] [-o file] command [args]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -524,7 +524,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"p:o:fS"
+literal|"p:o:fdDS"
 argument_list|)
 operator|)
 operator|!=
@@ -560,6 +560,28 @@ operator|->
 name|flags
 operator||=
 name|FOLLOWFORKS
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+comment|/* Absolute timestamps */
+name|trussinfo
+operator|->
+name|flags
+operator||=
+name|ABSOLUTETIMESTAMPS
+expr_stmt|;
+break|break;
+case|case
+literal|'D'
+case|:
+comment|/* Relative timestamps */
+name|trussinfo
+operator|->
+name|flags
+operator||=
+name|RELATIVETIMESTAMPS
 expr_stmt|;
 break|break;
 case|case
@@ -804,6 +826,21 @@ name|trussinfo
 argument_list|)
 expr_stmt|;
 comment|/*    * At this point, it's a simple loop, waiting for the process to    * stop, finding out why, printing out why, and then continuing it.    * All of the grunt work is done in the support routines.    */
+name|gettimeofday
+argument_list|(
+operator|&
+name|trussinfo
+operator|->
+name|start_time
+argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
 do|do
 block|{
 name|int
@@ -856,10 +893,40 @@ operator|.
 name|val
 argument_list|)
 expr_stmt|;
+name|gettimeofday
+argument_list|(
+operator|&
+name|trussinfo
+operator|->
+name|before
+argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|S_SCX
 case|:
+name|gettimeofday
+argument_list|(
+operator|&
+name|trussinfo
+operator|->
+name|after
+argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * This is so we don't get two messages for an exec -- one 	 * for the S_EXEC, and one for the syscall exit.  It also, 	 * conveniently, ensures that the first message printed out 	 * isn't the return-from-syscall used to create the process. 	 */
 if|if
 condition|(
