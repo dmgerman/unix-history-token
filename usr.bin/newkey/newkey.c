@@ -18,13 +18,26 @@ name|SCCSIDS
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)newkey.c 1.8 91/03/11 Copyr 1986 Sun Micro";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)newkey.c 1.8 91/03/11 Copyr 1986 Sun Micro"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +53,12 @@ end_comment
 begin_comment
 comment|/*  * Administrative tool to add a new user to the publickey database  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -108,6 +127,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -225,24 +250,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|getpass
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -331,7 +338,21 @@ begin_comment
 comment|/* YP */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -447,40 +468,8 @@ literal|0
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: %s [-u username]\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: %s [-h hostname]\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -490,28 +479,13 @@ argument_list|()
 operator|!=
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"must be superuser to run %s\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"must be superuser"
 argument_list|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|YP
@@ -524,23 +498,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+literal|"cannot chdir to %s"
 argument_list|,
-literal|"cannot chdir to "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|YPDBPATH
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* YP */
@@ -575,15 +539,11 @@ name|pw
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"unknown user: %s\n"
+literal|"unknown user: %s"
 argument_list|,
 name|argv
 index|[
@@ -591,12 +551,6 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -640,15 +594,11 @@ name|h
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"unknown host: %s\n"
+literal|"unknown host: %s"
 argument_list|,
 name|argv
 index|[
@@ -656,12 +606,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -815,23 +759,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Password incorrect.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"password incorrect"
 argument_list|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|YP
@@ -847,6 +781,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|status
 operator|=
 name|setpublicmap
@@ -857,24 +792,17 @@ name|public
 argument_list|,
 name|crypt1
 argument_list|)
+operator|)
 condition|)
 block|{
 ifdef|#
 directive|ifdef
 name|YP
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: unable to update NIS database (%u): %s\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"unable to update NIS database (%u): %s"
 argument_list|,
 name|status
 argument_list|,
@@ -886,19 +814,11 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: unable to update publickey database (%u): %s\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"unable to update publickey database (%u): %s"
 argument_list|,
 name|status
 argument_list|,
@@ -910,11 +830,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 operator|(
 name|void
@@ -930,6 +845,34 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: newkey [-u username]"
+argument_list|,
+literal|"       newkey [-h hostname]"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
