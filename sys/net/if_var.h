@@ -273,6 +273,7 @@ name|ifaddrhead
 name|if_addrhead
 decl_stmt|;
 comment|/* linked list of addresses per if */
+comment|/* 		 * if_addrhead is the list of all addresses associated to 		 * an interface. The first element of the list must be 		 * of type AF_LINK, and contains sockaddr_dl addresses, 		 * which include the link-level address and the name 		 * of the interface. 		 */
 name|struct
 name|klist
 name|if_klist
@@ -1212,7 +1213,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * The ifaddr structure contains information about one address  * of an interface.  They are maintained by the different address families,  * are allocated and attached when an address is set, and are linked  * together so all addresses for an interface can be located.  */
+comment|/*  * The ifaddr structure contains information about one address  * of an interface.  They are maintained by the different address families,  * are allocated and attached when an address is set, and are linked  * together so all addresses for an interface can be located.  *  * NOTE: a 'struct ifaddr' is always at the beginning of a larger  * chunk of malloc'ed memory, where we store the three addresses  * (ifa_addr, ifa_dstaddr and ifa_netmask) referenced here.  */
 end_comment
 
 begin_struct
@@ -1290,17 +1291,6 @@ name|int
 name|ifa_metric
 decl_stmt|;
 comment|/* cost of going out this interface */
-ifdef|#
-directive|ifdef
-name|notdef
-name|struct
-name|rtentry
-modifier|*
-name|ifa_rt
-decl_stmt|;
-comment|/* XXXX for ROUTETOIF ????? */
-endif|#
-directive|endif
 name|int
 function_decl|(
 modifier|*
