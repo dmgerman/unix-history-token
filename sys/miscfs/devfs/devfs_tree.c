@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.1 1995/09/06 08:26:51 julian Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.2 1995/09/06 09:29:16 julian Exp $  */
 end_comment
 
 begin_include
@@ -138,7 +138,10 @@ end_comment
 begin_function
 name|void
 name|devfs_sinit
-parameter_list|()
+parameter_list|(
+name|caddr_t
+name|junk
+parameter_list|)
 comment|/*proto*/
 block|{
 name|int

@@ -1,11 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_define
-define|#
-directive|define
-name|DEVFS_DEBUG
-value|1
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -42,7 +35,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.4 1995/05/30 08:06:55 rgrimes Exp $  */
+comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.5 1995/09/06 09:29:19 julian Exp $  */
 end_comment
 
 begin_comment
@@ -354,7 +347,10 @@ modifier|*
 modifier|*
 name|devfs_vnodeop_p
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -370,7 +366,10 @@ modifier|*
 modifier|*
 name|dev_spec_vnodeop_p
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -463,7 +462,10 @@ modifier|*
 modifier|*
 name|ops
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 function_decl|;
 comment|/* yuk... pointer to pointer(s) to funcs */
 name|int
@@ -508,7 +510,10 @@ modifier|*
 modifier|*
 name|ops
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 function_decl|;
 comment|/* duplicate, used in dev_add_node */
 name|int
