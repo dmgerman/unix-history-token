@@ -310,7 +310,7 @@ name|SIZE
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|i
 argument_list|,
@@ -328,8 +328,7 @@ operator|(
 name|uint8
 operator|*
 operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 return|return
 operator|(

@@ -6140,8 +6140,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|buf
+operator|==
+name|MAP_FAILED
 condition|)
 block|{
 name|syslog

@@ -821,8 +821,7 @@ operator|(
 name|EXEC
 operator|*
 operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 block|{
 name|err

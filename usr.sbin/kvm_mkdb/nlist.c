@@ -290,6 +290,23 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|filep
+operator|==
+operator|(
+name|u_char
+operator|*
+operator|)
+name|MAP_FAILED
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"mmap failed"
+argument_list|)
+expr_stmt|;
 comment|/* Read in exec structure. */
 name|ebuf
 operator|=

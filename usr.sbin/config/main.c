@@ -1682,7 +1682,7 @@ name|tsize
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|from_fd
 argument_list|,
@@ -1694,13 +1694,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|long
-operator|)
 name|p
 operator|==
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 name|err
 argument_list|(
@@ -1721,7 +1717,7 @@ name|tsize
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|to_fd
 argument_list|,
@@ -1733,13 +1729,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|long
-operator|)
 name|q
 operator|==
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 name|err
 argument_list|(

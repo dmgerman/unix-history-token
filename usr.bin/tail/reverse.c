@@ -338,7 +338,7 @@ name|size
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|fileno
 argument_list|(
@@ -352,11 +352,7 @@ literal|0
 argument_list|)
 operator|)
 operator|==
-operator|(
-name|caddr_t
-operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 block|{
 name|ierr

@@ -600,7 +600,7 @@ name|st_size
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|fd
 argument_list|,
@@ -611,7 +611,7 @@ literal|0
 argument_list|)
 operator|)
 operator|==
-name|NULL
+name|MAP_FAILED
 condition|)
 name|err
 argument_list|(

@@ -316,7 +316,7 @@ name|st_size
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_PRIVATE
 argument_list|,
 name|fd
 argument_list|,
@@ -330,12 +330,7 @@ if|if
 condition|(
 name|a_out_mmap
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 return|return
 operator|(

@@ -292,7 +292,7 @@ name|length
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|fd1
 argument_list|,
@@ -304,8 +304,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 name|err
 argument_list|(
@@ -345,7 +344,7 @@ name|length
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|fd2
 argument_list|,
@@ -357,8 +356,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 name|err
 argument_list|(

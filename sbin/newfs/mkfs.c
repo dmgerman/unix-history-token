@@ -956,13 +956,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|membase
 operator|==
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 block|{
 name|perror

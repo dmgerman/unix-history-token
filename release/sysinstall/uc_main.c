@@ -961,10 +961,7 @@ name|kern
 operator|->
 name|core
 operator|==
-operator|(
-name|caddr_t
-operator|)
-literal|0
+name|MAP_FAILED
 condition|)
 block|{
 name|free
