@@ -1405,7 +1405,7 @@ value|0x01000
 end_define
 
 begin_comment
-comment|/* KSE is on loan queue */
+comment|/* KSE is on loan queue. */
 end_comment
 
 begin_define
@@ -1417,6 +1417,17 @@ end_define
 
 begin_comment
 comment|/* KSE actually ran. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_EXIT
+value|0x04000
+end_define
+
+begin_comment
+comment|/* KSE is being killed. */
 end_comment
 
 begin_comment
