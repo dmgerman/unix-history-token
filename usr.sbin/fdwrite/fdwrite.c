@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: fdwrite.c,v 1.2 1994/10/14 16:03:33 joerg Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: fdwrite.c,v 1.3 1995/05/30 03:47:40 rgrimes Exp $  *  */
 end_comment
 
 begin_include
@@ -290,7 +290,7 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"Usage:\n\tfdwrite [-v] [-f inputfile] [-d device]\n"
+literal|"Usage:\n\tfdwrite [-v] [-y] [-f inputfile] [-d device]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -345,6 +345,11 @@ literal|0
 decl_stmt|,
 name|track
 decl_stmt|;
+name|int
+name|interactive
+init|=
+literal|1
+decl_stmt|;
 name|char
 modifier|*
 name|device
@@ -387,7 +392,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:s:f:v"
+literal|"d:s:f:vy"
 argument_list|)
 operator|)
 operator|!=
@@ -462,6 +467,15 @@ name|verbose
 expr_stmt|;
 break|break;
 case|case
+literal|'y'
+case|:
+comment|/* Don't confirm? */
+name|interactive
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -476,6 +490,18 @@ operator|<
 literal|0
 condition|)
 name|inputfd
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isatty
+argument_list|(
+literal|1
+argument_list|)
+condition|)
+name|interactive
 operator|=
 literal|0
 expr_stmt|;
@@ -536,6 +562,11 @@ block|{
 name|fdn
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|interactive
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|tty
@@ -566,6 +597,7 @@ operator|==
 literal|'\n'
 condition|)
 break|break;
+block|}
 block|}
 if|if
 condition|(
