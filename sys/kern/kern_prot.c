@@ -5669,13 +5669,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 'seeotheruids_permitted' determines whether or not visibility of processes  * and sockets with credentials holding different real uid's is possible  * using a variety of system MIBs.  */
+comment|/*  * 'see_other_uids' determines whether or not visibility of processes  * and sockets with credentials holding different real uid's is possible  * using a variety of system MIBs.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
-name|seeotheruids_permitted
+name|see_other_uids
 init|=
 literal|1
 decl_stmt|;
@@ -5688,12 +5688,12 @@ name|_kern_security_bsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|seeotheruids_permitted
+name|see_other_uids
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|seeotheruids_permitted
+name|see_other_uids
 argument_list|,
 literal|0
 argument_list|,
@@ -5745,7 +5745,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|seeotheruids_permitted
+name|see_other_uids
 operator|&&
 name|u1
 operator|->
@@ -6205,7 +6205,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|unprivileged_procdebug_permitted
+name|unprivileged_proc_debug
 init|=
 literal|1
 decl_stmt|;
@@ -6218,12 +6218,12 @@ name|_kern_security_bsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|unprivileged_procdebug_permitted
+name|unprivileged_proc_debug
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|unprivileged_procdebug_permitted
+name|unprivileged_proc_debug
 argument_list|,
 literal|0
 argument_list|,
@@ -6265,7 +6265,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|unprivileged_procdebug_permitted
+name|unprivileged_proc_debug
 condition|)
 block|{
 name|error
