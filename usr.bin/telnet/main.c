@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -36,11 +37,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.2 (Berkeley) 12/15/93"
+literal|"@(#)main.c	8.3 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,7 +58,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -68,13 +82,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -133,6 +141,51 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|void
+name|init_terminal
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|init_network
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|init_telnet
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|init_sys
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|init_3270
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#
@@ -227,21 +280,10 @@ literal|"Usage: %s %s%s%s%s\n"
 argument_list|,
 name|prompt
 argument_list|,
-ifdef|#
-directive|ifdef
-name|AUTHENTICATION
-literal|"[-4] [-6] [-8] [-E] [-K] [-L] [-N] [-S tos] [-X atype] [-a] [-c] [-d]"
-argument_list|,
-literal|"\n\t[-e char] [-k realm] [-l user] [-f/-F] [-n tracefile] "
-argument_list|,
-else|#
-directive|else
-literal|"[-4] [-6] [-8] [-E] [-L] [-N] [-S tos] [-a] [-c] [-d]"
+literal|"[-4] [-6] [-8] [-E] [-L] [-N] [-S tos] [-c] [-d]"
 argument_list|,
 literal|"\n\t[-e char] [-l user] [-n tracefile] "
 argument_list|,
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -253,19 +295,9 @@ name|defined
 argument_list|(
 name|unix
 argument_list|)
-ifdef|#
-directive|ifdef
-name|AUTHENTICATION
-literal|"[-noasynch] [-noasynctty]\n\t"
-literal|"[-noasyncnet] [-r] [-s src_addr] [-t transcom] "
-argument_list|,
-else|#
-directive|else
 literal|"[-noasynch] [-noasynctty] [-noasyncnet] [-r]\n\t"
 literal|"[-s src_addr] [-t transcom] "
 argument_list|,
-endif|#
-directive|endif
 else|#
 directive|else
 literal|"[-r] [-s src_addr] [-u] "
@@ -286,7 +318,7 @@ argument_list|)
 literal|"[-P policy] "
 endif|#
 directive|endif
-literal|"\n\t[host-name [port]]"
+literal|"[host-name [port]]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -302,6 +334,7 @@ comment|/*  * main.  Parse arguments, invoke the protocol or command parser.  */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -367,6 +400,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|prompt
 operator|=
 name|strrchr
@@ -378,6 +412,7 @@ index|]
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
 condition|)
 operator|++
 name|prompt
@@ -451,7 +486,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"468EKLNS:X:acde:fFk:l:n:rs:t:ux"
+literal|"468EKLNS:X:acde:fFk:l:n:rs:t:uxy"
 name|IPSECOPT
 argument_list|)
 operator|)
@@ -511,15 +546,6 @@ break|break;
 case|case
 literal|'K'
 case|:
-ifdef|#
-directive|ifdef
-name|AUTHENTICATION
-name|autologin
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'L'
@@ -597,16 +623,6 @@ break|break;
 case|case
 literal|'X'
 case|:
-ifdef|#
-directive|ifdef
-name|AUTHENTICATION
-name|auth_disable_name
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'a'
@@ -644,48 +660,6 @@ break|break;
 case|case
 literal|'f'
 case|:
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AUTHENTICATION
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|KRB5
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|FORWARD
-argument_list|)
-if|if
-condition|(
-name|forward_flags
-operator|&
-name|OPTS_FORWARD_CREDS
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Only one of -f and -F allowed.\n"
-argument_list|,
-name|prompt
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-block|}
-name|forward_flags
-operator||=
-name|OPTS_FORWARD_CREDS
-expr_stmt|;
-else|#
-directive|else
 name|fprintf
 argument_list|(
 name|stderr
@@ -695,58 +669,10 @@ argument_list|,
 name|prompt
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'F'
 case|:
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AUTHENTICATION
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|KRB5
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|FORWARD
-argument_list|)
-if|if
-condition|(
-name|forward_flags
-operator|&
-name|OPTS_FORWARD_CREDS
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Only one of -f and -F allowed.\n"
-argument_list|,
-name|prompt
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-block|}
-name|forward_flags
-operator||=
-name|OPTS_FORWARD_CREDS
-expr_stmt|;
-name|forward_flags
-operator||=
-name|OPTS_FORWARDABLE_CREDS
-expr_stmt|;
-else|#
-directive|else
 name|fprintf
 argument_list|(
 name|stderr
@@ -756,53 +682,10 @@ argument_list|,
 name|prompt
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'k'
 case|:
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AUTHENTICATION
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|KRB4
-argument_list|)
-block|{
-specifier|extern
-name|char
-modifier|*
-name|dest_realm
-decl_stmt|,
-name|dst_realm_buf
-index|[]
-decl_stmt|,
-name|dst_realm_sz
-decl_stmt|;
-name|dest_realm
-operator|=
-name|dst_realm_buf
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strncpy
-argument_list|(
-name|dest_realm
-argument_list|,
-name|optarg
-argument_list|,
-name|dst_realm_sz
-argument_list|)
-expr_stmt|;
-block|}
-else|#
-directive|else
 name|fprintf
 argument_list|(
 name|stderr
@@ -812,8 +695,6 @@ argument_list|,
 name|prompt
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'l'
@@ -1294,6 +1175,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 

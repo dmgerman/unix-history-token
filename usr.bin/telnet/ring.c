@@ -9,15 +9,33 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static const char sccsid[] = "@(#)ring.c	8.2 (Berkeley) 5/30/95";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)ring.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -35,6 +53,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -42,12 +66,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_ifdef
@@ -222,39 +240,28 @@ begin_comment
 comment|/* Buffer state transition routines */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ring_init
-argument_list|(
-argument|ring
-argument_list|,
-argument|buffer
-argument_list|,
-argument|count
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ring
+parameter_list|,
+name|buffer
+parameter_list|,
+name|count
+parameter_list|)
 name|Ring
 modifier|*
 name|ring
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|char
 modifier|*
 name|buffer
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|count
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|memset
 argument_list|(
@@ -307,7 +314,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Mark routines */
