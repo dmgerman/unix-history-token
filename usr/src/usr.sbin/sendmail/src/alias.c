@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.15 (Berkeley) %G%"
+literal|"@(#)alias.c	8.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1006,6 +1006,24 @@ operator|->
 name|map_file
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|MF_ALIASWAIT
+argument_list|,
+name|map
+operator|->
+name|map_mflags
+argument_list|)
+condition|)
+return|return;
+name|map
+operator|->
+name|map_mflags
+operator||=
+name|MF_ALIASWAIT
+expr_stmt|;
 name|atcnt
 operator|=
 name|SafeAlias
@@ -1121,6 +1139,13 @@ argument_list|(
 literal|"aliaswait: not rebuildable\n"
 argument_list|)
 expr_stmt|;
+name|map
+operator|->
+name|map_mflags
+operator|&=
+operator|~
+name|MF_ALIASWAIT
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -1151,6 +1176,13 @@ name|printf
 argument_list|(
 literal|"aliaswait: no source file\n"
 argument_list|)
+expr_stmt|;
+name|map
+operator|->
+name|map_mflags
+operator|&=
+operator|~
+name|MF_ALIASWAIT
 expr_stmt|;
 return|return;
 block|}
@@ -1277,6 +1309,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|map
+operator|->
+name|map_mflags
+operator|&=
+operator|~
+name|MF_ALIASWAIT
+expr_stmt|;
 block|}
 end_block
 
