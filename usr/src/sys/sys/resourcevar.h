@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resourcevar.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resourcevar.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -8,10 +8,6 @@ ifndef|#
 directive|ifndef
 name|_SYS_RESOURCEVAR_H_
 end_ifndef
-
-begin_comment
-comment|/* tmp for user.h */
-end_comment
 
 begin_define
 define|#
@@ -116,10 +112,14 @@ index|[
 name|RLIM_NLIMITS
 index|]
 decl_stmt|;
+define|#
+directive|define
+name|PL_SHAREMOD
+value|0x01
+comment|/* modifications are shared */
 name|int
 name|p_lflags
 decl_stmt|;
-comment|/* below */
 name|int
 name|p_refcnt
 decl_stmt|;
@@ -129,44 +129,25 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* pl_lflags: */
+comment|/* add user profiling from AST */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PL_SHAREMOD
-value|0x01
+name|ADDUPROF
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|addupc_task(p,							\ 	    (p)->p_stats->p_prof.pr_addr, (p)->p_stats->p_prof.pr_ticks)
 end_define
 
-begin_comment
-comment|/* modifications are shared */
-end_comment
-
-begin_comment
-comment|/* make copy of plimit structure */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|plimit
-modifier|*
-name|limcopy
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|plimit
-operator|*
-name|lim
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* add profiling ticks: in interrupt context, and from AST */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -210,19 +191,27 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* add user profiling from AST */
-end_comment
+begin_decl_stmt
+name|struct
+name|plimit
+modifier|*
+name|limcopy
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|plimit
+operator|*
+name|lim
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|ADDUPROF
-parameter_list|(
-name|p
-parameter_list|)
-value|addupc_task(p, (p)->p_stats->p_prof.pr_addr, \ 			    (p)->p_stats->p_prof.pr_ticks)
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
