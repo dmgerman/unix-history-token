@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.30
+literal|3.31
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.30
+literal|3.31
 operator|%
 name|G
 operator|%
@@ -113,7 +113,6 @@ comment|/* "Service Shutting Down" */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|SmtpReplyBuffer
 index|[
@@ -127,7 +126,6 @@ comment|/* buffer for replies */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|FILE
 modifier|*
 name|SmtpOut
@@ -139,7 +137,6 @@ comment|/* output file */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|FILE
 modifier|*
 name|SmtpIn
@@ -151,7 +148,6 @@ comment|/* input file */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|SmtpPid
 decl_stmt|;
@@ -162,7 +158,6 @@ comment|/* pid of mailer */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|bool
 name|SmtpClosing
 decl_stmt|;
@@ -1070,12 +1065,17 @@ name|e_xfp
 argument_list|)
 expr_stmt|;
 comment|/* for debugging */
+comment|/* if we are in the process of closing just give the code */
 if|if
 condition|(
-operator|!
 name|SmtpClosing
 condition|)
-block|{
+return|return
+operator|(
+name|SMTPCLOSING
+operator|)
+return|;
+comment|/* get the line from the other side */
 name|p
 operator|=
 name|sfgets
@@ -1107,7 +1107,6 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* log the input in the transcript for future error returns */
 if|if
 condition|(
@@ -1186,11 +1185,9 @@ condition|(
 name|r
 operator|==
 name|SMTPCLOSING
-operator|&&
-operator|!
-name|SmtpClosing
 condition|)
 block|{
+comment|/* send the quit protocol */
 name|smtpquit
 argument_list|(
 literal|"SMTP Shutdown"
