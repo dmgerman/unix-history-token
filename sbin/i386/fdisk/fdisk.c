@@ -227,11 +227,7 @@ init|=
 block|{
 literal|"/dev/ad0"
 block|,
-literal|"/dev/wd0"
-block|,
 literal|"/dev/da0"
-block|,
-literal|"/dev/od0"
 block|,
 literal|0
 block|}
@@ -3565,6 +3561,16 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+return|return
+operator|-
+literal|2
+return|;
 name|warnx
 argument_list|(
 literal|"can't get file status of %s"
