@@ -1259,6 +1259,7 @@ argument_list|,
 literal|"\t[ arp | -arp ]\n"
 argument_list|,
 literal|"\t[ link0 | -link0 ] [ link1 | -link1 ] [ link2 | -link2 ] \n"
+argument_list|,
 literal|"\t[ -a ] [ -ad ] [ -au ]\n"
 argument_list|)
 expr_stmt|;
