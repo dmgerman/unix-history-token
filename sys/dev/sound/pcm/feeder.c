@@ -1974,6 +1974,18 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
+comment|/* When recording only return as much data as available */
+if|if
+condition|(
+name|ch
+operator|->
+name|direction
+operator|==
+name|PCMDIR_REC
+condition|)
+return|return
+name|l
+return|;
 comment|/* 	if (l< count) 		printf("appending %d bytes\n", count - l); */
 name|x
 operator|=
