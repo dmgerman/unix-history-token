@@ -556,6 +556,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|HAVE_PPSRATECHECK
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
