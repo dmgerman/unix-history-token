@@ -179,6 +179,10 @@ name|stderr
 argument_list|,
 literal|"Stack size (%d) != expected (%d), frame %d\n"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|parms
 operator|->
 name|top
@@ -189,6 +193,7 @@ operator|*
 operator|)
 operator|&
 name|top
+argument_list|)
 argument_list|,
 name|FRAME_SIZE
 operator|*
