@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.9 %G%"
+literal|"@(#)var.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -336,20 +336,12 @@ name|line
 operator|=
 name|vline
 expr_stmt|;
-comment|/* 	     * widths are evened out 	     */
 name|w
 operator|=
-operator|(
 name|lwidth
 argument_list|(
 name|np
 argument_list|)
-operator|+
-literal|1
-operator|)
-operator|&
-operator|~
-literal|1
 expr_stmt|;
 name|op
 operator|=
@@ -530,6 +522,21 @@ argument_list|(
 literal|"	.data"
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	.align	%d"
+argument_list|,
+literal|0
+argument_list|,
+name|dotalign
+argument_list|(
+name|align
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putprintf
@@ -1416,6 +1423,54 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*      *	given an alignment, return power of two for .align pseudo-op      */
+end_comment
+
+begin_macro
+name|dotalign
+argument_list|(
+argument|alignment
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|alignment
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+switch|switch
+condition|(
+name|alignment
+condition|)
+block|{
+case|case
+name|A_CHAR
+case|:
+comment|/* 				 * also 				 *	A_STRUCT 				 */
+return|return
+literal|0
+return|;
+case|case
+name|A_SHORT
+case|:
+return|return
+literal|1
+return|;
+case|case
+name|A_LONG
+case|:
+comment|/* 				 * also 				 *	A_POINT, A_INT, A_FLOAT, A_DOUBLE, 				 *	A_STACK, A_FILET, A_SET 				 */
+return|return
+literal|2
+return|;
+block|}
+block|}
+end_block
 
 begin_comment
 comment|/*  * Return the width of an element  * of a n time subscripted np.  */
