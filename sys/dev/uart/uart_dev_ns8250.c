@@ -1261,6 +1261,11 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
+name|uart_barrier
+argument_list|(
+name|bas
+argument_list|)
+expr_stmt|;
 name|limit
 operator|=
 literal|40
