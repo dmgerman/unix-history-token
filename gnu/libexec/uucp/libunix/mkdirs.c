@@ -168,6 +168,33 @@ name|z
 operator|=
 literal|'/'
 expr_stmt|;
+comment|/* replace '/' in its place */
+comment|/* now skips over multiple '/' in name */
+while|while
+condition|(
+operator|(
+operator|*
+operator|(
+name|z
+operator|+
+literal|1
+operator|)
+operator|)
+operator|&&
+operator|(
+operator|*
+operator|(
+name|z
+operator|+
+literal|1
+operator|)
+operator|)
+operator|==
+literal|'/'
+condition|)
+name|z
+operator|++
+expr_stmt|;
 block|}
 block|}
 name|ubuffree
