@@ -1007,11 +1007,17 @@ operator|&&
 name|something
 condition|)
 block|{
+name|HistEvent
+name|he
+decl_stmt|;
 name|INTOFF
 expr_stmt|;
 name|history
 argument_list|(
 name|hist
+argument_list|,
+operator|&
+name|he
 argument_list|,
 name|whichprompt
 operator|==

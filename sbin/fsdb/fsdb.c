@@ -1297,6 +1297,9 @@ name|EditLine
 modifier|*
 name|elptr
 decl_stmt|;
+name|HistEvent
+name|he
+decl_stmt|;
 name|curinode
 operator|=
 name|ginode
@@ -1320,6 +1323,9 @@ name|history
 argument_list|(
 name|hist
 argument_list|,
+operator|&
+name|he
+argument_list|,
 name|H_EVENT
 argument_list|,
 literal|100
@@ -1335,6 +1341,8 @@ argument_list|,
 name|stdin
 argument_list|,
 name|stdout
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 name|el_set
@@ -1408,6 +1416,9 @@ expr_stmt|;
 name|history
 argument_list|(
 name|hist
+argument_list|,
+operator|&
+name|he
 argument_list|,
 name|H_ENTER
 argument_list|,

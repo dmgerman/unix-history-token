@@ -6428,6 +6428,9 @@ name|hist
 init|=
 name|NULL
 decl_stmt|;
+name|HistEvent
+name|he
+decl_stmt|;
 specifier|static
 name|char
 name|buf
@@ -6476,6 +6479,8 @@ argument_list|,
 name|stdin
 argument_list|,
 name|stdout
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 name|hist
@@ -6486,6 +6491,9 @@ expr_stmt|;
 name|history
 argument_list|(
 name|hist
+argument_list|,
+operator|&
+name|he
 argument_list|,
 name|H_EVENT
 argument_list|,
@@ -6608,6 +6616,9 @@ expr_stmt|;
 name|history
 argument_list|(
 name|hist
+argument_list|,
+operator|&
+name|he
 argument_list|,
 name|H_ENTER
 argument_list|,
