@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.6	81/03/09	*/
+comment|/*	proc.h	4.7	81/04/13	*/
 end_comment
 
 begin_comment
@@ -118,6 +118,10 @@ name|size_t
 name|p_rssize
 decl_stmt|;
 comment|/* current resident set size in clicks */
+name|size_t
+name|p_maxrss
+decl_stmt|;
+comment|/* copy of u.u_limit[MAXRSS] */
 name|size_t
 name|p_swrss
 decl_stmt|;
