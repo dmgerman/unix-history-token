@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bcopy.c	5.5 (Berkeley) %G%"
+literal|"@(#)bcopy.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -259,6 +259,20 @@ expr_stmt|;
 do|do
 block|{
 comment|/* copy by words */
+name|src
+operator|-=
+sizeof|sizeof
+argument_list|(
+name|word
+argument_list|)
+expr_stmt|;
+name|dst
+operator|-=
+sizeof|sizeof
+argument_list|(
+name|word
+argument_list|)
+expr_stmt|;
 operator|*
 operator|(
 name|word
@@ -272,20 +286,6 @@ name|word
 operator|*
 operator|)
 name|src
-expr_stmt|;
-name|src
-operator|-=
-sizeof|sizeof
-argument_list|(
-name|word
-argument_list|)
-expr_stmt|;
-name|dst
-operator|-=
-sizeof|sizeof
-argument_list|(
-name|word
-argument_list|)
 expr_stmt|;
 block|}
 do|while
