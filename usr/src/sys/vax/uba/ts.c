@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.23	82/02/03	*/
+comment|/*	ts.c	4.24	82/07/13	*/
 end_comment
 
 begin_include
@@ -1774,7 +1774,7 @@ block|}
 comment|/* 	 * The following checks handle boundary cases for operation 	 * on non-raw tapes.  On raw tapes the initialization of 	 * sc->sc_nxrec by tsphys causes them to be skipped normally 	 * (except in the case of retries). 	 */
 if|if
 condition|(
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -1805,7 +1805,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -1858,7 +1858,7 @@ name|sc
 operator|->
 name|sc_nxrec
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -1878,7 +1878,7 @@ operator|->
 name|sc_blkno
 operator|)
 operator|==
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -1970,7 +1970,7 @@ if|if
 condition|(
 name|blkno
 operator|<
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -1988,7 +1988,7 @@ name|tc
 operator|->
 name|c_repcnt
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2012,7 +2012,7 @@ name|c_repcnt
 operator|=
 name|blkno
 operator|-
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2817,7 +2817,7 @@ name|sc
 operator|->
 name|sc_blkno
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2960,7 +2960,7 @@ name|sc
 operator|->
 name|sc_blkno
 operator|>
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2973,7 +2973,7 @@ name|sc
 operator|->
 name|sc_nxrec
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -3002,7 +3002,7 @@ name|sc
 operator|->
 name|sc_blkno
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -3033,7 +3033,7 @@ name|sc
 operator|->
 name|sc_nxrec
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -3229,7 +3229,7 @@ index|]
 expr_stmt|;
 name|a
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|u
 operator|.

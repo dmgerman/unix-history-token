@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.12	82/05/27	*/
+comment|/*	ut.c	4.13	82/07/13	*/
 end_comment
 
 begin_include
@@ -1787,7 +1787,7 @@ block|}
 comment|/* 	 * The following checks boundary conditions for operations 	 * on non-raw tapes.  On raw tapes the initialization of 	 * sc->sc_nxrec by utphys causes them to be skipped normally 	 * (except in the case of retries). 	 */
 if|if
 condition|(
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -1818,7 +1818,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -1872,7 +1872,7 @@ name|sc
 operator|->
 name|sc_nxrec
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -1892,7 +1892,7 @@ operator|->
 name|sc_blkno
 operator|)
 operator|==
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2040,7 +2040,7 @@ if|if
 condition|(
 name|blkno
 operator|<
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2054,7 +2054,7 @@ name|utfc
 operator|=
 name|blkno
 operator|-
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2074,7 +2074,7 @@ name|addr
 operator|->
 name|utfc
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2552,7 +2552,7 @@ name|sc
 operator|->
 name|sc_blkno
 operator|>
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2564,7 +2564,7 @@ name|sc
 operator|->
 name|sc_nxrec
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2590,7 +2590,7 @@ name|sc
 operator|->
 name|sc_blkno
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2618,7 +2618,7 @@ name|sc
 operator|->
 name|sc_nxrec
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2950,7 +2950,7 @@ name|sc
 operator|->
 name|sc_blkno
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -3444,7 +3444,7 @@ name|sc
 operator|->
 name|sc_blkno
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|u
 operator|.
