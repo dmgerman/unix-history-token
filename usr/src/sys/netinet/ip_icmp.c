@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.12	82/01/19	*/
+comment|/*	ip_icmp.c	4.13	82/04/07	*/
 end_comment
 
 begin_include
@@ -285,10 +285,9 @@ argument_list|(
 name|nip
 argument_list|)
 expr_stmt|;
-return|return;
-comment|/* 	 * Discard mbufs of original datagram 	 */
 name|free
 label|:
+comment|/* 	 * Discard mbufs of original datagram 	 */
 name|m_freem
 argument_list|(
 name|dtom
