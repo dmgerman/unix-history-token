@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  *	SLXOS configuration and debug interface  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Derived from:	SunOS 4.x version  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: sicontrol.c,v 1.2 1995/08/14 01:56:17 peter Exp $  */
+comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  *	SLXOS configuration and debug interface  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Derived from:	SunOS 4.x version  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: sicontrol.c,v 1.4 1995/10/01 03:13:33 peter Exp $  */
 end_comment
 
 begin_include
@@ -255,13 +255,13 @@ literal|"int_throttle"
 block|,
 name|txint
 block|,
-literal|"mstate"
-block|,
-name|mstate
-block|,
 literal|"nport"
 block|,
 name|nport
+block|,
+literal|"mstate"
+block|,
+name|mstate
 block|,
 literal|"ccbstat"
 block|,
@@ -325,14 +325,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|U_MSTATE
+name|U_NPORT
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|U_NPORT
+name|U_MSTATE
 value|4
 end_define
 
@@ -348,13 +348,6 @@ define|#
 directive|define
 name|U_STAT_TTY
 value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|U_STAT_PORT
-value|7
 end_define
 
 begin_define
@@ -384,15 +377,13 @@ literal|"int_throttle [newvalue]\n"
 block|,
 literal|"rxint_throttle [newvalue]\n"
 block|,
-literal|"mstate\n"
-block|,
 literal|"nport\n"
+block|,
+literal|"mstate\n"
 block|,
 literal|"ccbstat\n"
 block|,
 literal|"ttystat\n"
-block|,
-literal|"portstat\n"
 block|,
 literal|0
 block|}
@@ -825,11 +816,23 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       sicontrol devname %s"
+literal|"       sicontrol - %s"
 argument_list|,
 name|usage
 index|[
 literal|3
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       sicontrol devname %s"
+argument_list|,
+name|usage
+index|[
+literal|4
 index|]
 argument_list|)
 expr_stmt|;
@@ -840,7 +843,7 @@ operator|=
 operator|&
 name|usage
 index|[
-literal|4
+literal|5
 index|]
 init|;
 operator|*
@@ -853,7 +856,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"                         %s"
+literal|"       sicontrol devname %s"
 argument_list|,
 operator|*
 name|cp
