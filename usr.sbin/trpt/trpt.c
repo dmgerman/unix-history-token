@@ -39,7 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trpt.c	5.14 (Berkeley) 7/1/91"
+literal|"From: @(#)trpt.c	5.14 (Berkeley) 7/1/91"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,6 +272,22 @@ include|#
 directive|include
 file|<paths.h>
 end_include
+
+begin_decl_stmt
+name|struct
+name|tcp_debug
+name|tcp_debug
+index|[
+name|TCP_NDEBUG
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_debx
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
