@@ -15,6 +15,27 @@ directive|define
 name|_LDPART_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|_LDP_LOADED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|_LDP_ERROR
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_LDP_CACHE
+value|1
+end_define
+
 begin_function_decl
 name|int
 name|__part_load_locale

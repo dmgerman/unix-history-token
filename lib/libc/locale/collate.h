@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|COLLATE_H_INCLUDED
+name|_COLLATE_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|COLLATE_H_INCLUDED
+name|_COLLATE_H_
 end_define
 
 begin_include
@@ -102,16 +102,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-name|__collate_version
-index|[
-name|STR_LEN
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|u_char
 name|__collate_substitute_table
 index|[
@@ -149,85 +139,71 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|__BEGIN_DECLS
 name|u_char
 modifier|*
 name|__collate_strdup
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|u_char
 modifier|*
 name|__collate_substitute
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|u_char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|__collate_load_tables
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
+specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|__collate_lookup
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|u_char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|__collate_range_cmp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -235,17 +211,14 @@ directive|ifdef
 name|COLLATE_DEBUG
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|__collate_print_tables
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -262,7 +235,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not COLLATE_H_INCLUDED */
+comment|/* !_COLLATE_H_ */
 end_comment
 
 end_unit
