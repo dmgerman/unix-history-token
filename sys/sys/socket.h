@@ -221,28 +221,6 @@ begin_comment
 comment|/* timestamp received dgram traffic */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SO_DELAYACCEPT
-value|0x1000
-end_define
-
-begin_comment
-comment|/* delay accept until data arrived */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SO_HTTPACCEPT
-value|0x2000
-end_define
-
-begin_comment
-comment|/* delay accept until http request */
-end_comment
-
 begin_comment
 comment|/*  * Additional options, not kept in so_options.  */
 end_comment
