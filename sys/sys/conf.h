@@ -781,8 +781,9 @@ decl_stmt|;
 name|u_int
 name|d_flags
 decl_stmt|;
+comment|/* This following field is deprecated.  Please don't initialize */
 name|int
-name|d_bmaj
+name|d_XXXbmaj
 decl_stmt|;
 block|}
 struct|;
