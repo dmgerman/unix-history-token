@@ -1150,21 +1150,26 @@ begin_comment
 comment|/*  * List of all PCI devices, generation count for the list.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|STAILQ_HEAD
 argument_list|(
-argument|devlist
+name|devlist
 argument_list|,
-argument|pci_devinfo
+name|pci_devinfo
 argument_list|)
-end_macro
-
-begin_expr_stmt
-name|pci_devq
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|devlist
+name|pci_devq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|u_int32_t
 name|pci_generation
 decl_stmt|;

@@ -1141,6 +1141,19 @@ comment|/* port map */
 end_comment
 
 begin_decl_stmt
+name|struct
+name|devlist
+name|pci_devq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int32_t
+name|pci_generation
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|u_int32_t
 name|pci_numdevs
 init|=
