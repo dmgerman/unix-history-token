@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_synch.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_synch.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -37,6 +31,18 @@ begin_include
 include|#
 directive|include
 file|"buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"signalvar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"resourcevar.h"
 end_include
 
 begin_include
@@ -396,8 +402,6 @@ operator|(
 name|p
 operator|!=
 name|curproc
-operator|||
-name|noproc
 operator|)
 operator|&&
 name|p
@@ -709,7 +713,6 @@ name|p
 init|=
 name|curproc
 decl_stmt|;
-comment|/* XXX */
 specifier|register
 name|struct
 name|slpque
@@ -1185,7 +1188,6 @@ name|p
 init|=
 name|curproc
 decl_stmt|;
-comment|/* XXX */
 specifier|register
 name|struct
 name|slpque
