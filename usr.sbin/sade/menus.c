@@ -9994,7 +9994,7 @@ block|,
 block|{
 literal|"6 IBM 866u"
 block|,
-literal|"Ukrainian, IBM encoding"
+literal|"Ukrainian, IBM encoding (use with screenmap)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -10002,7 +10002,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"font8x8=cp866u-8x8,font8x14=cp866u-8x14,font8x16=cp866u-8x16"
+literal|"font8x8=cp866u-8x8,font8x14=cp866u-8x14,font8x16=cp866u-8x16,mousechar_start=3"
 block|}
 block|,
 block|{
@@ -10034,21 +10034,7 @@ literal|"font8x8=iso02-8x8,font8x14=iso02-8x14,font8x16=iso02-8x16"
 block|}
 block|,
 block|{
-literal|"0 KOI8-U"
-block|,
-literal|"Ukrainian, KOI8-U encoding"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"font8x8=koi8-u-8x8,font8x14=koi8-u-8x14,font8x16=koi8-u-8x16"
-block|}
-block|,
-block|{
-literal|"S SWISS"
+literal|"9 SWISS"
 block|,
 literal|"English, better resolution"
 block|,
