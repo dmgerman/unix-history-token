@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.134.2.72 1998/10/28 10:59:45 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.134.2.73 1998/11/15 09:07:37 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -2920,16 +2926,6 @@ ifdef|#
 directive|ifdef
 name|SAVE_USERCONFIG
 comment|/* Snapshot any boot -c changes back to the new kernel */
-if|if
-condition|(
-operator|!
-name|variable_cmp
-argument_list|(
-name|VAR_RELNAME
-argument_list|,
-name|RELEASE_NAME
-argument_list|)
-condition|)
 name|save_userconfig_to_kernel
 argument_list|(
 literal|"/kernel"
@@ -4213,6 +4209,70 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|char
+modifier|*
+name|getRelname
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|static
+name|char
+name|buf
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|int
+name|sz
+init|=
+operator|(
+sizeof|sizeof
+name|buf
+operator|)
+operator|-
+literal|1
+decl_stmt|;
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"kern.osrelease"
+argument_list|,
+name|buf
+argument_list|,
+operator|&
+name|sz
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|buf
+index|[
+name|sz
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+return|return
+name|buf
+return|;
+block|}
+else|else
+return|return
+literal|"<unknown>"
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* Initialize various user-settable values to their defaults */
 end_comment
@@ -4235,7 +4295,8 @@ name|variable_set2
 argument_list|(
 name|VAR_RELNAME
 argument_list|,
-name|RELEASE_NAME
+name|getRelname
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4300,7 +4361,7 @@ name|variable_set2
 argument_list|(
 name|VAR_BROWSER_PACKAGE
 argument_list|,
-name|PACKAGE_LYNX
+literal|"lynx"
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4335,14 +4396,14 @@ name|variable_set2
 argument_list|(
 name|VAR_GATED_PKG
 argument_list|,
-name|PACKAGE_GATED
+literal|"gated"
 argument_list|)
 expr_stmt|;
 name|variable_set2
 argument_list|(
 name|VAR_PCNFSD_PKG
 argument_list|,
-name|PACKAGE_PCNFSD
+literal|"pcnfsd"
 argument_list|)
 expr_stmt|;
 name|variable_set2
