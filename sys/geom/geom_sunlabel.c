@@ -295,7 +295,7 @@ modifier|*
 name|ms
 decl_stmt|;
 name|u_int
-name|secsize
+name|sectorsize
 decl_stmt|,
 name|u
 decl_stmt|,
@@ -418,7 +418,7 @@ break|break;
 name|j
 operator|=
 sizeof|sizeof
-name|secsize
+name|sectorsize
 expr_stmt|;
 name|error
 operator|=
@@ -432,7 +432,7 @@ operator|&
 name|j
 argument_list|,
 operator|&
-name|secsize
+name|sectorsize
 argument_list|)
 expr_stmt|;
 if|if
@@ -440,7 +440,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|secsize
+name|sectorsize
 operator|=
 literal|512
 expr_stmt|;
@@ -450,7 +450,7 @@ literal|"g_sunlabel_taste: error %d Sectors are %d bytes\n"
 argument_list|,
 name|error
 argument_list|,
-name|secsize
+name|sectorsize
 argument_list|)
 expr_stmt|;
 block|}
@@ -505,7 +505,7 @@ name|cp
 argument_list|,
 literal|0
 argument_list|,
-name|secsize
+name|sectorsize
 argument_list|,
 operator|&
 name|error

@@ -538,7 +538,7 @@ literal|512
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"g_bsd_taste: error %d Sectors are %d bytes\n"
+literal|"g_dev_taste: error %d Sectors are %d bytes\n"
 argument_list|,
 name|error
 argument_list|,
@@ -577,7 +577,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"g_error %d Mediasize is %lld bytes\n"
+literal|"g_dev_taste: %d Mediasize is %lld bytes\n"
 argument_list|,
 name|error
 argument_list|,
