@@ -192,6 +192,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ucontext.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/netisr.h>
 end_include
 
@@ -1444,20 +1450,6 @@ argument_list|(
 name|physmem
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialise virtual memory. 	 */
-name|ofmsr
-operator||=
-name|PSL_IR
-operator||
-name|PSL_DR
-expr_stmt|;
-name|pmap_bootstrap
-argument_list|(
-name|startkernel
-argument_list|,
-name|endkernel
-argument_list|)
-expr_stmt|;
 comment|/* 	 * XXX: Initialize the interrupt tables. 	 */
 name|bcopy
 argument_list|(
@@ -1477,7 +1469,7 @@ operator|&
 name|decrsize
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize proc0. 	 */
+comment|/* 	 * Start initializing proc0 and thread0. 	 */
 name|proc_linkup
 argument_list|(
 operator|&
@@ -1497,7 +1489,6 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
-comment|/* proc0.p_md.md_utrap = NULL; */
 name|proc0
 operator|.
 name|p_uarea
@@ -1520,34 +1511,6 @@ name|p_uarea
 operator|->
 name|u_stats
 expr_stmt|;
-name|thread0
-operator|.
-name|td_kstack
-operator|=
-name|kstack0
-expr_stmt|;
-name|thread0
-operator|.
-name|td_pcb
-operator|=
-operator|(
-expr|struct
-name|pcb
-operator|*
-operator|)
-operator|(
-name|thread0
-operator|.
-name|td_kstack
-operator|+
-name|KSTACK_PAGES
-operator|*
-name|PAGE_SIZE
-operator|)
-operator|-
-literal|1
-expr_stmt|;
-comment|/* frame0.tf_tstate = TSTATE_IE | TSTATE_PEF; */
 name|thread0
 operator|.
 name|td_frame
@@ -1607,47 +1570,14 @@ name|thread0
 operator|.
 name|td_pcb
 expr_stmt|;
-comment|/* pc->pc_mid = mid; */
-asm|__asm __volatile("mtsprg 0, %0" :: "r"(pc));
-comment|/* 	 * Map and initialise the message buffer. 	 */
-for|for
-control|(
-name|off
+name|pc
+operator|->
+name|pc_cpuid
 operator|=
 literal|0
-init|;
-name|off
-operator|<
-name|round_page
-argument_list|(
-name|MSGBUF_SIZE
-argument_list|)
-condition|;
-name|off
-operator|+=
-name|PAGE_SIZE
-control|)
-name|pmap_kenter
-argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
-name|msgbufp
-operator|+
-name|off
-argument_list|,
-name|msgbuf_phys
-operator|+
-name|off
-argument_list|)
 expr_stmt|;
-name|msgbufinit
-argument_list|(
-name|msgbufp
-argument_list|,
-name|MSGBUF_SIZE
-argument_list|)
-expr_stmt|;
+comment|/* pc->pc_mid = mid; */
+asm|__asm __volatile("mtsprg 0, %0" :: "r"(pc));
 comment|/* 	 * Initialize mutexes. 	 */
 name|mtx_init
 argument_list|(
@@ -1689,6 +1619,87 @@ name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Initialise virtual memory. 	 */
+name|ofmsr
+operator||=
+name|PSL_IR
+operator||
+name|PSL_DR
+expr_stmt|;
+name|pmap_bootstrap
+argument_list|(
+name|startkernel
+argument_list|,
+name|endkernel
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Finish setting up thread0. 	 */
+name|thread0
+operator|.
+name|td_kstack
+operator|=
+name|kstack0
+expr_stmt|;
+name|thread0
+operator|.
+name|td_pcb
+operator|=
+operator|(
+expr|struct
+name|pcb
+operator|*
+operator|)
+operator|(
+name|thread0
+operator|.
+name|td_kstack
+operator|+
+name|KSTACK_PAGES
+operator|*
+name|PAGE_SIZE
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+comment|/* 	 * Map and initialise the message buffer. 	 */
+for|for
+control|(
+name|off
+operator|=
+literal|0
+init|;
+name|off
+operator|<
+name|round_page
+argument_list|(
+name|MSGBUF_SIZE
+argument_list|)
+condition|;
+name|off
+operator|+=
+name|PAGE_SIZE
+control|)
+name|pmap_kenter
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|msgbufp
+operator|+
+name|off
+argument_list|,
+name|msgbuf_phys
+operator|+
+name|off
+argument_list|)
+expr_stmt|;
+name|msgbufinit
+argument_list|(
+name|msgbufp
+argument_list|,
+name|MSGBUF_SIZE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2865,7 +2876,11 @@ argument_list|(
 name|msr
 operator|&
 operator|~
+operator|(
 name|PSL_EE
+operator||
+name|PSL_RI
+operator|)
 argument_list|)
 expr_stmt|;
 name|extint_call
