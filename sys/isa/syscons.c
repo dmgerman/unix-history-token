@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1994 Søren Schmidt  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: syscons.c,v 1.71 1994/10/23 21:27:36 wollman Exp $  */
+comment|/*-  * Copyright (c) 1992-1994 Søren Schmidt  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: syscons.c,v 1.72 1994/10/24 21:36:38 wollman Exp $  */
 end_comment
 
 begin_include
@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/console.h>
 end_include
 
@@ -196,6 +202,37 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* vm things */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISMAPPED
+parameter_list|(
+name|pa
+parameter_list|,
+name|width
+parameter_list|)
+define|\
+value|(((pa)<= (u_long)0x1000 - (width)) \ 	 || ((pa)>= 0xa0000&& (pa)<= 0x100000 - (width)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|pa_to_va
+parameter_list|(
+name|pa
+parameter_list|)
+value|(KERNBASE + (pa))
+end_define
+
+begin_comment
+comment|/* works if ISMAPPED(pa...) */
+end_comment
 
 begin_comment
 comment|/* status flags */
@@ -1065,6 +1102,16 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|video_mode_ptr
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* function prototypes */
 end_comment
@@ -1907,14 +1954,14 @@ begin_define
 define|#
 directive|define
 name|MONO_BUF
-value|(KERNBASE+0xB0000)
+value|pa_to_va(0xB0000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CGA_BUF
-value|(KERNBASE+0xB8000)
+value|pa_to_va(0xB8000)
 end_define
 
 begin_decl_stmt
@@ -1942,14 +1989,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|video_mode_ptr
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -4066,6 +4105,10 @@ if|if
 condition|(
 operator|!
 name|crtc_vga
+operator|||
+name|video_mode_ptr
+operator|==
+name|NULL
 condition|)
 return|return
 name|ENXIO
@@ -12782,10 +12825,115 @@ operator|==
 literal|7
 condition|)
 block|{
+name|u_long
+name|pa
+decl_stmt|;
+name|u_long
+name|segoff
+decl_stmt|;
 name|crtc_vga
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 		 * Get the BIOS video mode pointer. 		 */
+name|segoff
+operator|=
+operator|*
+operator|(
+name|u_long
+operator|*
+operator|)
+name|pa_to_va
+argument_list|(
+literal|0x4a8
+argument_list|)
+expr_stmt|;
+name|pa
+operator|=
+operator|(
+operator|(
+operator|(
+name|segoff
+operator|&
+literal|0xffff0000
+operator|)
+operator|>>
+literal|12
+operator|)
+operator|+
+operator|(
+name|segoff
+operator|&
+literal|0xffff
+operator|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ISMAPPED
+argument_list|(
+name|pa
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_long
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|segoff
+operator|=
+operator|*
+operator|(
+name|u_long
+operator|*
+operator|)
+name|pa_to_va
+argument_list|(
+name|pa
+argument_list|)
+expr_stmt|;
+name|pa
+operator|=
+operator|(
+operator|(
+operator|(
+name|segoff
+operator|&
+literal|0xffff0000
+operator|)
+operator|>>
+literal|12
+operator|)
+operator|+
+operator|(
+name|segoff
+operator|&
+literal|0xffff
+operator|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ISMAPPED
+argument_list|(
+name|pa
+argument_list|,
+literal|64
+argument_list|)
+condition|)
+name|video_mode_ptr
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|pa_to_va
+argument_list|(
+name|pa
+argument_list|)
+expr_stmt|;
+block|}
 if|#
 directive|if
 name|defined
@@ -15010,6 +15158,10 @@ if|if
 condition|(
 operator|!
 name|crtc_vga
+operator|||
+name|video_mode_ptr
+operator|==
+name|NULL
 condition|)
 block|{
 comment|/* (re)activate cursor */
@@ -15248,11 +15400,6 @@ name|M_ENH_C80x25
 case|:
 name|modetable
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
 name|video_mode_ptr
 operator|+
 operator|(
@@ -15261,7 +15408,6 @@ operator|->
 name|mode
 operator|*
 literal|64
-operator|)
 operator|)
 expr_stmt|;
 name|setup_mode
@@ -15998,11 +16144,12 @@ name|direction
 condition|)
 operator|*
 operator|(
-operator|(
 name|char
 operator|*
 operator|)
-name|atdevbase
+name|pa_to_va
+argument_list|(
+name|VIDEOMEM
 operator|+
 operator|(
 name|segment
@@ -16017,7 +16164,7 @@ literal|32
 operator|)
 operator|+
 name|line
-operator|)
+argument_list|)
 operator|=
 name|font
 index|[
@@ -16044,11 +16191,12 @@ index|]
 operator|=
 operator|*
 operator|(
-operator|(
 name|char
 operator|*
 operator|)
-name|atdevbase
+name|pa_to_va
+argument_list|(
+name|VIDEOMEM
 operator|+
 operator|(
 name|segment
@@ -16063,7 +16211,7 @@ literal|32
 operator|)
 operator|+
 name|line
-operator|)
+argument_list|)
 expr_stmt|;
 comment|/* setup vga for text mode again */
 name|s
