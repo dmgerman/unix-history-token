@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_domain.c	5.8	83/02/10	*/
+comment|/*	uipc_domain.c	5.9	83/03/15	*/
 end_comment
 
 begin_include
@@ -252,6 +252,10 @@ operator|++
 control|)
 if|if
 condition|(
+name|pr
+operator|->
+name|pr_type
+operator|&&
 name|pr
 operator|->
 name|pr_type
