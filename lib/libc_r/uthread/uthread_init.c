@@ -798,6 +798,8 @@ name|_pthread_page_size
 expr_stmt|;
 name|sched_stack_size
 operator|=
+literal|4
+operator|*
 name|_pthread_page_size
 expr_stmt|;
 name|_pthread_attr_default
