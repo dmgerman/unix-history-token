@@ -3386,6 +3386,10 @@ name|PFIL_HOOKS
 comment|/* 	 * NetBSD-style generic packet filter, pfil(9), hooks. 	 * Enables ipf(8) in bridging. 	 */
 if|if
 condition|(
+name|pfh
+operator|!=
+name|NULL
+operator|&&
 name|m0
 operator|->
 name|m_pkthdr
@@ -3445,20 +3449,8 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
-name|pfh
-condition|;
-name|pfh
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|pfh
-argument_list|,
-name|pfil_link
-argument_list|)
-control|)
+do|do
+block|{
 if|if
 condition|(
 name|pfh
@@ -3531,6 +3523,19 @@ operator|*
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+do|while
+condition|(
+name|pfh
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|pfh
+argument_list|,
+name|pfil_link
+argument_list|)
+condition|)
+do|;
 comment|/* 	     * If we get here, the firewall has passed the pkt, but the mbuf 	     * pointer might have changed. Restore ip and the fields ntohs()'d. 	     */
 name|ip
 operator|=
