@@ -726,7 +726,7 @@ break|break;
 default|default :
 name|error
 operator|=
-name|EINVAL
+name|EOPNOTSUPP
 expr_stmt|;
 break|break;
 block|}

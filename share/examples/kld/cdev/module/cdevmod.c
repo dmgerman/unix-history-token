@@ -240,7 +240,7 @@ default|default:
 comment|/* we only understand load/unload*/
 name|err
 operator|=
-name|EINVAL
+name|EOPNOTSUPP
 expr_stmt|;
 break|break;
 block|}
