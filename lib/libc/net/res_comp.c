@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_comp.c,v 1.12 1997/06/27 08:22:02 peter Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -228,6 +228,20 @@ expr_stmt|;
 name|cp
 operator|=
 name|comp_dn
+expr_stmt|;
+if|if
+condition|(
+name|length
+operator|>
+name|MAXHOSTNAMELEN
+operator|-
+literal|1
+condition|)
+name|length
+operator|=
+name|MAXHOSTNAMELEN
+operator|-
+literal|1
 expr_stmt|;
 name|eom
 operator|=
