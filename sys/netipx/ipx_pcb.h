@@ -69,10 +69,6 @@ name|ipx_addr
 name|ipxp_lastdst
 decl_stmt|;
 comment|/* validate cached route for dg socks*/
-name|long
-name|ipxp_notify_param
-decl_stmt|;
-comment|/* extra info passed via ipx_pcbnotify*/
 name|short
 name|ipxp_flags
 decl_stmt|;
@@ -320,35 +316,6 @@ name|lport
 parameter_list|,
 name|int
 name|wildp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ipx_pcbnotify
-parameter_list|(
-name|struct
-name|ipx_addr
-modifier|*
-name|dst
-parameter_list|,
-name|int
-name|errno
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|notify
-function_decl|)
-parameter_list|(
-name|struct
-name|ipxpcb
-modifier|*
-parameter_list|)
-parameter_list|,
-name|long
-name|param
 parameter_list|)
 function_decl|;
 end_function_decl
