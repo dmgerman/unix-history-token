@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.31 1998/03/20 02:33:40 kato Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.32 1998/04/05 13:10:11 ache Exp $ */
 end_comment
 
 begin_comment
@@ -1243,23 +1243,12 @@ name|magic
 operator|!=
 name|MSDOSFS_ARGSMAGIC
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Old mount_msdosfs, flags=%d\n"
-argument_list|,
-name|args
-operator|.
-name|flags
-argument_list|)
-expr_stmt|;
 name|args
 operator|.
 name|flags
 operator|=
 literal|0
 expr_stmt|;
-block|}
 comment|/* 	 * If updating, check whether changing from read-only to 	 * read/write; if there is no device name, that's all we do. 	 */
 if|if
 condition|(
@@ -1398,6 +1387,8 @@ argument_list|(
 name|devvp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
 argument_list|,
 name|p
 argument_list|)
