@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)random.c	8.1 (Berkeley) %G%"
+literal|"@(#)random.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,7 +50,7 @@ file|<stdlib.h>
 end_include
 
 begin_comment
-comment|/*  * random.c:  *  * An improved random number generation package.  In addition to the standard  * rand()/srand() like interface, this package also has a special state info  * interface.  The initstate() routine is called with a seed, an array of  * bytes, and a count of how many bytes are being passed in; this array is  * then initialized to contain information for random number generation with  * that much state information.  Good sizes for the amount of state  * information are 32, 64, 128, and 256 bytes.  The state can be switched by  * calling the setstate() routine with the same array as was initiallized  * with initstate().  By default, the package runs with 128 bytes of state  * information and generates far better random numbers than a linear  * congruential generator.  If the amount of state information is less than  * 32 bytes, a simple linear congruential R.N.G. is used.  *  * Internally, the state information is treated as an array of longs; the  * zeroeth element of the array is the type of R.N.G. being used (small  * integer); the remainder of the array is the state information for the  * R.N.G.  Thus, 32 bytes of state information will give 7 longs worth of  * state information, which will allow a degree seven polynomial.  (Note:  * the zeroeth word of state information also has some other information  * stored in it -- see setstate() for details).  *   * The random number generation technique is a linear feedback shift register  * approach, employing trinomials (since there are fewer terms to sum up that  * way).  In this approach, the least significant bit of all the numbers in  * the state table will act as a linear feedback shift register, and will  * have period 2^deg - 1 (where deg is the degree of the polynomial being  * used, assuming that the polynomial is irreducible and primitive).  The  * higher order bits will have longer periods, since their values are also  * influenced by pseudo-random carries out of the lower bits.  The total  * period of the generator is approximately deg*(2**deg - 1); thus doubling  * the amount of state information has a vast influence on the period of the  * generator.  Note: the deg*(2**deg - 1) is an approximation only good for  * large deg, when the period of the shift register is the dominant factor.  * With deg equal to seven, the period is actually much longer than the  * 7*(2**7 - 1) predicted by this formula.  */
+comment|/*  * random.c:  *  * An improved random number generation package.  In addition to the standard  * rand()/srand() like interface, this package also has a special state info  * interface.  The initstate() routine is called with a seed, an array of  * bytes, and a count of how many bytes are being passed in; this array is  * then initialized to contain information for random number generation with  * that much state information.  Good sizes for the amount of state  * information are 32, 64, 128, and 256 bytes.  The state can be switched by  * calling the setstate() routine with the same array as was initiallized  * with initstate().  By default, the package runs with 128 bytes of state  * information and generates far better random numbers than a linear  * congruential generator.  If the amount of state information is less than  * 32 bytes, a simple linear congruential R.N.G. is used.  *  * Internally, the state information is treated as an array of longs; the  * zeroeth element of the array is the type of R.N.G. being used (small  * integer); the remainder of the array is the state information for the  * R.N.G.  Thus, 32 bytes of state information will give 7 longs worth of  * state information, which will allow a degree seven polynomial.  (Note:  * the zeroeth word of state information also has some other information  * stored in it -- see setstate() for details).  *   * The random number generation technique is a linear feedback shift register  * approach, employing trinomials (since there are fewer terms to sum up that  * way).  In this approach, the least significant bit of all the numbers in  * the state table will act as a linear feedback shift register, and will  * have period 2^deg - 1 (where deg is the degree of the polynomial being  * used, assuming that the polynomial is irreducible and primitive).  The  * higher order bits will have longer periods, since their values are also  * influenced by pseudo-random carries out of the lower bits.  The total  * period of the generator is approximately deg*(2**deg - 1); thus doubling  * the amount of state information has a vast influence on the period of the  * generator.  Note: the deg*(2**deg - 1) is an approximation only good for  * large deg, when the period of the shift register is the dominant factor.  * With deg equal to seven, the period is actually much longer than the  * 7*(2**7 - 1) predicted by this formula.  *  * Modified 28 December 1994 by Jacob S. Rosenberg.  * The following changes have been made:  * All references to the type u_int have been changed to unsigned long.  * All references to type int have been changed to type long.  Other  * cleanups have been made as well.  A warning for both initstate and  * setstate has been inserted to the effect that on Sparc platforms  * the 'arg_state' variable must be forced to begin on word boundaries.  * This can be easily done by casting a long integer array to char *.  * The overall logic has been left STRICTLY alone.  This software was  * tested on both a VAX and Sun SpacsStation with exactly the same  * results.  The new version and the original give IDENTICAL results.  * The new version is somewhat faster than the original.  As the  * documentation says:  "By default, the package runs with 128 bytes of  * state information and generates far better random numbers than a linear  * congruential generator.  If the amount of state information is less than  * 32 bytes, a simple linear congruential R.N.G. is used."  For a buffer of  * 128 bytes, this new version runs about 19 percent faster and for a 16  * byte buffer it is about 5 percent faster.  */
 end_comment
 
 begin_comment
@@ -234,7 +234,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|degrees
 index|[
 name|MAX_TYPES
@@ -256,7 +256,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|seps
 index|[
 name|MAX_TYPES
@@ -412,7 +412,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|rand_type
 init|=
 name|TYPE_3
@@ -421,7 +421,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|rand_deg
 init|=
 name|DEG_3
@@ -430,7 +430,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|rand_sep
 init|=
 name|SEP_3
@@ -463,15 +463,14 @@ name|srandom
 parameter_list|(
 name|x
 parameter_list|)
-name|u_int
+name|unsigned
+name|long
 name|x
 decl_stmt|;
 block|{
 specifier|register
-name|int
+name|long
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 if|if
 condition|(
@@ -488,10 +487,6 @@ name|x
 expr_stmt|;
 else|else
 block|{
-name|j
-operator|=
-literal|1
-expr_stmt|;
 name|state
 index|[
 literal|0
@@ -570,7 +565,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * initstate:  *  * Initialize the state information in the given array of n bytes for future  * random number generation.  Based on the number of bytes we are given, and  * the break values for the different R.N.G.'s, we choose the best (largest)  * one we can and set things up for it.  srandom() is then called to  * initialize the state information.  *   * Note that on return from srandom(), we set state[-1] to be the type  * multiplexed with the current value of the rear pointer; this is so  * successive calls to initstate() won't lose this information and will be  * able to restart with setstate().  *   * Note: the first thing we do is save the current state, if any, just like  * setstate() so that it doesn't matter when initstate is called.  *  * Returns a pointer to the old state.  */
+comment|/*  * initstate:  *  * Initialize the state information in the given array of n bytes for future  * random number generation.  Based on the number of bytes we are given, and  * the break values for the different R.N.G.'s, we choose the best (largest)  * one we can and set things up for it.  srandom() is then called to  * initialize the state information.  *   * Note that on return from srandom(), we set state[-1] to be the type  * multiplexed with the current value of the rear pointer; this is so  * successive calls to initstate() won't lose this information and will be  * able to restart with setstate().  *   * Note: the first thing we do is save the current state, if any, just like  * setstate() so that it doesn't matter when initstate is called.  *  * Returns a pointer to the old state.  *  * Note: The Sparc platform requires that arg_state begin on a long  * word boundary; otherwise a bus error will occur. Even so, lint will  * complain about mis-alignment, but you should disregard these messages.  */
 end_comment
 
 begin_function
@@ -584,7 +579,8 @@ name|arg_state
 parameter_list|,
 name|n
 parameter_list|)
-name|u_int
+name|unsigned
+name|long
 name|seed
 decl_stmt|;
 comment|/* seed for R.N.G. */
@@ -593,7 +589,7 @@ modifier|*
 name|arg_state
 decl_stmt|;
 comment|/* pointer to state array */
-name|int
+name|long
 name|n
 decl_stmt|;
 comment|/* # bytes of state info */
@@ -615,6 +611,17 @@ operator|-
 literal|1
 index|]
 operator|)
+decl_stmt|;
+specifier|register
+name|long
+modifier|*
+name|long_arg_state
+init|=
+operator|(
+name|long
+operator|*
+operator|)
+name|arg_state
 decl_stmt|;
 if|if
 condition|(
@@ -661,7 +668,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"random: not enough state (%d bytes); ignored.\n"
+literal|"random: not enough state (%ld bytes); ignored.\n"
 argument_list|,
 name|n
 argument_list|)
@@ -772,18 +779,14 @@ expr_stmt|;
 block|}
 name|state
 operator|=
-operator|&
-operator|(
-operator|(
 operator|(
 name|long
 operator|*
 operator|)
-name|arg_state
-operator|)
-index|[
+operator|(
+name|long_arg_state
+operator|+
 literal|1
-index|]
 operator|)
 expr_stmt|;
 comment|/* first location */
@@ -807,19 +810,17 @@ name|rand_type
 operator|==
 name|TYPE_0
 condition|)
-name|state
+name|long_arg_state
 index|[
-operator|-
-literal|1
+literal|0
 index|]
 operator|=
 name|rand_type
 expr_stmt|;
 else|else
-name|state
+name|long_arg_state
 index|[
-operator|-
-literal|1
+literal|0
 index|]
 operator|=
 name|MAX_TYPES
@@ -841,7 +842,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setstate:  *  * Restore the state from the given state array.  *  * Note: it is important that we also remember the locations of the pointers  * in the current state information, and restore the locations of the pointers  * from the old state information.  This is done by multiplexing the pointer  * location into the zeroeth word of the state information.  *  * Note that due to the order in which things are done, it is OK to call  * setstate() with the same state as the current state.  *  * Returns a pointer to the old state information.  */
+comment|/*  * setstate:  *  * Restore the state from the given state array.  *  * Note: it is important that we also remember the locations of the pointers  * in the current state information, and restore the locations of the pointers  * from the old state information.  This is done by multiplexing the pointer  * location into the zeroeth word of the state information.  *  * Note that due to the order in which things are done, it is OK to call  * setstate() with the same state as the current state.  *  * Returns a pointer to the old state information.  *  * Note: The Sparc platform requires that arg_state begin on a long  * word boundary; otherwise a bus error will occur. Even so, lint will  * complain about mis-alignment, but you should disregard these messages.  */
 end_comment
 
 begin_function
@@ -855,6 +856,7 @@ name|char
 modifier|*
 name|arg_state
 decl_stmt|;
+comment|/* pointer to state array */
 block|{
 specifier|register
 name|long
@@ -868,7 +870,7 @@ operator|)
 name|arg_state
 decl_stmt|;
 specifier|register
-name|int
+name|long
 name|type
 init|=
 name|new_state
@@ -879,7 +881,7 @@ operator|%
 name|MAX_TYPES
 decl_stmt|;
 specifier|register
-name|int
+name|long
 name|rear
 init|=
 name|new_state
@@ -990,11 +992,15 @@ expr_stmt|;
 block|}
 name|state
 operator|=
-operator|&
+operator|(
+name|long
+operator|*
+operator|)
+operator|(
 name|new_state
-index|[
+operator|+
 literal|1
-index|]
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1052,8 +1058,17 @@ name|long
 name|random
 parameter_list|()
 block|{
+specifier|register
 name|long
 name|i
+decl_stmt|;
+specifier|register
+name|long
+modifier|*
+name|f
+decl_stmt|,
+modifier|*
+name|r
 decl_stmt|;
 if|if
 condition|(
@@ -1061,18 +1076,23 @@ name|rand_type
 operator|==
 name|TYPE_0
 condition|)
+block|{
 name|i
 operator|=
 name|state
 index|[
 literal|0
 index|]
-operator|=
-operator|(
+expr_stmt|;
 name|state
 index|[
 literal|0
 index|]
+operator|=
+name|i
+operator|=
+operator|(
+name|i
 operator|*
 literal|1103515245
 operator|+
@@ -1081,19 +1101,29 @@ operator|)
 operator|&
 literal|0x7fffffff
 expr_stmt|;
+block|}
 else|else
 block|{
-operator|*
+comment|/* 		 * Use local variables rather than static variables for speed. 		 */
+name|f
+operator|=
 name|fptr
+expr_stmt|;
+name|r
+operator|=
+name|rptr
+expr_stmt|;
+operator|*
+name|f
 operator|+=
 operator|*
-name|rptr
+name|r
 expr_stmt|;
 name|i
 operator|=
 operator|(
 operator|*
-name|fptr
+name|f
 operator|>>
 literal|1
 operator|)
@@ -1104,30 +1134,40 @@ comment|/* chucking least random bit */
 if|if
 condition|(
 operator|++
-name|fptr
+name|f
 operator|>=
 name|end_ptr
 condition|)
 block|{
-name|fptr
+name|f
 operator|=
 name|state
 expr_stmt|;
 operator|++
-name|rptr
+name|r
 expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
 operator|++
-name|rptr
+name|r
 operator|>=
 name|end_ptr
 condition|)
-name|rptr
+block|{
+name|r
 operator|=
 name|state
+expr_stmt|;
+block|}
+name|fptr
+operator|=
+name|f
+expr_stmt|;
+name|rptr
+operator|=
+name|r
 expr_stmt|;
 block|}
 return|return
