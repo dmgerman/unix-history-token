@@ -210,7 +210,7 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -225,7 +225,7 @@ operator|,
 name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|,
 name|int
 operator|,
@@ -293,7 +293,7 @@ specifier|const
 name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|,
 name|int
 operator|)
@@ -310,7 +310,7 @@ specifier|const
 name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|,
 name|int
 operator|,
