@@ -3981,13 +3981,10 @@ argument_list|(
 name|old
 argument_list|)
 expr_stmt|;
-name|dst
-operator|=
-name|gate
+name|old
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX??? */
 block|}
 comment|/* 	 * If there is already a gwroute, it's now almost definitly wrong 	 * so drop it. 	 */
 if|if
