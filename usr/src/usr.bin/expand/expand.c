@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)expand.c	4.1 (Berkeley) %G%"
+literal|"@(#)expand.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -479,6 +479,8 @@ operator|<=
 name|tabstops
 index|[
 name|nstops
+operator|-
+literal|1
 index|]
 condition|)
 goto|goto
