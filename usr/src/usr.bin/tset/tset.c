@@ -8,7 +8,7 @@ name|char
 name|id_tset
 index|[]
 init|=
-literal|"@(#)tset.c	1.2"
+literal|"@(#)tset.c	1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2971,10 +2971,14 @@ name|bufp
 operator|-
 literal|8
 argument_list|,
-literal|"NOTHING=nothing"
+literal|"NOTHING"
 argument_list|)
 expr_stmt|;
 end_if
+
+begin_comment
+comment|/* overwrite only "TERMCAP" */
+end_comment
 
 begin_comment
 comment|/* get current idea of terminal type from environment */
@@ -6402,12 +6406,6 @@ name|b
 expr_stmt|;
 while|while
 condition|(
-operator|*
-name|p
-operator|&&
-operator|*
-name|q
-operator|&&
 operator|(
 operator|*
 name|p
