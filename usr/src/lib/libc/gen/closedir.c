@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)closedir.c	8.1 (Berkeley) %G%"
+literal|"@(#)closedir.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,16 @@ block|{
 name|int
 name|fd
 decl_stmt|;
+name|seekdir
+argument_list|(
+name|dirp
+argument_list|,
+name|dirp
+operator|->
+name|dd_rewind
+argument_list|)
+expr_stmt|;
+comment|/* free seekdir storage */
 name|fd
 operator|=
 name|dirp
