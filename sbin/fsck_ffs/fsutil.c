@@ -143,24 +143,6 @@ begin_comment
 comment|/* Disk cache statistics */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|void
-name|rwerror
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-name|mesg
-operator|,
-name|ufs_daddr_t
-name|blk
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|ftypeok
@@ -280,9 +262,15 @@ operator|&&
 operator|(
 name|nflag
 operator|||
+operator|(
 name|fswritefd
 operator|<
 literal|0
+operator|&&
+name|bkgrdflag
+operator|==
+literal|0
+operator|)
 operator|)
 condition|)
 block|{
@@ -1071,6 +1059,26 @@ operator|->
 name|b_dirty
 condition|)
 return|return;
+name|bp
+operator|->
+name|b_dirty
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|fswritefd
+operator|<
+literal|0
+condition|)
+block|{
+name|pfatal
+argument_list|(
+literal|"WRITING IN READ_ONLY MODE.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|bp
@@ -1103,12 +1111,6 @@ name|bp
 operator|->
 name|b_bno
 argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_dirty
-operator|=
-literal|0
 expr_stmt|;
 name|bp
 operator|->
@@ -1228,7 +1230,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|rwerror
 parameter_list|(
@@ -1257,7 +1258,7 @@ argument_list|)
 expr_stmt|;
 name|pfatal
 argument_list|(
-literal|"CANNOT %s: BLK %ld"
+literal|"CANNOT %s: %ld"
 argument_list|,
 name|mesg
 argument_list|,
@@ -1309,6 +1310,125 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+name|bkgrdflag
+condition|)
+block|{
+name|unlink
+argument_list|(
+name|snapname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|!
+operator|(
+name|sblock
+operator|.
+name|fs_flags
+operator|&
+name|FS_UNCLEAN
+operator|)
+operator|)
+operator|!=
+name|markclean
+condition|)
+block|{
+name|cmd
+operator|.
+name|value
+operator|=
+name|FS_UNCLEAN
+expr_stmt|;
+name|cmd
+operator|.
+name|size
+operator|=
+name|markclean
+condition|?
+operator|-
+literal|1
+else|:
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"vfs.ffs.setflags"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|cmd
+argument_list|,
+sizeof|sizeof
+name|cmd
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|rwerror
+argument_list|(
+literal|"SET FILESYSTEM FLAGS"
+argument_list|,
+name|FS_UNCLEAN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|preen
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n***** FILE SYSTEM MARKED %s *****\n"
+argument_list|,
+name|markclean
+condition|?
+literal|"CLEAN"
+else|:
+literal|"DIRTY"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|markclean
+condition|)
+name|rerun
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|preen
+operator|&&
+operator|!
+name|markclean
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n***** FILE SYSTEM STILL DIRTY *****\n"
+argument_list|)
+expr_stmt|;
+name|rerun
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
 name|fswritefd
 operator|<
 literal|0
@@ -1343,6 +1463,10 @@ operator|!=
 name|SBOFF
 operator|/
 name|dev_bsize
+operator|&&
+name|cursnapshot
+operator|==
+literal|0
 operator|&&
 operator|!
 name|preen
@@ -1479,6 +1603,10 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|cursnapshot
+operator|==
+literal|0
+operator|&&
 name|sblock
 operator|.
 name|fs_clean
@@ -1663,7 +1791,7 @@ literal|0
 condition|)
 name|rwerror
 argument_list|(
-literal|"SEEK"
+literal|"SEEK BLK"
 argument_list|,
 name|blk
 argument_list|)
@@ -1692,7 +1820,7 @@ operator|)
 return|;
 name|rwerror
 argument_list|(
-literal|"READ"
+literal|"READ BLK"
 argument_list|,
 name|blk
 argument_list|)
@@ -1712,7 +1840,7 @@ literal|0
 condition|)
 name|rwerror
 argument_list|(
-literal|"SEEK"
+literal|"SEEK BLK"
 argument_list|,
 name|blk
 argument_list|)
@@ -1929,7 +2057,7 @@ literal|0
 condition|)
 name|rwerror
 argument_list|(
-literal|"SEEK"
+literal|"SEEK BLK"
 argument_list|,
 name|blk
 argument_list|)
@@ -1964,7 +2092,7 @@ literal|0
 expr_stmt|;
 name|rwerror
 argument_list|(
-literal|"WRITE"
+literal|"WRITE BLK"
 argument_list|,
 name|blk
 argument_list|)
@@ -1984,7 +2112,7 @@ literal|0
 condition|)
 name|rwerror
 argument_list|(
-literal|"SEEK"
+literal|"SEEK BLK"
 argument_list|,
 name|blk
 argument_list|)

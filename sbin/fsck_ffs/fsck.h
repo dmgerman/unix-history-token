@@ -337,7 +337,8 @@ name|dirty
 parameter_list|(
 name|bp
 parameter_list|)
-value|(bp)->b_dirty = 1
+define|\
+value|if (fswritefd< 0) \ 		pfatal("SETTING DIRTY FLAG IN READ_ONLY MODE\n"); \ 	else \ 		(bp)->b_dirty = 1
 end_define
 
 begin_define
@@ -356,7 +357,7 @@ define|#
 directive|define
 name|sbdirty
 parameter_list|()
-value|sblk.b_dirty = 1
+value|dirty(&sblk)
 end_define
 
 begin_define
@@ -364,7 +365,7 @@ define|#
 directive|define
 name|cgdirty
 parameter_list|()
-value|cgblk.b_dirty = 1
+value|dirty(&cgblk)
 end_define
 
 begin_define
@@ -657,6 +658,106 @@ begin_comment
 comment|/* number of directories we actually found */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MIBSIZE
+value|3
+end_define
+
+begin_comment
+comment|/* size of fsck sysctl MIBs */
+end_comment
+
+begin_decl_stmt
+name|int
+name|adjrefcnt
+index|[
+name|MIBSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MIB command to adjust inode reference cnt */
+end_comment
+
+begin_decl_stmt
+name|int
+name|adjblkcnt
+index|[
+name|MIBSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MIB command to adjust inode block count */
+end_comment
+
+begin_decl_stmt
+name|int
+name|freefiles
+index|[
+name|MIBSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MIB command to free a set of files */
+end_comment
+
+begin_decl_stmt
+name|int
+name|freedirs
+index|[
+name|MIBSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MIB command to free a set of directories */
+end_comment
+
+begin_decl_stmt
+name|int
+name|freeblks
+index|[
+name|MIBSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MIB command to free a set of data blocks */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|fsck_cmd
+name|cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sysctl filesystem update commands */
+end_comment
+
+begin_decl_stmt
+name|char
+name|snapname
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* when doing snapshots, the name of the file */
+end_comment
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -716,6 +817,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* assume a yes response */
+end_comment
+
+begin_decl_stmt
+name|int
+name|bkgrdflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use a snapshot to run on an active system */
 end_comment
 
 begin_decl_stmt
@@ -826,16 +937,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* cleared if unresolved changes => not clean */
-end_comment
-
-begin_decl_stmt
-name|int
-name|markclean
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mark file system clean when done */
 end_comment
 
 begin_decl_stmt
@@ -2012,6 +2113,23 @@ operator|(
 name|char
 operator|*
 name|question
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|rwerror
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|mesg
+operator|,
+name|ufs_daddr_t
+name|blk
 operator|)
 argument_list|)
 decl_stmt|;

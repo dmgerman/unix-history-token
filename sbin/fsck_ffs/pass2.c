@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/ffs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -2569,6 +2575,13 @@ argument_list|,
 name|namebuf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cursnapshot
+operator|!=
+literal|0
+condition|)
+break|break;
 if|if
 condition|(
 name|preen

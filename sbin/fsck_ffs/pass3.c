@@ -211,7 +211,11 @@ continue|continue;
 comment|/* 		 * If we are running with soft updates and we come 		 * across unreferenced directories, we just leave 		 * them in DSTATE which will cause them to be pitched 		 * in pass 4. 		 */
 if|if
 condition|(
+operator|(
 name|preen
+operator|||
+name|bkgrdflag
+operator|)
 operator|&&
 name|resolved
 operator|&&

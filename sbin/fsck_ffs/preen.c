@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/ffs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
