@@ -1311,15 +1311,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|pca_initialized
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -2476,20 +2467,6 @@ condition|)
 return|return
 name|ENXIO
 return|;
-if|if
-condition|(
-operator|!
-name|pca_initialized
-condition|)
-block|{
-name|pca_init
-argument_list|()
-expr_stmt|;
-name|pca_initialized
-operator|=
-literal|1
-expr_stmt|;
-block|}
 comment|/* audio device can only be open by one process */
 if|if
 condition|(
