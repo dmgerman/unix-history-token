@@ -759,16 +759,6 @@ name|lookup
 parameter_list|)
 block|{
 name|Elf_Addr
-name|relocbase
-init|=
-operator|(
-name|Elf_Addr
-operator|)
-name|lf
-operator|->
-name|address
-decl_stmt|;
-name|Elf_Addr
 modifier|*
 name|where
 decl_stmt|;
