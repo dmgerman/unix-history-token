@@ -2179,6 +2179,23 @@ operator|==
 name|NULL
 condition|)
 return|return;
+comment|/* ACPI already active */
+if|if
+condition|(
+name|devclass_get_softc
+argument_list|(
+name|devclass_find
+argument_list|(
+literal|"ACPI"
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+return|return;
+comment|/* get count of PnP devices */
 name|bzero
 argument_list|(
 operator|&
