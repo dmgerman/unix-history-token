@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	upmaptype.c	4.3	83/02/21	*/
+comment|/*	upmaptype.c	4.4	83/03/10	*/
 end_comment
 
 begin_comment
@@ -311,7 +311,7 @@ name|type
 operator|=
 name|st
 operator|-
-name|st
+name|upst
 expr_stmt|;
 break|break;
 block|}
