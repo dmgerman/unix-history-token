@@ -33,7 +33,7 @@ name|BARBIT
 parameter_list|(
 name|RID
 parameter_list|)
-value|(1<<((RID)-CARDBUS_BASE0_REG)/4)
+value|(1<<(((RID)-CARDBUS_BASE0_REG)/4))
 block|}
 struct|;
 end_struct
