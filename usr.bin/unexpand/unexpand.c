@@ -68,6 +68,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -75,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_include
@@ -180,6 +192,13 @@ name|char
 modifier|*
 name|filename
 decl_stmt|;
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|nstops
 operator|=
 literal|1
@@ -725,6 +744,13 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isprint
+argument_list|(
+name|ch
+argument_list|)
+condition|)
 name|ocol
 operator|++
 operator|,
@@ -921,10 +947,16 @@ name|cp
 operator|!=
 literal|','
 operator|&&
+operator|!
+name|isblank
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
-operator|!=
-literal|' '
+argument_list|)
 condition|)
 name|errx
 argument_list|(

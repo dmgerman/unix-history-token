@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -167,6 +173,13 @@ decl_stmt|;
 name|int
 name|rval
 decl_stmt|;
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 comment|/* handle obsolete syntax */
 while|while
 condition|(
@@ -186,6 +199,10 @@ literal|'-'
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|argv
 index|[
 literal|1
@@ -503,6 +520,13 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isprint
+argument_list|(
+name|c
+argument_list|)
+condition|)
 name|column
 operator|++
 expr_stmt|;
@@ -673,10 +697,16 @@ name|cp
 operator|!=
 literal|','
 operator|&&
+operator|!
+name|isblank
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
-operator|!=
-literal|' '
+argument_list|)
 condition|)
 name|errx
 argument_list|(
