@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * $Id: $  */
+comment|/*-  * $Id: syscons_pc98.c,v 1.1 1999/06/24 10:51:40 kato Exp $  */
 end_comment
 
 begin_include
@@ -188,10 +188,11 @@ name|SC_DRIVER_NAME
 block|,
 name|sc_methods
 block|,
-literal|1
-block|,
-comment|/* XXX */
-block|}
+sizeof|sizeof
+argument_list|(
+name|sc_softc_t
+argument_list|)
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -389,11 +390,14 @@ operator|(
 name|sc_softc_t
 operator|*
 operator|)
-name|devclass_get_softc
+name|device_get_softc
+argument_list|(
+name|devclass_get_device
 argument_list|(
 name|sc_devclass
 argument_list|,
 name|unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -531,11 +535,14 @@ operator|(
 name|sc_softc_t
 operator|*
 operator|)
-name|devclass_get_softc
+name|device_get_softc
+argument_list|(
+name|devclass_get_device
 argument_list|(
 name|sc_devclass
 argument_list|,
 name|i
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
