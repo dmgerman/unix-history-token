@@ -1046,7 +1046,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|p
 operator|->
@@ -1088,7 +1088,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|p
 operator|->
@@ -1117,7 +1117,7 @@ return|return
 name|error
 return|;
 block|}
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|p
 operator|->
@@ -1151,7 +1151,7 @@ name|f_type
 operator|=
 name|DTYPE_SOCKET
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|p
 operator|->
