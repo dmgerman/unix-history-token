@@ -29,7 +29,7 @@ operator|)
 name|scv
 operator|.
 name|c
-literal|4.2
+literal|4.3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3141,19 +3141,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|scv
-literal|2.1.1.2
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_define
 define|#
