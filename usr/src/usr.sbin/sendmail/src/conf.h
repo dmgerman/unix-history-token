@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.110 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.111 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4303,7 +4303,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  NCR 3000 Series (SysVr4) ** **	From From: Kevin Darcy<kevin@tech.mis.cfc.com>. */
+comment|/* **  NCR 3000 Series (SysVr4) ** **	From Kevin Darcy<kevin@tech.mis.cfc.com>. */
 end_comment
 
 begin_ifdef
@@ -4329,6 +4329,27 @@ define|#
 directive|define
 name|LA_AVENRUN
 value|"avenrun"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Tandem NonStop-UX SVR4 ** **	From Rick McCarty<mccarty@mpd.tandem.com>. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NonStop_UX_BXX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__svr4__
 end_define
 
 begin_endif
@@ -5204,6 +5225,38 @@ directive|include
 file|<arpa/nameser.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__svr4__
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOERROR
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|NOERROR
+end_undef
+
+begin_comment
+comment|/* avoid compiler conflict with stream.h */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -5490,6 +5543,12 @@ operator|!
 name|defined
 argument_list|(
 name|_SCO_unix_
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NonStop_UX_BXX
 argument_list|)
 end_if
 
