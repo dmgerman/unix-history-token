@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1568,6 +1568,18 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
+comment|/* 	 * In theory resid should be unsigned. 	 * However, space must be signed, as it might be less than 0 	 * if we over-committed, and we must use a signed comparison 	 * of space and resid.  On the other hand, a negative resid 	 * causes us to loop sending 0-length segments to the protocol. 	 */
+if|if
+condition|(
+name|resid
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|dontroute
 operator|=
 operator|(
