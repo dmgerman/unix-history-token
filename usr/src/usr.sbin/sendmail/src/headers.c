@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.68 (Berkeley) %G%"
+literal|"@(#)headers.c	8.69 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2202,6 +2202,7 @@ name|e
 argument_list|)
 expr_stmt|;
 comment|/* check to see if this is a MIME message */
+elseif|else
 if|if
 condition|(
 operator|(
@@ -2251,6 +2252,56 @@ name|e_bodytype
 operator|=
 literal|"8BITMIME"
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|hvalue
+argument_list|(
+literal|"Content-Type"
+argument_list|,
+name|e
+operator|->
+name|e_header
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* this may be an RFC 1049 message */
+name|p
+operator|=
+name|strtok
+argument_list|(
+name|p
+argument_list|,
+literal|";/"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+operator|||
+operator|*
+name|p
+operator|==
+literal|';'
+condition|)
+block|{
+comment|/* yep, it is */
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_DONT_MIME
+expr_stmt|;
+block|}
 block|}
 comment|/* 	**  From person in antiquated ARPANET mode 	**	required by UK Grey Book e-mail gateways (sigh) 	*/
 if|if
@@ -4798,6 +4849,16 @@ operator|&&
 name|bitset
 argument_list|(
 name|EF_HAS8BIT
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_DONT_MIME
 argument_list|,
 name|e
 operator|->

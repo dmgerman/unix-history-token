@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.158 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.159 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3825,6 +3825,7 @@ operator|->
 name|m_flags
 argument_list|)
 operator|&&
+operator|(
 operator|!
 name|bitset
 argument_list|(
@@ -3832,6 +3833,16 @@ name|MM_MIME8BIT
 argument_list|,
 name|MimeMode
 argument_list|)
+operator|||
+name|bitset
+argument_list|(
+name|EF_DONT_MIME
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+operator|)
 condition|)
 block|{
 name|usrerr

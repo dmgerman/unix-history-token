@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.55 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.56 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.55 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.56 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1245,6 +1245,16 @@ name|e_flags
 argument_list|)
 operator|&&
 operator|!
+name|bitset
+argument_list|(
+name|EF_DONT_MIME
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+operator|&&
+operator|!
 name|bitnset
 argument_list|(
 name|M_8BITS
@@ -1317,6 +1327,16 @@ argument_list|(
 name|MM_CVTMIME
 argument_list|,
 name|MimeMode
+argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_DONT_MIME
+argument_list|,
+name|e
+operator|->
+name|e_flags
 argument_list|)
 operator|&&
 operator|(
