@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)delwin.c	5.10 (Berkeley) %G%"
+literal|"@(#)delwin.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,10 +63,6 @@ name|wp
 decl_stmt|,
 modifier|*
 name|np
-decl_stmt|;
-specifier|register
-name|int
-name|i
 decl_stmt|;
 if|if
 condition|(
