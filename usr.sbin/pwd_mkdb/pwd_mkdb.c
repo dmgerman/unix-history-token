@@ -2942,9 +2942,12 @@ argument_list|)
 operator|)
 condition|)
 block|{
+comment|/* 		 * XXX: This may also happen if the last line in a 		 * file does not have a trailing newline. 		 */
 name|warnx
 argument_list|(
-literal|"line too long"
+literal|"line #%d too long"
+argument_list|,
+name|lcnt
 argument_list|)
 expr_stmt|;
 goto|goto
