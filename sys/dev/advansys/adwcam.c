@@ -3822,6 +3822,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3845,17 +3847,6 @@ return|return
 name|NULL
 return|;
 block|}
-name|bzero
-argument_list|(
-name|adw
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|adw_softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
