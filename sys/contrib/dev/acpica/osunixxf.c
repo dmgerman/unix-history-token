@@ -528,7 +528,7 @@ parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS
 name|where
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 name|length
 parameter_list|,
 name|void
@@ -545,7 +545,7 @@ name|void
 operator|*
 operator|)
 operator|(
-name|UINT32
+name|uintptr_t
 operator|)
 name|where
 expr_stmt|;
