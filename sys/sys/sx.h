@@ -24,22 +24,8 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/_mutex.h>
 end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_include
 include|#
@@ -50,12 +36,6 @@ end_include
 begin_comment
 comment|/* XXX */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|lock_object
-struct_decl|;
-end_struct_decl
 
 begin_struct
 struct|struct

@@ -22,13 +22,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -82,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -107,6 +119,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_expr_stmt
 name|MALLOC_DEFINE

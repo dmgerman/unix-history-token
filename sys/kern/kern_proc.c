@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -36,7 +36,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -66,13 +78,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
 end_include
 
 begin_include
@@ -90,19 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_zone.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/jail.h>
 end_include
 
 begin_expr_stmt

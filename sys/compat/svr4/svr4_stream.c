@@ -29,13 +29,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
+file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -47,43 +41,47 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/filio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/socketvar.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/un.h>
+file|<sys/file.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
+begin_comment
+comment|/* Must come after sys/malloc.h */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -107,19 +105,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/uio.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ktrace.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
+file|<sys/socketvar.h>
 end_include
 
 begin_include
@@ -132,6 +124,34 @@ begin_include
 include|#
 directive|include
 file|<sys/sysproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ktrace.h>
+end_include
+
+begin_comment
+comment|/* Must come after sys/uio.h */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
 end_include
 
 begin_include

@@ -22,7 +22,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -34,31 +40,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
 end_include
 
 begin_include
@@ -76,19 +88,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/signalvar.h>
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
 end_include
 
 begin_include

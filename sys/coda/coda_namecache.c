@@ -28,7 +28,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -42,27 +54,6 @@ include|#
 directive|include
 file|<sys/ucred.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|insque
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* insque */
-end_comment
 
 begin_include
 include|#

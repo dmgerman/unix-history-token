@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LOCK_H_
+name|_SYS_LOCKMGR_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_LOCK_H_
+name|_SYS_LOCKMGR_H_
 end_define
 
 begin_struct_decl
@@ -669,7 +669,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_LOCK_H_ */
+comment|/* !_SYS_LOCKMGR_H_ */
 end_comment
 
 end_unit

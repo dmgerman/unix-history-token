@@ -38,13 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include

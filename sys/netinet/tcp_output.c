@@ -36,13 +36,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/domain.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -54,7 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/domain.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -73,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include

@@ -178,6 +178,12 @@ directive|include
 file|<sys/systm.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -203,6 +209,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include

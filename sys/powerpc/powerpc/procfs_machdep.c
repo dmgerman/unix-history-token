@@ -22,6 +22,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -34,19 +46,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/reg.h>
+file|<machine/md_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/md_var.h>
+file|<machine/reg.h>
 end_include
 
 begin_include
@@ -64,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/pmap.h>
 end_include
 
@@ -77,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_map.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
 end_include
 
 begin_function

@@ -45,14 +45,47 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/cons.h>
 end_include
+
+begin_comment
+comment|/* cngetc() */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/dkstat.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GPROF
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/gmon.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -63,13 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -93,24 +120,26 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/smp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/dkstat.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/cons.h>
+file|<sys/user.h>
 end_include
-
-begin_comment
-comment|/* cngetc() */
-end_comment
 
 begin_include
 include|#
@@ -145,37 +174,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_map.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GPROF
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/gmon.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

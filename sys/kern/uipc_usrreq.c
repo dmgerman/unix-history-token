@@ -24,13 +24,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/domain.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
+file|<sys/filedesc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -52,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/filedesc.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include

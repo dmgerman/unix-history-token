@@ -24,25 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -54,29 +36,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/vm_extern.h>
-end_include
-
-begin_comment
-comment|/*#include<vm/vm_page.h> #include<vm/vm_object.h>*/
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
+file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -96,6 +86,22 @@ include|#
 directive|include
 file|<netsmb/smb_subr.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_extern.h>
+end_include
+
+begin_comment
+comment|/*#include<vm/vm_page.h> #include<vm/vm_object.h>*/
+end_comment
 
 begin_include
 include|#

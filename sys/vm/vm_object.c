@@ -22,23 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_comment
-comment|/* for curproc, pageproc */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vmmeter.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -57,6 +41,34 @@ begin_include
 include|#
 directive|include
 file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_comment
+comment|/* for curproc, pageproc */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vmmeter.h>
 end_include
 
 begin_include

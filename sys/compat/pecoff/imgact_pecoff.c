@@ -27,25 +27,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysent.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/imgact.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/signalvar.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -63,13 +51,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/namei.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/namei.h>
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -100,12 +106,6 @@ begin_include
 include|#
 directive|include
 file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
 end_include
 
 begin_include

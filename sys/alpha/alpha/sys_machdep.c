@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysproto.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sysent.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -36,13 +36,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
+file|<sys/sysent.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/sysproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
 end_include
 
 begin_include
@@ -61,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
 end_include
 
 begin_include

@@ -18,6 +18,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fnv_hash.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -30,25 +48,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fnv_hash.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
 end_include
 
 begin_include

@@ -24,8 +24,38 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_comment
+comment|/* for hz */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lockf.h>
+end_include
+
+begin_comment
+comment|/* for hz */
+end_comment
+
+begin_comment
+comment|/* Must come after sys/malloc.h */
+end_comment
 
 begin_include
 include|#
@@ -54,6 +84,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -68,32 +110,6 @@ include|#
 directive|include
 file|<sys/vnode.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resourcevar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_comment
-comment|/* for hz */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/lockf.h>
-end_include
-
-begin_comment
-comment|/* for hz */
-end_comment
 
 begin_include
 include|#

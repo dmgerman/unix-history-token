@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/consio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -52,25 +58,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/tty.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kbio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/consio.h>
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/sysproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/tty.h>
 end_include
 
 begin_include

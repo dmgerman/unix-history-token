@@ -27,25 +27,28 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/_lock.h>
 end_include
 
-begin_comment
-comment|/* XXX */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Kernel per-process accounting / statistics  * (not necessarily resident except when running).  */

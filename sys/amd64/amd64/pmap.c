@@ -40,19 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/msgbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vmmeter.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -64,7 +52,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/msgbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vmmeter.h>
 end_include
 
 begin_include
@@ -77,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
 end_include
 
 begin_include
@@ -131,12 +137,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_zone.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
 end_include
 
 begin_include

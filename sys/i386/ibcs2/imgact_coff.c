@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mman.h>
+file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -36,13 +36,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mman.h>
 end_include
 
 begin_include

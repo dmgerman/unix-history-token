@@ -22,7 +22,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ptrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/user.h>
 end_include
 
 begin_include
@@ -47,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
 end_include
 
 begin_include
@@ -89,18 +101,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_page.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ptrace.h>
 end_include
 
 begin_decl_stmt

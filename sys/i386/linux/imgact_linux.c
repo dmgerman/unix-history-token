@@ -18,19 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/resourcevar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/exec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mman.h>
 end_include
 
 begin_include
@@ -60,7 +48,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resourcevar.h>
 end_include
 
 begin_include

@@ -31,6 +31,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
 begin_comment
 comment|/*  * Lock classes.  Each lock has a class which describes characteristics  * common to all types of locks of a given class.  *  * Spin locks in general must always protect against preemption, as it is  * an error to perform any type of context switch while holding a spin lock.  * Also, for an individual lock to be recursable, its class must allow  * recursion and the lock itself must explicitly allow recursion.  */
 end_comment
@@ -94,54 +100,6 @@ end_define
 begin_comment
 comment|/* Locks of this type may recurse. */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|witness
-struct_decl|;
-end_struct_decl
-
-begin_struct
-struct|struct
-name|lock_object
-block|{
-name|struct
-name|lock_class
-modifier|*
-name|lo_class
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|lo_name
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|lo_file
-decl_stmt|;
-comment|/* File and line of last acquire. */
-name|int
-name|lo_line
-decl_stmt|;
-name|u_int
-name|lo_flags
-decl_stmt|;
-name|STAILQ_ENTRY
-argument_list|(
-argument|lock_object
-argument_list|)
-name|lo_list
-expr_stmt|;
-comment|/* List of all locks in system. */
-name|struct
-name|witness
-modifier|*
-name|lo_witness
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_define
 define|#

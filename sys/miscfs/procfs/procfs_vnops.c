@@ -22,7 +22,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sys/dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -40,7 +46,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/namei.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/pioctl.h>
 end_include
 
 begin_include
@@ -58,13 +88,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -76,25 +112,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/namei.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dirent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
+file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -113,12 +131,6 @@ begin_include
 include|#
 directive|include
 file|<miscfs/procfs/procfs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/pioctl.h>
 end_include
 
 begin_decl_stmt

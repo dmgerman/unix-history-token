@@ -27,6 +27,18 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -230,58 +242,6 @@ ifndef|#
 directive|ifndef
 name|LOCORE
 end_ifndef
-
-begin_comment
-comment|/*  * Sleep/spin mutex  */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|lock_object
-struct_decl|;
-end_struct_decl
-
-begin_struct
-struct|struct
-name|mtx
-block|{
-name|struct
-name|lock_object
-name|mtx_object
-decl_stmt|;
-comment|/* Common lock properties. */
-specifier|volatile
-name|uintptr_t
-name|mtx_lock
-decl_stmt|;
-comment|/* owner (and state for sleep locks) */
-specifier|volatile
-name|u_int
-name|mtx_recurse
-decl_stmt|;
-comment|/* number of recursive holds */
-name|critical_t
-name|mtx_savecrit
-decl_stmt|;
-comment|/* saved flags (for spin locks) */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|proc
-argument_list|)
-name|mtx_blocked
-expr_stmt|;
-comment|/* threads blocked on this lock */
-name|LIST_ENTRY
-argument_list|(
-argument|mtx
-argument_list|)
-name|mtx_contested
-expr_stmt|;
-comment|/* list of all contested locks */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * XXX: Friendly reminder to fix things in MP code that is presently being  * XXX: worked on.  */

@@ -64,22 +64,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/_mutex.h>
 end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/_lock.h>
 end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_include
 include|#

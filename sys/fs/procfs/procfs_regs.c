@@ -12,6 +12,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -24,19 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<miscfs/procfs/procfs.h>
 end_include
 
 begin_include
@@ -49,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<miscfs/procfs/procfs.h>
 end_include
 
 begin_function

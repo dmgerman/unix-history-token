@@ -18,13 +18,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/filedesc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/filedesc.h>
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include

@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/dirent.h>
 end_include
 
@@ -23,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
 end_include
 
 begin_include
@@ -53,6 +53,22 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_comment
+comment|/* Must come after sys/malloc.h */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -83,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysproto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
 end_include
 
 begin_include

@@ -51,13 +51,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioccom.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -69,14 +75,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/radix.h>
+file|<sys/file.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
+begin_comment
+comment|/* must come after sys/malloc.h */
+end_comment
 
 begin_include
 include|#
@@ -87,19 +91,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioccom.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/poll.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_include

@@ -18,13 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/namei.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -36,7 +42,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/namei.h>
 end_include
 
 begin_include
@@ -48,13 +66,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
+file|<sys/vnode.h>
 end_include
 
 begin_include

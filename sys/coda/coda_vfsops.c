@@ -32,13 +32,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -50,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
+file|<sys/mount.h>
 end_include
 
 begin_include
@@ -62,19 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/radix.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
 end_include
 
 begin_include

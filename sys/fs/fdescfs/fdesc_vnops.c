@@ -22,7 +22,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/filedesc.h>
 end_include
 
 begin_include
@@ -38,13 +50,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/filedesc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -59,23 +65,9 @@ directive|include
 file|<sys/file.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/radix.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
+begin_comment
+comment|/* Must come after sys/malloc.h */
+end_comment
 
 begin_include
 include|#
@@ -92,13 +84,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dirent.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
 end_include
 
 begin_include

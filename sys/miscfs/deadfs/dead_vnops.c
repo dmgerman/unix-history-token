@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/mutex.h>
+file|<sys/vnode.h>
 end_include
 
 begin_decl_stmt

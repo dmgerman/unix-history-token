@@ -12,13 +12,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -30,19 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/filio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/uio.h>
+file|<sys/filio.h>
 end_include
 
 begin_include
@@ -60,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/selinfo.h>
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -96,19 +96,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/uio.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
 end_include
 
 begin_include

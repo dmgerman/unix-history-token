@@ -44,13 +44,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysproto.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/jail.h>
 end_include
 
@@ -117,12 +123,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
 end_include
 
 begin_include

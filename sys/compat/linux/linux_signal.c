@@ -18,7 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysproto.h>
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -31,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysproto.h>
 end_include
 
 begin_include

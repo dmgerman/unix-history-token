@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -24,13 +24,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/dkstat.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -60,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/tty.h>
 end_include
 
@@ -73,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/jail.h>
 end_include
 
 begin_include

@@ -15,6 +15,16 @@ directive|define
 name|SYS_EVENTHANDLER_H
 end_define
 
+begin_comment
+comment|/*  * XXX - compatability until lockmgr() goes away or all the #includes are  * updated.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/lockmgr.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -24,7 +34,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
 end_include
 
 begin_struct

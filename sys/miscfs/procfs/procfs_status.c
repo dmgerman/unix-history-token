@@ -18,13 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
+file|<sys/exec.h>
 end_include
 
 begin_include
@@ -36,13 +30,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/tty.h>
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -54,7 +60,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<miscfs/procfs/procfs.h>
+file|<sys/tty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -78,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/exec.h>
+file|<miscfs/procfs/procfs.h>
 end_include
 
 begin_define
