@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -623,6 +623,34 @@ name|fs
 parameter_list|)
 define|\
 value|(((fs)->fs_postblformat == FS_42POSTBLFMT) \     ? ((fs)->fs_space) \     : ((u_char *)((char *)(fs) + (fs)->fs_rotbloff)))
+end_define
+
+begin_comment
+comment|/*  * The size of a cylinder group is calculated by CGSIZE. The maximum size  * is limited by the fact that cylinder groups are at most one block.  * Its size is derived from the size of the maps maintained in the   * cylinder group and the (struct cg) size.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CGSIZE
+parameter_list|(
+name|fs
+parameter_list|)
+define|\
+comment|/* base cg */
+value|(sizeof(struct cg) + sizeof(long) + \
+comment|/* blktot size */
+value|(fs)->fs_cpg * sizeof(long) + \
+comment|/* blks size */
+value|(fs)->fs_cpg * (fs)->fs_nrpos * sizeof(short) + \
+comment|/* inode map */
+value|howmany((fs)->fs_ipg, NBBY) + \
+comment|/* block map */
+value|howmany((fs)->fs_cpg * (fs)->fs_spc / NSPF(fs), NBBY) +\
+comment|/* cluster sum */
+value|(fs)->fs_contigsumsize * sizeof(long) + \
+comment|/* cluster map */
+value|howmany((fs)->fs_cpg * (fs)->fs_spc / NSPB(fs), NBBY))
 end_define
 
 begin_comment
