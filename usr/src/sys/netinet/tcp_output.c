@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.26	81/12/21	*/
+comment|/*	tcp_output.c	4.27	81/12/22	*/
 end_comment
 
 begin_include
@@ -265,8 +265,16 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|tp
+operator|->
+name|snd_nxt
+operator|+
 name|len
 operator|<
+name|tp
+operator|->
+name|snd_una
+operator|+
 name|so
 operator|->
 name|so_snd
@@ -814,7 +822,7 @@ operator|->
 name|t_state
 argument_list|)
 operator|&&
-name|SEQ_GT
+name|SEQ_GEQ
 argument_list|(
 name|tp
 operator|->
@@ -936,6 +944,12 @@ name|TCPTV_MIN
 argument_list|,
 name|TCPTV_MAX
 argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|t_rtt
+operator|=
+literal|0
 expr_stmt|;
 name|tp
 operator|->
