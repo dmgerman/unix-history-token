@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.125 1998/09/15 22:05:38 gibbs Exp $ ** **  Device driver for the   NCR 53C8XX   PCI-SCSI-Controller Family. ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.126 1998/09/16 17:11:59 gibbs Exp $ ** **  Device driver for the   NCR 53C8XX   PCI-SCSI-Controller Family. ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -3261,7 +3261,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.125 1998/09/15 22:05:38 gibbs Exp $\n"
+literal|"\n$Id: ncr.c,v 1.126 1998/09/16 17:11:59 gibbs Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -4106,8 +4106,7 @@ name|SCR_COPY
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|timeval
+name|ticks
 argument_list|)
 argument_list|)
 block|,
@@ -4712,8 +4711,7 @@ name|SCR_COPY
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|timeval
+name|ticks
 argument_list|)
 argument_list|)
 block|,
@@ -4780,8 +4778,7 @@ name|SCR_COPY
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|timeval
+name|ticks
 argument_list|)
 argument_list|)
 block|,
@@ -5596,8 +5593,7 @@ name|SCR_COPY
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|timeval
+name|ticks
 argument_list|)
 argument_list|)
 block|,
@@ -6147,13 +6143,13 @@ block|,  }
 comment|/*-------------------------< DATA_IN>--------------------*/
 block|,
 block|{
-comment|/* **	Because the size depends on the **	#define MAX_SCATTER parameter, **	it is filled in at runtime. ** **	SCR_JUMP ^ IFFALSE (WHEN (SCR_DATA_IN)), **		PADDR (no_data), **	SCR_COPY (sizeof (struct timeval)), **		KVAR (KVAR_TICKS), **		NADDR (header.stamp.data), **	SCR_MOVE_TBL ^ SCR_DATA_IN, **		offsetof (struct dsb, data[ 0]), ** **  ##===========< i=1; i<MAX_SCATTER>========= **  ||	SCR_CALL ^ IFFALSE (WHEN (SCR_DATA_IN)), **  ||		PADDR (checkatn), **  ||	SCR_MOVE_TBL ^ SCR_DATA_IN, **  ||		offsetof (struct dsb, data[ i]), **  ##========================================== ** **	SCR_CALL, **		PADDR (checkatn), **	SCR_JUMP, **		PADDR (no_data), */
+comment|/* **	Because the size depends on the **	#define MAX_SCATTER parameter, **	it is filled in at runtime. ** **	SCR_JUMP ^ IFFALSE (WHEN (SCR_DATA_IN)), **		PADDR (no_data), **	SCR_COPY (sizeof (ticks)), **		KVAR (KVAR_TICKS), **		NADDR (header.stamp.data), **	SCR_MOVE_TBL ^ SCR_DATA_IN, **		offsetof (struct dsb, data[ 0]), ** **  ##===========< i=1; i<MAX_SCATTER>========= **  ||	SCR_CALL ^ IFFALSE (WHEN (SCR_DATA_IN)), **  ||		PADDR (checkatn), **  ||	SCR_MOVE_TBL ^ SCR_DATA_IN, **  ||		offsetof (struct dsb, data[ i]), **  ##========================================== ** **	SCR_CALL, **		PADDR (checkatn), **	SCR_JUMP, **		PADDR (no_data), */
 literal|0
 block|}
 comment|/*-------------------------< DATA_OUT>-------------------*/
 block|,
 block|{
-comment|/* **	Because the size depends on the **	#define MAX_SCATTER parameter, **	it is filled in at runtime. ** **	SCR_JUMP ^ IFFALSE (WHEN (SCR_DATA_OUT)), **		PADDR (no_data), **	SCR_COPY (sizeof (struct timeval)), **		KVAR (KVAR_TICKS), **		NADDR (header.stamp.data), **	SCR_MOVE_TBL ^ SCR_DATA_OUT, **		offsetof (struct dsb, data[ 0]), ** **  ##===========< i=1; i<MAX_SCATTER>========= **  ||	SCR_CALL ^ IFFALSE (WHEN (SCR_DATA_OUT)), **  ||		PADDR (dispatch), **  ||	SCR_MOVE_TBL ^ SCR_DATA_OUT, **  ||		offsetof (struct dsb, data[ i]), **  ##========================================== ** **	SCR_CALL, **		PADDR (dispatch), **	SCR_JUMP, **		PADDR (no_data), ** **--------------------------------------------------------- */
+comment|/* **	Because the size depends on the **	#define MAX_SCATTER parameter, **	it is filled in at runtime. ** **	SCR_JUMP ^ IFFALSE (WHEN (SCR_DATA_OUT)), **		PADDR (no_data), **	SCR_COPY (sizeof (ticks)), **		KVAR (KVAR_TICKS), **		NADDR (header.stamp.data), **	SCR_MOVE_TBL ^ SCR_DATA_OUT, **		offsetof (struct dsb, data[ 0]), ** **  ##===========< i=1; i<MAX_SCATTER>========= **  ||	SCR_CALL ^ IFFALSE (WHEN (SCR_DATA_OUT)), **  ||		PADDR (dispatch), **  ||	SCR_MOVE_TBL ^ SCR_DATA_OUT, **  ||		offsetof (struct dsb, data[ i]), **  ##========================================== ** **	SCR_CALL, **		PADDR (dispatch), **	SCR_JUMP, **		PADDR (no_data), ** **--------------------------------------------------------- */
 operator|(
 name|u_long
 operator|)
@@ -7709,8 +7705,7 @@ name|SCR_COPY
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|timeval
+name|ticks
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7914,8 +7909,7 @@ name|SCR_COPY
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|timeval
+name|ticks
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -11242,12 +11236,14 @@ argument_list|(
 literal|"\tinterruptless mode: reduced performance.\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	** Create the device queue. 	*/
+comment|/* 	** Create the device queue.  We only allow MAX_START-1 concurrent 	** transactions so we can be sure to have one element free in our 	** start queue to reset to the idle loop. 	*/
 name|devq
 operator|=
 name|cam_simq_alloc
 argument_list|(
 name|MAX_START
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -14677,14 +14673,26 @@ modifier|*
 name|path
 parameter_list|)
 block|{
-comment|/* 	**	Starting at the first nccb and following 	**	the links, complete all jobs that match 	**	the passed in path and are in the start queue. 	*/
 name|nccb_p
 name|cp
-init|=
+decl_stmt|;
+name|int
+name|count
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/* 	**	Starting at the first nccb and following 	**	the links, complete all jobs that match 	**	the passed in path and are in the start queue. 	*/
+name|cp
+operator|=
 name|np
 operator|->
 name|link_nccb
-decl_stmt|;
+expr_stmt|;
+name|count
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|cp
@@ -14742,10 +14750,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|;
-comment|/* Remove from the start queue */
+comment|/* Mark for removal from the start queue */
 for|for
 control|(
 name|i
@@ -14804,6 +14809,9 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+name|count
+operator|++
+expr_stmt|;
 block|}
 break|break;
 default|default:
@@ -14814,6 +14822,141 @@ operator|=
 name|cp
 operator|->
 name|link_nccb
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|count
+operator|>
+literal|0
+condition|)
+block|{
+name|int
+name|j
+decl_stmt|;
+name|int
+name|bidx
+decl_stmt|;
+comment|/* Compress the start queue */
+name|j
+operator|=
+literal|0
+expr_stmt|;
+name|bidx
+operator|=
+name|np
+operator|->
+name|squeueput
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+operator|(
+name|np
+operator|->
+name|squeueput
+operator|+
+literal|1
+operator|)
+operator|%
+name|MAX_START
+init|;
+condition|;
+name|i
+operator|=
+operator|(
+name|i
+operator|+
+literal|1
+operator|)
+operator|%
+name|MAX_START
+control|)
+block|{
+name|bidx
+operator|=
+name|i
+operator|-
+name|j
+expr_stmt|;
+if|if
+condition|(
+name|bidx
+operator|<
+literal|0
+condition|)
+name|bidx
+operator|=
+name|MAX_START
+operator|+
+name|bidx
+expr_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|squeue
+index|[
+name|i
+index|]
+operator|==
+name|NCB_SCRIPT_PHYS
+argument_list|(
+name|np
+argument_list|,
+name|skip
+argument_list|)
+condition|)
+name|j
+operator|++
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|j
+operator|!=
+literal|0
+condition|)
+block|{
+name|np
+operator|->
+name|squeue
+index|[
+name|bidx
+index|]
+operator|=
+name|np
+operator|->
+name|squeue
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|squeue
+index|[
+name|bidx
+index|]
+operator|==
+name|NCB_SCRIPT_PHYS
+argument_list|(
+name|np
+argument_list|,
+name|idle
+argument_list|)
+condition|)
+break|break;
+block|}
+block|}
+name|np
+operator|->
+name|squeueput
+operator|=
+name|bidx
 expr_stmt|;
 block|}
 block|}
@@ -20907,13 +21050,13 @@ case|:
 name|cp
 operator|->
 name|xerr_status
-operator|==
+operator|=
 name|XE_OK
 expr_stmt|;
 name|cp
 operator|->
 name|host_status
-operator|==
+operator|=
 name|HS_COMPLETE
 expr_stmt|;
 name|cp
