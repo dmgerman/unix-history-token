@@ -633,7 +633,7 @@ literal|"%s\n%s\n"
 argument_list|,
 literal|"usage: fdformat [-y] [-q] [-n | -v] [-f #] [-c #] [-s #] [-h #]"
 argument_list|,
-literal|"                [-r #] [-g #] [-i #] [-S #] [-F #] [-t #] devname"
+literal|"                [-r #] [-g #] [-i #] [-S #] [-F #] [-t #] device_name"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -883,7 +883,7 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|devname
+name|device
 decl_stmt|,
 modifier|*
 name|suffix
@@ -1218,7 +1218,7 @@ literal|".1720"
 expr_stmt|;
 break|break;
 block|}
-name|devname
+name|device
 operator|=
 name|makename
 argument_list|(
@@ -1237,7 +1237,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|devname
+name|device
 argument_list|,
 name|O_RDWR
 argument_list|)
@@ -1251,7 +1251,7 @@ literal|1
 argument_list|,
 literal|"%s"
 argument_list|,
-name|devname
+name|device
 argument_list|)
 expr_stmt|;
 if|if
@@ -1274,7 +1274,7 @@ literal|1
 argument_list|,
 literal|"not a floppy disk: %s"
 argument_list|,
-name|devname
+name|device
 argument_list|)
 expr_stmt|;
 name|fdopts
@@ -1514,7 +1514,7 @@ name|bytes_per_track
 operator|/
 literal|1024
 argument_list|,
-name|devname
+name|device
 argument_list|)
 expr_stmt|;
 block|}
@@ -1544,7 +1544,7 @@ name|bytes_per_track
 operator|/
 literal|1024
 argument_list|,
-name|devname
+name|device
 argument_list|)
 expr_stmt|;
 if|if
@@ -1571,9 +1571,6 @@ operator|!
 name|quiet
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"Processing "
