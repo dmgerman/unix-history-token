@@ -10,19 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -288,7 +282,9 @@ expr_stmt|;
 break|break;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -373,7 +369,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The mydev_read function just takes the buf that was saved   * via mydev_write() and returns it to userland for  * accessing.  */
+comment|/*  * The mydev_read function just takes the buf that was saved  * via mydev_write() and returns it to userland for  * accessing.  */
 end_comment
 
 begin_function
