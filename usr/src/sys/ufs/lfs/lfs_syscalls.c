@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.28 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -153,26 +153,9 @@ begin_comment
 comment|/*  * lfs_markv:  *  * This will mark inodes and blocks dirty, so they are written into the log.  * It will block until all the blocks have been written.  The segment create  * time passed in the block_info and inode_info structures is used to decide  * if the data is valid for each block (in case some process dirtied a block  * or inode that is being cleaned between the determination that a block is  * live and the lfs_markv call).  *  *  0 on success  * -1/errno is return on error.  */
 end_comment
 
-begin_decl_stmt
-name|int
-name|lfs_markv
-argument_list|(
-name|p
-argument_list|,
-name|uap
-argument_list|,
-name|retval
-argument_list|)
-decl|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
-name|args
+name|lfs_markv_args
 block|{
 name|fsid_t
 name|fsid
@@ -188,19 +171,33 @@ name|blkcnt
 decl_stmt|;
 comment|/* count of block array entries */
 block|}
-modifier|*
-name|uap
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function
+name|int
+name|lfs_markv
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|lfs_markv_args
+modifier|*
+name|uap
+decl_stmt|;
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|segment
@@ -993,32 +990,15 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * lfs_bmapv:  *  * This will fill in the current disk address for arrays of blocks.  *  *  0 on success  * -1/errno is return on error.  */
 end_comment
 
-begin_decl_stmt
-name|int
-name|lfs_bmapv
-argument_list|(
-name|p
-argument_list|,
-name|uap
-argument_list|,
-name|retval
-argument_list|)
-decl|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
-name|args
+name|lfs_bmapv_args
 block|{
 name|fsid_t
 name|fsid
@@ -1034,19 +1014,33 @@ name|blkcnt
 decl_stmt|;
 comment|/* count of block array entries */
 block|}
-modifier|*
-name|uap
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function
+name|int
+name|lfs_bmapv
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|lfs_bmapv_args
+modifier|*
+name|uap
+decl_stmt|;
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|BLOCK_INFO
 modifier|*
@@ -1283,32 +1277,15 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * lfs_segclean:  *  * Mark the segment clean.  *  *  0 on success  * -1/errno is return on error.  */
 end_comment
 
-begin_decl_stmt
-name|int
-name|lfs_segclean
-argument_list|(
-name|p
-argument_list|,
-name|uap
-argument_list|,
-name|retval
-argument_list|)
-decl|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
-name|args
+name|lfs_segclean_args
 block|{
 name|fsid_t
 name|fsid
@@ -1319,19 +1296,33 @@ name|segment
 decl_stmt|;
 comment|/* segment number */
 block|}
-modifier|*
-name|uap
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function
+name|int
+name|lfs_segclean
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|lfs_segclean_args
+modifier|*
+name|uap
+decl_stmt|;
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|CLEANERINFO
 modifier|*
@@ -1559,32 +1550,15 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * lfs_segwait:  *  * This will block until a segment in file system fsid is written.  A timeout  * in milliseconds may be specified which will awake the cleaner automatically.  * An fsid of -1 means any file system, and a timeout of 0 means forever.  *  *  0 on success  *  1 on timeout  * -1/errno is return on error.  */
 end_comment
 
-begin_decl_stmt
-name|int
-name|lfs_segwait
-argument_list|(
-name|p
-argument_list|,
-name|uap
-argument_list|,
-name|retval
-argument_list|)
-decl|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
-name|args
+name|lfs_segwait_args
 block|{
 name|fsid_t
 name|fsid
@@ -1597,19 +1571,33 @@ name|tv
 decl_stmt|;
 comment|/* timeout */
 block|}
-modifier|*
-name|uap
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function
+name|int
+name|lfs_segwait
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|lfs_segwait_args
+modifier|*
+name|uap
+decl_stmt|;
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|int
@@ -1863,7 +1851,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * VFS_VGET call specialized for the cleaner.  The cleaner already knows the  * daddr from the ifile, so don't look it up again.  If the cleaner is  * processing IINFO structures, it may have the ondisk inode already, so  * don't go retrieving it again.  */
