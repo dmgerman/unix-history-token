@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lprint.c	5.7 (Berkeley) %G%"
+literal|"@(#)lprint.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1052,6 +1052,13 @@ block|{
 specifier|register
 name|int
 name|ch
+decl_stmt|,
+name|lastc
+decl_stmt|;
+specifier|register
+name|FILE
+modifier|*
+name|fp
 decl_stmt|;
 operator|(
 name|void
@@ -1069,15 +1076,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|freopen
+operator|(
+name|fp
+operator|=
+name|fopen
 argument_list|(
 name|tbuf
 argument_list|,
 literal|"r"
-argument_list|,
-name|stdin
 argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1099,7 +1109,7 @@ condition|(
 operator|(
 name|ch
 operator|=
-name|getchar
+name|getc
 argument_list|(
 name|fp
 argument_list|)
@@ -1109,12 +1119,14 @@ name|EOF
 condition|)
 name|vputc
 argument_list|(
+name|lastc
+operator|=
 name|ch
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ch
+name|lastc
 operator|!=
 literal|'\n'
 condition|)
@@ -1124,6 +1136,14 @@ operator|)
 name|putchar
 argument_list|(
 literal|'\n'
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 return|return
