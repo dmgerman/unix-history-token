@@ -404,6 +404,22 @@ name|NULL
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|struct
+name|mbuf
+modifier|*
+name|tbr_dequeue
+parameter_list|(
+name|struct
+name|ifaltq
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1496,6 +1512,7 @@ value|((x)>> TBR_SHIFT)
 end_define
 
 begin_function
+specifier|static
 name|struct
 name|mbuf
 modifier|*
@@ -1762,6 +1779,16 @@ decl_stmt|,
 modifier|*
 name|otbr
 decl_stmt|;
+if|if
+condition|(
+name|tbr_dequeue_ptr
+operator|==
+name|NULL
+condition|)
+name|tbr_dequeue_ptr
+operator|=
+name|tbr_dequeue
+expr_stmt|;
 if|if
 condition|(
 name|machclk_freq

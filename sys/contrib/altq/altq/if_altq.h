@@ -752,7 +752,10 @@ specifier|extern
 name|struct
 name|mbuf
 modifier|*
-name|tbr_dequeue
+function_decl|(
+modifier|*
+name|tbr_dequeue_ptr
+function_decl|)
 parameter_list|(
 name|struct
 name|ifaltq
@@ -783,33 +786,15 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|1
+literal|0
 end_if
 
 begin_comment
 comment|/* ALTQ3_CLFIER_COMPAT */
 end_comment
 
-begin_function_decl
-name|void
-name|altq_etherclassify
-parameter_list|(
-name|struct
-name|ifaltq
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|altq_pktattr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
+unit|void altq_etherclassify(struct ifaltq *, struct mbuf *, struct altq_pktattr *);
 endif|#
 directive|endif
 end_endif

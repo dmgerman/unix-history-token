@@ -1276,11 +1276,15 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ALTQ
-end_ifdef
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
+begin_comment
+comment|/* ALTQ */
+end_comment
 
 begin_define
 define|#
@@ -1307,7 +1311,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do {									\ 	if (TBR_IS_ENABLED(ifq))					\ 		(m) = tbr_dequeue(ifq, ALTDQ_REMOVE);			\ 	else if (ALTQ_IS_ENABLED(ifq))					\ 		ALTQ_DEQUEUE(ifq, m);					\ 	else								\ 		_IF_DEQUEUE(ifq, m);					\ } while (0)
+value|do {									\ 	if (TBR_IS_ENABLED(ifq))					\ 		(m) = tbr_dequeue_ptr(ifq, ALTDQ_REMOVE);		\ 	else if (ALTQ_IS_ENABLED(ifq))					\ 		ALTQ_DEQUEUE(ifq, m);					\ 	else								\ 		_IF_DEQUEUE(ifq, m);					\ } while (0)
 end_define
 
 begin_define
@@ -1333,7 +1337,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do {									\ 	if (TBR_IS_ENABLED(ifq))					\ 		(m) = tbr_dequeue(ifq, ALTDQ_POLL);			\ 	else if (ALTQ_IS_ENABLED(ifq))					\ 		ALTQ_POLL(ifq, m);					\ 	else								\ 		_IF_POLL(ifq, m);					\ } while (0)
+value|do {									\ 	if (TBR_IS_ENABLED(ifq))					\ 		(m) = tbr_dequeue_ptr(ifq, ALTDQ_POLL);			\ 	else if (ALTQ_IS_ENABLED(ifq))					\ 		ALTQ_POLL(ifq, m);					\ 	else								\ 		_IF_POLL(ifq, m);					\ } while (0)
 end_define
 
 begin_define

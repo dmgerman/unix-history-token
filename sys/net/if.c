@@ -253,6 +253,26 @@ directive|endif
 end_endif
 
 begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+function_decl|(
+modifier|*
+name|tbr_dequeue_ptr
+function_decl|)
+parameter_list|(
+name|struct
+name|ifaltq
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+init|=
+name|NULL
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|void
 name|if_attachdomain
@@ -2285,9 +2305,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* reliably crash if used uninitialized */
-ifdef|#
-directive|ifdef
-name|ALTQ
 name|ifp
 operator|->
 name|if_snd
@@ -2328,8 +2345,6 @@ name|altq_ifp
 operator|=
 name|ifp
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|domains
