@@ -1414,7 +1414,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static	void	siointr1	(struct com_s *com);
+unit|static	void	siointr1(struct com_s *com);
 endif|#
 directive|endif
 end_endif
