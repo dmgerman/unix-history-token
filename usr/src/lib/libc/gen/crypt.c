@@ -20,7 +20,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crypt.c	5.3 (Berkeley) %G%"
+literal|"@(#)crypt.c	5.3.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
