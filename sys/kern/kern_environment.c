@@ -311,6 +311,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Export for userland.  See kenv(1) specifically.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
