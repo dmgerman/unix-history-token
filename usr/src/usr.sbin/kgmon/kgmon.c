@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kgmon.c	5.6 (Berkeley) %G%"
+literal|"@(#)kgmon.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -394,6 +394,18 @@ condition|?
 name|O_RDWR
 else|:
 name|O_RDONLY
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+operator|+
+literal|1
+expr_stmt|;
+name|argc
+operator|-=
+name|optind
+operator|+
+literal|1
 expr_stmt|;
 name|kmemf
 operator|=
