@@ -38,13 +38,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|uid_t
-name|myuid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|iflag
 decl_stmt|,
@@ -53,8 +46,6 @@ decl_stmt|,
 name|fflag
 decl_stmt|,
 name|vflag
-decl_stmt|,
-name|myumask
 decl_stmt|;
 end_decl_stmt
 
