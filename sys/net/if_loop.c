@@ -771,7 +771,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"looutput: af=%d unexpected"
+literal|"looutput: af=%d unexpected\n"
 argument_list|,
 name|dst
 operator|->
