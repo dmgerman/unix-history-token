@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: readcis.c,v 1.6.2.2 1997/10/26 04:13:47 nate Exp $"
+literal|"$Id: readcis.c,v 1.13 1998/04/19 18:41:45 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2613,6 +2613,11 @@ name|tl
 expr_stmt|;
 block|}
 block|}
+else|else
+name|tl
+operator|=
+literal|0
+expr_stmt|;
 block|}
 do|while
 condition|(
