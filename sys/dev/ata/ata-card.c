@@ -133,6 +133,15 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|OEM2
+argument_list|,
+name|IDE
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|PANASONIC
 argument_list|,
 name|KXLC005
