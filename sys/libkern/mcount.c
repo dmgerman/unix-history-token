@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mcount.c,v 1.8 1996/08/28 20:15:12 bde Exp $"
+literal|"$Id: mcount.c,v 1.9 1996/10/17 19:32:25 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,23 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GUPROF
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
