@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.11	81/02/27	*/
+comment|/*	buf.h	4.12	81/03/09	*/
 end_comment
 
 begin_comment
@@ -195,7 +195,6 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|buf
 modifier|*
@@ -208,7 +207,6 @@ comment|/* the buffer pool itself */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|char
 modifier|*
 name|buffers
@@ -216,14 +214,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|nbuf
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|buf
 modifier|*
@@ -236,14 +232,12 @@ comment|/* swap I/O headers */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|nswbuf
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|short
 modifier|*
 name|swsize
@@ -251,7 +245,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 modifier|*
 name|swpf
@@ -259,7 +252,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|buf
 name|bfreelist
@@ -274,7 +266,6 @@ comment|/* heads of available lists */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|buf
 name|bswlist
@@ -286,7 +277,6 @@ comment|/* head of free swap header list */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|buf
 modifier|*

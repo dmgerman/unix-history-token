@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.24	81/03/08	*/
+comment|/*	autoconf.c	4.25	81/03/09	*/
 end_comment
 
 begin_comment
@@ -387,8 +387,6 @@ name|ocp
 decl_stmt|;
 specifier|register
 name|int
-name|i
-decl_stmt|,
 modifier|*
 name|ip
 decl_stmt|;
@@ -515,6 +513,10 @@ begin_comment
 comment|/*  * Build configuration table for a 780, by looking  * at the things (mbas and ubas) in the nexus slots  * and initialzing each appropriately.  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_expr_stmt
 name|c780
 argument_list|(
@@ -535,12 +537,6 @@ name|struct
 name|nexus
 modifier|*
 name|nxv
-decl_stmt|;
-specifier|register
-name|struct
-name|uba_hd
-modifier|*
-name|uhp
 decl_stmt|;
 name|struct
 name|nexus
@@ -585,9 +581,6 @@ control|)
 block|{
 name|nxaccess
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|nxp
 argument_list|,
 name|Nexmap
@@ -658,7 +651,7 @@ name|nummba
 argument_list|)
 expr_stmt|;
 goto|goto
-name|notconfig
+name|unconfig
 goto|;
 block|}
 if|#
@@ -718,8 +711,6 @@ goto|;
 block|}
 name|setscbnex
 argument_list|(
-name|nexnum
-argument_list|,
 name|ubaintv
 index|[
 name|numuba
@@ -901,6 +892,9 @@ name|timeout
 argument_list|(
 name|ubawatch
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 literal|0
 argument_list|,
 name|hz
@@ -966,7 +960,9 @@ expr_stmt|;
 name|nxaccess
 argument_list|(
 operator|(
-name|caddr_t
+expr|struct
+name|nexus
+operator|*
 operator|)
 name|MCR_750
 argument_list|,
@@ -1011,9 +1007,6 @@ control|)
 block|{
 name|nxaccess
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|nxp
 argument_list|,
 name|Nexmap
@@ -1089,9 +1082,6 @@ argument_list|)
 expr_stmt|;
 name|nxaccess
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|nxp
 argument_list|,
 name|Nexmap
@@ -1208,10 +1198,6 @@ name|int
 name|dn
 decl_stmt|,
 name|dt
-decl_stmt|,
-name|sn
-decl_stmt|,
-name|ds
 decl_stmt|;
 name|struct
 name|mba_device
@@ -1251,8 +1237,6 @@ name|nxp
 expr_stmt|;
 name|setscbnex
 argument_list|(
-name|nexnum
-argument_list|,
 name|mbaintv
 index|[
 name|nummba
@@ -1499,13 +1483,13 @@ name|mdp
 operator|->
 name|mba_cr
 operator|=
-name|MBAINIT
+name|MBCR_INIT
 expr_stmt|;
 name|mdp
 operator|->
 name|mba_cr
 operator|=
-name|MBAIE
+name|MBCR_IE
 expr_stmt|;
 block|}
 end_block
@@ -1965,6 +1949,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|lint
 specifier|register
 name|int
 name|br
@@ -1972,6 +1959,21 @@ decl_stmt|,
 name|cvec
 decl_stmt|;
 comment|/* MUST BE r11, r10 */
+else|#
+directive|else
+comment|/* 	 * Lint doesn't realize that these 	 * can be initialized asynchronously 	 * when devices interrupt. 	 */
+specifier|register
+name|int
+name|br
+init|=
+literal|0
+decl_stmt|,
+name|cvec
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 specifier|register
 name|struct
 name|uba_device
@@ -1985,18 +1987,6 @@ modifier|*
 name|um
 decl_stmt|;
 name|u_short
-modifier|*
-name|umem
-init|=
-operator|(
-name|u_short
-operator|*
-operator|)
-name|vumem
-decl_stmt|,
-modifier|*
-name|sp
-decl_stmt|,
 modifier|*
 name|reg
 decl_stmt|,
@@ -2198,6 +2188,7 @@ argument_list|,
 name|SCB_ISTACK
 argument_list|)
 expr_stmt|;
+comment|/* THIS IS A CHEAT: USING THE FACT THAT UMEM and NEXI ARE SAME SIZE */
 name|nxaccess
 argument_list|(
 operator|(
@@ -3046,26 +3037,18 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function_decl
 name|setscbnex
-argument_list|(
-argument|nexnum
-argument_list|,
-argument|fn
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|nexnum
-decl_stmt|,
-argument_list|(
-operator|*
+function_decl|(
 name|fn
+function_decl|)
+name|int
+argument_list|(
+argument|*fn
 argument_list|)
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_block
 block|{
@@ -3130,7 +3113,9 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|caddr_t
+name|struct
+name|nexus
+modifier|*
 name|physa
 decl_stmt|;
 end_decl_stmt
@@ -3148,7 +3133,7 @@ begin_block
 block|{
 specifier|register
 name|int
-name|cnt
+name|i
 init|=
 name|btop
 argument_list|(
@@ -3187,7 +3172,7 @@ expr_stmt|;
 do|while
 condition|(
 operator|--
-name|cnt
+name|i
 operator|>
 literal|0
 condition|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.13	81/02/28	*/
+comment|/*	systm.h	4.14	81/03/09	*/
 end_comment
 
 begin_comment
@@ -334,28 +334,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* its size */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|printsw
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* debug print switch */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|coresw
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* switch to force action on core dumps */
 end_comment
 
 begin_function_decl

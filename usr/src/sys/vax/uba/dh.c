@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.28	81/03/07	*/
+comment|/*	dh.c	4.29	81/03/09	*/
 end_comment
 
 begin_include
@@ -16,16 +16,6 @@ name|NDH
 operator|>
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|DELAY
-parameter_list|(
-name|i
-parameter_list|)
-value|{ register int j = i; while (--j> 0); }
-end_define
 
 begin_comment
 comment|/*  * DH-11/DM-11 driver  */
@@ -1148,13 +1138,13 @@ name|br
 operator|=
 literal|0
 expr_stmt|;
-name|cvec
+name|vec
 operator|=
 name|br
 expr_stmt|;
 name|br
 operator|=
-name|cvec
+name|vec
 expr_stmt|;
 endif|#
 directive|endif
@@ -2754,6 +2744,9 @@ name|tp
 operator|->
 name|t_outq
 argument_list|,
+operator|(
+name|int
+operator|)
 name|cntr
 argument_list|)
 expr_stmt|;
@@ -3679,6 +3672,9 @@ name|ui
 operator|->
 name|ui_addr
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -3757,6 +3753,9 @@ argument_list|,
 name|TTIPRI
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|spl0
 argument_list|()
 expr_stmt|;

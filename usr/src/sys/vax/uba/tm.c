@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.24	%G%	*/
+comment|/*	tm.c	4.25	%G%	*/
 end_comment
 
 begin_include
@@ -16,16 +16,6 @@ name|NTM
 operator|>
 literal|0
 end_if
-
-begin_decl_stmt
-name|int
-name|tmgapsdcnt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* DEBUG */
-end_comment
 
 begin_comment
 comment|/*  * TM11/TE10 tape driver  *  * TODO:  *	test driver with more than one slave  *	test driver with more than one controller  *	test reset code  *	test rewinds without hanging in driver  *	what happens if you offline tape during rewind?  *	test using file system on tape  */
@@ -344,7 +334,7 @@ decl_stmt|;
 comment|/* copy of last bc */
 ifdef|#
 directive|ifdef
-name|notdef
+name|unneeded
 name|short
 name|sc_lastcmd
 decl_stmt|;
@@ -362,6 +352,27 @@ name|NTM
 index|]
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|unneeded
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|tmgapsdcnt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* DEBUG */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * States for um->um_tab.b_active, the per controller state flag.  * This is used to sequence control in the driver.  */
@@ -444,13 +455,13 @@ name|br
 operator|=
 literal|0
 expr_stmt|;
-name|br
-operator|=
 name|cvec
+operator|=
+name|br
 expr_stmt|;
-name|cvec
-operator|=
 name|br
+operator|=
+name|cvec
 expr_stmt|;
 endif|#
 directive|endif
@@ -472,6 +483,9 @@ if|if
 condition|(
 name|badaddr
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 operator|(
 operator|(
@@ -1170,18 +1184,6 @@ name|buf
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
-name|struct
-name|te_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|te_softc
-index|[
-name|teunit
-index|]
-decl_stmt|;
 comment|/* 	 * Put transfer at end of unit queue 	 */
 name|dp
 operator|=
@@ -1809,6 +1811,9 @@ expr_stmt|;
 comment|/* will serve */
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
 name|ubago
 argument_list|(
 name|ui

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	4.6	%G%	*/
+comment|/*	Locore.c	4.7	%G%	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"dz.h"
+end_include
 
 begin_include
 include|#
@@ -60,7 +66,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/uba.h"
+file|"../h/ubavar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/nexus.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/msgbuf.h"
 end_include
 
 begin_comment
@@ -161,53 +185,6 @@ begin_block
 block|{ }
 end_block
 
-begin_if
-if|#
-directive|if
-name|VAX780
-end_if
-
-begin_macro
-name|Xuba3int
-argument_list|()
-end_macro
-
-begin_block
-block|{ }
-end_block
-
-begin_macro
-name|Xuba2int
-argument_list|()
-end_macro
-
-begin_block
-block|{ }
-end_block
-
-begin_macro
-name|Xuba1int
-argument_list|()
-end_macro
-
-begin_block
-block|{ }
-end_block
-
-begin_macro
-name|Xuba0int
-argument_list|()
-end_macro
-
-begin_block
-block|{ }
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_macro
 name|lowinit
 argument_list|()
@@ -228,6 +205,10 @@ name|intstack
 index|[
 literal|1
 index|]
+expr_stmt|;
+name|rpb
+operator|=
+name|rpb
 expr_stmt|;
 name|scb
 operator|=
@@ -306,7 +287,33 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|consdin
+argument_list|()
+expr_stmt|;
+name|consdout
+argument_list|()
+expr_stmt|;
+if|#
+directive|if
+name|NDZ
+operator|>
+literal|0
+name|dzdma
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|hardclock
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|softclock
 argument_list|(
 operator|(
 name|caddr_t
@@ -348,6 +355,54 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vmemall
+argument_list|(
+operator|(
+expr|struct
+name|pte
+operator|*
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+return|return;
+comment|/* use value */
+if|if
+condition|(
+name|forceclose
+argument_list|(
+operator|(
+name|dev_t
+operator|)
+literal|0
+argument_list|)
+condition|)
+return|return;
+comment|/* use value */
+name|machinecheck
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+name|memerr
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 
@@ -369,6 +424,14 @@ begin_block
 block|{ }
 end_block
 
+begin_if
+if|#
+directive|if
+name|NDZ
+operator|>
+literal|0
+end_if
+
 begin_macro
 name|dzdma
 argument_list|()
@@ -388,6 +451,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -460,15 +528,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|struct
+name|nexus
 name|nexus
 index|[
-literal|16
-index|]
-index|[
-literal|16
-operator|*
-name|NBPG
+name|NNEXUS
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -640,6 +704,9 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|CADDR1
+index|[
+name|NBPG
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -653,6 +720,9 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|CADDR2
+index|[
+name|NBPG
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -686,13 +756,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|struct
 name|msgbuf
-index|[
-name|CLSIZE
-operator|*
-name|NBPG
-index|]
+name|msgbuf
 decl_stmt|;
 end_decl_stmt
 
@@ -712,6 +778,12 @@ name|cabase
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|unneeded
+end_ifdef
+
 begin_decl_stmt
 name|char
 name|caspace
@@ -722,6 +794,11 @@ name|NBPG
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -780,7 +857,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|caddr_t
+name|int
 name|pc
 decl_stmt|;
 end_decl_stmt
@@ -977,7 +1054,16 @@ argument_list|()
 end_macro
 
 begin_block
-block|{ }
+block|{
+if|if
+condition|(
+name|whichqs
+condition|)
+name|whichqs
+operator|=
+literal|0
+expr_stmt|;
+block|}
 end_block
 
 begin_comment
@@ -1224,7 +1310,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{ }
+block|{
+name|CMAP1
+operator|=
+name|CMAP1
+expr_stmt|;
+name|CADDR1
+index|[
+literal|0
+index|]
+operator|=
+name|CADDR1
+index|[
+literal|0
+index|]
+expr_stmt|;
+block|}
 end_block
 
 begin_comment
@@ -1245,7 +1346,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{ }
+block|{
+name|CMAP2
+operator|=
+name|CMAP2
+expr_stmt|;
+name|CADDR2
+index|[
+literal|0
+index|]
+operator|=
+name|CADDR2
+index|[
+literal|0
+index|]
+expr_stmt|;
+block|}
 end_block
 
 begin_comment
@@ -1394,21 +1510,6 @@ block|}
 end_block
 
 begin_macro
-name|spl1
-argument_list|()
-end_macro
-
-begin_block
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_block
-
-begin_macro
 name|spl4
 argument_list|()
 end_macro
@@ -1520,8 +1621,8 @@ end_decl_stmt
 
 begin_block
 block|{
-operator|(
 operator|*
+operator|(
 name|int
 operator|*
 operator|)
@@ -1529,6 +1630,27 @@ name|mcrmap
 operator|=
 literal|0
 expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
+begin_macro
+name|ffs
+argument_list|(
+argument|i
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

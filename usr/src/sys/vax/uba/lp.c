@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.11	81/03/07	*/
+comment|/*	lp.c	4.12	81/03/09	*/
 end_comment
 
 begin_include
@@ -455,6 +455,9 @@ argument_list|)
 operator|&
 literal|07
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|spl4
 argument_list|()
 expr_stmt|;
@@ -489,6 +492,9 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
@@ -897,6 +903,9 @@ name|logcol
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|spl4
 argument_list|()
 expr_stmt|;
@@ -905,6 +914,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
@@ -1051,6 +1063,9 @@ operator|>=
 name|LPHWAT
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|spl4
 argument_list|()
 expr_stmt|;
@@ -1089,6 +1104,9 @@ name|LPPRI
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|spl0
 argument_list|()
 expr_stmt|;

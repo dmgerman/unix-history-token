@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbavar.h	4.13	81/03/08	*/
+comment|/*	mbavar.h	4.14	81/03/09	*/
 end_comment
 
 begin_comment
@@ -359,17 +359,6 @@ end_define
 
 begin_comment
 comment|/* don't do anything */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBN_CONT
-value|3
-end_define
-
-begin_comment
-comment|/* operation continues */
 end_comment
 
 begin_comment

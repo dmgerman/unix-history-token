@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tmreg.h	4.4	81/02/25	*/
+comment|/*	tmreg.h	4.5	81/03/09	*/
 end_comment
 
 begin_comment
@@ -243,172 +243,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TM_TUR
-value|0000001
-end_define
-
-begin_comment
-comment|/* tape unit ready */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TM_RWS
-value|0000002
-end_define
-
-begin_comment
-comment|/* tape unit rewinding */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TM_WRL
-value|0000004
-end_define
-
-begin_comment
-comment|/* tape unit write protected */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TM_SDWN
-value|0000010
-end_define
-
-begin_comment
-comment|/* gap settling down */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TM_CH7
-value|0000020
-end_define
-
-begin_comment
-comment|/* 7 channel tape */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TM_BOT
-value|0000040
-end_define
-
-begin_comment
-comment|/* at beginning of tape */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TM_SELR
-value|0000100
-end_define
-
-begin_comment
-comment|/* tape unit properly selected */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TM_NXM
-value|0000200
-end_define
-
-begin_comment
-comment|/* non-existant memory */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TM_BTE
-value|0000400
-end_define
-
-begin_comment
-comment|/* bad tape error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TM_RLE
-value|0001000
-end_define
-
-begin_comment
-comment|/* record length error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TM_EOT
-value|0002000
-end_define
-
-begin_comment
-comment|/* at end of tape */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TM_BGL
-value|0004000
-end_define
-
-begin_comment
-comment|/* bus grant late */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TM_PAE
-value|0010000
-end_define
-
-begin_comment
-comment|/* parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TM_CRE
-value|0020000
-end_define
-
-begin_comment
-comment|/* cyclic redundancy error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TM_EOF
-value|0040000
-end_define
-
-begin_comment
-comment|/* end of file */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TM_ILC
+name|TMER_ILC
 value|0100000
 end_define
 
@@ -419,7 +254,172 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TMEREG_BITS
+name|TMER_EOF
+value|0040000
+end_define
+
+begin_comment
+comment|/* end of file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMER_CRE
+value|0020000
+end_define
+
+begin_comment
+comment|/* cyclic redundancy error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMER_PAE
+value|0010000
+end_define
+
+begin_comment
+comment|/* parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMER_BGL
+value|0004000
+end_define
+
+begin_comment
+comment|/* bus grant late */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMER_EOT
+value|0002000
+end_define
+
+begin_comment
+comment|/* at end of tape */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMER_RLE
+value|0001000
+end_define
+
+begin_comment
+comment|/* record length error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMER_BTE
+value|0000400
+end_define
+
+begin_comment
+comment|/* bad tape error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMER_NXM
+value|0000200
+end_define
+
+begin_comment
+comment|/* non-existant memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMER_SELR
+value|0000100
+end_define
+
+begin_comment
+comment|/* tape unit properly selected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMER_BOT
+value|0000040
+end_define
+
+begin_comment
+comment|/* at beginning of tape */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMER_CH7
+value|0000020
+end_define
+
+begin_comment
+comment|/* 7 channel tape */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMER_SDWN
+value|0000010
+end_define
+
+begin_comment
+comment|/* gap settling down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMER_WRL
+value|0000004
+end_define
+
+begin_comment
+comment|/* tape unit write protected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMER_RWS
+value|0000002
+end_define
+
+begin_comment
+comment|/* tape unit rewinding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMER_TUR
+value|0000001
+end_define
+
+begin_comment
+comment|/* tape unit ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMER_BITS
 define|\
 value|"\10\20ILC\17EOF\16CRE\15PAE\14BGL\13EOT\12RLE\11BTE\10NXM\ \7SELR\6BOT\5CH7\4SDWN\3WRL\2RWS\1TUR"
 end_define
@@ -427,15 +427,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|TM_HARD
-value|(TM_ILC|TM_EOT)
+name|TMER_HARD
+value|(TMER_ILC|TMER_EOT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TM_SOFT
-value|(TM_CRE|TM_PAE|TM_BGL|TM_RLE|TM_BTE|TM_NXM)
+name|TMER_SOFT
+value|(TMER_CRE|TMER_PAE|TMER_BGL|TMER_RLE|TMER_BTE|TMER_NXM)
 end_define
 
 end_unit

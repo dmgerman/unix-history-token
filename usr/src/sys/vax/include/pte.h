@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pte.h	4.7	81/02/27	*/
+comment|/*	pte.h	4.8	81/03/09	*/
 end_comment
 
 begin_comment
@@ -347,24 +347,6 @@ specifier|extern
 name|struct
 name|pte
 name|mmap
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pte
-name|mcrmap
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pte
-name|bufmap
 index|[]
 decl_stmt|;
 end_decl_stmt

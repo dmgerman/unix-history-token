@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpreg.h	4.4	81/02/25	*/
+comment|/*	hpreg.h	4.5	81/03/09	*/
 end_comment
 
 begin_struct
@@ -376,7 +376,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_ATA
+name|HPDS_ATA
 value|0100000
 end_define
 
@@ -387,7 +387,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_ERR
+name|HPDS_ERR
 value|0040000
 end_define
 
@@ -398,7 +398,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_PIP
+name|HPDS_PIP
 value|0020000
 end_define
 
@@ -409,7 +409,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_MOL
+name|HPDS_MOL
 value|0010000
 end_define
 
@@ -420,7 +420,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_WRL
+name|HPDS_WRL
 value|0004000
 end_define
 
@@ -431,7 +431,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_LST
+name|HPDS_LST
 value|0002000
 end_define
 
@@ -442,7 +442,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_PGM
+name|HPDS_PGM
 value|0001000
 end_define
 
@@ -453,7 +453,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_DPR
+name|HPDS_DPR
 value|0000400
 end_define
 
@@ -464,7 +464,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_DRY
+name|HPDS_DRY
 value|0000200
 end_define
 
@@ -475,7 +475,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_VV
+name|HPDS_VV
 value|0000100
 end_define
 
@@ -490,7 +490,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_OM
+name|HPDS_OM
 value|0000001
 end_define
 
@@ -501,8 +501,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_DREADY
-value|(HP_DPR|HP_DRY|HP_MOL|HP_VV)
+name|HPDS_DREADY
+value|(HPDS_DPR|HPDS_DRY|HPDS_MOL|HPDS_VV)
 end_define
 
 begin_define
@@ -520,7 +520,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_DCK
+name|HPER1_DCK
 value|0100000
 end_define
 
@@ -531,7 +531,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_UNS
+name|HPER1_UNS
 value|0040000
 end_define
 
@@ -542,7 +542,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_OPI
+name|HPER1_OPI
 value|0020000
 end_define
 
@@ -553,7 +553,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_DTE
+name|HPER1_DTE
 value|0010000
 end_define
 
@@ -564,7 +564,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_WLE
+name|HPER1_WLE
 value|0004000
 end_define
 
@@ -575,7 +575,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_IAE
+name|HPER1_IAE
 value|0002000
 end_define
 
@@ -586,7 +586,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_AOE
+name|HPER1_AOE
 value|0001000
 end_define
 
@@ -597,7 +597,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_HCRC
+name|HPER1_HCRC
 value|0000400
 end_define
 
@@ -608,7 +608,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_HCE
+name|HPER1_HCE
 value|0000200
 end_define
 
@@ -619,7 +619,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_ECH
+name|HPER1_ECH
 value|0000100
 end_define
 
@@ -630,7 +630,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_WCF
+name|HPER1_WCF
 value|0000040
 end_define
 
@@ -641,7 +641,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_FER
+name|HPER1_FER
 value|0000020
 end_define
 
@@ -652,7 +652,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_PAR
+name|HPER1_PAR
 value|0000010
 end_define
 
@@ -663,7 +663,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_RMR
+name|HPER1_RMR
 value|0000004
 end_define
 
@@ -674,7 +674,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_ILR
+name|HPER1_ILR
 value|0000002
 end_define
 
@@ -685,7 +685,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_ILF
+name|HPER1_ILF
 value|0000001
 end_define
 
@@ -701,15 +701,12 @@ define|\
 value|"\10\20DCK\17UNS\16OPI\15DTE\14WLE\13IAE\12AOE\11HCRC\10HCE\ \7ECH\6WCF\5FER\4PAR\3RMR\2ILR\1ILF"
 end_define
 
-begin_comment
-comment|/* THIS NEEDS TO BE DOUBLE CHECKED... */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|HPER1_HARD
-value|(HP_UNS|HP_WLE|HP_IAE|HP_AOE|HP_FER|HP_RMR|HP_ILR|HP_ILF)
+define|\
+value|(HPER1_UNS|HPER1_WLE|HPER1_IAE|HPER1_AOE|\ 	 HPER1_FER|HPER1_RMR|HPER1_ILR|HPER1_ILF)
 end_define
 
 begin_comment
@@ -719,7 +716,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_BSE
+name|HPER2_BSE
 value|0100000
 end_define
 
@@ -730,7 +727,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_SKI
+name|HPER2_SKI
 value|0040000
 end_define
 
@@ -741,7 +738,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_OPE
+name|HPER2_OPE
 value|0020000
 end_define
 
@@ -752,7 +749,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_IVC
+name|HPER2_IVC
 value|0010000
 end_define
 
@@ -763,7 +760,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_LSC
+name|HPER2_LSC
 value|0004000
 end_define
 
@@ -774,7 +771,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_LBC
+name|HPER2_LBC
 value|0002000
 end_define
 
@@ -785,7 +782,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_DVC
+name|HPER2_DVC
 value|0000200
 end_define
 
@@ -796,7 +793,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_DPE
+name|HPER2_SSE
+value|0000020
+end_define
+
+begin_comment
+comment|/* skip sector error (rm80) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPER2_DPE
 value|0000010
 end_define
 
@@ -809,14 +817,14 @@ define|#
 directive|define
 name|HPER2_BITS
 define|\
-value|"\10\20BSE\17SKI\16OPE\15IVC\14LSC\13LBC\10DVC\4DPE"
+value|"\10\20BSE\17SKI\16OPE\15IVC\14LSC\13LBC\10DVC\5SSE\4DPE"
 end_define
 
 begin_define
 define|#
 directive|define
 name|HPER2_HARD
-value|(HP_BSE|HP_OPE)
+value|(HPER2_BSE|HPER2_OPE)
 end_define
 
 begin_comment
@@ -826,7 +834,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_CMO
+name|HPOF_CMO
 value|0100000
 end_define
 
@@ -837,7 +845,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_MTD
+name|HPOF_MTD
 value|0040000
 end_define
 
@@ -848,7 +856,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_FMT22
+name|HPOF_FMT22
 value|0010000
 end_define
 
@@ -859,7 +867,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_ECI
+name|HPOF_ECI
 value|0004000
 end_define
 
@@ -870,7 +878,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_HCI
+name|HPOF_HCI
 value|0002000
 end_define
 
@@ -881,7 +889,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_SSEI
+name|HPOF_SSEI
 value|0001000
 end_define
 
@@ -892,7 +900,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_P400
+name|HPOF_P400
 value|020
 end_define
 
@@ -903,7 +911,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_M400
+name|HPOF_M400
 value|0220
 end_define
 
@@ -914,7 +922,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_P800
+name|HPOF_P800
 value|040
 end_define
 
@@ -925,7 +933,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_M800
+name|HPOF_M800
 value|0240
 end_define
 
@@ -936,7 +944,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_P1200
+name|HPOF_P1200
 value|060
 end_define
 
@@ -947,7 +955,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HP_M1200
+name|HPOF_M1200
 value|0260
 end_define
 

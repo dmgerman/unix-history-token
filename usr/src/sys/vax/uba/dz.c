@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.21	%G%	*/
+comment|/*	dz.c	4.22	%G%	*/
 end_comment
 
 begin_include
@@ -16,16 +16,6 @@ name|NDZ
 operator|>
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|DELAY
-parameter_list|(
-name|i
-parameter_list|)
-value|{ register int j = i; while (--j> 0); }
-end_define
 
 begin_comment
 comment|/*  *  DZ-11 Driver  *  * This driver mimics dh.c; see it for explanation of common code.  */
@@ -568,13 +558,13 @@ name|br
 operator|=
 literal|0
 expr_stmt|;
-name|br
-operator|=
 name|cvec
+operator|=
+name|br
 expr_stmt|;
-name|cvec
-operator|=
 name|br
+operator|=
+name|cvec
 expr_stmt|;
 endif|#
 directive|endif

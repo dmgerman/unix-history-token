@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbareg.h	4.13	81/03/08	*/
+comment|/*	mbareg.h	4.14	81/03/09	*/
 end_comment
 
 begin_comment
@@ -139,7 +139,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBAINIT
+name|MBCR_INIT
 value|0x1
 end_define
 
@@ -150,7 +150,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBAIE
+name|MBCR_IE
 value|0x4
 end_define
 
@@ -165,7 +165,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_DTBUSY
+name|MBSR_DTBUSY
 value|0x80000000
 end_define
 
@@ -176,7 +176,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_NRCONF
+name|MBSR_NRCONF
 value|0x40000000
 end_define
 
@@ -187,7 +187,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_CRD
+name|MBSR_CRD
 value|0x20000000
 end_define
 
@@ -198,7 +198,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_CBHUNG
+name|MBSR_CBHUNG
 value|0x00800000
 end_define
 
@@ -209,7 +209,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_PGE
+name|MBSR_PGE
 value|0x00080000
 end_define
 
@@ -220,7 +220,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_NED
+name|MBSR_NED
 value|0x00040000
 end_define
 
@@ -231,7 +231,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_MCPE
+name|MBSR_MCPE
 value|0x00020000
 end_define
 
@@ -242,7 +242,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_ATTN
+name|MBSR_ATTN
 value|0x00010000
 end_define
 
@@ -253,7 +253,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_SPE
+name|MBSR_SPE
 value|0x00004000
 end_define
 
@@ -264,7 +264,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_DTCMP
+name|MBSR_DTCMP
 value|0x00002000
 end_define
 
@@ -275,7 +275,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_DTABT
+name|MBSR_DTABT
 value|0x00001000
 end_define
 
@@ -286,7 +286,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_DLT
+name|MBSR_DLT
 value|0x00000800
 end_define
 
@@ -297,7 +297,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_WCKUP
+name|MBSR_WCKUP
 value|0x00000400
 end_define
 
@@ -308,7 +308,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_WCKLWR
+name|MBSR_WCKLWR
 value|0x00000200
 end_define
 
@@ -319,7 +319,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_MXF
+name|MBSR_MXF
 value|0x00000100
 end_define
 
@@ -330,7 +330,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_MBEXC
+name|MBSR_MBEXC
 value|0x00000080
 end_define
 
@@ -341,7 +341,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_MDPE
+name|MBSR_MDPE
 value|0x00000040
 end_define
 
@@ -352,7 +352,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_MAPPE
+name|MBSR_MAPPE
 value|0x00000020
 end_define
 
@@ -363,7 +363,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_INVMAP
+name|MBSR_INVMAP
 value|0x00000010
 end_define
 
@@ -374,7 +374,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_ERRCONF
+name|MBSR_ERRCONF
 value|0x00000008
 end_define
 
@@ -385,7 +385,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_RDS
+name|MBSR_RDS
 value|0x00000004
 end_define
 
@@ -396,7 +396,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_ISTIMO
+name|MBSR_ISTIMO
 value|0x00000002
 end_define
 
@@ -407,7 +407,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBS_RDTIMO
+name|MBSR_RDTIMO
 value|0x00000001
 end_define
 
@@ -418,7 +418,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBASR_BITS
+name|MBSR_BITS
 define|\
 value|"\20\40DTBUSY\37NRCONF\36CRD\30CBHUNG\24PGE\23NED\22MCPE\21ATTN\ \17SPE\16DTCMP\15DTABT\14DLT\13WCKUP\12WCKLWR\11MXF\10MBEXC\7MDPE\ \6MAPPE\5INVMAP\4ERRCONF\3RDS\2ISTIMO\1RDTIMO"
 end_define
@@ -426,24 +426,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|MBASR_HARD
-value|(MBS_PGE|MBS_ERRCONF|MBS_ISTIMO|MBS_RDTIMO)
+name|MBSR_HARD
+value|(MBSR_PGE|MBSR_ERRCONF|MBSR_ISTIMO|MBSR_RDTIMO)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAEBITS
-value|(~(MBS_DTBUSY|MBS_CRD|MBS_ATTN|MBS_DTCMP))
+name|MBSR_EBITS
+value|(~(MBSR_DTBUSY|MBSR_CRD|MBSR_ATTN|MBSR_DTCMP))
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
 name|char
-name|mbasr_bits
+name|mbsr_bits
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Commands for mbd_cs1  */
@@ -452,21 +463,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBD_WCOM
+name|MB_WCOM
 value|0x30
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBD_RCOM
+name|MB_RCOM
 value|0x38
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBD_GO
+name|MB_GO
 value|0x1
 end_define
 
@@ -477,19 +488,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBD_DRY
-value|0x80
+name|MBDS_ERR
+value|0x00004000
 end_define
 
 begin_comment
-comment|/* drive ready */
+comment|/* error in drive */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MBD_MOL
-value|0x1000
+name|MBDS_MOL
+value|0x00001000
 end_define
 
 begin_comment
@@ -499,8 +510,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBD_DPR
-value|0x100
+name|MBDS_DPR
+value|0x00000100
 end_define
 
 begin_comment
@@ -510,13 +521,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBD_ERR
-value|0x4000
+name|MBDS_DRY
+value|0x00000080
 end_define
 
 begin_comment
-comment|/* error in drive */
+comment|/* drive ready */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MBDS_DREADY
+value|(MBDS_MOL|MBDS_DPR|MBDS_DRY)
+end_define
 
 begin_comment
 comment|/*  * Bits in mbd_dt  */

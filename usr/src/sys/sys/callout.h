@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	callout.h	4.4	81/02/27	*/
+comment|/*	callout.h	4.5	81/03/09	*/
 end_comment
 
 begin_comment
@@ -38,7 +38,6 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|callout
 modifier|*
@@ -47,7 +46,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|ncallout
 decl_stmt|;

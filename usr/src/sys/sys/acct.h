@@ -1,23 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	acct.h	4.2	81/02/19	*/
+comment|/*	acct.h	4.3	81/03/09	*/
 end_comment
 
 begin_comment
-comment|/*  * Accounting structures  */
+comment|/*  * Accounting structures;  * these use a comp_t type which is a 3 bits base 8  * exponent, 13 bit fraction ``floating point'' number.  */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|short
+name|u_short
 name|comp_t
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* "floating pt": 3 bits base 8 exp, 13 bits fraction */
-end_comment
 
 begin_struct
 struct|struct
@@ -73,27 +68,6 @@ comment|/* Accounting flag */
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|acct
-name|acctbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|inode
-modifier|*
-name|acctp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* inode of accounting file */
-end_comment
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.25	81/03/08	*/
+comment|/*	hp.c	4.26	81/03/09	*/
 end_comment
 
 begin_include
@@ -929,8 +929,6 @@ name|int
 name|sn
 decl_stmt|,
 name|dist
-decl_stmt|,
-name|flags
 decl_stmt|;
 if|if
 condition|(
@@ -1303,7 +1301,7 @@ name|hpdtint
 argument_list|(
 name|mi
 argument_list|,
-name|mbasr
+name|mbsr
 argument_list|)
 specifier|register
 expr|struct
@@ -1315,7 +1313,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|mbasr
+name|mbsr
 decl_stmt|;
 end_decl_stmt
 
@@ -1361,9 +1359,9 @@ name|hpds
 operator|&
 name|HPDS_ERR
 operator|||
-name|mbasr
+name|mbsr
 operator|&
-name|MBAEBITS
+name|MBSR_EBITS
 condition|)
 block|{
 if|if
@@ -1404,9 +1402,9 @@ name|b_errcnt
 operator|>
 literal|27
 operator|||
-name|mbasr
+name|mbsr
 operator|&
-name|MBASR_HARD
+name|MBSR_HARD
 operator|||
 name|hpaddr
 operator|->
@@ -1430,11 +1428,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"mbasr=%b er1=%b er2=%b\n"
+literal|"mbsr=%b er1=%b er2=%b\n"
 argument_list|,
-name|mbasr
+name|mbsr
 argument_list|,
-name|mbasr_bits
+name|mbsr_bits
 argument_list|,
 name|hpaddr
 operator|->
@@ -1455,9 +1453,6 @@ name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 block|}
 elseif|else
 if|if
@@ -1481,8 +1476,6 @@ operator|(
 name|MBD_RESTARTED
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 elseif|else
 if|if
@@ -1879,6 +1872,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_expr_stmt
 name|hpecc
 argument_list|(
@@ -2015,9 +2012,6 @@ name|reg
 operator|=
 name|npf
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 if|if
 condition|(
 name|rm80sse
@@ -2032,13 +2026,11 @@ expr_stmt|;
 name|reg
 operator|--
 expr_stmt|;
-comment|/* compensate in advance for reg-- below */
+comment|/* compensate in advance for reg+1 below */
 goto|goto
 name|sse
 goto|;
 block|}
-endif|#
-directive|endif
 name|o
 operator|=
 operator|(
@@ -2546,7 +2538,7 @@ name|mba
 operator|->
 name|mba_cr
 operator|=
-name|MBAINIT
+name|MBCR_INIT
 expr_stmt|;
 name|hpaddr
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inode.h	4.4	81/02/27	*/
+comment|/*	inode.h	4.5	81/03/09	*/
 end_comment
 
 begin_comment
@@ -176,7 +176,6 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|inode
 modifier|*
@@ -187,12 +186,7 @@ name|inodeNINODE
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* The inode table itself */
-end_comment
-
 begin_decl_stmt
-specifier|extern
 name|int
 name|ninode
 decl_stmt|;

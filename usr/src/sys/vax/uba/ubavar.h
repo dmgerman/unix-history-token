@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	4.17	81/03/08	*/
+comment|/*	ubavar.h	4.18	81/03/09	*/
 end_comment
 
 begin_comment

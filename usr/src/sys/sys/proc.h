@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.5	81/02/27	*/
+comment|/*	proc.h	4.6	81/03/09	*/
 end_comment
 
 begin_comment
@@ -231,7 +231,6 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|proc
 modifier|*
@@ -247,7 +246,6 @@ comment|/* the proc table itself */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|nproc
 decl_stmt|;

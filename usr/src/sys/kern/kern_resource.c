@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_resource.c	4.2	%G%	*/
+comment|/*	kern_resource.c	4.3	%G%	*/
 end_comment
 
 begin_include
@@ -50,6 +50,14 @@ include|#
 directive|include
 file|"../h/seg.h"
 end_include
+
+begin_decl_stmt
+name|struct
+name|inode
+modifier|*
+name|acctp
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Perform process accounting functions.  */
@@ -196,6 +204,13 @@ block|}
 block|}
 end_block
 
+begin_decl_stmt
+name|struct
+name|acct
+name|acctbuf
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * On exit, write a record on the accounting file.  */
 end_comment
@@ -218,6 +233,15 @@ name|ip
 decl_stmt|;
 name|off_t
 name|siz
+decl_stmt|;
+specifier|register
+name|struct
+name|acct
+modifier|*
+name|ap
+init|=
+operator|&
+name|acctbuf
 decl_stmt|;
 if|if
 condition|(
@@ -245,16 +269,16 @@ name|i
 operator|<
 sizeof|sizeof
 argument_list|(
-name|acctbuf
-operator|.
+name|ap
+operator|->
 name|ac_comm
 argument_list|)
 condition|;
 name|i
 operator|++
 control|)
-name|acctbuf
-operator|.
+name|ap
+operator|->
 name|ac_comm
 index|[
 name|i
@@ -267,8 +291,8 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|acctbuf
-operator|.
+name|ap
+operator|->
 name|ac_utime
 operator|=
 name|compress
@@ -283,8 +307,8 @@ operator|.
 name|vm_utime
 argument_list|)
 expr_stmt|;
-name|acctbuf
-operator|.
+name|ap
+operator|->
 name|ac_stime
 operator|=
 name|compress
@@ -299,8 +323,8 @@ operator|.
 name|vm_stime
 argument_list|)
 expr_stmt|;
-name|acctbuf
-operator|.
+name|ap
+operator|->
 name|ac_etime
 operator|=
 name|compress
@@ -317,32 +341,32 @@ name|u_start
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|acctbuf
-operator|.
+name|ap
+operator|->
 name|ac_btime
 operator|=
 name|u
 operator|.
 name|u_start
 expr_stmt|;
-name|acctbuf
-operator|.
+name|ap
+operator|->
 name|ac_uid
 operator|=
 name|u
 operator|.
 name|u_ruid
 expr_stmt|;
-name|acctbuf
-operator|.
+name|ap
+operator|->
 name|ac_gid
 operator|=
 name|u
 operator|.
 name|u_rgid
 expr_stmt|;
-name|acctbuf
-operator|.
+name|ap
+operator|->
 name|ac_mem
 operator|=
 literal|0
@@ -363,8 +387,8 @@ name|u_vm
 operator|.
 name|vm_stime
 condition|)
-name|acctbuf
-operator|.
+name|ap
+operator|->
 name|ac_mem
 operator|=
 operator|(
@@ -383,8 +407,8 @@ operator|)
 operator|/
 name|i
 expr_stmt|;
-name|acctbuf
-operator|.
+name|ap
+operator|->
 name|ac_io
 operator|=
 name|compress
@@ -407,16 +431,16 @@ name|vm_oublk
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|acctbuf
-operator|.
+name|ap
+operator|->
 name|ac_tty
 operator|=
 name|u
 operator|.
 name|u_ttyd
 expr_stmt|;
-name|acctbuf
-operator|.
+name|ap
+operator|->
 name|ac_flag
 operator|=
 name|u
@@ -442,8 +466,7 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-operator|&
-name|acctbuf
+name|ap
 expr_stmt|;
 name|u
 operator|.

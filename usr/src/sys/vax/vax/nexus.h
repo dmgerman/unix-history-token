@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	nexus.h	4.5	81/03/06	*/
+comment|/*	nexus.h	4.6	81/03/09	*/
 end_comment
 
 begin_comment
@@ -144,7 +144,6 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|nexus
 name|nexus
@@ -262,7 +261,6 @@ value|"\20\40PARFLT\37WSQFLT\36URDFLT\35ISQFLT\34MXTFLT\33XMTFLT"
 end_define
 
 begin_decl_stmt
-specifier|extern
 name|char
 name|nexflt_bits
 index|[]

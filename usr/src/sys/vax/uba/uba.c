@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.20	%G%	*/
+comment|/*	uba.c	4.21	%G%	*/
 end_comment
-
-begin_define
-define|#
-directive|define
-name|DELAY
-parameter_list|(
-name|N
-parameter_list|)
-value|{ register int d; d = N; while (--d> 0); }
-end_define
 
 begin_include
 include|#
@@ -1057,15 +1047,22 @@ name|bcnt
 operator|,
 name|flags
 operator|)
-name|caddr_t
-name|addr
+name|int
+name|uban
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|unsigned
-name|short
+name|caddr_t
+name|addr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|bcnt
+decl_stmt|,
+name|flags
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	va.c	4.6	%G%	*/
+comment|/*	va.c	4.7	%G%	*/
 end_comment
 
 begin_include
@@ -1144,16 +1144,6 @@ literal|0
 expr_stmt|;
 block|}
 end_block
-
-begin_define
-define|#
-directive|define
-name|DELAY
-parameter_list|(
-name|N
-parameter_list|)
-value|{ register int d; d = N; while (--d> 0); }
-end_define
 
 begin_macro
 name|vareset

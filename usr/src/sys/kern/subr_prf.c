@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.13	%G%	*/
+comment|/*	subr_prf.c	4.14	%G%	*/
 end_comment
 
 begin_include
@@ -311,6 +311,9 @@ name|number
 label|:
 name|printn
 argument_list|(
+operator|(
+name|u_long
+operator|)
 operator|*
 name|adx
 argument_list|,
@@ -382,6 +385,9 @@ name|adx
 expr_stmt|;
 name|printn
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|b
 argument_list|,
 operator|*
@@ -546,8 +552,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|unsigned
-name|long
+name|u_long
 name|n
 decl_stmt|;
 end_decl_stmt
@@ -681,13 +686,6 @@ decl_stmt|;
 name|panicstr
 operator|=
 name|s
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"panic: %s\n"
-argument_list|,
-name|s
-argument_list|)
 expr_stmt|;
 operator|(
 name|void

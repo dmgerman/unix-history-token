@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.24	%G%	*/
+comment|/*	conf.c	4.25	%G%	*/
 end_comment
 
 begin_include
@@ -206,6 +206,9 @@ argument_list|()
 decl_stmt|,
 name|htdump
 argument_list|()
+decl_stmt|,
+name|htioctl
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -253,7 +256,14 @@ begin_define
 define|#
 directive|define
 name|htdump
-value|0
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|htioctl
+value|nodev
 end_define
 
 begin_endif
@@ -379,11 +389,18 @@ argument_list|()
 decl_stmt|,
 name|tmwrite
 argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|tmioctl
 argument_list|()
 decl_stmt|,
 name|tmdump
+argument_list|()
+decl_stmt|,
+name|tmreset
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -439,6 +456,13 @@ begin_define
 define|#
 directive|define
 name|tmdump
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|tmreset
 value|nodev
 end_define
 
@@ -1535,7 +1559,7 @@ block|,
 name|htwrite
 block|,
 comment|/*5*/
-name|nodev
+name|htioctl
 block|,
 name|nodev
 block|,
@@ -1716,7 +1740,7 @@ name|tmioctl
 block|,
 name|nodev
 block|,
-name|nulldev
+name|tmreset
 block|,
 literal|0
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	4.15	%G%	*/
+comment|/*	kern_physio.c	4.16	%G%	*/
 end_comment
 
 begin_include
@@ -72,6 +72,26 @@ end_include
 begin_comment
 comment|/*  * The following several routines allocate and free  * buffers with various side effects.  In general the  * arguments to an allocate routine are a device and  * a block number, and the value is a pointer to  * to the buffer header; the buffer is marked "busy"  * so that no one else can touch it.  If the block was  * already in core, no I/O need be done; if it is  * already busy, the process waits until it becomes free.  * The following routines allocate a buffer:  *	getblk  *	bread  *	breada  *	baddr	(if it is incore)  * Eventually the buffer must be released, possibly with the  * side effect of writing it out, by using one of  *	bwrite  *	bdwrite  *	bawrite  *	brelse  */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|buf
+name|bfreelist
+index|[
+name|BQUEUES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|buf
+name|bswlist
+decl_stmt|,
+modifier|*
+name|bclnlist
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#

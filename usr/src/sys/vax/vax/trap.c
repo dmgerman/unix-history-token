@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.6	%G%	*/
+comment|/*	trap.c	4.7	%G%	*/
 end_comment
 
 begin_include
@@ -553,9 +553,6 @@ operator|)
 condition|)
 name|addupc
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|locr0
 index|[
 name|PC

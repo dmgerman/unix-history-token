@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.23	81/03/08	*/
+comment|/*	machdep.c	4.24	81/03/09	*/
 end_comment
 
 begin_include
@@ -166,27 +166,11 @@ file|<frame.h>
 end_include
 
 begin_decl_stmt
-name|int
-name|coresw
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|printsw
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 name|version
 index|[]
 init|=
-literal|"VAX/UNIX (Berkeley Version 4.23) 81/03/08 16:18:25 \n"
+literal|"VAX/UNIX (Berkeley Version 4.24) 81/03/09 00:32:40 \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,7 +246,7 @@ name|int
 name|unixsize
 decl_stmt|;
 specifier|register
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 specifier|register
@@ -1959,7 +1943,7 @@ end_decl_stmt
 begin_macro
 name|boot
 argument_list|(
-argument|panic
+argument|paniced
 argument_list|,
 argument|arghowto
 argument_list|)
@@ -1967,7 +1951,7 @@ end_macro
 
 begin_decl_stmt
 name|int
-name|panic
+name|paniced
 decl_stmt|,
 name|arghowto
 decl_stmt|;
@@ -2090,7 +2074,7 @@ else|else
 block|{
 if|if
 condition|(
-name|panic
+name|paniced
 operator|==
 name|RB_PANIC
 condition|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.h	4.5	81/02/19	*/
+comment|/*	conf.h	4.6	81/03/09	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,6 @@ comment|/*  * Declaration of block device  * switch. Each entry (row) is  * the 
 end_comment
 
 begin_struct
-specifier|extern
 struct|struct
 name|bdevsw
 block|{
@@ -44,17 +43,33 @@ name|int
 name|d_flags
 decl_stmt|;
 block|}
-name|bdevsw
-index|[]
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|bdevsw
+name|bdevsw
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Character device switch.  */
 end_comment
 
 begin_struct
-specifier|extern
 struct|struct
 name|cdevsw
 block|{
@@ -113,17 +128,33 @@ modifier|*
 name|d_ttys
 decl_stmt|;
 block|}
-name|cdevsw
-index|[]
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|cdevsw
+name|cdevsw
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * tty line control switch.  */
 end_comment
 
 begin_struct
-specifier|extern
 struct|struct
 name|linesw
 block|{
@@ -199,17 +230,33 @@ function_decl|)
 parameter_list|()
 function_decl|;
 block|}
-name|linesw
-index|[]
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|linesw
+name|linesw
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Swap device information  */
 end_comment
 
 begin_struct
-specifier|extern
 struct|struct
 name|swdevt
 block|{
@@ -228,13 +275,14 @@ end_struct
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CHAOS
+name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|cdevpath
+name|struct
+name|swdevt
+name|swdevt
+index|[]
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	4.4	81/02/27	*/
+comment|/*	file.h	4.5	81/03/09	*/
 end_comment
 
 begin_comment
@@ -50,7 +50,6 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|file
 modifier|*
@@ -66,7 +65,6 @@ comment|/* the file table itself */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|nfile
 decl_stmt|;

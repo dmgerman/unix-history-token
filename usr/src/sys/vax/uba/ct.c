@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ct.c	4.1	81/02/23	*/
+comment|/*	ct.c	4.2	81/03/09	*/
 end_comment
 
 begin_include
@@ -216,6 +216,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -270,6 +273,9 @@ expr_stmt|;
 name|ctintr
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|spl0
 argument_list|()
 expr_stmt|;

@@ -1,19 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.24	%G%	*/
+comment|/*	rk.c	4.25	%G%	*/
 end_comment
-
-begin_decl_stmt
-name|int
-name|rkpip
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|rknosval
-decl_stmt|;
-end_decl_stmt
 
 begin_include
 include|#
@@ -29,19 +17,29 @@ operator|>
 literal|0
 end_if
 
+begin_decl_stmt
+name|int
+name|rkpip
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* DEBUG */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rknosval
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* DEBUG */
+end_comment
+
 begin_comment
 comment|/*  * RK11/RK07 disk driver  *  * This driver mimics up.c; see it for an explanation of common code.  *  * TODO:  *	Add reading of bad sector information and disk layout from sector 1  *	Add bad sector forwarding code  *	Why do we lose an interrupt sometime when spinning drives down?  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|DELAY
-parameter_list|(
-name|i
-parameter_list|)
-value|{ register int j; j = i; while (--j> 0); }
-end_define
 
 begin_include
 include|#
@@ -1055,20 +1053,6 @@ name|rkdevice
 modifier|*
 name|rkaddr
 decl_stmt|;
-specifier|register
-name|struct
-name|rkst
-modifier|*
-name|st
-decl_stmt|;
-name|daddr_t
-name|bn
-decl_stmt|;
-name|int
-name|sn
-decl_stmt|,
-name|csn
-decl_stmt|;
 name|int
 name|didie
 init|=
@@ -1882,6 +1866,9 @@ name|um_cmd
 operator|=
 name|cmd
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ubago
 argument_list|(
 name|ui

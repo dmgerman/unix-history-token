@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.30	81/03/07	*/
+comment|/*	up.c	4.31	81/03/09	*/
 end_comment
 
 begin_include
@@ -20,16 +20,6 @@ end_if
 begin_comment
 comment|/*  * UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * TODO:  *	Add reading of bad sector information and disk layout from sector 1  *	Add bad sector forwarding code  *	Check multiple drive handling  *	Check unibus reset code  *	Check that offset recovery code, etc works  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|DELAY
-parameter_list|(
-name|N
-parameter_list|)
-value|{ register int d; d = N; while (--d> 0); }
-end_define
 
 begin_include
 include|#
@@ -2122,6 +2112,9 @@ name|um_cmd
 operator|=
 name|cmd
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ubago
 argument_list|(
 name|ui
@@ -3953,8 +3946,6 @@ decl_stmt|,
 name|blk
 decl_stmt|,
 name|unit
-decl_stmt|,
-name|i
 decl_stmt|;
 name|struct
 name|size
