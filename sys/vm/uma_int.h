@@ -172,12 +172,12 @@ name|LIST_ENTRY
 argument_list|(
 argument|uma_slab
 argument_list|)
-name|us_link
+name|_us_link
 expr_stmt|;
 comment|/* slabs in zone */
 name|unsigned
 name|long
-name|us_size
+name|_us_size
 decl_stmt|;
 comment|/* Size of allocation */
 block|}
@@ -222,14 +222,14 @@ begin_define
 define|#
 directive|define
 name|us_link
-value|us_type.us_link
+value|us_type._us_link
 end_define
 
 begin_define
 define|#
 directive|define
 name|us_size
-value|us_type.us_size
+value|us_type._us_size
 end_define
 
 begin_typedef
