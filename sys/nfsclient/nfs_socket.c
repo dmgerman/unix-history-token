@@ -5327,6 +5327,18 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
+name|nfs_callout
+argument_list|,
+name|nfs_ticks
+argument_list|,
+name|nfs_timer
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
