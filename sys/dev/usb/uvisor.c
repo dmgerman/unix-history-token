@@ -820,7 +820,7 @@ block|,
 name|USB_PRODUCT_SONY_CLIE_41
 block|}
 block|,
-literal|0
+name|PALM4
 block|}
 block|,
 block|{
