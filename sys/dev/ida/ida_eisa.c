@@ -1015,17 +1015,6 @@ name|eisa_add_iospace
 argument_list|(
 name|dev
 argument_list|,
-name|io_base
-argument_list|,
-literal|0x100
-argument_list|,
-name|RESVADDR_NONE
-argument_list|)
-expr_stmt|;
-name|eisa_add_iospace
-argument_list|(
-name|dev
-argument_list|,
 operator|(
 name|io_base
 operator|+
