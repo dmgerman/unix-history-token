@@ -669,9 +669,6 @@ name|tte
 modifier|*
 name|tp
 decl_stmt|;
-name|vm_page_t
-name|om
-decl_stmt|;
 name|vm_offset_t
 name|ova
 decl_stmt|;
