@@ -1161,6 +1161,20 @@ operator|)
 operator|>>
 literal|2
 expr_stmt|;
+name|ce
+operator|->
+name|Length
+operator|=
+name|MPT_NSGL
+argument_list|(
+name|mpt
+argument_list|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|SGE_SIMPLE32
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1174,7 +1188,6 @@ name|NextChainOffset
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|ce
 operator|->
 name|Length
@@ -1186,6 +1199,7 @@ argument_list|(
 name|SGE_SIMPLE32
 argument_list|)
 expr_stmt|;
+block|}
 name|ce
 operator|->
 name|Address
