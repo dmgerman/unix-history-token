@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_pageout.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_pageout.c,v 1.7 1993/12/19 00:56:12 wollman Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_pageout.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_pageout.c,v 1.8 1993/12/21 05:51:06 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -397,7 +397,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 				 *	Try to collapse the object before 				 *	making a pager for it.  We must 				 *	unlock the page queues first. 				 *	We try to defer the creation of a pager 				 *	until all shadows are not paging.  This 				 *	allows vm_object_collapse to work better and 				 *	helps control swap space size. 				 *	(J. Dyson 11 Nov 93) 				 */
+comment|/* 				 *	Try to collapse the object before 				 *	making a pager for it.  We must 				 *	unlock the page queues first. 				 *	We try to defer the creation of a pager 				 *	until all shadows are not paging.  This 				 *	allows vm_object_collapse to work better and 				 *	helps control swap space size. 				 *	(J. Dyson 18 Dec 93) 				 */
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
@@ -407,12 +407,7 @@ operator|!
 name|object
 operator|->
 name|pager
-condition|)
-block|{
-comment|/* 		 *  If our shadow is active, then wait until paging is done 		 *  this will allow vm_object_collapse to work well. 		 *  The collapse is necessary to keep swap space down. 		 */
-if|if
-condition|(
-operator|(
+operator|&&
 operator|(
 name|object
 operator|->
@@ -430,7 +425,6 @@ name|vm_page_free_count
 operator|<
 name|vm_pageout_free_min
 operator|)
-operator|)
 condition|)
 block|{
 name|vm_object_unlock
@@ -453,53 +447,11 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-else|else
-block|{
 name|vm_object_collapse
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 					 * If we still have a shadow active, then defer the 					 * creation of the pager further... 					 */
-if|if
-condition|(
-name|object
-operator|->
-name|shadow
-condition|)
-block|{
-if|if
-condition|(
-name|object
-operator|->
-name|shadow
-operator|->
-name|paging_in_progress
-condition|)
-block|{
-name|vm_object_unlock
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-name|m
-operator|=
-operator|(
-name|vm_page_t
-operator|)
-name|queue_next
-argument_list|(
-operator|&
-name|m
-operator|->
-name|pageq
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-block|}
-block|}
-block|}
 name|pmap_page_protect
 argument_list|(
 name|VM_PAGE_TO_PHYS

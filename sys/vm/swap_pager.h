@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)swap_pager.h	7.1 (Berkeley) 12/5/90  *	$Id: swap_pager.h,v 1.3 1993/11/07 17:54:06 wollman Exp $  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)swap_pager.h	7.1 (Berkeley) 12/5/90  *	$Id: swap_pager.h,v 1.2 1993/10/16 16:20:21 rgrimes Exp $  */
+end_comment
+
+begin_comment
+comment|/*  * Modifications to the block allocation data structure by John S. Dyson  * 18 Dec 93.  */
 end_comment
 
 begin_ifndef
@@ -17,32 +21,32 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * In the swap pager, the backing store for an object is organized as an  * array of some number of "swap blocks".  A swap block consists of a bitmask  * and some number of contiguous DEV_BSIZE disk blocks.  The minimum size  * of a swap block is:  *  *	max(PAGE_SIZE, dmmin*DEV_BSIZE)			[ 32k currently ]  *  * bytes (since the pager interface is page oriented), the maximum size is:  *  *	min(#bits(swb_mask)*PAGE_SIZE, dmmax*DEV_BSIZE)	[ 128k currently ]  *  * where dmmin and dmmax are left over from the old VM interface.  The bitmask  * (swb_mask) is used by swap_pager_haspage() to determine if a particular  * page has actually been written; i.e. the pager copy of the page is valid.  * All swap blocks in the backing store of an object will be the same size.  *  * The reason for variable sized swap blocks is to reduce fragmentation of  * swap resources.  Whenever possible we allocate smaller swap blocks to  * smaller objects.  The swap block size is determined from a table of  * object-size vs. swap-block-size computed at boot time.  */
+comment|/*  * SWB_NPAGES can be set to any value from 1 to 32 pages per allocation,  * however, due to the allocation spilling into non-swap pager backed memory,  * suggest keeping SWB_NPAGES small (1-4).  If high performance is manditory  * perhaps up to 8 pages might be in order????  */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|int
-name|sw_bm_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* pager bitmask */
-end_comment
+begin_define
+define|#
+directive|define
+name|SWB_NPAGES
+value|1
+end_define
 
 begin_struct
 struct|struct
 name|swblock
 block|{
-name|sw_bm_t
-name|swb_mask
+name|unsigned
+name|int
+name|swb_valid
 decl_stmt|;
-comment|/* bitmask of valid pages in this block */
-name|daddr_t
+comment|/* bitmask for valid pages */
+name|int
 name|swb_block
+index|[
+name|SWB_NPAGES
+index|]
 decl_stmt|;
-comment|/* starting disk block for this block */
+comment|/* unfortunately int instead of daddr_t */
 block|}
 struct|;
 end_struct
@@ -68,10 +72,6 @@ name|vm_size_t
 name|sw_osize
 decl_stmt|;
 comment|/* size of object we are backing (bytes) */
-name|int
-name|sw_bsize
-decl_stmt|;
-comment|/* size of swap blocks (DEV_BSIZE units) */
 name|int
 name|sw_nblocks
 decl_stmt|;
@@ -180,6 +180,24 @@ end_function_decl
 
 begin_function_decl
 name|boolean_t
+name|swap_pager_getmulti
+parameter_list|(
+name|vm_pager_t
+parameter_list|,
+name|vm_page_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|boolean_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
 name|swap_pager_haspage
 parameter_list|(
 name|vm_pager_t
@@ -190,13 +208,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|swap_pager_io
 parameter_list|(
 name|sw_pager_t
 parameter_list|,
 name|vm_page_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)

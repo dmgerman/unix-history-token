@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_object.c,v 1.11 1993/12/19 00:56:07 wollman Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_object.c,v 1.12 1993/12/21 05:51:02 davidg Exp $  */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+end_comment
+
+begin_comment
+comment|/*  * Significant modifications to vm_object_collapse fixing the growing  * swap space allocation by John S. Dyson, 18 Dec 93.  */
 end_comment
 
 begin_comment
@@ -2011,6 +2015,12 @@ argument_list|(
 name|src_object
 argument_list|)
 expr_stmt|;
+comment|/* 	 *	Try to collapse the object before copying it. 	 */
+name|vm_object_collapse
+argument_list|(
+name|src_object
+argument_list|)
+expr_stmt|;
 comment|/*  * we can simply add a reference to the object if we have no  * pager or are using the swap pager or we have an internal object  *  * John Dyson 24 Nov 93  */
 if|if
 condition|(
@@ -2131,12 +2141,6 @@ name|TRUE
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 *	Try to collapse the object before copying it. 	 */
-name|vm_object_collapse
-argument_list|(
-name|src_object
-argument_list|)
-expr_stmt|;
 comment|/* 	 *	If the object has a pager, the pager wants to 	 *	see all of the changes.  We need a copy-object 	 *	for the changed pages. 	 * 	 *	If there is a copy-object, and it is empty, 	 *	no changes have been made to the object since the 	 *	copy-object was made.  We can use the same copy- 	 *	object. 	 */
 name|Retry1
 label|:
@@ -3100,7 +3104,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *	vm_object_collapse:  *  *	Collapse an object with the object backing it.  *	Pages in the backing object are moved into the  *	parent, and the backing object is deallocated.  *  *	Requires that the object be locked and the page  *	queues be unlocked.  *  */
+comment|/*  *	vm_object_collapse:  *  *	Collapse an object with the object backing it.  *	Pages in the backing object are moved into the  *	parent, and the backing object is deallocated.  *  *	Requires that the object be locked and the page  *	queues be unlocked.  *  *	This routine substantially modified by John S. Dyson  *	Dec 18,1993.  Many restrictions have been removed from  *	this routine including:  *  *	1)	The object CAN now have a pager  *	2)	Backing object pager space is now removed if not needed  *	3)	Bypasses now check for existance of pages on paging space  *  */
 end_comment
 
 begin_function
@@ -3147,7 +3151,7 @@ condition|(
 name|TRUE
 condition|)
 block|{
-comment|/* 		 *	Verify that the conditions are right for collapse: 		 * 		 *	The object exists and no pages in it are currently 		 *	being paged out (or have ever been paged out). 		 */
+comment|/* 		 *	Verify that the conditions are right for collapse: 		 * 		 *	The object exists and no pages in it are currently 		 *	being paged out. 		 */
 if|if
 condition|(
 name|object
@@ -3159,12 +3163,6 @@ operator|->
 name|paging_in_progress
 operator|!=
 literal|0
-operator|||
-name|object
-operator|->
-name|pager
-operator|!=
-name|NULL
 condition|)
 return|return;
 comment|/* 		 *		There is a backing object, and 		 */
@@ -3222,8 +3220,47 @@ operator|->
 name|shadow
 operator|->
 name|copy
+operator|==
+name|backing_object
+condition|)
+block|{
+name|vm_object_unlock
+argument_list|(
+name|backing_object
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 		 * we can deal only with the swap pager 		 */
+if|if
+condition|(
+operator|(
+name|object
+operator|->
+name|pager
+operator|&&
+name|object
+operator|->
+name|pager
+operator|->
+name|pg_type
 operator|!=
-name|NULL
+name|PG_SWAP
+operator|)
+operator|||
+operator|(
+name|backing_object
+operator|->
+name|pager
+operator|&&
+name|backing_object
+operator|->
+name|pager
+operator|->
+name|pg_type
+operator|!=
+name|PG_SWAP
+operator|)
 condition|)
 block|{
 name|vm_object_unlock
@@ -3364,9 +3401,6 @@ condition|(
 name|pp
 condition|)
 block|{
-if|#
-directive|if
-literal|1
 comment|/* 					     *  This should never happen -- the 					     *  parent cannot have ever had an 					     *  external memory object, and thus 					     *  cannot have absent pages. 					     */
 name|panic
 argument_list|(
@@ -3374,27 +3408,6 @@ literal|"vm_object_collapse: bad case"
 argument_list|)
 expr_stmt|;
 comment|/* andrew@werple.apana.org.au - from 					       mach 3.0 VM */
-else|#
-directive|else
-comment|/* may be someone waiting for it */
-name|PAGE_WAKEUP
-argument_list|(
-name|pp
-argument_list|)
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_free
-argument_list|(
-name|pp
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* 					 *	Parent now has no page. 					 *	Move the backing object's page 					 *	up. 					 */
 name|vm_page_rename
@@ -3409,8 +3422,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 			 *	Move the pager from backing_object to object. 			 * 			 *	XXX We're only using part of the paging space 			 *	for keeps now... we ought to discard the 			 *	unused portion. 			 */
-comment|/* 			 * Remove backing_object from the object hashtable now. 			 * This is necessary since its pager is going away 			 * and therefore it is not going to be removed from 			 * hashtable in vm_object_deallocate(). 			 * 			 * NOTE - backing_object can only get at this stage if 			 * it has an internal pager. It is not normally on the 			 * hashtable unless it was put there by eg. vm_mmap() 			 * 			 * XXX - Need I worry here about *named* ANON pagers ? 			 */
+comment|/* 			 *	Move the pager from backing_object to object. 			 */
 if|if
 condition|(
 name|backing_object
@@ -3418,14 +3430,93 @@ operator|->
 name|pager
 condition|)
 block|{
-name|vm_object_remove
+if|if
+condition|(
+name|object
+operator|->
+name|pager
+condition|)
+block|{
+name|object
+operator|->
+name|paging_in_progress
+operator|++
+expr_stmt|;
+name|backing_object
+operator|->
+name|paging_in_progress
+operator|++
+expr_stmt|;
+comment|/* 					 * copy shadow object pages into ours 					 * and destroy unneeded pages in shadow object. 					 */
+name|swap_pager_copy
 argument_list|(
 name|backing_object
 operator|->
 name|pager
+argument_list|,
+name|backing_object
+operator|->
+name|paging_offset
+argument_list|,
+name|object
+operator|->
+name|pager
+argument_list|,
+name|object
+operator|->
+name|paging_offset
+argument_list|,
+name|object
+operator|->
+name|shadow_offset
+argument_list|)
+expr_stmt|;
+name|object
+operator|->
+name|paging_in_progress
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|object
+operator|->
+name|paging_in_progress
+operator|==
+literal|0
+condition|)
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|object
+argument_list|)
+expr_stmt|;
+name|backing_object
+operator|->
+name|paging_in_progress
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|backing_object
+operator|->
+name|paging_in_progress
+operator|==
+literal|0
+condition|)
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|backing_object
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* 					 * grab the shadow objects pager 					 */
 name|object
 operator|->
 name|pager
@@ -3434,18 +3525,6 @@ name|backing_object
 operator|->
 name|pager
 expr_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* Mach 3.0 code */
-comment|/* andrew@werple.apana.org.au, 12 Feb 1993 */
-comment|/* 			 * If there is no pager, leave paging-offset alone. 			 */
-if|if
-condition|(
-name|object
-operator|->
-name|pager
-condition|)
 name|object
 operator|->
 name|paging_offset
@@ -3456,17 +3535,29 @@ name|paging_offset
 operator|+
 name|backing_offset
 expr_stmt|;
-else|#
-directive|else
-comment|/* old VM 2.5 version */
+comment|/* 					 * free unnecessary blocks 					 */
+name|swap_pager_freespace
+argument_list|(
+name|object
+operator|->
+name|pager
+argument_list|,
+literal|0
+argument_list|,
 name|object
 operator|->
 name|paging_offset
-operator|+=
-name|backing_offset
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
+name|vm_object_remove
+argument_list|(
+name|backing_object
+operator|->
+name|pager
+argument_list|)
+expr_stmt|;
+block|}
 name|backing_object
 operator|->
 name|pager
@@ -3655,6 +3746,27 @@ operator|&
 name|PG_FAKE
 operator|)
 operator|)
+operator|&&
+operator|(
+operator|!
+name|object
+operator|->
+name|pager
+operator|||
+operator|!
+name|vm_pager_has_page
+argument_list|(
+name|object
+operator|->
+name|pager
+argument_list|,
+name|object
+operator|->
+name|paging_offset
+operator|+
+name|new_offset
+argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* 					 *	Page still needed. 					 *	Can't go any further. 					 */
@@ -3722,6 +3834,19 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*	Drop the reference count on backing_object. 			 *	Since its ref_count was at least 2, it 			 *	will not vanish; so we don't need to call 			 *	vm_object_deallocate. 			 */
+if|if
+condition|(
+name|backing_object
+operator|->
+name|ref_count
+operator|==
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"should have called obj deallocate\n"
+argument_list|)
+expr_stmt|;
 name|backing_object
 operator|->
 name|ref_count
