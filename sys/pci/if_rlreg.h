@@ -825,6 +825,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RL_TXCFG_IFG2
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* 8169 only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RL_TXCFG_IFG
 value|0x03000000
 end_define
@@ -838,6 +849,20 @@ define|#
 directive|define
 name|RL_TXCFG_HWREV
 value|0x7CC00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_LOOPTEST_OFF
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_LOOPTEST_ON
+value|0x00020000
 end_define
 
 begin_define
@@ -1103,6 +1128,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|RL_ISR_LINKCHG
+value|0x0020
+end_define
+
+begin_comment
+comment|/* 8169 only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RL_ISR_FIFO_OFLOW
 value|0x0040
 end_define
@@ -1178,7 +1214,7 @@ define|#
 directive|define
 name|RL_INTRS_CPLUS
 define|\
-value|(RL_ISR_RX_OK|RL_ISR_RX_ERR|RL_ISR_TX_ERR|		\ 	RL_ISR_RX_OVERRUN|RL_ISR_PKT_UNDERRUN|RL_ISR_FIFO_OFLOW|	\ 	RL_ISR_PCS_TIMEOUT|RL_ISR_SYSTEM_ERR|RL_ISR_TIMEOUT_EXPIRED)
+value|(RL_ISR_RX_OK|RL_ISR_RX_ERR|RL_ISR_TX_ERR|			\ 	RL_ISR_RX_OVERRUN|RL_ISR_PKT_UNDERRUN|RL_ISR_FIFO_OFLOW|	\ 	RL_ISR_PCS_TIMEOUT|RL_ISR_SYSTEM_ERR|RL_ISR_TIMEOUT_EXPIRED)
 end_define
 
 begin_comment
@@ -2214,19 +2250,15 @@ begin_define
 define|#
 directive|define
 name|RL_RX_FIFOTHRESH
-value|RL_RXFIFO_256BYTES
+value|RL_RXFIFO_NOTHRESH
 end_define
 
 begin_define
 define|#
 directive|define
 name|RL_RX_MAXDMA
-value|RL_RXDMA_1024BYTES
+value|RL_RXDMA_UNLIMITED
 end_define
-
-begin_comment
-comment|/*RL_RXDMA_UNLIMITED*/
-end_comment
 
 begin_define
 define|#
@@ -2776,7 +2808,7 @@ begin_define
 define|#
 directive|define
 name|RL_RDESC_CMD_BUFLEN
-value|0x00001FFF
+value|0x00003FFF
 end_define
 
 begin_define
@@ -2965,7 +2997,7 @@ begin_define
 define|#
 directive|define
 name|RL_RDESC_STAT_FRAGLEN
-value|0x00001FFF
+value|0x00003FFF
 end_define
 
 begin_comment
@@ -3181,7 +3213,9 @@ name|RL_PKTSZ
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)>> 3)
+value|((x)
+comment|/*>> 3*/
+value|)
 end_define
 
 begin_define
@@ -3202,6 +3236,62 @@ parameter_list|(
 name|y
 parameter_list|)
 value|((u_int64_t) (y)>> 32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_JUMBO_FRAMELEN
+value|9018
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_JUMBO_MTU
+value|(RL_JUMBO_FRAMELEN-ETHER_HDR_LEN-ETHER_CRC_LEN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_JSLOTS
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_JRAWLEN
+value|(RL_JUMBO_FRAMELEN + ETHER_ALIGN + sizeof(u_int64_t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_JLEN
+value|(RL_JRAWLEN + (sizeof(u_int64_t) - \ 	(RL_JRAWLEN % sizeof(u_int64_t))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_JPAGESZ
+value|PAGE_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_RESID
+value|(RL_JPAGESZ - (RL_JLEN * RL_JSLOTS) % RL_JPAGESZ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_JMEM
+value|((RL_JLEN * RL_JSLOTS) + RL_RESID)
 end_define
 
 begin_struct_decl
@@ -3404,6 +3494,22 @@ decl_stmt|;
 name|struct
 name|mtx
 name|rl_mtx
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|rl_head
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|rl_tail
+decl_stmt|;
+name|u_int32_t
+name|rl_hwrev
+decl_stmt|;
+name|int
+name|rl_testmode
 decl_stmt|;
 name|int
 name|suspended

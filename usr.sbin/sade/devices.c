@@ -674,9 +674,25 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"re"
+block|,
+literal|"RealTek 8139C+/8169/8169S/8110S PCI ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"rl"
 block|,
 literal|"RealTek 8129/8139 PCI ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
+literal|"rue"
+block|,
+literal|"RealTek USB ethernet card"
 block|}
 block|,
 block|{

@@ -363,7 +363,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* 	 * Make sure the parent is an `rl'. 	 */
+comment|/* 	 * Make sure the parent is an `rl' or an `re'. 	 */
 if|if
 condition|(
 name|strcmp
@@ -374,6 +374,18 @@ name|parent
 argument_list|)
 argument_list|,
 literal|"rl"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|device_get_name
+argument_list|(
+name|parent
+argument_list|)
+argument_list|,
+literal|"re"
 argument_list|)
 operator|!=
 literal|0
