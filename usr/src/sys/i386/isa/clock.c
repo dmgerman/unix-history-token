@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Added stuff to read the cmos clock on startup - Don Ahn  *  * %sccs.include.386.c%  *  *	@(#)clock.c	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Added stuff to read the cmos clock on startup - Don Ahn  *  * %sccs.include.386.c%  *  *	@(#)clock.c	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -28,13 +28,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"icu.h"
+file|"machine/segments.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"isa.h"
+file|"machine/isa/icu.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/isa/isa.h"
 end_include
 
 begin_define
@@ -61,7 +67,7 @@ block|{
 comment|/* initialize 8253 clock */
 name|outb
 argument_list|(
-name|IO_TIMER0
+name|IO_TIMER1
 operator|+
 literal|3
 argument_list|,
@@ -70,7 +76,7 @@ argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-name|IO_TIMER0
+name|IO_TIMER1
 argument_list|,
 literal|1193182
 operator|/
@@ -79,7 +85,7 @@ argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-name|IO_TIMER0
+name|IO_TIMER1
 argument_list|,
 operator|(
 literal|1193182
@@ -752,6 +758,28 @@ begin_block
 block|{ }
 end_block
 
+begin_define
+define|#
+directive|define
+name|V
+parameter_list|(
+name|s
+parameter_list|)
+value|V
+comment|/**/
+value|s
+end_define
+
+begin_function_decl
+specifier|extern
+name|V
+function_decl|(
+name|clk
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_macro
 name|enablertclock
 argument_list|()
@@ -762,6 +790,23 @@ block|{
 name|INTREN
 argument_list|(
 name|IRQ0
+argument_list|)
+expr_stmt|;
+name|setidt
+argument_list|(
+name|ICU_OFFSET
+operator|+
+literal|0
+argument_list|,
+operator|&
+name|V
+argument_list|(
+name|clk
+argument_list|)
+argument_list|,
+name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 name|splnone

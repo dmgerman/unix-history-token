@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)icu.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)icu.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -25,6 +25,10 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
+begin_comment
+comment|/*  * Interrupt "level" mechanism variables, masks, and macros  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|unsigned
@@ -46,7 +50,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* current priority level */
+comment|/* current priority level mask */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|short
+name|highmask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* group of interrupts masked with splhigh() */
 end_comment
 
 begin_decl_stmt
@@ -58,7 +74,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* things that get masked with spltty() */
+comment|/* group of interrupts masked with spltty() */
 end_comment
 
 begin_decl_stmt
@@ -70,7 +86,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* things that get masked with splbio() */
+comment|/* group of interrupts masked with splbio() */
 end_comment
 
 begin_decl_stmt
@@ -82,7 +98,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* things that get masked with splimp() */
+comment|/* group of interrupts masked with splimp() */
 end_comment
 
 begin_define
@@ -117,13 +133,86 @@ parameter_list|)
 value|msk |= (s)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * Macro's for interrupt level priority masks (used in interrupt vector entry)  */
+end_comment
+
+begin_comment
+comment|/* Just mask this interrupt only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTR
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|pushl	$0 ; \ 	pushl	$ T_ASTFLT ; \ 	pushal ; \ 	push	%ds ; \ 	push	%es ; \ 	movw	$0x10, %ax ; \ 	movw	%ax, %ds ; \ 	movw	%ax,%es ; \ 	incl	_cnt+V_INTR ; \ 	movzwl	_cpl,%eax ; \ 	pushl	%eax ; \ 	pushl	$ a ; \ 	orw	$ IRQ
+comment|/**/
+value|a ,%ax ; \ 	movw	%ax,_cpl ; \ 	orw	_imen,%ax ; \ 	NOP ; \ 	outb	%al,$ IO_ICU1+1 ; \ 	NOP ; \ 	movb	%ah,%al ; \ 	outb	%al,$ IO_ICU2+1	; \ 	NOP	; \ 	sti
+end_define
+
+begin_comment
+comment|/* Mask a group of interrupts atomically */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTRN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|pushl	$0 ; \ 	pushl	$ T_ASTFLT ; \ 	pushal ; \ 	push	%ds ; \ 	push	%es ; \ 	movw	$0x10, %ax ; \ 	movw	%ax, %ds ; \ 	movw	%ax,%es ; \ 	incl	_cnt+V_INTR ; \ 	movzwl	_cpl,%eax ; \ 	pushl	%eax ; \ 	pushl	$ a ; \ 	orw	$ IRQ
+comment|/**/
+value|a ,%ax ; \ 	orw	b ,%ax ; \ 	movw	%ax,_cpl ; \ 	orw	_imen,%ax ; \ 	NOP ; \ 	outb	%al,$ IO_ICU1+1 ; \ 	NOP ; \ 	movb	%ah,%al ; \ 	outb	%al,$ IO_ICU2+1	; \ 	NOP	; \ 	sti
+end_define
+
+begin_comment
+comment|/* Interrupt vector exit macros */
+end_comment
+
+begin_comment
+comment|/* First eight interrupts (ICU1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTREXT1
+define|\
+value|movb	$0x20,%al ; \ 	outb	%al,$ IO_ICU1 ; \ 	jmp	doreti
+end_define
+
+begin_comment
+comment|/* Second eight interrupts (ICU2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTREXT2
+define|\
+value|movb	$0x20,%al ; \ 	outb	%al,$ IO_ICU1 ; \ 	outb	%al,$ IO_ICU2 ; \ 	jmp	doreti
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* Interrupt enable bits -- in order of priority */
+comment|/*  * Interrupt enable bits -- in order of priority  */
 end_comment
 
 begin_define
@@ -251,6 +340,32 @@ end_define
 
 begin_comment
 comment|/* lowest - parallel printer */
+end_comment
+
+begin_comment
+comment|/*  * Interrupt Control offset into Interrupt descriptor table (IDT)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICU_OFFSET
+value|32
+end_define
+
+begin_comment
+comment|/* 0-31 are processor exceptions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICU_LEN
+value|16
+end_define
+
+begin_comment
+comment|/* 32-47 are ISA interrupts */
 end_comment
 
 begin_endif

@@ -14,7 +14,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1989 Carnegie-Mellon University  * All rights reserved.  The CMU software License Agreement specifies  * the terms and conditions for use and redistribution.  *	@(#)wt.c	1.1 (Berkeley) %G%  */
+comment|/*   * Mach Operating System  * Copyright (c) 1989 Carnegie-Mellon University  * All rights reserved.  The CMU software License Agreement specifies  * the terms and conditions for use and redistribution.  *	@(#)wt.c	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4969,7 +4969,7 @@ end_block
 begin_include
 include|#
 directive|include
-file|"machine/isa/device.h"
+file|"machine/isa/isa_device.h"
 end_include
 
 begin_include

@@ -1,6 +1,90 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 387 and 287 Numeric Coprocessor Extension (NPX) Driver.  * @(#)npx.c	1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 W. Jolitz  * @(#)npx.c	1.2 (Berkeley) %G%  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"npx.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NNPX
+operator|>
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"conf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"file.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dir.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ioctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/isa/isa_device.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"icu.h"
+end_include
+
+begin_comment
+comment|/*  * 387 and 287 Numeric Coprocessor Extension (NPX) Driver.  */
 end_comment
 
 begin_decl_stmt
@@ -18,7 +102,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|driver
+name|isa_driver
 name|npxdriver
 init|=
 block|{
@@ -44,9 +128,9 @@ comment|/* process who owns device, otherwise zero */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|user
-modifier|*
 name|npxutl
 decl_stmt|;
 end_decl_stmt
@@ -56,10 +140,11 @@ comment|/* owners user structure */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|pte
-modifier|*
 name|Npxmap
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +165,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|device
+name|isa_device
 modifier|*
 name|dvp
 decl_stmt|;
@@ -88,8 +173,10 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
+specifier|static
 name|status
+operator|,
+name|control
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -100,14 +187,14 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* insure EM bit off */
-asm|asm("	fninit");
+asm|asm("	fninit ");
 comment|/* put device in known state */
 comment|/* check for a proper status of zero */
 name|status
 operator|=
 literal|0xa5a5
 expr_stmt|;
-asm|asm("	movw	%1,%%ax ; fnstsw %%ax ;  movw %%ax, %0" 		: "=g" (status) : "g" (status) : "ax");
+asm|asm ("	fnstsw	%0 " : "=m" (status) : "m" (status) );
 if|if
 condition|(
 name|status
@@ -115,20 +202,19 @@ operator|==
 literal|0
 condition|)
 block|{
-specifier|register
-name|control
-expr_stmt|;
 comment|/* good, now check for a proper control word */
 name|control
 operator|=
 literal|0xa5a5
 expr_stmt|;
-asm|asm("	movw	%1,%%ax ; fnstcw %%ax ;  movw %%ax, %0" 			: "=g" (control) : "g" (control) : "ax");
+asm|asm ("	fnstcw %0 " : "=m" (control) : "m" (control));
 if|if
 condition|(
+operator|(
 name|control
 operator|&
 literal|0x103f
+operator|)
 operator|==
 literal|0x3f
 condition|)
@@ -164,7 +250,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|device
+name|isa_device
 modifier|*
 name|dvp
 decl_stmt|;
@@ -172,22 +258,12 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|unit
-init|=
-name|dvp
-operator|->
-name|unit
-decl_stmt|;
 name|npxinit
-argument_list|()
-expr_stmt|;
-comment|/* check for ET bit to decide 387/287 */
-name|INTREN
 argument_list|(
-name|IRQ13
+literal|0x262
 argument_list|)
 expr_stmt|;
+comment|/* check for ET bit to decide 387/287 */
 comment|/*outb(0xb1,0);		/* reset processor */
 block|}
 end_block
@@ -198,20 +274,15 @@ end_comment
 
 begin_macro
 name|npxinit
-argument_list|()
+argument_list|(
+argument|control
+argument_list|)
 end_macro
 
 begin_block
 block|{
-specifier|register
-name|control
-expr_stmt|;
 asm|asm ("	fninit");
-name|control
-operator|=
-name|XXX
-expr_stmt|;
-asm|asm("	movw	%0,%%ax ; fldcw %%ax " 			: "g" (control) : "ax");
+asm|asm("	fldcw %0" : : "g" (control));
 block|}
 end_block
 
@@ -251,7 +322,7 @@ operator|&
 name|npxutl
 argument_list|)
 expr_stmt|;
-asm|asm("	frstor %0 " : "g" (u.u_pcb.pcb_savefpu) );
+asm|asm("	frstor %0 " : : "g" (u.u_pcb.pcb_savefpu) );
 block|}
 end_block
 
@@ -277,7 +348,7 @@ argument_list|(
 literal|"npxunload"
 argument_list|)
 expr_stmt|;
-asm|asm("	fsave %0 " : "g" (npxutl.u_pcb.pcb_savefpu) );
+asm|asm("	fsave %0 " : : "g" (npxutl.u_pcb.pcb_savefpu) );
 name|npxproc
 operator|=
 literal|0
@@ -308,7 +379,7 @@ argument_list|(
 literal|"npxexcept"
 argument_list|)
 expr_stmt|;
-asm|asm ("	fsave %0 " : "g" (npxutl.u_pcb.pcb_savefpu) );
+asm|asm ("	fsave %0 " : : "g" (npxutl.u_pcb.pcb_savefpu) );
 comment|/* 	 * encode the appropriate u_code for detailed information          * on this exception 	 */
 comment|/* signal appropriate process */
 name|psignal
@@ -361,6 +432,11 @@ end_macro
 begin_block
 block|{ }
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

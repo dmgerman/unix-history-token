@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)isa.h	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)isa.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_DMA0
+name|IO_DMA1
 value|0x000
 end_define
 
@@ -75,7 +75,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_ICU0
+name|IO_ICU1
 value|0x020
 end_define
 
@@ -86,7 +86,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_TIMER0
+name|IO_TIMER1
 value|0x040
 end_define
 
@@ -97,7 +97,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_TIMER1
+name|IO_TIMER2
 value|0x048
 end_define
 
@@ -152,7 +152,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_ICU1
+name|IO_ICU2
 value|0x0A0
 end_define
 
@@ -163,7 +163,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_DMA1
+name|IO_DMA2
 value|0x0C0
 end_define
 
@@ -193,7 +193,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_WD1
+name|IO_WD2
 value|0x170
 end_define
 
@@ -208,7 +208,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_WD0
+name|IO_WD1
 value|0x1f0
 end_define
 
@@ -234,7 +234,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_LPT1
+name|IO_LPT2
 value|0x278
 end_define
 
@@ -249,7 +249,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_COM1
+name|IO_COM2
 value|0x2f8
 end_define
 
@@ -264,7 +264,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_FD1
+name|IO_FD2
 value|0x370
 end_define
 
@@ -275,7 +275,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_LPT0
+name|IO_LPT1
 value|0x378
 end_define
 
@@ -301,7 +301,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_LPT2
+name|IO_LPT3
 value|0x3BC
 end_define
 
@@ -338,7 +338,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_FD0
+name|IO_FD1
 value|0x3f0
 end_define
 
@@ -349,7 +349,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_COM0
+name|IO_COM1
 value|0x3f8
 end_define
 
@@ -378,11 +378,11 @@ begin_comment
 comment|/*  * Input / Output Memory Physical Addresses  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IOM_BEGIN
-end_ifdef
+end_ifndef
 
 begin_define
 define|#
@@ -416,11 +416,11 @@ begin_comment
 comment|/*  * RAM Physical Address Space (ignoring the above mentioned "hole")  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|RAM_BEGIN
-end_ifdef
+end_ifndef
 
 begin_define
 define|#
@@ -436,7 +436,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IOM_END
+name|RAM_END
 value|0xFFFFFF
 end_define
 
@@ -453,6 +453,12 @@ end_endif
 begin_comment
 comment|/*  * Oddball Physical Memory Addresses  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAQ_RAMRELOC
+end_ifndef
 
 begin_define
 define|#
@@ -497,6 +503,12 @@ end_define
 begin_comment
 comment|/* Cyrix EMC */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|COMPAQ_RAMRELOC
+end_endif
 
 end_unit
 
