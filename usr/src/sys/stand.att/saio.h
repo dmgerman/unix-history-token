@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	saio.h	4.8	%G%	*/
+comment|/*	saio.h	4.9	%G%	*/
 end_comment
 
 begin_comment
@@ -279,30 +279,30 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*   * device data structure,  * used by the ioctl-command SAIODEVDATA ( for disks only)  */
-end_comment
-
 begin_struct
 struct|struct
-name|devdata
+name|st
 block|{
-name|int
+name|short
 name|nsect
 decl_stmt|;
 comment|/* number of sectors per track */
-name|int
+name|short
 name|ntrak
 decl_stmt|;
 comment|/* number of tracks/surfaces/heads... */
-name|int
+name|short
 name|nspc
 decl_stmt|;
 comment|/* number of sectors per cylinder */
-name|int
+name|short
 name|ncyl
 decl_stmt|;
 comment|/* number of cylinders */
+name|short
+modifier|*
+name|off
+decl_stmt|;
 block|}
 struct|;
 end_struct
