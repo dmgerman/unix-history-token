@@ -3583,9 +3583,14 @@ name|int
 name|write_s0
 parameter_list|()
 block|{
+ifdef|#
+directive|ifdef
+name|NOT_NOW
 name|int
 name|flag
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|iotest
