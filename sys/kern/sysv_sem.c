@@ -283,7 +283,7 @@ name|p
 condition|)
 block|{
 comment|/* printf("semaphore facility locked - sleeping ...\n"); */
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -296,6 +296,10 @@ name|PZERO
 operator|-
 literal|4
 operator|)
+argument_list|,
+literal|"semsys"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4512,7 +4516,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -4525,6 +4529,10 @@ name|PZERO
 operator|-
 literal|4
 operator|)
+argument_list|,
+literal|"semexit"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
