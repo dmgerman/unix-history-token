@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.42 (Berkeley) %G%"
+literal|"@(#)ls.c	5.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -309,6 +309,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|f_sectime
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* print the real time for all files */
+end_comment
+
+begin_decl_stmt
+name|int
 name|f_singlecol
 decl_stmt|;
 end_decl_stmt
@@ -544,7 +554,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ACFLRacdfgiklqrstu"
+literal|"1ACFLRTacdfgiklqrstu"
 argument_list|)
 operator|)
 operator|!=
@@ -731,6 +741,14 @@ case|case
 literal|'s'
 case|:
 name|f_size
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+name|f_sectime
 operator|=
 literal|1
 expr_stmt|;

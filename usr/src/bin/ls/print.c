@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.22 (Berkeley) %G%"
+literal|"@(#)print.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -967,6 +967,8 @@ name|SIXMONTHS
 value|((DAYSPERNYEAR / 2) * SECSPERDAY)
 if|if
 condition|(
+name|f_sectime
+operator|||
 name|ftime
 operator|+
 name|SIXMONTHS
