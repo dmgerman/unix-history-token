@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)prof.c	4.1 (Berkeley) %G%"
+literal|"@(#)prof.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3044,6 +3044,25 @@ operator|->
 name|value
 operator|>=
 name|highpc
+condition|)
+continue|continue;
+if|if
+condition|(
+name|zflg
+operator|==
+literal|0
+operator|&&
+name|np
+operator|->
+name|time
+operator|==
+literal|0
+operator|&&
+name|np
+operator|->
+name|ncall
+operator|==
+literal|0
 condition|)
 continue|continue;
 name|time
