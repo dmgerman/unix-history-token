@@ -119,9 +119,13 @@ name|sc_candebug_errno
 decl_stmt|;
 comment|/* desired ptrace failure */
 name|int
-name|sc_cansignal_errno
+name|sc_cansighup_errno
 decl_stmt|;
 comment|/* desired SIGHUP failure */
+name|int
+name|sc_cansigsegv_errno
+decl_stmt|;
+comment|/* desired SIGSEGV failure */
 name|int
 name|sc_cansee_errno
 decl_stmt|;
@@ -337,7 +341,7 @@ name|scenarios
 index|[]
 init|=
 block|{
-comment|/*	cred1		cred2		debug	signal	see	sched	name */
+comment|/*	cred1		cred2		debug	sighup	sigsegv	see	sched	name */
 block|{
 operator|&
 name|creds
@@ -350,6 +354,8 @@ name|creds
 index|[
 literal|0
 index|]
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -383,6 +389,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|"1. priv on priv"
 block|}
 block|,
@@ -407,6 +415,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|"2. priv on priv"
 block|}
 block|,
@@ -422,6 +432,8 @@ name|creds
 index|[
 literal|1
 index|]
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -456,6 +468,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|"4. priv on unpriv1"
 block|}
 block|,
@@ -471,6 +485,8 @@ name|creds
 index|[
 literal|3
 index|]
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -504,6 +520,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|"6. priv on unpriv1"
 block|}
 block|,
@@ -519,6 +537,8 @@ name|creds
 index|[
 literal|3
 index|]
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -549,6 +569,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -568,6 +590,8 @@ name|creds
 index|[
 literal|1
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -597,6 +621,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -616,6 +642,8 @@ name|creds
 index|[
 literal|1
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -650,6 +678,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|"12. unpriv1 on unpriv1"
 block|}
 block|,
@@ -669,6 +699,8 @@ block|,
 name|EPERM
 block|,
 literal|0
+block|,
+name|EPERM
 block|,
 literal|0
 block|,
@@ -698,6 +730,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|"14. unpriv1 on unpriv1"
 block|}
 block|,
@@ -717,6 +751,8 @@ block|,
 name|EPERM
 block|,
 literal|0
+block|,
+name|EPERM
 block|,
 literal|0
 block|,
@@ -738,6 +774,8 @@ name|creds
 index|[
 literal|4
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -767,6 +805,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -791,6 +831,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -810,6 +852,8 @@ name|creds
 index|[
 literal|5
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -840,6 +884,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -859,6 +905,8 @@ name|creds
 index|[
 literal|7
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -888,6 +936,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -907,6 +957,8 @@ name|creds
 index|[
 literal|7
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -937,6 +989,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -956,6 +1010,8 @@ name|creds
 index|[
 literal|9
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -985,6 +1041,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -1004,6 +1062,8 @@ name|creds
 index|[
 literal|9
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -1038,6 +1098,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|"28. unpriv1 on setuid1"
 block|}
 block|,
@@ -1057,6 +1119,8 @@ block|,
 name|EPERM
 block|,
 literal|0
+block|,
+name|EPERM
 block|,
 literal|0
 block|,
@@ -1086,6 +1150,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|"30. unpriv1 on setuid1"
 block|}
 block|,
@@ -1105,6 +1171,8 @@ block|,
 name|EPERM
 block|,
 literal|0
+block|,
+name|EPERM
 block|,
 literal|0
 block|,
@@ -1126,6 +1194,8 @@ name|creds
 index|[
 literal|12
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -1155,6 +1225,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -1179,6 +1251,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -1198,6 +1272,8 @@ name|creds
 index|[
 literal|13
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -1287,6 +1363,14 @@ case|:
 return|return
 operator|(
 literal|"ESRCH"
+operator|)
+return|;
+case|case
+name|EOPNOTSUPP
+case|:
+return|return
+operator|(
+literal|"EOPNOTSUPP"
 operator|)
 return|;
 case|case
@@ -1636,22 +1720,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|LOOP_SIGNAL
+name|LOOP_SIGHUP
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_SEE
+name|LOOP_SIGSEGV
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_SCHED
+name|LOOP_SEE
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_SCHED
+value|4
 end_define
 
 begin_define
@@ -1877,7 +1968,7 @@ name|sc_candebug_errno
 expr_stmt|;
 break|break;
 case|case
-name|LOOP_SIGNAL
+name|LOOP_SIGHUP
 case|:
 name|error
 operator|=
@@ -1894,7 +1985,7 @@ name|errno
 expr_stmt|;
 name|name
 operator|=
-literal|"signal"
+literal|"sighup"
 expr_stmt|;
 name|desirederror
 operator|=
@@ -1903,7 +1994,37 @@ index|[
 name|scenario
 index|]
 operator|.
-name|sc_cansignal_errno
+name|sc_cansighup_errno
+expr_stmt|;
+break|break;
+case|case
+name|LOOP_SIGSEGV
+case|:
+name|error
+operator|=
+name|kill
+argument_list|(
+name|pid1
+argument_list|,
+name|SIGSEGV
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|errno
+expr_stmt|;
+name|name
+operator|=
+literal|"sigsegv"
+expr_stmt|;
+name|desirederror
+operator|=
+name|scenarios
+index|[
+name|scenario
+index|]
+operator|.
+name|sc_cansigsegv_errno
 expr_stmt|;
 break|break;
 case|case
