@@ -817,7 +817,7 @@ argument_list|,
 sizeof|sizeof
 name|skeyprompt
 argument_list|,
-literal|"opt-%.*s %d %.*s ext"
+literal|"otp-%.*s %d %.*s ext"
 argument_list|,
 name|OPIE_HASHNAME_MAX
 argument_list|,
@@ -917,7 +917,7 @@ argument_list|,
 sizeof|sizeof
 name|skeyprompt
 argument_list|,
-literal|"opt-md5 %d %.*s ext"
+literal|"otp-md5 %d %.*s ext"
 argument_list|,
 literal|499
 argument_list|,
