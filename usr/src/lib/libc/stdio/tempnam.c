@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tempnam.c	4.7 (Berkeley) %G%"
+literal|"@(#)tempnam.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -389,12 +389,29 @@ else|:
 name|pfx
 argument_list|)
 expr_stmt|;
-return|return
+if|if
+condition|(
+operator|!
 operator|(
+name|f
+operator|=
 name|mktemp
 argument_list|(
 name|name
 argument_list|)
+operator|)
+condition|)
+operator|(
+name|void
+operator|)
+name|free
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|f
 operator|)
 return|;
 block|}
