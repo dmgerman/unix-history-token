@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctype.c	5.8 (Berkeley) %G%"
+literal|"@(#)ctype.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,24 +37,61 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
+begin_define
+define|#
+directive|define
+name|_U
+value|0x01
+end_define
 
-begin_decl_stmt
-name|char
-modifier|*
-name|_ctype_
-init|=
-name|__ctype
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|_L
+value|0x02
+end_define
 
-begin_comment
-comment|/* Backward compatibility. */
-end_comment
+begin_define
+define|#
+directive|define
+name|_N
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|_S
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|_P
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|_C
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|_X
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|_B
+value|0x80
+end_define
 
 begin_decl_stmt
 name|char
@@ -362,6 +399,19 @@ name|_C
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|_ctype_
+init|=
+name|__ctype
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Backward compatibility. */
+end_comment
 
 end_unit
 
