@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1189,35 +1189,14 @@ operator|)
 operator|=
 name|Q_LMEAE
 expr_stmt|;
-break|break;
-endif|#
-directive|endif
-block|}
-comment|/* give unibus devices a chance to recover... */
-if|if
-condition|(
-name|nuba
-operator|>
-literal|0
-condition|)
-name|DELAY
-argument_list|(
-literal|2000000
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
-name|defined
-argument_list|(
-name|VAX630
-argument_list|)
-operator|&&
 operator|!
 name|defined
 argument_list|(
 name|SMALL
 argument_list|)
-comment|/* 	 * configure the console 	 */
+comment|/* 		 * configure the console 		 */
 for|for
 control|(
 name|i
@@ -1245,6 +1224,22 @@ control|)
 empty_stmt|;
 endif|#
 directive|endif
+break|break;
+endif|#
+directive|endif
+block|}
+comment|/* give unibus devices a chance to recover... */
+if|if
+condition|(
+name|nuba
+operator|>
+literal|0
+condition|)
+name|DELAY
+argument_list|(
+literal|2000000
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
