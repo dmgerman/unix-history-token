@@ -19,8 +19,8 @@ name|char
 name|ocopyright
 index|[]
 init|=
-literal|"$Id: dhclient.c,v 1.129.2.12 2002/11/07 23:26:38 dhankins Exp $ Copyright (c) 1995-2002 Internet Software Consortium.  All rights reserved.\n"
 literal|"$FreeBSD$\n"
+literal|"$Id: dhclient.c,v 1.129.2.16 2003/04/26 21:51:39 dhankins Exp $ Copyright (c) 1995-2002 Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1078,6 +1078,26 @@ index|[
 name|i
 index|]
 argument_list|,
+literal|"-nw"
+argument_list|)
+condition|)
+block|{
+name|nowait
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
 literal|"-n"
 argument_list|)
 condition|)
@@ -1302,26 +1322,6 @@ name|exit
 argument_list|(
 literal|0
 argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|argv
-index|[
-name|i
-index|]
-argument_list|,
-literal|"-nw"
-argument_list|)
-condition|)
-block|{
-name|nowait
-operator|=
-literal|1
 expr_stmt|;
 block|}
 elseif|else
@@ -9102,7 +9102,8 @@ literal|0
 argument_list|,
 name|client
 argument_list|,
-literal|0
+comment|/* maximum packet size */
+literal|1500
 argument_list|,
 operator|(
 expr|struct
@@ -9113,13 +9114,17 @@ literal|0
 argument_list|,
 name|options
 argument_list|,
+comment|/* scope */
 operator|&
 name|global_scope
 argument_list|,
+comment|/* overload */
 literal|0
 argument_list|,
+comment|/* terminate */
 literal|0
 argument_list|,
+comment|/* bootpp    */
 literal|0
 argument_list|,
 operator|(
@@ -9574,7 +9579,8 @@ literal|0
 argument_list|,
 name|client
 argument_list|,
-literal|0
+comment|/* maximum packet size */
+literal|1500
 argument_list|,
 operator|(
 expr|struct
@@ -9587,13 +9593,17 @@ name|client
 operator|->
 name|sent_options
 argument_list|,
+comment|/* scope */
 operator|&
 name|global_scope
 argument_list|,
+comment|/* overload */
 literal|0
 argument_list|,
+comment|/* terminate */
 literal|0
 argument_list|,
+comment|/* bootpp    */
 literal|0
 argument_list|,
 operator|(
@@ -10502,7 +10512,8 @@ literal|0
 argument_list|,
 name|client
 argument_list|,
-literal|0
+comment|/* maximum packet size */
+literal|1500
 argument_list|,
 operator|(
 expr|struct
@@ -10513,13 +10524,17 @@ literal|0
 argument_list|,
 name|options
 argument_list|,
+comment|/* scope */
 operator|&
 name|global_scope
 argument_list|,
+comment|/* overload */
 literal|0
 argument_list|,
+comment|/* terminate */
 literal|0
 argument_list|,
+comment|/* bootpp    */
 literal|0
 argument_list|,
 operator|(
