@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)docmd.c	5.4 (Berkeley) %G%"
+literal|"@(#)docmd.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1694,10 +1694,10 @@ literal|"%s: %s\n"
 argument_list|,
 name|stamp
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1765,10 +1765,10 @@ literal|"%s: %s\n"
 argument_list|,
 name|stamp
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2070,10 +2070,10 @@ literal|"%s: %s\n"
 argument_list|,
 name|name
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2202,10 +2202,10 @@ literal|"%s: %s\n"
 argument_list|,
 name|target
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2467,10 +2467,10 @@ literal|"%s: %s\n"
 argument_list|,
 name|file
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2494,10 +2494,10 @@ literal|"%s: %s\n"
 argument_list|,
 name|file
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
