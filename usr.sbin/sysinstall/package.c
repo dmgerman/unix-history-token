@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: package.c,v 1.13 1995/10/22 17:39:28 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: package.c,v 1.15 1995/10/22 21:38:20 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -239,9 +239,6 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|pid_t
-name|tpid
-decl_stmt|;
 name|pen
 index|[
 literal|0
@@ -267,118 +264,16 @@ condition|)
 block|{
 if|if
 condition|(
-name|isDebug
-argument_list|()
-condition|)
-name|msgDebug
+name|mediaExtractDist
 argument_list|(
-literal|"Working in temporary directory %s, will return to %s\n"
-argument_list|,
 name|pen
 argument_list|,
-name|where
-argument_list|)
-expr_stmt|;
-name|tpid
-operator|=
-name|fork
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|tpid
-condition|)
-block|{
-name|dup2
-argument_list|(
-name|fd
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
 name|fd
 argument_list|)
-expr_stmt|;
-name|dup2
-argument_list|(
-name|DebugFD
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|dup2
-argument_list|(
-name|DebugFD
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|vsystem
-argument_list|(
-literal|"tar %s-xpzf -"
-argument_list|,
-operator|!
-name|strcmp
-argument_list|(
-name|variable_get
-argument_list|(
-name|VAR_CPIO_VERBOSITY
-argument_list|)
-argument_list|,
-literal|"high"
-argument_list|)
-condition|?
-literal|"-v "
-else|:
-literal|""
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
 condition|)
-name|msgDebug
-argument_list|(
-literal|"tar command returns %d status (errno: %d)\n"
-argument_list|,
-name|i
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
-name|int
-name|pstat
-decl_stmt|;
-name|tpid
-operator|=
-name|waitpid
-argument_list|(
-name|tpid
-argument_list|,
-operator|&
-name|pstat
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-operator|!
-name|pstat
-operator|&&
 name|file_readable
 argument_list|(
 literal|"+CONTENTS"
@@ -433,16 +328,39 @@ argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"The package fetch and extraction phase failed for %s\n"
-literal|"and it will not be pkg_add'd.  There was either a media\n"
-literal|"error of some sort or the package file itself is corrupted.\n"
+literal|"The package specified (%s) has no CONTENTS file.  This means\n"
+literal|"that there was either a media error of some sort or the package\n"
+literal|"file itself is corrupted.\n"
 literal|"You may wish to look into this and try again."
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 block|}
+name|dev
+operator|->
 name|close
 argument_list|(
+name|dev
+argument_list|,
 name|fd
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ret
+operator|=
+name|RET_FAIL
+expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Unable to extract the contents of package %s.  This means\n"
+literal|"that there was either a media error of some sort or the package\n"
+literal|"file itself is corrupted.\n"
+literal|"You may wish to look into this and try again."
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 block|}
