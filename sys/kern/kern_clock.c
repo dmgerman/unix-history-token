@@ -1935,8 +1935,11 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"Total        %20llu\n"
+literal|"Total        %20ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inttotal
 argument_list|)
 expr_stmt|;
