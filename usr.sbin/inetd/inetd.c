@@ -56,7 +56,7 @@ name|unused
 operator|)
 argument_list|)
 init|=
-literal|"$Id: inetd.c,v 1.17 1996/11/10 21:12:44 julian Exp $"
+literal|"$Id: inetd.c,v 1.15.2.1 1996/11/11 23:42:30 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3527,6 +3527,14 @@ operator|.
 name|sin_family
 operator|=
 name|AF_INET
+expr_stmt|;
+name|sep
+operator|->
+name|se_ctrladdr
+operator|.
+name|sin_addr
+operator|=
+name|bind_address
 expr_stmt|;
 name|sep
 operator|->
