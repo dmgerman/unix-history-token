@@ -320,14 +320,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|cmask
-init|=
-name|CMASK
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vnode
 modifier|*
@@ -1579,7 +1571,7 @@ name|fd_fd
 operator|.
 name|fd_cmask
 operator|=
-name|cmask
+name|CMASK
 expr_stmt|;
 name|fdp
 operator|->
