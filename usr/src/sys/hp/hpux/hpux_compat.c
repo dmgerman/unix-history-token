@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.33 89/08/23$  *  *	@(#)hpux_compat.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.33 89/08/23$  *  *	@(#)hpux_compat.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscontext.h"
+file|"user.h"
 end_include
 
 begin_include
@@ -625,11 +625,11 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -692,11 +692,11 @@ name|uap
 operator|->
 name|rusage
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|u
 operator|.
 name|u_ar0
@@ -728,8 +728,8 @@ name|uap
 operator|->
 name|rusage
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|hpuxwait
 argument_list|(
 name|p
@@ -738,8 +738,8 @@ name|uap
 argument_list|,
 name|retval
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -826,11 +826,11 @@ if|if
 condition|(
 name|error
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|sig
 operator|=
 name|retval
@@ -932,11 +932,11 @@ name|error
 operator|=
 name|EFAULT
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1034,11 +1034,11 @@ if|if
 condition|(
 name|error
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|sig
 operator|=
 name|retval
@@ -1140,11 +1140,11 @@ name|error
 operator|=
 name|EFAULT
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1282,8 +1282,8 @@ name|mode
 operator||=
 name|FEXCL
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|open
 argument_list|(
 name|p
@@ -1292,8 +1292,8 @@ name|uap
 argument_list|,
 name|retval
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1388,11 +1388,11 @@ name|F_SETFD
 case|:
 break|break;
 default|default:
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|error
 operator|=
@@ -1471,11 +1471,11 @@ operator||=
 name|HPUXFEXCL
 expr_stmt|;
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1568,11 +1568,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1661,11 +1661,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1754,11 +1754,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1847,11 +1847,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1937,11 +1937,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EBADF
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|error
@@ -1954,11 +1954,11 @@ operator|&
 name|fd
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 operator|*
 name|retval
 operator|=
@@ -2011,11 +2011,11 @@ name|u_lastfile
 operator|=
 name|fd
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -2265,11 +2265,11 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -2320,8 +2320,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|hpuxstat1
 argument_list|(
 name|uap
@@ -2334,8 +2334,8 @@ name|hsb
 argument_list|,
 name|FOLLOW
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -2386,8 +2386,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|hpuxstat1
 argument_list|(
 name|uap
@@ -2400,8 +2400,8 @@ name|hsb
 argument_list|,
 name|NOFOLLOW
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -2491,11 +2491,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EBADF
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 switch|switch
 condition|(
 name|fp
@@ -2572,11 +2572,11 @@ operator|->
 name|hsb
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -2751,11 +2751,11 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -2844,11 +2844,11 @@ name|prio
 operator|!=
 name|RTPRIO_RTOFF
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|uap
@@ -2877,11 +2877,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|ESRCH
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|nice
 operator|=
 name|p
@@ -2921,11 +2921,11 @@ block|{
 case|case
 name|RTPRIO_NOCHG
 case|:
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 case|case
 name|RTPRIO_RTOFF
 case|:
@@ -2935,11 +2935,11 @@ name|nice
 operator|>=
 name|NZERO
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|nice
 operator|=
 name|NZERO
@@ -2981,11 +2981,11 @@ name|error
 operator|=
 name|EPERM
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -3075,11 +3075,11 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -3197,11 +3197,11 @@ argument_list|,
 name|retval
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -3269,8 +3269,8 @@ name|domainnamelen
 operator|+
 literal|1
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|copyout
 argument_list|(
 name|domainname
@@ -3283,8 +3283,8 @@ name|uap
 operator|->
 name|len
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -3353,11 +3353,11 @@ operator|.
 name|u_acflag
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|uap
@@ -3371,11 +3371,11 @@ argument_list|)
 operator|-
 literal|1
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|domainnamelen
 operator|=
 name|uap
@@ -3404,11 +3404,11 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -3449,8 +3449,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|shmat
 argument_list|(
 name|p
@@ -3459,8 +3459,8 @@ name|uap
 argument_list|,
 name|retval
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -3495,8 +3495,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|shmctl
 argument_list|(
 name|p
@@ -3505,8 +3505,8 @@ name|uap
 argument_list|,
 name|retval
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -3541,8 +3541,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|shmdt
 argument_list|(
 name|p
@@ -3551,8 +3551,8 @@ name|uap
 argument_list|,
 name|retval
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -3587,8 +3587,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|shmget
 argument_list|(
 name|p
@@ -3597,8 +3597,8 @@ name|uap
 argument_list|,
 name|retval
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -3662,11 +3662,11 @@ end_decl_stmt
 begin_block
 block|{
 comment|/* XXX: should do something here */
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -3718,11 +3718,11 @@ end_decl_stmt
 begin_block
 block|{
 comment|/* XXX: should do something here */
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -3776,11 +3776,11 @@ end_decl_stmt
 begin_block
 block|{
 comment|/* XXX: should do something here */
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -4394,8 +4394,8 @@ name|com
 operator|==
 name|HPUXTIOCSETP
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|getsettty
 argument_list|(
 name|uap
@@ -4408,8 +4408,8 @@ name|uap
 operator|->
 name|cmarg
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 operator|(
@@ -4436,11 +4436,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EBADF
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 operator|(
@@ -4457,11 +4457,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EBADF
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 comment|/* 	 * Interpret high order word to find 	 * amount of data to be copied to/from the 	 * user's address space. 	 */
 name|size
 operator|=
@@ -4476,11 +4476,11 @@ name|size
 operator|>
 name|IOCPARM_MAX
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|ENOTTY
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|size
@@ -4557,11 +4557,11 @@ argument_list|,
 name|M_IOCTLOPS
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 block|}
 else|else
@@ -4856,11 +4856,11 @@ argument_list|,
 name|M_IOCTLOPS
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -4970,11 +4970,11 @@ argument_list|(
 name|hpuxcontext
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -5057,11 +5057,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -5148,11 +5148,11 @@ name|p
 operator|==
 literal|0
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|ESRCH
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|u
@@ -5173,11 +5173,11 @@ argument_list|(
 name|p
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EPERM
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 operator|*
 name|retval
 operator|=
@@ -5185,11 +5185,11 @@ name|p
 operator|->
 name|p_pgid
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -5256,13 +5256,13 @@ name|pgrp
 operator|>=
 literal|30000
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
-name|RETURN
-argument_list|(
+operator|)
+return|;
+return|return
+operator|(
 name|setpgrp
 argument_list|(
 name|p
@@ -5271,8 +5271,8 @@ name|uap
 argument_list|,
 name|retval
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -6305,11 +6305,11 @@ operator|.
 name|tv_sec
 expr_stmt|;
 comment|/* XXX */
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -6394,11 +6394,11 @@ operator|.
 name|u_acflag
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 comment|/* WHAT DO WE DO ABOUT PENDING REAL-TIME TIMEOUTS??? */
 name|boottime
 operator|.
@@ -6429,11 +6429,11 @@ expr_stmt|;
 name|resettodr
 argument_list|()
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -6532,8 +6532,8 @@ name|tz
 operator|.
 name|tz_dsttime
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|copyout
 argument_list|(
 operator|(
@@ -6554,8 +6554,8 @@ argument_list|(
 name|tb
 argument_list|)
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -6696,11 +6696,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|p
 operator|->
@@ -6747,11 +6747,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -6834,11 +6834,11 @@ name|p_nice
 operator|-
 name|NZERO
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -6994,11 +6994,11 @@ name|boottime
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -7156,11 +7156,11 @@ if|if
 condition|(
 name|error
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 else|else
 name|tv
@@ -7254,11 +7254,11 @@ argument_list|(
 name|ndp
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|vp
 operator|=
 name|ndp
@@ -7299,11 +7299,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -7359,11 +7359,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* always return EINTR rather than ERESTART... */
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINTR
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -7449,11 +7449,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EBADF
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|fp
@@ -7462,13 +7462,13 @@ name|f_type
 operator|!=
 name|DTYPE_VNODE
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
-name|RETURN
-argument_list|(
+operator|)
+return|;
+return|return
+operator|(
 name|ohpuxstat1
 argument_list|(
 operator|(
@@ -7484,8 +7484,8 @@ name|uap
 operator|->
 name|sb
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -7588,11 +7588,11 @@ argument_list|(
 name|ndp
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|error
 operator|=
 name|ohpuxstat1
@@ -7613,11 +7613,11 @@ operator|->
 name|ni_vp
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

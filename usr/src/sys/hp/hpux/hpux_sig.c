@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.33 89/08/23$  *  *	@(#)hpux_sig.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.33 89/08/23$  *  *	@(#)hpux_sig.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscontext.h"
+file|"user.h"
 end_include
 
 begin_include
@@ -317,11 +317,11 @@ name|sig
 operator|==
 name|SIGSTOP
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|sv
 operator|=
 operator|&
@@ -439,11 +439,11 @@ if|if
 condition|(
 name|error
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -478,11 +478,11 @@ if|if
 condition|(
 name|error
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|sig
@@ -495,11 +495,11 @@ name|sv_handler
 operator|==
 name|SIG_IGN
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|setsigvec
 argument_list|(
 name|p
@@ -523,11 +523,11 @@ comment|/* XXX */
 endif|#
 directive|endif
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -606,11 +606,11 @@ operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -691,11 +691,11 @@ operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -751,8 +751,8 @@ operator|->
 name|mask
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|sigsuspend
 argument_list|(
 name|p
@@ -761,8 +761,8 @@ name|uap
 argument_list|,
 name|retval
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -847,8 +847,8 @@ operator|=
 name|NSIG
 expr_stmt|;
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|kill
 argument_list|(
 name|p
@@ -857,8 +857,8 @@ name|uap
 argument_list|,
 name|retval
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -983,11 +983,11 @@ argument_list|,
 name|SIGSYS
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -1017,11 +1017,11 @@ name|sv_handler
 operator|==
 name|SIG_IGN
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|sv
 operator|->
 name|sv_mask
@@ -1068,11 +1068,11 @@ block|p->p_flag |= SOUSIG;
 comment|/* mark as simulating old stuff */
 endif|#
 directive|endif
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

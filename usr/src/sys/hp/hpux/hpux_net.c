@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_net.c 1.33 89/08/23$  *  *	@(#)hpux_net.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_net.c 1.33 89/08/23$  *  *	@(#)hpux_net.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -28,13 +28,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscontext.h"
+file|"kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"time.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"errno.h"
 end_include
 
 begin_include
@@ -65,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"socketvar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"uio.h"
 end_include
 
 begin_include
@@ -447,11 +459,11 @@ name|rout
 operator|==
 name|NULL
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 operator|(
@@ -525,11 +537,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 ifdef|#
 directive|ifdef
@@ -563,8 +575,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|RETURN
-argument_list|(
+return|return
+operator|(
 operator|(
 operator|*
 name|hpuxtobsdipc
@@ -581,8 +593,8 @@ name|uap
 operator|,
 name|retval
 operator|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -674,11 +686,11 @@ name|fp
 operator|==
 literal|0
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|uap
@@ -687,11 +699,11 @@ name|valsize
 operator|>
 name|MLEN
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|uap
@@ -714,11 +726,11 @@ name|m
 operator|==
 name|NULL
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|ENOBUFS
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|error
@@ -753,11 +765,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -882,8 +894,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|sosetopt
 argument_list|(
 operator|(
@@ -905,8 +917,8 @@ name|name
 argument_list|,
 name|m
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -999,11 +1011,11 @@ name|fp
 operator|==
 literal|0
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|uap
@@ -1036,11 +1048,11 @@ name|valsize
 argument_list|)
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 else|else
 name|valsize
@@ -1235,11 +1247,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
