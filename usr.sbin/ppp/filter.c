@@ -582,12 +582,6 @@ name|paddr
 operator|->
 name|s_addr
 operator|==
-name|INADDR_ANY
-operator|||
-name|paddr
-operator|->
-name|s_addr
-operator|==
 name|INADDR_NONE
 condition|)
 block|{
