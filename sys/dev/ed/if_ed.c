@@ -1399,6 +1399,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
