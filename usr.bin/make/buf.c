@@ -122,7 +122,7 @@ parameter_list|(
 name|Buffer
 name|bp
 parameter_list|,
-name|int
+name|Byte
 name|byte
 parameter_list|)
 block|{
@@ -174,7 +174,7 @@ parameter_list|(
 name|Buffer
 name|bp
 parameter_list|,
-name|int
+name|size_t
 name|numBytes
 parameter_list|,
 specifier|const
@@ -235,7 +235,7 @@ parameter_list|(
 name|Buffer
 name|bp
 parameter_list|,
-name|int
+name|Byte
 name|byte
 parameter_list|)
 block|{
@@ -303,7 +303,7 @@ block|}
 else|else
 block|{
 comment|/* 		 * Yech. have to expand the buffer to stuff this thing in. 		 * We use a different expansion constant because people don't 		 * usually push back many bytes when they're doing it a byte at 		 * a time... 		 */
-name|int
+name|size_t
 name|numBytes
 init|=
 name|bp
@@ -427,7 +427,7 @@ parameter_list|(
 name|Buffer
 name|bp
 parameter_list|,
-name|int
+name|size_t
 name|numBytes
 parameter_list|,
 name|Byte
@@ -437,6 +437,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|bp
 operator|->
 name|outPtr
@@ -444,6 +448,7 @@ operator|-
 name|bp
 operator|->
 name|buffer
+argument_list|)
 operator|>=
 name|numBytes
 condition|)
@@ -490,7 +495,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|int
+name|size_t
 name|curNumBytes
 init|=
 name|bp
@@ -505,7 +510,7 @@ name|Byte
 modifier|*
 name|newBuf
 decl_stmt|;
-name|int
+name|size_t
 name|newBytes
 init|=
 name|max
@@ -721,7 +726,7 @@ parameter_list|(
 name|Buffer
 name|bp
 parameter_list|,
-name|int
+name|size_t
 name|numBytes
 parameter_list|,
 name|Byte
@@ -731,6 +736,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|bp
 operator|->
 name|inPtr
@@ -738,6 +747,7 @@ operator|-
 name|bp
 operator|->
 name|outPtr
+argument_list|)
 operator|<
 name|numBytes
 condition|)
@@ -827,7 +837,7 @@ parameter_list|(
 name|Buffer
 name|bp
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|numBytesPtr
 parameter_list|)
@@ -870,12 +880,16 @@ parameter_list|(
 name|Buffer
 name|bp
 parameter_list|,
-name|int
+name|size_t
 name|numBytes
 parameter_list|)
 block|{
 if|if
 condition|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|bp
 operator|->
 name|inPtr
@@ -883,6 +897,7 @@ operator|-
 name|bp
 operator|->
 name|outPtr
+argument_list|)
 operator|<=
 name|numBytes
 condition|)
@@ -930,7 +945,7 @@ comment|/*-  *------------------------------------------------------------------
 end_comment
 
 begin_function
-name|int
+name|size_t
 name|Buf_Size
 parameter_list|(
 name|Buffer
@@ -959,7 +974,7 @@ begin_function
 name|Buffer
 name|Buf_Init
 parameter_list|(
-name|int
+name|size_t
 name|size
 parameter_list|)
 block|{
@@ -1079,7 +1094,7 @@ parameter_list|(
 name|Buffer
 name|buf
 parameter_list|,
-name|int
+name|Byte
 name|byte
 parameter_list|)
 block|{

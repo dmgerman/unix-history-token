@@ -1201,7 +1201,7 @@ comment|/* 	     * Pattern is unanchored: search for the pattern in the word usi
 name|Boolean
 name|done
 decl_stmt|;
-name|int
+name|size_t
 name|origSize
 decl_stmt|;
 name|done

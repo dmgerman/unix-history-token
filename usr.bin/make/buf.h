@@ -37,11 +37,11 @@ typedef|typedef
 struct|struct
 name|Buffer
 block|{
-name|int
+name|size_t
 name|size
 decl_stmt|;
 comment|/* Current size of the buffer */
-name|int
+name|size_t
 name|left
 decl_stmt|;
 comment|/* Space left (== size - (inPtr - buffer)) */
@@ -96,7 +96,7 @@ name|Buf_OvAddByte
 parameter_list|(
 name|Buffer
 parameter_list|,
-name|int
+name|Byte
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -107,7 +107,7 @@ name|Buf_AddBytes
 parameter_list|(
 name|Buffer
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 specifier|const
 name|Byte
@@ -122,7 +122,7 @@ name|Buf_UngetByte
 parameter_list|(
 name|Buffer
 parameter_list|,
-name|int
+name|Byte
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -133,7 +133,7 @@ name|Buf_UngetBytes
 parameter_list|(
 name|Buffer
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 name|Byte
 modifier|*
@@ -156,7 +156,7 @@ name|Buf_GetBytes
 parameter_list|(
 name|Buffer
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 name|Byte
 modifier|*
@@ -171,7 +171,7 @@ name|Buf_GetAll
 parameter_list|(
 name|Buffer
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -183,13 +183,13 @@ name|Buf_Discard
 parameter_list|(
 name|Buffer
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|size_t
 name|Buf_Size
 parameter_list|(
 name|Buffer
@@ -201,7 +201,7 @@ begin_function_decl
 name|Buffer
 name|Buf_Init
 parameter_list|(
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -223,7 +223,7 @@ name|Buf_ReplaceLastByte
 parameter_list|(
 name|Buffer
 parameter_list|,
-name|int
+name|Byte
 parameter_list|)
 function_decl|;
 end_function_decl
