@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.7	%G%	*/
+comment|/*	conf.c	4.8	%G%	*/
 end_comment
 
 begin_include
@@ -104,7 +104,7 @@ end_function_decl
 begin_include
 include|#
 directive|include
-file|"../conf/hp.h"
+file|"hp.h"
 end_include
 
 begin_if
@@ -193,7 +193,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../conf/ht.h"
+file|"ht.h"
 end_include
 
 begin_if
@@ -292,7 +292,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../conf/rk.h"
+file|"rk.h"
 end_include
 
 begin_if
@@ -381,7 +381,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../conf/tm.h"
+file|"tm.h"
 end_include
 
 begin_if
@@ -480,7 +480,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../conf/ts.h"
+file|"ts.h"
 end_include
 
 begin_if
@@ -571,10 +571,15 @@ name|TSTAB
 value|0
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
-file|"../conf/lp.h"
+file|"lp.h"
 end_include
 
 begin_if
@@ -652,7 +657,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../conf/up.h"
+file|"up.h"
 end_include
 
 begin_if
@@ -855,7 +860,7 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
-file|"../conf/ct.h"
+file|"ct.h"
 end_include
 
 begin_if
@@ -913,7 +918,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../conf/dh.h"
+file|"dh.h"
 end_include
 
 begin_if
@@ -1055,7 +1060,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../conf/dk.h"
+file|"dk.h"
 end_include
 
 begin_if
@@ -1168,7 +1173,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../conf/dz.h"
+file|"dz.h"
 end_include
 
 begin_if
@@ -1281,7 +1286,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../conf/pk.h"
+file|"pk.h"
 end_include
 
 begin_if
@@ -1408,7 +1413,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../conf/tr.h"
+file|"tr.h"
 end_include
 
 begin_if
@@ -1545,7 +1550,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../conf/tdk.h"
+file|"tdk.h"
 end_include
 
 begin_if
@@ -1688,7 +1693,7 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
-file|"../conf/va.h"
+file|"va.h"
 end_include
 
 begin_if
@@ -1773,7 +1778,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../conf/vp.h"
+file|"vp.h"
 end_include
 
 begin_if
