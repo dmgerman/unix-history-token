@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<langinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<locale.h>
 end_include
 
@@ -1990,6 +1996,31 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+specifier|static
+name|int
+name|d_first
+init|=
+operator|-
+literal|1
+decl_stmt|;
+if|if
+condition|(
+name|d_first
+operator|<
+literal|0
+condition|)
+name|d_first
+operator|=
+operator|(
+operator|*
+name|nl_langinfo
+argument_list|(
+name|D_MD_ORDER
+argument_list|)
+operator|==
+literal|'d'
+operator|)
+expr_stmt|;
 comment|/* force orthodox easter for years before 1583 */
 if|if
 condition|(
@@ -2085,7 +2116,11 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%EF %Y"
+name|d_first
+condition|?
+literal|"%e %B %Y"
+else|:
+literal|"%B %e %Y"
 argument_list|,
 operator|&
 name|tm
