@@ -405,7 +405,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* vnode free list */
+comment|/*  * List of vnodes that are ready for recycling.  */
 end_comment
 
 begin_expr_stmt
@@ -489,7 +489,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Various variables used for debugging the new implementation of reassignbuf().  * XXX These are probably of (very) limited utility now.  */
+comment|/*  * Various variables used for debugging the new implementation of  * reassignbuf().  * XXX these are probably of (very) limited utility now.  */
 end_comment
 
 begin_decl_stmt
@@ -645,7 +645,7 @@ name|ENABLE_VFS_IOOPT
 end_ifdef
 
 begin_comment
-comment|/* See NOTES for description */
+comment|/* See NOTES for a description of this setting. */
 end_comment
 
 begin_decl_stmt
@@ -683,7 +683,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* mounted fs */
+comment|/* List of mounted filesystems. */
 end_comment
 
 begin_decl_stmt
@@ -1028,7 +1028,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Number of vnodes we want to exist at any one time.  Used all over the place.  * XXX Better documentation gladly accepted.  */
+comment|/*  * Number of vnodes we want to exist at any one time.  This is mostly used  * to size hash tables in vnode-related code.  It is normally not used in  * getnewvnode(), as wantfreevnodes is normally nonzero.)  *  * XXX desiredvnodes is historical cruft and should not exist.  */
 end_comment
 
 begin_decl_stmt
@@ -6194,7 +6194,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Local helper function  - same as addaliasu, but for a dev_t */
+comment|/* This is a local helper function that do the same as addaliasu, but for a  * dev_t instead of an udev_t. */
 end_comment
 
 begin_function
@@ -6473,7 +6473,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Increase reference count of a vnode  */
+comment|/*   * Increase the reference count of a vnode.  */
 end_comment
 
 begin_function
@@ -6686,7 +6686,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Release an already locked vnode.  * This gives almost the exact same effects as unlock+vrele()  */
+comment|/*   * Release an already locked vnode.  This give the same effects as  * unlock+vrele(), but takes less time and avoids releasing and  * re-aquiring the lock (as vrele() aquires the lock internally.)  */
 end_comment
 
 begin_function
@@ -6889,7 +6889,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * One less who cares about this vnode (opposite of vhold())  */
+comment|/*  * Note that there is one less who cares about this vnode.  vdrop() is the  * opposite of vhold().  */
 end_comment
 
 begin_function
@@ -9049,7 +9049,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* XXX The below code does not compile; vfs_sysctl does not exist. */
+comment|/* XXX the below code does not compile; vfs_sysctl does not exist. */
 ifdef|#
 directive|ifdef
 name|notyet
@@ -10406,7 +10406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Helper for vfs_free_addrlist */
+comment|/* Helper for vfs_free_addrlist. */
 end_comment
 
 begin_comment
@@ -12989,7 +12989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free data allocated by namei().  * See namei(9) for details.  */
+comment|/*  * Free data allocated by namei(); see namei(9) for details.  */
 end_comment
 
 begin_function
