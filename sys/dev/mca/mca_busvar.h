@@ -53,10 +53,6 @@ block|,
 name|MCA_IVAR_ID
 block|,
 name|MCA_IVAR_ENABLED
-block|,
-name|MCA_IVAR_IRQ
-block|,
-name|MCA_IVAR_DRQ
 block|, }
 enum|;
 end_enum
@@ -109,28 +105,6 @@ argument|int
 argument_list|)
 end_macro
 
-begin_macro
-name|MCA_ACCESSOR
-argument_list|(
-argument|irq
-argument_list|,
-argument|IRQ
-argument_list|,
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
-name|MCA_ACCESSOR
-argument_list|(
-argument|drq
-argument_list|,
-argument|DRQ
-argument_list|,
-argument|int
-argument_list|)
-end_macro
-
 begin_comment
 comment|/* don't use these! */
 end_comment
@@ -171,7 +145,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|mca_add_irq
 parameter_list|(
 name|device_t
@@ -182,7 +156,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|mca_add_drq
 parameter_list|(
 name|device_t
@@ -193,7 +167,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|mca_add_iospace
 parameter_list|(
 name|device_t
@@ -201,14 +175,12 @@ parameter_list|,
 name|u_long
 parameter_list|,
 name|u_long
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|mca_add_mspace
 parameter_list|(
 name|device_t
@@ -216,8 +188,6 @@ parameter_list|,
 name|u_long
 parameter_list|,
 name|u_long
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
