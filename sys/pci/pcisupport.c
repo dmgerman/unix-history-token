@@ -4929,7 +4929,7 @@ literal|0x85981106
 case|:
 return|return
 operator|(
-literal|"VIA 82C598MVP (Apollo MVP3) PCI-PCI (AGP) bridge"
+literal|"VIA 82C598MVP/82C694X (Apollo MVP3/Pro133A) PCI-PCI (AGP) bridge"
 operator|)
 return|;
 comment|/* AcerLabs -- vendor 0x10b9 */
@@ -6784,11 +6784,27 @@ literal|"VIA 82C598MVP (Apollo MVP3) host bridge"
 operator|)
 return|;
 case|case
+literal|0x06911106
+case|:
+return|return
+operator|(
+literal|"VIA 82C691/693A/694X (Apollo Pro133A) host bridge"
+operator|)
+return|;
+case|case
 literal|0x30401106
 case|:
 return|return
 operator|(
 literal|"VIA 82C586B ACPI interface"
+operator|)
+return|;
+case|case
+literal|0x30501106
+case|:
+return|return
+operator|(
+literal|"VIA 82C596B ACPI interface"
 operator|)
 return|;
 case|case
