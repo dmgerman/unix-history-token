@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -495,6 +495,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -673,6 +675,9 @@ argument_list|()
 decl_stmt|,
 name|nqnfsrv_vacated
 argument_list|()
+decl_stmt|,
+name|nqnfsrv_access
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -729,6 +734,10 @@ operator|,
 function_decl|nqnfsrv_getlease
 operator|,
 function_decl|nqnfsrv_vacated
+operator|,
+function_decl|nfsrv_noop
+operator|,
+function_decl|nqnfsrv_access
 operator|,
 end_function_decl
 

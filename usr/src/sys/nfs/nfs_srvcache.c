@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_srvcache.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_srvcache.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -259,6 +259,8 @@ block|,
 name|FALSE
 block|,
 name|FALSE
+block|,
+name|FALSE
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -319,6 +321,8 @@ block|,
 name|FALSE
 block|,
 name|FALSE
+block|,
+name|TRUE
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -494,13 +498,6 @@ operator|&
 name|rp
 operator|->
 name|rc_haddr
-argument_list|,
-operator|(
-expr|union
-name|nethostaddr
-operator|*
-operator|)
-literal|0
 argument_list|,
 name|nam
 argument_list|)
@@ -1298,13 +1295,6 @@ operator|&
 name|rp
 operator|->
 name|rc_haddr
-argument_list|,
-operator|(
-expr|union
-name|nethostaddr
-operator|*
-operator|)
-literal|0
 argument_list|,
 name|nam
 argument_list|)

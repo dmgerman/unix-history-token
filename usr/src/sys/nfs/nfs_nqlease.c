@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -330,6 +330,8 @@ block|,
 literal|0
 block|,
 name|NQL_READ
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1983,13 +1985,6 @@ name|lph
 operator|->
 name|lph_haddr
 argument_list|,
-operator|(
-expr|union
-name|nethostaddr
-operator|*
-operator|)
-literal|0
-argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
@@ -2012,13 +2007,6 @@ operator|&
 name|lph
 operator|->
 name|lph_claddr
-argument_list|,
-operator|(
-expr|union
-name|nethostaddr
-operator|*
-operator|)
-literal|0
 argument_list|,
 name|addr
 argument_list|)
@@ -2098,13 +2086,6 @@ name|sin_family
 argument_list|,
 operator|&
 name|lhaddr
-argument_list|,
-operator|(
-expr|union
-name|nethostaddr
-operator|*
-operator|)
-literal|0
 argument_list|,
 name|addr
 argument_list|)
