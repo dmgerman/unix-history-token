@@ -129,6 +129,9 @@ parameter_list|(
 name|pcm_channel
 modifier|*
 name|c
+parameter_list|,
+name|u_int32_t
+name|fmt
 parameter_list|)
 function_decl|;
 end_function_decl
