@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|DEFBBLKNAME
-value|"boot"
+value|"loader"
 end_define
 
 begin_decl_stmt

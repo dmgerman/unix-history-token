@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  * From: $NetBSD: ls.c,v 1.3 1997/06/13 13:48:47 drochner Exp $  */
+comment|/*  * $Id: ls.c,v 1.1.1.1 1998/08/21 03:17:41 msmith Exp $  * From: $NetBSD: ls.c,v 1.3 1997/06/13 13:48:47 drochner Exp $  */
 end_comment
 
 begin_comment
@@ -85,26 +85,21 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
+specifier|static
 name|char
 name|dirbuf
 index|[
 name|DIRBLKSIZ
 index|]
 decl_stmt|;
-name|char
-name|pathbuf
-index|[
-literal|128
-index|]
-decl_stmt|;
-comment|/* XXX path length constant? */
+specifier|static
 name|char
 name|buf
 index|[
 literal|128
 index|]
 decl_stmt|;
-comment|/* must be long enough for dir entry! */
+comment|/* must be long enough for full pathname */
 name|char
 modifier|*
 name|path
@@ -478,7 +473,7 @@ name|buf
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|pathbuf
+name|path
 argument_list|,
 name|dp
 operator|->
@@ -496,6 +491,19 @@ operator|&
 name|sb
 argument_list|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"stat(%s) failed: %s\n"
+argument_list|,
+name|buf
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sb
 operator|.
 name|st_size
@@ -503,6 +511,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 name|sprintf
 argument_list|(
 name|buf
