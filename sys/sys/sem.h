@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: sem.h,v 1.15 1998/07/15 02:32:32 bde Exp $ */
+comment|/* $Id: sem.h,v 1.16 1998/12/14 08:34:55 dillon Exp $ */
 end_comment
 
 begin_comment
@@ -598,6 +598,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SEM_ALIGN
+parameter_list|(
+name|bytes
+parameter_list|)
+value|(((bytes) + 15)& ~15)
+end_define
+
 begin_comment
 comment|/* actual size of an undo structure */
 end_comment
@@ -606,7 +616,7 @@ begin_define
 define|#
 directive|define
 name|SEMUSZ
-value|(offsetof(struct sem_undo, un_ent[SEMUME]))
+value|SEM_ALIGN(offsetof(struct sem_undo, un_ent[SEMUME]))
 end_define
 
 begin_decl_stmt
