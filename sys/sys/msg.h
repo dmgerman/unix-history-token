@@ -99,30 +99,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_TIME_T_DECLARED
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|__time_t
-name|time_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|_TIME_T_DECLARED
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|_SIZE_T_DECLARED
 end_ifndef
 
@@ -168,15 +144,33 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* XXX namespace pollution. */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TIME_T_DECLARED
+end_ifndef
 
-begin_struct_decl
-struct_decl|struct
-name|msg
-struct_decl|;
-end_struct_decl
+begin_typedef
+typedef|typedef
+name|__time_t
+name|time_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_TIME_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * XXX there seems to be no prefix reserved for this header, so the name  * "msg" in "struct msg" and the names of all of the nonstandard members  * (mainly "msg_pad*) are namespace pollution.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -329,16 +323,14 @@ name|msginfo
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_else
+else|#
+directive|else
+end_else
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_function_decl
 name|__BEGIN_DECLS
@@ -439,6 +431,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
