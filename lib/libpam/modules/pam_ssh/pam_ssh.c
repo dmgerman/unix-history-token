@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -148,6 +154,14 @@ include|#
 directive|include
 file|"pam_ssh.h"
 end_include
+
+begin_decl_stmt
+name|int
+name|IPv4or6
+init|=
+name|AF_UNSPEC
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Generic cleanup function for SSH "Key" type.  */
@@ -1767,6 +1781,35 @@ operator|==
 literal|0
 condition|)
 block|{
+name|env_value
+operator|=
+name|strdup
+argument_list|(
+name|env_value
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|env_value
+operator|==
+name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"%s: %m"
+argument_list|,
+name|MODULE_NAME
+argument_list|)
+expr_stmt|;
+name|PAM_RETURN
+argument_list|(
+name|PAM_SERVICE_ERR
+argument_list|)
+expr_stmt|;
+block|}
 name|retval
 operator|=
 name|pam_set_data
