@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)strings.c	8.2 (Berkeley) 1/28/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)strings.c	8.2 (Berkeley) 1/28/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -131,7 +145,7 @@ name|ISSTR
 parameter_list|(
 name|ch
 parameter_list|)
-value|(isalnum(ch) || ispunct(ch) || \ 			 isspace(ch)&& (!iscntrl(ch) || ch == '\t') || \ 			 isascii(ch)&& isprint(ch))
+value|(isalnum(ch) || ispunct(ch) || \ 			 (isspace(ch)&& (!iscntrl(ch) || ch == '\t')) || \ 			 (isascii(ch)&& isprint(ch)))
 end_define
 
 begin_typedef
@@ -191,15 +205,33 @@ begin_comment
 comment|/* buffer for struct exec */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+name|int
+name|getch
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -476,23 +508,13 @@ name|minlen
 operator|<
 literal|1
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"strings: length less than 1\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"length less than 1"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -508,28 +530,13 @@ name|minlen
 argument_list|)
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"strings: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
-block|}
 name|bfr
 index|[
 name|minlen
@@ -568,21 +575,11 @@ name|stdin
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"strings: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|file
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|exitcode
@@ -857,12 +854,10 @@ begin_comment
 comment|/*  * getch --  *	get next character from wherever  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getch
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|++
 name|foff
@@ -919,7 +914,7 @@ name|EOF
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
