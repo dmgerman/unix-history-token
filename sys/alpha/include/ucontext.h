@@ -79,9 +79,13 @@ name|long
 name|mc_format
 decl_stmt|;
 name|long
+name|mc_thrptr
+decl_stmt|;
+comment|/* Thread pointer */
+name|long
 name|mc_spare
 index|[
-literal|6
+literal|5
 index|]
 decl_stmt|;
 block|}
