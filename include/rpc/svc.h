@@ -1261,11 +1261,11 @@ name|__rpc_get_local_uid
 parameter_list|(
 name|SVCXPRT
 modifier|*
-name|transp
+name|_transp
 parameter_list|,
 name|uid_t
 modifier|*
-name|uid
+name|_uid
 parameter_list|)
 function_decl|;
 end_function_decl
