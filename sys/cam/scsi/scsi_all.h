@@ -2225,6 +2225,20 @@ end_struct
 
 begin_struct
 struct|struct
+name|scsi_mode_page_header
+block|{
+name|u_int8_t
+name|page_code
+decl_stmt|;
+name|u_int8_t
+name|page_length
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|scsi_mode_blk_desc
 block|{
 name|u_int8_t
