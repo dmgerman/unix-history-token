@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.12 1995/04/19 14:02:00 jkh Exp $"
+literal|"$Id: perform.c,v 1.13 1995/04/26 15:08:02 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -309,13 +309,15 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|struct
 name|stat
 name|sb
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|code
