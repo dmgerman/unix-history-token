@@ -42,21 +42,10 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)random.c	8.5 (Berkeley) 4/5/94";
+unit|static const char sccsid[] = "@(#)random.c	8.5 (Berkeley) 4/5/94";
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -66,6 +55,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -112,6 +115,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -128,6 +137,7 @@ file|"randomize_fd.h"
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -145,8 +155,8 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 parameter_list|)
 block|{
 name|double
@@ -475,7 +485,7 @@ literal|1
 argument_list|,
 literal|"%s"
 argument_list|,
-name|optarg
+name|filename
 argument_list|)
 expr_stmt|;
 name|ret
@@ -508,7 +518,10 @@ condition|(
 name|random_exit
 condition|)
 return|return
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|denom
 operator|*
@@ -517,7 +530,7 @@ argument_list|()
 operator|)
 operator|/
 name|LONG_MAX
-operator|)
+argument_list|)
 return|;
 comment|/* 	 * Select whether to print the first line.  (Prime the pump.) 	 * We find a random number between 0 and denom - 1 and, if it's 	 * 0 (which has a 1 / denom chance of being true), we select the 	 * line. 	 */
 name|selected
@@ -624,13 +637,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
-parameter_list|()
-block|{
-operator|(
+parameter_list|(
 name|void
-operator|)
+parameter_list|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
