@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -7166,7 +7172,7 @@ condition|)
 return|return;
 name|db_iprintf
 argument_list|(
-literal|"Object %p: type=%d, size=0x%lx, res=%d, ref=%d, flags=0x%x\n"
+literal|"Object %p: type=%d, size=0x%jx, res=%d, ref=%d, flags=0x%x\n"
 argument_list|,
 name|object
 argument_list|,
@@ -7178,7 +7184,7 @@ operator|->
 name|type
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|object
 operator|->
@@ -7197,10 +7203,9 @@ operator|->
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX no %qd in kernel.  Truncate object->backing_object_offset. 	 */
 name|db_iprintf
 argument_list|(
-literal|" sref=%d, backing_object(%d)=(%p)+0x%lx\n"
+literal|" sref=%d, backing_object(%d)=(%p)+0x%jx\n"
 argument_list|,
 name|object
 operator|->
@@ -7223,7 +7228,7 @@ operator|->
 name|backing_object
 argument_list|,
 operator|(
-name|long
+name|uintmax_t
 operator|)
 name|object
 operator|->
@@ -7298,17 +7303,17 @@ operator|++
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"(off=0x%lx,page=0x%lx)"
+literal|"(off=0x%jx,page=0x%jx)"
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|p
 operator|->
 name|pindex
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|VM_PAGE_TO_PHYS
 argument_list|(
