@@ -366,12 +366,6 @@ argument_list|,
 literal|"vnode_pager_alloc"
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Prevent race condition when allocating the object. This 	 * can happen with NFS vnodes since the nfsnode isn't locked. 	 */
 name|VI_LOCK
 argument_list|(
@@ -586,12 +580,6 @@ block|}
 name|VI_UNLOCK
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
