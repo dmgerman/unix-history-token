@@ -77,12 +77,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<grp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<math.h>
 end_include
 
@@ -90,12 +84,6 @@ begin_include
 include|#
 directive|include
 file|<langinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
 end_include
 
 begin_include
@@ -114,6 +102,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
