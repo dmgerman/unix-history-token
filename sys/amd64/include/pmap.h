@@ -799,10 +799,6 @@ modifier|*
 name|pm_pml4
 decl_stmt|;
 comment|/* KVA of level 4 page table */
-name|vm_object_t
-name|pm_pteobj
-decl_stmt|;
-comment|/* Container for pte's */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
