@@ -552,7 +552,7 @@ name|parent
 argument_list|,
 literal|0
 argument_list|,
-literal|"if_fwe"
+literal|"fwe"
 argument_list|,
 name|device_get_unit
 argument_list|(
@@ -945,10 +945,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
+name|unit
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -3289,7 +3286,7 @@ name|driver_t
 name|fwe_driver
 init|=
 block|{
-literal|"if_fwe"
+literal|"fwe"
 block|,
 name|fwe_methods
 block|,
