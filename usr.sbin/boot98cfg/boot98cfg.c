@@ -779,7 +779,7 @@ operator|||
 operator|*
 name|optarg
 operator|==
-name|NULL
+literal|'\0'
 operator|||
 operator|*
 name|endptr
@@ -850,7 +850,7 @@ operator|||
 operator|*
 name|optarg
 operator|==
-name|NULL
+literal|'\0'
 operator|||
 operator|*
 name|endptr
