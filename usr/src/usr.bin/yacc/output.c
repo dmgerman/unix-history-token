@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.6 (Berkeley) %G%"
+literal|"@(#)output.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,6 +167,9 @@ expr_stmt|;
 name|free_reductions
 argument_list|()
 expr_stmt|;
+name|output_prefix
+argument_list|()
+expr_stmt|;
 name|output_stored_text
 argument_list|()
 expr_stmt|;
@@ -225,6 +228,329 @@ block|}
 end_block
 
 begin_macro
+name|output_prefix
+argument_list|()
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|symbol_prefix
+operator|==
+name|NULL
+condition|)
+name|symbol_prefix
+operator|=
+literal|"yy"
+expr_stmt|;
+else|else
+block|{
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yyparse %sparse\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yylex %slex\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yyerror %serror\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yychar %schar\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yyval %sval\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yylval %slval\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yydebug %sdebug\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yynerrs %snerrs\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yyerrflag %serrflag\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yyss %sss\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yyssp %sssp\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yyvs %svs\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yyvsp %svsp\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yylhs %slhs\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yylen %slen\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yydefred %sdefred\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yydgoto %sdgoto\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yysindex %ssindex\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yyrindex %srindex\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yygindex %sgindex\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yytable %stable\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yycheck %scheck\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yyname %sname\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yyrule %srule\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+block|}
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define YYPREFIX \"%s\"\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
 name|output_rule_data
 argument_list|()
 end_macro
@@ -243,7 +569,9 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"short yylhs[] = {%42d,"
+literal|"short %slhs[] = {%42d,"
+argument_list|,
+name|symbol_prefix
 argument_list|,
 name|symbol_value
 index|[
@@ -336,7 +664,9 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"short yylen[] = {%42d,"
+literal|"short %slen[] = {%42d,"
+argument_list|,
+name|symbol_prefix
 argument_list|,
 literal|2
 argument_list|)
@@ -448,7 +778,9 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"short yydefred[] = {%39d,"
+literal|"short %sdefred[] = {%39d,"
+argument_list|,
+name|symbol_prefix
 argument_list|,
 operator|(
 name|defred
@@ -1215,7 +1547,9 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"short yydgoto[] = {%40d,"
+literal|"short %sdgoto[] = {%40d,"
+argument_list|,
+name|symbol_prefix
 argument_list|,
 name|k
 argument_list|)
@@ -2787,7 +3121,9 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"short yysindex[] = {%39d,"
+literal|"short %ssindex[] = {%39d,"
+argument_list|,
+name|symbol_prefix
 argument_list|,
 name|base
 index|[
@@ -2870,7 +3206,9 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"\n};\nshort yyrindex[] = {%39d,"
+literal|"\n};\nshort %srindex[] = {%39d,"
+argument_list|,
+name|symbol_prefix
 argument_list|,
 name|base
 index|[
@@ -2957,7 +3295,9 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"\n};\nshort yygindex[] = {%39d,"
+literal|"\n};\nshort %sgindex[] = {%39d,"
+argument_list|,
+name|symbol_prefix
 argument_list|,
 name|base
 index|[
@@ -3090,7 +3430,9 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"short yytable[] = {%40d,"
+literal|"short %stable[] = {%40d,"
+argument_list|,
+name|symbol_prefix
 argument_list|,
 name|table
 index|[
@@ -3203,7 +3545,9 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"short yycheck[] = {%40d,"
+literal|"short %scheck[] = {%40d,"
+argument_list|,
+name|symbol_prefix
 argument_list|,
 name|check
 index|[
@@ -3708,7 +4052,9 @@ name|fprintf
 argument_list|(
 name|defines_file
 argument_list|,
-literal|" YYSTYPE;\nextern YYSTYPE yylval;\n"
+literal|" YYSTYPE;\nextern YYSTYPE %slval;\n"
+argument_list|,
+name|symbol_prefix
 argument_list|)
 expr_stmt|;
 block|}
@@ -4058,7 +4404,9 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"#if YYDEBUG\nchar *yyname[] = {"
+literal|"#if YYDEBUG\nchar *%sname[] = {"
+argument_list|,
+name|symbol_prefix
 argument_list|)
 expr_stmt|;
 name|j
@@ -4619,7 +4967,9 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"char *yyrule[] = {\n"
+literal|"char *%srule[] = {\n"
+argument_list|,
+name|symbol_prefix
 argument_list|)
 expr_stmt|;
 for|for

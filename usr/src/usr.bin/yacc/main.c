@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.4 (Berkeley) %G%"
+literal|"@(#)main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,6 +91,13 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|vflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|symbol_prefix
 decl_stmt|;
 end_decl_stmt
 
@@ -502,7 +509,12 @@ end_block
 begin_function
 name|void
 name|onintr
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|done
 argument_list|(
@@ -602,7 +614,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-dlrtv] [-b file_prefix] filename\n"
+literal|"usage: %s [-dlrtv] [-b file_prefix] [-p symbol_prefix] filename\n"
 argument_list|,
 name|myname
 argument_list|)
@@ -775,6 +787,39 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'p'
+case|:
+if|if
+condition|(
+operator|*
+operator|++
+name|s
+condition|)
+name|symbol_prefix
+operator|=
+name|s
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|++
+name|i
+operator|<
+name|argc
+condition|)
+name|symbol_prefix
+operator|=
+name|argv
+index|[
+name|i
+index|]
+expr_stmt|;
+else|else
+name|usage
+argument_list|()
+expr_stmt|;
+continue|continue;
 case|case
 literal|'r'
 case|:
