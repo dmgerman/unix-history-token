@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.2	%G%	*/
+comment|/*	vfs_vnops.c	4.3	%G%	*/
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"../h/acct.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/mount.h"
 end_include
 
 begin_comment
@@ -157,6 +163,12 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
+specifier|register
+name|struct
+name|mount
+modifier|*
+name|mp
+decl_stmt|;
 name|int
 name|flag
 decl_stmt|,
@@ -224,6 +236,8 @@ operator|=
 name|ip
 operator|->
 name|i_mode
+operator|&
+name|IFMT
 expr_stmt|;
 name|plock
 argument_list|(
@@ -283,8 +297,6 @@ expr_stmt|;
 switch|switch
 condition|(
 name|mode
-operator|&
-name|IFMT
 condition|)
 block|{
 case|case
@@ -309,6 +321,39 @@ break|break;
 case|case
 name|IFBLK
 case|:
+comment|/* 		 * We don't want to really close the device if it is mounted 		 */
+for|for
+control|(
+name|mp
+operator|=
+name|mount
+init|;
+name|mp
+operator|<
+operator|&
+name|mount
+index|[
+name|NMOUNT
+index|]
+condition|;
+name|mp
+operator|++
+control|)
+if|if
+condition|(
+name|mp
+operator|->
+name|m_bufp
+operator|!=
+name|NULL
+operator|&&
+name|mp
+operator|->
+name|m_dev
+operator|==
+name|dev
+condition|)
+return|return;
 case|case
 name|IFMPB
 case|:
@@ -330,13 +375,15 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
 name|flag
 operator|&
 name|FMP
+operator|)
+operator|==
+literal|0
 condition|)
-goto|goto
-name|call
-goto|;
+block|{
 for|for
 control|(
 name|fp
@@ -382,15 +429,29 @@ operator|&
 name|IFMT
 operator|)
 operator|==
-operator|(
 name|mode
-operator|&
-name|IFMT
-operator|)
 condition|)
 return|return;
-name|call
-label|:
+if|if
+condition|(
+name|mode
+operator|==
+name|IFBLK
+condition|)
+block|{
+comment|/* 			 * on last close of a block device (that isn't mounted) 			 * we must invalidate any in core blocks 			 */
+name|bflush
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|binval
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 call|(
 modifier|*
 name|cfunc
