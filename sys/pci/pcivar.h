@@ -1,4 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pcivar.h,v 1.20 1998/08/13 19:12:20 gibbs Exp $  *  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PCIVAR_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PCIVAR_H_
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -16,9 +32,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<pci/pci_ioctl.h>
+end_include
+
 begin_comment
-comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pcivar.h,v 1.19 1998/07/22 08:39:08 dfr Exp $  *  */
+comment|/* XXX KDM */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
 
 begin_comment
 comment|/* some PCI bus constants */
@@ -193,16 +221,6 @@ typedef|typedef
 struct|struct
 name|pcicfg
 block|{
-name|struct
-name|pcicfg
-modifier|*
-name|parent
-decl_stmt|;
-name|struct
-name|pcicfg
-modifier|*
-name|next
-decl_stmt|;
 name|pcimap
 modifier|*
 name|map
@@ -541,6 +559,40 @@ name|pciattach
 typedef|;
 end_typedef
 
+begin_struct
+struct|struct
+name|pci_devinfo
+block|{
+name|STAILQ_ENTRY
+argument_list|(
+argument|pci_devinfo
+argument_list|)
+name|pci_links
+expr_stmt|;
+name|struct
+name|pci_device
+modifier|*
+name|device
+decl_stmt|;
+comment|/* should this be ifdefed? */
+name|pcicfgregs
+name|cfg
+decl_stmt|;
+name|struct
+name|pci_conf
+name|conf
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|u_int32_t
+name|pci_numdevs
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* externally visible functions */
 end_comment
@@ -560,9 +612,10 @@ begin_function_decl
 name|void
 name|pci_drvattach
 parameter_list|(
-name|pcicfgregs
+name|struct
+name|pci_devinfo
 modifier|*
-name|cfg
+name|dinfo
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -912,6 +965,15 @@ end_endif
 
 begin_comment
 comment|/* PCI_COMPAT */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _PCIVAR_H_ */
 end_comment
 
 end_unit
