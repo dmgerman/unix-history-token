@@ -1028,33 +1028,14 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMP
-if|if
-condition|(
-name|smp_active
-operator|==
-literal|0
-condition|)
-block|{
-name|cpu_reset_real
-argument_list|()
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-else|else
-block|{
 name|u_int
 name|map
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"cpu_reset called on cpu#%d\n"
-argument_list|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|smp_active
+condition|)
+block|{
 name|map
 operator|=
 name|PCPU_GET
@@ -1082,25 +1063,19 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-comment|/* Stop all other CPUs */
 block|}
 name|DELAY
 argument_list|(
 literal|1000000
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|cpu_reset_real
 argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
-block|}
-else|#
-directive|else
-name|cpu_reset_real
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1110,7 +1085,7 @@ name|void
 name|cpu_reset_real
 parameter_list|()
 block|{
-comment|/* 	 * Attempt to do a CPU reset via the keyboard controller, 	 * do not turn of the GateA20, as any machine that fails 	 * to do the reset here would then end up in no man's land. 	 */
+comment|/* 	 * Attempt to do a CPU reset via the keyboard controller, 	 * do not turn off GateA20, as any machine that fails 	 * to do the reset here would then end up in no man's land. 	 */
 name|outb
 argument_list|(
 name|IO_KBD
@@ -1137,7 +1112,7 @@ literal|1000000
 argument_list|)
 expr_stmt|;
 comment|/* wait 1 sec for printf to complete */
-comment|/* force a shutdown by unmapping entire address space ! */
+comment|/* Force a shutdown by unmapping entire address space. */
 name|bzero
 argument_list|(
 operator|(
