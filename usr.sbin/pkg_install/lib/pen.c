@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pen.c,v 1.22.2.3 1998/02/16 17:41:57 jkh Exp $"
+literal|"$Id: pen.c,v 1.22.2.4 1998/04/12 16:01:28 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -637,11 +637,12 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -651,6 +652,7 @@ argument_list|,
 name|pen
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|PenLocation
@@ -721,11 +723,12 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -735,6 +738,7 @@ argument_list|,
 name|Previous
 argument_list|)
 expr_stmt|;
+block|}
 name|Previous
 index|[
 literal|0

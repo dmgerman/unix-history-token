@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: extract.c,v 1.7.6.10 1998/07/04 14:10:56 jkh Exp $"
+literal|"$Id: extract.c,v 1.7.6.11 1998/07/04 14:12:19 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,7 +69,7 @@ name|todir
 parameter_list|)
 comment|/* push out string */
 define|\
-value|if (where_count> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xf - -C "); \ 		    strcat(where_args, todir); \ 		    if (system(where_args)) \ 	cleanup(0), errx(2, "can not invoke %d byte tar pipeline: %s", \ 				strlen(where_args), where_args); \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	} \ 	if (perm_count) { \ 		    apply_perms(todir, perm_args); \ 		    perm_args[0] = 0;\ 		    perm_count = 0; \ 	}
+value|if (where_count> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xf - -C "); \ 		    strcat(where_args, todir); \ 		    if (system(where_args)) { \ 	                cleanup(0); \ 		        errx(2, "can not invoke %d byte tar pipeline: %s", \ 			     strlen(where_args), where_args); \ 		    } \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	} \ 	if (perm_count) { \ 		    apply_perms(todir, perm_args); \ 		    perm_args[0] = 0;\ 		    perm_count = 0; \ 	}
 end_define
 
 begin_function
@@ -320,11 +320,12 @@ condition|(
 operator|!
 name|where_args
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -332,6 +333,7 @@ argument_list|,
 literal|"can't get argument list space"
 argument_list|)
 expr_stmt|;
+block|}
 name|perm_args
 operator|=
 name|alloca
@@ -344,11 +346,12 @@ condition|(
 operator|!
 name|perm_args
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -356,6 +359,7 @@ argument_list|,
 literal|"can't get argument list space"
 argument_list|)
 expr_stmt|;
+block|}
 name|strcpy
 argument_list|(
 name|where_args
@@ -506,11 +510,12 @@ argument_list|,
 literal|'\''
 argument_list|)
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -522,6 +527,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* first try to rename it into place */
 name|snprintf
 argument_list|(
@@ -690,11 +696,12 @@ name|maxargs
 operator|-
 name|perm_count
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -702,6 +709,7 @@ argument_list|,
 literal|"oops, miscounted strings!"
 argument_list|)
 expr_stmt|;
+block|}
 name|perm_count
 operator|+=
 name|add_count
@@ -798,11 +806,12 @@ name|maxargs
 operator|-
 name|where_count
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -810,6 +819,7 @@ argument_list|,
 literal|"oops, miscounted strings!"
 argument_list|)
 expr_stmt|;
+block|}
 name|where_count
 operator|+=
 name|add_count
@@ -843,11 +853,12 @@ name|maxargs
 operator|-
 name|perm_count
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -855,6 +866,7 @@ argument_list|,
 literal|"oops, miscounted strings!"
 argument_list|)
 expr_stmt|;
+block|}
 name|perm_count
 operator|+=
 name|add_count
@@ -909,11 +921,12 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -925,6 +938,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 name|Directory
 operator|=
 name|p
@@ -976,11 +990,12 @@ name|last_file
 operator|==
 name|NULL
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -992,6 +1007,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|strstr
@@ -1007,11 +1023,12 @@ name|Directory
 operator|==
 name|NULL
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1023,6 +1040,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 name|format_cmd
 argument_list|(
 name|cmd

@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: msg.c,v 1.6.2.2 1997/10/13 15:06:14 jkh Exp $"
+literal|"$Id: msg.c,v 1.6.2.3 1998/03/09 12:31:15 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,16 +51,18 @@ modifier|*
 name|err
 parameter_list|)
 block|{
-name|warn
-argument_list|(
-literal|"fatal error during execution: %s"
-argument_list|,
-name|err
-argument_list|)
-expr_stmt|;
 name|cleanup
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"fatal error during execution: %s"
+argument_list|,
+name|err
 argument_list|)
 expr_stmt|;
 block|}
@@ -120,14 +122,16 @@ operator|!
 name|tty
 condition|)
 block|{
-name|warnx
-argument_list|(
-literal|"can't open /dev/tty!"
-argument_list|)
-expr_stmt|;
 name|cleanup
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"can't open /dev/tty!"
 argument_list|)
 expr_stmt|;
 block|}

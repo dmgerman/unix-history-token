@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: file.c,v 1.24.2.4 1997/10/18 05:55:12 jkh Exp $"
+literal|"$Id: file.c,v 1.24.2.5 1998/09/08 10:42:41 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1448,11 +1448,12 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1462,6 +1463,7 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+block|}
 name|contents
 operator|=
 operator|(
@@ -1494,11 +1496,12 @@ name|fd
 operator|==
 name|FAIL
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1508,6 +1511,7 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|read
@@ -1525,11 +1529,12 @@ name|sb
 operator|.
 name|st_size
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1543,6 +1548,7 @@ operator|.
 name|st_size
 argument_list|)
 expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|fd
@@ -1814,11 +1820,12 @@ condition|(
 operator|!
 name|fp
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1828,6 +1835,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 name|len
 operator|=
 name|strlen
@@ -1850,11 +1858,12 @@ argument_list|)
 operator|!=
 name|len
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1866,6 +1875,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|fclose
@@ -1873,11 +1883,12 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1887,6 +1898,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1958,11 +1970,12 @@ argument_list|(
 name|cmd
 argument_list|)
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1972,6 +1985,7 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2043,11 +2057,12 @@ argument_list|(
 name|cmd
 argument_list|)
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -2057,6 +2072,7 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2157,11 +2173,12 @@ argument_list|(
 name|cmd
 argument_list|)
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -2171,6 +2188,7 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: plist.c,v 1.17.2.6 1998/09/01 06:59:46 jkh Exp $"
+literal|"$Id: plist.c,v 1.17.2.7 1998/09/01 07:00:20 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1101,11 +1101,12 @@ name|cmd
 operator|==
 name|FAIL
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1115,6 +1116,7 @@ argument_list|,
 name|pline
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*

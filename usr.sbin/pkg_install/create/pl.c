@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pl.c,v 1.8 1996/07/30 10:48:13 jkh Exp $"
+literal|"$Id: pl.c,v 1.8.2.1 1997/10/09 07:09:06 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -365,7 +365,7 @@ name|PUSHOUT
 parameter_list|()
 comment|/* push out string */
 define|\
-value|if (where_count> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xpf -"); \ 		    if (system(where_args)) \ 			cleanup(0), errx(2, "can't invoke tar pipeline"); \ 		    memset(where_args, 0, maxargs); \  		    last_chdir = NULL; \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	}
+value|if (where_count> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xpf -"); \ 		    if (system(where_args)) { \ 			cleanup(0); \ 			errx(2, "can't invoke tar pipeline"); \ 		    } \ 		    memset(where_args, 0, maxargs); \  		    last_chdir = NULL; \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	}
 end_define
 
 begin_comment
@@ -459,11 +459,12 @@ condition|(
 operator|!
 name|where_args
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -471,6 +472,7 @@ argument_list|,
 literal|"can't get argument list space"
 argument_list|)
 expr_stmt|;
+block|}
 name|memset
 argument_list|(
 name|where_args
@@ -794,11 +796,12 @@ name|maxargs
 operator|-
 name|where_count
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -806,6 +809,7 @@ argument_list|,
 literal|"oops, miscounted strings!"
 argument_list|)
 expr_stmt|;
+block|}
 name|where_count
 operator|+=
 name|add_count
@@ -984,11 +988,12 @@ name|maxargs
 operator|-
 name|where_count
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -996,6 +1001,7 @@ argument_list|,
 literal|"oops, miscounted strings!"
 argument_list|)
 expr_stmt|;
+block|}
 name|where_count
 operator|+=
 name|add_count
