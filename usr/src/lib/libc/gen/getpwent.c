@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpwent.c	5.16 (Berkeley) %G%"
+literal|"@(#)getpwent.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,13 +146,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|_pw_euid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|__hashpw
 argument_list|()
 decl_stmt|,
@@ -170,9 +163,6 @@ parameter_list|()
 block|{
 name|datum
 name|key
-decl_stmt|;
-name|int
-name|rval
 decl_stmt|;
 name|char
 name|bf
@@ -250,40 +240,12 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-name|rval
-operator|=
+return|return
+operator|(
 name|__hashpw
 argument_list|(
 name|key
 argument_list|)
-expr_stmt|;
-comment|/* Can't leave secure database open. */
-if|if
-condition|(
-operator|!
-name|_pw_euid
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|dbm_close
-argument_list|(
-name|_pw_db
-argument_list|)
-expr_stmt|;
-name|_pw_db
-operator|=
-operator|(
-name|DBM
-operator|*
-operator|)
-name|NULL
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|rval
 condition|?
 operator|&
 name|_pw_passwd
@@ -399,14 +361,10 @@ argument_list|(
 name|key
 argument_list|)
 expr_stmt|;
-comment|/* Can't leave secure database open. */
 if|if
 condition|(
 operator|!
 name|_pw_stayopen
-operator|||
-operator|!
-name|_pw_euid
 condition|)
 block|{
 operator|(
@@ -472,6 +430,8 @@ name|datum
 name|key
 decl_stmt|;
 name|int
+name|keyuid
+decl_stmt|,
 name|rval
 decl_stmt|;
 name|char
@@ -511,10 +471,14 @@ index|]
 operator|=
 name|_PW_KEYBYUID
 expr_stmt|;
+name|keyuid
+operator|=
+name|uid
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
-name|uid
+name|keyuid
 argument_list|,
 name|bf
 operator|+
@@ -522,7 +486,7 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|uid
+name|keyuid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -538,7 +502,7 @@ name|dsize
 operator|=
 sizeof|sizeof
 argument_list|(
-name|uid
+name|keyuid
 argument_list|)
 operator|+
 literal|1
@@ -550,14 +514,10 @@ argument_list|(
 name|key
 argument_list|)
 expr_stmt|;
-comment|/* Can't leave secure database open. */
 if|if
 condition|(
 operator|!
 name|_pw_stayopen
-operator|||
-operator|!
-name|_pw_euid
 condition|)
 block|{
 operator|(
@@ -692,8 +652,6 @@ block|;
 name|p
 operator|=
 operator|(
-name|_pw_euid
-operator|=
 name|geteuid
 argument_list|()
 operator|)
