@@ -210,7 +210,12 @@ name|L3_DEBUG_DEFAULT
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* this is declared in layer4/i4b_l4mgmt.c, which is always required */
+end_comment
+
 begin_decl_stmt
+specifier|extern
 name|call_desc_t
 name|call_desc
 index|[
