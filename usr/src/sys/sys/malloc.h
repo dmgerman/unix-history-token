@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -452,6 +452,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_FILE
+value|38
+end_define
+
+begin_comment
+comment|/* Open file structure */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_TEMP
 value|49
 end_define
@@ -547,7 +558,9 @@ value|\ 	"VM pager",
 comment|/* 36 M_VMPAGER */
 value|\ 	"VM pgdata",
 comment|/* 37 M_VMPGDATA */
-value|\ 	0, \ 	0, 0, 0, 0, 0, \ 	0, 0, 0, 0, 0, \ 	"temp",
+value|\ 	"open files",
+comment|/* 38 M_FILE */
+value|\ 	0, 0, 0, 0, 0, \ 	0, 0, 0, 0, 0, \ 	"temp",
 comment|/* 49 M_TEMP */
 value|\ }
 end_define
