@@ -2970,9 +2970,6 @@ decl_stmt|,
 name|days
 decl_stmt|;
 name|int
-name|yd
-decl_stmt|;
-name|int
 name|year
 decl_stmt|,
 name|month
@@ -3179,10 +3176,6 @@ name|RTC_DAY
 argument_list|)
 operator|-
 literal|1
-expr_stmt|;
-name|yd
-operator|=
-name|days
 expr_stmt|;
 for|for
 control|(
