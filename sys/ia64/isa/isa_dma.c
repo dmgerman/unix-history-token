@@ -786,20 +786,12 @@ name|int
 name|error
 parameter_list|)
 block|{
-name|caddr_t
-name|addr
-init|=
-operator|(
-operator|(
-expr|struct
-name|isa_dmastart_arg
-operator|*
-operator|)
-name|arg
-operator|)
-operator|->
-name|addr
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|caddr_t addr = ((struct isa_dmastart_arg *) arg)->addr;
+endif|#
+directive|endif
 name|int
 name|chan
 init|=

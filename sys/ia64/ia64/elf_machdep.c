@@ -103,9 +103,6 @@ modifier|*
 name|where
 decl_stmt|;
 name|Elf_Addr
-name|addr
-decl_stmt|;
-name|Elf_Addr
 name|addend
 decl_stmt|;
 name|Elf_Word
