@@ -4066,8 +4066,6 @@ name|MTX_QUIET
 operator||
 name|MTX_RECURSE
 operator||
-name|MTX_SLEEPABLE
-operator||
 name|MTX_NOWITNESS
 operator||
 name|MTX_DUPOK
@@ -4189,18 +4187,6 @@ operator|->
 name|lo_flags
 operator||=
 name|LO_RECURSABLE
-expr_stmt|;
-if|if
-condition|(
-name|opts
-operator|&
-name|MTX_SLEEPABLE
-condition|)
-name|lock
-operator|->
-name|lo_flags
-operator||=
-name|LO_SLEEPABLE
 expr_stmt|;
 if|if
 condition|(

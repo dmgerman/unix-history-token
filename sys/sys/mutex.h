@@ -144,17 +144,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MTX_SLEEPABLE
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* We can sleep with this lock. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MTX_DUPOK
 value|0x00000020
 end_define
