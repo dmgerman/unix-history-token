@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	4.9	82/03/15	*/
+comment|/*	if.h	4.10	82/03/19	*/
 end_comment
 
 begin_comment
@@ -204,6 +204,17 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_decl_stmt
+name|struct
+name|ifqueue
+name|rawintrq
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* raw packet input queue */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -225,17 +236,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|struct
-name|ifqueue
-name|rawintrq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* raw packet input queue */
-end_comment
 
 begin_decl_stmt
 name|struct
