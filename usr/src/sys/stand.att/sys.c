@@ -1,75 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys.c	7.14 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/reboot.h"
+file|<sys/reboot.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ufs/dir.h"
+file|<ufs/dir.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"stand/saio.h"
+file|<stand/saio.h>
 end_include
 
 begin_comment
 comment|/* used from machine/stand dir */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|isdigit
-parameter_list|(
-name|c
-parameter_list|)
-value|((u_int)((c) - '0')<= 9)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isspace
-parameter_list|(
-name|c
-parameter_list|)
-value|((c) == ' ' || (c) == '\t')
-end_define
-
-begin_define
-define|#
-directive|define
-name|isupper
-parameter_list|(
-name|c
-parameter_list|)
-value|((u_int)((c) - 'A')<= 'Z' - 'A')
-end_define
-
-begin_define
-define|#
-directive|define
-name|tolower
-parameter_list|(
-name|c
-parameter_list|)
-value|((c) - 'A' + 'a')
-end_define
 
 begin_function_decl
 name|ino_t
@@ -99,7 +59,7 @@ name|struct
 name|iob
 name|iob
 index|[
-name|NFILES
+name|SOPEN_MAX
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -544,7 +504,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * blocks 0..NDADDR are direct blocks 	 */
+comment|/* The first NDADDR blocks are direct blocks. */
 if|if
 condition|(
 name|bn
@@ -567,7 +527,7 @@ name|nb
 operator|)
 return|;
 block|}
-comment|/* 	 * addresses NIADDR have single and double indirect blocks. 	 * the first step is to determine how many levels of indirection. 	 */
+comment|/* Determine the number of levels of indirection. */
 name|sh
 operator|=
 literal|1
@@ -635,7 +595,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * fetch the first indirect block address from the inode 	 */
+comment|/* Get the first indirect block address. */
 name|nb
 operator|=
 name|ip
@@ -670,7 +630,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * fetch through the indirect blocks 	 */
+comment|/* Get the indirect blocks. */
 for|for
 control|(
 init|;
@@ -856,10 +816,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * get next entry in a directory.  */
-end_comment
 
 begin_function
 name|struct
@@ -1375,7 +1331,7 @@ literal|0
 operator|||
 name|fdesc
 operator|>=
-name|NFILES
+name|SOPEN_MAX
 operator|||
 operator|(
 operator|(
@@ -1513,7 +1469,7 @@ literal|0
 operator|||
 name|fdesc
 operator|>=
-name|NFILES
+name|SOPEN_MAX
 operator|||
 operator|(
 operator|(
@@ -1932,7 +1888,7 @@ literal|0
 operator|||
 name|fdesc
 operator|>=
-name|NFILES
+name|SOPEN_MAX
 operator|||
 operator|(
 operator|(
@@ -2395,7 +2351,7 @@ literal|0
 operator|||
 name|fdesc
 operator|>=
-name|NFILES
+name|SOPEN_MAX
 operator|||
 operator|(
 operator|(
@@ -2605,7 +2561,7 @@ literal|0
 init|;
 name|cnt
 operator|<
-name|NFILES
+name|SOPEN_MAX
 condition|;
 name|cnt
 operator|++
@@ -2639,7 +2595,7 @@ if|if
 condition|(
 name|fdesc
 operator|==
-name|NFILES
+name|SOPEN_MAX
 condition|)
 name|_stop
 argument_list|(
@@ -3652,7 +3608,7 @@ literal|0
 operator|||
 name|fdesc
 operator|>=
-name|NFILES
+name|SOPEN_MAX
 operator|||
 operator|(
 operator|(
@@ -3759,7 +3715,7 @@ literal|0
 operator|||
 name|fdesc
 operator|>=
-name|NFILES
+name|SOPEN_MAX
 operator|||
 operator|(
 operator|(
@@ -3931,7 +3887,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NFILES
+name|SOPEN_MAX
 condition|;
 name|i
 operator|++
