@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)TEOLN.c 1.3 %G%"
+literal|"@(#)TEOLN.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,14 @@ name|fblk
 index|]
 operator|!=
 name|filep
+operator|||
+operator|(
+name|filep
+operator|->
+name|funit
+operator|&
+name|FDEF
+operator|)
 condition|)
 block|{
 name|ERROR
@@ -59,11 +67,51 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|filep
+operator|->
+name|funit
+operator|&
+name|FWRITE
+condition|)
+block|{
+name|ERROR
+argument_list|(
+literal|"%s: eoln is undefined on files open for writing\n"
+argument_list|,
+name|filep
+operator|->
+name|pfname
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|IOSYNC
 argument_list|(
 name|filep
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|filep
+operator|->
+name|funit
+operator|&
+name|EOFF
+condition|)
+block|{
+name|ERROR
+argument_list|(
+literal|"%s: eoln is undefined when eof is true\n"
+argument_list|,
+name|filep
+operator|->
+name|pfname
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|filep

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)TEOF.c 1.3 %G%"
+literal|"@(#)TEOF.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,14 @@ name|fblk
 index|]
 operator|!=
 name|filep
+operator|||
+operator|(
+name|filep
+operator|->
+name|funit
+operator|&
+name|FDEF
+operator|)
 condition|)
 block|{
 name|ERROR
@@ -65,7 +73,11 @@ name|filep
 operator|->
 name|funit
 operator|&
+operator|(
 name|EOFF
+operator||
+name|FWRITE
+operator|)
 condition|)
 return|return
 name|TRUE
