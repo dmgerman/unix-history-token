@@ -57,16 +57,10 @@ begin_comment
 comment|/*  * Cache the result of getdtablesize(), so we don't have to do an  * expensive system call every time.  */
 end_comment
 
-begin_comment
-comment|/*  * XXX In FreeBSD 2.x, you can have the maximum number of open file  * descriptors be greater than FD_SETSIZE (which us 256 by default).  * This can lead to many RPC functions getting back an EINVAL from  * select() and bombing all over the place.  *  * You can apparently get select() to handle values larger than 256  * by patching the kernel, but most people aren't likely to know  * that. Clamping this function at 256 is a kludge, but it'll have to  * do until select()'s descriptor table size can be adjusted dynamically.  */
-end_comment
-
 begin_function
 name|int
 name|_rpc_dtablesize
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 specifier|static
 name|int
@@ -78,23 +72,11 @@ name|size
 operator|==
 literal|0
 condition|)
-block|{
 name|size
 operator|=
 name|getdtablesize
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|size
-operator|>
-name|FD_SETSIZE
-condition|)
-name|size
-operator|=
-name|FD_SETSIZE
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|size
