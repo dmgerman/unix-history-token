@@ -1211,6 +1211,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+else|else
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|NHERE
