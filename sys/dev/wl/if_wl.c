@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl.c,v 1.6 1997/08/01 03:36:12 msmith Exp $ */
+comment|/* $Id: if_wl.c,v 1.7 1997/08/02 05:19:32 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -3868,16 +3868,12 @@ specifier|static
 name|int
 name|wlread
 parameter_list|(
-name|unit
-parameter_list|,
-name|fd_p
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|,
 name|u_short
 name|fd_p
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
