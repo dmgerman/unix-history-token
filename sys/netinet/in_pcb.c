@@ -2031,7 +2031,7 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-comment|/* 		 * If route is known or can be allocated now, 		 * our src addr is taken from the i/f, else punt. 		 */
+comment|/* 		 * If route is known or can be allocated now, 		 * our src addr is taken from the i/f, else punt. 		 * Note that we should check the address family of the cached 		 * destination, in case of sharing the cache with IPv6. 		 */
 name|ro
 operator|=
 operator|&
@@ -2046,6 +2046,14 @@ operator|->
 name|ro_rt
 operator|&&
 operator|(
+name|ro
+operator|->
+name|ro_dst
+operator|.
+name|sa_family
+operator|!=
+name|AF_INET
+operator|||
 name|satosin
 argument_list|(
 operator|&
@@ -2136,6 +2144,20 @@ operator|)
 condition|)
 block|{
 comment|/* No route yet, so try to acquire one */
+name|bzero
+argument_list|(
+operator|&
+name|ro
+operator|->
+name|ro_dst
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ro
 operator|->
 name|ro_dst

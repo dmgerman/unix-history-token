@@ -993,7 +993,7 @@ name|ro
 operator|->
 name|ro_dst
 expr_stmt|;
-comment|/* 	 * If there is a cached route, 	 * check that it is to the same destination 	 * and is still up.  If not, free it and try again. 	 */
+comment|/* 	 * If there is a cached route, 	 * check that it is to the same destination 	 * and is still up.  If not, free it and try again. 	 * The address family should also be checked in case of sharing the 	 * cache with IPv6. 	 */
 if|if
 condition|(
 name|ro
@@ -1012,6 +1012,12 @@ name|RTF_UP
 operator|)
 operator|==
 literal|0
+operator|||
+name|dst
+operator|->
+name|sin_family
+operator|!=
+name|AF_INET
 operator|||
 name|dst
 operator|->
@@ -1053,6 +1059,17 @@ operator|==
 literal|0
 condition|)
 block|{
+name|bzero
+argument_list|(
+name|dst
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|dst
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|dst
 operator|->
 name|sin_family
