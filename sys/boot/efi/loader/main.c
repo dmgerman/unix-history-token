@@ -536,6 +536,8 @@ literal|"RuntimeServicesData"
 block|,
 literal|"ConventionalMemory"
 block|,
+literal|"UnusableMemory"
+block|,
 literal|"ACPIReclaimMemory"
 block|,
 literal|"ACPIMemoryNVS"
@@ -637,7 +639,7 @@ name|dsz
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%20s %12s %12s %8s %4s\n"
+literal|"%23s %12s %12s %8s %4s\n"
 argument_list|,
 literal|"Type"
 argument_list|,
@@ -679,7 +681,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"%20s %012lx %012lx %08lx "
+literal|"%23s %012lx %012lx %08lx "
 argument_list|,
 name|types
 index|[
