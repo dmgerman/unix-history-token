@@ -58,14 +58,6 @@ begin_comment
 comment|/* Local string definitions. */
 end_comment
 
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
 name|char
 modifier|*

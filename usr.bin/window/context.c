@@ -66,14 +66,6 @@ begin_comment
 comment|/*  * Context push/pop for nested command files.  */
 end_comment
 
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_macro
 name|cx_alloc
 argument_list|()
