@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)string.h	3.2 84/01/05  */
+comment|/*  *	@(#)string.h	3.3 84/04/05  */
 end_comment
 
 begin_define
@@ -13,6 +13,14 @@ begin_function_decl
 name|char
 modifier|*
 name|str_cpy
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|str_ncpy
 parameter_list|()
 function_decl|;
 end_function_decl
