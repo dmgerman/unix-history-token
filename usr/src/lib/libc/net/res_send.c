@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	5.1 (Berkeley) %G%"
+literal|"@(#)res_send.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -861,12 +861,28 @@ name|answer
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|resplen
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
