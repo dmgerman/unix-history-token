@@ -387,13 +387,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|_thread_init
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -761,10 +754,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MCRT0 */
-comment|/* 	 * Initialize the initial thread. 	 * This function might be a stub if libc does not 	 * contain thread support. 	 */
-name|_thread_init
-argument_list|()
-expr_stmt|;
 asm|asm ("__callmain:");
 comment|/* Defined for the benefit of debuggers */
 name|exit
