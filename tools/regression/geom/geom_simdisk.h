@@ -81,8 +81,8 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|struct
-name|g_method
-name|g_simdisk_method
+name|g_class
+name|g_simdisk_class
 decl_stmt|;
 end_decl_stmt
 

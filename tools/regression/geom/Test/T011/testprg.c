@@ -136,7 +136,7 @@ name|gp
 operator|=
 name|g_insert_geom
 argument_list|(
-literal|"BSD-method"
+literal|"BSD-class"
 argument_list|,
 name|cp
 argument_list|)

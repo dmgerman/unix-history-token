@@ -71,7 +71,7 @@ modifier|*
 name|dev_taste
 parameter_list|(
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|,
@@ -134,7 +134,7 @@ name|cp
 operator|->
 name|geom
 operator|->
-name|method
+name|class
 operator|==
 name|mp
 condition|)
@@ -299,11 +299,11 @@ end_function
 begin_decl_stmt
 specifier|static
 name|struct
-name|g_method
-name|dev_method
+name|g_class
+name|dev_class
 init|=
 block|{
-literal|"DEV-method"
+literal|"DEV-class"
 block|,
 name|dev_taste
 block|,
@@ -313,7 +313,7 @@ name|g_dev_orphan
 block|,
 name|NULL
 block|,
-name|G_METHOD_INITSTUFF
+name|G_CLASS_INITSTUFF
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -339,7 +339,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|gp
 argument_list|,
-argument|&dev_method.geom
+argument|&dev_class.geom
 argument_list|,
 argument|geom
 argument_list|)
@@ -374,10 +374,10 @@ name|junk
 name|__unused
 parameter_list|)
 block|{
-name|g_add_method
+name|g_add_class
 argument_list|(
 operator|&
-name|dev_method
+name|dev_class
 argument_list|)
 expr_stmt|;
 block|}

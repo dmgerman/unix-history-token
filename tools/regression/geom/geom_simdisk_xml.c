@@ -150,7 +150,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|gp
 argument_list|,
-argument|&g_simdisk_method.geom
+argument|&g_simdisk_class.geom
 argument_list|,
 argument|geom
 argument_list|)
@@ -212,7 +212,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|{ 		struct sbuf *sb; 		sb = g_conf_specific(&g_simdisk_method, gp, NULL, NULL); 		fprintf(f, "<config>%s</config>\n", sbuf_data(sb)); 		}
+block|{ 		struct sbuf *sb; 		sb = g_conf_specific(&g_simdisk_class, gp, NULL, NULL); 		fprintf(f, "<config>%s</config>\n", sbuf_data(sb)); 		}
 endif|#
 directive|endif
 name|fprintf

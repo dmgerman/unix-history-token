@@ -59,11 +59,11 @@ end_include
 
 begin_decl_stmt
 name|struct
-name|g_method
-name|g_simdisk_method
+name|g_class
+name|g_simdisk_class
 init|=
 block|{
-literal|"SIMDISK-method"
+literal|"SIMDISK-class"
 block|,
 name|NULL
 block|,
@@ -73,7 +73,7 @@ name|NULL
 block|,
 name|NULL
 block|,
-name|G_METHOD_INITSTUFF
+name|G_CLASS_INITSTUFF
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -467,10 +467,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|g_add_method
+name|g_add_class
 argument_list|(
 operator|&
-name|g_simdisk_method
+name|g_simdisk_class
 argument_list|)
 expr_stmt|;
 block|}
@@ -523,7 +523,7 @@ operator|=
 name|g_new_geomf
 argument_list|(
 operator|&
-name|g_simdisk_method
+name|g_simdisk_class
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -684,7 +684,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|gp
 argument_list|,
-argument|&g_simdisk_method.geom
+argument|&g_simdisk_class.geom
 argument_list|,
 argument|geom
 argument_list|)
@@ -991,7 +991,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|gp
 argument_list|,
-argument|&g_simdisk_method.geom
+argument|&g_simdisk_class.geom
 argument_list|,
 argument|geom
 argument_list|)
@@ -1062,7 +1062,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|gp
 argument_list|,
-argument|&g_simdisk_method.geom
+argument|&g_simdisk_class.geom
 argument_list|,
 argument|geom
 argument_list|)

@@ -386,12 +386,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Sizeof g_method = %d\n"
+literal|"Sizeof g_class = %d\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|g_method
+name|g_class
 argument_list|)
 argument_list|)
 expr_stmt|;

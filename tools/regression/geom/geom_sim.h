@@ -583,14 +583,14 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|DECLARE_GEOM_METHOD
+name|DECLARE_GEOM_CLASS
 parameter_list|(
-name|method
+name|class
 parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|void					\ 	name##_init(void)			\ 	{					\ 		g_add_method(&method);		\ 	}
+value|void					\ 	name##_init(void)			\ 	{					\ 		g_add_class(&class);		\ 	}
 end_define
 
 begin_function_decl
