@@ -115,19 +115,6 @@ directive|include
 file|<ufs/ufs/ufs_extern.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|VN_KNOTE
-parameter_list|(
-name|vp
-parameter_list|,
-name|b
-parameter_list|)
-define|\
-value|KNOTE(&vp->v_pollinfo.vpi_selinfo.si_note, (b))
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

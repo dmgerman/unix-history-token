@@ -478,6 +478,19 @@ define|\
 value|do {							\ 		if ((vp)->v_pollinfo.vpi_events& (events))	\ 			vn_pollevent((vp), (events));		\ 	} while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VN_KNOTE
+parameter_list|(
+name|vp
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|KNOTE(&vp->v_pollinfo.vpi_selinfo.si_note, (b))
+end_define
+
 begin_comment
 comment|/*  * Vnode flags.  */
 end_comment
