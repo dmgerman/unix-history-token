@@ -1184,7 +1184,7 @@ name|first_buf_printf
 condition|)
 name|printf
 argument_list|(
-literal|"No buffers busy after final sync"
+literal|"All buffers synced."
 argument_list|)
 expr_stmt|;
 break|break;
