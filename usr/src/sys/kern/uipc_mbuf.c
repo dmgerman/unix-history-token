@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.29	82/02/08	*/
+comment|/*	uipc_mbuf.c	1.30	82/03/09	*/
 end_comment
 
 begin_include
@@ -1234,14 +1234,15 @@ while|while
 condition|(
 name|n
 condition|)
+block|{
 if|if
 condition|(
 name|m
 operator|->
 name|m_off
-operator|<
+operator|>=
 name|MMAXOFF
-operator|&&
+operator|||
 name|m
 operator|->
 name|m_off
@@ -1253,10 +1254,20 @@ operator|+
 name|n
 operator|->
 name|m_len
-operator|<=
+operator|>
 name|MMAXOFF
 condition|)
 block|{
+comment|/* just join the two chains */
+name|m
+operator|->
+name|m_next
+operator|=
+name|n
+expr_stmt|;
+return|return;
+block|}
+comment|/* splat the data from one into the other */
 name|bcopy
 argument_list|(
 name|mtod
@@ -1299,25 +1310,6 @@ name|m_free
 argument_list|(
 name|n
 argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|m
-operator|->
-name|m_next
-operator|=
-name|n
-expr_stmt|;
-name|m
-operator|=
-name|n
-expr_stmt|;
-name|n
-operator|=
-name|m
-operator|->
-name|m_next
 expr_stmt|;
 block|}
 block|}
