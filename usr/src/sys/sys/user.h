@@ -1,13 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.18 (Berkeley) %G%  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
+end_include
 
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|KERNEL
 end_ifndef
+
+begin_comment
+comment|/* stuff that *used* to be included by user.h, or is now needed */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
 begin_include
 include|#
@@ -24,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ucred.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/uio.h>
 end_include
 
@@ -35,7 +57,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<machine/pcb.h>
+file|<sys/resourcevar.h>
 end_include
 
 begin_include
@@ -47,13 +69,17 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/resourcevar.h>
+file|<vm/vm.h>
 end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/namei.h>
+file|<sys/kinfo_proc.h>
 end_include
 
 begin_comment
@@ -68,21 +94,10 @@ name|struct
 name|pcb
 name|u_pcb
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|u_procp
-decl_stmt|;
-comment|/* pointer to proc structure XXX */
 name|label_t
 name|u_ssave
 decl_stmt|;
 comment|/* label variable for swapping XXX */
-define|#
-directive|define
-name|curproc
-value|u.u_procp
-comment|/* XXX */
 name|struct
 name|sigacts
 name|u_sigacts
@@ -92,38 +107,66 @@ name|struct
 name|pstats
 name|u_stats
 decl_stmt|;
-comment|/* rusage, profiling& timers */
-comment|/* 1.6 - resource controls */
-name|int
-name|u_spare
-index|[
-literal|1
-index|]
+comment|/* p_stats points here (use it!) */
+comment|/* 	 * Remaining fields only for core dump and/or ptrace-- 	 * not valid at other times! 	 */
+name|struct
+name|kinfo_proc
+name|u_kproc
 decl_stmt|;
+comment|/* proc + eproc */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* u_error codes */
+comment|/*  * Redefinitions to make the debuggers happy for now...  * This subterfuge brought to you by coredump() and procxmt().  * These fields are *only* valid at those times!  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KERNEL
-end_ifndef
+begin_define
+define|#
+directive|define
+name|U_ar0
+value|u_kproc.kp_proc.p_regs
+end_define
 
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
+begin_comment
+comment|/* copy of curproc->p_regs */
+end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|U_tsize
+value|u_kproc.kp_eproc.e_vm.vm_tsize
+end_define
+
+begin_define
+define|#
+directive|define
+name|U_dsize
+value|u_kproc.kp_eproc.e_vm.vm_dsize
+end_define
+
+begin_define
+define|#
+directive|define
+name|U_ssize
+value|u_kproc.kp_eproc.e_vm.vm_ssize
+end_define
+
+begin_define
+define|#
+directive|define
+name|U_sig
+value|u_sigacts.ps_sig
+end_define
+
+begin_define
+define|#
+directive|define
+name|U_code
+value|u_sigacts.ps_code
+end_define
 
 begin_ifdef
 ifdef|#
@@ -139,64 +182,61 @@ name|u
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|user
-modifier|*
-name|swaputl
-decl_stmt|;
-end_decl_stmt
+begin_else
+else|#
+directive|else
+end_else
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|user
-modifier|*
-name|forkutl
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|u_ar0
+value|U_ar0
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|user
-modifier|*
-name|xswaputl
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|u_tsize
+value|U_tsize
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|user
-modifier|*
-name|xswap2utl
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|u_dsize
+value|U_dsize
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|user
-modifier|*
-name|pushutl
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|u_ssize
+value|U_ssize
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|user
-modifier|*
-name|vfutl
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|u_sig
+value|U_sig
+end_define
+
+begin_define
+define|#
+directive|define
+name|u_code
+value|U_code
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 end_unit
 
