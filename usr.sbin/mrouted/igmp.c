@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: igmp.c,v 1.8 1994/08/24 23:53:32 thyagara Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: igmp.c,v 3.6 1995/06/25 18:52:55 fenner Exp $  */
 end_comment
 
 begin_include
@@ -15,10 +15,8 @@ end_comment
 
 begin_decl_stmt
 name|char
+modifier|*
 name|recv_buf
-index|[
-name|MAX_IP_PACKET_LEN
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -28,10 +26,8 @@ end_comment
 
 begin_decl_stmt
 name|char
+modifier|*
 name|send_buf
-index|[
-name|MAX_IP_PACKET_LEN
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -50,17 +46,27 @@ comment|/* socket for all network I/O  */
 end_comment
 
 begin_decl_stmt
-name|u_long
+name|u_int32
 name|allhosts_group
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* allhosts  addr in net order */
+comment|/* All hosts addr in net order */
 end_comment
 
 begin_decl_stmt
-name|u_long
+name|u_int32
+name|allrtrs_group
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* All-Routers "  in net order */
+end_comment
+
+begin_decl_stmt
+name|u_int32
 name|dvmrp_group
 decl_stmt|;
 end_decl_stmt
@@ -70,7 +76,7 @@ comment|/* DVMRP grp addr in net order */
 end_comment
 
 begin_decl_stmt
-name|u_long
+name|u_int32
 name|dvmrp_genid
 decl_stmt|;
 end_decl_stmt
@@ -78,6 +84,49 @@ end_decl_stmt
 begin_comment
 comment|/* IGMP generation id          */
 end_comment
+
+begin_comment
+comment|/*  * Local function definitions.  */
+end_comment
+
+begin_comment
+comment|/* u_char promoted to u_int */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|packet_kind
+name|__P
+argument_list|(
+operator|(
+name|u_int
+name|type
+operator|,
+name|u_int
+name|code
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|igmp_log_level
+name|__P
+argument_list|(
+operator|(
+name|u_int
+name|type
+operator|,
+name|u_int
+name|code
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Open and initialize the igmp socket, and fill in the non-changing  * IP header fields in the output packet buffer.  */
@@ -93,6 +142,20 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
+name|recv_buf
+operator|=
+name|malloc
+argument_list|(
+name|RECV_BUF_SIZE
+argument_list|)
+expr_stmt|;
+name|send_buf
+operator|=
+name|malloc
+argument_list|(
+name|RECV_BUF_SIZE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -156,6 +219,24 @@ name|send_buf
 expr_stmt|;
 name|ip
 operator|->
+name|ip_hl
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+operator|>>
+literal|2
+expr_stmt|;
+name|ip
+operator|->
+name|ip_v
+operator|=
+name|IPVERSION
+expr_stmt|;
+name|ip
+operator|->
 name|ip_tos
 operator|=
 literal|0
@@ -193,19 +274,15 @@ argument_list|(
 name|INADDR_DVMRP_GROUP
 argument_list|)
 expr_stmt|;
+name|allrtrs_group
+operator|=
+name|htonl
+argument_list|(
+name|INADDR_ALLRTRS_GROUP
+argument_list|)
+expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* %%% hack for PIM %%% */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGMP_PIM
-value|0x14
-end_define
 
 begin_define
 define|#
@@ -273,7 +350,7 @@ name|type
 parameter_list|,
 name|code
 parameter_list|)
-name|u_char
+name|u_int
 name|type
 decl_stmt|,
 name|code
@@ -300,13 +377,13 @@ case|case
 name|IGMP_HOST_NEW_MEMBERSHIP_REPORT
 case|:
 return|return
-literal|"new membership report "
+literal|"new member report "
 return|;
 case|case
 name|IGMP_HOST_LEAVE_MESSAGE
 case|:
 return|return
-literal|"leave message"
+literal|"leave message     "
 return|;
 case|case
 name|IGMP_DVMRP
@@ -356,13 +433,13 @@ case|case
 name|DVMRP_PRUNE
 case|:
 return|return
-literal|"prune message	  "
+literal|"prune message     "
 return|;
 case|case
 name|DVMRP_GRAFT
 case|:
 return|return
-literal|"graft message	  "
+literal|"graft message     "
 return|;
 case|case
 name|DVMRP_GRAFT_ACK
@@ -378,7 +455,6 @@ block|}
 case|case
 name|IGMP_PIM
 case|:
-comment|/* %%% hack for PIM %%% */
 switch|switch
 condition|(
 name|code
@@ -472,11 +548,7 @@ name|recvlen
 decl_stmt|;
 block|{
 specifier|register
-name|vifi_t
-name|vifi
-decl_stmt|;
-specifier|register
-name|u_long
+name|u_int32
 name|src
 decl_stmt|,
 name|dst
@@ -563,11 +635,11 @@ if|if
 condition|(
 name|src
 operator|==
-name|NULL
+literal|0
 operator|||
 name|dst
 operator|==
-name|NULL
+literal|0
 condition|)
 name|log
 argument_list|(
@@ -726,7 +798,19 @@ block|{
 case|case
 name|IGMP_HOST_MEMBERSHIP_QUERY
 case|:
-comment|/* we have to do the determination of the querrier router here */
+name|accept_membership_query
+argument_list|(
+name|src
+argument_list|,
+name|dst
+argument_list|,
+name|group
+argument_list|,
+name|igmp
+operator|->
+name|igmp_code
+argument_list|)
+expr_stmt|;
 return|return;
 case|case
 name|IGMP_HOST_MEMBERSHIP_REPORT
@@ -751,7 +835,7 @@ return|return;
 case|case
 name|IGMP_HOST_LEAVE_MESSAGE
 case|:
-name|leave_group_message
+name|accept_leave_message
 argument_list|(
 name|src
 argument_list|,
@@ -764,6 +848,13 @@ return|return;
 case|case
 name|IGMP_DVMRP
 case|:
+name|group
+operator|=
+name|ntohl
+argument_list|(
+name|group
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|igmp
@@ -853,7 +944,7 @@ argument_list|,
 name|dst
 argument_list|,
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|(
@@ -878,7 +969,7 @@ argument_list|,
 name|dst
 argument_list|,
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|(
@@ -995,12 +1086,15 @@ block|}
 case|case
 name|IGMP_PIM
 case|:
-comment|/* %%% hack for PIM  %%% */
+return|return;
+case|case
+name|IGMP_MTRACE_RESP
+case|:
 return|return;
 case|case
 name|IGMP_MTRACE
 case|:
-name|mtrace
+name|accept_mtrace
 argument_list|(
 name|src
 argument_list|,
@@ -1033,7 +1127,7 @@ name|LOG_INFO
 argument_list|,
 literal|0
 argument_list|,
-literal|"ignoring unknown IGMP message type %u from %s to %s"
+literal|"ignoring unknown IGMP message type %x from %s to %s"
 argument_list|,
 name|igmp
 operator|->
@@ -1060,6 +1154,61 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Some IGMP messages are more important than others.  This routine  * determines the logging level at which to log a send error (often  * "No route to host").  This is important when there is asymmetric  * reachability and someone is trying to, i.e., mrinfo me periodically.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|igmp_log_level
+parameter_list|(
+name|type
+parameter_list|,
+name|code
+parameter_list|)
+name|u_int
+name|type
+decl_stmt|,
+name|code
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|IGMP_MTRACE_RESP
+case|:
+return|return
+name|LOG_INFO
+return|;
+case|case
+name|IGMP_DVMRP
+case|:
+switch|switch
+condition|(
+name|code
+condition|)
+block|{
+case|case
+name|DVMRP_NEIGHBORS
+case|:
+case|case
+name|DVMRP_NEIGHBORS2
+case|:
+return|return
+name|LOG_INFO
+return|;
+block|}
+block|}
+return|return
+name|LOG_WARNING
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Construct an IGMP message in the output packet buffer.  The caller may  * have already placed data in that buffer, of length 'datalen'.  Then send  * the message from the interface with IP address 'src' to destination 'dst'.  */
 end_comment
 
@@ -1079,7 +1228,7 @@ name|group
 parameter_list|,
 name|datalen
 parameter_list|)
-name|u_long
+name|u_int32
 name|src
 decl_stmt|,
 name|dst
@@ -1089,7 +1238,7 @@ name|type
 decl_stmt|,
 name|code
 decl_stmt|;
-name|u_long
+name|u_int32
 name|group
 decl_stmt|;
 name|int
@@ -1100,10 +1249,6 @@ specifier|static
 name|struct
 name|sockaddr_in
 name|sdst
-init|=
-block|{
-name|AF_INET
-block|}
 decl_stmt|;
 name|struct
 name|ip
@@ -1232,6 +1377,48 @@ argument_list|(
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|sdst
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sdst
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sdst
+operator|.
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|&&
+operator|(
+name|BSD
+operator|>=
+literal|199103
+operator|)
+operator|)
+name|sdst
+operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|sdst
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sdst
 operator|.
 name|sin_addr
@@ -1283,17 +1470,29 @@ expr_stmt|;
 else|else
 name|log
 argument_list|(
-name|LOG_WARNING
+name|igmp_log_level
+argument_list|(
+name|type
+argument_list|,
+name|code
+argument_list|)
 argument_list|,
 name|errno
 argument_list|,
-literal|"sendto on %s"
+literal|"sendto to %s on %s"
+argument_list|,
+name|inet_fmt
+argument_list|(
+name|dst
+argument_list|,
+name|s1
+argument_list|)
 argument_list|,
 name|inet_fmt
 argument_list|(
 name|src
 argument_list|,
-name|s1
+name|s2
 argument_list|)
 argument_list|)
 expr_stmt|;
