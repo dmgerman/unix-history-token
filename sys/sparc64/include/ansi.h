@@ -44,24 +44,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_BSD_IN_ADDR_T_
-value|__uint32_t
-end_define
-
-begin_comment
-comment|/* inet(3) functions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_BSD_IN_PORT_T_
-value|__uint16_t
-end_define
-
-begin_define
-define|#
-directive|define
 name|_BSD_MBSTATE_T_
 value|__mbstate_t
 end_define

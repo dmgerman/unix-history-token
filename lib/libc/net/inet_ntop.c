@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"$Id: inet_ntop.c,v 8.7 1996/08/05 08:41:18 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,20 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -98,7 +112,7 @@ name|SPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|((size_t)sprintf x)
+value|((socklen_t)sprintf x)
 end_define
 
 begin_comment
@@ -123,7 +137,7 @@ name|char
 operator|*
 name|dst
 operator|,
-name|size_t
+name|socklen_t
 name|size
 operator|)
 argument_list|)
@@ -148,7 +162,7 @@ name|char
 operator|*
 name|dst
 operator|,
-name|size_t
+name|socklen_t
 name|size
 operator|)
 argument_list|)
@@ -185,7 +199,7 @@ name|char
 modifier|*
 name|dst
 decl_stmt|;
-name|size_t
+name|socklen_t
 name|size
 decl_stmt|;
 block|{
@@ -265,7 +279,7 @@ name|char
 modifier|*
 name|dst
 decl_stmt|;
-name|size_t
+name|socklen_t
 name|size
 decl_stmt|;
 block|{
@@ -368,7 +382,7 @@ name|char
 modifier|*
 name|dst
 decl_stmt|;
-name|size_t
+name|socklen_t
 name|size
 decl_stmt|;
 block|{
@@ -836,7 +850,7 @@ comment|/* 	 * Check for overflow, copy, and we're done. 	 */
 if|if
 condition|(
 call|(
-name|size_t
+name|socklen_t
 call|)
 argument_list|(
 name|tp

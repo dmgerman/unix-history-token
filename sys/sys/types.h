@@ -566,7 +566,7 @@ comment|/* !_KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * XXX: Deprecated;  * byteorder(3) functions now defined in<apra/inet.h>.  */
+comment|/*  * XXX: Deprecated;  * byteorder(3) functions now defined in<arpa/inet.h>.  */
 end_comment
 
 begin_include
@@ -624,27 +624,27 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* XXX: Deprecated; now defined in<apra/inet.h>. */
+comment|/* XXX: Deprecated; now defined in<arpa/inet.h>. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_IN_ADDR_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_IN_ADDR_T_DECLARED_
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_IN_ADDR_T_
+name|__uint32_t
 name|in_addr_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_IN_ADDR_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_IN_ADDR_T_DECLARED_
+end_define
 
 begin_endif
 endif|#
@@ -652,27 +652,27 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* XXX: Deprecated; now defined in<apra/inet.h>. */
+comment|/* XXX: Deprecated; now defined in<arpa/inet.h>. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_IN_PORT_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_IN_PORT_T_DECLARED_
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_IN_PORT_T_
+name|__uint16_t
 name|in_port_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_IN_PORT_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_IN_PORT_T_DECLARED_
+end_define
 
 begin_endif
 endif|#
