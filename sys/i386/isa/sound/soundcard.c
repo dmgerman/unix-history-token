@@ -1427,12 +1427,8 @@ argument_list|,
 literal|0ul
 argument_list|,
 name|dma_pagesize
-operator|<=
-literal|65536
-condition|?
-literal|0xFFFFul
-else|:
-literal|0x1FFFFul
+operator|-
+literal|1
 argument_list|)
 decl_stmt|;
 if|if
