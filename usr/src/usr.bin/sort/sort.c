@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sort.c	4.11 (Berkeley) %G%"
+literal|"@(#)sort.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ begin_define
 define|#
 directive|define
 name|L
-value|1024
+value|2048
 end_define
 
 begin_define
