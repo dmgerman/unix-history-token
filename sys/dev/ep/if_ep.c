@@ -2072,11 +2072,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
-name|struct
-name|mbuf
+decl_stmt|,
 modifier|*
-name|top
+name|m0
 decl_stmt|;
 name|int
 name|s
@@ -2089,9 +2087,7 @@ name|sc
 operator|->
 name|gone
 condition|)
-block|{
 return|return;
-block|}
 while|while
 condition|(
 name|inw
@@ -2112,9 +2108,7 @@ name|if_flags
 operator|&
 name|IFF_OACTIVE
 condition|)
-block|{
 return|return;
-block|}
 name|startagain
 label|:
 comment|/* Sneak a peek at the next packet */
@@ -2125,27 +2119,25 @@ name|ifp
 operator|->
 name|if_snd
 argument_list|,
-name|m
+name|m0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m
+name|m0
 operator|==
-literal|0
+name|NULL
 condition|)
-block|{
 return|return;
-block|}
 for|for
 control|(
 name|len
 operator|=
 literal|0
 operator|,
-name|top
-operator|=
 name|m
+operator|=
+name|m0
 init|;
 name|m
 condition|;
@@ -2189,7 +2181,7 @@ name|if_oerrors
 expr_stmt|;
 name|m_freem
 argument_list|(
-name|top
+name|m0
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2260,7 +2252,7 @@ name|ifp
 operator|->
 name|if_snd
 argument_list|,
-name|top
+name|m0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2318,11 +2310,11 @@ for|for
 control|(
 name|m
 operator|=
-name|top
+name|m0
 init|;
 name|m
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|m
 operator|=
@@ -2406,11 +2398,11 @@ for|for
 control|(
 name|m
 operator|=
-name|top
+name|m0
 init|;
 name|m
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|m
 operator|=
@@ -2504,7 +2496,7 @@ name|BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
-name|top
+name|m0
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -2520,7 +2512,7 @@ operator|++
 expr_stmt|;
 name|m_freem
 argument_list|(
-name|top
+name|m0
 argument_list|)
 expr_stmt|;
 comment|/*      * Is another packet coming in? We don't want to overflow the tiny RX      * fifo.      */
@@ -2547,7 +2539,6 @@ name|if_snd
 operator|.
 name|ifq_head
 condition|)
-block|{
 name|outw
 argument_list|(
 name|BASE
@@ -2559,7 +2550,6 @@ operator||
 literal|8
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 block|}
 goto|goto
