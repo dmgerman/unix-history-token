@@ -1159,11 +1159,18 @@ name|bpf_if
 modifier|*
 name|bp
 decl_stmt|;
+comment|/* XXX locking */
 name|bp
 operator|=
 name|d
 operator|->
 name|bd_bif
+expr_stmt|;
+name|d
+operator|->
+name|bd_bif
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * Check if this descriptor had requested promiscuous mode. 	 * If so, turn it off. 	 */
 if|if
@@ -1279,9 +1286,7 @@ literal|0
 condition|)
 comment|/* 		 * Let the driver know that there are no more listeners. 		 */
 operator|*
-name|d
-operator|->
-name|bd_bif
+name|bp
 operator|->
 name|bif_driverp
 operator|=
@@ -1291,12 +1296,6 @@ name|BPFIF_UNLOCK
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-name|d
-operator|->
-name|bd_bif
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function
