@@ -3423,10 +3423,6 @@ begin_comment
 comment|/*  * MPSAFE  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|sigpending
@@ -3458,15 +3454,6 @@ decl_stmt|;
 name|sigset_t
 name|siglist
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -3483,14 +3470,8 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|copyout
 argument_list|(
 operator|&
@@ -3505,10 +3486,6 @@ argument_list|(
 name|sigset_t
 argument_list|)
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
