@@ -984,9 +984,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|gets
+name|fgets
 argument_list|(
 name|captain
+argument_list|,
+sizeof|sizeof
+name|captain
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 if|if
