@@ -1720,9 +1720,10 @@ value|0x80
 comment|/* Enable Ultra 3                   */
 define|#
 directive|define
-name|AIPEN
+name|AIPCKEN
 value|0x40
-comment|/* Allow check upper byte lanes     */
+comment|/* AIP checking enable              */
+comment|/* Also enable AIP generation on C10-33*/
 define|#
 directive|define
 name|XCLKH_DT
@@ -1744,10 +1745,20 @@ name|XCLKS_ST
 value|0x01
 comment|/* Extra clock of data set  on ST edge */
 comment|/*be*/
-name|u16
-name|nc_aipcntl
+name|u8
+name|nc_aipcntl0
 decl_stmt|;
-comment|/* Epat Control 1 C1010 only        */
+comment|/* AIP Control 0 C1010 only         */
+comment|/*bf*/
+name|u8
+name|nc_aipcntl1
+decl_stmt|;
+comment|/* AIP Control 1 C1010 only         */
+define|#
+directive|define
+name|DISAIP
+value|0x08
+comment|/* Disable AIP generation C10-66 only  */
 comment|/*c0*/
 name|u32
 name|nc_pmjad1

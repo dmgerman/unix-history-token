@@ -1598,23 +1598,21 @@ block|, }
 comment|/*-------------------------< DATAO_PHASE>----------------------*/
 block|,
 block|{
-comment|/* 	 *  C1010-66 errata work-around. 	 *  SCNTL4 to be written prior to any DATA_OUT  	 *  phase if 33 MHz PCI BUS. 	 *  Patched with a NOOP for other chips. 	 */
-name|SCR_LOAD_REL
+comment|/* 	 *  C1010-66 errata work-around. 	 *  Extra clocks of data hold must be inserted  	 *  in DATA OUT phase on 33 MHz PCI BUS. 	 *  Patched with a NOOP for other chips. 	 */
+name|SCR_REG_REG
 argument_list|(
 name|scntl4
 argument_list|,
-literal|1
+name|SCR_OR
+argument_list|,
+operator|(
+name|XCLKH_DT
+operator||
+name|XCLKH_ST
+operator|)
 argument_list|)
 block|,
-name|offsetof
-argument_list|(
-expr|struct
-name|sym_dsb
-argument_list|,
-name|select
-operator|.
-name|sel_scntl4
-argument_list|)
+literal|0
 block|,
 name|SCR_RETURN
 block|,

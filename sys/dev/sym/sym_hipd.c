@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|SYM_DRIVER_NAME
-value|"sym-1.5.3-20000506"
+value|"sym-1.5.4-20000528"
 end_define
 
 begin_comment
@@ -710,7 +710,7 @@ parameter_list|,
 name|member
 parameter_list|)
 define|\
-value|((type *)((char *)(ptr)-(unsigned long)(&((type *)0)->member)))
+value|((type *)((char *)(ptr)-(unsigned int)(&((type *)0)->member)))
 end_define
 
 begin_define
@@ -1407,7 +1407,7 @@ specifier|static
 name|void
 name|UDELAY
 parameter_list|(
-name|long
+name|int
 name|us
 parameter_list|)
 block|{
@@ -1424,7 +1424,7 @@ specifier|static
 name|void
 name|MDELAY
 parameter_list|(
-name|long
+name|int
 name|ms
 parameter_list|)
 block|{
@@ -5876,7 +5876,7 @@ value|2
 endif|#
 directive|endif
 comment|/* 	 *  Other fields. 	 */
-name|u_long
+name|u32
 name|ccb_ba
 decl_stmt|;
 comment|/* BUS address of this CCB	*/
@@ -6330,10 +6330,14 @@ name|u_char
 name|clock_divn
 decl_stmt|;
 comment|/* Number of clock divisors	*/
-name|u_long
+name|u32
 name|clock_khz
 decl_stmt|;
 comment|/* SCSI clock frequency in KHz	*/
+name|u32
+name|pciclk_khz
+decl_stmt|;
+comment|/* Estimated PCI clock  in KHz	*/
 comment|/* 	 *  Start queue management. 	 *  It is filled up by the host processor and accessed by the  	 *  SCRIPTS processor in order to start SCSI commands. 	 */
 specifier|volatile
 comment|/* Prevent code optimizations	*/
@@ -7136,22 +7140,22 @@ block|}
 comment|/* 	 *  Remove a couple of work-arounds specific to C1010 if  	 *  they are not desirable. See `sym_fw2.h' for more details. 	 */
 if|if
 condition|(
+operator|!
 operator|(
 name|np
 operator|->
-name|features
-operator|&
-operator|(
-name|FE_C10
-operator||
-name|FE_PCI66
-operator|)
-operator|)
-operator|!=
-operator|(
-name|FE_C10
-operator||
-name|FE_PCI66
+name|device_id
+operator|==
+name|PCI_ID_LSI53C1010_2
+operator|&&
+comment|/* np->revision_id< 0xff */
+literal|1
+operator|&&
+name|np
+operator|->
+name|pciclk_khz
+operator|<
+literal|60000
 operator|)
 condition|)
 block|{
@@ -7182,19 +7186,17 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
 operator|(
 name|np
 operator|->
-name|features
-operator|&
-operator|(
-name|FE_C10
-operator||
-name|FE_PCI66
+name|device_id
+operator|==
+name|PCI_ID_LSI53C1010
+operator|&&
+comment|/* np->revision_id< 0xff */
+literal|1
 operator|)
-operator|)
-operator|!=
-name|FE_C10
 condition|)
 block|{
 name|scripta0
@@ -9050,7 +9052,7 @@ parameter_list|(
 name|hcb_p
 name|np
 parameter_list|,
-name|u_long
+name|u32
 name|dsa
 parameter_list|)
 function_decl|;
@@ -10139,7 +10141,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u32
 name|div_10M
 index|[]
 init|=
@@ -10590,7 +10592,7 @@ block|{
 name|u_char
 name|burst_max
 decl_stmt|;
-name|u_long
+name|u32
 name|period
 decl_stmt|;
 name|int
@@ -11037,11 +11039,8 @@ name|device_id
 operator|==
 name|PCI_ID_LSI53C1010
 operator|&&
-name|np
-operator|->
-name|revision_id
-operator|<
-literal|0x45
+comment|/* np->revision_id< 0xff */
+literal|1
 condition|)
 name|np
 operator|->
@@ -12979,7 +12978,7 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
-name|u_long
+name|u32
 name|dsa
 decl_stmt|;
 name|n
@@ -13070,13 +13069,16 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"%s: bad DSA (%lx) in done queue.\n"
+literal|"%s: bad DSA (%x) in done queue.\n"
 argument_list|,
 name|sym_name
 argument_list|(
 name|np
 argument_list|)
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|dsa
 argument_list|)
 expr_stmt|;
@@ -13160,7 +13162,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_long
+name|u32
 name|phys
 decl_stmt|;
 comment|/* 	 *  Reset chip if asked, otherwise just clear fifos.  	 */
@@ -13548,6 +13550,22 @@ literal|0x0c
 argument_list|)
 expr_stmt|;
 comment|/* HTH disabled  STO 0.25 sec */
+comment|/* 	 *  For now, disable AIP generation on C1010-66. 	 */
+if|if
+condition|(
+name|np
+operator|->
+name|device_id
+operator|==
+name|PCI_ID_LSI53C1010_2
+condition|)
+name|OUTB
+argument_list|(
+name|nc_aipcntl1
+argument_list|,
+name|DISAIP
+argument_list|)
+expr_stmt|;
 comment|/* 	 *  C10101 Errata. 	 *  Errant SGE's when in narrow. Write bits 4& 5 of 	 *  STEST1 register to disable SGE. We probably should do  	 *  that from SCRIPTS for each selection/reselection, but  	 *  I just don't want. :) 	 */
 if|if
 condition|(
@@ -13557,11 +13575,8 @@ name|device_id
 operator|==
 name|PCI_ID_LSI53C1010
 operator|&&
-name|np
-operator|->
-name|revision_id
-operator|<
-literal|0x45
+comment|/* np->revision_id< 0xff */
+literal|1
 condition|)
 name|OUTB
 argument_list|(
@@ -15364,7 +15379,11 @@ operator|=
 name|uval
 operator|&
 operator|~
+operator|(
 name|U3EN
+operator||
+name|AIPCKEN
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -22001,7 +22020,7 @@ operator|++
 name|dp_sg
 control|)
 block|{
-name|u_long
+name|u_int
 name|tmp
 init|=
 name|scr_to_cpu
@@ -24010,7 +24029,7 @@ argument_list|(
 name|nc_dsps
 argument_list|)
 decl_stmt|;
-name|u_long
+name|u32
 name|dsa
 init|=
 name|INL
@@ -25898,7 +25917,7 @@ parameter_list|(
 name|hcb_p
 name|np
 parameter_list|,
-name|u_long
+name|u32
 name|dsa
 parameter_list|)
 block|{
@@ -27670,18 +27689,14 @@ name|hcb_p
 name|np
 parameter_list|)
 block|{
-specifier|static
 name|int
 name|f
 init|=
 literal|0
 decl_stmt|;
-comment|/* For the C10, this will not work */
+comment|/* 	 *  For the C1010-33, this doesn't work. 	 *  For the C1010-66, this will be tested when I'll have  	 *  such a beast to play with. 	 */
 if|if
 condition|(
-operator|!
-name|f
-operator|&&
 operator|!
 operator|(
 name|np
@@ -27718,6 +27733,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|np
+operator|->
+name|pciclk_khz
+operator|=
+name|f
+expr_stmt|;
 return|return
 name|f
 return|;
@@ -37949,6 +37970,7 @@ ifdef|#
 directive|ifdef
 name|SYM_CONF_DEBUG_NVRAM
 comment|/*  *  Dump Symbios format NVRAM for debugging purpose.  */
+specifier|static
 name|void
 name|sym_display_Symbios_nvram
 parameter_list|(
@@ -38163,7 +38185,6 @@ name|Tekram_boot_delay
 index|[
 literal|7
 index|]
-name|__initdata
 init|=
 block|{
 literal|3
@@ -38181,6 +38202,7 @@ block|,
 literal|120
 block|}
 decl_stmt|;
+specifier|static
 name|void
 name|sym_display_Tekram_nvram
 parameter_list|(
@@ -38595,12 +38617,31 @@ operator|.
 name|Symbios
 argument_list|)
 condition|)
+block|{
 name|nvp
 operator|->
 name|type
 operator|=
 name|SYM_SYMBIOS_NVRAM
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SYM_CONF_DEBUG_NVRAM
+name|sym_display_Symbios_nvram
+argument_list|(
+name|np
+argument_list|,
+operator|&
+name|nvp
+operator|->
+name|data
+operator|.
+name|Symbios
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 elseif|else
 if|if
 condition|(
@@ -38619,12 +38660,31 @@ operator|.
 name|Tekram
 argument_list|)
 condition|)
+block|{
 name|nvp
 operator|->
 name|type
 operator|=
 name|SYM_TEKRAM_NVRAM
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SYM_CONF_DEBUG_NVRAM
+name|sym_display_Tekram_nvram
+argument_list|(
+name|np
+argument_list|,
+operator|&
+name|nvp
+operator|->
+name|data
+operator|.
+name|Tekram
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 else|else
 name|nvp
 operator|->
