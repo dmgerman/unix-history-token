@@ -223,17 +223,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|tty
-modifier|*
-name|prom_tp
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|polltime
 decl_stmt|;
@@ -387,16 +376,12 @@ name|ENXIO
 return|;
 name|tp
 operator|=
-name|prom_tp
-operator|=
 name|dev
 operator|->
 name|si_tty
 operator|=
-name|ttymalloc
-argument_list|(
-name|prom_tp
-argument_list|)
+name|ttyalloc
+argument_list|()
 expr_stmt|;
 name|s
 operator|=
@@ -621,7 +606,9 @@ name|tty
 modifier|*
 name|tp
 init|=
-name|prom_tp
+name|dev
+operator|->
+name|si_tty
 decl_stmt|;
 if|if
 condition|(
