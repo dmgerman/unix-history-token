@@ -1775,7 +1775,7 @@ name|p
 operator|->
 name|p_cred
 operator|->
-name|p_ruid
+name|p_uidinfo
 argument_list|,
 operator|-
 literal|1
@@ -1815,6 +1815,15 @@ argument_list|(
 name|p
 operator|->
 name|p_ucred
+argument_list|)
+expr_stmt|;
+name|uifree
+argument_list|(
+name|p
+operator|->
+name|p_cred
+operator|->
+name|p_uidinfo
 argument_list|)
 expr_stmt|;
 name|FREE

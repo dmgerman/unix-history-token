@@ -42,6 +42,12 @@ name|NGROUPS
 index|]
 decl_stmt|;
 comment|/* groups */
+name|struct
+name|uidinfo
+modifier|*
+name|cr_uidinfo
+decl_stmt|;
+comment|/* per uid resource consumption */
 block|}
 struct|;
 end_struct
@@ -90,6 +96,24 @@ name|cr
 parameter_list|)
 value|(cr)->cr_ref++
 end_define
+
+begin_decl_stmt
+name|void
+name|change_euid
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|,
+name|uid_t
+name|euid
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct

@@ -1077,6 +1077,15 @@ name|p_refcnt
 operator|=
 literal|1
 expr_stmt|;
+name|cred0
+operator|.
+name|p_uidinfo
+operator|=
+name|uifind
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_cred
@@ -1100,6 +1109,17 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* group 0 */
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_uidinfo
+operator|=
+name|uifind
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Don't jail it */
 name|p
 operator|->
@@ -1430,7 +1450,9 @@ name|void
 operator|)
 name|chgproccnt
 argument_list|(
-literal|0
+name|cred0
+operator|.
+name|p_uidinfo
 argument_list|,
 literal|1
 argument_list|,
