@@ -1159,6 +1159,8 @@ operator|.
 name|va_flags
 operator|&
 operator|(
+name|SF_SNAPSHOT
+operator||
 name|IMMUTABLE
 operator||
 name|APPEND

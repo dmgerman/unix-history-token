@@ -1285,8 +1285,6 @@ name|ip
 operator|->
 name|i_flags
 operator||=
-name|SF_IMMUTABLE
-operator||
 name|SF_SNAPSHOT
 expr_stmt|;
 name|ip
@@ -2401,11 +2399,7 @@ operator|->
 name|di_flags
 operator|&=
 operator|~
-operator|(
-name|SF_IMMUTABLE
-operator||
 name|SF_SNAPSHOT
-operator|)
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -3687,7 +3681,6 @@ name|xp
 operator|==
 literal|0
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"ffs_snapremove: lost snapshot vnode %d\n"
@@ -3697,12 +3690,6 @@ operator|->
 name|i_number
 argument_list|)
 expr_stmt|;
-name|vref
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|VTOI
@@ -3957,11 +3944,7 @@ operator|->
 name|i_flags
 operator|&=
 operator|~
-operator|(
-name|SF_IMMUTABLE
-operator||
 name|SF_SNAPSHOT
-operator|)
 expr_stmt|;
 name|ip
 operator|->
@@ -3970,11 +3953,6 @@ operator||=
 name|IN_CHANGE
 operator||
 name|IN_UPDATE
-expr_stmt|;
-name|vrele
-argument_list|(
-name|vp
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -4993,6 +4971,14 @@ name|i_copyonwrite
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|xp
+operator|->
+name|i_effnlink
+operator|>
+literal|0
+condition|)
 name|vrele
 argument_list|(
 name|ITOV

@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -792,6 +798,23 @@ operator|)
 return|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|(
+name|oip
+operator|->
+name|i_flags
+operator|&
+name|SF_SNAPSHOT
+operator|)
+operator|!=
+literal|0
+condition|)
+name|ffs_snapremove
+argument_list|(
+name|ovp
+argument_list|)
+expr_stmt|;
 name|ovp
 operator|->
 name|v_lasta
