@@ -159,7 +159,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|hcount
 decl_stmt|;
 end_decl_stmt
@@ -205,17 +205,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* cost per page (or what ever) */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|long
-name|price100
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* per-page cost in 100th of a cent */
 end_comment
 
 begin_decl_stmt
@@ -351,7 +340,7 @@ name|account
 parameter_list|(
 name|FILE
 modifier|*
-name|_acct
+name|_acctf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -491,7 +480,7 @@ parameter_list|)
 block|{
 name|FILE
 modifier|*
-name|acct
+name|acctf
 decl_stmt|;
 specifier|const
 name|char
@@ -668,7 +657,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|acct
+name|acctf
 operator|=
 name|fopen
 argument_list|(
@@ -694,18 +683,18 @@ expr_stmt|;
 block|}
 name|account
 argument_list|(
-name|acct
+name|acctf
 argument_list|)
 expr_stmt|;
 name|fclose
 argument_list|(
-name|acct
+name|acctf
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|acct
+name|acctf
 operator|=
 name|fopen
 argument_list|(
@@ -720,12 +709,12 @@ condition|)
 block|{
 name|account
 argument_list|(
-name|acct
+name|acctf
 argument_list|)
 expr_stmt|;
 name|fclose
 argument_list|(
-name|acct
+name|acctf
 argument_list|)
 expr_stmt|;
 block|}
@@ -782,7 +771,7 @@ name|account
 parameter_list|(
 name|FILE
 modifier|*
-name|acct
+name|acctf
 parameter_list|)
 block|{
 name|char
@@ -820,7 +809,7 @@ name|linebuf
 argument_list|,
 name|BUFSIZ
 argument_list|,
-name|acct
+name|acctf
 argument_list|)
 operator|!=
 name|NULL
@@ -1015,9 +1004,10 @@ specifier|register
 name|int
 name|hno
 decl_stmt|,
-name|c
-decl_stmt|,
 name|runs
+decl_stmt|;
+name|size_t
+name|c
 decl_stmt|;
 name|float
 name|feet
@@ -1226,7 +1216,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|FILE
 modifier|*
 name|acctf
@@ -1446,6 +1435,9 @@ sizeof|sizeof
 expr|*
 name|hp
 argument_list|,
+operator|(
+name|size_t
+operator|)
 literal|1
 argument_list|)
 expr_stmt|;
