@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated for what's essentially a complete rewrite.  *  * $Id: options.c,v 1.19 1995/10/20 14:25:01 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated for what's essentially a complete rewrite.  *  * $Id: options.c,v 1.20 1995/10/21 14:06:59 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -25,13 +25,20 @@ name|Option
 name|opt
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|cp
+init|=
+name|NULL
+decl_stmt|;
 if|if
 condition|(
 name|opt
 operator|.
 name|aux
 condition|)
-return|return
+name|cp
+operator|=
 name|variable_get
 argument_list|(
 operator|(
@@ -42,9 +49,17 @@ name|opt
 operator|.
 name|aux
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+return|return
+literal|"NO"
 return|;
 return|return
-name|NULL
+name|cp
 return|;
 block|}
 end_function
@@ -158,6 +173,41 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|TAPE_PROMPT
+value|"Please enter the tape block size in 512 byte blocks"
+end_define
+
+begin_define
+define|#
+directive|define
+name|RELNAME_PROMPT
+value|"Please specify the release you wish to load"
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPKG_PROMPT
+value|"Please specify the name of the HTML browser package:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|BBIN_PROMPT
+value|"Please specify a full pathname to the HTML browser binary:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONFIG_PROMPT
+value|"Please specify the name of a configuration file"
+end_define
+
 begin_decl_stmt
 specifier|static
 name|Option
@@ -172,7 +222,7 @@ literal|"NFS server talks only on a secure port"
 block|,
 name|OPT_IS_VAR
 block|,
-literal|"Set if your server refuses to talk to you (usually Suns)"
+name|NULL
 block|,
 name|OPT_NFS_SECURE
 block|,
@@ -186,7 +236,7 @@ literal|"User is using a slow PC or ethernet card"
 block|,
 name|OPT_IS_VAR
 block|,
-literal|"Set if your cheap PC ethernet card is dropping NFS packets"
+name|NULL
 block|,
 name|OPT_SLOW_ETHER
 block|,
@@ -200,7 +250,7 @@ literal|"Emit extra debugging output on VTY2 (ALT-F2)"
 block|,
 name|OPT_IS_VAR
 block|,
-literal|"Turn this on for more info if you're experiencing any weirdness"
+name|NULL
 block|,
 name|OPT_DEBUG
 block|,
@@ -214,7 +264,7 @@ literal|"Assume \"Yes\" answers to all non-critical dialogs"
 block|,
 name|OPT_IS_VAR
 block|,
-literal|"This is a good idea for unattended installation."
+name|NULL
 block|,
 name|OPT_NO_CONFIRM
 block|,
@@ -256,7 +306,7 @@ literal|"Tape media block size in 512 byte blocks"
 block|,
 name|OPT_IS_VAR
 block|,
-literal|"Please enter the tape block size in 512 byte blocks"
+name|TAPE_PROMPT
 block|,
 name|TAPE_BLOCKSIZE
 block|,
@@ -284,7 +334,7 @@ literal|"Which release to attempt to load from installation media"
 block|,
 name|OPT_IS_VAR
 block|,
-literal|"Please specify the release you wish to load"
+name|RELNAME_PROMPT
 block|,
 name|RELNAME
 block|,
@@ -298,7 +348,7 @@ literal|"This is the browser package that will be used for viewing HTML"
 block|,
 name|OPT_IS_VAR
 block|,
-literal|"Please specify the name of the HTML browser package:"
+name|BPKG_PROMPT
 block|,
 name|BROWSER_PACKAGE
 block|,
@@ -312,7 +362,7 @@ literal|"This is the path to the main binary of the browser package"
 block|,
 name|OPT_IS_VAR
 block|,
-literal|"Please specify a full pathname to the HTML browser binary:"
+name|BBIN_PROMPT
 block|,
 name|BROWSER_BINARY
 block|,
@@ -326,7 +376,7 @@ literal|"Name of default configuration file for Load command (top menu)"
 block|,
 name|OPT_IS_VAR
 block|,
-literal|"Please specify the name of a configuration file"
+name|CONFIG_PROMPT
 block|,
 name|CONFIG_FILE
 block|,
@@ -460,47 +510,6 @@ return|return
 name|ival
 return|;
 case|case
-name|OPT_IS_FLAG
-case|:
-if|if
-condition|(
-name|opt
-operator|.
-name|check
-condition|)
-return|return
-name|opt
-operator|.
-name|check
-argument_list|(
-name|opt
-argument_list|)
-return|;
-else|else
-return|return
-operator|(
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|opt
-operator|.
-name|data
-operator|)
-operator|&
-operator|(
-name|int
-operator|)
-name|opt
-operator|.
-name|aux
-condition|?
-literal|"ON"
-else|:
-literal|"OFF"
-return|;
-case|case
 name|OPT_IS_FUNC
 case|:
 case|case
@@ -546,76 +555,6 @@ name|opt
 operator|.
 name|type
 operator|==
-name|OPT_IS_FLAG
-condition|)
-block|{
-comment|/* Toggle a flag */
-if|if
-condition|(
-operator|*
-operator|(
-operator|(
-name|int
-operator|*
-operator|)
-name|opt
-operator|.
-name|data
-operator|)
-operator|&
-operator|(
-name|int
-operator|)
-name|opt
-operator|.
-name|aux
-condition|)
-operator|*
-operator|(
-operator|(
-name|int
-operator|*
-operator|)
-name|opt
-operator|.
-name|data
-operator|)
-operator|&=
-operator|~
-operator|(
-name|int
-operator|)
-name|opt
-operator|.
-name|aux
-expr_stmt|;
-else|else
-operator|*
-operator|(
-operator|(
-name|int
-operator|*
-operator|)
-name|opt
-operator|.
-name|data
-operator|)
-operator||=
-operator|(
-name|int
-operator|)
-name|opt
-operator|.
-name|aux
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|opt
-operator|.
-name|type
-operator|==
 name|OPT_IS_FUNC
 condition|)
 block|{
@@ -649,6 +588,13 @@ operator|==
 name|OPT_IS_VAR
 condition|)
 block|{
+if|if
+condition|(
+name|opt
+operator|.
+name|data
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -665,6 +611,34 @@ argument_list|)
 expr_stmt|;
 name|dialog_clear
 argument_list|()
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|variable_get
+argument_list|(
+name|opt
+operator|.
+name|aux
+argument_list|)
+condition|)
+name|variable_unset
+argument_list|(
+name|opt
+operator|.
+name|aux
+argument_list|)
+expr_stmt|;
+else|else
+name|variable_set2
+argument_list|(
+name|opt
+operator|.
+name|aux
+argument_list|,
+literal|"YES"
+argument_list|)
 expr_stmt|;
 block|}
 if|if
