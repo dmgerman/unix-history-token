@@ -3040,7 +3040,7 @@ block|}
 end_function
 
 begin_function
-name|usbd_status
+name|void
 name|usbd_interface2device_handle
 parameter_list|(
 name|usbd_interface_handle
@@ -3058,11 +3058,6 @@ name|iface
 operator|->
 name|device
 expr_stmt|;
-return|return
-operator|(
-name|USBD_NORMAL_COMPLETION
-operator|)
-return|;
 block|}
 end_function
 

@@ -537,7 +537,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|usbd_status
+name|void
 name|usbd_interface2device_handle
 parameter_list|(
 name|usbd_interface_handle
