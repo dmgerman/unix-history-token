@@ -1051,6 +1051,12 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|amrd_dev
+operator|=
+name|dev
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
