@@ -421,7 +421,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_ASUS
+name|ACPI_OEM
 value|0x04000000
 end_define
 
