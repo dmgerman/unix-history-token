@@ -1,11 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* include/config.h.  Hand tweaked by MarkM.  */
+end_comment
+
+begin_comment
 comment|/* include/config.h.  Generated automatically by configure.  */
 end_comment
 
 begin_comment
 comment|/* include/config.h.in.  Generated automatically from configure.in by autoheader.  */
 end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KRB4
+value|1
+end_define
 
 begin_comment
 comment|/* Define if using alloca.c.  */
@@ -79,6 +94,14 @@ directive|define
 name|HAVE_ST_BLKSIZE
 value|1
 end_define
+
+begin_comment
+comment|/* Define as __inline if that's what the C compiler calls it.  */
+end_comment
+
+begin_comment
+comment|/* #undef inline */
+end_comment
 
 begin_comment
 comment|/* Define to `long' if<sys/types.h> doesn't define.  */
@@ -189,305 +212,15 @@ comment|/* #undef X_DISPLAY_MISSING */
 end_comment
 
 begin_comment
-comment|/*  Define this if RETSIGTYPE == void  */
+comment|/* Define if you have the XauFileName function.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VOID_RETSIGTYPE
+name|HAVE_XAUFILENAME
 value|1
 end_define
-
-begin_comment
-comment|/*  Define this if struct utmp have ut_user  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_UT_USER */
-end_comment
-
-begin_comment
-comment|/*  Define this if struct utmp have ut_host  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_UT_HOST
-value|1
-end_define
-
-begin_comment
-comment|/*  Define this if struct utmp have ut_addr  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_UT_ADDR */
-end_comment
-
-begin_comment
-comment|/*  Define this if struct utmp have ut_type  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_UT_TYPE */
-end_comment
-
-begin_comment
-comment|/*  Define this if struct utmp have ut_pid  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_UT_PID */
-end_comment
-
-begin_comment
-comment|/*  Define this if struct utmp have ut_id  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_UT_ID */
-end_comment
-
-begin_comment
-comment|/*  Define this if struct utmpx have ut_syslen  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_UT_SYSLEN */
-end_comment
-
-begin_comment
-comment|/*  Define this if struct winsize is declared in sys/termios.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRUCT_WINSIZE
-value|1
-end_define
-
-begin_comment
-comment|/*  Define this if struct winsize have ws_xpixel */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WS_XPIXEL
-value|1
-end_define
-
-begin_comment
-comment|/*  Define this if struct winsize have ws_ypixel */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WS_YPIXEL
-value|1
-end_define
-
-begin_comment
-comment|/*  Define this to be the directory where the dictionary for cracklib */
-end_comment
-
-begin_comment
-comment|/*  resides */
-end_comment
-
-begin_comment
-comment|/* #undef DICTPATH */
-end_comment
-
-begin_comment
-comment|/* Define this if you want to use SOCKS v5 */
-end_comment
-
-begin_comment
-comment|/* #undef SOCKS */
-end_comment
-
-begin_comment
-comment|/* Define this to the path of the mail spool directory */
-end_comment
-
-begin_comment
-comment|/* #undef KRB4_MAILDIR */
-end_comment
-
-begin_comment
-comment|/* Define this if `struct sockaddr' includes sa_len */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SOCKADDR_HAS_SA_LEN
-value|1
-end_define
-
-begin_comment
-comment|/* Define this if `struct siaentity' includes ouid */
-end_comment
-
-begin_comment
-comment|/* #undef SIAENTITY_HAS_OUID */
-end_comment
-
-begin_comment
-comment|/* Define if getlogin has POSIX flavour, as opposed to BSD */
-end_comment
-
-begin_comment
-comment|/* #undef POSIX_GETLOGIN */
-end_comment
-
-begin_comment
-comment|/* Define if getpwnam_r has POSIX flavour */
-end_comment
-
-begin_comment
-comment|/* #undef POSIX_GETPWNAM_R */
-end_comment
-
-begin_comment
-comment|/* define if getcwd() is broken (such as in SunOS) */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_GETCWD */
-end_comment
-
-begin_comment
-comment|/* define if the system is missing a prototype for crypt() */
-end_comment
-
-begin_comment
-comment|/* #undef NEED_CRYPT_PROTO */
-end_comment
-
-begin_comment
-comment|/* define if the system is missing a prototype for strtok_r() */
-end_comment
-
-begin_comment
-comment|/* #undef NEED_STRTOK_R_PROTO */
-end_comment
-
-begin_comment
-comment|/* define if /bin/ls takes -A */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LS_A
-value|1
-end_define
-
-begin_comment
-comment|/* define if you have h_errno */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_H_ERRNO
-value|1
-end_define
-
-begin_comment
-comment|/* define if you have h_errlist but not hstrerror */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_H_ERRLIST
-value|1
-end_define
-
-begin_comment
-comment|/* define if you have h_nerr but not hstrerror */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_H_NERR
-value|1
-end_define
-
-begin_comment
-comment|/* define if your system doesn't declare h_errlist */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_H_ERRLIST_DECLARATION */
-end_comment
-
-begin_comment
-comment|/* define if your system doesn't declare h_nerr */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_H_NERR_DECLARATION */
-end_comment
-
-begin_comment
-comment|/* define this if you need a declaration for h_errno */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_H_ERRNO_DECLARATION
-value|1
-end_define
-
-begin_comment
-comment|/* define if you need a declaration for optarg */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_OPTARG_DECLARATION */
-end_comment
-
-begin_comment
-comment|/* define if you need a declaration for optind */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_OPTIND_DECLARATION */
-end_comment
-
-begin_comment
-comment|/* define if you need a declaration for opterr */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_OPTERR_DECLARATION */
-end_comment
-
-begin_comment
-comment|/* define if you need a declaration for optopt */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_OPTOPT_DECLARATION */
-end_comment
-
-begin_comment
-comment|/* define if you need a declaration for __progname */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE___PROGNAME_DECLARATION */
-end_comment
 
 begin_comment
 comment|/* Define if you have the XauReadAuth function.  */
@@ -531,9 +264,12 @@ begin_comment
 comment|/* Define if you have the _setsid function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE__SETSID */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE__SETSID
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the _stricmp function.  */
@@ -563,6 +299,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the atexit function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ATEXIT
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the chown function.  */
 end_comment
 
@@ -570,6 +317,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_CHOWN
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the chroot function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CHROOT
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the crypt function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CRYPT
 value|1
 end_define
 
@@ -585,26 +354,12 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the dbm_firstkey function.  */
+comment|/* Define if you have the dlopen function.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_DBM_FIRSTKEY
-value|1
-end_define
 
 begin_comment
-comment|/* Define if you have the dbopen function.  */
+comment|/* #undef HAVE_DLOPEN */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_DBOPEN
-value|1
-end_define
 
 begin_comment
 comment|/* Define if you have the dn_expand function.  */
@@ -651,6 +406,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the fattach function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FATTACH */
+end_comment
+
+begin_comment
 comment|/* Define if you have the fchmod function.  */
 end_comment
 
@@ -691,6 +454,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_FLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the fnmatch function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FNMATCH
 value|1
 end_define
 
@@ -744,6 +518,39 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the getegid function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETEGID
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the geteuid function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETEUID
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the getgid function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETGID
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the gethostbyname function.  */
 end_comment
 
@@ -775,6 +582,14 @@ directive|define
 name|HAVE_GETLOGIN
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the getmsg function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETMSG */
+end_comment
 
 begin_comment
 comment|/* Define if you have the getopt function.  */
@@ -816,6 +631,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_GETPWNAM_R */
 end_comment
+
+begin_comment
+comment|/* Define if you have the getrlimit function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETRLIMIT
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the getservbyname function.  */
@@ -865,6 +691,14 @@ directive|define
 name|HAVE_GETTIMEOFDAY
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the gettosbyname function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETTOSBYNAME */
+end_comment
 
 begin_comment
 comment|/* Define if you have the getudbnam function.  */
@@ -1034,6 +868,22 @@ comment|/* #undef HAVE_ODM_INITIALIZE */
 end_comment
 
 begin_comment
+comment|/* Define if you have the on_exit function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ON_EXIT */
+end_comment
+
+begin_comment
+comment|/* Define if you have the parsetos function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PARSETOS */
+end_comment
+
+begin_comment
 comment|/* Define if you have the ptsname function.  */
 end_comment
 
@@ -1093,6 +943,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_READLINE
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the readv function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_READV
 value|1
 end_define
 
@@ -1291,13 +1152,21 @@ comment|/* #undef HAVE_SETUTENT */
 end_comment
 
 begin_comment
-comment|/* Define if you have the snprintf function.  */
+comment|/* Define if you have the sgi_getcapabilitybyname function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SGI_GETCAPABILITYBYNAME */
+end_comment
+
+begin_comment
+comment|/* Define if you have the sigaction function.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_SNPRINTF
+name|HAVE_SIGACTION
 value|1
 end_define
 
@@ -1365,12 +1234,42 @@ comment|/* #undef HAVE_STRLWR */
 end_comment
 
 begin_comment
+comment|/* Define if you have the strncasecmp function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRNCASECMP
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the strndup function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRNDUP */
+end_comment
+
+begin_comment
 comment|/* Define if you have the strnlen function.  */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_STRNLEN */
 end_comment
+
+begin_comment
+comment|/* Define if you have the strsep function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRSEP
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the strtok_r function.  */
@@ -1399,6 +1298,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_SWAB
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the sysconf function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYSCONF
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the sysctl function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYSCTL
 value|1
 end_define
 
@@ -1545,6 +1466,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the vsyslog function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_VSYSLOG
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the vwarn function.  */
 end_comment
 
@@ -1585,6 +1517,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_WARNX
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the writev function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WRITEV
 value|1
 end_define
 
@@ -1644,14 +1587,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<bind/bitypes.h> header file.  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_BIND_BITYPES_H */
-end_comment
-
-begin_comment
 comment|/* Define if you have the<bsd/bsd.h> header file.  */
 end_comment
 
@@ -1668,12 +1603,42 @@ comment|/* #undef HAVE_BSDSETJMP_H */
 end_comment
 
 begin_comment
+comment|/* Define if you have the<capability.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CAPABILITY_H */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<crypt.h> header file.  */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_CRYPT_H */
 end_comment
+
+begin_comment
+comment|/* Define if you have the<curses.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CURSES_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<db.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DB_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<dbm.h> header file.  */
@@ -1706,6 +1671,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<errno.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ERRNO_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<fcntl.h> header file.  */
 end_comment
 
@@ -1717,6 +1693,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<fnmatch.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FNMATCH_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<grp.h> header file.  */
 end_comment
 
@@ -1724,6 +1711,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_GRP_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<inttypes.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INTTYPES_H
 value|1
 end_define
 
@@ -1742,6 +1740,28 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_LASTLOG_H */
 end_comment
+
+begin_comment
+comment|/* Define if you have the<libutil.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIBUTIL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<limits.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIMITS_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<login.h> header file.  */
@@ -1916,6 +1936,17 @@ comment|/* #undef HAVE_RPCSVC_DBM_H */
 end_comment
 
 begin_comment
+comment|/* Define if you have the<rpcsvc/ypclnt.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RPCSVC_YPCLNT_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<sac.h> header file.  */
 end_comment
 
@@ -1927,9 +1958,12 @@ begin_comment
 comment|/* Define if you have the<security/pam_modules.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SECURITY_PAM_MODULES_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SECURITY_PAM_MODULES_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<shadow.h> header file.  */
@@ -1959,6 +1993,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<standards.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STANDARDS_H */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<stropts.h> header file.  */
 end_comment
 
@@ -1975,23 +2017,20 @@ comment|/* #undef HAVE_SYS_BITYPES_H */
 end_comment
 
 begin_comment
+comment|/* Define if you have the<sys/capability.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_CAPABILITY_H */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<sys/category.h> header file.  */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_SYS_CATEGORY_H */
 end_comment
-
-begin_comment
-comment|/* Define if you have the<sys/cdefs.h> header file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_CDEFS_H
-value|1
-end_define
 
 begin_comment
 comment|/* Define if you have the<sys/file.h> header file.  */
@@ -2077,6 +2116,14 @@ directive|define
 name|HAVE_SYS_PROC_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the<sys/pty.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_PTY_H */
+end_comment
 
 begin_comment
 comment|/* Define if you have the<sys/ptyio.h> header file.  */
@@ -2322,6 +2369,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<term.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TERM_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<termcap.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TERMCAP_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<termio.h> header file.  */
 end_comment
 
@@ -2449,14 +2518,6 @@ comment|/* #undef HAVE_WAIT_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<winsock.h> header file.  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_WINSOCK_H */
-end_comment
-
-begin_comment
 comment|/* Define if you have the X11 library (-lX11).  */
 end_comment
 
@@ -2492,6 +2553,33 @@ comment|/* #undef HAVE_LIBCFG */
 end_comment
 
 begin_comment
+comment|/* Define if you have the crypt library (-lcrypt).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIBCRYPT
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the curses library (-lcurses).  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBCURSES */
+end_comment
+
+begin_comment
+comment|/* Define if you have the dl library (-ldl).  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBDL */
+end_comment
+
+begin_comment
 comment|/* Define if you have the edit library (-ledit).  */
 end_comment
 
@@ -2503,19 +2591,11 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the gdbm library (-lgdbm).  */
+comment|/* Define if you have the ncurses library (-lncurses).  */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_LIBGDBM */
-end_comment
-
-begin_comment
-comment|/* Define if you have the ndbm library (-lndbm).  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBNDBM */
+comment|/* #undef HAVE_LIBNCURSES */
 end_comment
 
 begin_comment
@@ -2599,6 +2679,703 @@ name|HAVE_LIBUTIL
 value|1
 end_define
 
+begin_comment
+comment|/* Name of package */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE
+value|"krb4"
+end_define
+
+begin_comment
+comment|/* Version number of package */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VERSION
+value|"0.10pre3"
+end_define
+
+begin_comment
+comment|/* Define to what version of SunOS you are running. */
+end_comment
+
+begin_comment
+comment|/* #undef SunOS */
+end_comment
+
+begin_comment
+comment|/* Define if you have the socks package. */
+end_comment
+
+begin_comment
+comment|/* #undef SOCKS */
+end_comment
+
+begin_comment
+comment|/* Define to enable old kdestroy behavior. */
+end_comment
+
+begin_comment
+comment|/* #undef LEGACY_KDESTROY */
+end_comment
+
+begin_comment
+comment|/* Define if you want to match subdomains. */
+end_comment
+
+begin_comment
+comment|/* #undef MATCH_SUBDOMAINS */
+end_comment
+
+begin_comment
+comment|/* Define this to be the directory where the  	dictionary for cracklib resides. */
+end_comment
+
+begin_comment
+comment|/* #undef DICTPATH */
+end_comment
+
+begin_comment
+comment|/* Define this to the path of the mail spool directory. */
+end_comment
+
+begin_comment
+comment|/* #undef KRB4_MAILDIR */
+end_comment
+
+begin_comment
+comment|/* Define this to the kerberos database directory. */
+end_comment
+
+begin_comment
+comment|/* #undef DB_DIR */
+end_comment
+
+begin_comment
+comment|/* Define to enable new master key code. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RANDOM_MKEY
+value|1
+end_define
+
+begin_comment
+comment|/* Define this to the location of the master key. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MKEYFILE
+value|"file"
+end_define
+
+begin_comment
+comment|/* Define to enable basic OSF C2 support. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_OSFC2 */
+end_comment
+
+begin_comment
+comment|/* Define if you don't want to use mmap. */
+end_comment
+
+begin_comment
+comment|/* #undef NO_MMAP */
+end_comment
+
+begin_comment
+comment|/* Define if you don't wan't support for AFS. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_AFS
+value|1
+end_define
+
+begin_comment
+comment|/* Set this to the type of des-quad-cheksum to use. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DES_QUAD_DEFAULT
+value|DES_QUAD_GUESS
+end_define
+
+begin_comment
+comment|/* Define if you have the readline package. */
+end_comment
+
+begin_comment
+comment|/* #undef READLINE */
+end_comment
+
+begin_comment
+comment|/* Define if you have the hesiod package. */
+end_comment
+
+begin_comment
+comment|/* #undef HESIOD */
+end_comment
+
+begin_comment
+comment|/* define if your compiler has __attribute__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___ATTRIBUTE__
+value|1
+end_define
+
+begin_comment
+comment|/* Huh? */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRANGE_INT8_T */
+end_comment
+
+begin_comment
+comment|/* Define if NDBM really is DB (creates files ending in .db). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NEW_DB
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have NDBM (and not DBM) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDBM
+value|1
+end_define
+
+begin_comment
+comment|/* define if you have a working snprintf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SNPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* define if the system is missing a prototype for snprintf() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_SNPRINTF_PROTO */
+end_comment
+
+begin_comment
+comment|/* define if you have a glob() that groks  	GLOB_BRACE, GLOB_NOCHECK, GLOB_QUOTE, and GLOB_TILDE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GLOB
+value|1
+end_define
+
+begin_comment
+comment|/* define if the system is missing a prototype for glob() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_GLOB_PROTO */
+end_comment
+
+begin_comment
+comment|/* Define if getpwnam_r has POSIX flavour. */
+end_comment
+
+begin_comment
+comment|/* #undef POSIX_GETPWNAM_R */
+end_comment
+
+begin_comment
+comment|/* Define if getlogin has POSIX flavour (and not BSD). */
+end_comment
+
+begin_comment
+comment|/* #undef POSIX_GETLOGIN */
+end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for hstrerror() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_HSTRERROR_PROTO */
+end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for gethostname() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_GETHOSTNAME_PROTO */
+end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for mkstemp() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_MKSTEMP_PROTO */
+end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for inet_aton() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_INET_ATON_PROTO */
+end_comment
+
+begin_comment
+comment|/* Define if realloc(NULL, X) doesn't work. */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_REALLOC */
+end_comment
+
+begin_comment
+comment|/* Define if getcwd is broken (like in SunOS 4). */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_GETCWD */
+end_comment
+
+begin_comment
+comment|/* define if prototype of gethostbyname is compatible with 	struct hostent *gethostbyname(const char *) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETHOSTBYNAME_PROTO_COMPATIBLE
+value|1
+end_define
+
+begin_comment
+comment|/* define if prototype of gethostbyaddr is compatible with 	struct hostent *gethostbyaddr(const void *, size_t, int) */
+end_comment
+
+begin_comment
+comment|/* #undef GETHOSTBYADDR_PROTO_COMPATIBLE */
+end_comment
+
+begin_comment
+comment|/* define if prototype of getservbyname is compatible with 	struct servent *getservbyname(const char *, const char *) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETSERVBYNAME_PROTO_COMPATIBLE
+value|1
+end_define
+
+begin_comment
+comment|/* define if prototype of openlog is compatible with 	void openlog(const char *, int, int) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENLOG_PROTO_COMPATIBLE
+value|1
+end_define
+
+begin_comment
+comment|/* define if the system is missing a prototype for crypt() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_CRYPT_PROTO */
+end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for fclose() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_FCLOSE_PROTO */
+end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for strtok_r() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_STRTOK_R_PROTO */
+end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for strsep() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_STRSEP_PROTO */
+end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for getusershell() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_GETUSERSHELL_PROTO */
+end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for utime() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_UTIME_PROTO */
+end_comment
+
+begin_comment
+comment|/* define if you have h_errno */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_H_ERRNO
+value|1
+end_define
+
+begin_comment
+comment|/* define if your system declares h_errno */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_H_ERRNO_DECLARATION
+value|1
+end_define
+
+begin_comment
+comment|/* define if you have h_errlist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_H_ERRLIST
+value|1
+end_define
+
+begin_comment
+comment|/* define if your system declares h_errlist */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_H_ERRLIST_DECLARATION */
+end_comment
+
+begin_comment
+comment|/* define if you have h_nerr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_H_NERR
+value|1
+end_define
+
+begin_comment
+comment|/* define if your system declares h_nerr */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_H_NERR_DECLARATION */
+end_comment
+
+begin_comment
+comment|/* define if you have __progname */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___PROGNAME
+value|1
+end_define
+
+begin_comment
+comment|/* define if your system declares __progname */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___PROGNAME_DECLARATION */
+end_comment
+
+begin_comment
+comment|/* define if your system declares optarg */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_OPTARG_DECLARATION */
+end_comment
+
+begin_comment
+comment|/* define if your system declares optind */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_OPTIND_DECLARATION */
+end_comment
+
+begin_comment
+comment|/* define if your system declares opterr */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_OPTERR_DECLARATION */
+end_comment
+
+begin_comment
+comment|/* define if your system declares optopt */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_OPTOPT_DECLARATION */
+end_comment
+
+begin_comment
+comment|/* define if your system declares environ */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ENVIRON_DECLARATION */
+end_comment
+
+begin_comment
+comment|/* Define if RETSIGTYPE == void. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VOID_RETSIGTYPE
+value|1
+end_define
+
+begin_comment
+comment|/* Define if struct utmp has field ut_addr. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_UTMP_UT_ADDR */
+end_comment
+
+begin_comment
+comment|/* Define if struct utmp has field ut_host. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_UTMP_UT_HOST
+value|1
+end_define
+
+begin_comment
+comment|/* Define if struct utmp has field ut_id. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_UTMP_UT_ID */
+end_comment
+
+begin_comment
+comment|/* Define if struct utmp has field ut_pid. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_UTMP_UT_PID */
+end_comment
+
+begin_comment
+comment|/* Define if struct utmp has field ut_type. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_UTMP_UT_TYPE */
+end_comment
+
+begin_comment
+comment|/* Define if struct utmp has field ut_user. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_UTMP_UT_USER */
+end_comment
+
+begin_comment
+comment|/* Define if struct utmpx has field ut_exit. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_UTMPX_UT_EXIT */
+end_comment
+
+begin_comment
+comment|/* Define if struct utmpx has field ut_syslen. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_UTMPX_UT_SYSLEN */
+end_comment
+
+begin_comment
+comment|/* define if you have struct spwd */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_SPWD */
+end_comment
+
+begin_comment
+comment|/* define if struct winsize is declared in sys/termios.h */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_WINSIZE
+value|1
+end_define
+
+begin_comment
+comment|/* define if struct winsize has ws_xpixel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WS_XPIXEL
+value|1
+end_define
+
+begin_comment
+comment|/* define if struct winsize has ws_ypixel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WS_YPIXEL
+value|1
+end_define
+
+begin_comment
+comment|/* Define this to what the type ssize_t should be. */
+end_comment
+
+begin_comment
+comment|/* #undef ssize_t */
+end_comment
+
+begin_comment
+comment|/* Define if struct sockaddr has field sa_len. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_SOCKADDR_SA_LEN
+value|1
+end_define
+
+begin_comment
+comment|/* Define if SIAENTITY has field ouid. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SIAENTITY_OUID */
+end_comment
+
+begin_comment
+comment|/* Define if you have a working getmsg. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETMSG */
+end_comment
+
+begin_comment
+comment|/* Define if el_init takes four arguments. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FOUR_VALUED_EL_INIT */
+end_comment
+
+begin_comment
+comment|/* Define if you have a readline function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_READLINE
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have working stream ptys. */
+end_comment
+
+begin_comment
+comment|/* #undef STREAMSPTY */
+end_comment
+
+begin_comment
+comment|/* Define if /bin/ls has a `-A' flag. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LS_A
+value|1
+end_define
+
 begin_define
 define|#
 directive|define
@@ -2655,6 +3432,40 @@ name|HAVE_U_INT64_T
 value|1
 end_define
 
+begin_comment
+comment|/* This for compat with heimdal (or something) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KRB_PUT_INT
+parameter_list|(
+name|f
+parameter_list|,
+name|t
+parameter_list|,
+name|l
+parameter_list|,
+name|s
+parameter_list|)
+value|krb_put_int((f), (t), (l), (s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_KRB_ENABLE_DEBUG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_KRB_DISABLE_DEBUG
+value|1
+end_define
+
 begin_define
 define|#
 directive|define
@@ -2676,47 +3487,8 @@ begin_define
 define|#
 directive|define
 name|ORGANIZATION
-value|"eBones International"
+value|"FreeBSD Inc."
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|BINDIR
-value|"/usr/athena/bin"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LIBDIR
-value|"/usr/athena/lib"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LIBEXECDIR
-value|"/usr/athena/libexec"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBINDIR
-value|"/usr/athena/sbin"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -2833,250 +3605,43 @@ value|(1024+4)
 end_define
 
 begin_comment
-comment|/*  * Define NDBM if you are using the 4.3 ndbm library (which is part of  * libc).  If not defined, 4.2 dbm will be assumed.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_DBM_FIRSTKEY
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NDBM
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ftp stuff -------------------------------------------------- */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERBEROS
-end_define
-
-begin_comment
-comment|/* telnet stuff ----------------------------------------------- */
-end_comment
-
-begin_comment
-comment|/* define this if you have kerberos 4 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KRB4
-value|1
-end_define
-
-begin_comment
-comment|/* define this if you want encryption */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENCRYPTION
-value|1
-end_define
-
-begin_comment
-comment|/* define this if you want authentication */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AUTHENTICATION
-value|1
-end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ENCRYPTION
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|AUTHENTICATION
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|AUTHENTICATION
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Set this if you want des encryption */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DES_ENCRYPTION
-value|1
-end_define
-
-begin_comment
-comment|/* Set this to the default system lead string for telnetd   * can contain %-escapes: %s=sysname, %m=machine, %r=os-release  * %v=os-version, %t=tty, %h=hostname, %d=date and time  */
-end_comment
-
-begin_comment
-comment|/* #undef USE_IM */
-end_comment
-
-begin_comment
-comment|/* define this if you want diagnostics in telnetd */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIAGNOSTICS
-value|1
-end_define
-
-begin_comment
-comment|/* define this if you want support for broken ENV_{VALUE,VAR} systems  */
-end_comment
-
-begin_comment
-comment|/* #undef ENV_HACK */
-end_comment
-
-begin_comment
-comment|/*  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OLD_ENVIRON
-value|1
-end_define
-
-begin_comment
-comment|/* Used with login -p */
-end_comment
-
-begin_comment
-comment|/* #undef LOGIN_ARGS */
-end_comment
-
-begin_comment
-comment|/* Define if there are working stream ptys */
-end_comment
-
-begin_comment
-comment|/* #undef STREAMSPTY */
-end_comment
-
-begin_comment
-comment|/* set this to a sensible login */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOGIN_PATH
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LOGIN_PATH
-value|BINDIR "/login"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* ------------------------------------------------------------ */
 end_comment
 
-begin_comment
-comment|/*  * Define this if your ndbm-library really is berkeley db and creates  * files that ends in .db.  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BROKEN_REALLOC
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|HAVE_NEW_DB
-value|1
+name|realloc
+parameter_list|(
+name|X
+parameter_list|,
+name|Y
+parameter_list|)
+value|isoc_realloc((X), (Y))
 end_define
-
-begin_comment
-comment|/* Define this if you have a working getmsg */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_GETMSG */
-end_comment
-
-begin_comment
-comment|/* Define to enable new master key code */
-end_comment
-
-begin_comment
-comment|/* #undef RANDOM_MKEY */
-end_comment
-
-begin_comment
-comment|/* Location of the master key file, default value lives in<kdc.h> */
-end_comment
-
-begin_comment
-comment|/* #undef MKEYFILE */
-end_comment
-
-begin_comment
-comment|/* Define if you don't want support for afs, might be a good idea on    AIX if you don't have afs */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|NO_AFS
-value|1
+name|isoc_realloc
+parameter_list|(
+name|X
+parameter_list|,
+name|Y
+parameter_list|)
+value|((X) ? realloc((X), (Y)) : malloc(Y))
 end_define
 
-begin_comment
-comment|/* Define if you have a readline compatible library */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_READLINE
-value|1
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -3115,17 +3680,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Define this if your compiler supports '#pragma weak' */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PRAGMA_WEAK
-value|1
-end_define
-
-begin_comment
 comment|/* Temporary fixes for krb_{rd,mk}_safe */
 end_comment
 
@@ -3151,15 +3705,8 @@ value|2
 end_define
 
 begin_comment
-comment|/* Set this to one of the constants above to specify default checksum    type to emit */
+comment|/*  * All these are system-specific defines that I would rather not have at all.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|DES_QUAD_DEFAULT
-value|DES_QUAD_GUESS
-end_define
 
 begin_comment
 comment|/*  * AIX braindamage!  */
@@ -3177,88 +3724,33 @@ directive|define
 name|_ALL_SOURCE
 end_define
 
-begin_define
-define|#
-directive|define
-name|_POSIX_SOURCE
-end_define
-
 begin_comment
-comment|/* this is left for hysteric reasons :-) */
+comment|/* XXX this is gross, but kills about a gazillion warnings */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|unix
-end_define
+begin_struct_decl
+struct_decl|struct
+name|ether_addr
+struct_decl|;
+end_struct_decl
 
-begin_comment
-comment|/* well, ok... */
-end_comment
+begin_struct_decl
+struct_decl|struct
+name|sockaddr
+struct_decl|;
+end_struct_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_struct_decl
+struct_decl|struct
+name|sockaddr_dl
+struct_decl|;
+end_struct_decl
 
-begin_comment
-comment|/*  * SunOS braindamage! (Sun include files are generally braindead)  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sun
-argument_list|)
-operator|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__svr4__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__SVR4
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|SunOS
-value|5
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SunOS
-value|4
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_struct_decl
+struct_decl|struct
+name|sockaddr_in
+struct_decl|;
+end_struct_decl
 
 begin_endif
 endif|#
@@ -3346,6 +3838,60 @@ directive|define
 name|__STDC__
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Defining this enables lots of useful (and used) extensions on  * glibc-based systems such as Linux  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GNU_SOURCE
+end_define
+
+begin_comment
+comment|/* some strange OS/2 stuff.  From<d96-mst@nada.kth.se> */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__EMX__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_EMX_TCPIP
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAIL_USE_SYSTEM_LOCK
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ROKEN_RENAME
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"roken_rename.h"
+end_include
 
 begin_endif
 endif|#
