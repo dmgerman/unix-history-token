@@ -191,6 +191,15 @@ expr_stmt|;
 name|output_stype
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|rflag
+condition|)
+name|write_section
+argument_list|(
+name|tables
+argument_list|)
+expr_stmt|;
 name|write_section
 argument_list|(
 name|header
@@ -267,6 +276,11 @@ operator|>=
 literal|10
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -302,6 +316,11 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 name|outline
 operator|+=
 literal|2
@@ -347,6 +366,11 @@ operator|>=
 literal|10
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -388,6 +412,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 name|outline
 operator|+=
 literal|2
@@ -467,6 +496,11 @@ name|j
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -506,6 +540,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 name|outline
 operator|+=
 literal|2
@@ -1217,6 +1256,11 @@ operator|>=
 literal|10
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -1260,6 +1304,11 @@ name|k
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 name|outline
 operator|+=
 literal|2
@@ -2511,7 +2560,7 @@ operator|(
 name|short
 operator|*
 operator|)
-name|realloc
+name|REALLOC
 argument_list|(
 name|table
 argument_list|,
@@ -2538,7 +2587,7 @@ operator|(
 name|short
 operator|*
 operator|)
-name|realloc
+name|REALLOC
 argument_list|(
 name|check
 argument_list|,
@@ -2771,6 +2820,11 @@ operator|>=
 literal|10
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -2803,6 +2857,11 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 name|outline
 operator|+=
 literal|2
@@ -2848,6 +2907,11 @@ operator|>=
 literal|10
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -2880,6 +2944,11 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 name|outline
 operator|+=
 literal|2
@@ -2929,6 +2998,11 @@ operator|>=
 literal|10
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -2961,6 +3035,11 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 name|outline
 operator|+=
 literal|2
@@ -3000,7 +3079,7 @@ name|outline
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|output_file
+name|code_file
 argument_list|,
 literal|"#define YYTABLESIZE %d\n"
 argument_list|,
@@ -3044,6 +3123,11 @@ operator|>=
 literal|10
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -3076,6 +3160,11 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 name|outline
 operator|+=
 literal|2
@@ -3147,6 +3236,11 @@ operator|>=
 literal|10
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -3179,6 +3273,11 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 name|outline
 operator|+=
 literal|2
@@ -3411,7 +3510,7 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
-name|output_file
+name|code_file
 argument_list|,
 literal|"#define "
 argument_list|)
@@ -3456,7 +3555,7 @@ name|putc
 argument_list|(
 name|c
 argument_list|,
-name|output_file
+name|code_file
 argument_list|)
 expr_stmt|;
 if|if
@@ -3480,7 +3579,7 @@ name|putc
 argument_list|(
 name|c
 argument_list|,
-name|output_file
+name|code_file
 argument_list|)
 expr_stmt|;
 if|if
@@ -3510,7 +3609,7 @@ name|outline
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|output_file
+name|code_file
 argument_list|,
 literal|" %d\n"
 argument_list|,
@@ -3543,7 +3642,7 @@ name|outline
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|output_file
+name|code_file
 argument_list|,
 literal|"#define YYERRCODE %d\n"
 argument_list|,
@@ -3664,10 +3763,6 @@ name|in
 operator|=
 name|text_file
 expr_stmt|;
-name|out
-operator|=
-name|output_file
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3682,6 +3777,10 @@ operator|==
 name|EOF
 condition|)
 return|return;
+name|out
+operator|=
+name|code_file
+expr_stmt|;
 if|if
 condition|(
 name|c
@@ -3734,24 +3833,20 @@ condition|(
 operator|!
 name|lflag
 condition|)
-block|{
-operator|++
-name|outline
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|out
 argument_list|,
 name|line_format
 argument_list|,
+operator|++
 name|outline
 operator|+
 literal|1
 argument_list|,
-name|output_file_name
+name|code_file_name
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -3785,7 +3880,7 @@ name|outline
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|output_file
+name|code_file
 argument_list|,
 literal|"#define YYFINAL %d\n"
 argument_list|,
@@ -3796,6 +3891,19 @@ name|outline
 operator|+=
 literal|3
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#ifndef YYDEBUG\n#define YYDEBUG %d\n#endif\n"
+argument_list|,
+name|tflag
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rflag
+condition|)
 name|fprintf
 argument_list|(
 name|output_file
@@ -3843,7 +3951,7 @@ name|outline
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|output_file
+name|code_file
 argument_list|,
 literal|"#define YYMAXTOKEN %d\n"
 argument_list|,
@@ -3881,6 +3989,8 @@ condition|)
 name|no_space
 argument_list|()
 expr_stmt|;
+comment|/* Note that it is  not necessary to initialize the element		*/
+comment|/* symnam[max].							*/
 for|for
 control|(
 name|i
@@ -3936,6 +4046,11 @@ index|]
 operator|=
 literal|"end-of-file"
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -3997,6 +4112,9 @@ operator|!=
 literal|'"'
 condition|)
 block|{
+operator|++
+name|k
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -4017,19 +4135,10 @@ name|s
 operator|==
 literal|'\\'
 condition|)
-name|k
-operator|+=
-literal|2
-expr_stmt|;
-else|else
 operator|++
 name|k
 expr_stmt|;
 block|}
-else|else
-operator|++
-name|k
-expr_stmt|;
 block|}
 name|j
 operator|+=
@@ -4042,6 +4151,11 @@ operator|>
 literal|80
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -4170,6 +4284,11 @@ operator|>
 literal|80
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -4208,6 +4327,9 @@ operator|!=
 literal|'\''
 condition|)
 block|{
+operator|++
+name|k
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -4220,9 +4342,6 @@ name|k
 operator|+=
 literal|2
 expr_stmt|;
-operator|++
-name|s
-expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -4231,19 +4350,10 @@ name|s
 operator|==
 literal|'\\'
 condition|)
-name|k
-operator|+=
-literal|2
-expr_stmt|;
-else|else
 operator|++
 name|k
 expr_stmt|;
 block|}
-else|else
-operator|++
-name|k
-expr_stmt|;
 block|}
 name|j
 operator|+=
@@ -4256,6 +4366,11 @@ operator|>
 literal|80
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -4375,6 +4490,11 @@ operator|>
 literal|80
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -4437,6 +4557,11 @@ operator|>
 literal|80
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -4461,6 +4586,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 name|outline
 operator|+=
 literal|2
@@ -4477,6 +4607,11 @@ argument_list|(
 name|symnam
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -4751,6 +4886,11 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 operator|++
 name|outline
 expr_stmt|;
@@ -4762,6 +4902,11 @@ literal|"\",\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
 name|outline
 operator|+=
 literal|2
@@ -4799,7 +4944,7 @@ literal|3
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|output_file
+name|code_file
 argument_list|,
 literal|"#ifndef YYSTYPE\ntypedef int YYSTYPE;\n#endif\n"
 argument_list|)
@@ -4821,6 +4966,14 @@ name|c
 decl_stmt|,
 name|last
 decl_stmt|;
+specifier|register
+name|FILE
+modifier|*
+name|in
+decl_stmt|,
+modifier|*
+name|out
+decl_stmt|;
 if|if
 condition|(
 name|line
@@ -4828,6 +4981,14 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|in
+operator|=
+name|input_file
+expr_stmt|;
+name|out
+operator|=
+name|code_file
+expr_stmt|;
 name|c
 operator|=
 operator|*
@@ -4850,7 +5011,7 @@ name|c
 operator|=
 name|getc
 argument_list|(
-name|input_file
+name|in
 argument_list|)
 operator|)
 operator|==
@@ -4868,7 +5029,7 @@ name|outline
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|output_file
+name|out
 argument_list|,
 name|line_format
 argument_list|,
@@ -4891,7 +5052,7 @@ name|putc
 argument_list|(
 name|c
 argument_list|,
-name|output_file
+name|out
 argument_list|)
 expr_stmt|;
 name|last
@@ -4912,7 +5073,7 @@ name|outline
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|output_file
+name|out
 argument_list|,
 name|line_format
 argument_list|,
@@ -4928,7 +5089,7 @@ name|putc
 argument_list|(
 name|c
 argument_list|,
-name|output_file
+name|out
 argument_list|)
 expr_stmt|;
 block|}
@@ -4952,7 +5113,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|output_file
+name|out
 argument_list|)
 expr_stmt|;
 name|last
@@ -4967,7 +5128,7 @@ name|c
 operator|=
 name|getc
 argument_list|(
-name|input_file
+name|in
 argument_list|)
 operator|)
 operator|!=
@@ -4987,7 +5148,7 @@ name|putc
 argument_list|(
 name|c
 argument_list|,
-name|output_file
+name|out
 argument_list|)
 expr_stmt|;
 name|last
@@ -5009,7 +5170,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|output_file
+name|out
 argument_list|)
 expr_stmt|;
 block|}
@@ -5018,24 +5179,20 @@ condition|(
 operator|!
 name|lflag
 condition|)
-block|{
-operator|++
-name|outline
-expr_stmt|;
 name|fprintf
 argument_list|(
-name|output_file
+name|out
 argument_list|,
 name|line_format
 argument_list|,
+operator|++
 name|outline
 operator|+
 literal|1
 argument_list|,
-name|output_file_name
+name|code_file_name
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -5051,6 +5208,11 @@ name|int
 name|c
 decl_stmt|,
 name|last
+decl_stmt|;
+specifier|register
+name|FILE
+modifier|*
+name|out
 decl_stmt|;
 name|fclose
 argument_list|(
@@ -5091,6 +5253,10 @@ operator|==
 name|EOF
 condition|)
 return|return;
+name|out
+operator|=
+name|code_file
+expr_stmt|;
 name|last
 operator|=
 name|c
@@ -5108,7 +5274,7 @@ name|putc
 argument_list|(
 name|c
 argument_list|,
-name|output_file
+name|out
 argument_list|)
 expr_stmt|;
 while|while
@@ -5138,7 +5304,7 @@ name|putc
 argument_list|(
 name|c
 argument_list|,
-name|output_file
+name|out
 argument_list|)
 expr_stmt|;
 name|last
@@ -5160,7 +5326,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|output_file
+name|out
 argument_list|)
 expr_stmt|;
 block|}
@@ -5169,24 +5335,20 @@ condition|(
 operator|!
 name|lflag
 condition|)
-block|{
-operator|++
-name|outline
-expr_stmt|;
 name|fprintf
 argument_list|(
-name|output_file
+name|out
 argument_list|,
 name|line_format
 argument_list|,
+operator|++
 name|outline
 operator|+
 literal|1
 argument_list|,
-name|output_file_name
+name|code_file_name
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
