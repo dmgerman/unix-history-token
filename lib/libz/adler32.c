@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* adler32.c -- compute the Adler-32 checksum of a data stream  * Copyright (C) 1995-2002 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* adler32.c -- compute the Adler-32 checksum of a data stream  * Copyright (C) 1995-2003 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
 comment|/* @(#) $Id$ */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ZLIB_INTERNAL
+end_define
 
 begin_include
 include|#
@@ -17,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|BASE
-value|65521L
+value|65521UL
 end_define
 
 begin_comment
@@ -93,6 +99,43 @@ parameter_list|)
 value|DO8(buf,0); DO8(buf,8);
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NO_DIVIDE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MOD
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|do { \         if (a>= (BASE<< 16)) a -= (BASE<< 16); \         if (a>= (BASE<< 15)) a -= (BASE<< 15); \         if (a>= (BASE<< 14)) a -= (BASE<< 14); \         if (a>= (BASE<< 13)) a -= (BASE<< 13); \         if (a>= (BASE<< 12)) a -= (BASE<< 12); \         if (a>= (BASE<< 11)) a -= (BASE<< 11); \         if (a>= (BASE<< 10)) a -= (BASE<< 10); \         if (a>= (BASE<< 9)) a -= (BASE<< 9); \         if (a>= (BASE<< 8)) a -= (BASE<< 8); \         if (a>= (BASE<< 7)) a -= (BASE<< 7); \         if (a>= (BASE<< 6)) a -= (BASE<< 6); \         if (a>= (BASE<< 5)) a -= (BASE<< 5); \         if (a>= (BASE<< 4)) a -= (BASE<< 4); \         if (a>= (BASE<< 3)) a -= (BASE<< 3); \         if (a>= (BASE<< 2)) a -= (BASE<< 2); \         if (a>= (BASE<< 1)) a -= (BASE<< 1); \         if (a>= BASE) a -= BASE; \     } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MOD
+parameter_list|(
+name|a
+parameter_list|)
+value|a %= BASE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* ========================================================================= */
 end_comment
@@ -165,6 +208,9 @@ name|len
 operator|<
 name|NMAX
 condition|?
+operator|(
+name|int
+operator|)
 name|len
 else|:
 name|NMAX
@@ -219,13 +265,15 @@ operator|--
 name|k
 condition|)
 do|;
+name|MOD
+argument_list|(
 name|s1
-operator|%=
-name|BASE
+argument_list|)
 expr_stmt|;
+name|MOD
+argument_list|(
 name|s2
-operator|%=
-name|BASE
+argument_list|)
 expr_stmt|;
 block|}
 return|return

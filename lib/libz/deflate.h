@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* deflate.h -- internal compression state  * Copyright (C) 1995-2002 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* deflate.h -- internal compression state  * Copyright (C) 1995-2002 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -14,13 +14,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_DEFLATE_H
+name|DEFLATE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_DEFLATE_H
+name|DEFLATE_H
 end_define
 
 begin_include
@@ -28,6 +28,27 @@ include|#
 directive|include
 file|"zutil.h"
 end_include
+
+begin_comment
+comment|/* define NO_GZIP when compiling if you want to disable gzip header and    trailer creation by deflate().  NO_GZIP would be used to avoid linking in    the crc code when it is not needed.  For shared libraries, gzip encoding    should be left enabled. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_GZIP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GZIP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ===========================================================================  * Internal compression state.  */
@@ -295,9 +316,9 @@ name|pending
 decl_stmt|;
 comment|/* nb of bytes in the pending buffer */
 name|int
-name|noheader
+name|wrap
 decl_stmt|;
-comment|/* suppress zlib header and adler32 */
+comment|/* bit 0 true for zlib, bit 1 true for gzip */
 name|Byte
 name|data_type
 decl_stmt|;
@@ -875,6 +896,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* DEFLATE_H */
+end_comment
 
 end_unit
 

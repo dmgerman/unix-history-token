@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* minigzip.c -- simulate gzip using the zlib compression library  * Copyright (C) 1995-2002 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* minigzip.c -- simulate gzip using the zlib compression library  * Copyright (C) 1995-2002 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -109,6 +109,11 @@ operator|||
 name|defined
 argument_list|(
 name|WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
 argument_list|)
 end_if
 
@@ -575,6 +580,9 @@ control|)
 block|{
 name|len
 operator|=
+operator|(
+name|int
+operator|)
 name|fread
 argument_list|(
 name|buf
@@ -1166,9 +1174,12 @@ decl_stmt|;
 name|gzFile
 name|in
 decl_stmt|;
-name|int
+name|uInt
 name|len
 init|=
+operator|(
+name|uInt
+operator|)
 name|strlen
 argument_list|(
 name|file
@@ -1313,7 +1324,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ===========================================================================  * Usage:  minigzip [-d] [-f] [-h] [-1 to -9] [files...]  *   -d : decompress  *   -f : compress with Z_FILTERED  *   -h : compress with Z_HUFFMAN_ONLY  *   -1 to -9 : compression level  */
+comment|/* ===========================================================================  * Usage:  minigzip [-d] [-f] [-h] [-r] [-1 to -9] [files...]  *   -d : decompress  *   -f : compress with Z_FILTERED  *   -h : compress with Z_HUFFMAN_ONLY  *   -r : compress with Z_RLE  *   -1 to -9 : compression level  */
 end_comment
 
 begin_function
@@ -1429,6 +1440,26 @@ literal|3
 index|]
 operator|=
 literal|'h'
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-r"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|outmode
+index|[
+literal|3
+index|]
+operator|=
+literal|'R'
 expr_stmt|;
 elseif|else
 if|if
@@ -1620,15 +1651,9 @@ name|argc
 condition|)
 do|;
 block|}
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
-comment|/* to avoid warning */
 block|}
 end_function
 

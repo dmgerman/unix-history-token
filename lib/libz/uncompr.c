@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uncompr.c -- decompress a memory buffer  * Copyright (C) 1995-2002 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* uncompr.c -- decompress a memory buffer  * Copyright (C) 1995-2003 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
 comment|/* @(#) $Id$ */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ZLIB_INTERNAL
+end_define
 
 begin_include
 include|#
@@ -176,13 +182,28 @@ operator|&
 name|stream
 argument_list|)
 expr_stmt|;
-return|return
+if|if
+condition|(
 name|err
 operator|==
-name|Z_OK
-condition|?
+name|Z_NEED_DICT
+operator|||
+operator|(
+name|err
+operator|==
 name|Z_BUF_ERROR
-else|:
+operator|&&
+name|stream
+operator|.
+name|avail_in
+operator|==
+literal|0
+operator|)
+condition|)
+return|return
+name|Z_DATA_ERROR
+return|;
+return|return
 name|err
 return|;
 block|}

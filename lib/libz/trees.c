@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* trees.c -- output deflated data using Huffman coding  * Copyright (C) 1995-2002 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* trees.c -- output deflated data using Huffman coding  * Copyright (C) 1995-2003 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -1205,18 +1205,6 @@ end_endif
 begin_comment
 comment|/* DEBUG */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(a>= b ? a : b)
-end_define
 
 begin_comment
 comment|/* the arguments must not have side effects */
@@ -3650,22 +3638,35 @@ call|(
 name|uch
 call|)
 argument_list|(
-name|MAX
-argument_list|(
+operator|(
 name|s
 operator|->
 name|depth
 index|[
 name|n
 index|]
-argument_list|,
+operator|>=
 name|s
 operator|->
 name|depth
 index|[
 name|m
 index|]
-argument_list|)
+condition|?
+name|s
+operator|->
+name|depth
+index|[
+name|n
+index|]
+else|:
+name|s
+operator|->
+name|depth
+index|[
+name|m
+index|]
+operator|)
 operator|+
 literal|1
 argument_list|)
@@ -5203,8 +5204,8 @@ name|static_len
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* At this point, opt_len and static_len are the total bit lengths of 	 * the compressed block data, excluding the tree representations. 	 */
-comment|/* Build the bit length tree for the above two trees, and get the index 	 * in bl_order of the last bit length code to send. 	 */
+comment|/* At this point, opt_len and static_len are the total bit lengths of          * the compressed block data, excluding the tree representations.          */
+comment|/* Build the bit length tree for the above two trees, and get the index          * in bl_order of the last bit length code to send.          */
 name|max_blindex
 operator|=
 name|build_bl_tree
@@ -5212,7 +5213,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* Determine the best encoding. Compute first the block length in bytes*/
+comment|/* Determine the best encoding. Compute the block lengths in bytes. */
 name|opt_lenb
 operator|=
 operator|(
@@ -6129,9 +6130,14 @@ comment|/* literal or match pair ? */
 comment|/* Check that the overlay between pending_buf and d_buf+l_buf is ok: */
 name|Assert
 argument_list|(
+call|(
+name|uInt
+call|)
+argument_list|(
 name|s
 operator|->
 name|pending
+argument_list|)
 operator|<
 name|s
 operator|->
