@@ -848,7 +848,6 @@ operator|*
 operator|*
 operator|,
 name|int
-name|base
 operator|)
 argument_list|)
 decl_stmt|;
@@ -869,7 +868,6 @@ operator|*
 operator|*
 operator|,
 name|int
-name|base
 operator|)
 argument_list|)
 decl_stmt|;
@@ -890,7 +888,6 @@ operator|*
 operator|*
 operator|,
 name|int
-name|base
 operator|)
 argument_list|)
 decl_stmt|;
@@ -911,7 +908,6 @@ operator|*
 operator|*
 operator|,
 name|int
-name|base
 operator|)
 argument_list|)
 decl_stmt|;
