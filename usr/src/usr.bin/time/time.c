@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)time.c	4.5 (Berkeley) %G%"
+literal|"@(#)time.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,10 @@ decl_stmt|;
 block|{
 name|int
 name|status
+decl_stmt|,
+name|lflag
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|int
@@ -98,6 +102,31 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-l"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|lflag
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
+block|}
 name|gettimeofday
 argument_list|(
 operator|&
@@ -289,6 +318,245 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lflag
+condition|)
+block|{
+name|int
+name|hz
+init|=
+literal|100
+decl_stmt|;
+comment|/* XXX */
+name|long
+name|ticks
+decl_stmt|;
+name|ticks
+operator|=
+name|hz
+operator|*
+operator|(
+name|ru
+operator|.
+name|ru_utime
+operator|.
+name|tv_sec
+operator|+
+name|ru
+operator|.
+name|ru_stime
+operator|.
+name|tv_sec
+operator|)
+operator|+
+name|hz
+operator|*
+operator|(
+name|ru
+operator|.
+name|ru_utime
+operator|.
+name|tv_usec
+operator|+
+name|ru
+operator|.
+name|ru_stime
+operator|.
+name|tv_usec
+operator|)
+operator|/
+literal|1000000
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%10D  %s\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_maxrss
+argument_list|,
+literal|"maximum resident set size"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%10D  %s\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_ixrss
+operator|/
+name|ticks
+argument_list|,
+literal|"average shared memory size"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%10D  %s\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_idrss
+operator|/
+name|ticks
+argument_list|,
+literal|"average unshared data size"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%10D  %s\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_isrss
+operator|/
+name|ticks
+argument_list|,
+literal|"average unshared stack size"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%10D  %s\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_minflt
+argument_list|,
+literal|"page reclaims"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%10D  %s\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_majflt
+argument_list|,
+literal|"page faults"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%10D  %s\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_nswap
+argument_list|,
+literal|"swaps"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%10D  %s\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_inblock
+argument_list|,
+literal|"block input operations"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%10D  %s\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_oublock
+argument_list|,
+literal|"block output operations"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%10D  %s\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_msgsnd
+argument_list|,
+literal|"messages sent"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%10D  %s\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_msgrcv
+argument_list|,
+literal|"messages received"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%10D  %s\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_nsignals
+argument_list|,
+literal|"signals received"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%10D  %s\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_nvcsw
+argument_list|,
+literal|"voluntary context switches"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%10D  %s\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_nivcsw
+argument_list|,
+literal|"involuntary context switches"
+argument_list|)
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 name|status
@@ -329,7 +597,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%9d.%01d %s "
+literal|"%9d.%02d %s "
 argument_list|,
 name|tv
 operator|->
@@ -339,7 +607,7 @@ name|tv
 operator|->
 name|tv_usec
 operator|/
-literal|100000
+literal|10000
 argument_list|,
 name|s
 argument_list|)
