@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.15 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3884,6 +3884,9 @@ name|pmap
 operator|!=
 name|kernel_pmap
 condition|)
+operator|(
+name|void
+operator|)
 name|vm_map_pageable
 argument_list|(
 name|pt_map
@@ -6839,6 +6842,9 @@ operator|!=
 name|kernel_pmap
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|vm_map_pageable
 argument_list|(
 name|pt_map
@@ -8898,6 +8904,8 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|s
 operator|=
 name|vm_fault
@@ -8935,32 +8943,6 @@ literal|"pmap_enter: vm_fault failed"
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-if|if
-condition|(
-name|vm_fault
-argument_list|(
-name|pt_map
-argument_list|,
-name|va
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-argument_list|,
-name|FALSE
-argument_list|)
-operator|!=
-name|KERN_SUCCESS
-condition|)
-name|panic
-argument_list|(
-literal|"pmap_enter: vm_fault failed"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ptpa
 operator|=
 name|pmap_extract
@@ -8969,6 +8951,16 @@ name|kernel_pmap
 argument_list|,
 name|va
 argument_list|)
+expr_stmt|;
+comment|/* 		 * Mark the page clean now to avoid its pageout (and 		 * hence creation of a pager) between now and when it 		 * is wired; i.e. while it is on a paging queue. 		 */
+name|PHYS_TO_VM_PAGE
+argument_list|(
+name|ptpa
+argument_list|)
+operator|->
+name|flags
+operator||=
+name|PG_CLEAN
 expr_stmt|;
 ifdef|#
 directive|ifdef
