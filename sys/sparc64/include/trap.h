@@ -242,8 +242,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|T_KERNEL
+name|T_SYSCALL
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_RESTOREWP
+value|0x21
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_KERNEL
+value|0x40
 end_define
 
 begin_define
@@ -257,7 +271,7 @@ begin_define
 define|#
 directive|define
 name|T_TYPE_SIZE
-value|6
+value|7
 end_define
 
 begin_define
@@ -330,6 +344,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ST_BREAKPOINT
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ST_SYSCALL
+value|0x9
+end_define
 
 begin_endif
 endif|#
