@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dver.c	1.2	83/05/19  *  * dver.c - Versatec driver for the new troff  *  * Authors:	BWK(BELL), VCAT(berkley), and Richard L. Hyde  *		Many parts where lifted from the above sources.  * Editor:	Richard L. Hyde  * 		Dept. of Computer Sciences  * 		Purdue University  * Date:	Thu Oct 28 1982  */
+comment|/* dver.c	1.3	83/06/24  *  * dver.c - Versatec driver for the new troff  *  * Authors:	BWK(BELL), VCAT(berkley), and Richard L. Hyde  *		Many parts where lifted from the above sources.  * Editor:	Richard L. Hyde  * 		Dept. of Computer Sciences  * 		Purdue University  * Date:	Thu Oct 28 1982  */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************      output language from troff:     all numbers are character strings  sn	size in points fn	font as number from 1-n cx	ascii character x Cxyz	funny char xyz. terminated by white space Hn	go to absolute horizontal position n Vn	go to absolute vertical position n (down is positive) hn	go n units horizontally (relative) vn	ditto vertically nnc	move right nn, then print c (exactly 2 digits!) 		(this wart is an optimization that shrinks output file size 		 about 35% and run-time about 15% while preserving ascii-ness) Dt ..\n	draw operation 't': 	Dl x y		line from here by x,y 	Dc d		circle of diameter d with left side here 	De x y		ellipse of axes x,y with left side here 	Da x y r	arc counter-clockwise by x,y of radius r 	D~ x y x y ...	wiggly line by x,y then x,y ... nb a	end of line (information only -- no action needed) w	paddable word space -- no action needed 	b = space before line, a = after p	new page begins -- set v to 0 #..\n	comment x ..\n	device control functions: 	x i	init 	x T s	name of device is s 	x r n h v	resolution is n/inch 		h = min horizontal motion, v = min vert 	x p	pause (can restart) 	x s	stop -- done for ever 	x t	generate trailer 	x f n s	font position n contains font s 	x H n	set character height to n 	x S n	set slant to N  	Subcommands like "i" are often spelled out like "init".  *******************************************************************************/
+comment|/*******************************************************************************      output language from troff:     all numbers are character strings  #..\n	comment sn	size in points fn	font as number from 1 to n cx	ascii character x Cxyz	funny char \(xyz. terminated by white space Hn	go to absolute horizontal position n Vn	go to absolute vertical position n (down is positive) hn	go n units horizontally (relative) vn	ditto vertically nnc	move right nn, then print c (exactly 2 digits!) 		(this wart is an optimization that shrinks output file size 		 about 35% and run-time about 15% while preserving ascii-ness) p	new page begins -- set v to 0 nb a	end of line (information only -- no action needed) 	b = space before line, a = after w	paddable word space -- no action needed  Dt ..\n	draw operation 't': 	Dl x y		line from here by x,y 	Dc d		circle of diameter d with left side here 	De x y		ellipse of axes x,y with left side here 	Da x y r	arc counter-clockwise by x,y of radius r 	D~ x y x y ...	B-spline curve by x,y then x,y ...  x ..\n	device control functions:      x i	init      x T s	name of device is s      x r n h v	resolution is n/inch h = min horizontal motion, v = min vert      x p	pause (can restart)      x s	stop -- done for ever      x t	generate trailer      x f n s	font position n contains font s      x H n	set character height to n      x S n	set slant to N  	Subcommands like "i" are often spelled out like "init".  *******************************************************************************/
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/vcmd.h>
 end_include
 
 begin_include
@@ -31,46 +31,26 @@ directive|include
 file|"dev.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"modes.h"
-end_include
+begin_define
+define|#
+directive|define
+name|DEBUGABLE
+end_define
 
 begin_comment
-comment|/*#define ACCOUNT*/
+comment|/* Yes, debugable... */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NFONT
+name|NFONTS
 value|25
 end_define
+
+begin_comment
+comment|/* total number of fonts useable */
+end_comment
 
 begin_define
 define|#
@@ -79,12 +59,20 @@ name|OPENREAD
 value|0
 end_define
 
+begin_comment
+comment|/* mode for openning files */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RESTART
 value|1
 end_define
+
+begin_comment
+comment|/* upon exit, return either RESTART */
+end_comment
 
 begin_define
 define|#
@@ -93,12 +81,79 @@ name|ABORT
 value|2
 end_define
 
+begin_comment
+comment|/*     or ABORT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FATAL
+value|1
+end_define
+
+begin_comment
+comment|/* type of error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BMASK
+value|0377
+end_define
+
+begin_comment
+comment|/* byte grabber */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FONTDIR
+value|"/usr/lib/font"
+end_define
+
+begin_comment
+comment|/* default place to look for fonts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|hmot
+parameter_list|(
+name|n
+parameter_list|)
+value|hpos += n
+end_define
+
+begin_define
+define|#
+directive|define
+name|hgoto
+parameter_list|(
+name|n
+parameter_list|)
+value|hpos = n
+end_define
+
+begin_define
+define|#
+directive|define
+name|vmot
+parameter_list|(
+name|n
+parameter_list|)
+value|vgoto(vpos + n)
+end_define
+
 begin_decl_stmt
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"dver.c	1.2	83/05/19"
+literal|"dver.c	1.3	83/06/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,22 +215,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|DX
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|DY
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|dev
 name|dev
@@ -188,7 +227,7 @@ name|font
 modifier|*
 name|fontbase
 index|[
-name|NFONT
+name|NFONTS
 operator|+
 literal|1
 index|]
@@ -249,7 +288,7 @@ name|char
 modifier|*
 name|fitab
 index|[
-name|NFONT
+name|NFONTS
 operator|+
 literal|1
 index|]
@@ -259,25 +298,21 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|widthtab
+name|widtab
 index|[
-name|NFONT
+name|NFONTS
 operator|+
 literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* widtab would be a better name */
-end_comment
 
 begin_decl_stmt
 name|char
 modifier|*
 name|codetab
 index|[
-name|NFONT
+name|NFONTS
 operator|+
 literal|1
 index|]
@@ -287,34 +322,6 @@ end_decl_stmt
 begin_comment
 comment|/* device codes */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|FATAL
-value|1
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|BMASK
-end_undef
-
-begin_define
-define|#
-directive|define
-name|BMASK
-value|0377
-end_define
-
-begin_decl_stmt
-name|int
-name|dbg
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -327,72 +334,32 @@ comment|/* input was computed according to this resolution */
 end_comment
 
 begin_decl_stmt
-name|FILE
-modifier|*
-name|tf
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* output file */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|fontdir
 init|=
-literal|"/usr/lib/font"
+name|FONTDIR
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
+end_ifdef
 
 begin_decl_stmt
-specifier|extern
-name|char
-name|devname
-index|[]
+name|int
+name|dbg
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* hpos == hpos */
-end_comment
-
-begin_comment
-comment|/* vpos != vpos vpos = vertical postion on the page xpos is rel buf0p */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|hmot
-parameter_list|(
-name|n
-parameter_list|)
-value|hpos += n
-end_define
-
-begin_define
-define|#
-directive|define
-name|hgoto
-parameter_list|(
-name|n
-parameter_list|)
-value|hpos = n
-end_define
-
-begin_define
-define|#
-directive|define
-name|vmot
-parameter_list|(
-name|n
-parameter_list|)
-value|vgoto(vpos + n)
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -438,32 +405,12 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|oldh
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* previous H position */
-end_comment
-
-begin_decl_stmt
-name|int
 name|vpos
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* current vertical position (down positive) */
-end_comment
-
-begin_decl_stmt
-name|int
-name|oldv
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* current pos in 1/4 point units */
 end_comment
 
 begin_decl_stmt
@@ -481,34 +428,6 @@ name|int
 name|vorig
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|drawdot
-init|=
-literal|'.'
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* draw with this character */
-end_comment
-
-begin_decl_stmt
-name|int
-name|drawsize
-init|=
-literal|2
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* shrink by this factor when drawing */
-end_comment
-
-begin_comment
-comment|/* new  */
-end_comment
 
 begin_define
 define|#
@@ -531,20 +450,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFONTS
-value|25
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPECIALFONT
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
 name|DSIZ
 value|((sizeof *dispatch)*DISPATCHSIZE)
 end_define
@@ -553,26 +458,22 @@ begin_define
 define|#
 directive|define
 name|MAXF
-value|(NFONT + 1)
+value|(NFONTS + 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OUTFILE
-value|1
+value|fileno (stdout)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RASTER_LENGTH
-value|1600
+value|7040
 end_define
-
-begin_comment
-comment|/* 100 characters, 16 bits / character */
-end_comment
 
 begin_define
 define|#
@@ -585,7 +486,7 @@ begin_define
 define|#
 directive|define
 name|NLINES
-value|(11*200 + 10)
+value|100
 end_define
 
 begin_define
@@ -594,6 +495,28 @@ directive|define
 name|BUFFER_SIZE
 value|(NLINES*BYTES_PER_LINE)
 end_define
+
+begin_decl_stmt
+name|int
+name|pltmode
+index|[]
+init|=
+block|{
+name|VPLOT
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|prtmode
+index|[]
+init|=
+block|{
+name|VPRINT
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -645,15 +568,6 @@ begin_function_decl
 name|char
 modifier|*
 name|allpanic
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|passwd
-modifier|*
-name|getpwuid
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -756,24 +670,6 @@ name|dispatch
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Accounting assumes roll paper */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FFLINES
-value|650
-end_define
-
-begin_define
-define|#
-directive|define
-name|EOTLINES
-value|1400
-end_define
-
 begin_decl_stmt
 name|int
 name|cfnum
@@ -808,17 +704,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|nfontnum
+name|fontwanted
 init|=
-operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* flag:  "has a new font been requested?" */
+end_comment
+
 begin_decl_stmt
 name|int
-name|fontwanted
+name|nfontnum
 init|=
+operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
@@ -830,44 +730,6 @@ init|=
 literal|10
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACCOUNT
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|lines
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* line counter */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|user
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* user name */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*     old  */
-end_comment
 
 begin_function
 name|main
@@ -890,10 +752,6 @@ name|int
 name|done
 parameter_list|()
 function_decl|;
-name|tf
-operator|=
-name|stdout
-expr_stmt|;
 while|while
 condition|(
 name|argc
@@ -958,6 +816,9 @@ index|]
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 case|case
 literal|'d'
 case|:
@@ -985,11 +846,9 @@ name|dbg
 operator|=
 literal|1
 expr_stmt|;
-name|tf
-operator|=
-name|stdout
-expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 literal|'s'
 case|:
@@ -1016,25 +875,6 @@ condition|)
 name|spage
 operator|=
 literal|9999
-expr_stmt|;
-break|break;
-case|case
-literal|'n'
-case|:
-comment|/* user's name */
-name|argc
-operator|--
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ACCOUNT
-name|user
-operator|=
-endif|#
-directive|endif
-operator|*
-operator|++
-name|argv
 expr_stmt|;
 break|break;
 block|}
@@ -1129,17 +969,6 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|ACCOUNT
-name|accounting
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-name|waitchild
-argument_list|()
-expr_stmt|;
 name|done
 argument_list|()
 expr_stmt|;
@@ -1317,6 +1146,9 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -1354,6 +1186,8 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -2085,20 +1919,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'T'
-case|:
-comment|/* device name */
-name|fscanf
-argument_list|(
-name|fp
-argument_list|,
-literal|"%s"
-argument_list|,
-name|devname
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'t'
 case|:
 comment|/* trailer */
@@ -2304,11 +2124,9 @@ name|sprintf
 argument_list|(
 name|temp
 argument_list|,
-literal|"%s/dev%s/DESC.out"
+literal|"%s/devver/DESC.out"
 argument_list|,
 name|fontdir
-argument_list|,
-name|devname
 argument_list|)
 expr_stmt|;
 if|if
@@ -2492,7 +2310,7 @@ name|font
 argument_list|)
 expr_stmt|;
 comment|/* that is on the beginning */
-name|widthtab
+name|widtab
 index|[
 name|i
 index|]
@@ -2554,6 +2372,9 @@ operator|->
 name|intname
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -2565,6 +2386,8 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|fontbase
 index|[
@@ -2601,7 +2424,7 @@ name|font
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|widthtab
+name|widtab
 index|[
 literal|0
 index|]
@@ -2715,7 +2538,7 @@ index|]
 operator|->
 name|namefont
 argument_list|,
-name|widthtab
+name|widtab
 index|[
 name|i
 index|]
@@ -2753,7 +2576,7 @@ name|stderr
 argument_list|,
 literal|" %2d"
 argument_list|,
-name|widthtab
+name|widtab
 index|[
 name|i
 index|]
@@ -2958,7 +2781,7 @@ literal|0
 operator|||
 name|n
 operator|>
-name|NFONT
+name|NFONTS
 condition|)
 name|error
 argument_list|(
@@ -3005,11 +2828,9 @@ name|sprintf
 argument_list|(
 name|temp
 argument_list|,
-literal|"%s/dev%s/%s.out"
+literal|"%s/devver/%s.out"
 argument_list|,
 name|fontdir
-argument_list|,
-name|devname
 argument_list|,
 name|s
 argument_list|)
@@ -3129,7 +2950,7 @@ name|nwfont
 operator|&
 name|BMASK
 expr_stmt|;
-name|widthtab
+name|widtab
 index|[
 name|n
 index|]
@@ -3158,7 +2979,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|widthtab
+name|widtab
 index|[
 name|n
 index|]
@@ -3176,7 +2997,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|widthtab
+name|widtab
 index|[
 name|n
 index|]
@@ -3214,6 +3035,9 @@ operator|=
 name|norig
 expr_stmt|;
 comment|/* to later use full original size */
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -3225,6 +3049,8 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -3326,17 +3152,6 @@ begin_comment
 comment|/*******************************************************************************      Here beginneth all the stuff that really depends on the versatec (we hope).  *******************************************************************************/
 end_comment
 
-begin_decl_stmt
-name|char
-name|devname
-index|[
-literal|20
-index|]
-init|=
-literal|"dver"
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -3350,39 +3165,6 @@ directive|define
 name|TRAILER
 value|(14 * res)
 end_define
-
-begin_define
-define|#
-directive|define
-name|LMARGIN
-value|0
-end_define
-
-begin_comment
-comment|/* left margin offset */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HMAX
-value|(48 * (res/6))
-end_define
-
-begin_comment
-comment|/* maximum horizontal size = 48 picas */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VMAX
-value|(12 * res)
-end_define
-
-begin_comment
-comment|/* 15 inch page */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -3430,10 +3212,6 @@ name|hpos
 operator|=
 name|vpos
 operator|=
-name|oldv
-operator|=
-name|oldh
-operator|=
 literal|0
 expr_stmt|;
 comment|/* the above are not true until the code below happens*/
@@ -3451,69 +3229,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|nchtab
-condition|;
-name|i
-operator|++
-control|)
-comment|/* find the line drawing char */
-if|if
-condition|(
-name|strcmp
-argument_list|(
-operator|&
-name|chname
-index|[
-name|chtab
-index|[
-name|i
-index|]
-index|]
-argument_list|,
-literal|"l."
-argument_list|)
-operator|==
-literal|0
-condition|)
-break|break;
-if|if
-condition|(
-name|i
-operator|<
-name|nchtab
-condition|)
-block|{
-name|drawdot
-operator|=
-name|i
-operator|+
-literal|128
-expr_stmt|;
-name|drawsize
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-name|drawdot
-operator|=
-literal|'.'
-expr_stmt|;
-name|drawsize
-operator|=
-literal|2
-expr_stmt|;
-comment|/* half size */
-block|}
 block|}
 end_block
 
@@ -3741,12 +3456,6 @@ condition|(
 name|output
 condition|)
 block|{
-if|if
-condition|(
-name|tf
-operator|!=
-name|stdout
-condition|)
 name|paper
 operator|+=
 name|vpos
@@ -3769,18 +3478,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/******* 	flush out the buffer. Do it in a child proc 	this buffering was added by Bob Brown to stop the versatec 	from smearing while waiting for the next page *******/
-name|waitchild
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|fork
-argument_list|()
-operator|==
-literal|0
-condition|)
-block|{
 name|slop_lines
 argument_list|(
 name|maxX
@@ -3822,21 +3519,6 @@ argument_list|,
 name|pltmode
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-ifdef|#
-directive|ifdef
-name|ACCOUNT
-name|lines
-operator|+=
-name|maxX
-expr_stmt|;
-endif|#
-directive|endif
 name|size
 operator|=
 name|BYTES_PER_LINE
@@ -3860,10 +3542,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|vpos
-operator|=
-literal|0
-expr_stmt|;
-name|oldv
 operator|=
 literal|0
 expr_stmt|;
@@ -3922,55 +3600,6 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-block|}
-end_block
-
-begin_macro
-name|waitchild
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|int
-name|status
-decl_stmt|;
-while|while
-condition|(
-name|wait
-argument_list|(
-operator|&
-name|status
-argument_list|)
-operator|!=
-operator|-
-literal|1
-condition|)
-if|if
-condition|(
-operator|(
-operator|(
-name|status
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0xff
-operator|)
-operator|!=
-literal|0
-condition|)
-name|exit
-argument_list|(
-operator|(
-name|status
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0xff
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -4092,6 +3721,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -4103,6 +3735,8 @@ argument_list|,
 literal|"can't set height on versatec yet\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -4125,6 +3759,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -4136,6 +3773,8 @@ argument_list|,
 literal|"can't set slant on versatec yet\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -4312,6 +3951,9 @@ argument_list|(
 name|lastw
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -4325,6 +3967,8 @@ argument_list|,
 name|lastw
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_block
@@ -4358,9 +4002,6 @@ block|{
 case|case
 literal|'p'
 case|:
-name|waitchild
-argument_list|()
-expr_stmt|;
 name|slop_lines
 argument_list|(
 name|maxX
@@ -4378,9 +4019,6 @@ break|break;
 case|case
 literal|'s'
 case|:
-name|waitchild
-argument_list|()
-expr_stmt|;
 name|slop_lines
 argument_list|(
 name|maxX
@@ -4406,9 +4044,6 @@ end_comment
 
 begin_block
 block|{
-name|waitchild
-argument_list|()
-expr_stmt|;
 name|ioctl
 argument_list|(
 name|OUTFILE
@@ -4448,8 +4083,6 @@ begin_block
 block|{
 name|vpos
 operator|=
-name|oldv
-operator|=
 literal|0
 expr_stmt|;
 name|vgoto
@@ -4458,8 +4091,6 @@ name|TRAILER
 argument_list|)
 expr_stmt|;
 name|vpos
-operator|=
-name|oldv
 operator|=
 literal|0
 expr_stmt|;
@@ -4475,6 +4106,7 @@ end_macro
 
 begin_block
 block|{
+comment|/* check to see if n would move use past buf0p */
 if|if
 condition|(
 name|n
@@ -4482,7 +4114,6 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* check to see if n would move use past buf0p */
 name|fprintf
 argument_list|(
 name|stderr
@@ -4493,7 +4124,6 @@ expr_stmt|;
 name|done
 argument_list|()
 expr_stmt|;
-comment|/* no return */
 block|}
 comment|/* check for end of page */
 if|if
@@ -4547,6 +4177,9 @@ operator|!
 name|output
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -4560,6 +4193,8 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -4666,6 +4301,9 @@ operator|<=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -4681,9 +4319,11 @@ operator|+
 literal|32
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|lastw
 operator|=
-name|widthtab
+name|widtab
 index|[
 name|font
 index|]
@@ -4740,7 +4380,7 @@ expr_stmt|;
 comment|/* get the printing value of ch */
 name|pw
 operator|=
-name|widthtab
+name|widtab
 index|[
 name|font
 index|]
@@ -4826,7 +4466,7 @@ index|]
 expr_stmt|;
 name|pw
 operator|=
-name|widthtab
+name|widtab
 index|[
 name|k
 index|]
@@ -4864,6 +4504,9 @@ operator|>
 name|nfonts
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -4879,8 +4522,13 @@ operator|+
 literal|32
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -4923,7 +4571,8 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+endif|#
+directive|endif
 name|outc
 argument_list|(
 name|code
@@ -4993,7 +4642,7 @@ decl_stmt|;
 block|}
 name|fontname
 index|[
-name|NFONT
+name|NFONTS
 operator|+
 literal|1
 index|]
@@ -5116,7 +4765,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NFONT
+name|NFONTS
 condition|;
 name|i
 operator|++
@@ -5194,7 +4843,7 @@ literal|0
 operator|||
 name|n
 operator|>
-name|NFONT
+name|NFONTS
 condition|)
 name|error
 argument_list|(
@@ -5450,16 +5099,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|fontwanted
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|fnum
 operator|=
 name|nfontnum
@@ -5578,7 +5217,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|(
 name|bits
 operator|=
 name|nalloc
@@ -5596,9 +5234,9 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
-operator|)
-operator|&&
-operator|(
+condition|)
+if|if
+condition|(
 operator|(
 name|bits
 operator|=
@@ -5615,7 +5253,6 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
-operator|)
 condition|)
 block|{
 name|fprintf
@@ -5633,8 +5270,6 @@ name|ABORT
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 comment|/* 			 * have allocated one chunk of mem for font, dispatch. 			 * get the dispatch addr, align to word boundary. 			 */
 name|d
 operator|=
@@ -5767,7 +5402,6 @@ operator|)
 return|;
 block|}
 block|}
-block|}
 name|close
 argument_list|(
 name|fontd
@@ -5786,14 +5420,9 @@ return|;
 block|}
 end_block
 
-begin_decl_stmt
-name|int
-name|lastloaded
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * "release" a font position - find an empty one, if possible  */
+end_comment
 
 begin_macro
 name|relfont
@@ -5806,22 +5435,21 @@ specifier|register
 name|int
 name|newfont
 decl_stmt|;
+for|for
+control|(
 name|newfont
 operator|=
-name|lastloaded
-expr_stmt|;
-comment|/* 	 * optimization for special font.  since we think that usually 	 * there is only one character at a time from any special math 	 * font, make it the candidate for removal. 	 */
+literal|0
+init|;
+name|newfont
+operator|<
+name|NFONTS
+condition|;
+name|newfont
+operator|++
+control|)
 if|if
 condition|(
-name|fontdes
-index|[
-name|newfont
-index|]
-operator|.
-name|fnum
-operator|!=
-name|SPECIALFONT
-operator|||
 name|fontdes
 index|[
 name|newfont
@@ -5829,23 +5457,22 @@ index|]
 operator|.
 name|bits
 operator|==
-literal|0
+operator|(
+name|char
+operator|*
+operator|)
+operator|-
+literal|1
+operator|||
+operator|!
+name|fontdes
+index|[
+name|newfont
+index|]
+operator|.
+name|bits
 condition|)
-if|if
-condition|(
-operator|++
-name|newfont
-operator|>=
-name|NFONTS
-condition|)
-name|newfont
-operator|=
-literal|0
-expr_stmt|;
-name|lastloaded
-operator|=
-name|newfont
-expr_stmt|;
+break|break;
 if|if
 condition|(
 name|fontdes
@@ -5868,12 +5495,6 @@ name|newfont
 index|]
 operator|.
 name|bits
-operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 condition|)
 block|{
 name|nfree
@@ -5899,9 +5520,41 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-comment|/* fprintf(stderr, "freeing position %d\n", newfont); */
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
+if|if
+condition|(
+name|dbg
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"freeing position %d\n"
+argument_list|,
+name|newfont
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* else 	    fprintf(stderr, "taking without freeing position %d\n", newfont); */
+else|else
+block|{
+if|if
+condition|(
+name|dbg
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"taking, not freeing, position %d\n"
+argument_list|,
+name|newfont
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 name|fontdes
 index|[
 name|newfont
@@ -5985,10 +5638,6 @@ index|]
 operator|.
 name|bits
 argument_list|)
-expr_stmt|;
-name|lastloaded
-operator|=
-name|cfont
 expr_stmt|;
 for|for
 control|(
@@ -6518,13 +6167,6 @@ block|{
 name|unsigned
 name|usize
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|nlines
-condition|)
-empty_stmt|;
-comment|/*	rlines = (&buffer[BUFFER_SIZE] - buf0p) / BYTES_PER_LINE; */
 name|usize
 operator|=
 name|BYTES_PER_LINE
@@ -6582,10 +6224,11 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
+name|int
 name|tsize
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 while|while
 condition|(
 name|usize
@@ -6595,36 +6238,13 @@ name|buf
 operator|+=
 name|tsize
 expr_stmt|;
-if|if
-condition|(
-name|usize
-operator|>
-call|(
-name|unsigned
-call|)
-argument_list|(
-literal|1024
-operator|*
-literal|1024
-argument_list|)
-condition|)
-block|{
-name|tsize
-operator|=
-literal|1024
-operator|*
-literal|1024
-expr_stmt|;
-block|}
-else|else
 name|tsize
 operator|=
 name|usize
 expr_stmt|;
-name|usize
-operator|-=
-name|tsize
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -6640,10 +6260,13 @@ argument_list|,
 name|tsize
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
+operator|(
 name|tsize
-operator|!=
+operator|=
 name|write
 argument_list|(
 name|OUTFILE
@@ -6652,6 +6275,9 @@ name|buf
 argument_list|,
 name|tsize
 argument_list|)
+operator|)
+operator|<
+literal|0
 condition|)
 block|{
 name|perror
@@ -6665,6 +6291,10 @@ name|RESTART
 argument_list|)
 expr_stmt|;
 block|}
+name|usize
+operator|-=
+name|tsize
+expr_stmt|;
 block|}
 block|}
 end_block
@@ -6733,6 +6363,9 @@ name|nbytes
 operator|-=
 name|tsize
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -6748,6 +6381,8 @@ argument_list|,
 name|tsize
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|clear
 argument_list|(
 name|ptr
@@ -6824,6 +6459,9 @@ argument_list|,
 name|j
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -6841,6 +6479,8 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|cp
@@ -6865,6 +6505,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -6878,7 +6521,8 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* DEBUG */
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|cp
@@ -6886,26 +6530,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACCOUNT
-end_ifdef
-
-begin_macro
-name|accounting
-argument_list|()
-end_macro
-
-begin_block
-block|{}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*******************************************************************************  	graphics routines go here  *******************************************************************************/
