@@ -556,6 +556,10 @@ index|]
 operator|.
 name|iov_base
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|t
 operator|->
