@@ -5634,7 +5634,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|"ufs:/dev/md0c"
+literal|"ufs:/dev/md0"
 expr_stmt|;
 block|}
 end_function
