@@ -1313,11 +1313,13 @@ name|vfprintf
 parameter_list|(
 name|FILE
 modifier|*
+name|__restrict
 name|fp
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|fmt0
 parameter_list|,
 name|va_list
