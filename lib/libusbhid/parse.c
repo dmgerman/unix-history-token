@@ -251,12 +251,6 @@ name|set_delimiter
 operator|=
 literal|0
 expr_stmt|;
-name|c
-operator|->
-name|report_size
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_function
 
