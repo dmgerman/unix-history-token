@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.40
+literal|3.41
 operator|%
 name|G
 operator|%
@@ -2562,12 +2562,8 @@ case|:
 comment|/* default gid */
 if|if
 condition|(
-operator|!
 name|safe
 condition|)
-goto|goto
-name|syntax
-goto|;
 name|DefGid
 operator|=
 name|ival
@@ -2768,12 +2764,8 @@ case|:
 comment|/* set default uid */
 if|if
 condition|(
-operator|!
 name|safe
 condition|)
-goto|goto
-name|syntax
-goto|;
 name|DefUid
 operator|=
 name|ival
@@ -2805,12 +2797,8 @@ case|:
 comment|/* set the wizards password */
 if|if
 condition|(
-operator|!
 name|safe
 condition|)
-goto|goto
-name|syntax
-goto|;
 name|WizWord
 operator|=
 name|val
