@@ -6899,7 +6899,7 @@ operator|&&
 name|scp
 operator|->
 name|status
-operator|==
+operator|&
 name|KBD_RAW_MODE
 condition|)
 name|shfts
