@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.37.2.10 1998/02/16 17:41:31 jkh Exp $"
+literal|"$Id: perform.c,v 1.37.2.11 1998/08/27 15:00:26 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1146,6 +1146,32 @@ operator|++
 name|code
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+name|warnx
+argument_list|(
+literal|"could not find package %s %s"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|,
+name|Force
+condition|?
+literal|" (proceeding anyway)"
+else|:
+literal|"!"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Force
+condition|)
+operator|++
+name|code
+expr_stmt|;
 block|}
 block|}
 elseif|else
