@@ -507,7 +507,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sbni%d:<Granch SBNI12/PCI%sadapter> port 0x%x"
+literal|"sbni%d:<Granch SBNI12/PCI%sadapter> port 0x%lx"
 argument_list|,
 name|next_sbni_unit
 argument_list|,
