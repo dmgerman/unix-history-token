@@ -5710,7 +5710,13 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 	 * Wait for GEOM to settle down 	 */
+name|DROP_GIANT
+argument_list|()
+expr_stmt|;
 name|g_waitidle
+argument_list|()
+expr_stmt|;
+name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 comment|/* 	 * We are booted with instructions to prompt for the root filesystem. 	 */
