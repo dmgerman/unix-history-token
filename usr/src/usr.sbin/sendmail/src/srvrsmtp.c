@@ -11,6 +11,12 @@ directive|include
 file|"sendmail.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -27,7 +33,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.47
+literal|3.48
 operator|%
 name|G
 operator|%
@@ -55,7 +61,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.47
+literal|3.48
 operator|%
 name|G
 operator|%

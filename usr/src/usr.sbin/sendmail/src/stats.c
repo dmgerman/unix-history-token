@@ -15,7 +15,7 @@ operator|)
 name|stats
 operator|.
 name|c
-literal|3.5
+literal|3.6
 operator|%
 name|G
 operator|%
@@ -205,13 +205,6 @@ end_escape
 begin_comment
 comment|/* **  POSTSTATS -- post statistics in the statistics file ** **	Parameters: **		sfile -- the name of the statistics file. ** **	Returns: **		none. ** **	Side Effects: **		merges the Stat structure with the sfile file. */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|statistics
-name|Stat
-decl_stmt|;
-end_decl_stmt
 
 begin_macro
 name|poststats

@@ -5,6 +5,12 @@ directive|include
 file|"sendmail.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
 begin_expr_stmt
 name|SCCSID
 argument_list|(
@@ -15,7 +21,7 @@ operator|)
 name|clock
 operator|.
 name|c
-literal|3.13
+literal|3.14
 operator|%
 name|G
 operator|%
