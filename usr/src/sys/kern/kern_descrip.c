@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	5.15	82/10/22	*/
+comment|/*	kern_descrip.c	5.16	82/10/23	*/
 end_comment
 
 begin_include
@@ -897,20 +897,16 @@ condition|(
 name|uap
 operator|->
 name|nd
-operator|>=
+operator|>
 name|NOFILE
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
+name|uap
+operator|->
+name|nd
 operator|=
-name|EINVAL
+name|NOFILE
 expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
+comment|/* forgiving, if slightly wrong */
 define|#
 directive|define
 name|getbits
@@ -1273,7 +1269,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if (uap->name) { \ 		if (copyout((caddr_t)obits[x], (caddr_t)uap->name, \ 		    sizeof (obits[x]))) \ 			u.u_error = EFAULT; \ 	}
+value|if (uap->name) { \ 		if (copyout((caddr_t)&obits[x], (caddr_t)uap->name, \ 		    sizeof (obits[x]))) \ 			u.u_error = EFAULT; \ 	}
 name|putbits
 argument_list|(
 name|in
