@@ -562,6 +562,49 @@ block|}
 union|;
 end_union
 
+begin_struct
+struct|struct
+name|sigevent
+block|{
+name|int
+name|sigev_notify
+decl_stmt|;
+comment|/* Notification type */
+name|int
+name|sigev_signo
+decl_stmt|;
+comment|/* Signal number */
+name|union
+name|sigval
+name|sigev_value
+decl_stmt|;
+comment|/* Signal value */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SIGEV_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* No async notification */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGEV_SIGNAL
+value|1
+end_define
+
+begin_comment
+comment|/* Generate a queued signal */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -925,8 +968,8 @@ name|__siginfohandler_t
 name|__P
 typedef|((
 name|int
-typedef|,
-name|siginfo_t
+typedef|, struct
+name|__siginfo
 modifier|*
 typedef|,
 name|void
@@ -1220,60 +1263,6 @@ end_define
 begin_comment
 comment|/* set specified signal set */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
-
-begin_struct
-struct|struct
-name|sigevent
-block|{
-name|int
-name|sigev_notify
-decl_stmt|;
-comment|/* Notification type */
-name|int
-name|sigev_signo
-decl_stmt|;
-comment|/* Signal number */
-name|union
-name|sigval
-name|sigev_value
-decl_stmt|;
-comment|/* Signal value */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|SIGEV_NONE
-value|0
-end_define
-
-begin_comment
-comment|/* No async notification */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGEV_SIGNAL
-value|1
-end_define
-
-begin_comment
-comment|/* Generate a queued signal */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
