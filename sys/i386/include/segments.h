@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989, 1990 William F. Jolitz  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)segments.h	7.1 (Berkeley) 5/9/91  *	$Id: segments.h,v 1.4 1994/01/31 10:27:13 davidg Exp $  */
+comment|/*-  * Copyright (c) 1989, 1990 William F. Jolitz  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)segments.h	7.1 (Berkeley) 5/9/91  *	$Id: segments.h,v 1.5 1994/10/01 02:56:08 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -795,32 +795,6 @@ block|}
 struct|;
 end_struct
 
-begin_extern
-extern|extern ssdtosd(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* to decode a ssd */
-end_comment
-
-begin_extern
-extern|extern sdtossd(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* to encode a sd */
-end_comment
-
 begin_comment
 comment|/*  * region descriptors, used to load gdt/idt tables before segments yet exist.  */
 end_comment
@@ -910,8 +884,12 @@ begin_define
 define|#
 directive|define
 name|NIDT
-value|256
+value|48
 end_define
+
+begin_comment
+comment|/* 32 reserved, 16 h/w, 0 s/w */
+end_comment
 
 begin_define
 define|#
@@ -1049,12 +1027,39 @@ begin_comment
 comment|/* APM BIOS 32-bit interface (Data) */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BDE_DEBUGGER
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|NGDT
-value|(GAPMDATA_SEL+1)
+value|18
 end_define
+
+begin_comment
+comment|/* some of 11-17 are reserved for debugger */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NGDT
+value|(GAPMDATA_SEL + 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Entries in the Local Descriptor Table (LDT)  */
@@ -1119,7 +1124,7 @@ begin_define
 define|#
 directive|define
 name|NLDT
-value|LUDATA_SEL+1
+value|(LUDATA_SEL + 1)
 end_define
 
 begin_ifdef
@@ -1127,13 +1132,6 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|currentldt
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1148,28 +1146,97 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|union
-name|descriptor
-name|ldt
+name|struct
+name|gate_descriptor
+name|idt
 index|[
-name|NLDT
+name|NIDT
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|soft_segment_descriptor
-name|gdt_segs
-index|[]
+name|void
+name|lgdt
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|region_descriptor
+operator|*
+name|rdp
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+name|void
+name|lidt
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|region_descriptor
+operator|*
+name|rdp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|lldt
+name|__P
+argument_list|(
+operator|(
+name|u_short
+name|sel
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|sdtossd
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|segment_descriptor
+operator|*
+name|sdp
+operator|,
+expr|struct
+name|soft_segment_descriptor
+operator|*
+name|ssdp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ssdtosd
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|soft_segment_descriptor
+operator|*
+name|ssdp
+operator|,
+expr|struct
+name|segment_descriptor
+operator|*
+name|sdp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -1177,7 +1244,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MACHINE_SEGMENTS_H_ */
+comment|/* KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_MACHINE_SEGMENTS_H_ */
 end_comment
 
 end_unit
