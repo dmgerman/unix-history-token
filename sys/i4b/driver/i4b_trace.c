@@ -229,44 +229,40 @@ name|cdevsw
 name|i4btrc_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|i4btrcopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|i4btrcclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|i4btrcread
 block|,
-comment|/* write */
-name|nowrite
-block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|i4btrcioctl
 block|,
-comment|/* poll */
+operator|.
+name|d_poll
+operator|=
 name|i4btrcpoll
 block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"i4btrc"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt

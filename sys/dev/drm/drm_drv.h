@@ -1898,86 +1898,90 @@ name|cdevsw
 parameter_list|)
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|DRM
 argument_list|(
 name|open
 argument_list|)
 operator|,
-comment|/* close */
-function_decl|DRM
-parameter_list|(
+function_decl|.d_close
+init|=
+name|DRM
+argument_list|(
 name|close
-parameter_list|)
+argument_list|)
 operator|,
-comment|/* read */
-function_decl|DRM
-parameter_list|(
+function_decl|.d_read
+init|=
+name|DRM
+argument_list|(
 name|read
-parameter_list|)
+argument_list|)
 operator|,
-comment|/* write */
-function_decl|DRM
-parameter_list|(
+function_decl|.d_write
+init|=
+name|DRM
+argument_list|(
 name|write
-parameter_list|)
+argument_list|)
 operator|,
-comment|/* ioctl */
-function_decl|DRM
-parameter_list|(
+function_decl|.d_ioctl
+init|=
+name|DRM
+argument_list|(
 name|ioctl
-parameter_list|)
+argument_list|)
 operator|,
-comment|/* poll */
-function_decl|DRM
-parameter_list|(
+function_decl|.d_poll
+init|=
+name|DRM
+argument_list|(
 name|poll
-parameter_list|)
+argument_list|)
 operator|,
-comment|/* mmap */
-function_decl|DRM
-parameter_list|(
+function_decl|.d_mmap
+init|=
+name|DRM
+argument_list|(
 name|mmap
-parameter_list|)
+argument_list|)
 operator|,
-comment|/* strategy */
-function_decl|nostrategy
+function_decl|.d_name
+init|=
+name|DRIVER_NAME
 operator|,
-comment|/* name */
-function_decl|DRIVER_NAME
+function_decl|.d_maj
+init|=
+name|CDEV_MAJOR
 operator|,
-comment|/* maj */
-function_decl|CDEV_MAJOR
-operator|,
-comment|/* dump */
-function_decl|nodump
-operator|,
-comment|/* psize */
-function_decl|nopsize
-operator|,
-comment|/* flags */
-function_decl|D_TTY | D_TRACKCLOSE
+function_decl|.d_flags
+init|=
+name|D_TTY
+operator||
+name|D_TRACKCLOSE
 operator|,
 if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
 literal|500000
-comment|/* kqfilter */
-function_decl|0
+function_decl|.d_kqfilter
+init|=
+literal|0
 else|#
 directive|else
 comment|/* bmaj */
-function_decl|-1
+operator|-
+literal|1
+endif|#
+directive|endif
+init|}
+function_decl|;
 end_function_decl
 
 begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|};
 endif|#
 directive|endif
 end_endif

@@ -735,48 +735,56 @@ name|cdevsw
 name|digi_sw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|digiopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|digiclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|digiread
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|digiwrite
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|digiioctl
 block|,
-comment|/* poll */
+operator|.
+name|d_poll
+operator|=
 name|ttypoll
 block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 name|driver_name
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
 block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
+operator|.
+name|d_flags
+operator|=
 name|D_TTY
 operator||
 name|D_KQFILTER
 block|,
-comment|/* kqfilter */
+operator|.
+name|d_kqfilter
+operator|=
 name|ttykqfilter
 block|}
 decl_stmt|;

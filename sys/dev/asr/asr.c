@@ -2245,46 +2245,31 @@ name|cdevsw
 name|asr_cdevsw
 init|=
 block|{
+operator|.
+name|d_open
+operator|=
 name|asr_open
 block|,
-comment|/* open	    */
+operator|.
+name|d_close
+operator|=
 name|asr_close
 block|,
-comment|/* close    */
-name|noread
-block|,
-comment|/* read	    */
-name|nowrite
-block|,
-comment|/* write    */
+operator|.
+name|d_ioctl
+operator|=
 name|asr_ioctl
 block|,
-comment|/* ioctl    */
-name|nopoll
-block|,
-comment|/* poll	    */
-name|nommap
-block|,
-comment|/* mmap	    */
-name|nostrategy
-block|,
-comment|/* strategy */
+operator|.
+name|d_name
+operator|=
 literal|"asr"
 block|,
-comment|/* name	    */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
-block|,
-comment|/* maj	    */
-name|nodump
-block|,
-comment|/* dump	    */
-name|nopsize
-block|,
-comment|/* psize    */
-literal|0
-block|,
-comment|/* flags    */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

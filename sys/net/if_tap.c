@@ -386,44 +386,45 @@ name|cdevsw
 name|tap_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|tapopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|tapclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|tapread
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|tapwrite
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|tapioctl
 block|,
-comment|/* poll */
+operator|.
+name|d_poll
+operator|=
 name|tappoll
 block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* startegy */
-name|nostrategy
-block|,
-comment|/* dev name */
+operator|.
+name|d_name
+operator|=
 name|CDEV_NAME
 block|,
-comment|/* dev major */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -376,44 +376,35 @@ name|cdevsw
 name|gp_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|gpopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|gpclose
 block|,
-comment|/* read */
-name|noread
-block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|gpwrite
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|gpioctl
 block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"gp"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -321,46 +321,64 @@ name|cdevsw
 name|dead_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|dead_open
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|dead_close
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|dead_read
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|dead_write
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|dead_ioctl
 block|,
-comment|/* poll */
+operator|.
+name|d_poll
+operator|=
 name|dead_poll
 block|,
-comment|/* mmap */
+operator|.
+name|d_mmap
+operator|=
 name|dead_mmap
 block|,
-comment|/* strategy */
+operator|.
+name|d_strategy
+operator|=
 name|dead_strategy
 block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"dead"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 literal|255
 block|,
-comment|/* dump */
+operator|.
+name|d_dump
+operator|=
 name|dead_dump
 block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
-block|,
-comment|/* kqfilter */
+operator|.
+name|d_kqfilter
+operator|=
 name|dead_kqfilter
 block|}
 decl_stmt|;

@@ -144,43 +144,49 @@ name|cdevsw
 name|ast_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|astopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|astclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|physread
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|physwrite
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|astioctl
 block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
+operator|.
+name|d_strategy
+operator|=
 name|aststrategy
 block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"ast"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 literal|119
 block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
+operator|.
+name|d_flags
+operator|=
 name|D_TAPE
 operator||
 name|D_TRACKCLOSE

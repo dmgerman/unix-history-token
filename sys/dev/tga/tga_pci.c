@@ -345,49 +345,47 @@ name|cdevsw
 name|tga_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|pcigfb_open
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|pcigfb_close
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|pcigfb_read
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|pcigfb_write
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|pcigfb_ioctl
 block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
+operator|.
+name|d_mmap
+operator|=
 name|pcigfb_mmap
 block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"tga"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 operator|-
 literal|1
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
-block|,
-comment|/* kqfilter */
-name|nokqfilter
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

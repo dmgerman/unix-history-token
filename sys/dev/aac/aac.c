@@ -1129,46 +1129,36 @@ name|cdevsw
 name|aac_cdevsw
 init|=
 block|{
+operator|.
+name|d_open
+operator|=
 name|aac_open
 block|,
-comment|/* open */
+operator|.
+name|d_close
+operator|=
 name|aac_close
 block|,
-comment|/* close */
-name|noread
-block|,
-comment|/* read */
-name|nowrite
-block|,
-comment|/* write */
+operator|.
+name|d_ioctl
+operator|=
 name|aac_ioctl
 block|,
-comment|/* ioctl */
+operator|.
+name|d_poll
+operator|=
 name|aac_poll
 block|,
-comment|/* poll */
-name|nommap
-block|,
-comment|/* mmap */
-name|nostrategy
-block|,
-comment|/* strategy */
+operator|.
+name|d_name
+operator|=
 literal|"aac"
 block|,
-comment|/* name */
+operator|.
+name|d_maj
+operator|=
 name|AAC_CDEV_MAJOR
-block|,
-comment|/* major */
-name|nodump
-block|,
-comment|/* dump */
-name|nopsize
-block|,
-comment|/* psize */
-literal|0
-block|,
-comment|/* flags */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

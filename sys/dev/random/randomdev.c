@@ -198,48 +198,46 @@ name|cdevsw
 name|random_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|random_open
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|random_close
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|random_read
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|random_write
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|random_ioctl
 block|,
-comment|/* poll */
+operator|.
+name|d_poll
+operator|=
 name|random_poll
 block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"random"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
-block|,
-comment|/* kqfilter */
-name|NULL
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

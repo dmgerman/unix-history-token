@@ -3834,48 +3834,41 @@ name|cdevsw
 name|crypto_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|cryptoopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|nullclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|cryptoread
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|cryptowrite
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|cryptoioctl
 block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* dev name */
+operator|.
+name|d_name
+operator|=
 literal|"crypto"
 block|,
-comment|/* dev major */
+operator|.
+name|d_maj
+operator|=
 name|CRYPTO_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
-block|,
-comment|/* kqfilter */
-name|NULL
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

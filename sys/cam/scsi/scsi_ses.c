@@ -901,44 +901,30 @@ name|cdevsw
 name|ses_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|sesopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|sesclose
 block|,
-comment|/* read */
-name|noread
-block|,
-comment|/* write */
-name|nowrite
-block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|sesioctl
 block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"ses"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|SES_CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -599,44 +599,35 @@ name|cdevsw
 name|ulpt_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|ulptopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|ulptclose
 block|,
-comment|/* read */
-name|noread
-block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|ulptwrite
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|ulptioctl
 block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"ulpt"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|ULPT_CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
 block|,
 if|#
 directive|if

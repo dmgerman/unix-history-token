@@ -137,48 +137,41 @@ name|cdevsw
 name|null_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|nullopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|nullclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|null_read
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|null_write
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|null_ioctl
 block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"null"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
-block|,
-comment|/* kqfilter */
-name|NULL
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -189,48 +182,41 @@ name|cdevsw
 name|zero_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|nullopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|nullclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|zero_read
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|null_write
 block|,
-comment|/* ioctl */
-name|noioctl
-block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"zero"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
 block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
+operator|.
+name|d_flags
+operator|=
 name|D_MMAP_ANON
-block|,
-comment|/* kqfilter */
-name|NULL
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

@@ -480,44 +480,40 @@ name|cdevsw
 name|mse_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|mseopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|mseclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|mseread
 block|,
-comment|/* write */
-name|nowrite
-block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|mseioctl
 block|,
-comment|/* poll */
+operator|.
+name|d_poll
+operator|=
 name|msepoll
 block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"mse"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -232,44 +232,40 @@ name|cdevsw
 name|i4b_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|i4bopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|i4bclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|i4bread
 block|,
-comment|/* write */
-name|nowrite
-block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|i4bioctl
 block|,
-comment|/* poll */
+operator|.
+name|d_poll
+operator|=
 name|i4bpoll
 block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"i4b"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt

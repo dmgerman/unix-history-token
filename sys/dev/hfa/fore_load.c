@@ -1482,45 +1482,11 @@ name|cdevsw
 name|fore_cdev
 init|=
 block|{
-comment|/* open */
-name|noopen
-block|,
-comment|/* close */
-name|noclose
-block|,
-comment|/* read */
-name|noread
-block|,
-comment|/* write */
-name|nowrite
-block|,
-comment|/* ioctl */
-name|noioctl
-block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
-name|noname
-block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 operator|-
 literal|1
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt

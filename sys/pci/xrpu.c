@@ -139,44 +139,35 @@ name|cdevsw
 name|xrpu_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|xrpu_open
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|xrpu_close
 block|,
-comment|/* read */
-name|noread
-block|,
-comment|/* write */
-name|nowrite
-block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|xrpu_ioctl
 block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
+operator|.
+name|d_mmap
+operator|=
 name|xrpu_mmap
 block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"xrpu"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt

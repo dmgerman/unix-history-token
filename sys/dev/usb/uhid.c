@@ -577,44 +577,45 @@ name|cdevsw
 name|uhid_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|uhidopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|uhidclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|uhidread
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|uhidwrite
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|uhidioctl
 block|,
-comment|/* poll */
+operator|.
+name|d_poll
+operator|=
 name|uhidpoll
 block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"uhid"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|UHID_CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
 block|,
 if|#
 directive|if

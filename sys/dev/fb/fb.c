@@ -1448,44 +1448,45 @@ name|cdevsw
 name|fb_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|fbopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|fbclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|fbread
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|fbwrite
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|fbioctl
 block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
+operator|.
+name|d_mmap
+operator|=
 name|fbmmap
 block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 name|FB_DRIVER_NAME
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt

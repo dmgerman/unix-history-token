@@ -411,44 +411,45 @@ name|cdevsw
 name|meteor_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|meteor_open
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|meteor_close
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|meteor_read
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|meteor_write
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|meteor_ioctl
 block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
+operator|.
+name|d_mmap
+operator|=
 name|meteor_mmap
 block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"meteor"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt

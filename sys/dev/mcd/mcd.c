@@ -928,43 +928,44 @@ name|cdevsw
 name|mcd_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|mcdopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|mcdclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|physread
 block|,
-comment|/* write */
-name|nowrite
-block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|mcdioctl
 block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
+operator|.
+name|d_strategy
+operator|=
 name|mcdstrategy
 block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"mcd"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
 block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
+operator|.
+name|d_flags
+operator|=
 name|D_DISK
 block|, }
 decl_stmt|;

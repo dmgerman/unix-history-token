@@ -1451,48 +1451,61 @@ name|cdevsw
 name|sc_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|scopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|scclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|scread
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|ttywrite
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|scioctl
 block|,
-comment|/* poll */
+operator|.
+name|d_poll
+operator|=
 name|ttypoll
 block|,
-comment|/* mmap */
+operator|.
+name|d_mmap
+operator|=
 name|scmmap
 block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"sc"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
 block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
+operator|.
+name|d_flags
+operator|=
 name|D_TTY
 operator||
 name|D_KQFILTER
 block|,
-comment|/* kqfilter */
+operator|.
+name|d_kqfilter
+operator|=
 name|ttykqfilter
 block|}
 decl_stmt|;

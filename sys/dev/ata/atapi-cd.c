@@ -162,43 +162,49 @@ name|cdevsw
 name|acd_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|acdopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|acdclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|physread
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|physwrite
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|acdioctl
 block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
+operator|.
+name|d_strategy
+operator|=
 name|acdstrategy
 block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"acd"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 literal|117
 block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
+operator|.
+name|d_flags
+operator|=
 name|D_DISK
 operator||
 name|D_TRACKCLOSE

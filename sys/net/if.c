@@ -671,46 +671,39 @@ name|cdevsw
 name|net_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|netopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|netclose
 block|,
-comment|/* read */
-name|noread
-block|,
-comment|/* write */
-name|nowrite
-block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|netioctl
 block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"net"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|MAJOR_AUTO
 block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
+operator|.
+name|d_flags
+operator|=
 name|D_KQFILTER
 block|,
-comment|/* kqfilter */
+operator|.
+name|d_kqfilter
+operator|=
 name|netkqfilter
 block|, }
 decl_stmt|;

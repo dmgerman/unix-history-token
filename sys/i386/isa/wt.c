@@ -865,44 +865,45 @@ name|cdevsw
 name|wt_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|wtopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|wtclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|physread
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|physwrite
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|wtioctl
 block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
+operator|.
+name|d_strategy
+operator|=
 name|wtstrategy
 block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"wt"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt
