@@ -3850,6 +3850,8 @@ argument_list|,
 literal|0x4
 argument_list|,
 name|cnt
+operator|-
+literal|1
 argument_list|,
 literal|2
 argument_list|)
@@ -4923,7 +4925,7 @@ comment|/*parent*/
 name|NULL
 argument_list|,
 comment|/*alignment*/
-literal|2
+literal|65536
 argument_list|,
 comment|/*boundary*/
 literal|0
