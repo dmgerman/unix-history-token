@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -179,6 +185,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
@@ -232,11 +254,23 @@ expr_stmt|;
 name|int
 name|ch
 decl_stmt|;
+name|fcn
+operator|=
+name|NULL
+expr_stmt|;
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|dchar
 operator|=
 literal|'\t'
 expr_stmt|;
 comment|/* default delimiter is \t */
+comment|/* Since we don't support multi-byte characters, the -c and -b  	   options are equivalent, and the -n option is meaningless. */
 while|while
 condition|(
 operator|(
@@ -248,7 +282,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:d:f:s"
+literal|"b:c:d:f:sn"
 argument_list|)
 operator|)
 operator|!=
@@ -260,6 +294,9 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'b'
+case|:
 case|case
 literal|'c'
 case|:
@@ -314,6 +351,10 @@ name|sflag
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
 break|break;
 case|case
 literal|'?'
@@ -462,7 +503,6 @@ modifier|*
 name|list
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|setautostart
 decl_stmt|,
@@ -470,7 +510,6 @@ name|start
 decl_stmt|,
 name|stop
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|pos
@@ -486,17 +525,17 @@ init|;
 operator|(
 name|p
 operator|=
-name|strtok
+name|strsep
 argument_list|(
+operator|&
 name|list
 argument_list|,
 literal|", \t"
 argument_list|)
 operator|)
-condition|;
-name|list
-operator|=
+operator|!=
 name|NULL
+condition|;
 control|)
 block|{
 name|setautostart
@@ -527,6 +566,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -571,6 +614,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|p
 index|[
 literal|1
@@ -745,19 +792,19 @@ modifier|*
 name|fname
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ch
-init|=
-literal|0
 decl_stmt|,
 name|col
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|pos
 decl_stmt|;
+name|ch
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -824,6 +871,7 @@ name|ch
 operator|!=
 literal|'\n'
 condition|)
+block|{
 if|if
 condition|(
 name|autostop
@@ -872,6 +920,7 @@ operator|!=
 literal|'\n'
 condition|)
 empty_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -901,7 +950,6 @@ modifier|*
 name|fname
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ch
 decl_stmt|,
@@ -909,7 +957,6 @@ name|field
 decl_stmt|,
 name|isdelim
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|pos
@@ -983,7 +1030,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: line too long"
+literal|"%s: line too long."
 argument_list|,
 name|fname
 argument_list|)
@@ -1103,6 +1150,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 while|while
 condition|(
 operator|(
@@ -1119,7 +1167,8 @@ name|ch
 operator|!=
 name|sep
 condition|)
-empty_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|ch
@@ -1134,6 +1183,7 @@ name|ch
 operator|!=
 literal|'\n'
 condition|)
+block|{
 if|if
 condition|(
 name|autostop
@@ -1192,6 +1242,7 @@ operator|++
 name|p
 control|)
 empty_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1217,9 +1268,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n"
+literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: cut -c list [file1 ...]"
+literal|"usage: cut -b list [-n] [file ...]"
+argument_list|,
+literal|"       cut -c list [file ...]"
 argument_list|,
 literal|"       cut -f list [-s] [-d delim] [file ...]"
 argument_list|)
