@@ -4484,6 +4484,10 @@ index|[
 name|SF_RX_DLIST_CNT
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* 	 * Unfortunately, because the Starfire doesn't allow arbitrary 	 * byte alignment, we have to copy packets in the RX handler in 	 * order to align the payload correctly. This means that we 	 * don't gain anything by having separate large and small descriptor 	 * lists, so for now we don't bother with the small one. 	 */
 name|struct
 name|sf_rx_bufdesc_type0
 name|sf_rx_dlist_small
@@ -4491,6 +4495,8 @@ index|[
 name|SF_RX_DLIST_CNT
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|sf_rx_cmpdesc_type3
 name|sf_rx_clist
