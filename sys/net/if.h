@@ -64,6 +64,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_comment
+comment|/* get LIST macros */
+end_comment
+
 begin_comment
 comment|/*  * Structure describing information about an interface  * which may be of interest to management entities.  */
 end_comment
@@ -220,18 +230,27 @@ modifier|*
 name|if_name
 decl_stmt|;
 comment|/* name, e.g. ``en'' or ``lo'' */
-name|struct
-name|ifnet
-modifier|*
-name|if_next
-decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|ifnet
+argument_list|)
+name|if_link
+expr_stmt|;
 comment|/* all struct ifnets are chained */
+if|#
+directive|if
+literal|0
+block|LIST_HEAD(, ifaddr) if_addrlist;
+else|#
+directive|else
 name|struct
 name|ifaddr
 modifier|*
 name|if_addrlist
 decl_stmt|;
 comment|/* linked list of addresses per if */
+endif|#
+directive|endif
 name|int
 name|if_pcount
 decl_stmt|;
@@ -467,6 +486,16 @@ name|void
 modifier|*
 typedef|));
 end_typedef
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|ifnethead
+argument_list|,
+name|ifnet
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -1141,12 +1170,20 @@ modifier|*
 name|ifa_ifp
 decl_stmt|;
 comment|/* back-pointer to interface */
+if|#
+directive|if
+literal|0
+block|LIST_ENTRY(ifaddr) ifa_link;
+else|#
+directive|else
 name|struct
 name|ifaddr
 modifier|*
 name|ifa_next
 decl_stmt|;
 comment|/* next address for interface */
+endif|#
+directive|endif
 name|void
 argument_list|(
 argument|*ifa_rtrequest
@@ -1467,8 +1504,7 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ifnet
-modifier|*
+name|ifnethead
 name|ifnet
 decl_stmt|;
 end_decl_stmt
