@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	6.1	83/07/29	*/
+comment|/*	kern_descrip.c	6.2	83/09/25	*/
 end_comment
 
 begin_include
@@ -559,7 +559,7 @@ name|cmd
 condition|)
 block|{
 case|case
-literal|0
+name|F_DUPFD
 case|:
 name|i
 operator|=
@@ -612,7 +612,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|1
+name|F_GETFD
 case|:
 name|u
 operator|.
@@ -627,7 +627,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|2
+name|F_SETFD
 case|:
 operator|*
 name|pop
@@ -650,7 +650,7 @@ operator|)
 expr_stmt|;
 break|break;
 case|case
-literal|3
+name|F_GETFL
 case|:
 name|u
 operator|.
@@ -666,7 +666,7 @@ name|FOPEN
 expr_stmt|;
 break|break;
 case|case
-literal|4
+name|F_SETFL
 case|:
 name|fp
 operator|->
@@ -750,24 +750,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|5
-case|:
-name|u
-operator|.
-name|u_error
-operator|=
-name|fsetown
-argument_list|(
-name|fp
-argument_list|,
-name|uap
-operator|->
-name|arg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|6
+name|F_GETOWN
 case|:
 name|u
 operator|.
@@ -783,6 +766,23 @@ operator|.
 name|u_r
 operator|.
 name|r_val1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|F_SETOWN
+case|:
+name|u
+operator|.
+name|u_error
+operator|=
+name|fsetown
+argument_list|(
+name|fp
+argument_list|,
+name|uap
+operator|->
+name|arg
 argument_list|)
 expr_stmt|;
 break|break;
