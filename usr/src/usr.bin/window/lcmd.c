@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd.c	3.2 83/08/11"
+literal|"@(#)lcmd.c	3.3 83/08/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|l_close
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|lcmd
@@ -131,6 +138,19 @@ block|,
 literal|0
 block|,
 name|l_select
+block|,
+literal|"close"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+name|l_close
 block|,
 literal|"escape"
 block|,
@@ -420,6 +440,12 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|lp
+operator|->
+name|l_amax
+operator|>=
+literal|0
+operator|&&
 name|lp
 operator|->
 name|l_amax
