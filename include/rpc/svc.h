@@ -1208,6 +1208,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+name|__rpc_get_local_uid
+parameter_list|(
+name|SVCXPRT
+modifier|*
+name|transp
+parameter_list|,
+name|uid_t
+modifier|*
+name|uid
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro
