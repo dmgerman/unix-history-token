@@ -148,6 +148,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -382,6 +388,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* our selected dumper */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pcb
+name|dumppcb
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* "You Are Here" sign for dump-debuggers */
 end_comment
 
 begin_decl_stmt
@@ -821,6 +839,32 @@ operator|)
 name|ts
 operator|.
 name|tv_sec
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|doadump
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|savectx
+argument_list|(
+operator|&
+name|dumppcb
+argument_list|)
+expr_stmt|;
+name|dumping
+operator|++
+expr_stmt|;
+name|dumpsys
+argument_list|(
+operator|&
+name|dumper
 argument_list|)
 expr_stmt|;
 block|}
@@ -1355,17 +1399,9 @@ operator|&&
 operator|!
 name|dumping
 condition|)
-block|{
-name|dumping
-operator|++
+name|doadump
+argument_list|()
 expr_stmt|;
-name|dumpsys
-argument_list|(
-operator|&
-name|dumper
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Now that we're going to really halt the system... */
 name|EVENTHANDLER_INVOKE
 argument_list|(
