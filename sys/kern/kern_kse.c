@@ -4899,32 +4899,6 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-comment|/* 	 * We need to check to see if we have to exit or wait due to a 	 * single threading requirement or some other STOP condition. 	 * Don't bother doing all the work if the stop bits are not set 	 * at this time.. If we miss it, we miss it.. no big deal. 	 */
-if|if
-condition|(
-name|P_SHOULDSTOP
-argument_list|(
-name|p
-argument_list|)
-condition|)
-block|{
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|thread_suspend_check
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Can suspend or kill */
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Originally bound threads never upcall but they may  	 * loan out their KSE at this point. 	 * Upcalls imply bound.. They also may want to do some Philantropy. 	 * Unbound threads on the other hand either yield to other work 	 * or transform into an upcall. 	 * (having saved their context to user space in both cases) 	 */
 if|if
 condition|(
