@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	5.1 (Berkeley) %G%"
+literal|"@(#)format.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cencode.h>
 end_include
 
 begin_decl_stmt
@@ -1624,31 +1630,26 @@ end_expr_stmt
 
 begin_block
 block|{
+name|adbprintf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|cencode
+argument_list|(
+operator|(
+name|char
+operator|)
 name|c
-operator|&=
-literal|0177
-expr_stmt|;
-comment|/* XXX */
-if|if
-condition|(
+argument_list|,
 name|isprint
 argument_list|(
 name|c
 argument_list|)
-condition|)
-name|printc
-argument_list|(
-name|c
+condition|?
+literal|0
+else|:
+name|CENC_GRAPH
 argument_list|)
-expr_stmt|;
-else|else
-name|adbprintf
-argument_list|(
-literal|"^%c"
-argument_list|,
-name|c
-operator|^
-literal|'@'
 argument_list|)
 expr_stmt|;
 block|}
