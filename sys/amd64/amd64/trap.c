@@ -1703,6 +1703,13 @@ goto|goto
 name|out
 goto|;
 block|}
+if|if
+condition|(
+name|type
+operator|==
+name|T_STKFLT
+condition|)
+break|break;
 comment|/* FALL THROUGH */
 case|case
 name|T_SEGNPFLT
