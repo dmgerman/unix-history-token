@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)open.c	4.1 (Berkeley) %G%"
+literal|"@(#)open.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,55 +32,62 @@ name|ynow
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|float
 name|boty
+init|=
 literal|0.
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|float
 name|botx
+init|=
 literal|0.
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|float
 name|oboty
+init|=
 literal|0.
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|float
 name|obotx
+init|=
 literal|0.
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|float
 name|scalex
+init|=
 literal|1.
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|float
 name|scaley
+init|=
 literal|1.
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|int
 name|vti
+init|=
 operator|-
 literal|1
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|openvt
