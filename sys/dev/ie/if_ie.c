@@ -925,7 +925,7 @@ begin_define
 define|#
 directive|define
 name|NFRAMES
-value|8
+value|4
 end_define
 
 begin_comment
@@ -936,7 +936,7 @@ begin_define
 define|#
 directive|define
 name|NRXBUFS
-value|48
+value|24
 end_define
 
 begin_comment
@@ -958,7 +958,7 @@ begin_define
 define|#
 directive|define
 name|NTXBUFS
-value|2
+value|1
 end_define
 
 begin_comment
@@ -3195,7 +3195,7 @@ name|dvp
 operator|->
 name|id_msize
 operator|/
-literal|16384
+literal|8192
 expr_stmt|;
 name|sc
 operator|->
