@@ -1149,7 +1149,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"acpi_cpu: CPU throttling enabled, %d steps from 100%% to %d.%d%%\n"
+literal|"acpi_cpu: CPU throttling available, %d steps "
+literal|"from 100%% to %d.%d%%\n"
 argument_list|,
 name|CPU_MAX_SPEED
 argument_list|,
