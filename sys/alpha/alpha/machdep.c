@@ -6424,6 +6424,10 @@ comment|/* COMPAT_43 */
 block|}
 end_function
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|sigreturn
