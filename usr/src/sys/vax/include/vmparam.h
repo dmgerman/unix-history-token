@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vmparam.h	6.4	85/03/07	*/
+comment|/*	vmparam.h	6.5	85/03/07	*/
 end_comment
 
 begin_comment
@@ -70,26 +70,41 @@ value|UPAGES
 end_define
 
 begin_comment
-comment|/*  * Virtual memory related constants  */
+comment|/*  * Virtual memory related constants, all in clicks  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SLOP
-value|32
-end_define
 
 begin_define
 define|#
 directive|define
 name|MAXTSIZ
-value|(6*2048-SLOP)
+value|(6*CLSIZE*1024)
 end_define
 
 begin_comment
-comment|/* max text size (clicks) */
+comment|/* max text size */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DFLDSIZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DFLDSIZ
+value|(6*1024*1024/NBPG)
+end_define
+
+begin_comment
+comment|/* initial data size limit */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -101,11 +116,11 @@ begin_define
 define|#
 directive|define
 name|MAXDSIZ
-value|(12*1024-32-SLOP)
+value|(16*1024*1024/NBPG)
 end_define
 
 begin_comment
-comment|/* max data size (clicks) */
+comment|/* max data size */
 end_comment
 
 begin_endif
@@ -113,15 +128,85 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DFLSSIZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DFLSSIZ
+value|(512*1024/NBPG)
+end_define
+
+begin_comment
+comment|/* initial stack size limit */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXSSIZ
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|MAXSSIZ
-value|(12*1024-32-SLOP)
+value|MAXDSIZ
 end_define
 
 begin_comment
-comment|/* max stack size (clicks) */
+comment|/* max stack size */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Default sizes of swap allocation chunks (see dmap.h).  * The actual values may be changed in vminit() based on MAXDSIZ.  * With MAXDSIZ of 16Mb and NDMAP of 38, dmmax will be 1024.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMMIN
+value|32
+end_define
+
+begin_comment
+comment|/* smallest swap allocation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMMAX
+value|4096
+end_define
+
+begin_comment
+comment|/* largest potential swap allocation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMTEXT
+value|1024
+end_define
+
+begin_comment
+comment|/* swap allocation for text */
 end_comment
 
 begin_comment
@@ -143,7 +228,7 @@ begin_define
 define|#
 directive|define
 name|USRPTSIZE
-value|(8*NPTEPG)
+value|(32*NPTEPG)
 end_define
 
 begin_comment
