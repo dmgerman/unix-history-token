@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.5 83/02/09"
+literal|"@(#)main.c	4.6 83/03/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,7 +173,15 @@ block|{
 literal|"_rtnet"
 block|}
 block|,
-literal|0
+define|#
+directive|define
+name|N_ICMPSTAT
+value|13
+block|{
+literal|"_icmpstat"
+block|}
+block|,
+literal|""
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -196,6 +204,9 @@ name|udp_stats
 argument_list|()
 decl_stmt|,
 name|ip_stats
+argument_list|()
+decl_stmt|,
+name|icmp_stats
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -283,6 +294,21 @@ block|,
 name|ip_stats
 block|,
 literal|"ip"
+block|}
+block|,
+block|{
+operator|-
+literal|1
+block|,
+name|N_ICMPSTAT
+block|,
+literal|1
+block|,
+literal|0
+block|,
+name|icmp_stats
+block|,
+literal|"icmp"
 block|}
 block|,
 block|{
