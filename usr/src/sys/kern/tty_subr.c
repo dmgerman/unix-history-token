@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_subr.c	4.18	82/12/17	*/
+comment|/*	tty_subr.c	4.19	83/02/06	*/
 end_comment
 
 begin_include
@@ -814,25 +814,7 @@ condition|(
 name|q
 operator|->
 name|c_cc
-operator|<
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"neg q flush\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-if|if
-condition|(
-name|q
-operator|->
-name|c_cc
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{
