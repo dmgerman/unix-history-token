@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ipl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -37,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -107,19 +119,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ipl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/smp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mutex.h>
 end_include
 
 begin_decl_stmt
@@ -1276,22 +1276,6 @@ name|x
 parameter_list|)
 value|(((intptr_t)(x)>> 8)& (TABLESIZE - 1))
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * During autoconfiguration or after a panic, a sleep will simply  * lower the priority briefly to allow interrupts, then return.  * The priority to be used (safepri) is machine-dependent, thus this  * value is initialized and maintained in the machine-dependent layers.  * This priority will typically be 0, or the lowest priority  * that is safe for use on the interrupt stack; it can be made  * higher to block network software interrupts after panics.  */
-end_comment
-
-begin_endif
-unit|int safepri;
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -3329,6 +3313,14 @@ operator||
 name|MTX_RLIKELY
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+condition|)
 name|WITNESS_SAVE
 argument_list|(
 operator|&
@@ -3651,6 +3643,14 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+condition|)
 name|WITNESS_RESTORE
 argument_list|(
 operator|&
