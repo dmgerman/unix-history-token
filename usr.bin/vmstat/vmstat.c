@@ -4112,7 +4112,10 @@ name|intrname
 expr_stmt|;
 name|istrnamlen
 operator|=
-literal|12
+name|strlen
+argument_list|(
+literal|"interrupt"
+argument_list|)
 expr_stmt|;
 for|for
 control|(
