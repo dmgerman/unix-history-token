@@ -2351,14 +2351,16 @@ operator|/
 literal|100
 operator|)
 expr_stmt|;
+comment|/* 10ms */
 name|slice_max
 operator|=
 operator|(
 name|hz
 operator|/
-literal|10
+literal|7
 operator|)
 expr_stmt|;
+comment|/* ~140ms */
 name|mtx_lock_spin
 argument_list|(
 operator|&
