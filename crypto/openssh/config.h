@@ -662,23 +662,17 @@ begin_comment
 comment|/* Define if you want S/Key support */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SKEY
-value|1
-end_define
+begin_comment
+comment|/* #undef SKEY */
+end_comment
 
 begin_comment
 comment|/* Define if you want OPIE support */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|OPIE
-value|1
-end_define
+begin_comment
+comment|/* #undef OPIE */
+end_comment
 
 begin_comment
 comment|/* Define if you want TCP Wrappers support */
@@ -1289,12 +1283,9 @@ begin_comment
 comment|/* Define if you have the `endutent' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_ENDUTENT
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_ENDUTENT */
+end_comment
 
 begin_comment
 comment|/* Define if you have the `endutxent' function. */
@@ -1513,12 +1504,9 @@ begin_comment
 comment|/* Define if you have the `getutline' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_GETUTLINE
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_GETUTLINE */
+end_comment
 
 begin_comment
 comment|/* Define if you have the `getutxent' function. */
@@ -1967,12 +1955,9 @@ begin_comment
 comment|/* Define if you have the `pututline' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_PUTUTLINE
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_PUTUTLINE */
+end_comment
 
 begin_comment
 comment|/* Define if you have the `pututxline' function. */
@@ -2216,12 +2201,9 @@ begin_comment
 comment|/* Define if you have the `setutent' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SETUTENT
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SETUTENT */
+end_comment
 
 begin_comment
 comment|/* Define if you have the `setutxent' function. */
