@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)random.c	5.8 (Berkeley) %G%"
+literal|"@(#)random.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,7 +50,7 @@ file|<stdlib.h>
 end_include
 
 begin_comment
-comment|/*  * random.c:  * An improved random number generation package.  In addition to the standard  * rand()/srand() like interface, this package also has a special state info  * interface.  The initstate() routine is called with a seed, an array of  * bytes, and a count of how many bytes are being passed in; this array is then  * initialized to contain information for random number generation with that  * much state information.  Good sizes for the amount of state information are  * 32, 64, 128, and 256 bytes.  The state can be switched by calling the  * setstate() routine with the same array as was initiallized with initstate().  * By default, the package runs with 128 bytes of state information and  * generates far better random numbers than a linear congruential generator.  * If the amount of state information is less than 32 bytes, a simple linear  * congruential R.N.G. is used.  * Internally, the state information is treated as an array of longs; the  * zeroeth element of the array is the type of R.N.G. being used (small  * integer); the remainder of the array is the state information for the  * R.N.G.  Thus, 32 bytes of state information will give 7 longs worth of  * state information, which will allow a degree seven polynomial.  (Note: the   * zeroeth word of state information also has some other information stored  * in it -- see setstate() for details).  * The random number generation technique is a linear feedback shift register  * approach, employing trinomials (since there are fewer terms to sum up that  * way).  In this approach, the least significant bit of all the numbers in  * the state table will act as a linear feedback shift register, and will have  * period 2^deg - 1 (where deg is the degree of the polynomial being used,  * assuming that the polynomial is irreducible and primitive).  The higher  * order bits will have longer periods, since their values are also influenced  * by pseudo-random carries out of the lower bits.  The total period of the  * generator is approximately deg*(2**deg - 1); thus doubling the amount of  * state information has a vast influence on the period of the generator.  * Note: the deg*(2**deg - 1) is an approximation only good for large deg,  * when the period of the shift register is the dominant factor.  With deg  * equal to seven, the period is actually much longer than the 7*(2**7 - 1)  * predicted by this formula.  */
+comment|/*  * random.c:  *  * An improved random number generation package.  In addition to the standard  * rand()/srand() like interface, this package also has a special state info  * interface.  The initstate() routine is called with a seed, an array of  * bytes, and a count of how many bytes are being passed in; this array is  * then initialized to contain information for random number generation with  * that much state information.  Good sizes for the amount of state  * information are 32, 64, 128, and 256 bytes.  The state can be switched by  * calling the setstate() routine with the same array as was initiallized  * with initstate().  By default, the package runs with 128 bytes of state  * information and generates far better random numbers than a linear  * congruential generator.  If the amount of state information is less than  * 32 bytes, a simple linear congruential R.N.G. is used.  *  * Internally, the state information is treated as an array of longs; the  * zeroeth element of the array is the type of R.N.G. being used (small  * integer); the remainder of the array is the state information for the  * R.N.G.  Thus, 32 bytes of state information will give 7 longs worth of  * state information, which will allow a degree seven polynomial.  (Note:  * the zeroeth word of state information also has some other information  * stored in it -- see setstate() for details).  *   * The random number generation technique is a linear feedback shift register  * approach, employing trinomials (since there are fewer terms to sum up that  * way).  In this approach, the least significant bit of all the numbers in  * the state table will act as a linear feedback shift register, and will  * have period 2^deg - 1 (where deg is the degree of the polynomial being  * used, assuming that the polynomial is irreducible and primitive).  The  * higher order bits will have longer periods, since their values are also  * influenced by pseudo-random carries out of the lower bits.  The total  * period of the generator is approximately deg*(2**deg - 1); thus doubling  * the amount of state information has a vast influence on the period of the  * generator.  Note: the deg*(2**deg - 1) is an approximation only good for  * large deg, when the period of the shift register is the dominant factor.  * With deg equal to seven, the period is actually much longer than the  * 7*(2**7 - 1) predicted by this formula.  */
 end_comment
 
 begin_comment
@@ -218,7 +218,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Array versions of the above information to make code run faster -- relies  * on fact that TYPE_i == i.  */
+comment|/*  * Array versions of the above information to make code run faster --  * relies on fact that TYPE_i == i.  */
 end_comment
 
 begin_define
@@ -277,7 +277,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Initially, everything is set up as if from :  *		initstate( 1,&randtbl, 128 );  * Note that this initialization takes advantage of the fact that srandom()  * advances the front and rear pointers 10*rand_deg times, and hence the  * rear pointer which starts at 0 will also end up at zero; thus the zeroeth  * element of the state information, which contains info about the current  * position of the rear pointer is just  *	MAX_TYPES*(rptr - state) + TYPE_3 == TYPE_3.  */
+comment|/*  * Initially, everything is set up as if from:  *  *	initstate(1,&randtbl, 128);  *  * Note that this initialization takes advantage of the fact that srandom()  * advances the front and rear pointers 10*rand_deg times, and hence the  * rear pointer which starts at 0 will also end up at zero; thus the zeroeth  * element of the state information, which contains info about the current  * position of the rear pointer is just  *  *	MAX_TYPES * (rptr - state) + TYPE_3 == TYPE_3.  */
 end_comment
 
 begin_decl_stmt
@@ -354,12 +354,12 @@ block|,
 literal|0x8999220b
 block|,
 literal|0x27fb47b9
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * fptr and rptr are two pointers into the state info, a front and a rear  * pointer.  These two pointers are always rand_sep places aparts, as they cycle  * cyclically through the state information.  (Yes, this does mean we could get  * away with just one pointer, but the code for random() is more efficient this  * way).  The pointers are left positioned as they would be from the call  *			initstate( 1, randtbl, 128 )  * (The position of the rear pointer, rptr, is really 0 (as explained above  * in the initialization of randtbl) because the state table pointer is set  * to point to randtbl[1] (as explained below).  */
+comment|/*  * fptr and rptr are two pointers into the state info, a front and a rear  * pointer.  These two pointers are always rand_sep places aparts, as they  * cycle cyclically through the state information.  (Yes, this does mean we  * could get away with just one pointer, but the code for random() is more  * efficient this way).  The pointers are left positioned as they would be  * from the call  *  *	initstate(1, randtbl, 128);  *  * (The position of the rear pointer, rptr, is really 0 (as explained above  * in the initialization of randtbl) because the state table pointer is set  * to point to randtbl[1] (as explained below).  */
 end_comment
 
 begin_decl_stmt
@@ -393,7 +393,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The following things are the pointer to the state information table,  * the type of the current generator, the degree of the current polynomial  * being used, and the separation between the two pointers.  * Note that for efficiency of random(), we remember the first location of  * the state information, not the zeroeth.  Hence it is valid to access  * state[-1], which is used to store the type of the R.N.G.  * Also, we remember the last location, since this is more efficient than  * indexing every time to find the address of the last element to see if  * the front and rear pointers have wrapped.  */
+comment|/*  * The following things are the pointer to the state information table, the  * type of the current generator, the degree of the current polynomial being  * used, and the separation between the two pointers.  Note that for efficiency  * of random(), we remember the first location of the state information, not  * the zeroeth.  Hence it is valid to access state[-1], which is used to  * store the type of the R.N.G.  Also, we remember the last location, since  * this is more efficient than indexing every time to find the address of  * the last element to see if the front and rear pointers have wrapped.  */
 end_comment
 
 begin_decl_stmt
@@ -454,7 +454,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * srandom:  * Initialize the random number generator based on the given seed.  If the  * type is the trivial no-state-information type, just remember the seed.  * Otherwise, initializes state[] based on the given "seed" via a linear  * congruential generator.  Then, the pointers are set to known locations  * that are exactly rand_sep places apart.  Lastly, it cycles the state  * information a given number of times to get rid of any initial dependencies  * introduced by the L.C.R.N.G.  * Note that the initialization of randtbl[] for default usage relies on  * values produced by this routine.  */
+comment|/*  * srandom:  *  * Initialize the random number generator based on the given seed.  If the  * type is the trivial no-state-information type, just remember the seed.  * Otherwise, initializes state[] based on the given "seed" via a linear  * congruential generator.  Then, the pointers are set to known locations  * that are exactly rand_sep places apart.  Lastly, it cycles the state  * information a given number of times to get rid of any initial dependencies  * introduced by the L.C.R.N.G.  Note that the initialization of randtbl[]  * for default usage relies on values produced by this routine.  */
 end_comment
 
 begin_function
@@ -463,7 +463,7 @@ name|srandom
 parameter_list|(
 name|x
 parameter_list|)
-name|unsigned
+name|u_int
 name|x
 decl_stmt|;
 block|{
@@ -479,7 +479,6 @@ name|rand_type
 operator|==
 name|TYPE_0
 condition|)
-block|{
 name|state
 index|[
 literal|0
@@ -487,7 +486,6 @@ index|]
 operator|=
 name|x
 expr_stmt|;
-block|}
 else|else
 block|{
 name|j
@@ -514,7 +512,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|state
 index|[
 name|i
@@ -531,7 +528,6 @@ index|]
 operator|+
 literal|12345
 expr_stmt|;
-block|}
 name|fptr
 operator|=
 operator|&
@@ -574,7 +570,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * initstate:  * Initialize the state information in the given array of n bytes for  * future random number generation.  Based on the number of bytes we  * are given, and the break values for the different R.N.G.'s, we choose  * the best (largest) one we can and set things up for it.  srandom() is  * then called to initialize the state information.  * Note that on return from srandom(), we set state[-1] to be the type  * multiplexed with the current value of the rear pointer; this is so  * successive calls to initstate() won't lose this information and will  * be able to restart with setstate().  * Note: the first thing we do is save the current state, if any, just like  * setstate() so that it doesn't matter when initstate is called.  * Returns a pointer to the old state.  */
+comment|/*  * initstate:  *  * Initialize the state information in the given array of n bytes for future  * random number generation.  Based on the number of bytes we are given, and  * the break values for the different R.N.G.'s, we choose the best (largest)  * one we can and set things up for it.  srandom() is then called to  * initialize the state information.  *   * Note that on return from srandom(), we set state[-1] to be the type  * multiplexed with the current value of the rear pointer; this is so  * successive calls to initstate() won't lose this information and will be  * able to restart with setstate().  *   * Note: the first thing we do is save the current state, if any, just like  * setstate() so that it doesn't matter when initstate is called.  *  * Returns a pointer to the old state.  */
 end_comment
 
 begin_function
@@ -588,10 +584,10 @@ name|arg_state
 parameter_list|,
 name|n
 parameter_list|)
-name|unsigned
+name|u_int
 name|seed
 decl_stmt|;
-comment|/* seed for R. N. G. */
+comment|/* seed for R.N.G. */
 name|char
 modifier|*
 name|arg_state
@@ -655,29 +651,34 @@ if|if
 condition|(
 name|n
 operator|<
-name|BREAK_1
-condition|)
-block|{
-if|if
-condition|(
-name|n
-operator|<
 name|BREAK_0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"initstate: not enough state (%d bytes); ignored.\n"
+literal|"random: not enough state (%d bytes); ignored.\n"
 argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
+if|if
+condition|(
+name|n
+operator|<
+name|BREAK_1
+condition|)
+block|{
 name|rand_type
 operator|=
 name|TYPE_0
@@ -691,8 +692,7 @@ operator|=
 name|SEP_0
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|n
@@ -713,8 +713,7 @@ operator|=
 name|SEP_1
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|n
@@ -735,8 +734,7 @@ operator|=
 name|SEP_2
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|n
@@ -771,9 +769,6 @@ name|rand_sep
 operator|=
 name|SEP_4
 expr_stmt|;
-block|}
-block|}
-block|}
 block|}
 name|state
 operator|=
@@ -846,7 +841,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setstate:  * Restore the state from the given state array.  * Note: it is important that we also remember the locations of the pointers  * in the current state information, and restore the locations of the pointers  * from the old state information.  This is done by multiplexing the pointer  * location into the zeroeth word of the state information.  * Note that due to the order in which things are done, it is OK to call  * setstate() with the same state as the current state.  * Returns a pointer to the old state information.  */
+comment|/*  * setstate:  *  * Restore the state from the given state array.  *  * Note: it is important that we also remember the locations of the pointers  * in the current state information, and restore the locations of the pointers  * from the old state information.  This is done by multiplexing the pointer  * location into the zeroeth word of the state information.  *  * Note that due to the order in which things are done, it is OK to call  * setstate() with the same state as the current state.  *  * Returns a pointer to the old state information.  */
 end_comment
 
 begin_function
@@ -982,11 +977,14 @@ index|]
 expr_stmt|;
 break|break;
 default|default:
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"setstate: state info has been munged; not changed.\n"
+literal|"random: state info corrupted; not changed.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1046,7 +1044,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * random:  * If we are using the trivial TYPE_0 R.N.G., just do the old linear  * congruential bit.  Otherwise, we do our fancy trinomial stuff, which is the  * same in all ther other cases due to all the global variables that have been  * set up.  The basic operation is to add the number at the rear pointer into  * the one at the front pointer.  Then both pointers are advanced to the next  * location cyclically in the table.  The value returned is the sum generated,  * reduced to 31 bits by throwing away the "least random" low bit.  * Note: the code takes advantage of the fact that both the front and  * rear pointers can't wrap on the same call by not testing the rear  * pointer if the front one has wrapped.  * Returns a 31-bit random number.  */
+comment|/*  * random:  *  * If we are using the trivial TYPE_0 R.N.G., just do the old linear  * congruential bit.  Otherwise, we do our fancy trinomial stuff, which is  * the same in all the other cases due to all the global variables that have  * been set up.  The basic operation is to add the number at the rear pointer  * into the one at the front pointer.  Then both pointers are advanced to  * the next location cyclically in the table.  The value returned is the sum  * generated, reduced to 31 bits by throwing away the "least random" low bit.  *  * Note: the code takes advantage of the fact that both the front and  * rear pointers can't wrap on the same call by not testing the rear  * pointer if the front one has wrapped.  *  * Returns a 31-bit random number.  */
 end_comment
 
 begin_function
@@ -1063,7 +1061,6 @@ name|rand_type
 operator|==
 name|TYPE_0
 condition|)
-block|{
 name|i
 operator|=
 name|state
@@ -1084,7 +1081,6 @@ operator|)
 operator|&
 literal|0x7fffffff
 expr_stmt|;
-block|}
 else|else
 block|{
 operator|*
@@ -1121,8 +1117,7 @@ operator|++
 name|rptr
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 operator|++
@@ -1134,7 +1129,6 @@ name|rptr
 operator|=
 name|state
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
