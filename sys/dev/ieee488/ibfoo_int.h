@@ -303,7 +303,7 @@ end_define
 
 begin_struct
 struct|struct
-name|ibfoo_iocarg
+name|ibarg
 block|{
 name|enum
 name|ibfoo_id
@@ -317,7 +317,7 @@ name|int
 name|__retval
 decl_stmt|;
 name|int
-name|__ibsts
+name|__ibsta
 decl_stmt|;
 name|int
 name|__iberr
@@ -418,7 +418,7 @@ begin_define
 define|#
 directive|define
 name|GPIB_IBFOO
-value|_IOWR(4, 0, struct ibfoo_iocarg)
+value|_IOWR(4, 0, struct ibarg)
 end_define
 
 end_unit

@@ -9,5 +9,12 @@ directive|include
 file|<dev/ieee488/ugpib.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|ibcntl
+value|ibcnt
+end_define
+
 end_unit
 

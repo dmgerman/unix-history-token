@@ -579,6 +579,8 @@ name|int
 name|ibcnt
 decl_stmt|,
 name|iberr
+decl_stmt|,
+name|ibsta
 decl_stmt|;
 end_decl_stmt
 

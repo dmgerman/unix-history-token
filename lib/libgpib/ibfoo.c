@@ -50,6 +50,8 @@ name|int
 name|ibcnt
 decl_stmt|,
 name|iberr
+decl_stmt|,
+name|ibsta
 decl_stmt|;
 end_decl_stmt
 
@@ -69,7 +71,7 @@ name|int
 name|__ibsubmit
 parameter_list|(
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 modifier|*
 name|ap
 parameter_list|)
@@ -147,6 +149,12 @@ name|ap
 operator|->
 name|__iberr
 expr_stmt|;
+name|ibsta
+operator|=
+name|ap
+operator|->
+name|__ibsta
+expr_stmt|;
 return|return
 operator|(
 name|ap
@@ -173,7 +181,7 @@ name|retval
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -235,7 +243,7 @@ name|bdname
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -288,7 +296,7 @@ name|v
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -338,7 +346,7 @@ name|handle
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -387,7 +395,7 @@ name|cnt
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -452,7 +460,7 @@ name|cnt
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -516,7 +524,7 @@ name|value
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -589,7 +597,7 @@ name|eos
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -678,7 +686,7 @@ name|cnt
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -739,7 +747,7 @@ name|v
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -792,7 +800,7 @@ name|eos
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -845,7 +853,7 @@ name|eot
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -899,7 +907,7 @@ name|event
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -950,7 +958,7 @@ name|bdname
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -995,7 +1003,7 @@ name|v
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1048,7 +1056,7 @@ name|v
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1102,7 +1110,7 @@ name|lines
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1152,7 +1160,7 @@ name|handle
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1204,7 +1212,7 @@ name|listenflag
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1270,7 +1278,7 @@ name|handle
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1315,7 +1323,7 @@ name|v
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1368,7 +1376,7 @@ name|v
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1418,7 +1426,7 @@ name|handle
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1466,7 +1474,7 @@ name|value
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1527,7 +1535,7 @@ name|v
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1584,7 +1592,7 @@ name|cnt
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1649,7 +1657,7 @@ name|cnt
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1711,7 +1719,7 @@ name|flname
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1768,7 +1776,7 @@ name|cnt
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1830,7 +1838,7 @@ name|ppr
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1883,7 +1891,7 @@ name|v
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1937,7 +1945,7 @@ name|spr
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -1990,7 +1998,7 @@ name|v
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -2043,7 +2051,7 @@ name|v
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -2096,7 +2104,7 @@ name|v
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -2146,7 +2154,7 @@ name|handle
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -2191,7 +2199,7 @@ name|v
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -2242,7 +2250,7 @@ name|func
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -2284,7 +2292,7 @@ name|handle
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -2329,7 +2337,7 @@ name|tmo
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -2382,7 +2390,7 @@ name|mode
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -2432,7 +2440,7 @@ name|handle
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -2477,7 +2485,7 @@ name|mask
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -2535,7 +2543,7 @@ name|cnt
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -2607,7 +2615,7 @@ name|cnt
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -2676,7 +2684,7 @@ name|flname
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -2740,7 +2748,7 @@ name|cnt
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
@@ -2811,7 +2819,7 @@ name|cnt
 parameter_list|)
 block|{
 name|struct
-name|ibfoo_iocarg
+name|ibarg
 name|io
 decl_stmt|;
 name|io
