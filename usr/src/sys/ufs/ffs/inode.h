@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -537,7 +537,7 @@ name|t1
 parameter_list|,
 name|t2
 parameter_list|)
-value|{ \ 	if ((ip)->i_flag&(IUPD|IACC|ICHG)) { \ 		(ip)->i_flag |= IMOD; \ 		if ((ip)->i_flag&IACC) \ 			(ip)->i_atime.tv_sec = (t1)->tv_sec; \ 		if ((ip)->i_flag&IUPD) { \ 			(ip)->i_mtime.tv_sec = (t2)->tv_sec; \ 			INCRQUAD((ip)->i_modrev); \ 		} \ 		if ((ip)->i_flag&ICHG) \ 			(ip)->i_ctime.tv_sec = time.tv_sec; \ 		(ip)->i_flag&= ~(IACC|IUPD|ICHG); \ 	} \ }
+value|{ \ 	if ((ip)->i_flag&(IUPD|IACC|ICHG)) { \ 		(ip)->i_flag |= IMOD; \ 		if ((ip)->i_flag&IACC) \ 			(ip)->i_atime.ts_sec = (t1)->tv_sec; \ 		if ((ip)->i_flag&IUPD) { \ 			(ip)->i_mtime.ts_sec = (t2)->tv_sec; \ 			INCRQUAD((ip)->i_modrev); \ 		} \ 		if ((ip)->i_flag&ICHG) \ 			(ip)->i_ctime.ts_sec = time.tv_sec; \ 		(ip)->i_flag&= ~(IACC|IUPD|ICHG); \ 	} \ }
 end_define
 
 begin_comment

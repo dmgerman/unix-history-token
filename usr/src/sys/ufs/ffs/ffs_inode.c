@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.54 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.55 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -789,7 +789,7 @@ name|ip
 operator|->
 name|i_atime
 operator|.
-name|tv_sec
+name|ts_sec
 operator|=
 name|ap
 operator|->
@@ -810,7 +810,7 @@ name|ip
 operator|->
 name|i_mtime
 operator|.
-name|tv_sec
+name|ts_sec
 operator|=
 name|ap
 operator|->
@@ -838,7 +838,7 @@ name|ip
 operator|->
 name|i_ctime
 operator|.
-name|tv_sec
+name|ts_sec
 operator|=
 name|time
 operator|.

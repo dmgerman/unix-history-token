@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.51 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.52 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -779,7 +779,7 @@ name|vap
 operator|->
 name|va_atime
 operator|.
-name|tv_sec
+name|ts_sec
 operator|=
 name|fxdr_unsigned
 argument_list|(
@@ -796,7 +796,7 @@ name|vap
 operator|->
 name|va_atime
 operator|.
-name|tv_usec
+name|ts_nsec
 operator|=
 literal|0
 expr_stmt|;

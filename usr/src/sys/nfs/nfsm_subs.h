@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsm_subs.h	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsm_subs.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -331,7 +331,7 @@ define|#
 directive|define
 name|nfsm_srvfillattr
 define|\
-value|fp->fa_type = vtonfs_type(vap->va_type); \ 	fp->fa_mode = vtonfs_mode(vap->va_type, vap->va_mode); \ 	fp->fa_nlink = txdr_unsigned(vap->va_nlink); \ 	fp->fa_uid = txdr_unsigned(vap->va_uid); \ 	fp->fa_gid = txdr_unsigned(vap->va_gid); \ 	fp->fa_size = txdr_unsigned(vap->va_size); \ 	fp->fa_blocksize = txdr_unsigned(vap->va_blocksize); \ 	if (vap->va_type == VFIFO) \ 		fp->fa_rdev = 0xffffffff; \ 	else \ 		fp->fa_rdev = txdr_unsigned(vap->va_rdev); \ 	fp->fa_blocks = txdr_unsigned(vap->va_bytes / NFS_FABLKSIZE); \ 	fp->fa_fsid = txdr_unsigned(vap->va_fsid); \ 	fp->fa_fileid = txdr_unsigned(vap->va_fileid); \ 	fp->fa_atime.tv_sec = txdr_unsigned(vap->va_atime.tv_sec); \ 	fp->fa_atime.tv_usec = txdr_unsigned(vap->va_flags); \ 	txdr_time(&vap->va_mtime,&fp->fa_mtime); \ 	fp->fa_ctime.tv_sec = txdr_unsigned(vap->va_ctime.tv_sec); \ 	fp->fa_ctime.tv_usec = txdr_unsigned(vap->va_gen)
+value|fp->fa_type = vtonfs_type(vap->va_type); \ 	fp->fa_mode = vtonfs_mode(vap->va_type, vap->va_mode); \ 	fp->fa_nlink = txdr_unsigned(vap->va_nlink); \ 	fp->fa_uid = txdr_unsigned(vap->va_uid); \ 	fp->fa_gid = txdr_unsigned(vap->va_gid); \ 	fp->fa_size = txdr_unsigned(vap->va_size); \ 	fp->fa_blocksize = txdr_unsigned(vap->va_blocksize); \ 	if (vap->va_type == VFIFO) \ 		fp->fa_rdev = 0xffffffff; \ 	else \ 		fp->fa_rdev = txdr_unsigned(vap->va_rdev); \ 	fp->fa_blocks = txdr_unsigned(vap->va_bytes / NFS_FABLKSIZE); \ 	fp->fa_fsid = txdr_unsigned(vap->va_fsid); \ 	fp->fa_fileid = txdr_unsigned(vap->va_fileid); \ 	fp->fa_atime.tv_sec = txdr_unsigned(vap->va_atime.ts_sec); \ 	fp->fa_atime.tv_usec = txdr_unsigned(vap->va_flags); \ 	txdr_time(&vap->va_mtime,&fp->fa_mtime); \ 	fp->fa_ctime.tv_sec = txdr_unsigned(vap->va_ctime.ts_sec); \ 	fp->fa_ctime.tv_usec = txdr_unsigned(vap->va_gen)
 end_define
 
 end_unit

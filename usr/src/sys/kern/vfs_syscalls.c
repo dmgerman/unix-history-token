@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.84 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.85 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -7938,7 +7938,7 @@ name|vattr
 operator|.
 name|va_atime
 operator|.
-name|tv_sec
+name|ts_sec
 operator|=
 name|tv
 index|[
@@ -7949,9 +7949,24 @@ name|tv_sec
 expr_stmt|;
 name|vattr
 operator|.
+name|va_atime
+operator|.
+name|ts_nsec
+operator|=
+name|tv
+index|[
+literal|0
+index|]
+operator|.
+name|tv_usec
+operator|*
+literal|1000
+expr_stmt|;
+name|vattr
+operator|.
 name|va_mtime
 operator|.
-name|tv_sec
+name|ts_sec
 operator|=
 name|tv
 index|[
@@ -7959,6 +7974,21 @@ literal|1
 index|]
 operator|.
 name|tv_sec
+expr_stmt|;
+name|vattr
+operator|.
+name|va_mtime
+operator|.
+name|ts_nsec
+operator|=
+name|tv
+index|[
+literal|1
+index|]
+operator|.
+name|tv_usec
+operator|*
+literal|1000
 expr_stmt|;
 name|LEASE_CHECK
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.42 92/01/20$  *  *	@(#)hpux_compat.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.42 92/01/20$  *  *	@(#)hpux_compat.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -8788,7 +8788,7 @@ name|vattr
 operator|.
 name|va_atime
 operator|.
-name|tv_sec
+name|ts_sec
 operator|=
 name|tv
 index|[
@@ -8799,7 +8799,7 @@ name|vattr
 operator|.
 name|va_atime
 operator|.
-name|tv_usec
+name|ts_nsec
 operator|=
 literal|0
 expr_stmt|;
@@ -8807,7 +8807,7 @@ name|vattr
 operator|.
 name|va_mtime
 operator|.
-name|tv_sec
+name|ts_sec
 operator|=
 name|tv
 index|[
@@ -8818,7 +8818,7 @@ name|vattr
 operator|.
 name|va_mtime
 operator|.
-name|tv_usec
+name|ts_nsec
 operator|=
 literal|0
 expr_stmt|;
@@ -9376,7 +9376,7 @@ name|vattr
 operator|.
 name|va_atime
 operator|.
-name|tv_sec
+name|ts_sec
 expr_stmt|;
 name|ds
 operator|.
@@ -9389,7 +9389,7 @@ name|vattr
 operator|.
 name|va_mtime
 operator|.
-name|tv_sec
+name|ts_sec
 expr_stmt|;
 name|ds
 operator|.
@@ -9402,7 +9402,7 @@ name|vattr
 operator|.
 name|va_ctime
 operator|.
-name|tv_sec
+name|ts_sec
 expr_stmt|;
 return|return
 operator|(
