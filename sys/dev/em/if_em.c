@@ -7401,6 +7401,10 @@ operator|->
 name|link_duplex
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"em%d: Link is up %d Mbps %s\n"
@@ -7465,6 +7469,10 @@ name|link_duplex
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"em%d: Link is Down\n"
