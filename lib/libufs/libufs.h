@@ -157,6 +157,10 @@ modifier|*
 name|d_error
 decl_stmt|;
 comment|/* human readable disk error */
+name|int
+name|d_mine
+decl_stmt|;
+comment|/* internal flags */
 define|#
 directive|define
 name|d_fs
