@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)restore.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)restore.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -115,12 +115,12 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|clrimap
+name|usedinomap
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* map of inodes to be deleted */
+comment|/* map of inodes that are in use on this fs */
 end_comment
 
 begin_decl_stmt
@@ -540,6 +540,19 @@ name|map
 parameter_list|)
 define|\
 value|(map[(u_int)((ino) - 1) / NBBY]&  (1<< ((u_int)((ino) - 1) % NBBY)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SETINO
+parameter_list|(
+name|ino
+parameter_list|,
+name|map
+parameter_list|)
+define|\
+value|map[(u_int)((ino) - 1) / NBBY] |=  1<< ((u_int)((ino) - 1) % NBBY)
 end_define
 
 begin_define
