@@ -909,14 +909,12 @@ name|dumpstatus
 argument_list|(
 name|addr
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
+operator|(
+name|off_t
+operator|)
 name|count
 operator|*
 name|DEV_BSIZE
-argument_list|)
 argument_list|)
 operator|<
 literal|0
