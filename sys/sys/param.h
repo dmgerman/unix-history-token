@@ -1060,6 +1060,12 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|lint
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_BYTEORDER_FUNC_DEFINED
 end_ifndef
 
@@ -1116,6 +1122,15 @@ end_endif
 
 begin_comment
 comment|/* !_BYTEORDER_FUNC_DEFINED */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* lint */
 end_comment
 
 begin_endif
