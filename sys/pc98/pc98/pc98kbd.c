@@ -15,14 +15,6 @@ directive|include
 file|"opt_kbd.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NPCKBD
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -4103,15 +4095,6 @@ return|;
 comment|/* no data */
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NPCKBD> 0 */
-end_comment
 
 end_unit
 

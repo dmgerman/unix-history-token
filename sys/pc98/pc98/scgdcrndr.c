@@ -6,18 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gdc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_syscons.h"
 end_include
 
@@ -26,18 +14,6 @@ include|#
 directive|include
 file|"opt_gdc.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NSC
-operator|>
-literal|0
-operator|&&
-name|NGDC
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -965,15 +941,6 @@ end_endif
 
 begin_comment
 comment|/* SC_NO_MODE_CHANGE */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NSC> 0&& NGDC> 0 */
 end_comment
 
 end_unit
