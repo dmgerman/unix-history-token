@@ -304,6 +304,7 @@ comment|/* diversion index..	       */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|null
@@ -317,6 +318,7 @@ comment|/* as it says.. just a null..  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|m4wraps
@@ -413,16 +415,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Line synchronisation for C preprocessor */
-end_comment
-
-begin_decl_stmt
-name|int
-name|chscratch
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Scratch space for gpbc() macro */
 end_comment
 
 begin_decl_stmt
@@ -2285,24 +2277,24 @@ condition|)
 block|{
 name|char
 modifier|*
-name|p
+name|pc
 decl_stmt|;
 for|for
 control|(
-name|p
+name|pc
 operator|=
 name|scommt
 init|;
 operator|*
-name|p
+name|pc
 condition|;
-name|p
+name|pc
 operator|++
 control|)
 name|chrsave
 argument_list|(
 operator|*
-name|p
+name|pc
 argument_list|)
 expr_stmt|;
 for|for
@@ -2328,20 +2320,20 @@ condition|)
 block|{
 for|for
 control|(
-name|p
+name|pc
 operator|=
 name|ecommt
 init|;
 operator|*
-name|p
+name|pc
 condition|;
-name|p
+name|pc
 operator|++
 control|)
 name|chrsave
 argument_list|(
 operator|*
-name|p
+name|pc
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2729,7 +2721,10 @@ name|p
 operator|->
 name|defn
 operator|=
+name|xstrdup
+argument_list|(
 name|null
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
@@ -2837,6 +2832,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|builtin_realname

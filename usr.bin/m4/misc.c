@@ -349,9 +349,14 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|endpbb
 operator|-
 name|bp
+argument_list|)
 operator|<=
 name|n
 condition|)
@@ -900,6 +905,7 @@ name|signo
 parameter_list|)
 name|int
 name|signo
+name|__unused
 decl_stmt|;
 block|{
 define|#
@@ -1407,6 +1413,9 @@ name|s
 operator|-
 name|buf
 operator|>
+operator|(
+name|int
+operator|)
 name|m
 condition|;
 control|)

@@ -628,6 +628,7 @@ begin_struct
 struct|struct
 name|keyblk
 block|{
+specifier|const
 name|char
 modifier|*
 name|knam
@@ -698,16 +699,8 @@ value|(infile[ilevel].lineno)
 end_define
 
 begin_comment
-comment|/*  * macros for readibility and/or speed  *  *      gpbc()  - get a possibly pushed-back character  *      pushf() - push a call frame entry onto stack  *      pushs() - push a string pointer onto stack  */
+comment|/*  * macros for readibility and/or speed  *  *      pushf() - push a call frame entry onto stack  *      pushs() - push a string pointer onto stack  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|gpbc
-parameter_list|()
-value|(bp> bufbase) ? (*--bp ? (*bp& 0xFF) : EOF) : \ 	((chscratch = obtain_char(infile+ilevel)) == '\n'&& \ 	++inlineno[ilevel], chscratch)
-end_define
 
 begin_define
 define|#

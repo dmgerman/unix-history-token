@@ -710,7 +710,7 @@ name|vl
 decl_stmt|,
 name|vr
 decl_stmt|,
-name|eqrel
+name|eqrelval
 decl_stmt|;
 name|vl
 operator|=
@@ -720,7 +720,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-name|eqrel
+name|eqrelval
 operator|=
 name|geteqrel
 argument_list|()
@@ -737,7 +737,7 @@ argument_list|()
 expr_stmt|;
 switch|switch
 condition|(
-name|eqrel
+name|eqrelval
 condition|)
 block|{
 case|case
@@ -1356,6 +1356,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|int

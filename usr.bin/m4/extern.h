@@ -286,6 +286,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|builtin_realname
@@ -952,6 +953,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|m4wraps
@@ -964,6 +966,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|null
@@ -1020,17 +1023,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|chscratch
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Scratch space for gpbc() macro */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|mimic_gnu
 decl_stmt|;
 end_decl_stmt
@@ -1038,6 +1030,78 @@ end_decl_stmt
 begin_comment
 comment|/* behaves like gnu-m4 */
 end_comment
+
+begin_comment
+comment|/* get a possibly pushed-back-character, increment lineno if need be */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|gpbc
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|chscratch
+decl_stmt|;
+comment|/* Scratch space. */
+if|if
+condition|(
+name|bp
+operator|>
+name|bufbase
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+operator|--
+name|bp
+condition|)
+return|return
+operator|(
+operator|*
+name|bp
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|EOF
+operator|)
+return|;
+block|}
+name|chscratch
+operator|=
+name|obtain_char
+argument_list|(
+name|infile
+operator|+
+name|ilevel
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|chscratch
+operator|==
+literal|'\n'
+condition|)
+operator|++
+name|inlineno
+index|[
+name|ilevel
+index|]
+expr_stmt|;
+return|return
+operator|(
+name|chscratch
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 
