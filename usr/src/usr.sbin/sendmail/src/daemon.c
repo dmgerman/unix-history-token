@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.75 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.48.1.5 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.75 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.48.1.5 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2419,11 +2419,9 @@ expr_stmt|;
 name|nleft
 operator|=
 sizeof|sizeof
-argument_list|(
 name|ibuf
 operator|-
 literal|1
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
