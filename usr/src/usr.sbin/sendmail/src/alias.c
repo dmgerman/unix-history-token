@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.12 (Berkeley) %G%"
+literal|"@(#)alias.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1335,40 +1335,6 @@ name|map_cflags
 argument_list|)
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|LOG
-if|if
-condition|(
-name|LogLevel
-operator|>
-literal|7
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"alias database %s %srebuilt by %s"
-argument_list|,
-name|map
-operator|->
-name|map_file
-argument_list|,
-name|automatic
-condition|?
-literal|"auto"
-else|:
-literal|""
-argument_list|,
-name|username
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* LOG */
 comment|/* try to lock the source file */
 if|if
 condition|(
@@ -1388,6 +1354,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|int
+name|saveerr
+init|=
+name|errno
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -1407,7 +1378,26 @@ name|map_file
 argument_list|,
 name|errstring
 argument_list|(
-name|errno
+name|saveerr
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|automatic
+condition|)
+name|message
+argument_list|(
+literal|"newaliases: cannot open %s: %s"
+argument_list|,
+name|map
+operator|->
+name|map_file
+argument_list|,
+name|errstring
+argument_list|(
+name|saveerr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1515,6 +1505,40 @@ name|O_RDWR
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|7
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"alias database %s %srebuilt by %s"
+argument_list|,
+name|map
+operator|->
+name|map_file
+argument_list|,
+name|automatic
+condition|?
+literal|"auto"
+else|:
+literal|""
+argument_list|,
+name|username
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* LOG */
 name|map
 operator|->
 name|map_mflags
