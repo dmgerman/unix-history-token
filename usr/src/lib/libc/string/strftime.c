@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strftime.c	5.9 (Berkeley) %G%"
+literal|"@(#)strftime.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1207,11 +1207,22 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|tm
+name|tmp
+decl_stmt|;
+comment|/* Make a copy, mktime(3) modifies the tm struct. */
+name|tmp
+operator|=
+operator|*
+name|t
+expr_stmt|;
 name|s
 operator|=
 name|mktime
 argument_list|(
-name|t
+operator|&
+name|tmp
 argument_list|)
 expr_stmt|;
 for|for
