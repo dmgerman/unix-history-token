@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.24 1996/10/06 00:44:24 jmz Exp $ */
+comment|/* $Id: main.c,v 1.25 1996/10/24 00:15:44 adam Exp $ */
 end_comment
 
 begin_include
@@ -2084,6 +2084,28 @@ expr_stmt|;
 name|pr
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|size
+operator|>
+literal|1000000
+condition|)
+name|printf
+argument_list|(
+literal|"\r%s: %2d%%"
+argument_list|,
+name|s
+argument_list|,
+name|bytes
+operator|/
+operator|(
+name|size
+operator|/
+literal|100
+operator|)
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|size
