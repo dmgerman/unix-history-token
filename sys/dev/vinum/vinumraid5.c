@@ -1538,7 +1538,7 @@ operator|->
 name|b
 operator|.
 name|b_iocmd
-operator|==
+operator|=
 name|BIO_READ
 expr_stmt|;
 comment|/* we must read first */
