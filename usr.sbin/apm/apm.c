@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: apm.c,v 1.17 1999/07/30 16:15:11 msmith Exp $"
+literal|"$Id: apm.c,v 1.18 1999/07/30 19:35:21 msmith Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -802,11 +802,9 @@ name|args
 argument_list|)
 condition|)
 block|{
-name|err
+name|printf
 argument_list|(
-literal|1
-argument_list|,
-literal|"Get resume timer"
+literal|"Resume timer: unknown\n"
 argument_list|)
 expr_stmt|;
 block|}
