@@ -1079,7 +1079,7 @@ name|hdr
 operator|.
 name|flags
 operator|=
-name|MBUF_USED
+literal|0
 expr_stmt|;
 name|hatm_ext_free
 argument_list|(
@@ -1195,7 +1195,7 @@ name|hdr
 operator|.
 name|flags
 operator|=
-name|MBUF_USED
+literal|0
 expr_stmt|;
 name|hatm_ext_free
 argument_list|(
