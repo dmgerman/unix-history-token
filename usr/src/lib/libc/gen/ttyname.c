@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttyname.c	5.13 (Berkeley) %G%"
+literal|"@(#)ttyname.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -99,6 +99,24 @@ name|MAXNAMLEN
 index|]
 init|=
 name|_PATH_DEV
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|oldttyname
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|stat
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -141,12 +159,6 @@ decl_stmt|;
 block|}
 name|bkey
 struct|;
-specifier|static
-name|char
-modifier|*
-name|__oldttyname
-parameter_list|()
-function_decl|;
 comment|/* Must be a terminal. */
 if|if
 condition|(
@@ -313,7 +325,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|__oldttyname
+name|oldttyname
 argument_list|(
 name|fd
 argument_list|,
@@ -329,7 +341,7 @@ begin_function
 specifier|static
 name|char
 modifier|*
-name|__oldttyname
+name|oldttyname
 parameter_list|(
 name|fd
 parameter_list|,
@@ -359,11 +371,6 @@ name|struct
 name|stat
 name|dsb
 decl_stmt|;
-name|char
-modifier|*
-name|strcpy
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|(
