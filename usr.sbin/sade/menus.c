@@ -2935,6 +2935,36 @@ literal|"=ftp://ftp7.de.freebsd.org"
 block|}
 block|,
 block|{
+literal|" Greece"
+block|,
+literal|"ftp.gr.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.gr.freebsd.org"
+block|}
+block|,
+block|{
+literal|" Greece #2"
+block|,
+literal|"ftp2.gr.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp2.gr.freebsd.org"
+block|}
+block|,
+block|{
 literal|"Holland"
 block|,
 literal|"ftp.nl.freebsd.org"
