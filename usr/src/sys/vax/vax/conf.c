@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.10	%G%	*/
+comment|/*	conf.c	4.11	%G%	*/
 end_comment
 
 begin_include
@@ -408,6 +408,9 @@ argument_list|()
 decl_stmt|,
 name|tmwrite
 argument_list|()
+decl_stmt|,
+name|tmioctl
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -462,6 +465,13 @@ begin_define
 define|#
 directive|define
 name|tmwrite
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|tmioctl
 value|nodev
 end_define
 
@@ -1744,6 +1754,68 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|NCHLINE
+operator|==
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|ch_lopen
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|ch_lclose
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|ch_linput
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|ch_lstart
+value|nodev
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|ch_lopen
+argument_list|()
+decl_stmt|,
+name|ch_lclose
+argument_list|()
+decl_stmt|,
+name|ch_linput
+argument_list|()
+decl_stmt|,
+name|ch_lstart
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|syopen
@@ -1966,6 +2038,12 @@ name|mcwrite
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_include
+include|#
+directive|include
+file|"pty.h"
+end_include
 
 begin_if
 if|#
@@ -2368,7 +2446,7 @@ block|,
 name|tmwrite
 block|,
 comment|/*14*/
-name|nodev
+name|tmioctl
 block|,
 name|nodev
 block|,
@@ -2739,6 +2817,27 @@ block|,
 name|nulldev
 block|,
 comment|/* 5 */
+name|ch_lopen
+block|,
+name|ch_lclose
+block|,
+name|nulldev
+block|,
+name|nulldev
+block|,
+name|nullioctl
+block|,
+name|ch_linput
+block|,
+name|nulldev
+block|,
+name|nulldev
+block|,
+name|ch_lstart
+block|,
+name|nulldev
+block|,
+comment|/* 6 */
 name|mxopen
 block|,
 name|mxclose
@@ -2759,7 +2858,7 @@ name|nulldev
 block|,
 name|nulldev
 block|,
-comment|/* 6 */
+comment|/* 7 */
 literal|0
 block|}
 decl_stmt|;
@@ -2769,7 +2868,7 @@ begin_decl_stmt
 name|int
 name|nldisp
 init|=
-literal|6
+literal|7
 decl_stmt|;
 end_decl_stmt
 
@@ -2827,8 +2926,15 @@ begin_decl_stmt
 name|struct
 name|buf
 name|bfreelist
+index|[
+name|BQUEUES
+index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* buffer chain headers */
+end_comment
 
 begin_decl_stmt
 name|struct
