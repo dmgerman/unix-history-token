@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.46.2.4 1999/07/21 18:39:50 sheldonh Exp $"
+literal|"$Id: inetd.c,v 1.46.2.5 1999/07/21 19:28:27 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3980,7 +3980,7 @@ argument_list|,
 literal|"write: %m"
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 name|EX_OSERR
 argument_list|)
