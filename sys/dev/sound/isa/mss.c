@@ -1770,7 +1770,7 @@ name|mss
 operator|->
 name|pdma
 argument_list|,
-name|DSP_BUFFSIZE
+name|MSS_BUFFSIZE
 argument_list|)
 expr_stmt|;
 name|mss
@@ -1811,7 +1811,7 @@ name|mss
 operator|->
 name|rdma
 argument_list|,
-name|DSP_BUFFSIZE
+name|MSS_BUFFSIZE
 argument_list|)
 expr_stmt|;
 name|mss
