@@ -1437,6 +1437,12 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 comment|/* 4.4BSD converts this ip_input.c, but I don't in solaris.c */
 name|bo
 operator|=
