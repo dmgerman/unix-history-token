@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -271,11 +277,7 @@ literal|"BIOS SDT: INT call failed.\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -320,11 +322,7 @@ name|vmf_flags
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 name|paddr
 operator|=
