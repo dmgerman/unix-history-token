@@ -1094,6 +1094,7 @@ operator|->
 name|ccb_dmamap
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|6
 case|:
@@ -1123,6 +1124,7 @@ operator|->
 name|ccb_dmamap
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|5
 case|:
@@ -1133,6 +1135,7 @@ operator|->
 name|ccb_dmat
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|4
 case|:
@@ -1147,6 +1150,7 @@ operator|->
 name|mailbox_dmamap
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|3
 case|:
@@ -1176,6 +1180,7 @@ operator|->
 name|mailbox_dmamap
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:
@@ -1186,6 +1191,7 @@ operator|->
 name|buffer_dmat
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|1
 case|:
@@ -1196,6 +1202,7 @@ operator|->
 name|mailbox_dmat
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|0
 case|:

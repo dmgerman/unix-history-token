@@ -710,7 +710,6 @@ operator|(
 literal|"Buslogic 74xB SCSI host adapter"
 operator|)
 return|;
-break|break;
 case|case
 name|EISA_DEVICE_ID_BUSLOGIC_74X_C
 case|:
@@ -719,7 +718,6 @@ operator|(
 literal|"Buslogic 74xC SCSI host adapter"
 operator|)
 return|;
-break|break;
 case|case
 name|EISA_DEVICE_ID_SDC3222B
 case|:
@@ -728,7 +726,6 @@ operator|(
 literal|"Storage Dimensions SDC3222B SCSI host adapter"
 operator|)
 return|;
-break|break;
 case|case
 name|EISA_DEVICE_ID_SDC3222F
 case|:
@@ -737,7 +734,6 @@ operator|(
 literal|"Storage Dimensions SDC3222F SCSI host adapter"
 operator|)
 return|;
-break|break;
 case|case
 name|EISA_DEVICE_ID_SDC3222WS
 case|:
@@ -746,7 +742,6 @@ operator|(
 literal|"Storage Dimensions SDC3222WS SCSI host adapter"
 operator|)
 return|;
-break|break;
 case|case
 name|EISA_DEVICE_ID_SDC3222WB
 case|:
@@ -755,7 +750,6 @@ operator|(
 literal|"Storage Dimensions SDC3222WB SCSI host adapter"
 operator|)
 return|;
-break|break;
 case|case
 name|EISA_DEVICE_ID_AMI_4801
 case|:
@@ -764,7 +758,6 @@ operator|(
 literal|"AMI Series 48 SCSI host adapter"
 operator|)
 return|;
-break|break;
 default|default:
 break|break;
 block|}
