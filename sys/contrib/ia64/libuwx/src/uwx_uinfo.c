@@ -3747,7 +3747,7 @@ literal|0
 expr_stmt|;
 name|fr_base
 operator|-=
-literal|8
+literal|16
 expr_stmt|;
 name|nfr
 operator|--

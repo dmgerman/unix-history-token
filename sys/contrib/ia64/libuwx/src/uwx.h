@@ -1220,7 +1220,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* ar.pfs */
+comment|/* pfs (pseudo-register) */
 end_comment
 
 begin_define
@@ -1248,8 +1248,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UWX_REG_BSPSTORE
+name|UWX_REG_AR_PFS
 value|9
+end_define
+
+begin_comment
+comment|/* ar.pfs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UWX_REG_AR_BSPSTORE
+value|10
 end_define
 
 begin_comment
@@ -1259,8 +1270,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UWX_REG_RNAT
-value|10
+name|UWX_REG_AR_RNAT
+value|11
 end_define
 
 begin_comment
@@ -1270,8 +1281,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UWX_REG_UNAT
-value|11
+name|UWX_REG_AR_UNAT
+value|12
 end_define
 
 begin_comment
@@ -1281,8 +1292,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UWX_REG_FPSR
-value|12
+name|UWX_REG_AR_FPSR
+value|13
 end_define
 
 begin_comment
@@ -1292,8 +1303,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UWX_REG_LC
-value|13
+name|UWX_REG_AR_LC
+value|14
 end_define
 
 begin_comment
@@ -1328,6 +1339,45 @@ parameter_list|(
 name|br
 parameter_list|)
 value|(0x300 | (br))
+end_define
+
+begin_comment
+comment|/* for backwards compatibility with previous releases... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UWX_REG_BSPSTORE
+value|UWX_REG_AR_BSPSTORE
+end_define
+
+begin_define
+define|#
+directive|define
+name|UWX_REG_RNAT
+value|UWX_REG_AR_RNAT
+end_define
+
+begin_define
+define|#
+directive|define
+name|UWX_REG_UNAT
+value|UWX_REG_AR_UNAT
+end_define
+
+begin_define
+define|#
+directive|define
+name|UWX_REG_FPSR
+value|UWX_REG_AR_FPSR
+end_define
+
+begin_define
+define|#
+directive|define
+name|UWX_REG_LC
+value|UWX_REG_AR_LC
 end_define
 
 begin_comment
