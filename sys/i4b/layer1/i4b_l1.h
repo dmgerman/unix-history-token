@@ -161,6 +161,16 @@ parameter_list|)
 value|( (((L1DRVR_ITJC)<< 8)& 0xff00) | ((u)& 0xff))
 end_define
 
+begin_define
+define|#
+directive|define
+name|L0IFPI2UNIT
+parameter_list|(
+name|u
+parameter_list|)
+value|( (((L1DRVR_IFPI2)<< 8)& 0xff00) | ((u)& 0xff))
+end_define
+
 begin_comment
 comment|/* jump table for the multiplex functions */
 end_comment
