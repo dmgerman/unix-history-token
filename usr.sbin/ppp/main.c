@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.60 1997/06/09 03:27:28 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.61 1997/06/11 03:57:48 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -2509,7 +2509,17 @@ name|VarTerm
 operator|=
 literal|0
 expr_stmt|;
-comment|/* We know it's currently stdin */
+comment|/* We know it's currently stdout */
+name|close
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DOTTYINIT
@@ -2523,8 +2533,6 @@ operator||
 name|MODE_DEDICATED
 operator|)
 condition|)
-block|{
-comment|/* } */
 else|#
 directive|else
 if|if
@@ -2533,27 +2541,22 @@ name|mode
 operator|&
 name|MODE_DIRECT
 condition|)
-block|{
 endif|#
 directive|endif
-name|chdir
-argument_list|(
-literal|"/"
-argument_list|)
-expr_stmt|;
-comment|/* Be consistent with daemon() */
 name|TtyInit
 argument_list|()
 expr_stmt|;
-block|}
 else|else
-name|daemon
+block|{
+name|setsid
+argument_list|()
+expr_stmt|;
+name|close
 argument_list|(
-literal|0
-argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2590,7 +2593,13 @@ name|EX_DONE
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  *  Turn into packet mode, where we speak PPP.  */
+end_comment
+
+begin_function
 name|void
 name|PacketMode
 parameter_list|()
@@ -2676,6 +2685,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ShowHelp
@@ -2738,6 +2750,9 @@ literal|" ~?\tThis help\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ReadTty
@@ -3054,7 +3069,13 @@ break|break;
 block|}
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  *  Here, we'll try to detect HDLC frame  */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
@@ -3075,6 +3096,9 @@ block|,
 name|NULL
 block|, }
 decl_stmt|;
+end_decl_stmt
+
+begin_function
 name|u_char
 modifier|*
 name|HdlcDetect
@@ -3168,11 +3192,17 @@ name|ptr
 operator|)
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|pppTimer
 name|RedialTimer
 decl_stmt|;
+end_decl_stmt
+
+begin_function
 specifier|static
 name|void
 name|RedialTimeout
@@ -3192,6 +3222,9 @@ literal|"Redialing timer expired.\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|StartRedialTimer
@@ -3274,6 +3307,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|DoLoop
