@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cr_put.c	8.1 (Berkeley) %G%"
+literal|"@(#)cr_put.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1018,11 +1018,7 @@ comment|/* 	 * If we will later need a \n which will turn into a \r\n by the 	 *
 if|if
 condition|(
 operator|(
-name|__baset
-operator|.
-name|c_oflag
-operator|&
-name|ONLCR
+name|NONL
 operator|||
 operator|!
 name|__pfast
@@ -1162,11 +1158,7 @@ name|out
 goto|;
 if|if
 condition|(
-name|__baset
-operator|.
-name|c_oflag
-operator|&
-name|ONLCR
+name|NONL
 operator|||
 name|__pfast
 operator|==
