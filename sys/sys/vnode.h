@@ -1631,13 +1631,6 @@ begin_comment
 comment|/* predefined null vattr structure */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|vfs_ioopt
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Macro/function to check for client cache inconsistency w.r.t. leasing.  */
 end_comment
