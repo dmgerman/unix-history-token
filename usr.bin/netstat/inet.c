@@ -377,6 +377,8 @@ operator|.
 name|le_next
 control|)
 block|{
+if|if
+condition|(
 name|kread
 argument_list|(
 operator|(
@@ -396,7 +398,15 @@ argument_list|(
 name|inpcb
 argument_list|)
 argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"???\n"
+argument_list|)
 expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 operator|!
@@ -418,6 +428,8 @@ name|next
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
 name|kread
 argument_list|(
 operator|(
@@ -439,12 +451,23 @@ argument_list|(
 name|sockb
 argument_list|)
 argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"???\n"
+argument_list|)
 expr_stmt|;
+break|break;
+block|}
+empty_stmt|;
 if|if
 condition|(
 name|istcp
 condition|)
 block|{
+if|if
+condition|(
 name|kread
 argument_list|(
 operator|(
@@ -466,7 +489,16 @@ argument_list|(
 name|tcpcb
 argument_list|)
 argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"???\n"
+argument_list|)
 expr_stmt|;
+break|break;
+block|}
+empty_stmt|;
 block|}
 if|if
 condition|(
@@ -998,6 +1030,27 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
+name|tcps_cachedrtt
+argument_list|,
+literal|"\t\t%d connection%s updated cached RTT on close\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_cachedrttvar
+argument_list|,
+literal|"\t\t%d connection%s updated cached RTT variance on close\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_cachedssthresh
+argument_list|,
+literal|"\t\t%d connection%s updated cached ssthresh on close\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
 name|tcps_conndrops
 argument_list|,
 literal|"\t%d embryonic connection%s dropped\n"
@@ -1035,6 +1088,13 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
+name|tcps_persistdrop
+argument_list|,
+literal|"\t\t%d connection%s dropped by persist timeout\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
 name|tcps_keeptimeo
 argument_list|,
 literal|"\t%d keepalive timeout%s\n"
@@ -1066,13 +1126,6 @@ argument_list|(
 name|tcps_preddat
 argument_list|,
 literal|"\t%d correct data packet header prediction%s\n"
-argument_list|)
-expr_stmt|;
-name|p3
-argument_list|(
-name|tcps_pcbcachemiss
-argument_list|,
-literal|"\t%d PCB cache miss%s\n"
 argument_list|)
 expr_stmt|;
 undef|#

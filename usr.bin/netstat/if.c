@@ -1787,7 +1787,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%8d %5d "
+literal|"%8u %5u "
 argument_list|,
 name|ifnet
 operator|.
@@ -1812,7 +1812,7 @@ name|bflag
 condition|)
 name|printf
 argument_list|(
-literal|"%10d "
+literal|"%10u "
 argument_list|,
 name|ifnet
 operator|.
@@ -1825,7 +1825,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8d %5d "
+literal|"%8u %5u "
 argument_list|,
 name|ifnet
 operator|.
@@ -1850,7 +1850,7 @@ name|bflag
 condition|)
 name|printf
 argument_list|(
-literal|"%10d "
+literal|"%10u "
 argument_list|,
 name|ifnet
 operator|.
@@ -1863,7 +1863,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%5d"
+literal|"%5u"
 argument_list|,
 name|ifnet
 operator|.
@@ -1880,7 +1880,7 @@ name|dflag
 condition|)
 name|printf
 argument_list|(
-literal|" %5d"
+literal|" %5u"
 argument_list|,
 name|ifnet
 operator|.
@@ -2045,7 +2045,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  %8d %5d"
+literal|"  %8u %5u"
 argument_list|,
 name|sum
 operator|->
@@ -2070,7 +2070,7 @@ name|bflag
 condition|)
 name|printf
 argument_list|(
-literal|" %10d"
+literal|" %10u"
 argument_list|,
 name|sum
 operator|->
@@ -2083,7 +2083,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %8d %5d"
+literal|" %8u %5u"
 argument_list|,
 name|sum
 operator|->
@@ -2108,7 +2108,7 @@ name|bflag
 condition|)
 name|printf
 argument_list|(
-literal|" %10d"
+literal|" %10u"
 argument_list|,
 name|sum
 operator|->
@@ -2121,7 +2121,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %5d"
+literal|" %5u"
 argument_list|,
 name|sum
 operator|->
@@ -2138,7 +2138,7 @@ name|dflag
 condition|)
 name|printf
 argument_list|(
-literal|" %5d"
+literal|" %5u"
 argument_list|,
 name|sum
 operator|->
