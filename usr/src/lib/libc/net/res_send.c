@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.16 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,6 +112,14 @@ end_decl_stmt
 begin_comment
 comment|/* socket used for communications */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sockaddr
+name|no_addr
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -902,9 +910,15 @@ operator|.
 name|nscount
 operator|==
 literal|1
+operator|||
+name|retry
+operator|==
+name|_res
+operator|.
+name|retry
 condition|)
 block|{
-comment|/* 				 * Connect/Send is detrimental if you 				 * are going to poll more than one server 				 */
+comment|/* 				 * Don't use connect if we might 				 * still receive a response 				 * from another server. 				 */
 if|if
 condition|(
 name|connect
@@ -1160,6 +1174,37 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+comment|/* 				 * Disconnect if we want to listen 				 * for responses from more than one server. 				 */
+if|if
+condition|(
+name|_res
+operator|.
+name|nscount
+operator|>
+literal|1
+operator|&&
+name|retry
+operator|==
+name|_res
+operator|.
+name|retry
+condition|)
+operator|(
+name|void
+operator|)
+name|connect
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|no_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|no_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|gotsomewhere
 operator|=
 literal|1
