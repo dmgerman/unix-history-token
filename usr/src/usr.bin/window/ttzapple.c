@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttzapple.c	3.9 (Berkeley) %G%"
+literal|"@(#)ttzapple.c	3.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -455,9 +455,11 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
 name|col
 operator|&
 literal|7
+operator|)
 operator|==
 literal|0
 operator|&&
