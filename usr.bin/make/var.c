@@ -3104,6 +3104,7 @@ name|tstr
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* modify input string */
 name|Buf_AddByte
 argument_list|(
 name|buf
