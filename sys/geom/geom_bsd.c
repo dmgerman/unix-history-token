@@ -135,7 +135,7 @@ value|"BSD"
 end_define
 
 begin_comment
-comment|/*  * Our private data about one instance.  All the rest is handled by the  * slice code and stored in the its softc, so this is just the stuff  * specific to BSD disklabels.  */
+comment|/*  * Our private data about one instance.  All the rest is handled by the  * slice code and stored in its softc, so this is just the stuff  * specific to BSD disklabels.  */
 end_comment
 
 begin_struct
@@ -161,7 +161,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The next 4 functions isolate us from how the compiler lays out and pads  * "struct disklabel".  We treat what we read from disk as a bytestream and  * explicitly convert it into a struct disklabel.  This makes us compiler-  * endianes- and wordsize- agnostic.  * For now we only have little-endian formats to deal with.  */
+comment|/*  * The next 4 functions isolate us from how the compiler lays out and pads  * "struct disklabel".  We treat what we read from disk as a bytestream and  * explicitly convert it into a struct disklabel.  This makes us compiler-  * endianness- and wordsize- agnostic.  * For now we only have little-endian formats to deal with.  */
 end_comment
 
 begin_function
@@ -1333,7 +1333,7 @@ name|sc
 operator|->
 name|inram
 expr_stmt|;
-comment|/* Basic sanity-check needed to avoid mistakes */
+comment|/* Basic sanity-check needed to avoid mistakes. */
 if|if
 condition|(
 name|dl
@@ -1689,7 +1689,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* Cannot extend past unit */
+comment|/* Cannot extend past unit. */
 if|if
 condition|(
 name|ppp
@@ -1772,7 +1772,7 @@ decl_stmt|;
 name|off_t
 name|mediasize
 decl_stmt|;
-comment|/* Basic check that this is indeed a disklabel */
+comment|/* Basic check that this is indeed a disklabel. */
 name|error
 operator|=
 name|g_bsd_checklabel
@@ -1789,7 +1789,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* Make sure the checksum is OK */
+comment|/* Make sure the checksum is OK. */
 if|if
 condition|(
 name|dkcksum
@@ -1804,7 +1804,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* Get dimensions of our device */
+comment|/* Get dimensions of our device. */
 name|cp
 operator|=
 name|LIST_FIRST
@@ -1884,8 +1884,8 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|notyet
-comment|/*  	 * Indications are that the d_secperunit is not correctly 	 * initialized in many cases, and since we don't need it 	 * for anything, we dont strictly need this test. 	 * Preemptive action to avoid confusing people in disklabel(8) 	 * may be in order. 	 */
-comment|/* The label cannot claim a larger size than the media */
+comment|/* 	 * Indications are that the d_secperunit is not correctly 	 * initialized in many cases, and since we don't need it 	 * for anything, we dont strictly need this test. 	 * Preemptive action to avoid confusing people in disklabel(8) 	 * may be in order. 	 */
+comment|/* The label cannot claim a larger size than the media. */
 if|if
 condition|(
 operator|(
@@ -1908,7 +1908,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* ... or a smaller sector size */
+comment|/* ... or a smaller sector size. */
 if|if
 condition|(
 name|dl
@@ -1922,7 +1922,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* ... or a non-multiple sector size */
+comment|/* ... or a non-multiple sector size. */
 if|if
 condition|(
 name|dl
@@ -1941,7 +1941,7 @@ return|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
-comment|/* Don't munge open parititions */
+comment|/* Don't munge open partitions. */
 name|gsp
 operator|=
 name|gp
@@ -2266,7 +2266,7 @@ operator|(
 name|ENOENT
 operator|)
 return|;
-comment|/* Decode into our native format */
+comment|/* Decode into our native format. */
 name|dl
 operator|=
 operator|&
@@ -2295,7 +2295,7 @@ name|ms
 operator|->
 name|inram
 expr_stmt|;
-comment|/* Does it look like a label at all ? */
+comment|/* Does it look like a label at all? */
 if|if
 condition|(
 name|g_bsd_checklabel
@@ -2307,7 +2307,7 @@ name|error
 operator|=
 name|ENOENT
 expr_stmt|;
-comment|/* ... and does the raw data have a good checksum ? */
+comment|/* ... and does the raw data have a good checksum? */
 if|if
 condition|(
 name|error
@@ -2329,13 +2329,13 @@ name|error
 operator|=
 name|ENOENT
 expr_stmt|;
-comment|/* Remember to free the buffer g_read_data() gave us */
+comment|/* Remember to free the buffer g_read_data() gave us. */
 name|g_free
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-comment|/* If we had a label, record it properly */
+comment|/* If we had a label, record it properly. */
 if|if
 condition|(
 name|error
@@ -2429,11 +2429,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* We don't need topology for now */
+comment|/* We don't need topology for now. */
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-comment|/* Get hold of the interesting bits from the bio */
+comment|/* Get hold of the interesting bits from the bio. */
 name|bp
 operator|=
 name|arg
@@ -2469,14 +2469,14 @@ name|bp
 operator|->
 name|bio_data
 expr_stmt|;
-comment|/* The disklabel to set is the ioctl argument */
+comment|/* The disklabel to set is the ioctl argument. */
 name|dl
 operator|=
 name|gio
 operator|->
 name|data
 expr_stmt|;
-comment|/* Validate and modify our slice instance to match */
+comment|/* Validate and modify our slice instance to match. */
 name|error
 operator|=
 name|g_bsd_modify
@@ -2486,7 +2486,7 @@ argument_list|,
 name|dl
 argument_list|)
 expr_stmt|;
-comment|/* picks up topology lock on success */
+comment|/* Picks up topology lock on success. */
 if|if
 condition|(
 name|error
@@ -2504,7 +2504,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Update our copy of the disklabel */
+comment|/* Update our copy of the disklabel. */
 name|ms
 operator|->
 name|inram
@@ -2680,7 +2680,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2767,15 +2766,17 @@ operator|->
 name|bio_length
 operator|!=
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|gio
+argument_list|)
 condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* Get hold of the ioctl parameters */
+comment|/* Get hold of the ioctl parameters. */
 name|gio
 operator|=
 operator|(
@@ -2797,7 +2798,7 @@ block|{
 case|case
 name|DIOCGDINFO
 case|:
-comment|/* Return a copy of the disklabel to userland */
+comment|/* Return a copy of the disklabel to userland. */
 name|bcopy
 argument_list|(
 operator|&
@@ -2810,9 +2811,11 @@ operator|->
 name|data
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ms
 operator|->
 name|inram
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|g_io_deliver
@@ -3046,7 +3049,7 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
-comment|/* We don't implement transparent inserts */
+comment|/* We don't implement transparent inserts. */
 if|if
 condition|(
 name|flags
@@ -3102,8 +3105,10 @@ operator|&
 name|ms
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|ms
+argument_list|)
 argument_list|,
 name|g_bsd_start
 argument_list|)
@@ -3130,7 +3135,7 @@ name|dumpconf
 operator|=
 name|g_bsd_dumpconf
 expr_stmt|;
-comment|/* Get the geom_slicer softc from the geom */
+comment|/* Get the geom_slicer softc from the geom. */
 name|gsp
 operator|=
 name|gp
@@ -3189,7 +3194,7 @@ operator|<
 literal|512
 condition|)
 break|break;
-comment|/* First look for a label at the start of the second sector */
+comment|/* First look for a label at the start of the second sector. */
 name|error
 operator|=
 name|g_bsd_try
@@ -3205,7 +3210,7 @@ argument_list|,
 name|secsize
 argument_list|)
 expr_stmt|;
-comment|/* Next, loot for it 64 bytes into the first sector */
+comment|/* Next, look for it 64 bytes into the first sector. */
 if|if
 condition|(
 name|error
@@ -3225,13 +3230,13 @@ argument_list|,
 literal|64
 argument_list|)
 expr_stmt|;
-comment|/* If we didn't find a label, punt */
+comment|/* If we didn't find a label, punt. */
 if|if
 condition|(
 name|error
 condition|)
 break|break;
-comment|/* 		 * Proccess the found disklabel, and modify our "slice" 		 * instance to match it, if possible. 		 */
+comment|/* 		 * Process the found disklabel, and modify our "slice" 		 * instance to match it, if possible. 		 */
 name|dl
 operator|=
 operator|&
@@ -3248,7 +3253,7 @@ argument_list|,
 name|dl
 argument_list|)
 expr_stmt|;
-comment|/* picks up topology lock */
+comment|/* Picks up topology lock. */
 if|if
 condition|(
 operator|!
@@ -3264,7 +3269,7 @@ condition|(
 literal|0
 condition|)
 do|;
-comment|/* Success of failure, we can close our provider now */
+comment|/* Success of failure, we can close our provider now. */
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -3311,7 +3316,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Finally, register with GEOM infrastructure.  */
+comment|/* Finally, register with GEOM infrastructure. */
 end_comment
 
 begin_decl_stmt
