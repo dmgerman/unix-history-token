@@ -402,6 +402,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCSIFCAP
+value|_IOW('i', 30, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set IF features */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFCAP
+value|_IOWR('i', 31, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get IF features */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCADDMULTI
 value|_IOW('i', 49, struct ifreq)
 end_define
@@ -594,7 +616,7 @@ value|_IOW('i', 60, struct ifreq)
 end_define
 
 begin_comment
-comment|/* set link level addr */
+comment|/* set linklevel addr */
 end_comment
 
 begin_define
