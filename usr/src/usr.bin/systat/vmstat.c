@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.23 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1348,10 +1348,11 @@ name|labelkre
 parameter_list|()
 block|{
 specifier|register
+name|int
 name|i
-operator|,
+decl_stmt|,
 name|j
-expr_stmt|;
+decl_stmt|;
 name|clear
 argument_list|()
 expr_stmt|;
@@ -3880,8 +3881,9 @@ name|double
 name|t
 decl_stmt|;
 specifier|register
+name|int
 name|i
-expr_stmt|;
+decl_stmt|;
 name|t
 operator|=
 literal|0

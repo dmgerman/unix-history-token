@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.11 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1104,16 +1104,16 @@ name|showiostat
 parameter_list|()
 block|{
 specifier|register
+name|long
+name|t
+decl_stmt|;
+specifier|register
 name|int
 name|i
 decl_stmt|,
 name|row
 decl_stmt|,
 name|col
-decl_stmt|;
-specifier|register
-name|long
-name|t
 decl_stmt|;
 if|if
 condition|(
@@ -1739,8 +1739,9 @@ name|o
 decl_stmt|;
 block|{
 specifier|register
+name|int
 name|i
-expr_stmt|;
+decl_stmt|;
 name|double
 name|time
 decl_stmt|;
