@@ -644,14 +644,11 @@ literal|0
 operator|)
 return|;
 block|}
-else|else
-block|{
 return|return
 operator|(
 name|ENOENT
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -738,14 +735,11 @@ literal|0
 operator|)
 return|;
 block|}
-else|else
-block|{
 return|return
 operator|(
 name|ENOENT
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -821,14 +815,11 @@ literal|0
 operator|)
 return|;
 block|}
-else|else
-block|{
 return|return
 operator|(
 name|ENOENT
 operator|)
 return|;
-block|}
 block|}
 end_function
 
