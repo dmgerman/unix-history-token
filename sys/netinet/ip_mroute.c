@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.27 1995/12/14 09:53:43 phk Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.28 1996/03/02 18:24:10 peter Exp $  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -73,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
 end_include
 
 begin_include
