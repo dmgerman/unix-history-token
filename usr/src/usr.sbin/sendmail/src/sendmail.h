@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.10	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.11	%G% */
 end_comment
 
 begin_include
@@ -388,6 +388,10 @@ name|short
 name|h_flags
 decl_stmt|;
 comment|/* status bits, see below */
+name|short
+name|h_mflags
+decl_stmt|;
+comment|/* m_flags bits needed */
 block|}
 struct|;
 end_struct
@@ -429,12 +433,10 @@ name|short
 name|hi_flags
 decl_stmt|;
 comment|/* status bits, see below */
-name|char
-modifier|*
-modifier|*
-name|hi_pptr
+name|short
+name|hi_mflags
 decl_stmt|;
-comment|/*&ptr to point to this value */
+comment|/* m_flags needed for this field */
 block|}
 struct|;
 end_struct
@@ -494,6 +496,17 @@ end_define
 
 begin_comment
 comment|/* indicates that this has been output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_CHECK
+value|00020
+end_define
+
+begin_comment
+comment|/* check h_mflags against m_flags */
 end_comment
 
 begin_comment
@@ -695,17 +708,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|bool
-name|UseMsgId
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* put msg-id's in all msgs [conf.c] */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
 name|IgnrDot
 decl_stmt|;
 end_decl_stmt
@@ -769,30 +771,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* the transcript file name */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|MsgId
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the message id for this message */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|Date
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* origination date (UNIX format) */
 end_comment
 
 begin_decl_stmt

@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.10	%G%"
+literal|"@(#)conf.c	3.11	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -614,15 +614,15 @@ init|=
 block|{
 literal|"date"
 block|,
-literal|0
+name|H_CHECK
 block|,
-name|NULL
+name|M_NEEDDATE
 block|,
 literal|"from"
 block|,
-literal|0
+name|H_CHECK
 block|,
-name|NULL
+name|M_NEEDFROM
 block|,
 literal|"to"
 block|,
@@ -644,10 +644,9 @@ name|NULL
 block|,
 literal|"message-id"
 block|,
-literal|0
+name|H_CHECK
 block|,
-operator|&
-name|MsgId
+name|M_MSGID
 block|,
 literal|"message"
 block|,

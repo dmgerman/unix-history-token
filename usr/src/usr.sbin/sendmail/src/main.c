@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.7	%G%"
+literal|"@(#)main.c	3.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,17 +241,6 @@ comment|/* the target person */
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-name|FullName
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* full name of sender */
-end_comment
-
-begin_decl_stmt
 name|int
 name|HopCount
 decl_stmt|;
@@ -426,12 +415,6 @@ modifier|*
 name|strcat
 argument_list|()
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|makemsgid
-parameter_list|()
-function_decl|;
 name|char
 modifier|*
 name|cfname
@@ -591,7 +574,7 @@ name|NULL
 expr_stmt|;
 name|cfname
 operator|=
-literal|"sendmail.cf"
+literal|"/usr/lib/sendmail.cf"
 expr_stmt|;
 comment|/* 	** Crack argv. 	*/
 while|while
@@ -838,7 +821,7 @@ operator|++
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s\n"
+literal|"Version %s\n"
 argument_list|,
 name|Version
 argument_list|)
@@ -938,6 +921,7 @@ literal|"-f and -a are mutually exclusive"
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Read control file and initialize system macros. 	**	Collect should be called first, so that the time 	**	corresponds to the time that the messages starts 	**	getting sent, rather than when it is first composed. 	*/
+comment|/* process id */
 name|sprintf
 argument_list|(
 name|pbuf
@@ -955,6 +939,7 @@ argument_list|,
 name|pbuf
 argument_list|)
 expr_stmt|;
+comment|/* hop count */
 name|sprintf
 argument_list|(
 name|cbuf
@@ -971,6 +956,7 @@ argument_list|,
 name|cbuf
 argument_list|)
 expr_stmt|;
+comment|/* time as integer, unix time, arpa time */
 name|time
 argument_list|(
 operator|&
@@ -1020,6 +1006,24 @@ argument_list|(
 literal|'d'
 argument_list|,
 name|dbuf
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'a'
+argument_list|,
+name|arpadate
+argument_list|(
+name|dbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* version */
+name|define
+argument_list|(
+literal|'v'
+argument_list|,
+name|Version
 argument_list|)
 expr_stmt|;
 name|readcf
@@ -1336,11 +1340,14 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|FullName
-operator|=
+name|define
+argument_list|(
+literal|'x'
+argument_list|,
 name|newstr
 argument_list|(
 name|nbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

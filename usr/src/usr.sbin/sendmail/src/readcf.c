@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	3.1	%G%"
+literal|"@(#)readcf.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -394,6 +394,22 @@ index|[
 literal|2
 index|]
 argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'H'
+case|:
+comment|/* required header line */
+name|chompheader
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|,
+name|H_DEFAULT
 argument_list|)
 expr_stmt|;
 break|break;
