@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwwrite.c	3.30 (Berkeley) %G%"
+literal|"@(#)wwwrite.c	3.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1349,6 +1349,31 @@ operator|->
 name|ww_insert
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|wwinschar
+argument_list|(
+name|w
+argument_list|,
+name|w
+operator|->
+name|ww_cur
+operator|.
+name|r
+argument_list|,
+name|w
+operator|->
+name|ww_cur
+operator|.
+name|c
+argument_list|,
+literal|' '
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

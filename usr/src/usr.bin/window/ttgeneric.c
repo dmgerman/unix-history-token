@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttgeneric.c	3.41 (Berkeley) %G%"
+literal|"@(#)ttgeneric.c	3.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2571,6 +2571,42 @@ operator|==
 literal|0
 condition|)
 name|gen_US
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|gen_IM
+operator|->
+name|ts_n
+operator|==
+literal|0
+condition|)
+name|gen_IM
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|gen_EI
+operator|->
+name|ts_n
+operator|==
+literal|0
+condition|)
+name|gen_EI
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|gen_IC
+operator|->
+name|ts_n
+operator|==
+literal|0
+condition|)
+name|gen_IC
 operator|=
 literal|0
 expr_stmt|;
