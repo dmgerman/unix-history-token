@@ -1249,7 +1249,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
