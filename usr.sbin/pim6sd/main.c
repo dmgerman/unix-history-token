@@ -2564,7 +2564,7 @@ condition|(
 name|difftime
 operator|.
 name|tv_usec
-operator|>
+operator|>=
 literal|1000000
 condition|)
 block|{
