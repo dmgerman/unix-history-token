@@ -156,11 +156,10 @@ name|EVENTHANDLER_FAST_INVOKE
 parameter_list|(
 name|name
 parameter_list|,
-name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {									\ 	struct eventhandler_list *_el =&Xeventhandler_list_ ## name ;	\ 	struct eventhandler_entry *_ep, *_en;				\ 	struct eventhandler_entry_ ## name *_t;				\ 									\ 	if (_el->el_flags& EHE_INITTED) {				\ 		EHE_LOCK(_el);						\ 		_ep = TAILQ_FIRST(&(_el->el_entries));			\ 		while (_ep != NULL) {					\ 			_en = TAILQ_NEXT(_ep, ee_link);			\ 			_t = (struct eventhandler_entry_ ## name *)_ep; \ 			_t->eh_func(_ep->ee_arg , ## args);		\ 			_ep = _en;					\ 		}							\ 		EHE_UNLOCK(_el);					\ 	}								\ } while (0)
+value|do {									\ 	struct eventhandler_list *_el =&Xeventhandler_list_ ## name ;	\ 	struct eventhandler_entry *_ep, *_en;				\ 	struct eventhandler_entry_ ## name *_t;				\ 									\ 	if (_el->el_flags& EHE_INITTED) {				\ 		EHE_LOCK(_el);						\ 		_ep = TAILQ_FIRST(&(_el->el_entries));			\ 		while (_ep != NULL) {					\ 			_en = TAILQ_NEXT(_ep, ee_link);			\ 			_t = (struct eventhandler_entry_ ## name *)_ep; \ 			_t->eh_func(_ep->ee_arg , __VA_ARGS__);		\ 			_ep = _en;					\ 		}							\ 		EHE_UNLOCK(_el);					\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -217,11 +216,10 @@ name|EVENTHANDLER_INVOKE
 parameter_list|(
 name|name
 parameter_list|,
-name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {									\ 	struct eventhandler_list *_el;					\ 	struct eventhandler_entry *_ep, *_en;				\ 	struct eventhandler_entry_ ## name *_t;				\ 									\ 	if (((_el = eventhandler_find_list(#name)) != NULL)&& 		\ 		(_el->el_flags& EHE_INITTED)) {			\ 		EHE_LOCK(_el);						\ 		_ep = TAILQ_FIRST(&(_el->el_entries));			\ 		while (_ep != NULL) {					\ 			_en = TAILQ_NEXT(_ep, ee_link);			\ 			_t = (struct eventhandler_entry_ ## name *)_ep;	\ 			_t->eh_func(_ep->ee_arg , ## args); 		\ 			_ep = _en;					\ 		}							\ 		EHE_UNLOCK(_el);					\ 	}								\ } while (0)
+value|do {									\ 	struct eventhandler_list *_el;					\ 	struct eventhandler_entry *_ep, *_en;				\ 	struct eventhandler_entry_ ## name *_t;				\ 									\ 	if (((_el = eventhandler_find_list(#name)) != NULL)&& 		\ 		(_el->el_flags& EHE_INITTED)) {			\ 		EHE_LOCK(_el);						\ 		_ep = TAILQ_FIRST(&(_el->el_entries));			\ 		while (_ep != NULL) {					\ 			_en = TAILQ_NEXT(_ep, ee_link);			\ 			_t = (struct eventhandler_entry_ ## name *)_ep;	\ 			_t->eh_func(_ep->ee_arg , __VA_ARGS__);		\ 			_ep = _en;					\ 		}							\ 		EHE_UNLOCK(_el);					\ 	}								\ } while (0)
 end_define
 
 begin_define
