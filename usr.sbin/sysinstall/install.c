@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.28 1995/05/18 22:00:01 phk Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.29 1995/05/19 01:49:57 gpalmer Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -43,6 +43,16 @@ begin_function_decl
 specifier|static
 name|void
 name|make_filesystems
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|copy_self
 parameter_list|(
 name|void
 parameter_list|)
@@ -427,6 +437,9 @@ block|}
 name|make_filesystems
 argument_list|()
 expr_stmt|;
+name|copy_self
+argument_list|()
+expr_stmt|;
 name|cpio_extract
 argument_list|()
 expr_stmt|;
@@ -774,6 +787,20 @@ argument_list|(
 literal|"Failed to make some of the devices in /mnt!"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Mkdir
+argument_list|(
+literal|"/mnt/stand"
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Unable to make /mnt/stand directory!"
+argument_list|)
+expr_stmt|;
 name|chdir
 argument_list|(
 literal|"/"
@@ -978,6 +1005,52 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Copy the boot floppy contents into /stand */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|copy_self
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|msgNotify
+argument_list|(
+literal|"Copying the boot floppy to /stand on root filesystem"
+argument_list|)
+expr_stmt|;
+name|chdir
+argument_list|(
+literal|"/"
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|vsystem
+argument_list|(
+literal|"find -x . | cpio -pdmv /mnt/stand"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Copy returned error status of %d!"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -1166,6 +1239,31 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DebugFD
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|dup2
+argument_list|(
+name|DebugFD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|dup2
+argument_list|(
+name|DebugFD
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|close
 argument_list|(
 literal|1
@@ -1178,6 +1276,14 @@ argument_list|,
 name|O_WRONLY
 argument_list|)
 expr_stmt|;
+name|dup2
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 name|chdir
 argument_list|(
 literal|"/mnt"

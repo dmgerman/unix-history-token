@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: msg.c,v 1.12 1995/05/18 12:57:54 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: msg.c,v 1.13 1995/05/18 14:11:16 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -103,6 +103,17 @@ expr_stmt|;
 name|refresh
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|OnVTY
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Informational message `%s'\n"
+argument_list|,
+name|errstr
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|errstr
@@ -198,6 +209,17 @@ argument_list|)
 expr_stmt|;
 name|refresh
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|OnVTY
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Informational message `%s'\n"
+argument_list|,
+name|errstr
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
@@ -316,6 +338,17 @@ expr_stmt|;
 name|refresh
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|OnVTY
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Warning message `%s'\n"
+argument_list|,
+name|errstr
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|errstr
@@ -432,6 +465,17 @@ argument_list|)
 expr_stmt|;
 name|refresh
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|OnVTY
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Error message `%s'\n"
+argument_list|,
+name|errstr
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
@@ -578,6 +622,17 @@ expr_stmt|;
 name|refresh
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|OnVTY
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Fatal error `%s'!\n"
+argument_list|,
+name|errstr
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|errstr
@@ -656,6 +711,15 @@ expr_stmt|;
 name|use_helpfile
 argument_list|(
 name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|OnVTY
+condition|)
+name|msgDebug
+argument_list|(
+literal|"User confirmation requested (type ALT-F1)\n"
 argument_list|)
 expr_stmt|;
 name|dialog_notify
@@ -743,7 +807,7 @@ argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"[%s]\n"
+literal|"Notify: %s\n"
 argument_list|,
 name|errstr
 argument_list|)
@@ -873,6 +937,15 @@ argument_list|(
 name|newscr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|OnVTY
+condition|)
+name|msgDebug
+argument_list|(
+literal|"User decision requested (type ALT-F1)\n"
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|dialog_yesno
@@ -901,19 +974,6 @@ expr_stmt|;
 name|delwin
 argument_list|(
 name|w
-argument_list|)
-expr_stmt|;
-name|msgDebug
-argument_list|(
-literal|"[User answers %s to \"%s\"]\n"
-argument_list|,
-name|ret
-condition|?
-literal|"no"
-else|:
-literal|"yes"
-argument_list|,
-name|errstr
 argument_list|)
 expr_stmt|;
 name|free
@@ -1038,6 +1098,15 @@ argument_list|(
 name|newscr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|OnVTY
+condition|)
+name|msgDebug
+argument_list|(
+literal|"User input requested (type ALT-F1)\n"
+argument_list|)
+expr_stmt|;
 name|rval
 operator|=
 name|dialog_inputbox
@@ -1068,15 +1137,6 @@ expr_stmt|;
 name|delwin
 argument_list|(
 name|w
-argument_list|)
-expr_stmt|;
-name|msgDebug
-argument_list|(
-literal|"[input request \"%s\" returns %d status]\n"
-argument_list|,
-name|errstr
-argument_list|,
-name|rval
 argument_list|)
 expr_stmt|;
 name|free
