@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.31 (Berkeley) %G%"
+literal|"@(#)main.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -551,6 +551,21 @@ block|,
 name|icmp_stats
 block|,
 literal|"icmp"
+block|}
+block|,
+block|{
+operator|-
+literal|1
+block|,
+name|N_IGMPSTAT
+block|,
+literal|1
+block|,
+literal|0
+block|,
+name|igmp_stats
+block|,
+literal|"igmp"
 block|}
 block|,
 block|{
