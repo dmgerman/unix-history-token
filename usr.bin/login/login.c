@@ -389,6 +389,20 @@ begin_comment
 comment|/* name of group to own ttys */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DEFAULT_RETRIES
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_BACKOFF
+value|10
+end_define
+
 begin_comment
 comment|/*  * This bounds the time given to login.  Not a define so it can  * be patched on machines where it's too small.  */
 end_comment
@@ -464,10 +478,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+modifier|*
 name|term
-index|[
-literal|64
-index|]
 decl_stmt|,
 modifier|*
 name|envinit
@@ -1432,20 +1444,13 @@ name|tty
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s login refused on this terminal.\n"
-argument_list|,
-name|pwd
-operator|->
-name|pw_name
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Fall through to standard failure message 			 * and standard backoff behaviour 			 */
+if|#
+directive|if
+literal|0
+block|(void)fprintf(stderr, 			    "%s login refused on this terminal.\n", 			    pwd->pw_name);
+endif|#
+directive|endif
 if|if
 condition|(
 name|hostname
@@ -1479,8 +1484,14 @@ argument_list|,
 name|tty
 argument_list|)
 expr_stmt|;
-continue|continue;
+if|#
+directive|if
+literal|0
+block|continue;
+endif|#
+directive|endif
 block|}
+elseif|else
 if|if
 condition|(
 name|pwd
@@ -1506,14 +1517,14 @@ condition|(
 operator|++
 name|cnt
 operator|>
-literal|3
+name|DEFAULT_BACKOFF
 condition|)
 block|{
 if|if
 condition|(
 name|cnt
 operator|>=
-literal|10
+name|DEFAULT_RETRIES
 condition|)
 block|{
 name|badlogin
@@ -1972,6 +1983,13 @@ name|pw_shell
 operator|=
 name|_PATH_BSHELL
 expr_stmt|;
+name|term
+operator|=
+name|getenv
+argument_list|(
+literal|"TERM"
+argument_list|)
+expr_stmt|;
 comment|/* Destroy environment unless user has requested its preservation. */
 if|if
 condition|(
@@ -2013,28 +2031,19 @@ expr_stmt|;
 if|if
 condition|(
 name|term
-index|[
-literal|0
-index|]
+operator|==
+name|NULL
+operator|||
+operator|*
+name|term
 operator|==
 literal|'\0'
 condition|)
-operator|(
-name|void
-operator|)
-name|strncpy
-argument_list|(
 name|term
-argument_list|,
+operator|=
 name|stypeof
 argument_list|(
 name|tty
-argument_list|)
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|term
-argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
