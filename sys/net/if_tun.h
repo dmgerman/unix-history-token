@@ -115,6 +115,13 @@ name|TUNSIFMODE
 value|_IOW('t', 94, int)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TUNSIFPID
+value|_IO('t', 95)
+end_define
+
 begin_endif
 endif|#
 directive|endif
