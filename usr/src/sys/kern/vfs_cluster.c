@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_cluster.c	4.34	82/06/14	*/
+comment|/*	vfs_cluster.c	4.35	82/08/13	*/
 end_comment
 
 begin_include
@@ -610,6 +610,10 @@ operator||=
 name|B_AGE
 expr_stmt|;
 else|else
+name|u
+operator|.
+name|u_error
+operator|=
 name|geterror
 argument_list|(
 name|bp
@@ -2238,6 +2242,10 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|u
+operator|.
+name|u_error
+operator|=
 name|geterror
 argument_list|(
 name|bp
@@ -2574,6 +2582,11 @@ end_expr_stmt
 
 begin_block
 block|{
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|bp
@@ -2585,9 +2598,7 @@ condition|)
 if|if
 condition|(
 operator|(
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|bp
 operator|->
@@ -2596,12 +2607,16 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EIO
-expr_stmt|;
+operator|)
+return|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_block
 

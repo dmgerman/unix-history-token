@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.26	82/08/04	*/
+comment|/*	tty.c	4.27	82/08/13	*/
 end_comment
 
 begin_comment
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"../h/dk.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/uio.h"
 end_include
 
 begin_comment
@@ -5088,6 +5094,8 @@ begin_expr_stmt
 name|ttread
 argument_list|(
 name|tp
+argument_list|,
+name|uio
 argument_list|)
 specifier|register
 expr|struct
@@ -5096,6 +5104,14 @@ operator|*
 name|tp
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -5326,7 +5342,16 @@ name|t_rawq
 operator|.
 name|c_cc
 operator|&&
-name|passc
+name|uio
+operator|->
+name|uio_iovcnt
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|passuc
 argument_list|(
 name|getc
 argument_list|(
@@ -5335,11 +5360,18 @@ name|tp
 operator|->
 name|t_rawq
 argument_list|)
+argument_list|,
+name|uio
 argument_list|)
-operator|>=
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
 condition|)
-empty_stmt|;
+break|break;
+block|}
 return|return
 operator|(
 literal|0
@@ -5616,15 +5648,32 @@ operator|==
 literal|0
 condition|)
 break|break;
-if|if
-condition|(
-name|passc
+name|u
+operator|.
+name|u_error
+operator|=
+name|passuc
 argument_list|(
 name|c
 operator|&
 literal|0177
+argument_list|,
+name|uio
 argument_list|)
-operator|<
+expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
+condition|)
+break|break;
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_iovcnt
+operator|==
 literal|0
 condition|)
 break|break;

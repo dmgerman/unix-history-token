@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.31	82/08/11	*/
+comment|/*	kern_proc.c	4.32	82/08/13	*/
 end_comment
 
 begin_include
@@ -469,6 +469,14 @@ operator|.
 name|uio_segflg
 operator|=
 literal|1
+expr_stmt|;
+name|uio
+operator|.
+name|uio_resid
+operator|=
+name|iovec
+operator|.
+name|iov_len
 expr_stmt|;
 name|u
 operator|.
