@@ -28,6 +28,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -1099,6 +1111,12 @@ name|int
 name|n
 decl_stmt|;
 comment|/* count #vnodes held on mount list */
+name|mtx_lock
+argument_list|(
+operator|&
+name|mntvnode_mtx
+argument_list|)
+expr_stmt|;
 name|n
 operator|=
 literal|0
@@ -1113,6 +1131,12 @@ argument|v_mntvnodes
 argument_list|)
 name|n
 operator|++
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|mntvnode_mtx
+argument_list|)
 expr_stmt|;
 comment|/* if this is unchanged then stop */
 if|if
