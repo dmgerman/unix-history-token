@@ -3424,6 +3424,52 @@ block|,             }
 block|,         }
 block|,
 block|{
+literal|"PCCOM dual port RS232/422/485"
+block|,
+block|{
+literal|0x6666
+block|,
+literal|0x0004
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x1c
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x1c
+block|,
+literal|0x08
+block|,
+name|COM_FREQ
+block|}
+block|, 	    }
+block|, 	}
+block|,
+block|{
 literal|0
 block|}
 block|}
