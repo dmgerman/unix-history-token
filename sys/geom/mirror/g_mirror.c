@@ -3723,6 +3723,21 @@ operator|->
 name|sc_syncid
 operator|++
 expr_stmt|;
+name|G_MIRROR_DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"Device %s: syncid bumped to %u."
+argument_list|,
+name|sc
+operator|->
+name|sc_name
+argument_list|,
+name|sc
+operator|->
+name|sc_syncid
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|disk
@@ -9335,6 +9350,15 @@ argument_list|,
 name|G_MIRROR_DISK_STATE_ACTIVE
 argument_list|)
 operator|>
+literal|0
+operator|&&
+name|g_mirror_ndisks
+argument_list|(
+name|sc
+argument_list|,
+name|G_MIRROR_DISK_STATE_NEW
+argument_list|)
+operator|==
 literal|0
 condition|)
 block|{
