@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)util.c	3.1	%G%"
+literal|"@(#)util.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -332,71 +332,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  ANY -- Return TRUE if the character exists in the string. ** **	Parameters: **		c -- the character. **		s -- the string **			(sounds like an avant garde script) ** **	Returns: **		TRUE -- if c could be found in s. **		FALSE -- otherwise. ** **	Side Effects: **		none. ** **	Called By: **		prescan */
-end_comment
-
-begin_expr_stmt
-name|any
-argument_list|(
-name|c
-argument_list|,
-name|s
-argument_list|)
-specifier|register
-name|char
-name|c
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|register
-name|char
-modifier|*
-name|s
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|register
-name|char
-name|c2
-decl_stmt|;
-while|while
-condition|(
-operator|(
-name|c2
-operator|=
-operator|*
-name|s
-operator|++
-operator|)
-operator|!=
-literal|'\0'
-condition|)
-if|if
-condition|(
-name|c2
-operator|==
-name|c
-condition|)
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
-end_block
 
 end_unit
 

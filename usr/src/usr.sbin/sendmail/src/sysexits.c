@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sysexits.c	2.1	%G%"
+literal|"@(#)sysexits.c	3.1	%G%"
 decl_stmt|;
 end_decl_stmt
 

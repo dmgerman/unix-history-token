@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	2.1	%G% */
+comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	3.1	%G% */
 end_comment
 
 begin_define
@@ -42,6 +42,42 @@ endif|#
 directive|endif
 endif|NULL
 end_endif
+
+begin_define
+define|#
+directive|define
+name|setbit
+parameter_list|(
+name|bit
+parameter_list|,
+name|word
+parameter_list|)
+value|(word |= bit)
+end_define
+
+begin_define
+define|#
+directive|define
+name|clrbit
+parameter_list|(
+name|bit
+parameter_list|,
+name|word
+parameter_list|)
+value|(word&= ~bit)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bitset
+parameter_list|(
+name|bit
+parameter_list|,
+name|word
+parameter_list|)
+value|((word)& (bit))
+end_define
 
 end_unit
 
