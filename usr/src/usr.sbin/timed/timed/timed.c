@@ -6,6 +6,10 @@ argument_list|(
 name|c
 argument_list|)
 literal|1985
+operator|,
+literal|1993
+operator|*
+name|The
 name|Regents
 name|of
 name|the
@@ -13,7 +17,6 @@ name|University
 name|of
 name|California
 operator|.
-modifier|*
 name|All
 name|rights
 name|reserved
@@ -34,11 +37,12 @@ operator|/
 ifndef|#
 directive|ifndef
 name|lint
+specifier|static
 name|char
 name|copyright
 index|[]
 operator|=
-literal|"@(#) Copyright (c) 1985 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1985, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 expr_stmt|;
 end_expr_stmt
 
@@ -63,7 +67,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timed.c	5.1 (Berkeley) %G%"
+literal|"@(#)timed.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
