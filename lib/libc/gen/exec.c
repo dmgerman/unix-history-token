@@ -828,6 +828,26 @@ name|bp
 operator|=
 name|buf
 expr_stmt|;
+comment|/* If it's an empty path name, fail in the usual POSIX way. */
+if|if
+condition|(
+operator|*
+name|name
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|errno
+operator|=
+name|ENOENT
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* Get the path we're searching. */
 if|if
 condition|(
