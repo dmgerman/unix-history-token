@@ -2754,13 +2754,6 @@ goto|goto
 name|abort
 goto|;
 block|}
-name|FREE
-argument_list|(
-name|sin6
-argument_list|,
-name|M_SONAME
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 endif|#
