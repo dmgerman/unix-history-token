@@ -509,7 +509,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"clean: sysctl: estimate: %s\n"
+literal|"iface_Create: sysctl: estimate: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -544,6 +544,18 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"iface_Create: malloc failed: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|s
@@ -574,6 +586,18 @@ operator|<
 literal|0
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"iface_Create: sysctl: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|buf
