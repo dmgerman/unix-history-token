@@ -72,7 +72,7 @@ file|<machine/specialreg.h>
 end_include
 
 begin_comment
-comment|/*  * i686 memory range operations  *  * This code will probably be impenetrable without reference to the  * Intel Pentium Pro documentation.  */
+comment|/*  * amd64 memory range operations  *  * This code will probably be impenetrable without reference to the  * Intel Pentium Pro documentation or x86-64 programmers manual vol 2.  */
 end_comment
 
 begin_decl_stmt
@@ -187,7 +187,7 @@ name|mtrrs_disabled
 argument_list|,
 literal|0
 argument_list|,
-literal|"Disable i686 MTRRs."
+literal|"Disable amd64 MTRRs."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -195,7 +195,7 @@ end_expr_stmt
 begin_function_decl
 specifier|static
 name|void
-name|i686_mrinit
+name|amd64_mrinit
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -208,7 +208,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|i686_mrset
+name|amd64_mrset
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -230,7 +230,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|i686_mrAPinit
+name|amd64_mrAPinit
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -244,14 +244,14 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mem_range_ops
-name|i686_mrops
+name|amd64_mrops
 init|=
 block|{
-name|i686_mrinit
+name|amd64_mrinit
 block|,
-name|i686_mrset
+name|amd64_mrset
 block|,
-name|i686_mrAPinit
+name|amd64_mrAPinit
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -292,7 +292,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|i686_mrfetch
+name|amd64_mrfetch
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -305,7 +305,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|i686_mtrrtype
+name|amd64_mtrrtype
 parameter_list|(
 name|int
 name|flags
@@ -316,7 +316,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|i686_mrt2mtrr
+name|amd64_mrt2mtrr
 parameter_list|(
 name|int
 name|flags
@@ -330,7 +330,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|i686_mtrrconflict
+name|amd64_mtrrconflict
 parameter_list|(
 name|int
 name|flag1
@@ -344,7 +344,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|i686_mrstore
+name|amd64_mrstore
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -357,7 +357,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|i686_mrstoreone
+name|amd64_mrstoreone
 parameter_list|(
 name|void
 modifier|*
@@ -371,7 +371,7 @@ specifier|static
 name|struct
 name|mem_range_desc
 modifier|*
-name|i686_mtrrfixsearch
+name|amd64_mtrrfixsearch
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -387,7 +387,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|i686_mrsetlow
+name|amd64_mrsetlow
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -409,7 +409,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|i686_mrsetvariable
+name|amd64_mrsetvariable
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -429,13 +429,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* i686 MTRR type to memory range type conversion */
+comment|/* amd64 MTRR type to memory range type conversion */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
-name|i686_mtrrtomrt
+name|amd64_mtrrtomrt
 index|[]
 init|=
 block|{
@@ -460,13 +460,13 @@ begin_define
 define|#
 directive|define
 name|MTRRTOMRTLEN
-value|(sizeof(i686_mtrrtomrt) / sizeof(i686_mtrrtomrt[0]))
+value|(sizeof(amd64_mtrrtomrt) / sizeof(amd64_mtrrtomrt[0]))
 end_define
 
 begin_function
 specifier|static
 name|int
-name|i686_mtrr2mrt
+name|amd64_mtrr2mrt
 parameter_list|(
 name|int
 name|val
@@ -486,7 +486,7 @@ return|return
 name|MDF_UNKNOWN
 return|;
 return|return
-name|i686_mtrrtomrt
+name|amd64_mtrrtomrt
 index|[
 name|val
 index|]
@@ -495,13 +495,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * i686 MTRR conflicts. Writeback and uncachable may overlap.  */
+comment|/*   * amd64 MTRR conflicts. Writeback and uncachable may overlap.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|i686_mtrrconflict
+name|amd64_mtrrconflict
 parameter_list|(
 name|int
 name|flag1
@@ -518,6 +518,23 @@ name|flag2
 operator|&=
 name|MDF_ATTRMASK
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flag1
+operator|&
+name|MDF_UNKNOWN
+operator|)
+operator|||
+operator|(
+name|flag2
+operator|&
+name|MDF_UNKNOWN
+operator|)
+condition|)
+return|return
+literal|1
+return|;
 if|if
 condition|(
 name|flag1
@@ -649,7 +666,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|i686_mrfetch
+name|amd64_mrfetch
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -750,7 +767,7 @@ operator|~
 name|MDF_ATTRMASK
 operator|)
 operator||
-name|i686_mtrr2mrt
+name|amd64_mtrr2mrt
 argument_list|(
 name|msrv
 operator|&
@@ -849,7 +866,7 @@ operator|~
 name|MDF_ATTRMASK
 operator|)
 operator||
-name|i686_mtrr2mrt
+name|amd64_mtrr2mrt
 argument_list|(
 name|msrv
 operator|&
@@ -948,7 +965,7 @@ operator|~
 name|MDF_ATTRMASK
 operator|)
 operator||
-name|i686_mtrr2mrt
+name|amd64_mtrr2mrt
 argument_list|(
 name|msrv
 operator|&
@@ -1034,7 +1051,7 @@ operator|~
 name|MDF_ATTRMASK
 operator|)
 operator||
-name|i686_mtrr2mrt
+name|amd64_mtrr2mrt
 argument_list|(
 name|msrv
 operator|&
@@ -1047,7 +1064,7 @@ name|mr_base
 operator|=
 name|msrv
 operator|&
-literal|0x0000000ffffff000LL
+literal|0x000ffffffffff000L
 expr_stmt|;
 name|msrv
 operator|=
@@ -1095,10 +1112,10 @@ operator|~
 operator|(
 name|msrv
 operator|&
-literal|0x0000000ffffff000LL
+literal|0x000ffffffffff000L
 operator|)
 operator|&
-literal|0x0000000fffffffffLL
+literal|0x000fffffffffffffL
 operator|)
 operator|+
 literal|1
@@ -1165,7 +1182,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|i686_mtrrtype
+name|amd64_mtrrtype
 parameter_list|(
 name|int
 name|flags
@@ -1194,7 +1211,7 @@ control|)
 block|{
 if|if
 condition|(
-name|i686_mtrrtomrt
+name|amd64_mtrrtomrt
 index|[
 name|i
 index|]
@@ -1206,7 +1223,7 @@ if|if
 condition|(
 name|flags
 operator|==
-name|i686_mtrrtomrt
+name|amd64_mtrrtomrt
 index|[
 name|i
 index|]
@@ -1229,7 +1246,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|i686_mrt2mtrr
+name|amd64_mrt2mtrr
 parameter_list|(
 name|int
 name|flags
@@ -1246,7 +1263,7 @@ condition|(
 operator|(
 name|val
 operator|=
-name|i686_mtrrtype
+name|amd64_mtrrtype
 argument_list|(
 name|flags
 argument_list|)
@@ -1275,7 +1292,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|i686_mrstore
+name|amd64_mrstore
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -1291,7 +1308,7 @@ name|smp_rendezvous
 argument_list|(
 name|NULL
 argument_list|,
-name|i686_mrstoreone
+name|amd64_mrstoreone
 argument_list|,
 name|NULL
 argument_list|,
@@ -1308,7 +1325,7 @@ name|disable_intr
 argument_list|()
 expr_stmt|;
 comment|/* disable interrupts */
-name|i686_mrstoreone
+name|amd64_mrstoreone
 argument_list|(
 operator|(
 name|void
@@ -1332,7 +1349,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|i686_mrstoreone
+name|amd64_mrstoreone
 parameter_list|(
 name|void
 modifier|*
@@ -1497,7 +1514,7 @@ literal|8
 expr_stmt|;
 name|msrv
 operator||=
-name|i686_mrt2mtrr
+name|amd64_mrt2mtrr
 argument_list|(
 operator|(
 name|mrd
@@ -1587,7 +1604,7 @@ literal|8
 expr_stmt|;
 name|msrv
 operator||=
-name|i686_mrt2mtrr
+name|amd64_mrt2mtrr
 argument_list|(
 operator|(
 name|mrd
@@ -1677,7 +1694,7 @@ literal|8
 expr_stmt|;
 name|msrv
 operator||=
-name|i686_mrt2mtrr
+name|amd64_mrt2mtrr
 argument_list|(
 operator|(
 name|mrd
@@ -1761,11 +1778,11 @@ name|mrd
 operator|->
 name|mr_base
 operator|&
-literal|0x0000000ffffff000LL
+literal|0x000ffffffffff000L
 expr_stmt|;
 name|msrv
 operator||=
-name|i686_mrt2mtrr
+name|amd64_mrt2mtrr
 argument_list|(
 name|mrd
 operator|->
@@ -1813,7 +1830,7 @@ operator|-
 literal|1
 operator|)
 operator|&
-literal|0x0000000ffffff000LL
+literal|0x000ffffffffff000L
 operator|)
 expr_stmt|;
 block|}
@@ -1883,7 +1900,7 @@ specifier|static
 name|struct
 name|mem_range_desc
 modifier|*
-name|i686_mtrrfixsearch
+name|amd64_mtrrfixsearch
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -1974,7 +1991,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|i686_mrsetlow
+name|amd64_mrsetlow
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -2009,7 +2026,7 @@ operator|(
 operator|(
 name|first_md
 operator|=
-name|i686_mtrrfixsearch
+name|amd64_mtrrfixsearch
 argument_list|(
 name|sc
 argument_list|,
@@ -2026,7 +2043,7 @@ operator|(
 operator|(
 name|last_md
 operator|=
-name|i686_mtrrfixsearch
+name|amd64_mtrrfixsearch
 argument_list|(
 name|sc
 argument_list|,
@@ -2161,7 +2178,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|i686_mrsetvariable
+name|amd64_mrsetvariable
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -2333,7 +2350,7 @@ block|{
 comment|/* between conflicting region types? */
 if|if
 condition|(
-name|i686_mtrrconflict
+name|amd64_mtrrconflict
 argument_list|(
 name|curr_md
 operator|->
@@ -2440,7 +2457,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|i686_mrset
+name|amd64_mrset
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -2491,7 +2508,7 @@ operator|->
 name|mr_len
 argument_list|)
 operator|||
-name|i686_mtrrtype
+name|amd64_mtrrtype
 argument_list|(
 name|mrd
 operator|->
@@ -2541,7 +2558,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|i686_mrsetlow
+name|amd64_mrsetlow
 argument_list|(
 name|sc
 argument_list|,
@@ -2567,7 +2584,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|i686_mrsetvariable
+name|amd64_mrsetvariable
 argument_list|(
 name|sc
 argument_list|,
@@ -2660,12 +2677,12 @@ operator|)
 return|;
 block|}
 comment|/* update the hardware */
-name|i686_mrstore
+name|amd64_mrstore
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|i686_mrfetch
+name|amd64_mrfetch
 argument_list|(
 name|sc
 argument_list|)
@@ -2686,7 +2703,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|i686_mrinit
+name|amd64_mrinit
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -2965,7 +2982,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/*       * Get current settings, anything set now is considered to have       * been set by the firmware. (XXX has something already played here?)      */
-name|i686_mrfetch
+name|amd64_mrfetch
 argument_list|(
 name|sc
 argument_list|)
@@ -3020,7 +3037,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|i686_mrAPinit
+name|amd64_mrAPinit
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -3028,7 +3045,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|i686_mrstoreone
+name|amd64_mrstoreone
 argument_list|(
 operator|(
 name|void
@@ -3052,44 +3069,49 @@ end_function
 begin_function
 specifier|static
 name|void
-name|i686_mem_drvinit
+name|amd64_mem_drvinit
 parameter_list|(
 name|void
 modifier|*
 name|unused
 parameter_list|)
 block|{
-comment|/* Try for i686 MTRRs */
+if|if
+condition|(
+name|mtrrs_disabled
+condition|)
+return|return;
 if|if
 condition|(
 operator|!
-name|mtrrs_disabled
-operator|&&
 operator|(
 name|cpu_feature
 operator|&
 name|CPUID_MTRR
 operator|)
-operator|&&
-operator|(
+condition|)
+return|return;
+if|if
+condition|(
 operator|(
 name|cpu_id
 operator|&
 literal|0xf00
 operator|)
-operator|==
+operator|!=
 literal|0x600
-operator|||
+operator|&&
 operator|(
 name|cpu_id
 operator|&
 literal|0xf00
 operator|)
-operator|==
+operator|!=
 literal|0xf00
-operator|)
-operator|&&
-operator|(
+condition|)
+return|return;
+if|if
+condition|(
 operator|(
 name|strcmp
 argument_list|(
@@ -3097,10 +3119,10 @@ name|cpu_vendor
 argument_list|,
 literal|"GenuineIntel"
 argument_list|)
-operator|==
+operator|!=
 literal|0
 operator|)
-operator|||
+operator|&&
 operator|(
 name|strcmp
 argument_list|(
@@ -3108,33 +3130,31 @@ name|cpu_vendor
 argument_list|,
 literal|"AuthenticAMD"
 argument_list|)
-operator|==
+operator|!=
 literal|0
 operator|)
-operator|)
 condition|)
-block|{
+return|return;
 name|mem_range_softc
 operator|.
 name|mr_op
 operator|=
 operator|&
-name|i686_mrops
+name|amd64_mrops
 expr_stmt|;
-block|}
 block|}
 end_function
 
 begin_macro
 name|SYSINIT
 argument_list|(
-argument|i686memdev
+argument|amd64memdev
 argument_list|,
 argument|SI_SUB_DRIVERS
 argument_list|,
 argument|SI_ORDER_FIRST
 argument_list|,
-argument|i686_mem_drvinit
+argument|amd64_mem_drvinit
 argument_list|,
 argument|NULL
 argument_list|)
