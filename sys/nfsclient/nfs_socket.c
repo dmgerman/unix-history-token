@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ksiginfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -5557,11 +5563,13 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|tmpset
-operator|=
+name|ksiginfo_to_sigset_t
+argument_list|(
 name|p
-operator|->
-name|p_siglist
+argument_list|,
+operator|&
+name|tmpset
+argument_list|)
 expr_stmt|;
 name|SIGSETNAND
 argument_list|(
@@ -5583,11 +5591,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SIGNOTEMPTY
+name|signal_queued
 argument_list|(
 name|p
-operator|->
-name|p_siglist
+argument_list|,
+literal|0
 argument_list|)
 operator|&&
 name|NFSINT_SIGMASK
