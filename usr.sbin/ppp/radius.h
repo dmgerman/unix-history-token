@@ -1,12 +1,43 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1999 Internet Business Solutions Ltd., Switzerland  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id:$  */
+comment|/*  * Copyright 1999 Internet Business Solutions Ltd., Switzerland  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: radius.h,v 1.1 1999/01/28 01:56:34 brian Exp $  */
 end_comment
 
 begin_struct
 struct|struct
 name|radius
 block|{
+name|struct
+name|descriptor
+name|desc
+decl_stmt|;
+comment|/* We're a sort of (selectable) descriptor */
+struct|struct
+block|{
+name|int
+name|fd
+decl_stmt|;
+comment|/* We're selecting on this */
+name|struct
+name|rad_handle
+modifier|*
+name|rad
+decl_stmt|;
+comment|/* Using this to talk to our lib */
+name|struct
+name|pppTimer
+name|timer
+decl_stmt|;
+comment|/* for this long */
+name|struct
+name|authinfo
+modifier|*
+name|auth
+decl_stmt|;
+comment|/* Tell this about success/failure */
+block|}
+name|cx
+struct|;
 name|unsigned
 name|valid
 range|:
@@ -56,6 +87,17 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|descriptor2radius
+parameter_list|(
+name|d
+parameter_list|)
+define|\
+value|((d)->type == RADIUS_DESCRIPTOR ? (struct radius *)(d) : NULL)
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|bundle
@@ -104,7 +146,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|void
 name|radius_Authenticate
 parameter_list|(
 name|struct
@@ -112,7 +154,7 @@ name|radius
 modifier|*
 parameter_list|,
 name|struct
-name|bundle
+name|authinfo
 modifier|*
 parameter_list|,
 specifier|const
