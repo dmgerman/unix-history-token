@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.20 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -454,6 +454,10 @@ name|int
 name|tp_rsycnt
 decl_stmt|;
 comment|/* number of packets "" "" "" ""    */
+name|u_long
+name|tp_rhiwat
+decl_stmt|;
+comment|/* remember original RCVBUF size */
 comment|/* receiver congestion state stuff ...  */
 name|u_int
 name|tp_win_recv
@@ -618,41 +622,17 @@ name|short
 name|tp_rxtshift
 decl_stmt|;
 comment|/* log(2) of rexmt exp. backoff */
-name|unsigned
-name|tp_sendfcc
-range|:
-literal|1
-decl_stmt|,
-comment|/* shall next ack include FCC parameter? */
-name|tp_trace
-range|:
-literal|1
-decl_stmt|,
-comment|/* is this pcb being traced? (not used yet) */
-name|tp_perf_on
-range|:
-literal|1
-decl_stmt|,
-comment|/* 0/1 -> performance measuring on  */
-name|tp_reneged
-range|:
-literal|1
-decl_stmt|,
-comment|/* have we reneged on cdt since last ack? */
-name|tp_decbit
-range|:
-literal|3
-decl_stmt|,
-comment|/* dec bit was set, we're in reneg mode  */
+name|u_char
 name|tp_cebit_off
-range|:
-literal|1
-decl_stmt|,
-comment|/* the real DEC bit algorithms not in use */
+decl_stmt|;
+comment|/* real DEC bit algorithms not in use */
+name|u_char
+name|tp_oktonagle
+decl_stmt|;
+comment|/* Last unsent pckt may be append to */
+name|u_char
 name|tp_flags
-range|:
-literal|8
-decl_stmt|,
+decl_stmt|;
 comment|/* values: */
 define|#
 directive|define
@@ -688,20 +668,37 @@ parameter_list|(
 name|t
 parameter_list|)
 value|(((t)->tp_flags& TPF_NLQOS_PDN) != 0)
-name|tp_oktonagle
+name|unsigned
+name|tp_sendfcc
 range|:
 literal|1
 decl_stmt|,
-comment|/* Last unsent packet that may be append to */
+comment|/* shall next ack include FCC parameter? */
+name|tp_trace
+range|:
+literal|1
+decl_stmt|,
+comment|/* is this pcb being traced? (not used yet) */
+name|tp_perf_on
+range|:
+literal|1
+decl_stmt|,
+comment|/* 0/1 -> performance measuring on  */
+name|tp_reneged
+range|:
+literal|1
+decl_stmt|,
+comment|/* have we reneged on cdt since last ack? */
+name|tp_decbit
+range|:
+literal|3
+decl_stmt|,
+comment|/* dec bit was set, we're in reneg mode  */
 name|tp_notdetached
 range|:
 literal|1
-decl_stmt|,
-comment|/* Call tp_detach before freeing XXXXXXX */
-name|tp_unused
-range|:
-literal|14
 decl_stmt|;
+comment|/* Call tp_detach before freeing XXXXXXX */
 ifdef|#
 directive|ifdef
 name|TP_PERF_MEAS
