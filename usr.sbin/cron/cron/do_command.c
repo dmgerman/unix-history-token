@@ -1206,11 +1206,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|ch
-init|=
-name|getc
-argument_list|(
-name|in
-argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -1230,6 +1225,13 @@ name|ERROR_EXIT
 argument_list|)
 expr_stmt|;
 block|}
+name|ch
+operator|=
+name|getc
+argument_list|(
+name|in
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ch
