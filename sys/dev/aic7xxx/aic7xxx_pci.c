@@ -4864,8 +4864,14 @@ condition|(
 name|sc
 operator|.
 name|signature
-operator|>=
+operator|==
 name|CFSIGNATURE
+operator|||
+name|sc
+operator|.
+name|signature
+operator|==
+name|CFSIGNATURE2
 condition|)
 block|{
 name|uint32_t

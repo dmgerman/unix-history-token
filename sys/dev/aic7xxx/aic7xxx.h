@@ -2038,6 +2038,10 @@ define|#
 directive|define
 name|CFSIGNATURE
 value|0x250
+define|#
+directive|define
+name|CFSIGNATURE2
+value|0x300
 name|uint16_t
 name|checksum
 decl_stmt|;
