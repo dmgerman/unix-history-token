@@ -1406,6 +1406,12 @@ name|power
 operator|=
 name|USB_MIN_POWER
 expr_stmt|;
+name|up
+operator|->
+name|restartcnt
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/* XXX should check for none, individual, or ganged power? */
 name|pwrdly
