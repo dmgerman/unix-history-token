@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irpmarshall.c,v 8.5 1999/10/13 17:11:19 vixie Exp $"
+literal|"$Id: irpmarshall.c,v 8.6 2000/11/13 05:08:08 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -178,6 +178,12 @@ directive|include
 file|"port_after.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRNDUP
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|char
@@ -194,6 +200,11 @@ name|len
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -7586,6 +7597,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRNDUP
+end_ifndef
+
 begin_comment
 comment|/*  * static char * strndup(const char *str, size_t len)  *  * notes:  *  *	like strdup, except do len bytes instead of the whole string. Always  *	null-terminates.  *  * return:  *  *	The newly malloced string.  *  */
 end_comment
@@ -7650,6 +7667,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

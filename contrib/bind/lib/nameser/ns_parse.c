@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_parse.c,v 8.13 1999/10/13 16:39:35 vixie Exp $"
+literal|"$Id: ns_parse.c,v 8.15 2000/12/23 08:14:55 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -242,6 +242,45 @@ comment|/* expansion (6/6). */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+name|int
+name|ns_msg_getflag
+parameter_list|(
+name|ns_msg
+name|handle
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+operator|(
+name|handle
+operator|)
+operator|.
+name|_flags
+operator|&
+name|_ns_flagdata
+index|[
+name|flag
+index|]
+operator|.
+name|mask
+operator|)
+operator|>>
+name|_ns_flagdata
+index|[
+name|flag
+index|]
+operator|.
+name|shift
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|int

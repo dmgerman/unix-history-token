@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind/src/lib/dst/rsaref_link.c,v 1.7 2000/07/17 07:36:53 vixie Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/rsaref_link.c,v 1.7 2000/07/17 07:36:53 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 

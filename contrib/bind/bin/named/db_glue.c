@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_glue.c,v 8.40 2000/04/21 06:54:02 vixie Exp $"
+literal|"$Id: db_glue.c,v 8.42 2000/12/23 08:14:35 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1544,9 +1544,6 @@ name|d_next
 operator|=
 name|ndp
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BIND_UPDATE
 if|if
 condition|(
 name|savedpp
@@ -1568,6 +1565,11 @@ operator|=
 operator|*
 name|savedpp
 expr_stmt|;
+name|DRCNTINC
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 operator|*
 name|savedpp
 operator|=
@@ -1581,16 +1583,6 @@ name|d_next
 operator|=
 name|NULL
 expr_stmt|;
-else|#
-directive|else
-name|dp
-operator|->
-name|d_next
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
 name|dp
 operator|->
 name|d_flags
@@ -1699,18 +1691,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-elseif|else
-ifdef|#
-directive|ifdef
-name|BIND_UPDATE
-if|if
-condition|(
-name|savedpp
-operator|==
-name|NULL
-condition|)
-endif|#
-directive|endif
+else|else
 name|db_freedata
 argument_list|(
 name|dp
@@ -1954,20 +1935,6 @@ operator|>=
 name|buflen
 condition|)
 block|{
-operator|*
-name|cp
-operator|=
-literal|'\0'
-expr_stmt|;
-name|ns_info
-argument_list|(
-name|ns_log_db
-argument_list|,
-literal|"domain name too long: %s..."
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 name|strcpy
 argument_list|(
 name|buf

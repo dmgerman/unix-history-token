@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_net_ntop.c,v 1.6 1999/01/08 19:23:42 vixie Exp $"
+literal|"$Id: inet_net_ntop.c,v 1.7 2001/01/25 19:55:59 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -356,7 +356,7 @@ block|{
 if|if
 condition|(
 name|size
-operator|<
+operator|<=
 sizeof|sizeof
 expr|"255."
 condition|)
@@ -430,7 +430,7 @@ block|{
 if|if
 condition|(
 name|size
-operator|<
+operator|<=
 sizeof|sizeof
 expr|".255"
 condition|)
@@ -503,7 +503,7 @@ comment|/* Format CIDR /width. */
 if|if
 condition|(
 name|size
-operator|<
+operator|<=
 sizeof|sizeof
 expr|"/32"
 condition|)

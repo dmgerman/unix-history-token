@@ -21,7 +21,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_ixfr.c,v 8.20 2000/02/29 05:15:03 vixie Exp $"
+literal|"$Id: db_ixfr.c,v 8.23 2000/12/23 08:14:35 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1798,14 +1798,6 @@ modifier|*
 name|new_serial
 parameter_list|)
 block|{
-specifier|static
-name|int
-name|read_soa
-decl_stmt|,
-name|read_ns
-decl_stmt|,
-name|rrcount
-decl_stmt|;
 name|char
 name|data
 index|[
@@ -1821,13 +1813,6 @@ name|sclass
 index|[
 literal|3
 index|]
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|errtype
-init|=
-literal|"Database"
 decl_stmt|;
 name|char
 modifier|*
@@ -1919,10 +1904,6 @@ decl_stmt|;
 name|struct
 name|in_addr
 name|ina
-decl_stmt|;
-name|struct
-name|sockaddr_in
-name|empty_from
 decl_stmt|;
 name|int
 name|datasize
@@ -2382,7 +2363,7 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|"origin %s class %s serial %ul"
+literal|"origin %s class %s serial %lu"
 argument_list|,
 name|origin
 argument_list|,
@@ -3183,6 +3164,8 @@ argument_list|,
 name|zp
 operator|->
 name|z_updatelog
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3222,6 +3205,9 @@ operator|->
 name|z_updatelog
 argument_list|,
 name|GETNUM_SERIAL
+argument_list|,
+operator|&
+name|multiline
 argument_list|)
 expr_stmt|;
 if|if
@@ -3324,7 +3310,10 @@ block|}
 if|if
 condition|(
 name|multiline
-operator|&&
+condition|)
+block|{
+name|c
+operator|=
 name|getnonblank
 argument_list|(
 name|fp
@@ -3332,15 +3321,29 @@ argument_list|,
 name|zp
 operator|->
 name|z_updatelog
+argument_list|,
+literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
 operator|!=
 literal|')'
 condition|)
 block|{
+name|ungetc
+argument_list|(
+name|c
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
 name|err
 operator|++
 expr_stmt|;
 break|break;
+block|}
 block|}
 name|endline
 argument_list|(

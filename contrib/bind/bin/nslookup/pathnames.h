@@ -4,7 +4,7 @@ comment|/*  * ++Copyright++ 1990  * -  * Copyright (c) 1990  *    The Regents of
 end_comment
 
 begin_comment
-comment|/*  *	@(#)pathnames.h	5.1 (Berkeley) 5/28/90  *	$Id: pathnames.h,v 8.1 1994/12/15 06:24:31 vixie Exp $  */
+comment|/*  *	@(#)pathnames.h	5.1 (Berkeley) 5/28/90  *	$Id: pathnames.h,v 8.2 2000/11/08 06:47:32 marka Exp $  */
 end_comment
 
 begin_define
@@ -14,12 +14,23 @@ name|_PATH_NSLOOKUPRC
 value|"/.nslookuprc"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_PAGERCMD
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_PAGERCMD
 value|"more"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_xfr.c,v 8.62 2000/04/24 05:20:51 vixie Exp $"
+literal|"$Id: ns_xfr.c,v 8.63 2000/12/23 08:14:43 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -981,8 +981,6 @@ name|zones
 index|[
 name|zone
 index|]
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if

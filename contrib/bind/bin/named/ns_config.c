@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_config.c,v 8.114 2000/04/23 02:18:58 vixie Exp $"
+literal|"$Id: ns_config.c,v 8.118 2000/12/23 08:14:37 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5599,6 +5599,12 @@ name|DEFAULT_MAX_NCACHE_TTL
 expr_stmt|;
 name|op
 operator|->
+name|max_host_stats
+operator|=
+literal|0
+expr_stmt|;
+name|op
+operator|->
 name|lame_ttl
 operator|=
 name|NTTL
@@ -5908,6 +5914,15 @@ condition|(
 name|bool_opt
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HITCOUNTS
+case|case
+name|OPTION_HITCOUNT
+case|:
+endif|#
+directive|endif
+comment|/* HITCOUNTS */
 case|case
 name|OPTION_NORECURSE
 case|:
@@ -14260,7 +14275,7 @@ literal|0
 argument_list|,
 name|log_info
 argument_list|,
-name|LOG_DAEMON
+name|ISC_FACILITY
 argument_list|)
 expr_stmt|;
 if|if
@@ -14807,7 +14822,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|time_t
 name|load_configuration
 parameter_list|(
 specifier|const
@@ -14816,6 +14831,9 @@ modifier|*
 name|filename
 parameter_list|)
 block|{
+name|time_t
+name|mtime
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|config_initialized
@@ -14856,6 +14874,8 @@ name|logging_installed
 operator|=
 literal|0
 expr_stmt|;
+name|mtime
+operator|=
 name|parse_configuration
 argument_list|(
 name|filename
@@ -14914,6 +14934,11 @@ comment|/* release queued notifies */
 name|notify_afterload
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+name|mtime
+operator|)
+return|;
 block|}
 end_function
 

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dnsquery.c,v 8.13 1999/10/13 16:38:59 vixie Exp $"
+literal|"$Id: dnsquery.c,v 8.15 2000/12/23 08:14:32 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,10 +225,6 @@ specifier|extern
 name|char
 modifier|*
 name|optarg
-decl_stmt|;
-name|HEADER
-modifier|*
-name|hp
 decl_stmt|;
 name|int
 name|stream
@@ -659,6 +655,7 @@ name|optind
 operator|<
 name|argc
 condition|)
+block|{
 if|if
 condition|(
 name|strlen
@@ -695,6 +692,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|strcpy
 argument_list|(
 name|name
@@ -705,6 +703,8 @@ name|optind
 index|]
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 name|len
 operator|=
 sizeof|sizeof

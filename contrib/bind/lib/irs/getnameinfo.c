@@ -602,7 +602,7 @@ name|snprintf
 argument_list|(
 name|numserv
 argument_list|,
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|numserv
 argument_list|)
@@ -667,6 +667,8 @@ name|sp
 operator|->
 name|s_name
 argument_list|)
+operator|+
+literal|1
 operator|>
 name|servlen
 condition|)
@@ -797,6 +799,8 @@ name|strlen
 argument_list|(
 name|numaddr
 argument_list|)
+operator|+
+literal|1
 operator|>
 name|hostlen
 condition|)
@@ -869,6 +873,8 @@ name|hp
 operator|->
 name|h_name
 argument_list|)
+operator|+
+literal|1
 operator|>
 name|hostlen
 condition|)
@@ -925,6 +931,8 @@ name|strlen
 argument_list|(
 name|numaddr
 argument_list|)
+operator|+
+literal|1
 operator|>
 name|hostlen
 condition|)

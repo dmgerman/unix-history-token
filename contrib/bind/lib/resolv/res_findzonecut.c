@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_findzonecut.c,v 8.9 1999/12/21 09:33:34 cyarnell Exp $"
+literal|"$Id: res_findzonecut.c,v 8.12 2000/11/22 01:20:44 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -468,7 +468,7 @@ comment|/* Public. */
 end_comment
 
 begin_comment
-comment|/*  * int  * res_findzonecut(res, dname, class, zname, zsize, addrs, naddrs)  *	find enclosing zone for a<dname,class>, and some server addresses  * parameters:  *	res - resolver context to work within (is modified)  *	dname - domain name whose enclosing zone is desired  *	class - class of dname (and its enclosing zone)  *	zname - found zone name  *	zsize - allocated size of zname  *	addrs - found server addresses  *	naddrs - max number of addrs  * return values:  *< 0 - an error occurred (check errno)  *	= 0 - zname is now valid, but addrs[] wasn't changed  *> 0 - zname is now valid, and return value is number of addrs[] found  * notes:  *	this function calls res_nsend() which means it depends on correctly  *	functioning recursive nameservers (usually defined in /etc/resolv.conf  *	or its local equivilent).  *  *	we start by asking for an SOA<dname,class>.  if we get one as an  *	answer, that just means<dname,class> is a zone top, which is fine.  *	more than likely we'll be told to go pound sand, in the form of a  *	negative answer.  *  *	note that we are not prepared to deal with referrals since that would  *	only come from authority servers and our correctly functioning local  *	recursive server would have followed the referral and got us something  *	more definite.  *  *	if the authority section contains an SOA, this SOA should also be the  *	closest enclosing zone, since any intermediary zone cuts would've been  *	returned as referrals and dealt with by our correctly functioning local  *	recursive name server.  but an SOA in the authority section should NOT  *	match our dname (since that would have been returned in the answer  *	section).  an authority section SOA has to be "above" our dname.  *  *	we cannot fail to find an SOA in this way.  ultimately we'll return  *	a zname indicating the root zone if that's the closest enclosing zone.  *	however, since authority section SOA's were once optional, it's  *	possible that we'll have to go hunting for the enclosing SOA by  *	ripping labels off the front of our dname -- this is known as "doing  *	it the hard way."  *  *	ultimately we want some server addresses, which are ideally the ones  *	pertaining to the SOA.MNAME, but only if there is a matching NS RR.  *	so the second phase (after we find an SOA) is to go looking for the  *	NS RRset for that SOA's zone.  *  *	no answer section processed by this code is allowed to contain CNAME  *	or DNAME RR's.  for the SOA query this means we strip a label and  *	keep going.  for the NS and A queries this means we just give up.  */
+comment|/*  * int  * res_findzonecut(res, dname, class, zname, zsize, addrs, naddrs)  *	find enclosing zone for a<dname,class>, and some server addresses  * parameters:  *	res - resolver context to work within (is modified)  *	dname - domain name whose enclosing zone is desired  *	class - class of dname (and its enclosing zone)  *	zname - found zone name  *	zsize - allocated size of zname  *	addrs - found server addresses  *	naddrs - max number of addrs  * return values:  *< 0 - an error occurred (check errno)  *	= 0 - zname is now valid, but addrs[] wasn't changed  *> 0 - zname is now valid, and return value is number of addrs[] found  * notes:  *	this function calls res_nsend() which means it depends on correctly  *	functioning recursive nameservers (usually defined in /etc/resolv.conf  *	or its local equivilent).  *  *	we start by asking for an SOA<dname,class>.  if we get one as an  *	answer, that just means<dname,class> is a zone top, which is fine.  *	more than likely we'll be told to go pound sand, in the form of a  *	negative answer.  *  *	note that we are not prepared to deal with referrals since that would  *	only come from authority servers and our correctly functioning local  *	recursive server would have followed the referral and got us something  *	more definite.  *  *	if the authority section contains an SOA, this SOA should also be the  *	closest enclosing zone, since any intermediary zone cuts would've been  *	returned as referrals and dealt with by our correctly functioning local  *	recursive name server.  but an SOA in the authority section should NOT  *	match our dname (since that would have been returned in the answer  *	section).  an authority section SOA has to be "above" our dname.  *  *	however, since authority section SOA's were once optional, it's  *	possible that we'll have to go hunting for the enclosing SOA by  *	ripping labels off the front of our dname -- this is known as "doing  *	it the hard way."  *  *	ultimately we want some server addresses, which are ideally the ones  *	pertaining to the SOA.MNAME, but only if there is a matching NS RR.  *	so the second phase (after we find an SOA) is to go looking for the  *	NS RRset for that SOA's zone.  *  *	no answer section processed by this code is allowed to contain CNAME  *	or DNAME RR's.  for the SOA query this means we strip a label and  *	keep going.  for the NS and A queries this means we just give up.  */
 end_comment
 
 begin_function
@@ -1781,7 +1781,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"get_ns: do_query('zname', %s) failed (%d)"
+literal|"get_ns: do_query('%s', %s) failed (%d)"
 operator|,
 name|zname
 operator|,
@@ -2376,6 +2376,13 @@ literal|1
 operator|)
 return|;
 block|}
+name|INIT_LINK
+argument_list|(
+name|nsrr
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
 name|INIT_LIST
 argument_list|(
 name|nsrr
@@ -2615,6 +2622,13 @@ literal|1
 operator|)
 return|;
 block|}
+name|INIT_LINK
+argument_list|(
+name|arr
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&

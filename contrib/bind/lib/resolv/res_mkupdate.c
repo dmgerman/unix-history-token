@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_mkupdate.c,v 1.24 1999/10/13 17:11:32 vixie Exp $"
+literal|"$Id: res_mkupdate.c,v 1.25 2000/11/22 01:20:46 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4710,6 +4710,20 @@ name|NULL
 operator|)
 return|;
 block|}
+name|INIT_LINK
+argument_list|(
+name|rrecp
+argument_list|,
+name|r_link
+argument_list|)
+expr_stmt|;
+name|INIT_LINK
+argument_list|(
+name|rrecp
+argument_list|,
+name|r_glink
+argument_list|)
+expr_stmt|;
 name|rrecp
 operator|->
 name|r_class

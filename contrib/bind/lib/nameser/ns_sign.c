@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_sign.c,v 8.8 1999/10/13 16:39:36 vixie Exp $"
+literal|"$Id: ns_sign.c,v 8.9 2000/12/23 08:14:57 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include

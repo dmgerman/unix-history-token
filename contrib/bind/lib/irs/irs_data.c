@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irs_data.c,v 1.14 1999/10/13 16:39:31 vixie Exp $"
+literal|"$Id: irs_data.c,v 1.15 2000/12/23 08:14:54 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,7 +189,9 @@ end_endif
 begin_function
 name|void
 name|irs_destroy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
