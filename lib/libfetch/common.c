@@ -1625,6 +1625,9 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|conn
@@ -1685,8 +1688,8 @@ literal|0
 expr_stmt|;
 do|do
 block|{
-if|if
-condition|(
+name|error
+operator|=
 name|_fetch_read
 argument_list|(
 name|conn
@@ -1696,6 +1699,10 @@ name|c
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|==
 operator|-
 literal|1
@@ -1706,6 +1713,14 @@ operator|-
 literal|1
 operator|)
 return|;
+elseif|else
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+break|break;
 name|conn
 operator|->
 name|buf
