@@ -3442,6 +3442,21 @@ operator|->
 name|wire_count
 operator|++
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|wire_count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"vm_page_wire: wire_count overflow m=%p"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
