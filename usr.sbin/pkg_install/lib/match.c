@@ -1338,6 +1338,7 @@ name|store
 operator|!=
 name|NULL
 condition|)
+block|{
 comment|/* Free previously allocated memory */
 for|for
 control|(
@@ -1367,6 +1368,16 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|store
+operator|->
+name|store
+index|[
+literal|0
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|store
 operator|->
 name|used
