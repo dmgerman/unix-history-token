@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * dumptab.c - handles dumping the database  *  *	$Id$  */
+comment|/*  * dumptab.c - handles dumping the database  *  *	$Id: dumptab.c,v 1.2 1996/09/22 21:52:07 wosch Exp $  */
 end_comment
 
 begin_include
@@ -305,7 +305,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|long
+name|time_t
 name|t
 decl_stmt|;
 comment|/* Print symbols in alphabetical order for reader's convenience. */
@@ -596,8 +596,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%d:"
+literal|"%lu:"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|hp
 operator|->
 name|bootsize
@@ -1043,8 +1046,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\\\n\t:ms=%d:"
+literal|"\\\n\t:ms=%lu:"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|hp
 operator|->
 name|msg_size
@@ -1064,8 +1070,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\\\n\t:mw=%d:"
+literal|"\\\n\t:mw=%lu:"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|hp
 operator|->
 name|min_wait

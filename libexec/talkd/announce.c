@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: announce.c,v 1.5.2.2 1997/12/18 07:30:09 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -352,6 +352,9 @@ name|struct
 name|timeval
 name|clock
 decl_stmt|;
+name|time_t
+name|clock_sec
+decl_stmt|;
 name|struct
 name|timezone
 name|zone
@@ -428,14 +431,18 @@ operator|&
 name|zone
 argument_list|)
 expr_stmt|;
+name|clock_sec
+operator|=
+name|clock
+operator|.
+name|tv_sec
+expr_stmt|;
 name|localclock
 operator|=
 name|localtime
 argument_list|(
 operator|&
-name|clock
-operator|.
-name|tv_sec
+name|clock_sec
 argument_list|)
 expr_stmt|;
 operator|(

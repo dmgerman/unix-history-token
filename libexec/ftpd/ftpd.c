@@ -55,7 +55,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftpd.c,v 1.25.2.16 1998/05/16 21:29:20 ache Exp $"
+literal|"$Id: ftpd.c,v 1.25.2.17 1998/06/04 22:28:14 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2267,17 +2267,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|signal
 argument_list|(
 name|SIGURG
 argument_list|,
 name|myoob
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|SIG_ERR
 condition|)
 name|syslog
 argument_list|(
@@ -2409,6 +2406,35 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Disable Nagle on the control channel so that we don't have to wait 	 * for peer's ACK before issuing our next reply. 	 */
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+literal|0
+argument_list|,
+name|IPPROTO_TCP
+argument_list|,
+name|TCP_NODELAY
+argument_list|,
+operator|&
+name|on
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"control setsockopt TCP_NODELAY: %m"
+argument_list|)
+expr_stmt|;
 name|data_source
 operator|.
 name|sin_port
@@ -5656,7 +5682,7 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-name|long
+name|time_t
 name|start
 decl_stmt|;
 if|if
@@ -9569,9 +9595,16 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"connection from %s"
+literal|"connection from %s (%s)"
 argument_list|,
 name|remotehost
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|sin
+operator|->
+name|sin_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -11265,7 +11298,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|long
+name|time_t
 name|now
 decl_stmt|;
 if|if

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: comsat.c,v 1.6.2.1 1997/12/12 07:16:56 charnier Exp $"
+literal|"$Id: comsat.c,v 1.6.2.2 1998/02/18 12:25:43 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -990,6 +990,9 @@ literal|"%s/%.*s"
 argument_list|,
 name|_PATH_MAILDIR
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|utmp
@@ -1019,6 +1022,9 @@ literal|"%s/%.*s"
 argument_list|,
 name|_PATH_MAILDIR
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|utmp
