@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Paul Corbett.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Paul Corbett.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -22,11 +22,11 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/*  machine dependent definitions			*/
+comment|/*  machine-dependent definitions			*/
 end_comment
 
 begin_comment
-comment|/*  the following definitions are for the VAX		*/
+comment|/*  the following definitions are for the Tahoe		*/
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ comment|/*  they might have to be changed for other machines	*/
 end_comment
 
 begin_comment
-comment|/*  MAXCHAR is the largest character value		*/
+comment|/*  MAXCHAR is the largest unsigned character value	*/
 end_comment
 
 begin_comment
@@ -127,7 +127,7 @@ name|r
 parameter_list|,
 name|n
 parameter_list|)
-value|((((r)[(n)>> 5])>> ((n)& 31))& 1)
+value|((((r)[(n)>>5])>>((n)&31))&1)
 end_define
 
 begin_define
@@ -139,7 +139,7 @@ name|r
 parameter_list|,
 name|n
 parameter_list|)
-value|((r)[(n)>> 5] |= (1<< ((n)& 31)))
+value|((r)[(n)>>5]|=((unsigned)1<<((n)&31)))
 end_define
 
 begin_comment
@@ -270,6 +270,13 @@ end_comment
 begin_comment
 comment|/* defines for constructing filenames */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CODE_SUFFIX
+value|".code.c"
+end_define
 
 begin_define
 define|#
@@ -420,13 +427,6 @@ name|REDUCE
 value|2
 end_define
 
-begin_define
-define|#
-directive|define
-name|ERROR
-value|3
-end_define
-
 begin_comment
 comment|/*  character macros  */
 end_comment
@@ -488,6 +488,18 @@ end_define
 begin_comment
 comment|/*  storage allocation macros  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CALLOC
+parameter_list|(
+name|k
+parameter_list|,
+name|n
+parameter_list|)
+value|(calloc((unsigned)(k),(unsigned)(n)))
+end_define
 
 begin_define
 define|#
@@ -779,6 +791,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
+name|rflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
 name|tflag
 decl_stmt|;
 end_decl_stmt
@@ -841,6 +860,15 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
+name|tables
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
 name|header
 index|[]
 decl_stmt|;
@@ -869,6 +897,14 @@ specifier|extern
 name|char
 modifier|*
 name|action_file_name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|code_file_name
 decl_stmt|;
 end_decl_stmt
 
@@ -925,6 +961,14 @@ specifier|extern
 name|FILE
 modifier|*
 name|action_file
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|code_file
 decl_stmt|;
 end_decl_stmt
 
