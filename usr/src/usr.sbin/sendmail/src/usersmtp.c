@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.10
+literal|4.11
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.10
+literal|4.11
 operator|%
 name|G
 operator|%
@@ -1542,7 +1542,7 @@ directive|ifdef
 name|LOG
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_MAIL
 argument_list|,
 literal|"%s"
 argument_list|,

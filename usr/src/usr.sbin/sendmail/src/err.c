@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|4.5
+literal|4.6
 operator|%
 name|G
 operator|%
@@ -212,7 +212,7 @@ literal|0
 condition|)
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_MAIL
 argument_list|,
 literal|"%s: SYSERR: %s"
 argument_list|,
