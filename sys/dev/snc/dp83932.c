@@ -1308,7 +1308,7 @@ decl_stmt|;
 name|int
 name|s
 init|=
-name|splnet
+name|splhardnet
 argument_list|()
 decl_stmt|,
 name|err
@@ -1837,7 +1837,7 @@ comment|/* already running */
 return|return;
 name|s
 operator|=
-name|splnet
+name|splhardnet
 argument_list|()
 expr_stmt|;
 name|NIC_PUT
@@ -2112,7 +2112,7 @@ decl_stmt|;
 name|int
 name|s
 init|=
-name|splnet
+name|splhardnet
 argument_list|()
 decl_stmt|;
 comment|/* stick chip in reset */
