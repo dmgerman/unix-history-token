@@ -49,11 +49,11 @@ file|"lst.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Insert --  *	Insert a new node with the given piece of data before the given  *	node in the given list.  *  * Results:  *	SUCCESS or FAILURE.  *  *	l	list to manipulate  *	ln	node before which to insert d  *	d	datum to be inserted  *  * Side Effects:  *	the firstPtr field will be changed if ln is the first node in the  *	list.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Insert --  *	Insert a new node with the given piece of data before the given  *	node in the given list.  *  * Parameters:  *	l	list to manipulate  *	ln	node before which to insert d  *	d	datum to be inserted  *  * Side Effects:  *	the firstPtr field will be changed if ln is the first node in the  *	list.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
-name|ReturnStatus
+name|void
 name|Lst_Insert
 parameter_list|(
 name|Lst
@@ -74,58 +74,6 @@ modifier|*
 name|nLNode
 decl_stmt|;
 comment|/* new lnode for d */
-comment|/*      * check validity of arguments      */
-if|if
-condition|(
-name|Lst_Valid
-argument_list|(
-name|list
-argument_list|)
-operator|&&
-operator|(
-name|Lst_IsEmpty
-argument_list|(
-name|list
-argument_list|)
-operator|&&
-name|ln
-operator|==
-name|NULL
-operator|)
-condition|)
-goto|goto
-name|ok
-goto|;
-if|if
-condition|(
-operator|!
-name|Lst_Valid
-argument_list|(
-name|list
-argument_list|)
-operator|||
-name|Lst_IsEmpty
-argument_list|(
-name|list
-argument_list|)
-operator|||
-operator|!
-name|Lst_NodeValid
-argument_list|(
-name|ln
-argument_list|,
-name|list
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|FAILURE
-operator|)
-return|;
-block|}
-name|ok
-label|:
 name|nLNode
 operator|=
 name|emalloc
@@ -238,11 +186,6 @@ name|nLNode
 expr_stmt|;
 block|}
 block|}
-return|return
-operator|(
-name|SUCCESS
-operator|)
-return|;
 block|}
 end_function
 

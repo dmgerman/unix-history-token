@@ -302,7 +302,7 @@ comment|/* Insert an element before another */
 end_comment
 
 begin_function_decl
-name|ReturnStatus
+name|void
 name|Lst_Insert
 parameter_list|(
 name|Lst
@@ -322,7 +322,7 @@ comment|/* Insert an element after another */
 end_comment
 
 begin_function_decl
-name|ReturnStatus
+name|void
 name|Lst_Append
 parameter_list|(
 name|Lst

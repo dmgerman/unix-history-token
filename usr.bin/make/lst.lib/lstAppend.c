@@ -49,11 +49,11 @@ file|"lst.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Append --  *	Create a new node and add it to the given list after the given node.  *  * Results:  *	SUCCESS if all went well.  *  * Arguments:  *	l	affected list  *	ln	node after which to append the datum  *	d	said datum  *  * Side Effects:  *	A new LstNode is created and linked in to the List. The lastPtr  *	field of the List will be altered if ln is the last node in the  *	list. lastPtr and firstPtr will alter if the list was empty and  *	ln was NULL.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Append --  *	Create a new node and add it to the given list after the given node.  *  * Arguments:  *	l	affected list  *	ln	node after which to append the datum  *	d	said datum  *  * Side Effects:  *	A new LstNode is created and linked in to the List. The lastPtr  *	field of the List will be altered if ln is the last node in the  *	list. lastPtr and firstPtr will alter if the list was empty and  *	ln was NULL.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
-name|ReturnStatus
+name|void
 name|Lst_Append
 parameter_list|(
 name|Lst
@@ -73,59 +73,6 @@ name|LstNode
 modifier|*
 name|nLNode
 decl_stmt|;
-if|if
-condition|(
-name|Lst_Valid
-argument_list|(
-name|list
-argument_list|)
-operator|&&
-operator|(
-name|ln
-operator|==
-name|NULL
-operator|&&
-name|Lst_IsEmpty
-argument_list|(
-name|list
-argument_list|)
-operator|)
-condition|)
-block|{
-goto|goto
-name|ok
-goto|;
-block|}
-if|if
-condition|(
-operator|!
-name|Lst_Valid
-argument_list|(
-name|list
-argument_list|)
-operator|||
-name|Lst_IsEmpty
-argument_list|(
-name|list
-argument_list|)
-operator|||
-operator|!
-name|Lst_NodeValid
-argument_list|(
-name|ln
-argument_list|,
-name|list
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|FAILURE
-operator|)
-return|;
-block|}
-name|ok
-label|:
 name|nLNode
 operator|=
 name|emalloc
@@ -238,11 +185,6 @@ name|nLNode
 expr_stmt|;
 block|}
 block|}
-return|return
-operator|(
-name|SUCCESS
-operator|)
-return|;
 block|}
 end_function
 
