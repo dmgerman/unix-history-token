@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory and the Systems  * Programming Group of the University of Utah Computer Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: sd.c 1.2 90/01/23$  *  *	@(#)sd.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory and the Systems  * Programming Group of the University of Utah Computer Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: sd.c 1.2 90/01/23$  *  *	@(#)sd.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -130,16 +130,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* NB: HP6300 won't boot if next printf is removed (???) - vj */
-name|printf
-argument_list|(
-literal|"sd(%d,%d,0,0): "
-argument_list|,
-name|ctlr
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 name|stat
 operator|=
 name|scsi_test_unit_rdy
@@ -155,11 +145,6 @@ name|stat
 condition|)
 block|{
 comment|/* drive may be doing RTZ - wait a bit */
-name|printf
-argument_list|(
-literal|"not ready - "
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|stat
@@ -167,11 +152,6 @@ operator|==
 name|STS_CHECKCOND
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"retrying ... "
-argument_list|)
-expr_stmt|;
 name|DELAY
 argument_list|(
 literal|1000000
@@ -194,7 +174,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"giving up (stat=%x).\n"
+literal|"sd(%d,%d,0,0): init failed (stat=%x)\n"
+argument_list|,
+name|ctlr
+argument_list|,
+name|unit
 argument_list|,
 name|stat
 argument_list|)
@@ -206,11 +190,6 @@ operator|)
 return|;
 block|}
 block|}
-name|printf
-argument_list|(
-literal|"unit ready.\n"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * try to get the drive block size. 	 */
 name|capbuf
 index|[
@@ -544,6 +523,19 @@ decl_stmt|;
 name|char
 name|stat
 decl_stmt|;
+if|if
+condition|(
+name|io
+operator|->
+name|i_cc
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|ss
 operator|->
 name|sc_retry
