@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_ethersubr.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_ethersubr.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1174,8 +1174,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|error
-operator|=
 call|(
 modifier|*
 name|ifp
@@ -1242,7 +1240,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Pull packet off interface.  Off is nonzero if packet  * has trailing header; we still have to drop  * the type and length which are at the front of any trailer data.  */
+comment|/*  * Process a received Ethernet packet;  * the packet is in the mbuf chain m without  * the ether header, which is provided separately.  */
 end_comment
 
 begin_macro
@@ -1408,6 +1406,9 @@ break|break;
 endif|#
 directive|endif
 default|default:
+ifdef|#
+directive|ifdef
+name|ISO
 if|if
 condition|(
 name|eh
@@ -1460,10 +1461,30 @@ name|LLC_ISO_LSAP
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|ISO
 comment|/* LSAP for ISO */
+name|m
+operator|->
+name|m_data
+operator|+=
+literal|3
+expr_stmt|;
+comment|/* XXX */
+name|m
+operator|->
+name|m_len
+operator|-=
+literal|3
+expr_stmt|;
+comment|/* XXX */
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|-=
+literal|3
+expr_stmt|;
+comment|/* XXX */
 name|M_PREPEND
 argument_list|(
 name|m
@@ -1515,61 +1536,11 @@ operator|=
 operator|&
 name|clnlintrq
 expr_stmt|;
-if|if
-condition|(
-name|IF_QFULL
-argument_list|(
-name|inq
-argument_list|)
-condition|)
-block|{
-name|IFDEBUG
-argument_list|(
-argument|D_ETHER
-argument_list|)
-name|printf
-argument_list|(
-literal|" qfull\n"
-argument_list|)
-expr_stmt|;
-name|ENDDEBUG
-name|IF_DROP
-parameter_list|(
-name|inq
-parameter_list|)
-function_decl|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|IF_ENQUEUE
-argument_list|(
-name|inq
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-name|IFDEBUG
-argument_list|(
-argument|D_ETHER
-argument_list|)
-name|printf
-argument_list|(
-literal|" queued\n"
-argument_list|)
-expr_stmt|;
-name|ENDDEBUG
-block|}
-return|return;
-endif|#
-directive|endif
-endif|ISO
-block|}
 break|break;
+block|}
+goto|goto
+name|dropanyway
+goto|;
 case|case
 name|LLC_XID
 case|:
@@ -1799,6 +1770,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+else|#
+directive|else
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return;
+endif|#
+directive|endif
+endif|ISO
 block|}
 name|s
 operator|=
