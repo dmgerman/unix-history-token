@@ -42,21 +42,15 @@ name|gd_curthread
 decl_stmt|;
 comment|/* current thread */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|gd_idleproc
+name|gd_idlethread
 decl_stmt|;
-comment|/* idle process */
+comment|/* idle thread */
 name|struct
 name|thread
 modifier|*
 name|gd_fpcurthread
-decl_stmt|;
-comment|/* fp state owner */
-name|struct
-name|proc
-modifier|*
-name|gd_fpcurproc
 decl_stmt|;
 comment|/* fp state owner */
 name|struct
