@@ -66,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<geom/geom_stats.h>
+file|<sys/devicestat.h>
 end_include
 
 begin_comment
@@ -240,7 +240,7 @@ name|statsfd
 operator|=
 name|open
 argument_list|(
-argument|_PATH_DEV GEOM_STATS_DEVICE
+argument|_PATH_DEV DEVSTAT_DEVICE_NAME
 argument_list|,
 argument|O_RDONLY
 argument_list|)
@@ -268,7 +268,7 @@ operator|/
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|g_stat
+name|devstat
 argument_list|)
 expr_stmt|;
 name|p
@@ -620,7 +620,7 @@ end_function
 
 begin_function
 name|struct
-name|g_stat
+name|devstat
 modifier|*
 name|geom_stats_snapshot_next
 parameter_list|(
@@ -630,7 +630,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|g_stat
+name|devstat
 modifier|*
 name|gsp
 decl_stmt|;
@@ -647,7 +647,7 @@ name|gsp
 operator|=
 operator|(
 expr|struct
-name|g_stat
+name|devstat
 operator|*
 operator|)
 operator|(

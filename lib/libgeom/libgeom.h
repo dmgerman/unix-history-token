@@ -27,12 +27,6 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<geom/geom_stats.h>
-end_include
-
 begin_function_decl
 name|void
 name|geom_stats_close
@@ -110,7 +104,7 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|g_stat
+name|devstat
 modifier|*
 name|geom_stats_snapshot_next
 parameter_list|(
