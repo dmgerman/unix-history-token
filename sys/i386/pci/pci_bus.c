@@ -1241,7 +1241,10 @@ name|devclass_get_device
 argument_list|(
 name|pci_devclass
 argument_list|,
-literal|0
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 condition|)
 return|return
