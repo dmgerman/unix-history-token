@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.19 1997/11/18 03:41:51 jdp Exp $"
+literal|"$Id: main.c,v 1.20 1998/02/18 04:15:04 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -259,7 +259,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"gpr"
+literal|"gprn"
 argument_list|)
 operator|)
 operator|!=
@@ -284,6 +284,11 @@ case|:
 name|profiling
 operator|++
 expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+comment|/* no_config_clobber is now true by default, no-op */
 break|break;
 case|case
 literal|'r'
