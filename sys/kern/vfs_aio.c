@@ -2447,7 +2447,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -2694,7 +2696,9 @@ name|aiocbe
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3396,7 +3400,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|aiocbe
+operator|)
 return|;
 block|}
 block|}
@@ -3406,7 +3412,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -4771,7 +4779,9 @@ begin_function
 specifier|static
 name|int
 name|aio_newproc
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|error
@@ -4806,7 +4816,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 comment|/* 	 * Wait until daemon is started, but continue on just in case to 	 * handle error conditions. 	 */
 name|error
@@ -4826,7 +4838,9 @@ name|num_aio_procs
 operator|++
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -5473,7 +5487,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|doerror
 label|:
@@ -5505,7 +5521,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -5593,7 +5611,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINPROGRESS
+operator|)
 return|;
 block|}
 else|else
@@ -6133,7 +6153,9 @@ name|aiocbe
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 if|if
@@ -6169,7 +6191,9 @@ name|aiocbe
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 comment|/* Save userspace address of the job info. */
@@ -6271,7 +6295,9 @@ name|EBADF
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EBADF
+operator|)
 return|;
 block|}
 name|fp
@@ -6347,7 +6373,9 @@ name|EBADF
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EBADF
+operator|)
 return|;
 block|}
 name|fhold
@@ -6504,7 +6532,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -7226,7 +7256,9 @@ expr_stmt|;
 name|done
 label|:
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -7288,7 +7320,9 @@ operator|>=
 name|max_queue_count
 condition|)
 return|return
+operator|(
 name|EAGAIN
+operator|)
 return|;
 name|ki
 operator|=
@@ -7307,7 +7341,9 @@ operator|->
 name|kaio_qallowed_count
 condition|)
 return|return
+operator|(
 name|EAGAIN
+operator|)
 return|;
 return|return
 name|_aio_aqueue
@@ -7406,7 +7442,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|ki
 operator|=
@@ -7421,7 +7459,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -7732,7 +7772,9 @@ operator|>
 name|AIO_LISTIO_MAX
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|timo
 operator|=
@@ -7770,7 +7812,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -7835,7 +7879,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|EAGAIN
+operator|)
 return|;
 name|njoblist
 operator|=
@@ -7955,7 +8001,9 @@ name|ujoblist
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|error
@@ -8042,7 +8090,9 @@ name|ujoblist
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 block|}
@@ -8146,7 +8196,9 @@ name|ujoblist
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 block|}
@@ -8203,7 +8255,9 @@ name|ujoblist
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINTR
+operator|)
 return|;
 block|}
 elseif|else
@@ -8229,13 +8283,17 @@ name|ujoblist
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EAGAIN
+operator|)
 return|;
 block|}
 block|}
 comment|/* NOTREACHED */
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 end_function
@@ -8396,7 +8454,9 @@ operator|=
 name|AIO_NOTCANCELED
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -8644,7 +8704,9 @@ operator|=
 name|AIO_CANCELED
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -8884,7 +8946,9 @@ operator|=
 name|AIO_NOTCANCELED
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -8902,7 +8966,9 @@ operator|=
 name|AIO_CANCELED
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|td
@@ -8915,7 +8981,9 @@ operator|=
 name|AIO_ALLDONE
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -8977,7 +9045,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|jobref
 operator|=
@@ -9009,7 +9079,9 @@ literal|0
 operator|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -9054,7 +9126,9 @@ operator|.
 name|error
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -9120,7 +9194,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -9181,7 +9257,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -9258,7 +9336,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -9319,7 +9399,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -9371,7 +9453,9 @@ return|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 end_function
@@ -9535,7 +9619,9 @@ name|LIO_WAIT
 operator|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|nent
 operator|=
@@ -9554,7 +9640,9 @@ operator|>
 name|AIO_LISTIO_MAX
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -9580,7 +9668,9 @@ operator|>
 name|max_queue_count
 condition|)
 return|return
+operator|(
 name|EAGAIN
+operator|)
 return|;
 name|ki
 operator|=
@@ -9603,7 +9693,9 @@ operator|->
 name|kaio_qallowed_count
 condition|)
 return|return
+operator|(
 name|EAGAIN
+operator|)
 return|;
 name|lj
 operator|=
@@ -9620,7 +9712,9 @@ operator|!
 name|lj
 condition|)
 return|return
+operator|(
 name|EAGAIN
+operator|)
 return|;
 name|lj
 operator|->
@@ -9708,7 +9802,9 @@ name|lj
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 if|if
@@ -9732,7 +9828,9 @@ name|lj
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|lj
@@ -9862,7 +9960,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* 	 * Calculate the appropriate error return. 	 */
 name|runningcode
@@ -10142,7 +10242,9 @@ operator|==
 name|nentqueued
 condition|)
 return|return
+operator|(
 name|runningcode
+operator|)
 return|;
 name|ki
 operator|->
@@ -10172,7 +10274,9 @@ operator|==
 name|EINTR
 condition|)
 return|return
+operator|(
 name|EINTR
+operator|)
 return|;
 elseif|else
 if|if
@@ -10182,12 +10286,16 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 return|return
+operator|(
 name|EAGAIN
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 name|runningcode
+operator|)
 return|;
 block|}
 end_function
@@ -10743,7 +10851,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -10812,7 +10922,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|EAGAIN
+operator|)
 return|;
 for|for
 control|(
@@ -10933,6 +11045,7 @@ name|cb
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|cb
 operator|->
 name|uaiocb
@@ -10940,6 +11053,7 @@ operator|.
 name|_aiocb_private
 operator|.
 name|error
+operator|)
 return|;
 block|}
 name|s
@@ -11004,6 +11118,7 @@ name|cb
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|cb
 operator|->
 name|uaiocb
@@ -11011,6 +11126,7 @@ operator|.
 name|_aiocb_private
 operator|.
 name|error
+operator|)
 return|;
 block|}
 name|ki
@@ -11046,7 +11162,9 @@ operator|==
 name|ERESTART
 condition|)
 return|return
+operator|(
 name|EINTR
+operator|)
 return|;
 elseif|else
 if|if
@@ -11056,7 +11174,9 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 elseif|else
 if|if
@@ -11066,7 +11186,9 @@ operator|==
 name|EINTR
 condition|)
 return|return
+operator|(
 name|EINTR
+operator|)
 return|;
 elseif|else
 if|if
@@ -11076,7 +11198,9 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 return|return
+operator|(
 name|EAGAIN
+operator|)
 return|;
 block|}
 block|}
