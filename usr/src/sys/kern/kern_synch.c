@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	7.22 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -720,7 +720,8 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|caddr_t
+name|void
+modifier|*
 name|chan
 decl_stmt|;
 end_decl_stmt
@@ -841,7 +842,7 @@ if|if
 condition|(
 name|chan
 operator|==
-literal|0
+name|NULL
 operator|||
 name|p
 operator|->
@@ -1305,7 +1306,8 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|caddr_t
+name|void
+modifier|*
 name|chan
 decl_stmt|;
 end_decl_stmt
@@ -1398,7 +1400,7 @@ if|if
 condition|(
 name|chan
 operator|==
-literal|0
+name|NULL
 operator|||
 name|p
 operator|->
@@ -1703,7 +1705,8 @@ argument_list|(
 name|chan
 argument_list|)
 specifier|register
-name|caddr_t
+name|void
+operator|*
 name|chan
 expr_stmt|;
 end_expr_stmt
