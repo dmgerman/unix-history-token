@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.51.2.12 1998/02/13 01:58:13 alex Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.51.2.13 1998/03/29 15:01:13 alex Exp $  */
 end_comment
 
 begin_comment
@@ -606,6 +606,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPFW_DIVERT_RESTART
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -639,6 +645,54 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ip_fw_chk
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|*
+name|pip
+operator|,
+name|int
+name|hlen
+operator|,
+expr|struct
+name|ifnet
+operator|*
+name|oif
+operator|,
+name|int
+name|pastrule
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|*
+name|m
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IPFW_DIVERT_RESTART */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2035,12 +2089,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parameters:  *  *	ip	Pointer to packet header (struct ip *)  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  *	ignport	Ignore all divert/tee rules to this port (if non-zero)  *	*m	The packet; we set to NULL when/if we nuke it.  *  * Return value:  *  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port.  */
+comment|/*  * Parameters:  *  *	ip	Pointer to packet header (struct ip *)  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  * #ifndef IPFW_DIVERT_RESTART  *	ignport	Ignore all divert/tee rules to this port (if non-zero)  * #else  *	pastrule Skip up to the first rule past this rule number;  * #endif  *	*m	The packet; we set to NULL when/if we nuke it.  *  * Return value:  *  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
+ifndef|#
+directive|ifndef
+name|IPFW_DIVERT_RESTART
 name|ip_fw_chk
 parameter_list|(
 name|struct
@@ -2066,6 +2123,36 @@ modifier|*
 modifier|*
 name|m
 parameter_list|)
+else|#
+directive|else
+function|ip_fw_chk
+parameter_list|(
+name|struct
+name|ip
+modifier|*
+modifier|*
+name|pip
+parameter_list|,
+name|int
+name|hlen
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+name|oif
+parameter_list|,
+name|int
+name|pastrule
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|m
+parameter_list|)
+endif|#
+directive|endif
+comment|/* IPFW_DIVERT_RESTART */
 block|{
 name|struct
 name|ip_fw_chain
@@ -2118,26 +2205,108 @@ name|src_port
 decl_stmt|,
 name|dst_port
 decl_stmt|;
-comment|/* 	 * Go down the chain, looking for enlightment 	 */
+comment|/* 	 * Go down the chain, looking for enlightment 	 * #ifdef IPFW_DIVERT_RESTART 	 * If we've been asked to start at a given rule immediatly, do so. 	 * #endif 	 */
+ifndef|#
+directive|ifndef
+name|IPFW_DIVERT_RESTART
 for|for
 control|(
 name|chain
 operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
 name|ip_fw_chain
-operator|.
-name|lh_first
+argument_list|)
 init|;
 name|chain
 condition|;
 name|chain
 operator|=
+name|LIST_NEXT
+argument_list|(
 name|chain
-operator|->
+argument_list|,
 name|chain
-operator|.
-name|le_next
+argument_list|)
 control|)
 block|{
+else|#
+directive|else
+name|chain
+operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|ip_fw_chain
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pastrule
+condition|)
+block|{
+if|if
+condition|(
+name|pastrule
+operator|>=
+literal|65535
+condition|)
+goto|goto
+name|dropit
+goto|;
+while|while
+condition|(
+name|chain
+operator|&&
+operator|(
+name|chain
+operator|->
+name|rule
+operator|->
+name|fw_number
+operator|<=
+name|pastrule
+operator|)
+condition|)
+block|{
+name|chain
+operator|=
+name|LIST_NEXT
+argument_list|(
+name|chain
+argument_list|,
+name|chain
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|chain
+condition|)
+goto|goto
+name|dropit
+goto|;
+block|}
+for|for
+control|(
+init|;
+name|chain
+condition|;
+name|chain
+operator|=
+name|LIST_NEXT
+argument_list|(
+name|chain
+argument_list|,
+name|chain
+argument_list|)
+control|)
+block|{
+endif|#
+directive|endif
+comment|/* IPFW_DIVERT_RESTART */
 specifier|register
 name|struct
 name|ip_fw
@@ -2788,6 +2957,9 @@ goto|;
 block|}
 name|got_match
 label|:
+ifndef|#
+directive|ifndef
+name|IPFW_DIVERT_RESTART
 comment|/* Ignore divert/tee rule if socket port is "ignport" */
 switch|switch
 condition|(
@@ -2816,6 +2988,9 @@ continue|continue;
 comment|/* ignore this rule */
 break|break;
 block|}
+endif|#
+directive|endif
+comment|/* IPFW_DIVERT_RESTART */
 comment|/* Update statistics */
 name|f
 operator|->
@@ -2888,6 +3063,18 @@ continue|continue;
 case|case
 name|IP_FW_F_DIVERT
 case|:
+ifdef|#
+directive|ifdef
+name|IPFW_DIVERT_RESTART
+name|ip_divert_in_cookie
+operator|=
+name|f
+operator|->
+name|fw_number
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* IPFW_DIVERT_RESTART */
 return|return
 operator|(
 name|f
@@ -3304,9 +3491,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|add_entry
@@ -3717,9 +3901,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|del_entry
@@ -3833,9 +4014,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|zero_entry
@@ -3997,9 +4175,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|struct
 name|ip_fw
@@ -4067,9 +4242,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|struct
 name|ip_fw
@@ -4674,9 +4846,6 @@ return|return
 name|frwl
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|ip_fw_ctl
@@ -5176,9 +5345,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|ip_fw_init
 parameter_list|(
@@ -5293,52 +5459,28 @@ directive|else
 literal|"divert disabled, "
 block|)
 function|;
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_DEFAULT_TO_ACCEPT
-end_ifdef
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"default to accept, "
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|IPFIREWALL_VERBOSE
-end_ifndef
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"logging disabled\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_if
 if|if
 condition|(
 name|fw_verbose_limit
@@ -5358,15 +5500,12 @@ argument_list|,
 name|fw_verbose_limit
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
 begin_ifdef
-unit|}
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_MODULE
@@ -5391,10 +5530,10 @@ file|<sys/lkm.h>
 end_include
 
 begin_expr_stmt
-unit|MOD_MISC
-operator|(
+name|MOD_MISC
+argument_list|(
 name|ipfw
-operator|)
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
