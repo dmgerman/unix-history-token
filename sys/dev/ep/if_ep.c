@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.36 1995/12/10 13:38:41 phk Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.37 1995/12/15 00:54:11 bde Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -1937,16 +1937,15 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|" address %s"
+literal|" address %6D"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|sc
 operator|->
 name|arpcom
 operator|.
 name|ac_enaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 comment|/*      * Write IRQ value to board      */

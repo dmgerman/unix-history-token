@@ -1040,16 +1040,15 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|" address %s\n"
+literal|" address %6D\n"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|sc
 operator|->
 name|arpcom
 operator|.
 name|ac_enaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 comment|/*      * Check for receive overrun anomaly in the first revision of the      * adapters.      */

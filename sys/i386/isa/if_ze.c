@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.26 1995/12/13 10:36:03 phk Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.27 1995/12/17 21:22:57 phk Exp $  */
 end_comment
 
 begin_include
@@ -2473,20 +2473,19 @@ block|}
 comment|/* 	 * Print additional info when attached 	 */
 name|printf
 argument_list|(
-literal|"ze%d: address %s, type %s (%dbit), MAU %s\n"
+literal|"ze%d: address %6D, type %s (%dbit), MAU %s\n"
 argument_list|,
 name|isa_dev
 operator|->
 name|id_unit
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|sc
 operator|->
 name|arpcom
 operator|.
 name|ac_enaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|,
 name|sc
 operator|->

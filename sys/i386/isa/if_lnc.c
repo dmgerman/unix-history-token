@@ -5206,7 +5206,7 @@ name|DC_IDLE
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"lnc%d: %s, address %s\n"
+literal|"lnc%d: %s, address %6D\n"
 argument_list|,
 name|isa_dev
 operator|->
@@ -5218,14 +5218,13 @@ name|kdc
 operator|.
 name|kdc_description
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|sc
 operator|->
 name|arpcom
 operator|.
 name|ac_enaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 if|#

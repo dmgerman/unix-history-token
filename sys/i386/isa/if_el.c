@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.20 1995/12/10 13:38:39 phk Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.21 1995/12/15 00:54:10 bde Exp $  */
 end_comment
 
 begin_comment
@@ -826,12 +826,11 @@ block|}
 name|dprintf
 argument_list|(
 operator|(
-literal|"Address is %s\n"
+literal|"Address is %6D\n"
 operator|,
-name|ether_sprintf
-argument_list|(
 name|station_addr
-argument_list|)
+operator|,
+literal|":"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1185,20 +1184,19 @@ block|}
 comment|/* Print out some information for the user */
 name|printf
 argument_list|(
-literal|"el%d: 3c501 address %s\n"
+literal|"el%d: 3c501 address %6D\n"
 argument_list|,
 name|idev
 operator|->
 name|id_unit
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|sc
 operator|->
 name|arpcom
 operator|.
 name|ac_enaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* Finally, attach to bpf filter if it is present. */
@@ -2808,30 +2806,28 @@ expr_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"%s-->"
+literal|"%6D-->"
 operator|,
-name|ether_sprintf
-argument_list|(
 name|sc
 operator|->
 name|el_pktbuf
 operator|+
 literal|6
-argument_list|)
+operator|,
+literal|":"
 operator|)
 argument_list|)
 expr_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"%s\n"
+literal|"%6D\n"
 operator|,
-name|ether_sprintf
-argument_list|(
 name|sc
 operator|->
 name|el_pktbuf
-argument_list|)
+operator|,
+literal|":"
 operator|)
 argument_list|)
 expr_stmt|;

@@ -4222,18 +4222,17 @@ expr_stmt|;
 comment|/* Print additional info when attached.  */
 name|printf
 argument_list|(
-literal|"fe%d: address %s, type %s\n"
+literal|"fe%d: address %6D, type %s\n"
 argument_list|,
 name|sc
 operator|->
 name|sc_unit
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|sc
 operator|->
 name|sc_enaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|,
 name|sc
 operator|->
@@ -5008,18 +5007,17 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"fe%d: invalid station address (%s)\n"
+literal|"fe%d: invalid station address (%6D)\n"
 argument_list|,
 name|sc
 operator|->
 name|sc_unit
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|sc
 operator|->
 name|sc_enaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7904,18 +7902,17 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"fe%d: got an unwanted packet, dst = %s\n"
+literal|"fe%d: got an unwanted packet, dst = %6D\n"
 argument_list|,
 name|sc
 operator|->
 name|sc_unit
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|eh
 operator|->
 name|ether_dhost
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -8657,18 +8654,17 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"fe%d: hash(%s) == %d\n"
+literal|"fe%d: hash(%6D) == %d\n"
 argument_list|,
 name|sc
 operator|->
 name|sc_unit
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|enm
 operator|->
 name|enm_addrlo
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|,
 name|index
 argument_list|)
