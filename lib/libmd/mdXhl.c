@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mdXhl.c  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: mdXhl.c,v 1.5 1995/05/30 05:45:17 rgrimes Exp $  *  */
+comment|/* mdXhl.c  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: mdXhl.c,v 1.6 1995/07/12 09:13:47 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -68,15 +68,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|char
-modifier|*
-name|p
-init|=
-name|malloc
-argument_list|(
-literal|33
-argument_list|)
-decl_stmt|;
 name|unsigned
 name|char
 name|digest
@@ -95,9 +86,9 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|p
+name|buf
 condition|)
-name|p
+name|buf
 operator|=
 name|malloc
 argument_list|(
@@ -107,7 +98,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|p
+name|buf
 condition|)
 return|return
 literal|0
@@ -133,7 +124,7 @@ name|i
 operator|++
 control|)
 block|{
-name|p
+name|buf
 index|[
 name|i
 operator|+
@@ -150,7 +141,7 @@ operator|>>
 literal|4
 index|]
 expr_stmt|;
-name|p
+name|buf
 index|[
 name|i
 operator|+
@@ -170,7 +161,7 @@ literal|0x0f
 index|]
 expr_stmt|;
 block|}
-name|p
+name|buf
 index|[
 name|i
 operator|+
@@ -180,7 +171,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
-name|p
+name|buf
 return|;
 block|}
 end_function
