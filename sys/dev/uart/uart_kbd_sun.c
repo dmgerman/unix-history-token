@@ -1555,6 +1555,9 @@ name|sc_uart
 operator|=
 name|sc
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KBD_INSTALL_CDEV
 name|kbd_attach
 argument_list|(
 operator|&
@@ -1563,6 +1566,8 @@ operator|.
 name|sc_kbd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sunkbd_enable
 argument_list|(
 operator|&
