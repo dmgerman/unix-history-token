@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ln.c 4.4 %G%"
+literal|"@(#)ln.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -483,10 +483,27 @@ argument_list|(
 name|to
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|access
+argument_list|(
+name|from
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
 name|perror
 argument_list|(
 name|from
+argument_list|)
+expr_stmt|;
+else|else
+name|perror
+argument_list|(
+name|to
 argument_list|)
 expr_stmt|;
 return|return
