@@ -4401,7 +4401,7 @@ directive|else
 end_else
 
 begin_expr_stmt
-literal|"8DELd"
+literal|"8DEKLd"
 operator|,
 literal|" "
 end_expr_stmt
