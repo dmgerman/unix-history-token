@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.62 (Berkeley) %G%"
+literal|"@(#)login.c	5.63 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -867,30 +867,6 @@ name|ask
 operator|=
 literal|0
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|TIOCNXCL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fcntl
-argument_list|(
-literal|0
-argument_list|,
-name|F_SETFL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|cnt
@@ -1240,23 +1216,6 @@ block|{
 name|badlogin
 argument_list|(
 name|username
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|TIOCHPCL
-argument_list|,
-operator|(
-expr|struct
-name|sgttyb
-operator|*
-operator|)
-name|NULL
 argument_list|)
 expr_stmt|;
 name|sleepexit
