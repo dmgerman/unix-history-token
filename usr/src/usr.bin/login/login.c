@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.31 (Berkeley) 83/06/30"
+literal|"@(#)login.c	4.32 (Berkeley) 83/06/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -1130,7 +1130,7 @@ literal|'d'
 condition|)
 name|logerr
 argument_list|(
-literal|"BADDIALUP %s %s\n"
+literal|"BADDIALUP %s %s"
 argument_list|,
 name|ttyn
 operator|+
@@ -1887,7 +1887,7 @@ literal|'d'
 condition|)
 name|logerr
 argument_list|(
-literal|"DIALUP %s %s\n"
+literal|"DIALUP %s %s"
 argument_list|,
 name|ttyn
 operator|+
@@ -3304,11 +3304,11 @@ argument_list|,
 name|a3
 argument_list|)
 expr_stmt|;
-name|fputc
+name|fprintf
 argument_list|(
-literal|'\r'
-argument_list|,
 name|cons
+argument_list|,
+literal|"\n\r"
 argument_list|)
 expr_stmt|;
 name|fclose
