@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	8.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1980,6 +1980,22 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|p
+operator|->
+name|p_simple_locks
+condition|)
+name|panic
+argument_list|(
+literal|"sleep: holding simple lock"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Compute the amount of time during which the current 	 * process was running, and add that to its total so far. 	 */
 name|microtime
 argument_list|(
