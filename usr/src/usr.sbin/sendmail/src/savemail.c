@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	5.15 (Berkeley) %G%"
+literal|"@(#)savemail.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1513,6 +1513,22 @@ literal|1
 index|]
 argument_list|,
 name|CurEnv
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ee
+operator|->
+name|e_sender
+operator|=
+name|ee
+operator|->
+name|e_returnpath
+operator|=
+name|newstr
+argument_list|(
+name|buf
 argument_list|)
 expr_stmt|;
 end_expr_stmt
