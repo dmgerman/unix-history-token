@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.29 1998/03/05 03:08:16 obrien Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.30 1998/03/07 08:45:46 ache Exp $  *  */
 end_comment
 
 begin_include
@@ -695,6 +695,12 @@ case|:
 case|case
 literal|0xb
 case|:
+case|case
+literal|0xc
+case|:
+case|case
+literal|0xe
+case|:
 name|ce
 operator|=
 name|fat
@@ -702,6 +708,9 @@ expr_stmt|;
 break|break;
 case|case
 name|DOSPTYP_EXTENDED
+case|:
+case|case
+literal|0xf
 case|:
 name|ce
 operator|=
@@ -1964,7 +1973,7 @@ case|case
 literal|4
 case|:
 return|return
-literal|"fat (16-bit)"
+literal|"fat (16-bit,<=32Mb)"
 return|;
 case|case
 literal|5
@@ -1976,13 +1985,25 @@ case|case
 literal|6
 case|:
 return|return
-literal|"fat (>32Mb)"
+literal|"fat (16-bit,>32Mb)"
 return|;
 case|case
 literal|7
 case|:
 return|return
-literal|"NTFS/HPFS"
+literal|"NTFS/HPFS/QNX"
+return|;
+case|case
+literal|8
+case|:
+return|return
+literal|"AIX bootable"
+return|;
+case|case
+literal|9
+case|:
+return|return
+literal|"AIX data"
 return|;
 case|case
 literal|10
@@ -1995,6 +2016,24 @@ literal|11
 case|:
 return|return
 literal|"fat (32-bit)"
+return|;
+case|case
+literal|12
+case|:
+return|return
+literal|"fat (32-bit,LBA)"
+return|;
+case|case
+literal|14
+case|:
+return|return
+literal|"fat (16-bit,>32Mb,LBA)"
+return|;
+case|case
+literal|15
+case|:
+return|return
+literal|"extended DOS, LBA"
 return|;
 case|case
 literal|84
