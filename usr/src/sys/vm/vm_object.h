@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_object.h	8.1 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_object.h	8.2 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -22,6 +22,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<vm/vm_page.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_pager.h>
 end_include
 
@@ -33,13 +39,17 @@ begin_struct
 struct|struct
 name|vm_object
 block|{
-name|queue_chain_t
+name|struct
+name|pglist
 name|memq
 decl_stmt|;
 comment|/* Resident memory */
-name|queue_chain_t
+name|TAILQ_ENTRY
+argument_list|(
+argument|vm_object
+argument_list|)
 name|object_list
-decl_stmt|;
+expr_stmt|;
 comment|/* list of all objects */
 name|u_short
 name|flags
@@ -89,9 +99,12 @@ name|vm_offset_t
 name|shadow_offset
 decl_stmt|;
 comment|/* Offset in shadow */
-name|queue_chain_t
+name|TAILQ_ENTRY
+argument_list|(
+argument|vm_object
+argument_list|)
 name|cached_list
-decl_stmt|;
+expr_stmt|;
 comment|/* for persistence */
 block|}
 struct|;
@@ -134,18 +147,31 @@ begin_comment
 comment|/* used to mark active objects */
 end_comment
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|vm_object_hash_head
+argument_list|,
+name|vm_object_hash_entry
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|vm_object_hash_entry
 block|{
-name|queue_chain_t
+name|TAILQ_ENTRY
+argument_list|(
+argument|vm_object_hash_entry
+argument_list|)
 name|hash_links
-decl_stmt|;
+expr_stmt|;
 comment|/* hash chain links */
 name|vm_object_t
 name|object
 decl_stmt|;
-comment|/* object we represent */
+comment|/* object represened */
 block|}
 struct|;
 end_struct
@@ -165,8 +191,19 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|object_q
+argument_list|,
+name|vm_object
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
-name|queue_head_t
+name|struct
+name|object_q
 name|vm_object_cached_list
 decl_stmt|;
 end_decl_stmt
@@ -196,7 +233,8 @@ comment|/* lock for object cache */
 end_comment
 
 begin_decl_stmt
-name|queue_head_t
+name|struct
+name|object_q
 name|vm_object_list
 decl_stmt|;
 end_decl_stmt
