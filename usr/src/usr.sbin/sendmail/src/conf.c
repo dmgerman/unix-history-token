@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.30 (Berkeley) %G%"
+literal|"@(#)conf.c	6.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3609,7 +3609,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ENOUGHSPACE -- check to see if there is enough free space on the queue fs ** **	Only implemented if you have statfs. ** **	Parameters: **		none. ** **	Returns: **		TRUE if there is enough space. **		FALSE otherwise. */
+comment|/* **  ENOUGHSPACE -- check to see if there is enough free space on the queue fs ** **	Only implemented if you have statfs. ** **	Parameters: **		msize -- the size to check against.  If zero, we don't yet **			know how big the message will be, so just check for **			a "reasonable" amount. ** **	Returns: **		TRUE if there is enough space. **		FALSE otherwise. */
 end_comment
 
 begin_ifndef
@@ -3771,7 +3771,12 @@ end_endif
 begin_function
 name|bool
 name|enoughspace
-parameter_list|()
+parameter_list|(
+name|msize
+parameter_list|)
+name|long
+name|msize
+decl_stmt|;
 block|{
 if|#
 directive|if
@@ -3828,6 +3833,9 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+name|long
+name|blocksneeded
+decl_stmt|;
 specifier|extern
 name|int
 name|errno
@@ -3841,6 +3849,10 @@ function_decl|;
 if|if
 condition|(
 name|MinBlocksFree
+operator|<=
+literal|0
+operator|&&
+name|msize
 operator|<=
 literal|0
 condition|)
@@ -3975,14 +3987,35 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"enoughspace: bavail=%ld, min=%ld\n"
+literal|"enoughspace: bavail=%ld, need=%ld\n"
 argument_list|,
 name|fs
 operator|.
 name|f_bavail
 argument_list|,
-name|MinBlocksFree
+name|msize
 argument_list|)
+expr_stmt|;
+comment|/* convert msize to block count */
+name|msize
+operator|=
+name|msize
+operator|/
+name|fs
+operator|.
+name|f_bsize
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|MinBlocksFree
+operator|>=
+literal|0
+condition|)
+name|msize
+operator|+=
+name|MinBlocksFree
 expr_stmt|;
 if|if
 condition|(
@@ -3990,7 +4023,7 @@ name|fs
 operator|.
 name|f_bavail
 operator|<
-name|MinBlocksFree
+name|msize
 condition|)
 block|{
 ifdef|#
@@ -4014,7 +4047,7 @@ name|fs
 operator|.
 name|f_bavail
 argument_list|,
-name|MinBlocksFree
+name|msize
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4036,9 +4069,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"enoughspace: min=%ld: %s\n"
+literal|"enoughspace failure: min=%ld, need=%ld: %s\n"
 argument_list|,
 name|MinBlocksFree
+argument_list|,
+name|msize
 argument_list|,
 name|errstring
 argument_list|(

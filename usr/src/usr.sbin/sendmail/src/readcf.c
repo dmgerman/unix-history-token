@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.15 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -768,6 +768,8 @@ argument_list|,
 literal|'\t'
 argument_list|,
 name|pvpbuf
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|nfuzzy
@@ -1030,6 +1032,8 @@ argument_list|,
 literal|'\t'
 argument_list|,
 name|pvpbuf
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1268,6 +1272,8 @@ name|bp
 index|[
 literal|2
 index|]
+argument_list|,
+name|NULL
 argument_list|)
 argument_list|)
 argument_list|,
@@ -2249,11 +2255,6 @@ name|munchstring
 parameter_list|()
 function_decl|;
 specifier|extern
-name|char
-modifier|*
-name|DelimChar
-decl_stmt|;
-specifier|extern
 name|long
 name|atol
 parameter_list|()
@@ -2359,6 +2360,11 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
+specifier|auto
+name|char
+modifier|*
+name|delimptr
+decl_stmt|;
 while|while
 condition|(
 operator|*
@@ -2459,6 +2465,9 @@ operator|=
 name|munchstring
 argument_list|(
 name|p
+argument_list|,
+operator|&
+name|delimptr
 argument_list|)
 expr_stmt|;
 comment|/* install the field into the mailer struct */
@@ -2714,7 +2723,7 @@ break|break;
 block|}
 name|p
 operator|=
-name|DelimChar
+name|delimptr
 expr_stmt|;
 block|}
 comment|/* do some heuristic cleanup for back compatibility */
@@ -2887,7 +2896,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MUNCHSTRING -- translate a string into internal form. ** **	Parameters: **		p -- the string to munch. ** **	Returns: **		the munched string. ** **	Side Effects: **		Sets "DelimChar" to point to the string that caused us **		to stop. */
+comment|/* **  MUNCHSTRING -- translate a string into internal form. ** **	Parameters: **		p -- the string to munch. **		delimptr -- if non-NULL, set to the pointer of the **			field delimiter character. ** **	Returns: **		the munched string. */
 end_comment
 
 begin_function
@@ -2896,11 +2905,18 @@ modifier|*
 name|munchstring
 parameter_list|(
 name|p
+parameter_list|,
+name|delimptr
 parameter_list|)
 specifier|register
 name|char
 modifier|*
 name|p
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|delimptr
 decl_stmt|;
 block|{
 specifier|register
@@ -2924,11 +2940,6 @@ name|buf
 index|[
 name|MAXLINE
 index|]
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|DelimChar
 decl_stmt|;
 for|for
 control|(
@@ -3061,7 +3072,14 @@ else|else
 break|break;
 block|}
 block|}
-name|DelimChar
+if|if
+condition|(
+name|delimptr
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|delimptr
 operator|=
 name|p
 expr_stmt|;

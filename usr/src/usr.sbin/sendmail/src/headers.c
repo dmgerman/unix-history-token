@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.13 (Berkeley) %G%"
+literal|"@(#)headers.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3097,12 +3097,6 @@ modifier|*
 name|remotename
 parameter_list|()
 function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|DelimChar
-decl_stmt|;
-comment|/* defined in prescan */
 comment|/* 		**  Find the end of the name.  New style names 		**  end with a comma, old style names end with 		**  a space character.  However, spaces do not 		**  necessarily delimit an old-style name -- at 		**  signs mean keep going. 		*/
 comment|/* find end of name */
 while|while
@@ -3139,6 +3133,7 @@ init|;
 condition|;
 control|)
 block|{
+specifier|auto
 name|char
 modifier|*
 name|oldp
@@ -3170,17 +3165,16 @@ else|:
 literal|','
 argument_list|,
 name|pvpbuf
+argument_list|,
+operator|&
+name|oldp
 argument_list|)
 expr_stmt|;
 name|p
 operator|=
-name|DelimChar
+name|oldp
 expr_stmt|;
 comment|/* look to see if we have an at sign */
-name|oldp
-operator|=
-name|p
-expr_stmt|;
 while|while
 condition|(
 operator|*

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.31 (Berkeley) %G%"
+literal|"@(#)main.c	6.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3179,10 +3179,10 @@ name|char
 modifier|*
 name|q
 decl_stmt|;
-specifier|extern
+specifier|auto
 name|char
 modifier|*
-name|DelimChar
+name|delimptr
 decl_stmt|;
 specifier|extern
 name|bool
@@ -3351,6 +3351,9 @@ argument_list|,
 literal|','
 argument_list|,
 name|pvpbuf
+argument_list|,
+operator|&
+name|delimptr
 argument_list|)
 expr_stmt|;
 if|if
@@ -3404,7 +3407,7 @@ operator|*
 operator|(
 name|p
 operator|=
-name|DelimChar
+name|delimptr
 operator|)
 operator|!=
 literal|'\0'
@@ -3785,6 +3788,8 @@ argument_list|(
 name|from
 argument_list|,
 name|CurEnv
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.17 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -745,6 +745,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|'\0'
+argument_list|,
+name|NULL
 argument_list|,
 name|e
 argument_list|)
@@ -1540,6 +1542,8 @@ literal|0
 argument_list|,
 literal|'\0'
 argument_list|,
+name|NULL
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -1706,6 +1710,8 @@ operator|-
 literal|1
 argument_list|,
 literal|'\0'
+argument_list|,
+name|NULL
 argument_list|,
 name|e
 argument_list|)

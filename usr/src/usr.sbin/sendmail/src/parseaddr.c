@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.20 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,7 +174,7 @@ comment|/* set to point to the delimiter */
 end_comment
 
 begin_comment
-comment|/* **  PARSEADDR -- Parse an address ** **	Parses an address and breaks it up into three parts: a **	net to transmit the message on, the host to transmit it **	to, and a user on that host.  These are loaded into an **	ADDRESS header with the values squirreled away if necessary. **	The "user" part may not be a real user; the process may **	just reoccur on that machine.  For example, on a machine **	with an arpanet connection, the address **		csvax.bill@berkeley **	will break up to a "user" of 'csvax.bill' and a host **	of 'berkeley' -- to be transmitted over the arpanet. ** **	Parameters: **		addr -- the address to parse. **		a -- a pointer to the address descriptor buffer. **			If NULL, a header will be created. **		copyf -- determines what shall be copied: **			-1 -- don't copy anything.  The printname **				(q_paddr) is just addr, and the **				user& host are allocated internally **				to parse. **			0 -- copy out the parsed user& host, but **				don't copy the printname. **			+1 -- copy everything. **		delim -- the character to terminate the address, passed **			to prescan. **		e -- the envelope that will contain this address. ** **	Returns: **		A pointer to the address descriptor header (`a' if **			`a' is non-NULL). **		NULL on error. ** **	Side Effects: **		none */
+comment|/* **  PARSEADDR -- Parse an address ** **	Parses an address and breaks it up into three parts: a **	net to transmit the message on, the host to transmit it **	to, and a user on that host.  These are loaded into an **	ADDRESS header with the values squirreled away if necessary. **	The "user" part may not be a real user; the process may **	just reoccur on that machine.  For example, on a machine **	with an arpanet connection, the address **		csvax.bill@berkeley **	will break up to a "user" of 'csvax.bill' and a host **	of 'berkeley' -- to be transmitted over the arpanet. ** **	Parameters: **		addr -- the address to parse. **		a -- a pointer to the address descriptor buffer. **			If NULL, a header will be created. **		copyf -- determines what shall be copied: **			-1 -- don't copy anything.  The printname **				(q_paddr) is just addr, and the **				user& host are allocated internally **				to parse. **			0 -- copy out the parsed user& host, but **				don't copy the printname. **			+1 -- copy everything. **		delim -- the character to terminate the address, passed **			to prescan. **		delimptr -- if non-NULL, set to the location of the **			delim character that was found. **		e -- the envelope that will contain this address. ** **	Returns: **		A pointer to the address descriptor header (`a' if **			`a' is non-NULL). **		NULL on error. ** **	Side Effects: **		none */
 end_comment
 
 begin_comment
@@ -205,6 +205,8 @@ name|copyf
 parameter_list|,
 name|delim
 parameter_list|,
+name|delimptr
+parameter_list|,
 name|e
 parameter_list|)
 name|char
@@ -222,6 +224,11 @@ decl_stmt|;
 name|char
 name|delim
 decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|delimptr
+decl_stmt|;
 specifier|register
 name|ENVELOPE
 modifier|*
@@ -233,6 +240,11 @@ name|char
 modifier|*
 modifier|*
 name|pvp
+decl_stmt|;
+specifier|auto
+name|char
+modifier|*
+name|delimptrbuf
 decl_stmt|;
 name|char
 name|pvpbuf
@@ -354,6 +366,17 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|delimptr
+operator|==
+name|NULL
+condition|)
+name|delimptr
+operator|=
+operator|&
+name|delimptrbuf
+expr_stmt|;
 name|pvp
 operator|=
 name|prescan
@@ -363,6 +386,8 @@ argument_list|,
 name|delim
 argument_list|,
 name|pvpbuf
+argument_list|,
+name|delimptr
 argument_list|)
 expr_stmt|;
 if|if
@@ -470,6 +495,9 @@ argument_list|,
 name|copyf
 argument_list|,
 name|addr
+argument_list|,
+operator|*
+name|delimptr
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Compute return value. 	*/
@@ -571,7 +599,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ALLOCADDR -- do local allocations of address on demand. ** **	Also lowercases the host name if requested. ** **	Parameters: **		a -- the address to reallocate. **		copyf -- the copy flag (see parseaddr for description). **		paddr -- the printname of the address. ** **	Returns: **		none. ** **	Side Effects: **		Copies portions of a into local buffers as requested. */
+comment|/* **  ALLOCADDR -- do local allocations of address on demand. ** **	Also lowercases the host name if requested. ** **	Parameters: **		a -- the address to reallocate. **		copyf -- the copy flag (see parseaddr for description). **		paddr -- the printname of the address. **		delimptr -- a pointer to the address delimiter.  Must be set. ** **	Returns: **		none. ** **	Side Effects: **		Copies portions of a into local buffers as requested. */
 end_comment
 
 begin_expr_stmt
@@ -582,6 +610,8 @@ argument_list|,
 name|copyf
 argument_list|,
 name|paddr
+argument_list|,
+name|delimptr
 argument_list|)
 specifier|register
 name|ADDRESS
@@ -600,6 +630,13 @@ begin_decl_stmt
 name|char
 modifier|*
 name|paddr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|delimptr
 decl_stmt|;
 end_decl_stmt
 
@@ -629,10 +666,10 @@ name|char
 name|savec
 init|=
 operator|*
-name|DelimChar
+name|delimptr
 decl_stmt|;
 operator|*
-name|DelimChar
+name|delimptr
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -646,7 +683,7 @@ name|paddr
 argument_list|)
 expr_stmt|;
 operator|*
-name|DelimChar
+name|delimptr
 operator|=
 name|savec
 expr_stmt|;
@@ -906,7 +943,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PRESCAN -- Prescan name and make it canonical ** **	Scans a name and turns it into a set of tokens.  This process **	deletes blanks and comments (in parentheses). ** **	This routine knows about quoted strings and angle brackets. ** **	There are certain subtleties to this routine.  The one that **	comes to mind now is that backslashes on the ends of names **	are silently stripped off; this is intentional.  The problem **	is that some versions of sndmsg (like at LBL) set the kill **	character to something other than @ when reading addresses; **	so people type "csvax.eric\@berkeley" -- which screws up the **	berknet mailer. ** **	Parameters: **		addr -- the name to chomp. **		delim -- the delimiter for the address, normally **			'\0' or ','; \0 is accepted in any case. **			If '\t' then we are reading the .cf file. **		pvpbuf -- place to put the saved text -- note that **			the pointers are static. ** **	Returns: **		A pointer to a vector of tokens. **		NULL on error. ** **	Side Effects: **		sets DelimChar to point to the character matching 'delim'. */
+comment|/* **  PRESCAN -- Prescan name and make it canonical ** **	Scans a name and turns it into a set of tokens.  This process **	deletes blanks and comments (in parentheses). ** **	This routine knows about quoted strings and angle brackets. ** **	There are certain subtleties to this routine.  The one that **	comes to mind now is that backslashes on the ends of names **	are silently stripped off; this is intentional.  The problem **	is that some versions of sndmsg (like at LBL) set the kill **	character to something other than @ when reading addresses; **	so people type "csvax.eric\@berkeley" -- which screws up the **	berknet mailer. ** **	Parameters: **		addr -- the name to chomp. **		delim -- the delimiter for the address, normally **			'\0' or ','; \0 is accepted in any case. **			If '\t' then we are reading the .cf file. **		pvpbuf -- place to put the saved text -- note that **			the pointers are static. **		delimptr -- if non-NULL, set to the location of the **			terminating delimiter. ** **	Returns: **		A pointer to a vector of tokens. **		NULL on error. */
 end_comment
 
 begin_comment
@@ -1140,6 +1177,8 @@ parameter_list|,
 name|delim
 parameter_list|,
 name|pvpbuf
+parameter_list|,
+name|delimptr
 parameter_list|)
 name|char
 modifier|*
@@ -1151,6 +1190,11 @@ decl_stmt|;
 name|char
 name|pvpbuf
 index|[]
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|delimptr
 decl_stmt|;
 block|{
 specifier|register
@@ -1307,7 +1351,14 @@ argument_list|(
 literal|"553 Address too long"
 argument_list|)
 expr_stmt|;
-name|DelimChar
+if|if
+condition|(
+name|delimptr
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|delimptr
 operator|=
 name|p
 expr_stmt|;
@@ -1550,7 +1601,14 @@ argument_list|(
 literal|"553 Unbalanced ')'"
 argument_list|)
 expr_stmt|;
-name|DelimChar
+if|if
+condition|(
+name|delimptr
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|delimptr
 operator|=
 name|p
 expr_stmt|;
@@ -1606,7 +1664,14 @@ argument_list|(
 literal|"553 Unbalanced '>'"
 argument_list|)
 expr_stmt|;
-name|DelimChar
+if|if
+condition|(
+name|delimptr
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|delimptr
 operator|=
 name|p
 expr_stmt|;
@@ -1844,7 +1909,14 @@ argument_list|(
 literal|"553 prescan: too many tokens"
 argument_list|)
 expr_stmt|;
-name|DelimChar
+if|if
+condition|(
+name|delimptr
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|delimptr
 operator|=
 name|p
 expr_stmt|;
@@ -1884,9 +1956,18 @@ name|avp
 operator|=
 name|NULL
 expr_stmt|;
-name|DelimChar
-operator|=
+name|p
 operator|--
+expr_stmt|;
+if|if
+condition|(
+name|delimptr
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|delimptr
+operator|=
 name|p
 expr_stmt|;
 if|if
@@ -6389,6 +6470,8 @@ argument_list|,
 literal|'\0'
 argument_list|,
 name|pvpbuf
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -6932,6 +7015,11 @@ name|a1
 init|=
 name|NULL
 decl_stmt|;
+specifier|auto
+name|char
+modifier|*
+name|delimptr
+decl_stmt|;
 name|char
 name|pvpbuf
 index|[
@@ -6972,6 +7060,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 name|pvpbuf
+argument_list|,
+operator|&
+name|delimptr
 argument_list|)
 expr_stmt|;
 if|if
@@ -7079,6 +7170,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|NULL
+argument_list|,
+name|delimptr
 argument_list|)
 expr_stmt|;
 operator|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.20 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,17 +256,16 @@ literal|'\0'
 condition|;
 control|)
 block|{
+specifier|auto
+name|char
+modifier|*
+name|delimptr
+decl_stmt|;
 specifier|register
 name|ADDRESS
 modifier|*
 name|a
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|DelimChar
-decl_stmt|;
-comment|/* defined in prescan */
 comment|/* parse the address */
 while|while
 condition|(
@@ -308,12 +307,15 @@ literal|1
 argument_list|,
 name|delimiter
 argument_list|,
+operator|&
+name|delimptr
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
 name|p
 operator|=
-name|DelimChar
+name|delimptr
 expr_stmt|;
 if|if
 condition|(
