@@ -517,31 +517,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|xe_compute_crc
-parameter_list|(
+argument_list|(
 name|u_int8_t
-modifier|*
+operator|*
 name|data
-parameter_list|,
+argument_list|,
 name|int
 name|len
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__unused
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|xe_compute_hashbit
-parameter_list|(
+argument_list|(
 name|u_int32_t
 name|crc
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__unused
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * MII functions  */
