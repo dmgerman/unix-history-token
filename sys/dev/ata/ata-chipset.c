@@ -4321,7 +4321,6 @@ argument_list|(
 name|atadev
 argument_list|)
 condition|)
-empty_stmt|;
 name|mode
 operator|=
 name|ata_limit_mode
