@@ -2132,9 +2132,30 @@ name|client
 operator|!=
 name|NULL
 condition|)
+block|{
+comment|/* Mark the socket to be closed in destructor */
+operator|(
+name|void
+operator|)
+name|CLNT_CONTROL
+argument_list|(
+name|client
+argument_list|,
+name|CLSET_FD_CLOSE
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 return|return
 name|client
 return|;
+block|}
+comment|/* Nobody needs this socket anymore; free the descriptor. */
+name|_close
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
 name|try_nconf
 label|:
 comment|/* VARIABLES PROTECTED BY loopnconf_lock: loopnconf */
@@ -2527,6 +2548,11 @@ operator|.
 name|r_addr
 condition|)
 block|{
+name|CLNT_DESTROY
+argument_list|(
+name|client
+argument_list|)
+expr_stmt|;
 name|rpc_createerr
 operator|.
 name|cf_stat
