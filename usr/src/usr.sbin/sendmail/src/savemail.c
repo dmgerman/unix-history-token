@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.36 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1283,6 +1283,8 @@ operator|->
 name|e_header
 argument_list|,
 name|e
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 call|(
@@ -1298,6 +1300,8 @@ argument_list|,
 name|e
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|putline
@@ -2253,7 +2257,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  ERRBODY -- output the body of an error message. ** **	Typically this is a copy of the transcript plus a copy of the **	original offending message. ** **	Parameters: **		mci -- the mailer connection information. **		e -- the envelope we are working in. **		separator -- any possible MIME separator. ** **	Returns: **		none ** **	Side Effects: **		Outputs the body of an error message. */
+comment|/* **  ERRBODY -- output the body of an error message. ** **	Typically this is a copy of the transcript plus a copy of the **	original offending message. ** **	Parameters: **		mci -- the mailer connection information. **		e -- the envelope we are working in. **		separator -- any possible MIME separator. **		flags -- to modify the behaviour. ** **	Returns: **		none ** **	Side Effects: **		Outputs the body of an error message. */
 end_comment
 
 begin_expr_stmt
@@ -2264,6 +2268,8 @@ operator|,
 name|e
 operator|,
 name|separator
+operator|,
+name|flags
 operator|)
 specifier|register
 name|MCI
@@ -2305,6 +2311,11 @@ name|q
 decl_stmt|;
 name|bool
 name|printheader
+decl_stmt|;
+name|int
+name|pflags
+init|=
+name|flags
 decl_stmt|;
 name|char
 name|buf
@@ -3548,6 +3559,15 @@ name|SendBody
 operator|=
 name|FALSE
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|SendBody
+condition|)
+name|pflags
+operator||=
+name|PF_NOBODYPART
+expr_stmt|;
 name|putline
 argument_list|(
 literal|""
@@ -3663,6 +3683,8 @@ argument_list|,
 name|e
 operator|->
 name|e_parent
+argument_list|,
+name|pflags
 argument_list|)
 expr_stmt|;
 if|if
@@ -3680,6 +3702,8 @@ argument_list|,
 name|e
 operator|->
 name|e_msgboundary
+argument_list|,
+name|pflags
 argument_list|)
 expr_stmt|;
 else|else

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.8 (Berkeley) %G%"
+literal|"@(#)mime.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -496,6 +496,8 @@ argument_list|,
 name|hdr
 argument_list|,
 name|e
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|bt

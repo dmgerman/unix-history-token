@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.107 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.108 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5883,6 +5883,8 @@ operator|->
 name|e_header
 argument_list|,
 name|e
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 call|(
@@ -5897,6 +5899,8 @@ argument_list|,
 name|e
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* get the exit status */
@@ -8613,7 +8617,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTBODY -- put the body of a message. ** **	Parameters: **		mci -- the connection information. **		e -- the envelope to put out. **		separator -- if non-NULL, a message separator that must **			not be permitted in the resulting message. ** **	Returns: **		none. ** **	Side Effects: **		The message is written onto fp. */
+comment|/* **  PUTBODY -- put the body of a message. ** **	Parameters: **		mci -- the connection information. **		e -- the envelope to put out. **		separator -- if non-NULL, a message separator that must **			not be permitted in the resulting message. **		flags -- to modify the behaviour. ** **	Returns: **		none. ** **	Side Effects: **		The message is written onto fp. */
 end_comment
 
 begin_comment
@@ -8661,6 +8665,8 @@ argument_list|,
 name|e
 argument_list|,
 name|separator
+argument_list|,
+name|flags
 argument_list|)
 specifier|register
 name|MCI
@@ -8681,6 +8687,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|separator
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flags
 decl_stmt|;
 end_decl_stmt
 
@@ -10300,6 +10312,8 @@ operator|->
 name|e_header
 argument_list|,
 name|e
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 call|(
@@ -10315,6 +10329,8 @@ argument_list|,
 name|e
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|putline

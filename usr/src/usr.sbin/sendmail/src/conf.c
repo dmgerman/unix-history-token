@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.116 (Berkeley) %G%"
+literal|"@(#)conf.c	8.117 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -233,6 +233,10 @@ block|,
 literal|"content-transfer-encoding"
 block|,
 name|H_CTE
+block|,
+literal|"content-type"
+block|,
+name|H_CTYPE
 block|,
 name|NULL
 block|,
