@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	5.2 (Berkeley) %G%"
+literal|"@(#)exec.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -836,7 +836,7 @@ name|INEXEC
 condition|)
 name|err
 argument_list|(
-literal|"assignment to an undimemsioned array"
+literal|"assignment to an undimensioned array"
 argument_list|)
 expr_stmt|;
 else|else
