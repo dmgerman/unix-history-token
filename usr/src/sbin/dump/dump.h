@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * "@(#)dump.h	1.3 (Berkeley) %G%"  */
+comment|/*  * "@(#)dump.h	1.4 (Berkeley) %G%"  */
 end_comment
 
 begin_define
@@ -14,7 +14,31 @@ begin_define
 define|#
 directive|define
 name|DIRPB
-value|(BSIZE/sizeof(struct direct))
+parameter_list|(
+name|fs
+parameter_list|)
+value|((fs)->fs_bsize / sizeof(struct direct))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXDIRPB
+value|(MAXBSIZE / sizeof(struct direct))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXINOPB
+value|(MAXBSIZE / sizeof(struct dinode))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXNINDIR
+value|(MAXBSIZE / sizeof(daddr_t))
 end_define
 
 begin_include
@@ -109,7 +133,7 @@ name|m
 parameter_list|,
 name|i
 parameter_list|)
-value|(m[(unsigned)(i-1)/MLEN])
+value|(m[(unsigned)(i-1)/NBBY])
 end_define
 
 begin_define
@@ -119,7 +143,7 @@ name|MBIT
 parameter_list|(
 name|i
 parameter_list|)
-value|(1<<((unsigned)(i-1)%MLEN))
+value|(1<<((unsigned)(i-1)%NBBY))
 end_define
 
 begin_define
@@ -159,29 +183,29 @@ value|(MWORD(w,i)& MBIT(i))
 end_define
 
 begin_decl_stmt
-name|short
+name|int
+name|msiz
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
 name|clrmap
-index|[
-name|MSIZ
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|short
+name|char
+modifier|*
 name|dirmap
-index|[
-name|MSIZ
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|short
+name|char
+modifier|*
 name|nodmap
-index|[
-name|MSIZ
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -402,6 +426,27 @@ begin_decl_stmt
 name|char
 modifier|*
 name|processname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|fs
+modifier|*
+name|sblock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the file system super block */
+end_comment
+
+begin_decl_stmt
+name|char
+name|buf
+index|[
+name|MAXBSIZE
+index|]
 decl_stmt|;
 end_decl_stmt
 

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ncheck.c	1.3 (Berkeley) %G%"
+literal|"@(#)ncheck.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,24 @@ begin_define
 define|#
 directive|define
 name|NDIR
-value|(BSIZE/sizeof(struct direct))
+parameter_list|(
+name|fs
+parameter_list|)
+value|((fs)->fs_bsize/sizeof(struct direct))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXNDIR
+value|(MAXBSIZE/sizeof(struct direct))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXNINDIR
+value|(MAXBSIZE/sizeof(daddr_t))
 end_define
 
 begin_include
@@ -421,10 +438,7 @@ operator|)
 operator|&
 name|sblock
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sblock
-argument_list|)
+name|MAXBSIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -501,12 +515,18 @@ control|)
 block|{
 name|bread
 argument_list|(
+name|fsbtodb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
 name|cgimin
 argument_list|(
 name|c
 argument_list|,
 operator|&
 name|sblock
+argument_list|)
 argument_list|)
 argument_list|,
 operator|(
@@ -587,12 +607,18 @@ control|)
 block|{
 name|bread
 argument_list|(
+name|fsbtodb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
 name|cgimin
 argument_list|(
 name|c
 argument_list|,
 operator|&
 name|sblock
+argument_list|)
 argument_list|)
 argument_list|,
 operator|(
@@ -664,12 +690,18 @@ control|)
 block|{
 name|bread
 argument_list|(
+name|fsbtodb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
 name|cgimin
 argument_list|(
 name|c
 argument_list|,
 operator|&
 name|sblock
+argument_list|)
 argument_list|)
 argument_list|,
 operator|(
@@ -832,7 +864,7 @@ name|struct
 name|direct
 name|dbuf
 index|[
-name|NDIR
+name|MAXNDIR
 index|]
 decl_stmt|;
 name|long
@@ -919,7 +951,13 @@ condition|)
 break|break;
 name|bread
 argument_list|(
+name|fsbtodb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
 name|d
+argument_list|)
 argument_list|,
 operator|(
 name|char
@@ -942,6 +980,10 @@ init|;
 name|j
 operator|<
 name|NDIR
+argument_list|(
+operator|&
+name|sblock
+argument_list|)
 condition|;
 name|j
 operator|++
@@ -1064,7 +1106,7 @@ name|struct
 name|direct
 name|dbuf
 index|[
-name|NDIR
+name|MAXNDIR
 index|]
 decl_stmt|;
 name|long
@@ -1146,7 +1188,13 @@ condition|)
 break|break;
 name|bread
 argument_list|(
+name|fsbtodb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
 name|d
+argument_list|)
 argument_list|,
 operator|(
 name|char
@@ -1169,6 +1217,10 @@ init|;
 name|j
 operator|<
 name|NDIR
+argument_list|(
+operator|&
+name|sblock
+argument_list|)
 condition|;
 name|j
 operator|++
@@ -1634,7 +1686,7 @@ name|fi
 argument_list|,
 name|bno
 operator|*
-name|FSIZE
+name|DEV_BSIZE
 argument_list|,
 literal|0
 argument_list|)
@@ -1670,7 +1722,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|BSIZE
+name|cnt
 condition|;
 name|i
 operator|++
@@ -1699,7 +1751,7 @@ block|{
 name|daddr_t
 name|ibuf
 index|[
-name|NINDIR
+name|MAXNINDIR
 index|]
 decl_stmt|;
 if|if
@@ -1727,6 +1779,10 @@ condition|(
 name|i
 operator|>
 name|NINDIR
+argument_list|(
+operator|&
+name|sblock
+argument_list|)
 condition|)
 block|{
 name|fprintf
@@ -1749,12 +1805,18 @@ return|;
 block|}
 name|bread
 argument_list|(
+name|fsbtodb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
 name|gip
 operator|->
 name|di_ib
 index|[
 name|i
 index|]
+argument_list|)
 argument_list|,
 operator|(
 name|char
