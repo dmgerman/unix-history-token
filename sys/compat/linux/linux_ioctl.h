@@ -3847,6 +3847,20 @@ name|LINUX_ASYNC_FLAGS
 value|0x0FFF
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_IOCTL_DRM_MIN
+value|0x6400
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_IOCTL_DRM_MAX
+value|0x64ff
+end_define
+
 begin_comment
 comment|/*  * This doesn't really belong here, but I can't think of a better  * place to put it.  */
 end_comment
