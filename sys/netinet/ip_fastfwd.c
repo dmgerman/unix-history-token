@@ -2089,6 +2089,9 @@ block|{
 comment|/* Reclaim remaining fragments */
 for|for
 control|(
+name|m
+operator|=
+name|m0
 init|;
 name|m
 condition|;
@@ -2102,12 +2105,6 @@ operator|=
 name|m
 operator|->
 name|m_nextpkt
-expr_stmt|;
-name|m
-operator|->
-name|m_nextpkt
-operator|=
-name|NULL
 expr_stmt|;
 name|m_freem
 argument_list|(
