@@ -840,12 +840,6 @@ name|g_provider
 modifier|*
 name|pp
 decl_stmt|;
-name|pp
-operator|=
-name|cp
-operator|->
-name|provider
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|cp
@@ -880,6 +874,12 @@ operator|(
 literal|"NULL bp->data in g_io_request"
 operator|)
 argument_list|)
+expr_stmt|;
+name|pp
+operator|=
+name|cp
+operator|->
+name|provider
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -1018,6 +1018,17 @@ name|g_provider
 modifier|*
 name|pp
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|bp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL bp in g_io_deliver"
+operator|)
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 name|bp
@@ -1029,17 +1040,6 @@ operator|=
 name|bp
 operator|->
 name|bio_to
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|bp
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"NULL bp in g_io_deliver"
-operator|)
-argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
