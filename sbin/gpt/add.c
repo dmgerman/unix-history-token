@@ -174,7 +174,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: error: device does not contain a GPT"
+literal|"%s: error: no primary GPT header; run create or recover"
 argument_list|,
 name|device_name
 argument_list|)
@@ -197,7 +197,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: error: no secundary table; run recover"
+literal|"%s: error: no secondary GPT header; run recover"
 argument_list|,
 name|device_name
 argument_list|)
