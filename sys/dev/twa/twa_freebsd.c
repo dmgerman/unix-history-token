@@ -1836,8 +1836,6 @@ name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
-operator|+
-literal|1
 argument_list|,
 comment|/* highaddr */
 name|NULL
