@@ -88,6 +88,74 @@ comment|/* #undef _GLIBCPP_CONCEPT_CHECKS */
 end_comment
 
 begin_comment
+comment|// Define to use symbol versioning in the shared library.
+end_comment
+
+begin_comment
+comment|/* #undef _GLIBCPP_SYMVER */
+end_comment
+
+begin_comment
+comment|// Define symbol versioning in assember directives. If symbol
+end_comment
+
+begin_comment
+comment|// versioning is beigng used, and the assembler supports this kind of
+end_comment
+
+begin_comment
+comment|// thing, then use it.
+end_comment
+
+begin_comment
+comment|// NB: _GLIBCPP_AT_AT is a hack to work around quoting issues in m4.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_GLIBCPP_SYMVER
+end_if
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_ASM_SYMVER
+parameter_list|(
+name|cur
+parameter_list|,
+name|old
+parameter_list|,
+name|version
+parameter_list|)
+define|\
+value|asm (".symver " #cur "," #old _GLIBCPP_AT_AT #version);
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_ASM_SYMVER
+parameter_list|(
+name|cur
+parameter_list|,
+name|old
+parameter_list|,
+name|version
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|// Define if mbstate_t exists in wchar.h.
 end_comment
 
@@ -901,9 +969,12 @@ begin_comment
 comment|/* Define if you have the btowc function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_BTOWC */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_BTOWC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the ceilf function.  */
@@ -1045,17 +1116,23 @@ begin_comment
 comment|/* Define if you have the fgetwc function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FGETWC */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FGETWC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the fgetws function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FGETWS */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FGETWS
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the finite function.  */
@@ -1137,17 +1214,23 @@ begin_comment
 comment|/* Define if you have the fputwc function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FPUTWC */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FPUTWC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the fputws function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FPUTWS */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FPUTWS
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the frexpf function.  */
@@ -1172,25 +1255,34 @@ begin_comment
 comment|/* Define if you have the fwide function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FWIDE */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FWIDE
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the fwprintf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FWPRINTF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FWPRINTF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the fwscanf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FWSCANF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FWSCANF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the getpagesize function.  */
@@ -1207,17 +1299,23 @@ begin_comment
 comment|/* Define if you have the getwc function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_GETWC */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_GETWC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the getwchar function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_GETWCHAR */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_GETWCHAR
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the hypot function.  */
@@ -1391,33 +1489,45 @@ begin_comment
 comment|/* Define if you have the mbrlen function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_MBRLEN */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_MBRLEN
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the mbrtowc function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_MBRTOWC */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_MBRTOWC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the mbsinit function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_MBSINIT */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_MBSINIT
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the mbsrtowcs function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_MBSRTOWCS */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_MBSRTOWCS
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the modff function.  */
@@ -1480,17 +1590,23 @@ begin_comment
 comment|/* Define if you have the putwc function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PUTWC */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PUTWC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the putwchar function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PUTWCHAR */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PUTWCHAR
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the qfpclass function.  */
@@ -1612,17 +1728,23 @@ begin_comment
 comment|/* Define if you have the swprintf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SWPRINTF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SWPRINTF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the swscanf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SWSCANF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SWSCANF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the tanf function.  */
@@ -1666,65 +1788,89 @@ begin_comment
 comment|/* Define if you have the ungetwc function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_UNGETWC */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_UNGETWC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the vfwprintf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_VFWPRINTF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_VFWPRINTF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the vfwscanf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_VFWSCANF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_VFWSCANF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the vswprintf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_VSWPRINTF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_VSWPRINTF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the vswscanf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_VSWSCANF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_VSWSCANF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the vwprintf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_VWPRINTF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_VWPRINTF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the vwscanf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_VWSCANF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_VWSCANF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcrtomb function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WCRTOMB */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WCRTOMB
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcscat function.  */
@@ -1763,9 +1909,12 @@ begin_comment
 comment|/* Define if you have the wcscoll function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WCSCOLL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WCSCOLL
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcscpy function.  */
@@ -1793,9 +1942,12 @@ begin_comment
 comment|/* Define if you have the wcsftime function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WCSFTIME */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WCSFTIME
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcslen function.  */
@@ -1867,9 +2019,12 @@ begin_comment
 comment|/* Define if you have the wcsrtombs function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WCSRTOMBS */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WCSRTOMBS
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcsspn function.  */
@@ -1897,9 +2052,12 @@ begin_comment
 comment|/* Define if you have the wcstod function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WCSTOD */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WCSTOD
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcstof function.  */
@@ -1913,41 +2071,56 @@ begin_comment
 comment|/* Define if you have the wcstok function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WCSTOK */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WCSTOK
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcstol function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WCSTOL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WCSTOL
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcstoul function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WCSTOUL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WCSTOUL
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcsxfrm function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WCSXFRM */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WCSXFRM
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wctob function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WCTOB */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WCTOB
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wmemchr function.  */
@@ -2008,17 +2181,23 @@ begin_comment
 comment|/* Define if you have the wprintf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WPRINTF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WPRINTF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wscanf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WSCANF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WSCANF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<endian.h> header file.  */
@@ -2126,6 +2305,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STDLIB_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<string.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRING_H
 value|1
 end_define
 
@@ -2241,7 +2431,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"3.1.0"
+value|"3.2.1"
 end_define
 
 begin_comment

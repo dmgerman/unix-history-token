@@ -130,7 +130,7 @@ begin_define
 define|#
 directive|define
 name|__GLIBCPP__
-value|20020514
+value|20021119
 end_define
 
 begin_comment
@@ -203,6 +203,17 @@ value|1
 end_define
 
 begin_comment
+comment|// Hopefully temporary workaround to autoconf/m4 issue with quoting '@'.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_AT_AT
+value|"@@"
+end_define
+
+begin_comment
 comment|// In those parts of the standard C++ library that use a mutex instead
 end_comment
 
@@ -255,7 +266,40 @@ comment|// so, please report any possible issues to libstdc++@gcc.gnu.org .
 end_comment
 
 begin_comment
-comment|// Do not blindly #define __USE_MALLOC here or on the command line.
+comment|// Do not define __USE_MALLOC on the command line.  Enforce it here:
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__USE_MALLOC
+end_ifdef
+
+begin_error
+error|#
+directive|error
+error|__USE_MALLOC should only be defined within \ libstdc++-v3/include/bits/c++config before full recompilation of the library.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// Define __USE_MALLOC after this point in the file in order to aid debugging
+end_comment
+
+begin_comment
+comment|// or globally change allocation policy.  This breaks the ABI, thus
+end_comment
+
+begin_comment
+comment|// completely recompile the library.  A patch to better support
+end_comment
+
+begin_comment
+comment|// changing the global allocator policy would be probably be accepted.
 end_comment
 
 begin_comment
@@ -353,6 +397,74 @@ end_comment
 begin_comment
 comment|/* #undef _GLIBCPP_CONCEPT_CHECKS */
 end_comment
+
+begin_comment
+comment|// Define to use symbol versioning in the shared library.
+end_comment
+
+begin_comment
+comment|/* #undef _GLIBCPP_SYMVER */
+end_comment
+
+begin_comment
+comment|// Define symbol versioning in assember directives. If symbol
+end_comment
+
+begin_comment
+comment|// versioning is beigng used, and the assembler supports this kind of
+end_comment
+
+begin_comment
+comment|// thing, then use it.
+end_comment
+
+begin_comment
+comment|// NB: _GLIBCPP_AT_AT is a hack to work around quoting issues in m4.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_GLIBCPP_SYMVER
+end_if
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_ASM_SYMVER
+parameter_list|(
+name|cur
+parameter_list|,
+name|old
+parameter_list|,
+name|version
+parameter_list|)
+define|\
+value|asm (".symver " #cur "," #old _GLIBCPP_AT_AT #version);
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_ASM_SYMVER
+parameter_list|(
+name|cur
+parameter_list|,
+name|old
+parameter_list|,
+name|version
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// Define if mbstate_t exists in wchar.h.
@@ -1168,9 +1280,12 @@ begin_comment
 comment|/* Define if you have the btowc function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_BTOWC */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_BTOWC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the ceilf function.  */
@@ -1312,17 +1427,23 @@ begin_comment
 comment|/* Define if you have the fgetwc function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_FGETWC */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_FGETWC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the fgetws function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_FGETWS */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_FGETWS
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the finite function.  */
@@ -1404,17 +1525,23 @@ begin_comment
 comment|/* Define if you have the fputwc function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_FPUTWC */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_FPUTWC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the fputws function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_FPUTWS */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_FPUTWS
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the frexpf function.  */
@@ -1439,25 +1566,34 @@ begin_comment
 comment|/* Define if you have the fwide function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_FWIDE */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_FWIDE
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the fwprintf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_FWPRINTF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_FWPRINTF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the fwscanf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_FWSCANF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_FWSCANF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the getpagesize function.  */
@@ -1474,17 +1610,23 @@ begin_comment
 comment|/* Define if you have the getwc function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_GETWC */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_GETWC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the getwchar function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_GETWCHAR */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_GETWCHAR
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the hypot function.  */
@@ -1658,33 +1800,45 @@ begin_comment
 comment|/* Define if you have the mbrlen function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_MBRLEN */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_MBRLEN
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the mbrtowc function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_MBRTOWC */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_MBRTOWC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the mbsinit function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_MBSINIT */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_MBSINIT
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the mbsrtowcs function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_MBSRTOWCS */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_MBSRTOWCS
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the modff function.  */
@@ -1747,17 +1901,23 @@ begin_comment
 comment|/* Define if you have the putwc function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_PUTWC */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_PUTWC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the putwchar function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_PUTWCHAR */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_PUTWCHAR
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the qfpclass function.  */
@@ -1879,17 +2039,23 @@ begin_comment
 comment|/* Define if you have the swprintf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_SWPRINTF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_SWPRINTF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the swscanf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_SWSCANF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_SWSCANF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the tanf function.  */
@@ -1933,65 +2099,89 @@ begin_comment
 comment|/* Define if you have the ungetwc function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_UNGETWC */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_UNGETWC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the vfwprintf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_VFWPRINTF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_VFWPRINTF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the vfwscanf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_VFWSCANF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_VFWSCANF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the vswprintf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_VSWPRINTF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_VSWPRINTF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the vswscanf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_VSWSCANF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_VSWSCANF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the vwprintf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_VWPRINTF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_VWPRINTF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the vwscanf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_VWSCANF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_VWSCANF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcrtomb function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_WCRTOMB */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_WCRTOMB
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcscat function.  */
@@ -2030,9 +2220,12 @@ begin_comment
 comment|/* Define if you have the wcscoll function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_WCSCOLL */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_WCSCOLL
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcscpy function.  */
@@ -2060,9 +2253,12 @@ begin_comment
 comment|/* Define if you have the wcsftime function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_WCSFTIME */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_WCSFTIME
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcslen function.  */
@@ -2134,9 +2330,12 @@ begin_comment
 comment|/* Define if you have the wcsrtombs function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_WCSRTOMBS */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_WCSRTOMBS
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcsspn function.  */
@@ -2164,9 +2363,12 @@ begin_comment
 comment|/* Define if you have the wcstod function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_WCSTOD */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_WCSTOD
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcstof function.  */
@@ -2180,41 +2382,56 @@ begin_comment
 comment|/* Define if you have the wcstok function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_WCSTOK */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_WCSTOK
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcstol function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_WCSTOL */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_WCSTOL
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcstoul function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_WCSTOUL */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_WCSTOUL
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcsxfrm function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_WCSXFRM */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_WCSXFRM
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wctob function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_WCTOB */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_WCTOB
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wmemchr function.  */
@@ -2275,17 +2492,23 @@ begin_comment
 comment|/* Define if you have the wprintf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_WPRINTF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_WPRINTF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wscanf function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_WSCANF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_WSCANF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<endian.h> header file.  */
@@ -2389,9 +2612,23 @@ begin_comment
 comment|/* Define if you have the<stdlib.h> header file.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_STDLIB_H
+value|1
+end_define
+
 begin_comment
-comment|/* #undef _GLIBCPP_HAVE_STDLIB_H */
+comment|/* Define if you have the<string.h> header file.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_STRING_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<sys/isa_defs.h> header file.  */
@@ -2432,9 +2669,12 @@ begin_comment
 comment|/* Define if you have the<sys/types.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_SYS_TYPES_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_SYS_TYPES_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<unistd.h> header file.  */
@@ -2499,7 +2739,7 @@ begin_define
 define|#
 directive|define
 name|_GLIBCPP_VERSION
-value|"3.1.0"
+value|"3.2.1"
 end_define
 
 begin_comment
