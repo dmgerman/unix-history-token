@@ -741,7 +741,7 @@ name|error
 operator|=
 name|getvfsbyname
 argument_list|(
-literal|"msdos"
+literal|"msdosfs"
 argument_list|,
 operator|&
 name|vfc
@@ -753,7 +753,7 @@ name|error
 operator|&&
 name|vfsisloadable
 argument_list|(
-literal|"msdos"
+literal|"msdosfs"
 argument_list|)
 condition|)
 block|{
@@ -761,14 +761,14 @@ if|if
 condition|(
 name|vfsload
 argument_list|(
-literal|"msdos"
+literal|"msdosfs"
 argument_list|)
 condition|)
 name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"vfsload(msdos)"
+literal|"vfsload(msdosfs)"
 argument_list|)
 expr_stmt|;
 name|endvfsent
@@ -779,7 +779,7 @@ name|error
 operator|=
 name|getvfsbyname
 argument_list|(
-literal|"msdos"
+literal|"msdosfs"
 argument_list|,
 operator|&
 name|vfc
@@ -1121,9 +1121,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: mount_msdos [-o options] [-u user] [-g group] [-m mask]"
+literal|"usage: mount_msdosfs [-o options] [-u user] [-g group] [-m mask]"
 argument_list|,
-literal|"                   [-s] [-l] [-9] [-L locale] [-W table] bdev dir"
+literal|"                     [-s] [-l] [-9] [-L locale] [-W table] bdev dir"
 argument_list|)
 expr_stmt|;
 name|exit

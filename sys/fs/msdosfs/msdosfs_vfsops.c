@@ -4817,7 +4817,7 @@ name|VFS_SET
 argument_list|(
 name|msdosfs_vfsops
 argument_list|,
-name|msdos
+name|msdosfs
 argument_list|,
 literal|0
 argument_list|)

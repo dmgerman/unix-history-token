@@ -2104,6 +2104,22 @@ argument_list|,
 literal|"update"
 argument_list|)
 expr_stmt|;
+comment|/* Compatibility glue. */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|vfstype
+argument_list|,
+literal|"msdos"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|vfstype
+operator|=
+literal|"msdosfs"
+expr_stmt|;
 name|argc
 operator|=
 literal|0

@@ -5220,7 +5220,7 @@ name|fsp
 operator|->
 name|f_fstypename
 argument_list|,
-literal|"msdos"
+literal|"msdosfs"
 argument_list|)
 operator|||
 operator|!
