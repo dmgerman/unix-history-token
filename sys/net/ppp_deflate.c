@@ -56,12 +56,6 @@ directive|include
 file|<net/ppp_comp.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|DO_DEFLATE
-end_if
-
 begin_define
 define|#
 directive|define
@@ -3457,15 +3451,6 @@ operator|++
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DO_DEFLATE */
-end_comment
 
 end_unit
 

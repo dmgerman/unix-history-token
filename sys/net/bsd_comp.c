@@ -50,12 +50,6 @@ directive|include
 file|<net/ppp_comp.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|DO_BSD_COMPRESS
-end_if
-
 begin_comment
 comment|/*  * PPP "BSD compress" compression  *  The differences between this compression and the classic BSD LZW  *  source are obvious from the requirement that the classic code worked  *  with files while this handles arbitrarily long streams that  *  are broken into packets.  They are:  *  *	When the code size expands, a block of junk is not emitted by  *	    the compressor and not expected by the decompressor.  *  *	New codes are not necessarily assigned every time an old  *	    code is output by the compressor.  This is because a packet  *	    end forces a code to be emitted, but does not imply that a  *	    new sequence has been seen.  *  *	The compression ratio is checked at the first end of a packet  *	    after the appropriate gap.	Besides simplifying and speeding  *	    things up, this makes it more likely that the transmitter  *	    and receiver will agree when the dictionary is cleared when  *	    compression is not going well.  */
 end_comment
@@ -4782,15 +4776,6 @@ directive|endif
 comment|/* DEBUG */
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DO_BSD_COMPRESS */
-end_comment
 
 end_unit
 
