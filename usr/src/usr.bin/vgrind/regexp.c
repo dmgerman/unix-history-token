@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regexp.c	4.1	(Berkeley)	%G%"
+literal|"@(#)regexp.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -524,6 +524,10 @@ name|acs
 operator|=
 name|NIL
 expr_stmt|;
+name|cs
+operator|=
+name|NIL
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -557,6 +561,10 @@ comment|/* escaped characters are just characters */
 default|default:
 if|if
 condition|(
+name|cs
+operator|==
+name|NIL
+operator|||
 operator|(
 operator|*
 name|cs
@@ -768,6 +776,10 @@ comment|/* mark the last match sequence as optional */
 case|case
 literal|'?'
 case|:
+if|if
+condition|(
+name|cs
+condition|)
 operator|*
 name|cs
 operator|=
@@ -1006,6 +1018,10 @@ comment|/* if its not a metasymbol just build a scharacter string */
 default|default:
 if|if
 condition|(
+name|cs
+operator|==
+name|NIL
+operator|||
 operator|(
 operator|*
 name|cs

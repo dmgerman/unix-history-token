@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vgrindefs.c	4.2 (Berkeley) %G%"
+literal|"@(#)vgrindefs.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,14 @@ specifier|static
 name|char
 modifier|*
 name|tbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|filename
 decl_stmt|;
 end_decl_stmt
 
@@ -114,7 +122,7 @@ argument|bp
 argument_list|,
 argument|name
 argument_list|,
-argument|filename
+argument|file
 argument_list|)
 end_macro
 
@@ -127,7 +135,7 @@ modifier|*
 name|name
 decl_stmt|,
 modifier|*
-name|filename
+name|file
 decl_stmt|;
 end_decl_stmt
 
@@ -172,6 +180,10 @@ expr_stmt|;
 name|tf
 operator|=
 literal|0
+expr_stmt|;
+name|filename
+operator|=
+name|file
 expr_stmt|;
 name|tf
 operator|=
@@ -514,6 +526,8 @@ argument_list|(
 name|tcbuf
 argument_list|,
 name|tcname
+argument_list|,
+name|filename
 argument_list|)
 operator|!=
 literal|1

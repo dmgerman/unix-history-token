@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfontedpr.c	4.1	(Berkeley)	%G%"
+literal|"@(#)vfontedpr.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,6 +151,14 @@ end_function_decl
 begin_comment
 comment|/* convert expression to internal form */
 end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|tgetstr
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|boolean
@@ -2521,6 +2529,8 @@ name|s
 argument_list|)
 operator|-
 literal|1
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|s
