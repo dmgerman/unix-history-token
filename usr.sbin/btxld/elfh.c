@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stddef.h>
 end_include
 
@@ -19,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|"elfh.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"endian.h"
 end_include
 
 begin_define
@@ -85,31 +85,31 @@ block|,
 literal|0
 block|}
 block|,
-name|HTOLE16
+name|htole16
 argument_list|(
 name|ET_EXEC
 argument_list|)
 block|,
 comment|/* e_type */
-name|HTOLE16
+name|htole16
 argument_list|(
 name|EM_386
 argument_list|)
 block|,
 comment|/* e_machine */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|EV_CURRENT
 argument_list|)
 block|,
 comment|/* e_version */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* e_entry */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|offsetof
 argument_list|(
@@ -121,7 +121,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* e_phoff */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|offsetof
 argument_list|(
@@ -136,7 +136,7 @@ comment|/* e_shoff */
 literal|0
 block|,
 comment|/* e_flags */
-name|HTOLE16
+name|htole16
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -147,7 +147,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* e_ehsize */
-name|HTOLE16
+name|htole16
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -161,7 +161,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* e_phentsize */
-name|HTOLE16
+name|htole16
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -182,7 +182,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* e_phnum */
-name|HTOLE16
+name|htole16
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -196,7 +196,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* e_shentsize */
-name|HTOLE16
+name|htole16
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -217,7 +217,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* e_shnum */
-name|HTOLE16
+name|htole16
 argument_list|(
 literal|1
 argument_list|)
@@ -226,13 +226,13 @@ block|}
 block|,
 block|{
 block|{
-name|HTOLE32
+name|htole32
 argument_list|(
 name|PT_LOAD
 argument_list|)
 block|,
 comment|/* p_type */
-name|HTOLE32
+name|htole32
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -241,31 +241,31 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* p_offset */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* p_vaddr */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* p_paddr */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* p_filesz */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* p_memsz */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|PF_R
 operator||
@@ -273,7 +273,7 @@ name|PF_X
 argument_list|)
 block|,
 comment|/* p_flags */
-name|HTOLE32
+name|htole32
 argument_list|(
 literal|0x1000
 argument_list|)
@@ -281,43 +281,43 @@ comment|/* p_align */
 block|}
 block|,
 block|{
-name|HTOLE32
+name|htole32
 argument_list|(
 name|PT_LOAD
 argument_list|)
 block|,
 comment|/* p_type */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* p_offset */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* p_vaddr */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* p_paddr */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* p_filesz */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* p_memsz */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|PF_R
 operator||
@@ -325,7 +325,7 @@ name|PF_W
 argument_list|)
 block|,
 comment|/* p_flags */
-name|HTOLE32
+name|htole32
 argument_list|(
 literal|0x1000
 argument_list|)
@@ -337,7 +337,7 @@ block|{
 block|{
 literal|0
 block|,
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHT_NULL
 argument_list|)
@@ -350,7 +350,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHN_UNDEF
 argument_list|)
@@ -363,13 +363,13 @@ literal|0
 block|}
 block|,
 block|{
-name|HTOLE32
+name|htole32
 argument_list|(
 literal|1
 argument_list|)
 block|,
 comment|/* sh_name */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHT_STRTAB
 argument_list|)
@@ -381,7 +381,7 @@ comment|/* sh_flags */
 literal|0
 block|,
 comment|/* sh_addr */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|offsetof
 argument_list|(
@@ -393,7 +393,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* sh_offset */
-name|HTOLE32
+name|htole32
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -404,7 +404,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* sh_size */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHN_UNDEF
 argument_list|)
@@ -413,7 +413,7 @@ comment|/* sh_link */
 literal|0
 block|,
 comment|/* sh_info */
-name|HTOLE32
+name|htole32
 argument_list|(
 literal|1
 argument_list|)
@@ -424,19 +424,19 @@ comment|/* sh_entsize */
 block|}
 block|,
 block|{
-name|HTOLE32
+name|htole32
 argument_list|(
 literal|0xb
 argument_list|)
 block|,
 comment|/* sh_name */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHT_PROGBITS
 argument_list|)
 block|,
 comment|/* sh_type */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHF_EXECINSTR
 operator||
@@ -444,25 +444,25 @@ name|SHF_ALLOC
 argument_list|)
 block|,
 comment|/* sh_flags */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* sh_addr */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* sh_offset */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* sh_size */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHN_UNDEF
 argument_list|)
@@ -471,7 +471,7 @@ comment|/* sh_link */
 literal|0
 block|,
 comment|/* sh_info */
-name|HTOLE32
+name|htole32
 argument_list|(
 literal|4
 argument_list|)
@@ -482,19 +482,19 @@ comment|/* sh_entsize */
 block|}
 block|,
 block|{
-name|HTOLE32
+name|htole32
 argument_list|(
 literal|0x11
 argument_list|)
 block|,
 comment|/* sh_name */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHT_PROGBITS
 argument_list|)
 block|,
 comment|/* sh_type */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHF_ALLOC
 operator||
@@ -502,25 +502,25 @@ name|SHF_WRITE
 argument_list|)
 block|,
 comment|/* sh_flags */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* sh_addr */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* sh_offset */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SET_ME
 argument_list|)
 block|,
 comment|/* sh_size */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHN_UNDEF
 argument_list|)
@@ -529,7 +529,7 @@ comment|/* sh_link */
 literal|0
 block|,
 comment|/* sh_info */
-name|HTOLE32
+name|htole32
 argument_list|(
 literal|4
 argument_list|)

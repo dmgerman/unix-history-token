@@ -23,7 +23,7 @@ parameter_list|(
 name|ex
 parameter_list|)
 define|\
-value|( (ex).a_midmag& 0xffff )
+value|( le32toh((ex).a_midmag)& 0xffff )
 end_define
 
 begin_define
@@ -62,7 +62,7 @@ parameter_list|,
 name|flag
 parameter_list|)
 define|\
-value|( (ex).a_midmag = (((flag)& 0x3f)<<26) | (((mid)& 0x03ff)<< 16) | \ 	((mag)& 0xffff) )
+value|( (ex).a_midmag = htole32((((flag)& 0x3f)<<26) | \ 	(((mid)& 0x03ff)<< 16) | \ 	((mag)& 0xffff)) )
 end_define
 
 begin_define
@@ -125,7 +125,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|(N_GETMAGIC(ex) == ZMAGIC || N_GETMAGIC(ex) == QMAGIC || \ 	 N_GETMAGIC_NET(ex) == ZMAGIC || N_GETMAGIC_NET(ex) == QMAGIC ? \ 	 ((x) + __LDPGSZ - 1)& ~(unsigned long)(__LDPGSZ - 1) : (x))
+value|(N_GETMAGIC(ex) == ZMAGIC || N_GETMAGIC(ex) == QMAGIC || \ 	 N_GETMAGIC_NET(ex) == ZMAGIC || N_GETMAGIC_NET(ex) == QMAGIC ? \ 	 ((x) + __LDPGSZ - 1)& ~(uint32_t)(__LDPGSZ - 1) : (x))
 end_define
 
 begin_comment
@@ -159,7 +159,7 @@ parameter_list|(
 name|ex
 parameter_list|)
 define|\
-value|((N_GETMAGIC(ex) == OMAGIC || N_GETMAGIC(ex) == NMAGIC || \ 	N_GETMAGIC(ex) == ZMAGIC) ? \ 	((ex).a_entry< (ex).a_text ? 0 : (ex).a_entry& ~__LDPGSZ) : __LDPGSZ)
+value|((N_GETMAGIC(ex) == OMAGIC || N_GETMAGIC(ex) == NMAGIC || \ 	N_GETMAGIC(ex) == ZMAGIC) ? \ 	(le32toh((ex).a_entry)< le32toh((ex).a_text) ? 0 : \ 	le32toh((ex).a_entry)& ~__LDPGSZ) : __LDPGSZ)
 end_define
 
 begin_comment
@@ -174,7 +174,7 @@ parameter_list|(
 name|ex
 parameter_list|)
 define|\
-value|N_ALIGN(ex, N_TXTADDR(ex) + (ex).a_text)
+value|N_ALIGN(ex, N_TXTADDR(ex) + le32toh((ex).a_text))
 end_define
 
 begin_comment
@@ -204,7 +204,7 @@ parameter_list|(
 name|ex
 parameter_list|)
 define|\
-value|N_ALIGN(ex, N_TXTOFF(ex) + (ex).a_text)
+value|N_ALIGN(ex, N_TXTOFF(ex) + le32toh((ex).a_text))
 end_define
 
 begin_comment
@@ -219,7 +219,7 @@ parameter_list|(
 name|ex
 parameter_list|)
 define|\
-value|N_ALIGN(ex, N_DATOFF(ex) + (ex).a_data)
+value|N_ALIGN(ex, N_DATOFF(ex) + le32toh((ex).a_data))
 end_define
 
 begin_comment
@@ -234,7 +234,7 @@ parameter_list|(
 name|ex
 parameter_list|)
 define|\
-value|(N_RELOFF(ex) + (ex).a_trsize + (ex).a_drsize)
+value|(N_RELOFF(ex) + le32toh((ex).a_trsize) + le32toh((ex).a_drsize))
 end_define
 
 begin_comment
@@ -248,7 +248,7 @@ name|N_STROFF
 parameter_list|(
 name|ex
 parameter_list|)
-value|(N_SYMOFF(ex) + (ex).a_syms)
+value|(N_SYMOFF(ex) + le32toh((ex).a_syms))
 end_define
 
 begin_comment
@@ -259,43 +259,35 @@ begin_struct
 struct|struct
 name|exec
 block|{
-name|unsigned
-name|long
+name|uint32_t
 name|a_midmag
 decl_stmt|;
 comment|/* flags<<26 | mid<<16 | magic */
-name|unsigned
-name|long
+name|uint32_t
 name|a_text
 decl_stmt|;
 comment|/* text segment size */
-name|unsigned
-name|long
+name|uint32_t
 name|a_data
 decl_stmt|;
 comment|/* initialized data size */
-name|unsigned
-name|long
+name|uint32_t
 name|a_bss
 decl_stmt|;
 comment|/* uninitialized data size */
-name|unsigned
-name|long
+name|uint32_t
 name|a_syms
 decl_stmt|;
 comment|/* symbol table size */
-name|unsigned
-name|long
+name|uint32_t
 name|a_entry
 decl_stmt|;
 comment|/* entry point */
-name|unsigned
-name|long
+name|uint32_t
 name|a_trsize
 decl_stmt|;
 comment|/* text relocation size */
-name|unsigned
-name|long
+name|uint32_t
 name|a_drsize
 decl_stmt|;
 comment|/* data relocation size */

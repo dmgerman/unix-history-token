@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stddef.h>
 end_include
 
@@ -13,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|"elfhdr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"endian.h"
 end_include
 
 begin_define
@@ -80,19 +80,19 @@ block|,
 literal|0
 block|}
 block|,
-name|HTOLE16
+name|htole16
 argument_list|(
 name|ET_EXEC
 argument_list|)
 block|,
 comment|/* e_type */
-name|HTOLE16
+name|htole16
 argument_list|(
 name|EM_386
 argument_list|)
 block|,
 comment|/* e_machine */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|EV_CURRENT
 argument_list|)
@@ -104,7 +104,7 @@ comment|/* e_entry */
 literal|0
 block|,
 comment|/* e_phoff */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|offsetof
 argument_list|(
@@ -119,7 +119,7 @@ comment|/* e_shoff */
 literal|0
 block|,
 comment|/* e_flags */
-name|HTOLE16
+name|htole16
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -134,7 +134,7 @@ comment|/* e_phentsize */
 literal|0
 block|,
 comment|/* e_phnum */
-name|HTOLE16
+name|htole16
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -143,13 +143,13 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* e_shentsize */
-name|HTOLE16
+name|htole16
 argument_list|(
 name|KGZ_SHNUM
 argument_list|)
 block|,
 comment|/* e_shnum */
-name|HTOLE16
+name|htole16
 argument_list|(
 argument|KGZ_SH_SHSTRTAB
 argument_list|)
@@ -162,7 +162,7 @@ block|{
 literal|0
 block|,
 comment|/* sh_name */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHT_NULL
 argument_list|)
@@ -180,7 +180,7 @@ comment|/* sh_offset */
 literal|0
 block|,
 comment|/* sh_size */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHN_UNDEF
 argument_list|)
@@ -197,7 +197,7 @@ comment|/* sh_entsize */
 block|}
 block|,
 block|{
-name|HTOLE32
+name|htole32
 argument_list|(
 name|offsetof
 argument_list|(
@@ -209,7 +209,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* sh_name */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHT_SYMTAB
 argument_list|)
@@ -221,7 +221,7 @@ comment|/* sh_flags */
 literal|0
 block|,
 comment|/* sh_addr */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|offsetof
 argument_list|(
@@ -233,7 +233,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* sh_offset */
-name|HTOLE32
+name|htole32
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -244,25 +244,25 @@ name|KGZ_STNUM
 argument_list|)
 block|,
 comment|/* sh_size */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|KGZ_SH_STRTAB
 argument_list|)
 block|,
 comment|/* sh_link */
-name|HTOLE32
+name|htole32
 argument_list|(
 literal|1
 argument_list|)
 block|,
 comment|/* sh_info */
-name|HTOLE32
+name|htole32
 argument_list|(
 literal|4
 argument_list|)
 block|,
 comment|/* sh_addralign */
-name|HTOLE32
+name|htole32
 argument_list|(
 argument|sizeof(Elf32_Sym)
 argument_list|)
@@ -270,7 +270,7 @@ comment|/* sh_entsize */
 block|}
 block|,
 block|{
-name|HTOLE32
+name|htole32
 argument_list|(
 name|offsetof
 argument_list|(
@@ -282,7 +282,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* sh_name */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHT_STRTAB
 argument_list|)
@@ -294,7 +294,7 @@ comment|/* sh_flags */
 literal|0
 block|,
 comment|/* sh_addr */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|offsetof
 argument_list|(
@@ -306,7 +306,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* sh_offset */
-name|HTOLE32
+name|htole32
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -316,7 +316,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* sh_size */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHN_UNDEF
 argument_list|)
@@ -325,7 +325,7 @@ comment|/* sh_link */
 literal|0
 block|,
 comment|/* sh_info */
-name|HTOLE32
+name|htole32
 argument_list|(
 literal|1
 argument_list|)
@@ -336,7 +336,7 @@ comment|/* sh_entsize */
 block|}
 block|,
 block|{
-name|HTOLE32
+name|htole32
 argument_list|(
 name|offsetof
 argument_list|(
@@ -348,7 +348,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* sh_name */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHT_STRTAB
 argument_list|)
@@ -360,7 +360,7 @@ comment|/* sh_flags */
 literal|0
 block|,
 comment|/* sh_addr */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|offsetof
 argument_list|(
@@ -372,7 +372,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* sh_offset */
-name|HTOLE32
+name|htole32
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -382,7 +382,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* sh_size */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHN_UNDEF
 argument_list|)
@@ -391,7 +391,7 @@ comment|/* sh_link */
 literal|0
 block|,
 comment|/* sh_info */
-name|HTOLE32
+name|htole32
 argument_list|(
 literal|1
 argument_list|)
@@ -402,7 +402,7 @@ comment|/* sh_entsize */
 block|}
 block|,
 block|{
-name|HTOLE32
+name|htole32
 argument_list|(
 name|offsetof
 argument_list|(
@@ -414,13 +414,13 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* sh_name */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHT_PROGBITS
 argument_list|)
 block|,
 comment|/* sh_type */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHF_ALLOC
 operator||
@@ -431,7 +431,7 @@ comment|/* sh_flags */
 literal|0
 block|,
 comment|/* sh_addr */
-name|HTOLE32
+name|htole32
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -441,7 +441,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* sh_offset */
-name|HTOLE32
+name|htole32
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -453,7 +453,7 @@ name|KGZ_FIX_NSIZE
 argument_list|)
 block|,
 comment|/* sh_size */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|SHN_UNDEF
 argument_list|)
@@ -462,7 +462,7 @@ comment|/* sh_link */
 literal|0
 block|,
 comment|/* sh_info */
-name|HTOLE32
+name|htole32
 argument_list|(
 literal|4
 argument_list|)
@@ -491,7 +491,7 @@ comment|/* st_info */
 literal|0
 block|,
 comment|/* st_other */
-name|HTOLE16
+name|htole16
 argument_list|(
 argument|SHN_UNDEF
 argument_list|)
@@ -499,7 +499,7 @@ comment|/* st_shndx */
 block|}
 block|,
 block|{
-name|HTOLE32
+name|htole32
 argument_list|(
 name|offsetof
 argument_list|(
@@ -514,7 +514,7 @@ comment|/* st_name */
 literal|0
 block|,
 comment|/* st_value */
-name|HTOLE32
+name|htole32
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -535,7 +535,7 @@ comment|/* st_info */
 literal|0
 block|,
 comment|/* st_other */
-name|HTOLE16
+name|htole16
 argument_list|(
 argument|KGZ_SH_DATA
 argument_list|)
@@ -543,7 +543,7 @@ comment|/* st_shndx */
 block|}
 block|,
 block|{
-name|HTOLE32
+name|htole32
 argument_list|(
 name|offsetof
 argument_list|(
@@ -555,7 +555,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* st_name */
-name|HTOLE32
+name|htole32
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -565,7 +565,7 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* st_value */
-name|HTOLE32
+name|htole32
 argument_list|(
 name|KGZ_FIX_NSIZE
 argument_list|)
@@ -582,7 +582,7 @@ comment|/* st_info */
 literal|0
 block|,
 comment|/* st_other */
-name|HTOLE16
+name|htole16
 argument_list|(
 argument|KGZ_SH_DATA
 argument_list|)

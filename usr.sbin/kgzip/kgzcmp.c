@@ -3,6 +3,24 @@ begin_comment
 comment|/*  * Copyright (c) 1999 Global Technology Associates, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|_KERNEL
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|_KERNEL
+end_undef
+
 begin_include
 include|#
 directive|include
@@ -54,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"i386_a.out.h"
+file|<a.out.h>
 end_include
 
 begin_include
@@ -67,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|"elfhdr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"endian.h"
 end_include
 
 begin_include
@@ -153,7 +165,7 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|i386_exec
+name|exec
 modifier|*
 parameter_list|)
 function_decl|;
@@ -474,7 +486,7 @@ index|]
 operator|.
 name|st_size
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
 name|kh
 operator|->
@@ -490,9 +502,9 @@ index|]
 operator|.
 name|sh_size
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|ehdr
 operator|.
@@ -541,7 +553,7 @@ name|khle
 operator|.
 name|dload
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
 name|khle
 operator|.
@@ -552,7 +564,7 @@ name|khle
 operator|.
 name|dsize
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
 name|khle
 operator|.
@@ -563,7 +575,7 @@ name|khle
 operator|.
 name|isize
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
 name|khle
 operator|.
@@ -574,7 +586,7 @@ name|khle
 operator|.
 name|entry
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
 name|khle
 operator|.
@@ -585,7 +597,7 @@ name|khle
 operator|.
 name|nsize
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
 name|khle
 operator|.
@@ -654,7 +666,7 @@ block|{
 union|union
 block|{
 name|struct
-name|i386_exec
+name|exec
 name|ex
 decl_stmt|;
 name|Elf32_Ehdr
@@ -745,7 +757,7 @@ operator|.
 name|ex
 argument_list|)
 operator|&&
-name|I386_N_GETMAGIC
+name|N_GETMAGIC
 argument_list|(
 name|hdr
 operator|.
@@ -1353,7 +1365,7 @@ name|kh
 parameter_list|,
 specifier|const
 name|struct
-name|i386_exec
+name|exec
 modifier|*
 name|a
 parameter_list|)
@@ -1367,7 +1379,7 @@ name|load
 operator|=
 name|addr
 operator|=
-name|I386_N_TXTADDR
+name|N_TXTADDR
 argument_list|(
 operator|*
 name|a
@@ -1379,14 +1391,14 @@ name|idi
 argument_list|,
 name|ido
 argument_list|,
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|a
 operator|->
 name|a_text
 argument_list|)
 argument_list|,
-name|I386_N_TXTOFF
+name|N_TXTOFF
 argument_list|(
 operator|*
 name|a
@@ -1395,7 +1407,7 @@ argument_list|)
 expr_stmt|;
 name|addr
 operator|+=
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|a
 operator|->
@@ -1404,7 +1416,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|I386_N_DATADDR
+name|N_DATADDR
 argument_list|(
 operator|*
 name|a
@@ -1422,14 +1434,14 @@ name|idi
 argument_list|,
 name|ido
 argument_list|,
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|a
 operator|->
 name|a_data
 argument_list|)
 argument_list|,
-name|I386_N_DATOFF
+name|N_DATOFF
 argument_list|(
 operator|*
 name|a
@@ -1438,7 +1450,7 @@ argument_list|)
 expr_stmt|;
 name|addr
 operator|+=
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|a
 operator|->
@@ -1467,7 +1479,7 @@ name|kh
 operator|->
 name|dsize
 operator|+
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|a
 operator|->
@@ -1478,7 +1490,7 @@ name|kh
 operator|->
 name|entry
 operator|=
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|a
 operator|->

@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -45,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<a.out.h>
 end_include
 
 begin_include
@@ -105,18 +117,6 @@ begin_include
 include|#
 directive|include
 file|"elfh.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"endian.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"i386_a.out.h"
 end_include
 
 begin_define
@@ -1447,7 +1447,7 @@ name|btxle
 operator|.
 name|btx_pgctl
 operator|=
-name|HTOLE16
+name|htole16
 argument_list|(
 name|btxle
 operator|.
@@ -1458,7 +1458,7 @@ name|btxle
 operator|.
 name|btx_textsz
 operator|=
-name|HTOLE16
+name|htole16
 argument_list|(
 name|btxle
 operator|.
@@ -1469,7 +1469,7 @@ name|btxle
 operator|.
 name|btx_entry
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
 name|btxle
 operator|.
@@ -1840,7 +1840,7 @@ name|btx
 operator|->
 name|btx_pgctl
 operator|=
-name|LE16TOH
+name|le16toh
 argument_list|(
 name|btx
 operator|->
@@ -1851,7 +1851,7 @@ name|btx
 operator|->
 name|btx_textsz
 operator|=
-name|LE16TOH
+name|le16toh
 argument_list|(
 name|btx
 operator|->
@@ -1862,7 +1862,7 @@ name|btx
 operator|->
 name|btx_entry
 operator|=
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|btx
 operator|->
@@ -1896,7 +1896,7 @@ name|sb
 decl_stmt|;
 specifier|const
 name|struct
-name|i386_exec
+name|exec
 modifier|*
 name|ex
 decl_stmt|;
@@ -2054,11 +2054,11 @@ operator|>=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|i386_exec
+name|exec
 argument_list|)
 operator|&&
 operator|!
-name|I386_N_BADMAG
+name|N_BADMAG
 argument_list|(
 operator|*
 name|ex
@@ -2073,7 +2073,7 @@ name|fmt
 expr_stmt|;
 name|x
 operator|=
-name|I386_N_GETMAGIC
+name|N_GETMAGIC
 argument_list|(
 operator|*
 name|ex
@@ -2119,7 +2119,7 @@ name|hdr
 operator|->
 name|text
 operator|=
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|ex
 operator|->
@@ -2130,7 +2130,7 @@ name|hdr
 operator|->
 name|data
 operator|=
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|ex
 operator|->
@@ -2141,7 +2141,7 @@ name|hdr
 operator|->
 name|bss
 operator|=
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|ex
 operator|->
@@ -2152,7 +2152,7 @@ name|hdr
 operator|->
 name|entry
 operator|=
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|ex
 operator|->
@@ -2161,7 +2161,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|ex
 operator|->
@@ -2219,7 +2219,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|LE16TOH
+name|le16toh
 argument_list|(
 name|ee
 operator|->
@@ -2243,14 +2243,14 @@ operator|*
 operator|)
 name|p
 operator|+
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|ee
 operator|->
 name|e_phoff
 argument_list|)
 operator|+
-name|LE16TOH
+name|le16toh
 argument_list|(
 name|ee
 operator|->
@@ -2262,7 +2262,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|ep
 operator|->
@@ -2284,7 +2284,7 @@ name|hdr
 operator|->
 name|text
 operator|=
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|ep
 operator|->
@@ -2295,7 +2295,7 @@ name|hdr
 operator|->
 name|org
 operator|=
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|ep
 operator|->
@@ -2304,7 +2304,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|ep
 operator|->
@@ -2327,7 +2327,7 @@ name|hdr
 operator|->
 name|data
 operator|=
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|ep
 operator|->
@@ -2338,14 +2338,14 @@ name|hdr
 operator|->
 name|bss
 operator|=
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|ep
 operator|->
 name|p_memsz
 argument_list|)
 operator|-
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|ep
 operator|->
@@ -2374,7 +2374,7 @@ name|hdr
 operator|->
 name|entry
 operator|=
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|ee
 operator|->
@@ -2425,7 +2425,7 @@ name|hdr
 parameter_list|)
 block|{
 name|struct
-name|i386_exec
+name|exec
 name|ex
 decl_stmt|;
 name|struct
@@ -2455,7 +2455,7 @@ name|ex
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|I386_N_SETMAGIC
+name|N_SETMAGIC
 argument_list|(
 name|ex
 argument_list|,
@@ -2470,7 +2470,7 @@ name|hdr
 operator|->
 name|text
 operator|=
-name|I386_N_ALIGN
+name|N_ALIGN
 argument_list|(
 name|ex
 argument_list|,
@@ -2483,7 +2483,7 @@ name|ex
 operator|.
 name|a_text
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
 name|hdr
 operator|->
@@ -2494,7 +2494,7 @@ name|hdr
 operator|->
 name|data
 operator|=
-name|I386_N_ALIGN
+name|N_ALIGN
 argument_list|(
 name|ex
 argument_list|,
@@ -2507,7 +2507,7 @@ name|ex
 operator|.
 name|a_data
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
 name|hdr
 operator|->
@@ -2518,7 +2518,7 @@ name|ex
 operator|.
 name|a_entry
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
 name|hdr
 operator|->
@@ -2542,7 +2542,7 @@ name|hdr
 operator|->
 name|size
 operator|=
-name|I386_N_ALIGN
+name|N_ALIGN
 argument_list|(
 name|ex
 argument_list|,
@@ -2575,7 +2575,7 @@ name|e
 operator|.
 name|e_entry
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
 name|hdr
 operator|->
@@ -2600,7 +2600,7 @@ index|]
 operator|.
 name|p_paddr
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
 name|hdr
 operator|->
@@ -2625,7 +2625,7 @@ index|]
 operator|.
 name|p_memsz
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
 name|hdr
 operator|->
@@ -2641,9 +2641,9 @@ index|]
 operator|.
 name|p_offset
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|eh
 operator|.
@@ -2655,7 +2655,7 @@ operator|.
 name|p_offset
 argument_list|)
 operator|+
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|eh
 operator|.
@@ -2686,11 +2686,11 @@ index|]
 operator|.
 name|p_paddr
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
 name|align
 argument_list|(
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|eh
 operator|.
@@ -2702,7 +2702,7 @@ operator|.
 name|p_paddr
 argument_list|)
 operator|+
-name|LE32TOH
+name|le32toh
 argument_list|(
 name|eh
 operator|.
@@ -2736,7 +2736,7 @@ index|]
 operator|.
 name|p_memsz
 operator|=
-name|HTOLE32
+name|htole32
 argument_list|(
 name|hdr
 operator|->
