@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.11 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2615,6 +2615,7 @@ name|ep
 operator|==
 name|NIL
 condition|)
+block|{
 name|panic
 argument_list|(
 literal|"cannot find directory inode %d\n"
@@ -2624,6 +2625,9 @@ operator|.
 name|ino
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|cp
 operator|=
 name|myname
@@ -2675,6 +2679,7 @@ operator|&=
 operator|~
 name|NEW
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
