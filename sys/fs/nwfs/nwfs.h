@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<netncp/ncp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nwfs/nwfs_mount.h>
 end_include
 
