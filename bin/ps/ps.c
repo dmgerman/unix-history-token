@@ -707,7 +707,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|opts
 parameter_list|,
 name|char
 modifier|*
@@ -3198,8 +3197,6 @@ operator|)
 return|;
 comment|/* Do not add this value. */
 block|}
-else|else
-block|{
 name|errno
 operator|=
 literal|0
@@ -3293,7 +3290,6 @@ literal|0
 operator|)
 return|;
 comment|/* Do not add this value. */
-block|}
 block|}
 if|if
 condition|(
