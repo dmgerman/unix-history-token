@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: pas.h,v 1.4 1994/08/02 07:40:19 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1045,6 +1045,7 @@ name|DEFINE_TRANSLATIONS
 end_ifdef
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|I_C_2_PCM_DMA_translate
 index|[]
@@ -1071,6 +1072,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|I_C_3_PCM_IRQ_translate
 index|[]
@@ -1113,6 +1115,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|E_C_MPU401_IRQ_translate
 index|[]
@@ -1149,6 +1152,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|E_C_SB_IRQ_translate
 index|[]
@@ -1189,6 +1193,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|E_C_SB_DMA_translate
 index|[]
@@ -1215,6 +1220,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|O_M_1_to_card
 index|[]
@@ -1263,6 +1269,7 @@ end_else
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 name|I_C_2_PCM_DMA_translate
 index|[]
@@ -1275,6 +1282,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 name|I_C_3_PCM_IRQ_translate
 index|[]
@@ -1287,6 +1295,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 name|E_C_MPU401_IRQ_translate
 index|[]
@@ -1299,6 +1308,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 name|E_C_SB_IRQ_translate
 index|[]
@@ -1311,6 +1321,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 name|E_C_SB_DMA_translate
 index|[]
@@ -1323,6 +1334,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 name|O_M_1_to_card
 index|[]

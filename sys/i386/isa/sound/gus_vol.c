@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * gus_vol.c - Compute volume for GUS.  *  * Greg Lee 1993.  * $Id$  */
+comment|/*  * gus_vol.c - Compute volume for GUS.  *  * Greg Lee 1993.  *  * $Id: gus_vol.c,v 1.4 1994/08/02 07:39:59 davidg Exp $  */
 end_comment
 
 begin_include

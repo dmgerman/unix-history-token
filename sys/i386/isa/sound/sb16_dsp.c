@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/sb16_dsp.c  *  * The low level driver for the SoundBlaster DSP chip.  *  * (C) 1993 J. Schubert (jsb@sth.ruhr-uni-bochum.de)  *  * based on SB-driver by (C) Hannu Savolainen  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: sb16_dsp.c,v 1.6 1994/08/02 07:40:36 davidg Exp $  */
+comment|/*  * sound/sb16_dsp.c  *  * The low level driver for the SoundBlaster DSP chip.  *  * (C) 1993 J. Schubert (jsb@sth.ruhr-uni-bochum.de)  *  * based on SB-driver by (C) Hannu Savolainen  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: sb16_dsp.c,v 1.7 1994/09/27 17:58:24 davidg Exp $  */
 end_comment
 
 begin_define
@@ -22,7 +22,7 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/*    #define DEB_DMARES  */
+comment|/*  * #define DEB_DMARES  */
 end_comment
 
 begin_include
@@ -80,10 +80,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|sbc_base
-decl_stmt|,
-name|sbc_minor
-decl_stmt|,
-name|sbc_major
 decl_stmt|;
 end_decl_stmt
 
@@ -97,7 +93,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Set to 1 after successful initialization */
+comment|/*   					 * *  * * Set to 1 after successful * 					 * * initialization   */
 end_comment
 
 begin_decl_stmt
@@ -128,7 +124,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*DSP_DEFAULT_SPEED; */
+comment|/*   						 * *  * * DSP_DEFAULT_SPEED;  */
 end_comment
 
 begin_decl_stmt
@@ -169,7 +165,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* IMODE_INPUT, IMODE_OUTPUT or  					   IMODE_NONE */
+comment|/*   					 * *  * * IMODE_INPUT, IMODE_OUTPUT 					 * or * * IMODE_NONE   */
 end_comment
 
 begin_decl_stmt
@@ -381,7 +377,13 @@ init|=
 block|{
 literal|"SoundBlaster 16"
 block|,
-name|NOTHING_SPECIAL
+name|DMA_AUTOMODE
+block|,
+name|AFMT_U8
+operator||
+name|AFMT_S16_LE
+block|,
+name|NULL
 block|,
 name|sb16_dsp_open
 block|,
@@ -459,129 +461,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_function
-specifier|static
-name|int
-name|wait_data_avail
-parameter_list|(
-name|unsigned
-name|long
-name|t
-parameter_list|)
-block|{
-name|int
-name|loopc
-init|=
-literal|5000000
-decl_stmt|;
-name|t
-operator|+=
-name|GET_TIME
-argument_list|()
-expr_stmt|;
-do|do
-block|{
-if|if
-condition|(
-name|INB
-argument_list|(
-name|DSP_DATA_AVAIL
-argument_list|)
-operator|&
-literal|0x80
-condition|)
-return|return
-literal|1
-return|;
-block|}
-do|while
-condition|(
-operator|--
-name|loopc
-operator|&&
-name|GET_TIME
-argument_list|()
-operator|<
-name|t
-condition|)
-do|;
-name|printk
-argument_list|(
-literal|"!data_avail l=%d\n"
-argument_list|,
-name|loopc
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|read_dsp
-parameter_list|(
-name|int
-name|t
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|wait_data_avail
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-name|t
-argument_list|)
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-else|else
-return|return
-name|INB
-argument_list|(
-name|DSP_READ
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|dsp_ini2
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|#
-directive|if
-literal|0
-comment|/* sb_setmixer(0x83, sb_getmixer(0x83) | 0x03);       */
-block|sb_dsp_command (0xe2);   sb_dsp_command (0x76);
-comment|/* E0 ??? */
-block|sb_dsp_command (0xe2);   sb_dsp_command (0x30);
-comment|/* A0 ??? */
-block|sb_dsp_command (0xe4);   sb_dsp_command (0xaa);   sb_dsp_command (0xe8);   if (read_dsp (100) != 0xaa)     printk ("Error dsp_ini2\n");
-endif|#
-directive|endif
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*    static char *dsp_getmessage(unsigned char command,int maxn)    {    static char buff[100];    int n=0;     sb_dsp_command(command);    while(n<maxn&& wait_data_avail(2L)) {    buff[++n]=INB(DSP_READ);    if(!buff[n])    break;    }    buff[0]=n;    return buff;    }     static void dsp_showmessage(unsigned char command,int len)    {    int n;    unsigned char *c;    c=dsp_getmessage(command,len);    printk("DSP C=%x l=%d,lr=%d b=",command,len,c[0]);    for(n=1;n<=c[0];n++)    if(c[n]>=' '& c[n]<='z')    printk("%c",c[n]);    else    printk("|%x|",c[n]);    printk("\n");    }  */
-end_comment
 
 begin_function
 specifier|static
@@ -712,12 +591,10 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-return|return
-name|RET_ERROR
-argument_list|(
-name|EINVAL
-argument_list|)
-return|;
+name|dsp_16bit
+operator|=
+literal|0
+expr_stmt|;
 block|}
 return|return
 name|dsp_16bit
@@ -884,7 +761,7 @@ literal|1
 argument_list|)
 return|;
 case|case
-name|SNDCTL_DSP_SAMPLESIZE
+name|SNDCTL_DSP_SETFMT
 case|:
 if|if
 condition|(
@@ -939,7 +816,7 @@ return|;
 case|case
 name|SOUND_PCM_WRITE_FILTER
 case|:
-comment|/* NOT YET IMPLEMENTED */
+comment|/* 					 * NOT YET IMPLEMENTED 					 */
 if|if
 condition|(
 name|IOCTL_IN
@@ -1042,6 +919,9 @@ condition|)
 return|return
 name|retval
 return|;
+name|sb_reset_dsp
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|ALLOC_DMA_CHN
@@ -1103,9 +983,6 @@ name|EBUSY
 argument_list|)
 return|;
 block|}
-name|dsp_ini2
-argument_list|()
-expr_stmt|;
 name|irq_mode
 operator|=
 name|IMODE_NONE
@@ -1257,10 +1134,12 @@ name|pos
 decl_stmt|,
 name|chan
 init|=
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|dev
 index|]
+operator|->
+name|dmachan
 decl_stmt|;
 name|DISABLE_INTR
 argument_list|(
@@ -1308,10 +1187,14 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|sound_dma_automode
+name|audio_devs
 index|[
 name|dev
 index|]
+operator|->
+name|flags
+operator|&
+name|DMA_AUTOMODE
 operator|&&
 name|intrflag
 operator|&&
@@ -1329,7 +1212,7 @@ operator|=
 literal|1
 expr_stmt|;
 return|return;
-comment|/* Auto mode on. No need to react */
+comment|/* 				 * Auto mode on. No need to react 				 */
 block|}
 name|DISABLE_INTR
 argument_list|(
@@ -1459,12 +1342,6 @@ literal|8
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* sb_dsp_command (0);      sb_dsp_command (0); */
-name|RESTORE_INTR
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
 name|dsp_count
 operator|=
 name|cnt
@@ -1476,6 +1353,11 @@ expr_stmt|;
 name|intr_active
 operator|=
 literal|1
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1547,10 +1429,12 @@ name|pos
 decl_stmt|,
 name|chan
 init|=
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|dev
 index|]
+operator|->
+name|dmachan
 decl_stmt|;
 name|DISABLE_INTR
 argument_list|(
@@ -1598,10 +1482,14 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|sound_dma_automode
+name|audio_devs
 index|[
 name|dev
 index|]
+operator|->
+name|flags
+operator|&
+name|DMA_AUTOMODE
 operator|&&
 name|intrflag
 operator|&&
@@ -1619,7 +1507,7 @@ operator|=
 literal|1
 expr_stmt|;
 return|return;
-comment|/* Auto mode on. No need to react */
+comment|/* 				 * Auto mode on. No need to react 				 */
 block|}
 name|DISABLE_INTR
 argument_list|(
@@ -1631,10 +1519,8 @@ condition|(
 name|dma_restart
 condition|)
 block|{
-name|sb16_dsp_halt
-argument_list|(
-name|dev
-argument_list|)
+name|sb_reset_dsp
+argument_list|()
 expr_stmt|;
 name|DMAbuf_start_dma
 argument_list|(
@@ -1749,12 +1635,6 @@ literal|8
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* sb_dsp_command (0);      sb_dsp_command (0); */
-name|RESTORE_INTR
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
 name|dsp_count
 operator|=
 name|cnt
@@ -1766,6 +1646,11 @@ expr_stmt|;
 name|intr_active
 operator|=
 literal|1
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1785,10 +1670,12 @@ name|int
 name|bcount
 parameter_list|)
 block|{
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|my_dev
 index|]
+operator|->
+name|dmachan
 operator|=
 name|dsp_16bit
 condition|?
@@ -1824,10 +1711,12 @@ name|int
 name|bcount
 parameter_list|)
 block|{
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|my_dev
 index|]
+operator|->
+name|dmachan
 operator|=
 name|dsp_16bit
 condition|?
@@ -1974,6 +1863,14 @@ literal|4
 expr_stmt|;
 break|break;
 case|case
+literal|9
+case|:
+name|ival
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|10
 case|:
 name|ival
@@ -2014,6 +1911,12 @@ modifier|*
 name|hw_config
 parameter_list|)
 block|{
+specifier|extern
+name|int
+name|sbc_major
+decl_stmt|,
+name|sbc_minor
+decl_stmt|;
 if|if
 condition|(
 name|sbc_major
@@ -2023,6 +1926,7 @@ condition|)
 return|return
 name|mem_start
 return|;
+comment|/* Not a SB16 */
 ifndef|#
 directive|ifndef
 name|SCO
@@ -2068,26 +1972,28 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|num_dspdevs
+name|num_audiodevs
 operator|<
-name|MAX_DSP_DEV
+name|MAX_AUDIO_DEV
 condition|)
 block|{
-name|dsp_devs
+name|audio_devs
 index|[
 name|my_dev
 operator|=
-name|num_dspdevs
+name|num_audiodevs
 operator|++
 index|]
 operator|=
 operator|&
 name|sb16_dsp_operations
 expr_stmt|;
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|my_dev
 index|]
+operator|->
+name|dmachan
 operator|=
 name|hw_config
 operator|->
@@ -2096,42 +2002,44 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NO_AUTODMA
-name|sound_buffcounts
+name|audio_devs
 index|[
 name|my_dev
 index|]
-operator|=
-literal|1
-expr_stmt|;
-name|sound_dma_automode
-index|[
-name|my_dev
-index|]
+operator|->
+name|buffcount
 operator|=
 literal|1
 expr_stmt|;
 else|#
 directive|else
-name|sound_buffcounts
+name|audio_devs
 index|[
 name|my_dev
 index|]
+operator|->
+name|flags
+operator|&=
+operator|~
+name|DMA_AUTOMODE
+expr_stmt|;
+name|audio_devs
+index|[
+name|my_dev
+index|]
+operator|->
+name|buffcount
 operator|=
 name|DSP_BUFFCOUNT
 expr_stmt|;
-name|sound_dma_automode
-index|[
-name|my_dev
-index|]
-operator|=
-literal|0
-expr_stmt|;
 endif|#
 directive|endif
-name|sound_buffsizes
+name|audio_devs
 index|[
 name|my_dev
 index|]
+operator|->
+name|buffsize
 operator|=
 name|DSP_BUFFSIZE
 expr_stmt|;
@@ -2167,6 +2075,10 @@ name|address_info
 modifier|*
 name|sb_config
 decl_stmt|;
+specifier|extern
+name|int
+name|sbc_major
+decl_stmt|;
 if|if
 condition|(
 name|sb16_dsp_ok
@@ -2174,7 +2086,7 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* Already initialized */
+comment|/* Can't drive two cards */
 if|if
 condition|(
 operator|!
@@ -2197,7 +2109,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* sb_setmixer(OPSW,0xf);      if(sb_getmixer(OPSW)!=0xf)      return 0; */
+comment|/*    * sb_setmixer(OPSW,0xf); if(sb_getmixer(OPSW)!=0xf) return 0;    */
 if|if
 condition|(
 operator|!
@@ -2207,6 +2119,17 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|sbc_major
+operator|<
+literal|4
+condition|)
+comment|/* Set by the plain SB driver */
+return|return
+literal|0
+return|;
+comment|/* Not a SB16 */
 if|if
 condition|(
 name|hw_config
@@ -2299,7 +2222,7 @@ name|dma
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*    dsp_showmessage(0xe3,99);  */
+comment|/*  * dsp_showmessage(0xe3,99);  */
 name|sb16_dsp_ok
 operator|=
 literal|1
@@ -2328,7 +2251,7 @@ argument_list|(
 name|DSP_DATA_AVL16
 argument_list|)
 expr_stmt|;
-comment|/* Interrupt acknowledge */
+comment|/* 				 * Interrupt acknowledge 				 */
 if|if
 condition|(
 name|intr_active

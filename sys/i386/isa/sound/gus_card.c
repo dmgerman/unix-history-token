@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/gus_card.c  *  * Detection routine for the Gravis Ultrasound.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: gus_card.c,v 1.7 1994/08/02 07:39:52 davidg Exp $  */
+comment|/*  * sound/gus_card.c  *  * Detection routine for the Gravis Ultrasound.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: gus_card.c,v 1.8 1994/09/27 17:58:17 davidg Exp $  */
 end_comment
 
 begin_include
@@ -40,6 +40,27 @@ name|gus_dma
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|gus_wave_volume
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|gus_pcm_volume
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|have_gus_max
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|long
 name|attach_gus_card
@@ -74,7 +95,7 @@ operator|->
 name|io_base
 argument_list|)
 condition|)
-comment|/* Try first the default */
+comment|/* 						 * Try first the default 						 */
 block|{
 name|mem_start
 operator|=
@@ -99,6 +120,20 @@ operator|=
 name|gus_midi_init
 argument_list|(
 name|mem_start
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|EXCLUDE_SEQUENCER
+name|sound_timer_init
+argument_list|(
+name|hw_config
+operator|->
+name|io_base
+operator|+
+literal|8
 argument_list|)
 expr_stmt|;
 endif|#
@@ -133,7 +168,7 @@ name|hw_config
 operator|->
 name|io_base
 condition|)
-comment|/* Already tested */
+comment|/* 					 * Already tested 					 */
 if|if
 condition|(
 name|gus_wave_detect
@@ -180,6 +215,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|EXCLUDE_SEQUENCER
+name|sound_timer_init
+argument_list|(
+name|io_addr
+operator|+
+literal|8
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|mem_start
 return|;
@@ -189,7 +236,7 @@ directive|endif
 return|return
 name|mem_start
 return|;
-comment|/* Not detected */
+comment|/* 				 * Not detected 				 */
 block|}
 end_function
 
@@ -244,7 +291,7 @@ name|hw_config
 operator|->
 name|io_base
 condition|)
-comment|/* Already tested */
+comment|/* 					 * Already tested 					 */
 if|if
 condition|(
 name|gus_wave_detect
@@ -268,7 +315,7 @@ name|void
 name|gusintr
 parameter_list|(
 name|int
-name|unit
+name|irq
 parameter_list|)
 block|{
 name|unsigned
@@ -280,6 +327,20 @@ directive|ifdef
 name|linux
 name|sti
 argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|EXCLUDE_GUSMAX
+if|if
+condition|(
+name|have_gus_max
+condition|)
+name|ad1848_interrupt
+argument_list|(
+name|irq
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -345,11 +406,14 @@ name|GF1_TIMER2_IRQ
 operator|)
 condition|)
 block|{
-name|printk
-argument_list|(
-literal|"T"
-argument_list|)
+ifndef|#
+directive|ifndef
+name|EXCLUDE_SEQUENCER
+name|sound_timer_interrupt
+argument_list|()
 expr_stmt|;
+else|#
+directive|else
 name|gus_write8
 argument_list|(
 literal|0x45
@@ -357,7 +421,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Timer control */
+comment|/* Stop timers */
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -375,6 +441,99 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Some extra code for the 16 bit sampling option  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIGURE_SOUNDCARD
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|EXCLUDE_GUS16
+argument_list|)
+end_if
+
+begin_function
+name|int
+name|probe_gus_db16
+parameter_list|(
+name|struct
+name|address_info
+modifier|*
+name|hw_config
+parameter_list|)
+block|{
+return|return
+name|ad1848_detect
+argument_list|(
+name|hw_config
+operator|->
+name|io_base
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|long
+name|attach_gus_db16
+parameter_list|(
+name|long
+name|mem_start
+parameter_list|,
+name|struct
+name|address_info
+modifier|*
+name|hw_config
+parameter_list|)
+block|{
+name|gus_pcm_volume
+operator|=
+literal|100
+expr_stmt|;
+name|gus_wave_volume
+operator|=
+literal|90
+expr_stmt|;
+name|ad1848_init
+argument_list|(
+literal|"GUS 16 bit sampling"
+argument_list|,
+name|hw_config
+operator|->
+name|io_base
+argument_list|,
+name|hw_config
+operator|->
+name|irq
+argument_list|,
+name|hw_config
+operator|->
+name|dma
+argument_list|,
+name|hw_config
+operator|->
+name|dma
+argument_list|)
+expr_stmt|;
+return|return
+name|mem_start
+return|;
 block|}
 end_function
 

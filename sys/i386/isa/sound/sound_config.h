@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sound_config.h  *  * A driver for Soundcards, misc configuration parameters.  *  *   * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
+comment|/* sound_config.h  *  * A driver for Soundcards, misc configuration parameters.  *  *   * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: sound_config.h,v 1.5 1994/08/02 07:40:53 davidg Exp $  */
 end_comment
 
 begin_include
@@ -8,6 +8,75 @@ include|#
 directive|include
 file|"local.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ISC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SCO
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SVR42
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GENERIC_SYSV
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Disable the AD1848 driver if there are no other drivers requiring it.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|EXCLUDE_GUS16
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|EXCLUDE_MSS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|EXCLUDE_PSS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|EXCLUDE_GUSMAX
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|EXCLUDE_AD1848
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -124,67 +193,6 @@ directive|define
 name|SND_DEFAULT_ENABLE
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/** UWM - new MIDI stuff **/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EXCLUDE_CHIP_MIDI
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EXCLUDE_PRO_MIDI
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|EXCLUDE_PRO_MIDI
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/** UWM - stuff **/
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|EXCLUDE_SEQUENCER
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|EXCLUDE_AUDIO
-argument_list|)
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|CONFIGURE_SOUNDCARD
-end_undef
 
 begin_endif
 endif|#
@@ -428,6 +436,60 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|GUS16_BASE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GUS16_BASE
+value|0x530
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GUS16_IRQ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GUS16_IRQ
+value|7
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GUS16_DMA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GUS16_DMA
+value|3
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MPU_BASE
 end_ifndef
 
@@ -454,6 +516,122 @@ define|#
 directive|define
 name|MPU_IRQ
 value|6
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Echo Personal Sound System */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PSS_BASE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PSS_BASE
+value|0x220
+end_define
+
+begin_comment
+comment|/* 0x240 or */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PSS_IRQ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PSS_IRQ
+value|7
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PSS_DMA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PSS_DMA
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MSS_BASE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MSS_BASE
+value|0x530
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MSS_IRQ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MSS_IRQ
+value|10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MSS_DMA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MSS_DMA
+value|3
 end_define
 
 begin_endif
@@ -564,18 +742,22 @@ value|(256)
 end_define
 
 begin_comment
-comment|/* Size of the FM Instrument 						   bank				 */
+comment|/* Size of the FM Instrument bank */
 end_comment
 
 begin_comment
 comment|/* 128 instruments for general MIDI setup and 16 unassigned	 */
 end_comment
 
+begin_comment
+comment|/*  * Minor numbers for the sound driver.  *  * Unfortunately Creative called the codec chip of SB as a DSP. For this  * reason the /dev/dsp is reserved for digitized audio use. There is a  * device for true DSP processors but it will be called something else.  * In v3.0 it's /dev/sndproc but this could be a temporary solution.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SND_NDEVS
-value|50
+value|256
 end_define
 
 begin_comment
@@ -612,7 +794,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* MIDI input /dev/midin (not implemented 				   yet) */
+comment|/* Raw midi access */
 end_comment
 
 begin_define
@@ -656,27 +838,41 @@ value|6
 end_define
 
 begin_comment
-comment|/* /dev/sndstatus */
+comment|/* /dev/sndstat */
 end_comment
 
 begin_comment
-comment|/* UWM ... note add new MIDI devices here..    *  Also do not forget to add table midi_supported[]  *  Minor numbers for on-chip midi devices start from 15.. and   *  should be contiguous.. viz. 15,16,17....  * ERROR!!!!!!!!! NO NO. Minor numbers above 15 are reserved!!!!!! Hannu  *  Also note the max # of midi devices as MAX_MIDI_DEV  */
+comment|/* #7 not in use now. Was in 2.4. Free for use after v3.0. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CMIDI_DEV_PRO
-value|15
+name|SND_DEV_SEQ2
+value|8
 end_define
 
 begin_comment
-comment|/* Chip midi device == /dev/pro_midi */
+comment|/* /dev/sequecer, level 2 interface */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SND_DEV_SNDPROC
+value|9
+end_define
+
 begin_comment
-comment|/*  *  Add other midis here... 		. 		. 		. 		.  */
+comment|/* /dev/sndproc for programmable devices */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SND_DEV_PSS
+value|SND_DEV_SNDPROC
+end_define
 
 begin_define
 define|#
@@ -702,8 +898,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_DSP_DEV
-value|4
+name|MAX_AUDIO_DEV
+value|5
 end_define
 
 begin_define
@@ -724,7 +920,14 @@ begin_define
 define|#
 directive|define
 name|MAX_MIDI_DEV
-value|4
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_TIMER_DEV
+value|3
 end_define
 
 begin_struct
@@ -751,6 +954,57 @@ name|irq
 decl_stmt|;
 name|int
 name|dma
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SYNTH_MAX_VOICES
+value|32
+end_define
+
+begin_struct
+struct|struct
+name|voice_alloc_info
+block|{
+name|int
+name|max_voice
+decl_stmt|;
+name|int
+name|used_voices
+decl_stmt|;
+name|int
+name|ptr
+decl_stmt|;
+comment|/* For device specific use */
+name|unsigned
+name|short
+name|map
+index|[
+name|SYNTH_MAX_VOICES
+index|]
+decl_stmt|;
+comment|/* (ch<< 8) | (note+1) */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|channel_info
+block|{
+name|int
+name|pgm_num
+decl_stmt|;
+name|unsigned
+name|char
+name|controllers
+index|[
+literal|128
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -847,6 +1101,26 @@ name|DEB
 parameter_list|(
 name|x
 parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIMER_ARMED
+value|121234
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIMER_NOT_ARMED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FUTURE_VERSION
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/dev_table.c  *  * Device call tables.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * sound/dev_table.c  *  * Device call tables.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: dev_table.c,v 1.5 1994/08/02 07:39:46 davidg Exp $  */
 end_comment
 
 begin_define
@@ -22,11 +22,11 @@ name|CONFIGURE_SOUNDCARD
 end_ifdef
 
 begin_function
-name|long
-name|sndtable_init
+name|int
+name|snd_find_driver
 parameter_list|(
-name|long
-name|mem_start
+name|int
+name|type
 parameter_list|)
 block|{
 name|int
@@ -36,13 +36,13 @@ name|n
 init|=
 sizeof|sizeof
 argument_list|(
-name|supported_drivers
+name|sound_drivers
 argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|card_info
+name|driver_info
 argument_list|)
 decl_stmt|;
 for|for
@@ -64,7 +64,73 @@ operator|++
 control|)
 if|if
 condition|(
-name|supported_drivers
+name|sound_drivers
+index|[
+name|i
+index|]
+operator|.
+name|card_type
+operator|==
+name|type
+condition|)
+return|return
+name|i
+return|;
+return|return
+operator|-
+literal|1
+return|;
+comment|/* 				 * Not found 				 */
+block|}
+end_function
+
+begin_function
+name|long
+name|sndtable_init
+parameter_list|(
+name|long
+name|mem_start
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|,
+name|n
+init|=
+sizeof|sizeof
+argument_list|(
+name|snd_installed_cards
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|card_info
+argument_list|)
+decl_stmt|;
+name|int
+name|drv
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+name|n
+operator|-
+literal|1
+operator|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -73,15 +139,45 @@ name|enabled
 condition|)
 if|if
 condition|(
-name|supported_drivers
+operator|(
+name|drv
+operator|=
+name|snd_find_driver
+argument_list|(
+name|snd_installed_cards
 index|[
 name|i
+index|]
+operator|.
+name|card_type
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|snd_installed_cards
+index|[
+name|i
+index|]
+operator|.
+name|enabled
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 						 * Mark as not detected 						 */
+elseif|else
+if|if
+condition|(
+name|sound_drivers
+index|[
+name|drv
 index|]
 operator|.
 name|probe
 argument_list|(
 operator|&
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -97,7 +193,7 @@ name|printk
 argument_list|(
 literal|"snd%d"
 argument_list|,
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -109,9 +205,9 @@ endif|#
 directive|endif
 name|mem_start
 operator|=
-name|supported_drivers
+name|sound_drivers
 index|[
-name|i
+name|drv
 index|]
 operator|.
 name|attach
@@ -119,7 +215,7 @@ argument_list|(
 name|mem_start
 argument_list|,
 operator|&
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -134,7 +230,7 @@ name|printk
 argument_list|(
 literal|" at 0x%x irq %d drq %d\n"
 argument_list|,
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -143,7 +239,7 @@ name|config
 operator|.
 name|io_base
 argument_list|,
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -152,7 +248,7 @@ name|config
 operator|.
 name|irq
 argument_list|,
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -166,7 +262,7 @@ endif|#
 directive|endif
 block|}
 else|else
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -175,7 +271,7 @@ name|enabled
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Mark as not detected */
+comment|/* 						 * Mark as not detected 						 */
 return|return
 name|mem_start
 return|;
@@ -202,7 +298,7 @@ name|n
 init|=
 sizeof|sizeof
 argument_list|(
-name|supported_drivers
+name|snd_installed_cards
 argument_list|)
 operator|/
 sizeof|sizeof
@@ -238,7 +334,16 @@ operator|++
 control|)
 if|if
 condition|(
-name|supported_drivers
+name|snd_installed_cards
+index|[
+name|i
+index|]
+operator|.
+name|enabled
+condition|)
+if|if
+condition|(
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -248,7 +353,10 @@ operator|==
 name|unit
 condition|)
 block|{
-name|supported_drivers
+name|int
+name|drv
+decl_stmt|;
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -261,7 +369,7 @@ name|hw_config
 operator|->
 name|io_base
 expr_stmt|;
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -274,7 +382,7 @@ name|hw_config
 operator|->
 name|irq
 expr_stmt|;
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -289,9 +397,39 @@ name|dma
 expr_stmt|;
 if|if
 condition|(
-name|supported_drivers
+operator|(
+name|drv
+operator|=
+name|snd_find_driver
+argument_list|(
+name|snd_installed_cards
 index|[
 name|i
+index|]
+operator|.
+name|card_type
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|snd_installed_cards
+index|[
+name|i
+index|]
+operator|.
+name|enabled
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 							 * Mark as not 							 * detected 							 */
+elseif|else
+if|if
+condition|(
+name|sound_drivers
+index|[
+name|drv
 index|]
 operator|.
 name|probe
@@ -302,7 +440,7 @@ condition|)
 return|return
 literal|1
 return|;
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -311,7 +449,7 @@ name|enabled
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Mark as not detected */
+comment|/* 						 * Mark as not detected 						 */
 return|return
 literal|0
 return|;
@@ -342,7 +480,7 @@ name|n
 init|=
 sizeof|sizeof
 argument_list|(
-name|supported_drivers
+name|snd_installed_cards
 argument_list|)
 operator|/
 sizeof|sizeof
@@ -394,7 +532,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -404,7 +542,10 @@ operator|==
 name|unit
 condition|)
 block|{
-name|supported_drivers
+name|int
+name|drv
+decl_stmt|;
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -417,7 +558,7 @@ name|hw_config
 operator|->
 name|io_base
 expr_stmt|;
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -430,7 +571,7 @@ name|hw_config
 operator|->
 name|irq
 expr_stmt|;
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -445,9 +586,39 @@ name|dma
 expr_stmt|;
 if|if
 condition|(
-name|supported_drivers
+operator|(
+name|drv
+operator|=
+name|snd_find_driver
+argument_list|(
+name|snd_installed_cards
 index|[
 name|i
+index|]
+operator|.
+name|card_type
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|snd_installed_cards
+index|[
+name|i
+index|]
+operator|.
+name|enabled
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 						 * Mark as not detected 						 */
+elseif|else
+if|if
+condition|(
+name|sound_drivers
+index|[
+name|drv
 index|]
 operator|.
 name|attach
@@ -482,7 +653,7 @@ name|void
 parameter_list|)
 block|{
 return|return
-name|num_dspdevs
+name|num_audiodevs
 operator|+
 name|num_mixers
 operator|+
@@ -519,7 +690,7 @@ name|n
 init|=
 sizeof|sizeof
 argument_list|(
-name|supported_drivers
+name|snd_installed_cards
 argument_list|)
 operator|/
 sizeof|sizeof
@@ -542,7 +713,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|i
 index|]
@@ -631,7 +802,7 @@ operator|>
 literal|127
 condition|)
 block|{
-comment|/* Add any future extensions here */
+comment|/* 	   * Add any future extensions here 	   */
 return|return;
 block|}
 name|ioaddr
@@ -687,7 +858,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|j
 index|]
@@ -695,7 +866,16 @@ operator|.
 name|card_type
 operator|==
 name|card_type
+operator|&&
+operator|!
+name|snd_installed_cards
+index|[
+name|j
+index|]
+operator|.
+name|enabled
 condition|)
+comment|/* 						 * Not already found 						 */
 name|ptr
 operator|=
 name|j
@@ -716,7 +896,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|ptr
 index|]
@@ -725,7 +905,7 @@ name|enabled
 operator|=
 literal|1
 expr_stmt|;
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|ptr
 index|]
@@ -736,7 +916,7 @@ name|io_base
 operator|=
 name|ioaddr
 expr_stmt|;
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|ptr
 index|]
@@ -747,7 +927,7 @@ name|irq
 operator|=
 name|irq
 expr_stmt|;
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|ptr
 index|]
@@ -792,7 +972,7 @@ name|n
 init|=
 sizeof|sizeof
 argument_list|(
-name|supported_drivers
+name|snd_installed_cards
 argument_list|)
 operator|/
 sizeof|sizeof
@@ -831,7 +1011,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|j
 index|]
@@ -839,7 +1019,16 @@ operator|.
 name|card_type
 operator|==
 name|card_type
+operator|&&
+operator|!
+name|snd_installed_cards
+index|[
+name|j
+index|]
+operator|.
+name|enabled
 condition|)
+comment|/* 						 * Not already found 						 */
 name|ptr
 operator|=
 name|j
@@ -852,7 +1041,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|ptr
 index|]
@@ -865,7 +1054,7 @@ if|if
 condition|(
 name|ioaddr
 condition|)
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|ptr
 index|]
@@ -880,7 +1069,7 @@ if|if
 condition|(
 name|irq
 condition|)
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|ptr
 index|]
@@ -895,7 +1084,7 @@ if|if
 condition|(
 name|dma
 condition|)
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|ptr
 index|]
@@ -935,7 +1124,7 @@ name|n
 init|=
 sizeof|sizeof
 argument_list|(
-name|supported_drivers
+name|snd_installed_cards
 argument_list|)
 operator|/
 sizeof|sizeof
@@ -969,7 +1158,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|j
 index|]
@@ -999,7 +1188,7 @@ name|NULL
 return|;
 return|return
 operator|&
-name|supported_drivers
+name|snd_installed_cards
 index|[
 name|ptr
 index|]
@@ -1007,6 +1196,26 @@ operator|.
 name|config
 return|;
 block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+name|void
+name|sound_setup
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|int
+modifier|*
+name|ints
+parameter_list|)
+block|{ }
 end_function
 
 begin_endif

@@ -4,7 +4,7 @@ comment|/* for FreeBSD */
 end_comment
 
 begin_comment
-comment|/*  * $Id: local.h,v 1.8 1994/08/02 07:40:06 davidg Exp $  */
+comment|/*  * $Id: local.h,v 1.9 1994/09/27 17:58:19 davidg Exp $  */
 end_comment
 
 begin_include
@@ -56,6 +56,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXCLUDE_UART6850
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EXCLUDE_UART6850
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXCLUDE_PSS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EXCLUDE_PSS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -84,28 +118,28 @@ begin_define
 define|#
 directive|define
 name|SOUND_VERSION_STRING
-value|"2.5"
+value|"2.90-2"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SOUND_CONFIG_DATE
-value|"Sat Apr 23 07:45:17 MSD 1994"
+value|"Thu Sep 29 15:33:39 PDT 1994"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SOUND_CONFIG_BY
-value|"ache"
+value|"swallace"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SOUND_CONFIG_HOST
-value|"dream.demos.su"
+value|"pal-r32-a07b.slip.nts.uci.edu"
 end_define
 
 begin_define

@@ -4,6 +4,10 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/*  * $Id: $  */
+end_comment
+
+begin_comment
 comment|/* Port offsets from base port for Sound Blaster DSP */
 end_comment
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/gus2_midi.c  *  * The low level driver for the GUS Midi Interface.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * sound/gus2_midi.c  *  * The low level driver for the GUS Midi Interface.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: gus_midi.c,v 1.5 1994/08/02 07:39:58 davidg Exp $  */
 end_comment
 
 begin_include
@@ -256,7 +256,7 @@ argument_list|,
 name|u_MidiControl
 argument_list|)
 expr_stmt|;
-comment|/* Enable */
+comment|/* 						 * Enable 						 */
 name|midi_busy
 operator|=
 literal|1
@@ -331,7 +331,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Enable Midi xmit interrupts (again) */
+comment|/*        * Enable Midi xmit interrupts (again)        */
 name|gus_midi_control
 operator||=
 name|MIDI_ENABLE_XMIT
@@ -364,7 +364,7 @@ name|int
 name|dev
 parameter_list|)
 block|{
-comment|/* Reset FIFO pointers, disable intrs */
+comment|/*    * Reset FIFO pointers, disable intrs    */
 name|OUTB
 argument_list|(
 name|MIDI_RESET
@@ -443,7 +443,7 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* OK */
+comment|/* 				 * OK 				 */
 comment|/*    * Put to the local queue    */
 if|if
 condition|(
@@ -454,7 +454,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Local queue full */
+comment|/* 				 * Local queue full 				 */
 name|DISABLE_INTR
 argument_list|(
 name|flags
@@ -618,6 +618,26 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|MIDI_SYNTH_NAME
+value|"Gravis Ultrasound Midi"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIDI_SYNTH_CAPS
+value|SYNTH_CAP_INPUT
+end_define
+
+begin_include
+include|#
+directive|include
+file|"midi_synth.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -626,7 +646,7 @@ name|gus_midi_operations
 init|=
 block|{
 block|{
-literal|"Gravis UltraSound"
+literal|"Gravis UltraSound Midi"
 block|,
 literal|0
 block|,
@@ -634,6 +654,9 @@ literal|0
 block|,
 name|SNDCARD_GUS
 block|}
+block|,
+operator|&
+name|std_midi_synth
 block|,
 name|gus_midi_open
 block|,
@@ -651,8 +674,10 @@ name|gus_midi_kick
 block|,
 name|NULL
 block|,
-comment|/* command */
+comment|/* 				 * command 				 */
 name|gus_midi_buffer_status
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -665,6 +690,22 @@ name|long
 name|mem_start
 parameter_list|)
 block|{
+if|if
+condition|(
+name|num_midis
+operator|>=
+name|MAX_MIDI_DEV
+condition|)
+block|{
+name|printk
+argument_list|(
+literal|"Sound: Too many midi devices detected\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|mem_start
+return|;
+block|}
 name|OUTB
 argument_list|(
 name|MIDI_RESET
@@ -672,6 +713,10 @@ argument_list|,
 name|u_MidiControl
 argument_list|)
 expr_stmt|;
+name|std_midi_synth
+operator|.
+name|midi_dev
+operator|=
 name|my_dev
 operator|=
 name|num_midis
@@ -778,7 +823,7 @@ operator|!
 name|qlen
 condition|)
 block|{
-comment|/* Disable Midi output interrupts, since no data in the buffer */
+comment|/* 	   * Disable Midi output interrupts, since no data in the buffer 	   */
 name|gus_midi_control
 operator|&=
 operator|~

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/audio.c  *  * Device file manager for /dev/audio  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * sound/audio.c  *  * Device file manager for /dev/audio  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: audio.c,v 1.5 1994/08/02 07:39:44 davidg Exp $  */
 end_comment
 
 begin_include
@@ -46,13 +46,13 @@ specifier|static
 name|int
 name|wr_buff_no
 index|[
-name|MAX_DSP_DEV
+name|MAX_AUDIO_DEV
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* != -1, if there is a  						 * incomplete output block */
+comment|/* 						 * != -1, if there is 						 * a incomplete output 						 * block in the queue. 						 */
 end_comment
 
 begin_decl_stmt
@@ -60,12 +60,12 @@ specifier|static
 name|int
 name|wr_buff_size
 index|[
-name|MAX_DSP_DEV
+name|MAX_AUDIO_DEV
 index|]
 decl_stmt|,
 name|wr_buff_ptr
 index|[
-name|MAX_DSP_DEV
+name|MAX_AUDIO_DEV
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -75,7 +75,7 @@ specifier|static
 name|int
 name|audio_mode
 index|[
-name|MAX_DSP_DEV
+name|MAX_AUDIO_DEV
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -107,10 +107,136 @@ name|char
 modifier|*
 name|wr_dma_buf
 index|[
-name|MAX_DSP_DEV
+name|MAX_AUDIO_DEV
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|audio_format
+index|[
+name|MAX_AUDIO_DEV
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|local_conversion
+index|[
+name|MAX_AUDIO_DEV
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|int
+name|set_format
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|int
+name|fmt
+parameter_list|)
+block|{
+if|if
+condition|(
+name|fmt
+operator|!=
+name|AFMT_QUERY
+condition|)
+block|{
+name|local_conversion
+index|[
+name|dev
+index|]
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|audio_devs
+index|[
+name|dev
+index|]
+operator|->
+name|format_mask
+operator|&
+name|fmt
+operator|)
+condition|)
+comment|/* Not supported */
+if|if
+condition|(
+name|fmt
+operator|==
+name|AFMT_MU_LAW
+condition|)
+block|{
+name|fmt
+operator|=
+name|AFMT_U8
+expr_stmt|;
+name|local_conversion
+index|[
+name|dev
+index|]
+operator|=
+name|AFMT_MU_LAW
+expr_stmt|;
+block|}
+else|else
+name|fmt
+operator|=
+name|AFMT_U8
+expr_stmt|;
+comment|/* This is always supported */
+name|audio_format
+index|[
+name|dev
+index|]
+operator|=
+name|DMAbuf_ioctl
+argument_list|(
+name|dev
+argument_list|,
+name|SNDCTL_DSP_SETFMT
+argument_list|,
+name|fmt
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|local_conversion
+index|[
+name|dev
+index|]
+condition|)
+comment|/* This shadows the HW format */
+return|return
+name|local_conversion
+index|[
+name|dev
+index|]
+return|;
+return|return
+name|audio_format
+index|[
+name|dev
+index|]
+return|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -186,13 +312,20 @@ condition|)
 return|return
 name|ret
 return|;
+name|local_conversion
+index|[
+name|dev
+index|]
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|DMAbuf_ioctl
 argument_list|(
 name|dev
 argument_list|,
-name|SNDCTL_DSP_SAMPLESIZE
+name|SNDCTL_DSP_SETFMT
 argument_list|,
 name|bits
 argument_list|,
@@ -216,6 +349,29 @@ name|ENXIO
 argument_list|)
 return|;
 block|}
+if|if
+condition|(
+name|dev_type
+operator|==
+name|SND_DEV_AUDIO
+condition|)
+block|{
+name|set_format
+argument_list|(
+name|dev
+argument_list|,
+name|AFMT_MU_LAW
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|set_format
+argument_list|(
+name|dev
+argument_list|,
+name|bits
+argument_list|)
+expr_stmt|;
 name|wr_buff_no
 index|[
 name|dev
@@ -435,13 +591,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|int
-name|dev_type
-init|=
-name|dev
-operator|&
-literal|0x0f
-decl_stmt|;
 name|dev
 operator|=
 name|dev
@@ -465,7 +614,7 @@ index|]
 operator|==
 name|AM_READ
 condition|)
-comment|/* Direction changed */
+comment|/* 					 * Direction changed 					 */
 block|{
 name|wr_buff_no
 index|[
@@ -488,7 +637,7 @@ condition|(
 operator|!
 name|count
 condition|)
-comment|/* Flush output */
+comment|/* 				 * Flush output 				 */
 block|{
 if|if
 condition|(
@@ -533,7 +682,7 @@ condition|(
 name|c
 condition|)
 block|{
-comment|/* Perform output blocking */
+comment|/* 				 * Perform output blocking 				 */
 if|if
 condition|(
 name|wr_buff_no
@@ -543,7 +692,7 @@ index|]
 operator|<
 literal|0
 condition|)
-comment|/* There is no incomplete buffers */
+comment|/* 				 * There is no incomplete buffers 				 */
 block|{
 if|if
 condition|(
@@ -573,12 +722,14 @@ operator|)
 operator|<
 literal|0
 condition|)
+block|{
 return|return
 name|wr_buff_no
 index|[
 name|dev
 index|]
 return|;
+block|}
 name|wr_buff_ptr
 index|[
 name|dev
@@ -624,7 +775,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|dsp_devs
+name|audio_devs
 index|[
 name|dev
 index|]
@@ -632,7 +783,7 @@ operator|->
 name|copy_from_user
 condition|)
 block|{
-comment|/* No device specific copy routine */
+comment|/* 				 * No device specific copy routine 				 */
 name|COPY_FROM_USER
 argument_list|(
 operator|&
@@ -656,7 +807,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|dsp_devs
+name|audio_devs
 index|[
 name|dev
 index|]
@@ -682,18 +833,21 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-comment|/* Insert local processing here */
+comment|/*        * Insert local processing here        */
 if|if
 condition|(
-name|dev_type
+name|local_conversion
+index|[
+name|dev
+index|]
 operator|==
-name|SND_DEV_AUDIO
+name|AFMT_MU_LAW
 condition|)
 block|{
 ifdef|#
 directive|ifdef
 name|linux
-comment|/* This just allows interrupts while the conversion is running */
+comment|/* 	   * This just allows interrupts while the conversion is running 	   */
 asm|__asm__ ("sti");
 endif|#
 directive|endif
@@ -773,9 +927,11 @@ operator|)
 operator|<
 literal|0
 condition|)
+block|{
 return|return
 name|err
 return|;
+block|}
 name|wr_buff_no
 index|[
 name|dev
@@ -825,13 +981,6 @@ name|dmabuf
 decl_stmt|;
 name|int
 name|buff_no
-decl_stmt|;
-name|int
-name|dev_type
-init|=
-name|dev
-operator|&
-literal|0x0f
 decl_stmt|;
 name|dev
 operator|=
@@ -936,18 +1085,21 @@ name|l
 operator|=
 name|c
 expr_stmt|;
-comment|/* Insert any local processing here. */
+comment|/*        * Insert any local processing here.        */
 if|if
 condition|(
-name|dev_type
+name|local_conversion
+index|[
+name|dev
+index|]
 operator|==
-name|SND_DEV_AUDIO
+name|AFMT_MU_LAW
 condition|)
 block|{
 ifdef|#
 directive|ifdef
 name|linux
-comment|/* This just allows interrupts while the conversion is running */
+comment|/* 	   * This just allows interrupts while the conversion is running 	   */
 asm|__asm__ ("sti");
 endif|#
 directive|endif
@@ -1024,13 +1176,6 @@ name|int
 name|arg
 parameter_list|)
 block|{
-name|int
-name|dev_type
-init|=
-name|dev
-operator|&
-literal|0x0f
-decl_stmt|;
 name|dev
 operator|=
 name|dev
@@ -1157,19 +1302,43 @@ literal|0
 argument_list|)
 return|;
 break|break;
-default|default:
-if|if
-condition|(
-name|dev_type
-operator|==
-name|SND_DEV_AUDIO
-condition|)
+case|case
+name|SNDCTL_DSP_GETFMTS
+case|:
 return|return
-name|RET_ERROR
+name|IOCTL_OUT
 argument_list|(
-name|EIO
+name|arg
+argument_list|,
+name|audio_devs
+index|[
+name|dev
+index|]
+operator|->
+name|format_mask
 argument_list|)
 return|;
+break|break;
+case|case
+name|SNDCTL_DSP_SETFMT
+case|:
+return|return
+name|IOCTL_OUT
+argument_list|(
+name|arg
+argument_list|,
+name|set_format
+argument_list|(
+name|dev
+argument_list|,
+name|IOCTL_IN
+argument_list|(
+name|arg
+argument_list|)
+argument_list|)
+argument_list|)
+return|;
+default|default:
 return|return
 name|DMAbuf_ioctl
 argument_list|(
@@ -1182,6 +1351,7 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
+break|break;
 block|}
 block|}
 end_function
@@ -1194,6 +1364,7 @@ name|long
 name|mem_start
 parameter_list|)
 block|{
+comment|/*  * NOTE! This routine could be called several times during boot.  */
 return|return
 name|mem_start
 return|;
@@ -1206,7 +1377,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Stub versions */
+comment|/*  * Stub versions  */
 end_comment
 
 begin_function

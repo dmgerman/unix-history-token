@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/sb16_midi.c  *  * The low level driver for the MPU-401 UART emulation of the SB16.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * sound/sb16_midi.c  *  * The low level driver for the MPU-401 UART emulation of the SB16.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: sb16_midi.c,v 1.3 1994/08/02 07:40:38 davidg Exp $  */
 end_comment
 
 begin_include
@@ -37,16 +37,18 @@ name|EXCLUDE_MIDI
 argument_list|)
 end_if
 
+begin_include
+include|#
+directive|include
+file|"sb.h"
+end_include
+
 begin_define
 define|#
 directive|define
 name|DATAPORT
 value|(sb16midi_base)
 end_define
-
-begin_comment
-comment|/* MPU-401 Data I/O Port on IBM */
-end_comment
 
 begin_define
 define|#
@@ -55,20 +57,12 @@ name|COMDPORT
 value|(sb16midi_base+1)
 end_define
 
-begin_comment
-comment|/* MPU-401 Command Port on IBM */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|STATPORT
 value|(sb16midi_base+1)
 end_define
-
-begin_comment
-comment|/* MPU-401 Status Port on IBM */
-end_comment
 
 begin_define
 define|#
@@ -129,20 +123,12 @@ name|OUTPUT_READY
 value|0x40
 end_define
 
-begin_comment
-comment|/* Mask for Data Read Redy Bit */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|INPUT_AVAIL
 value|0x80
 end_define
-
-begin_comment
-comment|/* Mask for Data Send Ready Bit */
-end_comment
 
 begin_define
 define|#
@@ -151,10 +137,6 @@ name|MPU_ACK
 value|0xFE
 end_define
 
-begin_comment
-comment|/* MPU-401 Acknowledge Response */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -162,20 +144,12 @@ name|MPU_RESET
 value|0xFF
 end_define
 
-begin_comment
-comment|/* MPU-401 Total Reset Command */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|UART_MODE_ON
 value|0x3F
 end_define
-
-begin_comment
-comment|/* MPU-401 "Dumb UART Mode" */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -211,6 +185,13 @@ name|my_dev
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|sbc_base
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -238,13 +219,6 @@ name|data
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sbc_major
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
@@ -442,7 +416,7 @@ name|timeout
 operator|--
 control|)
 empty_stmt|;
-comment|/* Wait */
+comment|/* 									 * Wait 									 */
 if|if
 condition|(
 operator|!
@@ -464,25 +438,6 @@ argument_list|(
 name|midi_byte
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|sb16midi_command
-parameter_list|(
-name|int
-name|dev
-parameter_list|,
-name|unsigned
-name|char
-name|midi_byte
-parameter_list|)
-block|{
 return|return
 literal|1
 return|;
@@ -566,9 +521,29 @@ block|{
 return|return
 literal|0
 return|;
-comment|/* No data in buffers */
+comment|/* 				 * No data in buffers 				 */
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|MIDI_SYNTH_NAME
+value|"SoundBlaster 16 Midi"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIDI_SYNTH_CAPS
+value|SYNTH_CAP_INPUT
+end_define
+
+begin_include
+include|#
+directive|include
+file|"midi_synth.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -578,7 +553,7 @@ name|sb16midi_operations
 init|=
 block|{
 block|{
-literal|"SoundBlaster MPU-401"
+literal|"SoundBlaster 16 Midi"
 block|,
 literal|0
 block|,
@@ -586,6 +561,9 @@ literal|0
 block|,
 name|SNDCARD_SB16MIDI
 block|}
+block|,
+operator|&
+name|std_midi_synth
 block|,
 name|sb16midi_open
 block|,
@@ -601,9 +579,11 @@ name|sb16midi_end_read
 block|,
 name|sb16midi_kick
 block|,
-name|sb16midi_command
+name|NULL
 block|,
 name|sb16midi_buffer_status
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -670,7 +650,7 @@ name|timeout
 operator|--
 control|)
 empty_stmt|;
-comment|/* Wait */
+comment|/* 									 * Wait 									 */
 name|sb16midi_cmd
 argument_list|(
 name|UART_MODE_ON
@@ -717,6 +697,22 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|num_midis
+operator|>=
+name|MAX_MIDI_DEV
+condition|)
+block|{
+name|printk
+argument_list|(
+literal|"Sound: Too many midi devices detected\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|mem_start
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -734,6 +730,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|std_midi_synth
+operator|.
+name|midi_dev
+operator|=
 name|my_dev
 operator|=
 name|num_midis
@@ -817,13 +817,13 @@ name|timeout
 operator|--
 control|)
 empty_stmt|;
-comment|/* Wait */
+comment|/* 										 * Wait 										 */
 name|sb16midi_cmd
 argument_list|(
 name|MPU_RESET
 argument_list|)
 expr_stmt|;
-comment|/* Send MPU-401 RESET Command */
+comment|/* 				 * Send MPU-401 RESET Command 				 */
 comment|/*        * Wait at least 25 msec. This method is not accurate so let's make the        * loop bit longer. Cannot sleep since this is called during boot.        */
 for|for
 control|(
@@ -869,7 +869,7 @@ condition|)
 name|sb16midi_input_loop
 argument_list|()
 expr_stmt|;
-comment|/* Flush input before enabling interrupts */
+comment|/* 				 * Flush input before enabling interrupts 				 */
 name|RESTORE_INTR
 argument_list|(
 name|flags
@@ -896,12 +896,13 @@ name|ok
 init|=
 literal|0
 decl_stmt|;
-name|sb16midi_base
-operator|=
-name|hw_config
-operator|->
-name|io_base
-expr_stmt|;
+name|int
+name|i
+decl_stmt|;
+specifier|extern
+name|int
+name|sbc_major
+decl_stmt|;
 if|if
 condition|(
 name|sbc_major
@@ -911,7 +912,13 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* SB16 not detected */
+comment|/* Not a SB16 */
+name|sb16midi_base
+operator|=
+name|hw_config
+operator|->
+name|io_base
+expr_stmt|;
 if|if
 condition|(
 name|sb_get_irq

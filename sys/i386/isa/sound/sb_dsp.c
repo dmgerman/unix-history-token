@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/sb_dsp.c  *   * The low level driver for the SoundBlaster DSP chip.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * Modified:  *	Hunyue Yau	Jan 6 1994  *	Added code to support Sound Galaxy NX Pro  *  * $Id: sb_dsp.c,v 1.19 1994/08/02 07:40:42 davidg Exp $  */
+comment|/*  * sound/sb_dsp.c  *  * The low level driver for the SoundBlaster DSP chip (SB1.0 to 2.1, SB Pro).  *  * Copyright by Hannu Savolainen 1994  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Modified:  *	Hunyue Yau	Jan 6 1994  *	Added code to support Sound Galaxy NX Pro  *  * $Id: sb_dsp.c,v 1.20 1994/09/27 17:58:26 davidg Exp $  */
 end_comment
 
 begin_include
@@ -69,6 +69,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Read, write or both */
+end_comment
+
+begin_comment
 comment|/*  * The DSP channel can be used either for input or output. Variable  * 'sb_irq_mode' will be set when the program calls read or write first time  * after open. Current version doesn't support mode changes without closing  * and reopening the device. Support for this feature may be implemented in a  * future version of this driver.  */
 end_comment
 
@@ -81,7 +85,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Set to 1 after successful initialization */
+comment|/*   				 * *  * * Set to 1 after successful 				 * initialization  *  */
 end_comment
 
 begin_decl_stmt
@@ -106,11 +110,7 @@ name|int
 name|sbc_major
 init|=
 literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|sbc_minor
 init|=
 literal|0
@@ -118,7 +118,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* DSP version */
+comment|/*   						   * *  * * DSP version   */
 end_comment
 
 begin_decl_stmt
@@ -174,7 +174,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 1 if the process has output to MIDI */
+comment|/*   					 * *  * * 1 if the process has output 					 * to *  * MIDI   */
 end_comment
 
 begin_decl_stmt
@@ -195,7 +195,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* IMODE_INPUT, IMODE_OUTPUT  						 * or IMODE_NONE */
+comment|/*   						 * *  * * IMODE_INPUT, * 						 * IMODE_OUTPUT * * or * 						 * IMODE_NONE   */
 end_comment
 
 begin_decl_stmt
@@ -272,7 +272,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* Common code for the midi and pcm functions */
+comment|/*  * Common code for the midi and pcm functions  */
 end_comment
 
 begin_function
@@ -300,7 +300,7 @@ name|HZ
 operator|/
 literal|10
 expr_stmt|;
-comment|/* The timeout is 0.1 secods */
+comment|/* 					   * The timeout is 0.1 secods 					 */
 comment|/*    * Note! the i<500000 is an emergency exit. The sb_dsp_command() is sometimes    * called while interrupts are disabled. This means that the timer is    * disabled also. However the timeout situation is a abnormal condition.    * Normally the DSP should be ready to accept commands after just couple of    * loops.    */
 for|for
 control|(
@@ -393,7 +393,7 @@ argument_list|(
 name|IRQ_STAT
 argument_list|)
 decl_stmt|;
-comment|/* Interrupt source register */
+comment|/*   							 * *  * * Interrupt 							 * source * * 							 * register   */
 ifndef|#
 directive|ifndef
 name|EXCLUDE_SB16
@@ -422,7 +422,7 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* MPU401 interrupt */
+comment|/* 				 * SB MPU401 interrupt 				 */
 endif|#
 directive|endif
 endif|#
@@ -437,7 +437,7 @@ literal|1
 operator|)
 condition|)
 return|return;
-comment|/* Not a DSP interupt */
+comment|/* 				 * Not a DSP interupt 				 */
 block|}
 endif|#
 directive|endif
@@ -448,7 +448,7 @@ argument_list|(
 name|DSP_DATA_AVAIL
 argument_list|)
 expr_stmt|;
-comment|/* Clear interrupt */
+comment|/* 					 * Clear interrupt 					 */
 if|if
 condition|(
 name|sb_intr_active
@@ -485,7 +485,7 @@ argument_list|(
 name|my_dev
 argument_list|)
 expr_stmt|;
-comment|/* A complete buffer has been input. Let's start new one */
+comment|/* 	 * A complete buffer has been input. Let's start new one 	 */
 break|break;
 case|case
 name|IMODE_INIT
@@ -502,11 +502,16 @@ break|break;
 case|case
 name|IMODE_MIDI
 case|:
+ifndef|#
+directive|ifndef
+name|EXCLUDE_MIDI
 name|sb_midi_interrupt
 argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|printk
@@ -658,7 +663,7 @@ name|loopc
 operator|++
 control|)
 empty_stmt|;
-comment|/* Wait for data 										 * available status */
+comment|/* 										 * Wait 										 * for 										 * data 										 * * 										 * available 										 * status 										 */
 if|if
 condition|(
 name|INB
@@ -671,7 +676,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Sorry */
+comment|/* 				 * Sorry 				 */
 return|return
 literal|1
 return|;
@@ -813,7 +818,7 @@ name|speed
 operator|=
 name|max_speed
 expr_stmt|;
-comment|/* Invalid speed */
+comment|/* 				 * Invalid speed 				 */
 if|if
 condition|(
 name|dsp_stereo
@@ -826,7 +831,7 @@ name|speed
 operator|=
 literal|22050
 expr_stmt|;
-comment|/* Max. stereo speed is 22050 */
+comment|/*    * Max. stereo speed is 22050    */
 if|if
 condition|(
 operator|(
@@ -856,7 +861,7 @@ name|speed
 operator|*=
 literal|2
 expr_stmt|;
-comment|/* Now the speed should be valid */
+comment|/*    * Now the speed should be valid    */
 if|if
 condition|(
 name|speed
@@ -864,7 +869,7 @@ operator|>
 literal|22050
 condition|)
 block|{
-comment|/* High speed mode */
+comment|/* 				 * High speed mode 				 */
 name|int
 name|tmp
 decl_stmt|;
@@ -984,7 +989,7 @@ argument_list|(
 literal|0x40
 argument_list|)
 condition|)
-comment|/* Set time constant */
+comment|/* 					 * Set time constant 					 */
 name|sb_dsp_command
 argument_list|(
 name|tconst
@@ -1064,7 +1069,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Sorry no stereo */
+comment|/* 				 * Sorry no stereo 				 */
 if|if
 condition|(
 name|mode
@@ -1148,10 +1153,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|dev
 index|]
+operator|->
+name|dmachan
 operator|>
 literal|3
 condition|)
@@ -1179,7 +1186,7 @@ argument_list|(
 literal|0x48
 argument_list|)
 condition|)
-comment|/* High speed size */
+comment|/* 					 * High speed size 					 */
 block|{
 name|sb_dsp_command
 argument_list|(
@@ -1216,7 +1223,7 @@ argument_list|(
 literal|0x91
 argument_list|)
 expr_stmt|;
-comment|/* High speed 8 bit DAC */
+comment|/* 					 * High speed 8 bit DAC 					 */
 block|}
 else|else
 name|printk
@@ -1244,7 +1251,7 @@ argument_list|(
 literal|0x14
 argument_list|)
 condition|)
-comment|/* 8-bit DAC (DMA) */
+comment|/* 					 * 8-bit DAC (DMA) 					 */
 block|{
 name|sb_dsp_command
 argument_list|(
@@ -1318,7 +1325,7 @@ name|int
 name|restart_dma
 parameter_list|)
 block|{
-comment|/* Start a DMA input to the buffer pointed by dmaqtail */
+comment|/*    * Start a DMA input to the buffer pointed by dmaqtail    */
 name|unsigned
 name|long
 name|flags
@@ -1350,10 +1357,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|dev
 index|]
+operator|->
+name|dmachan
 operator|>
 literal|3
 condition|)
@@ -1381,7 +1390,7 @@ argument_list|(
 literal|0x48
 argument_list|)
 condition|)
-comment|/* High speed size */
+comment|/* 					 * High speed size 					 */
 block|{
 name|sb_dsp_command
 argument_list|(
@@ -1418,7 +1427,7 @@ argument_list|(
 literal|0x99
 argument_list|)
 expr_stmt|;
-comment|/* High speed 8 bit ADC */
+comment|/* 					 * High speed 8 bit ADC 					 */
 block|}
 else|else
 name|printk
@@ -1446,7 +1455,7 @@ argument_list|(
 literal|0x24
 argument_list|)
 condition|)
-comment|/* 8-bit ADC (DMA) */
+comment|/* 					 * 8-bit ADC (DMA) 					 */
 block|{
 name|sb_dsp_command
 argument_list|(
@@ -1542,7 +1551,7 @@ name|sbc_major
 operator|==
 literal|3
 condition|)
-comment|/* SB Pro */
+comment|/* 				 * SB Pro 				 */
 block|{
 if|if
 condition|(
@@ -1564,7 +1573,7 @@ argument_list|(
 name|dsp_current_speed
 argument_list|)
 expr_stmt|;
-comment|/* Speed must be recalculated if #channels 					   * changes */
+comment|/* 					 * Speed must be recalculated if 					 * #channels * changes 					 */
 block|}
 return|return
 literal|0
@@ -1604,7 +1613,7 @@ name|sbc_major
 operator|==
 literal|3
 condition|)
-comment|/* SB Pro */
+comment|/* 				 * SB Pro 				 */
 block|{
 name|sb_mixer_set_stereo
 argument_list|(
@@ -1616,7 +1625,7 @@ argument_list|(
 name|dsp_current_speed
 argument_list|)
 expr_stmt|;
-comment|/* Speed must be recalculated if #channels 					   * changes */
+comment|/* 					 * Speed must be recalculated if 					 * #channels * changes 					 */
 block|}
 endif|#
 directive|endif
@@ -1649,7 +1658,7 @@ if|#
 directive|if
 literal|0
 block|DEFINE_WAIT_QUEUE (testq, testf);    irq_ok = 0;    if (sb_get_irq () == -1)     {       printk ("*** SB Error: Irq %d already in use\n", sbc_irq);       return 0;     }     sb_irq_mode = IMODE_INIT;    sb_dsp_command (0xf2);
-comment|/* This should cause immediate interrupt */
+comment|/* 				 * This should cause immediate interrupt 				 */
 block|DO_SLEEP (testq, testf, HZ / 5);    sb_free_irq ();    if (!irq_ok)     {       printk ("SB Warning: IRQ%d test not passed!", sbc_irq);       irq_ok = 1;     }
 else|#
 directive|else
@@ -1764,11 +1773,12 @@ name|retval
 return|;
 if|if
 condition|(
-operator|!
 name|DMAbuf_open_dma
 argument_list|(
 name|dev
 argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
 name|sb_free_irq
@@ -2024,7 +2034,7 @@ argument_list|,
 literal|8
 argument_list|)
 return|;
-comment|/* Only 8 bits/sample supported */
+comment|/* 					 * Only 8 bits/sample supported 					 */
 break|break;
 case|case
 name|SOUND_PCM_WRITE_FILTER
@@ -2127,7 +2137,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Already initialized */
+comment|/* 				 * Already initialized 				 */
 if|if
 condition|(
 operator|!
@@ -2140,21 +2150,9 @@ return|;
 return|return
 literal|1
 return|;
-comment|/* Detected */
+comment|/* 				 * Detected 				 */
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|char
-name|card_name
-index|[
-literal|32
-index|]
-init|=
-literal|"SoundBlaster"
-decl_stmt|;
-end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -2169,9 +2167,14 @@ name|audio_operations
 name|sb_dsp_operations
 init|=
 block|{
-literal|"SoundBlaster"
+literal|"SoundBlaster                    "
 block|,
 name|NOTHING_SPECIAL
+block|,
+name|AFMT_U8
+block|,
+comment|/* Just 8 bits. Poor old SB */
+name|NULL
 block|,
 name|sb_dsp_open
 block|,
@@ -2193,7 +2196,7 @@ name|sb_dsp_halt_xfer
 block|,
 name|NULL
 block|,
-comment|/* has_output_drained */
+comment|/* local_qlen */
 name|NULL
 comment|/* copy_from_user */
 block|}
@@ -2222,7 +2225,7 @@ name|int
 name|i
 decl_stmt|;
 name|int
-name|prostat
+name|mixer_type
 init|=
 literal|0
 decl_stmt|;
@@ -2237,7 +2240,7 @@ argument_list|(
 literal|0xe1
 argument_list|)
 expr_stmt|;
-comment|/* Get version */
+comment|/* 				 * Get version 				 */
 for|for
 control|(
 name|i
@@ -2260,7 +2263,7 @@ operator|&
 literal|0x80
 condition|)
 block|{
-comment|/* wait for Data Ready */
+comment|/* 				 * wait for Data Ready 				 */
 if|if
 condition|(
 name|sbc_major
@@ -2297,7 +2300,6 @@ name|sbc_major
 operator|==
 literal|3
 condition|)
-comment|/* SB 2.0 or SB Pro */
 name|sb_duplex_midi
 operator|=
 literal|1
@@ -2320,19 +2322,8 @@ condition|(
 name|sbc_major
 operator|>=
 literal|3
-operator|||
-operator|(
-name|sbc_major
-operator|==
-literal|2
-operator|&&
-name|sbc_minor
-operator|==
-literal|1
-operator|)
 condition|)
-comment|/* Sound Galaxy ??? */
-name|prostat
+name|mixer_type
 operator|=
 name|sb_mixer_init
 argument_list|(
@@ -2343,7 +2334,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|EXCLUDE_YM3812
+name|EXCLUDE_YM8312
 if|if
 condition|(
 name|sbc_major
@@ -2363,7 +2354,7 @@ operator|==
 literal|0x00
 operator|)
 condition|)
-comment|/* Non OPL-3 should return 0x06 */
+comment|/* Should be 0x06 if not OPL-3 */
 name|enable_opl3_mode
 argument_list|(
 name|OPL3_LEFT
@@ -2385,32 +2376,21 @@ block|{
 ifndef|#
 directive|ifndef
 name|SCO
+ifdef|#
+directive|ifdef
+name|__SGNXPRO__
 if|if
 condition|(
-name|prostat
+name|mixer_type
+operator|==
+literal|2
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|EXCLUDE_AUDIO
 name|sprintf
 argument_list|(
 name|sb_dsp_operations
 operator|.
 name|name
-argument_list|,
-literal|"Sound Galaxy NX Pro %d.%d"
-argument_list|,
-name|sbc_major
-argument_list|,
-name|sbc_minor
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|sprintf
-argument_list|(
-name|card_name
 argument_list|,
 literal|"Sound Galaxy NX Pro %d.%d"
 argument_list|,
@@ -2421,28 +2401,14 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
-ifndef|#
-directive|ifndef
-name|EXCLUDE_AUDIO
 name|sprintf
 argument_list|(
 name|sb_dsp_operations
 operator|.
 name|name
-argument_list|,
-literal|"SoundBlaster Pro %d.%d"
-argument_list|,
-name|sbc_major
-argument_list|,
-name|sbc_minor
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|sprintf
-argument_list|(
-name|card_name
 argument_list|,
 literal|"SoundBlaster Pro %d.%d"
 argument_list|,
@@ -2460,27 +2426,11 @@ block|{
 ifndef|#
 directive|ifndef
 name|SCO
-ifndef|#
-directive|ifndef
-name|EXCLUDE_AUDIO
 name|sprintf
 argument_list|(
 name|sb_dsp_operations
 operator|.
 name|name
-argument_list|,
-literal|"SoundBlaster %d.%d"
-argument_list|,
-name|sbc_major
-argument_list|,
-name|sbc_minor
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|sprintf
-argument_list|(
-name|card_name
 argument_list|,
 literal|"SoundBlaster %d.%d"
 argument_list|,
@@ -2499,7 +2449,9 @@ name|printk
 argument_list|(
 literal|"snd2:<%s>"
 argument_list|,
-name|card_name
+name|sb_dsp_operations
+operator|.
+name|name
 argument_list|)
 expr_stmt|;
 else|#
@@ -2508,7 +2460,9 @@ name|printk
 argument_list|(
 literal|"<%s>"
 argument_list|,
-name|card_name
+name|sb_dsp_operations
+operator|.
+name|name
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2534,56 +2488,55 @@ condition|(
 operator|!
 name|sb16
 condition|)
-comment|/* There is a better driver for SB16    */
+comment|/* 				 * There is a better driver for SB16 				 */
 endif|#
 directive|endif
 if|if
 condition|(
-name|num_dspdevs
+name|num_audiodevs
 operator|<
-name|MAX_DSP_DEV
+name|MAX_AUDIO_DEV
 condition|)
 block|{
-name|dsp_devs
+name|audio_devs
 index|[
 name|my_dev
 operator|=
-name|num_dspdevs
+name|num_audiodevs
 operator|++
 index|]
 operator|=
 operator|&
 name|sb_dsp_operations
 expr_stmt|;
-name|sound_buffcounts
+name|audio_devs
 index|[
 name|my_dev
 index|]
+operator|->
+name|buffcount
 operator|=
 name|DSP_BUFFCOUNT
 expr_stmt|;
-name|sound_buffsizes
+name|audio_devs
 index|[
 name|my_dev
 index|]
+operator|->
+name|buffsize
 operator|=
 name|DSP_BUFFSIZE
 expr_stmt|;
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|my_dev
 index|]
+operator|->
+name|dmachan
 operator|=
 name|hw_config
 operator|->
 name|dma
-expr_stmt|;
-name|sound_dma_automode
-index|[
-name|my_dev
-index|]
-operator|=
-literal|0
 expr_stmt|;
 block|}
 else|else
@@ -2605,7 +2558,7 @@ operator|&&
 operator|!
 name|sb16
 condition|)
-comment|/* Midi don't work in the SB emulation mode 				 * of PAS, SB16 has better midi interface */
+comment|/* 				 * Midi don't work in the SB emulation mode * 				 * of PAS, SB16 has better midi interface 				 */
 name|sb_midi_init
 argument_list|(
 name|sbc_major
