@@ -9,7 +9,7 @@ name|char
 name|vers
 index|[]
 init|=
-literal|"@(#)lfs_alloc.c 1.8 %G%"
+literal|"@(#)lfs_alloc.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,6 +272,18 @@ condition|)
 goto|goto
 name|nospace
 goto|;
+if|if
+condition|(
+name|bpref
+operator|>=
+name|fs
+operator|->
+name|fs_size
+condition|)
+name|bpref
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|bpref
@@ -602,6 +614,18 @@ name|bp
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|bpref
+operator|>=
+name|fs
+operator|->
+name|fs_size
+condition|)
+name|bpref
+operator|=
+literal|0
+expr_stmt|;
 name|bno
 operator|=
 name|hashalloc
@@ -814,6 +838,22 @@ condition|)
 goto|goto
 name|noinodes
 goto|;
+if|if
+condition|(
+name|ipref
+operator|>=
+name|fs
+operator|->
+name|fs_ncg
+operator|*
+name|fs
+operator|->
+name|fs_ipg
+condition|)
+name|ipref
+operator|=
+literal|0
+expr_stmt|;
 name|cg
 operator|=
 name|itog
