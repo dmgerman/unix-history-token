@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: histedit.h,v 1.3 1997/06/25 09:47:31 msmith Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 1996 by Internet Software Consortium.  *  * Permissi
 end_comment
 
 begin_comment
-comment|/*  *	From: Id: nameser.h,v 8.16 1998/02/06 00:35:58 halley Exp  *	$Id: nameser.h,v 1.12 1998/06/11 08:55:15 peter Exp $  */
+comment|/*  *	From: Id: nameser.h,v 8.16 1998/02/06 00:35:58 halley Exp  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  *	@(#)inet.h	8.1 (Berkeley) 6/2/93  *	From: Id: inet.h,v 8.5 1997/01/29 08:48:09 vixie Exp $  *	$Id: inet.h,v 1.9 1997/05/07 20:00:19 eivind Exp $  */
+comment|/*  *	@(#)inet.h	8.1 (Berkeley) 6/2/93  *	From: Id: inet.h,v 8.5 1997/01/29 08:48:09 vixie Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
