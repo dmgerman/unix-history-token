@@ -4,7 +4,7 @@ comment|/*  * (Free/Net/386)BSD ST01/02, Future Domain TMC-885, TMC-950 SCSI dri
 end_comment
 
 begin_comment
-comment|/*  *  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code   * rknier 940407 Added assembler coded data transfers   *  */
+comment|/*  *  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code   * rknier 940407 Added assembler coded data transfers   *  * $Id: seagate.c,v 1.2 1994/06/13 00:43:26 sean Exp $  */
 end_comment
 
 begin_comment
@@ -1577,9 +1577,9 @@ name|isa_driver
 name|seadriver
 init|=
 block|{
-name|seaprobe
+name|sea_probe
 block|,
-name|seaattach
+name|sea_attach
 block|,
 literal|"sea"
 block|}
