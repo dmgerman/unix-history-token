@@ -5346,7 +5346,14 @@ name|tf
 operator|->
 name|tf_scratch
 expr_stmt|;
-comment|/* XXX preserved */
+name|save_callee_saved
+argument_list|(
+operator|&
+name|regs
+operator|->
+name|r_preserved
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5397,7 +5404,14 @@ name|regs
 operator|->
 name|r_scratch
 expr_stmt|;
-comment|/* XXX preserved */
+name|restore_callee_saved
+argument_list|(
+operator|&
+name|regs
+operator|->
+name|r_preserved
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5499,7 +5513,14 @@ name|frame
 operator|->
 name|tf_scratch_fp
 expr_stmt|;
-comment|/* XXX preserved_fp */
+name|save_callee_saved_fp
+argument_list|(
+operator|&
+name|fpregs
+operator|->
+name|fpr_preserved
+argument_list|)
+expr_stmt|;
 name|fpregs
 operator|->
 name|fpr_high
@@ -5563,7 +5584,14 @@ name|fpregs
 operator|->
 name|fpr_scratch
 expr_stmt|;
-comment|/* XXX preserved_fp */
+name|restore_callee_saved_fp
+argument_list|(
+operator|&
+name|fpregs
+operator|->
+name|fpr_preserved
+argument_list|)
+expr_stmt|;
 name|pcb
 operator|->
 name|pcb_high_fp
