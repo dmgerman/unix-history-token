@@ -4582,24 +4582,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* The SVID says to return ENOMSG. */
-ifdef|#
-directive|ifdef
-name|ENOMSG
 return|return
 operator|(
 name|ENOMSG
 operator|)
 return|;
-else|#
-directive|else
-comment|/* Unfortunately, BSD doesn't define that code yet! */
-return|return
-operator|(
-name|EAGAIN
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 comment|/* 		 * Wait for something to happen 		 */
 ifdef|#
