@@ -20524,19 +20524,6 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|b_xflags
-operator|&
-name|BX_BKGRDINPROG
-condition|)
-name|panic
-argument_list|(
-literal|"getdirtybuf: still writing"
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 if|if
