@@ -2149,6 +2149,10 @@ index|[]
 init|=
 literal|"wdcXXX"
 decl_stmt|;
+specifier|static
+name|int
+name|once
+decl_stmt|;
 name|dvp
 operator|->
 name|id_intr
@@ -2168,6 +2172,22 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+operator|!
+name|once
+condition|)
+block|{
+name|cdevsw_add
+argument_list|(
+operator|&
+name|wd_cdevsw
+argument_list|)
+expr_stmt|;
+name|once
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|eide_quirks
@@ -4003,7 +4023,11 @@ argument|wdstart(unit); }
 comment|/*  * Initialize a drive.  */
 argument|int wdopen(dev_t dev, int flags, int fmt, struct proc *p) { 	register unsigned int lunit; 	register struct disk *du; 	int	error;  	lunit = dkunit(dev); 	if (lunit>= NWD || dktype(dev) !=
 literal|0
-argument|) 		return (ENXIO); 	du = wddrives[lunit]; 	if (du == NULL) 		return (ENXIO);
+argument|) 		return (ENXIO); 	du = wddrives[lunit]; 	if (du == NULL) 		return (ENXIO);  	dev->si_iosize_max =
+literal|248
+argument|*
+literal|512
+argument|;
 ifdef|#
 directive|ifdef
 name|PC98
@@ -5047,15 +5071,7 @@ argument|); 	} while (--timeout !=
 literal|0
 argument|); 	return (-
 literal|1
-argument|); }  static int wd_devsw_installed;  static void 	wd_drvinit(void *unused) {  	if( ! wd_devsw_installed ) { 		if (wd_cdevsw.d_maxio ==
-literal|0
-argument|) 			wd_cdevsw.d_maxio =
-literal|248
-argument|*
-literal|512
-argument|; 		cdevsw_add(&wd_cdevsw); 		wd_devsw_installed =
-literal|1
-argument|;     	} }  SYSINIT(wddev,SI_SUB_DRIVERS,SI_ORDER_MIDDLE+CDEV_MAJOR,wd_drvinit,NULL)
+argument|); }
 end_function
 
 begin_endif
