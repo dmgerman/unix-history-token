@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.5 83/08/22"
+literal|"@(#)cmd.c	3.6 83/08/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -1084,21 +1084,18 @@ argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Stick it in front of the old selected window, 		 * or behind everbody else. 		 */
+comment|/* 		 * Stick it in front of the old selected window, 		 * or behind the frame window. 		 */
 name|wwadd
 argument_list|(
 name|w
 argument_list|,
-operator|(
 name|oldselwin
 condition|?
 name|oldselwin
-else|:
-operator|&
-name|wwhead
-operator|)
 operator|->
 name|ww_back
+else|:
+name|framewin
 argument_list|)
 expr_stmt|;
 block|}
