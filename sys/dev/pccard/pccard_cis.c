@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pccard/pccard_cis.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"card_if.h"
 end_include
 
@@ -659,7 +665,7 @@ name|tuple
 operator|.
 name|code
 operator|=
-name|PCCARD_CISTPL_END
+name|CISTPL_END
 expr_stmt|;
 block|}
 else|else
@@ -687,7 +693,7 @@ name|tuple
 operator|.
 name|code
 operator|==
-name|PCCARD_CISTPL_NULL
+name|CISTPL_NULL
 condition|)
 block|{
 ifdef|#
@@ -739,7 +745,7 @@ name|tuple
 operator|.
 name|code
 operator|==
-name|PCCARD_CISTPL_END
+name|CISTPL_END
 condition|)
 block|{
 name|DPRINTF
@@ -804,10 +810,10 @@ name|code
 condition|)
 block|{
 case|case
-name|PCCARD_CISTPL_LONGLINK_A
+name|CISTPL_LONGLINK_A
 case|:
 case|case
-name|PCCARD_CISTPL_LONGLINK_C
+name|CISTPL_LONGLINK_C
 case|:
 if|if
 condition|(
@@ -849,7 +855,7 @@ name|tuple
 operator|.
 name|code
 operator|==
-name|PCCARD_CISTPL_LONGLINK_C
+name|CISTPL_LONGLINK_C
 operator|)
 condition|?
 literal|1
@@ -883,7 +889,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PCCARD_CISTPL_NO_LINK
+name|CISTPL_NO_LINK
 case|:
 name|longlink_present
 operator|=
@@ -898,7 +904,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PCCARD_CISTPL_CHECKSUM
+name|CISTPL_CHECKSUM
 case|:
 if|if
 condition|(
@@ -1111,7 +1117,7 @@ block|}
 block|}
 break|break;
 case|case
-name|PCCARD_CISTPL_LONGLINK_MFC
+name|CISTPL_LONGLINK_MFC
 case|:
 if|if
 condition|(
@@ -1664,7 +1670,7 @@ name|tuple
 operator|.
 name|code
 operator|!=
-name|PCCARD_CISTPL_LINKTARGET
+name|CISTPL_LINKTARGET
 condition|)
 block|{
 name|DPRINTF
@@ -2693,7 +2699,7 @@ name|code
 condition|)
 block|{
 case|case
-name|PCCARD_CISTPL_END
+name|CISTPL_END
 case|:
 comment|/* if we've seen a LONGLINK_MFC, and this is the first 		 * END after it, reset the function list.   		 * 		 * XXX This might also be the right place to start a 		 * new function, but that assumes that a function 		 * definition never crosses any longlink, and I'm not 		 * sure about that.  This is probably safe for MFC 		 * cards, but what we have now isn't broken, so I'd 		 * rather not change it. 		 */
 if|if
@@ -2784,7 +2790,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|PCCARD_CISTPL_LONGLINK_MFC
+name|CISTPL_LONGLINK_MFC
 case|:
 comment|/* 		 * this tuple's structure was dealt with in scan_cis.  here, 		 * record the fact that the MFC tuple was seen, so that 		 * functions declared before the MFC link can be cleaned 		 * up. 		 */
 name|state
@@ -2798,10 +2804,10 @@ ifdef|#
 directive|ifdef
 name|PCCARDCISDEBUG
 case|case
-name|PCCARD_CISTPL_DEVICE
+name|CISTPL_DEVICE
 case|:
 case|case
-name|PCCARD_CISTPL_DEVICE_A
+name|CISTPL_DEVICE_A
 case|:
 block|{
 name|u_int
@@ -2842,7 +2848,7 @@ name|tuple
 operator|->
 name|code
 operator|==
-name|PCCARD_CISTPL_DEVICE
+name|CISTPL_DEVICE
 operator|)
 condition|?
 literal|""
@@ -3076,7 +3082,7 @@ break|break;
 endif|#
 directive|endif
 case|case
-name|PCCARD_CISTPL_VERS_1
+name|CISTPL_VERS_1
 case|:
 if|if
 condition|(
@@ -3244,7 +3250,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|PCCARD_CISTPL_MANFID
+name|CISTPL_MANFID
 case|:
 if|if
 condition|(
@@ -3327,7 +3333,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PCCARD_CISTPL_FUNCID
+name|CISTPL_FUNCID
 case|:
 if|if
 condition|(
@@ -3460,7 +3466,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PCCARD_CISTPL_FUNCE
+name|CISTPL_FUNCE
 case|:
 if|if
 condition|(
@@ -3517,7 +3523,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PCCARD_CISTPL_CONFIG
+name|CISTPL_CONFIG
 case|:
 if|if
 condition|(
@@ -3857,7 +3863,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PCCARD_CISTPL_CFTABLE_ENTRY
+name|CISTPL_CFTABLE_ENTRY
 case|:
 block|{
 name|int

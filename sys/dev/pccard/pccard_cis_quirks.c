@@ -111,6 +111,12 @@ directive|include
 file|<dev/pccard/pccardvar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/pccard/pccard_cis.h>
+end_include
+
 begin_comment
 comment|/* There are cards out there whose CIS flat-out lies.  This file    contains struct pccard_function chains for those devices. */
 end_comment
