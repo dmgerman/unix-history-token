@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nlist.c	5.5 (Berkeley) %G%"
+literal|"@(#)nlist.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<kvm.h>
 end_include
 
 begin_ifdef
@@ -188,6 +194,14 @@ begin_comment
 comment|/* kernel _fscale variable */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|kvm_t
+modifier|*
+name|kd
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -198,7 +212,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|kvm_read(psnl[x].n_value, (char *)&v, sizeof v) != sizeof(v)
+value|kvm_read(kd, psnl[x].n_value, (char *)&v, sizeof v) != sizeof(v)
 end_define
 
 begin_macro
@@ -235,6 +249,8 @@ if|if
 condition|(
 name|kvm_nlist
 argument_list|(
+name|kd
+argument_list|,
 name|psnl
 argument_list|)
 condition|)
@@ -274,7 +290,9 @@ argument_list|,
 literal|"ps: fscale: %s\n"
 argument_list|,
 name|kvm_geterr
-argument_list|()
+argument_list|(
+name|kd
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|eval
@@ -307,7 +325,9 @@ argument_list|,
 literal|"ps: avail_start: %s\n"
 argument_list|,
 name|kvm_geterr
-argument_list|()
+argument_list|(
+name|kd
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|eval
@@ -337,7 +357,9 @@ argument_list|,
 literal|"ps: avail_end: %s\n"
 argument_list|,
 name|kvm_geterr
-argument_list|()
+argument_list|(
+name|kd
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|eval
@@ -373,7 +395,9 @@ argument_list|,
 literal|"ps: ecmx: %s\n"
 argument_list|,
 name|kvm_geterr
-argument_list|()
+argument_list|(
+name|kd
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|eval
@@ -405,7 +429,9 @@ argument_list|,
 literal|"ps: ccpu: %s\n"
 argument_list|,
 name|kvm_geterr
-argument_list|()
+argument_list|(
+name|kd
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|eval

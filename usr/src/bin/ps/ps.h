@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ps.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ps.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -40,11 +40,6 @@ struct|struct
 name|usave
 block|{
 name|struct
-name|proc
-modifier|*
-name|u_procp
-decl_stmt|;
-name|struct
 name|timeval
 name|u_start
 decl_stmt|;
@@ -59,9 +54,32 @@ decl_stmt|;
 name|char
 name|u_acflag
 decl_stmt|;
+name|char
+name|u_valid
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|KI_PROC
+parameter_list|(
+name|ki
+parameter_list|)
+value|(&(ki)->ki_p->kp_proc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KI_EPROC
+parameter_list|(
+name|ki
+parameter_list|)
+value|(&(ki)->ki_p->kp_eproc)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -69,20 +87,13 @@ struct|struct
 name|_kinfo
 block|{
 name|struct
-name|proc
+name|kinfo_proc
 modifier|*
 name|ki_p
 decl_stmt|;
 comment|/* proc structure */
 name|struct
-name|eproc
-modifier|*
-name|ki_e
-decl_stmt|;
-comment|/* extra stuff */
-name|struct
 name|usave
-modifier|*
 name|ki_u
 decl_stmt|;
 comment|/* interesting parts of user */
@@ -90,12 +101,12 @@ name|char
 modifier|*
 name|ki_args
 decl_stmt|;
-comment|/* exec args (should be char **) */
+comment|/* exec args */
 name|char
 modifier|*
 name|ki_env
 decl_stmt|;
-comment|/* environment (should be char **) */
+comment|/* environment */
 block|}
 name|KINFO
 typedef|;
