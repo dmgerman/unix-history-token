@@ -45,7 +45,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.40
+literal|3.41
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.40
+literal|3.41
 operator|%
 name|G
 operator|%
@@ -814,46 +814,6 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DBM
-block|}
-end_block
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  DBMCLOSE -- close the dbm file. ** **	This is highly implementation dependent.  It should be in the **	DBM library rather than here.  So why isn't it? ** **	This is really only needed to save file descriptors.  It can be **	safely (??) replaced by the null routine. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Closes the DBM file. */
-end_comment
-
-begin_macro
-name|dbmclose
-argument_list|()
-end_macro
-
-begin_block
-block|{
-comment|/* hack attack!! -- see comment above */
-specifier|extern
-name|int
-name|pagf
-decl_stmt|,
-name|dirf
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|pagf
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|dirf
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 

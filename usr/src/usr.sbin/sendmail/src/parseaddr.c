@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.65
+literal|3.66
 operator|%
 name|G
 operator|%
@@ -87,13 +87,6 @@ modifier|*
 name|buildaddr
 parameter_list|()
 function_decl|;
-specifier|static
-name|char
-name|nbuf
-index|[
-name|MAXNAME
-index|]
-decl_stmt|;
 comment|/* 	**  Initialize and prescan address. 	*/
 name|CurEnv
 operator|->
@@ -660,7 +653,7 @@ modifier|*
 name|q
 decl_stmt|;
 specifier|register
-name|char
+name|int
 name|c
 decl_stmt|;
 name|char

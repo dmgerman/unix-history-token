@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.52
+literal|3.53
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.52
+literal|3.53
 operator|%
 name|G
 operator|%
@@ -135,10 +135,6 @@ specifier|register
 name|ADDRESS
 modifier|*
 name|q
-decl_stmt|;
-specifier|register
-name|int
-name|i
 decl_stmt|;
 comment|/* 	**  Create control file. 	*/
 name|tf
@@ -604,6 +600,7 @@ operator|->
 name|h_flags
 argument_list|)
 condition|)
+block|{
 name|commaize
 argument_list|(
 name|h
@@ -623,9 +620,14 @@ operator|->
 name|e_flags
 argument_list|)
 argument_list|,
+operator|(
+name|MAILER
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|fprintf
 argument_list|(
@@ -815,6 +817,9 @@ name|QueueIntvl
 operator|!=
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|setevent
 argument_list|(
 name|QueueIntvl
@@ -1677,12 +1682,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|char
-name|buf
-index|[
-name|MAXNAME
-index|]
-decl_stmt|;
 comment|/* 		**  CHILD 		**	Lock the control file to avoid duplicate deliveries. 		**		Then run the file as though we had just read it. 		**	We save an idea of the temporary name so we 		**		can recover on interrupt. 		*/
 comment|/* set basic modes, etc. */
 operator|(
@@ -1753,6 +1752,9 @@ name|e_header
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|chompheader
 argument_list|(
 literal|"from: $q"
@@ -1984,15 +1986,12 @@ index|[
 name|MAXFIELD
 index|]
 decl_stmt|;
-specifier|register
+specifier|extern
 name|char
 modifier|*
-name|p
-decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|;
+name|fgetfolded
+parameter_list|()
+function_decl|;
 specifier|extern
 name|ADDRESS
 modifier|*

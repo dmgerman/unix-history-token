@@ -27,7 +27,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.37
+literal|3.38
 operator|%
 name|G
 operator|%
@@ -55,7 +55,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.37
+literal|3.38
 operator|%
 name|G
 operator|%
@@ -542,6 +542,10 @@ name|Version
 argument_list|,
 name|arpadate
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 argument_list|)
@@ -760,10 +764,6 @@ case|case
 name|CMDMAIL
 case|:
 comment|/* mail -- designate sender */
-name|firsttime
-operator|=
-name|FALSE
-expr_stmt|;
 comment|/* check for validity of this command */
 if|if
 condition|(

@@ -15,7 +15,7 @@ operator|)
 name|clock
 operator|.
 name|c
-literal|3.11
+literal|3.12
 operator|%
 name|G
 operator|%
@@ -105,7 +105,11 @@ argument_list|,
 name|intvl
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_if
 
@@ -417,6 +421,10 @@ name|ev_link
 expr_stmt|;
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|ev
 argument_list|)
 expr_stmt|;
@@ -580,6 +588,10 @@ name|ev_arg
 expr_stmt|;
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|ev
 argument_list|)
 expr_stmt|;
@@ -728,6 +740,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|setevent
 argument_list|(
 name|intvl

@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.34
+literal|3.35
 operator|%
 name|G
 operator|%
@@ -473,6 +473,10 @@ name|fmtmsg
 argument_list|(
 name|MsgBuf
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|,
 name|num

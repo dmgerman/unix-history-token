@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.48
+literal|3.49
 operator|%
 name|G
 operator|%
@@ -886,6 +886,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|queuename
 argument_list|(
 name|ee
