@@ -6058,6 +6058,7 @@ block|{
 if|if
 condition|(
 operator|(
+operator|(
 name|ccb
 operator|->
 name|ccb_h
@@ -6065,10 +6066,12 @@ operator|.
 name|status
 operator|&
 name|CAM_AUTOSNS_VALID
+operator|)
 operator|==
 literal|0
 operator|)
 operator|&&
+operator|(
 name|cb
 operator|->
 name|ccb_rcnt
@@ -6076,6 +6079,7 @@ operator|<
 name|slp
 operator|->
 name|sl_max_retry
+operator|)
 condition|)
 goto|goto
 name|retry
@@ -9658,6 +9662,9 @@ name|ti
 operator|->
 name|ti_sc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SCSI_LOW_INFORM
 name|struct
 name|lun_info
 modifier|*
@@ -9668,6 +9675,11 @@ operator|->
 name|ti_li
 decl_stmt|;
 name|u_int
+name|speed
+decl_stmt|;
+endif|#
+directive|endif
+name|u_int
 name|period
 init|=
 literal|0
@@ -9676,14 +9688,6 @@ name|offset
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_LOW_INFORM
-name|u_int
-name|speed
-decl_stmt|;
-endif|#
-directive|endif
 name|u_char
 modifier|*
 name|s
