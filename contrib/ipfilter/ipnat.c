@@ -374,7 +374,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipnat.c,v 2.16.2.20 2002/02/22 15:32:55 darrenr Exp $"
+literal|"@(#)$Id: ipnat.c,v 2.16.2.21 2002/06/06 10:49:19 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1052,6 +1052,19 @@ name|STRERROR
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ENODEV
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"IPFilter enabled?\n"
 argument_list|)
 expr_stmt|;
 name|exit

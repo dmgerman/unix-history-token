@@ -302,7 +302,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipf.c,v 2.10.2.14 2002/04/10 04:56:36 darrenr Exp $"
+literal|"@(#)$Id: ipf.c,v 2.10.2.16 2002/06/06 10:48:35 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1007,11 +1007,26 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|perror
 argument_list|(
 literal|"open device"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ENODEV
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"IPFilter enabled?\n"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|fd
 return|;

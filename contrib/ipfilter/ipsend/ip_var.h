@@ -126,6 +126,11 @@ name|defined
 argument_list|(
 name|i386
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 name|u_char
 name|ip_hl
 range|:

@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_sfil.c,v 2.23.2.16 2002/04/05 08:43:25 darrenr Exp $"
+literal|"@(#)$Id: ip_sfil.c,v 2.23.2.18 2002/06/06 10:47:26 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -352,6 +352,27 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|SOLARIS2
+operator|>=
+literal|7
+end_if
+
+begin_decl_stmt
+specifier|static
+name|u_int
+modifier|*
+name|ip_ttl_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|u_long
@@ -359,6 +380,11 @@ modifier|*
 name|ip_ttl_ptr
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1049,6 +1075,25 @@ name|unit
 condition|)
 return|return
 name|ENXIO
+return|;
+if|if
+condition|(
+name|fr_running
+operator|==
+literal|0
+operator|&&
+operator|(
+name|cmd
+operator|!=
+name|SIOCFRENB
+operator|||
+name|unit
+operator|!=
+name|IPL_LOGIPF
+operator|)
+condition|)
+return|return
+name|ENODEV
 return|;
 if|if
 condition|(
@@ -2168,6 +2213,32 @@ operator|(
 name|req
 operator|!=
 name|SIOCZRLST
+operator|)
+operator|&&
+operator|(
+operator|(
+name|req
+operator|==
+name|SIOCINAFR
+operator|)
+operator|||
+operator|(
+name|req
+operator|==
+name|SIOCINIFR
+operator|)
+operator|||
+operator|(
+name|req
+operator|==
+name|SIOCADAFR
+operator|)
+operator|||
+operator|(
+name|req
+operator|==
+name|SIOCADIFR
+operator|)
 operator|)
 operator|&&
 name|fp
