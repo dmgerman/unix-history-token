@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.112		%G%"
+literal|"@(#)sendmail.h	3.113		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -495,17 +495,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_RPATH
-value|'P'
-end_define
-
-begin_comment
-comment|/* wants a Return-Path: line */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|M_RESTR
 value|'S'
 end_define
@@ -561,39 +550,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_NEEDFROM
-value|'F'
-end_define
-
-begin_comment
-comment|/* need arpa-style From: line */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_NEEDDATE
-value|'D'
-end_define
-
-begin_comment
-comment|/* need arpa-style Date: line */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_MSGID
-value|'M'
-end_define
-
-begin_comment
-comment|/* need Message-Id: field */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|M_CANONICAL
 value|'C'
 end_define
@@ -622,17 +578,6 @@ end_define
 
 begin_comment
 comment|/* preserve host case distinction */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_FULLNAME
-value|'x'
-end_define
-
-begin_comment
-comment|/* want Full-Name field */
 end_comment
 
 begin_define
@@ -700,13 +645,6 @@ end_define
 begin_comment
 comment|/* use hidden-dot algorithm */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|M_ARPAFMT
-value|(M_NEEDDATE|M_NEEDFROM|M_MSGID)
-end_define
 
 begin_decl_stmt
 name|EXTERN
