@@ -2564,19 +2564,6 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * If the kernel is in secure mode, downgrade it to insecure mode. 	 */
-if|if
-condition|(
-name|getsecuritylevel
-argument_list|()
-operator|>
-literal|0
-condition|)
-name|setsecuritylevel
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|Reboot
