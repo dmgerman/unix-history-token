@@ -15,7 +15,7 @@ operator|)
 name|clock
 operator|.
 name|c
-literal|3.7
+literal|3.8
 operator|%
 name|G
 operator|%
@@ -216,6 +216,16 @@ operator|->
 name|ev_arg
 operator|=
 name|arg
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ev
+operator|->
+name|ev_pid
+operator|=
+name|getpid
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 
@@ -516,6 +526,9 @@ argument_list|()
 decl_stmt|,
 name|a
 decl_stmt|;
+name|int
+name|pid
+decl_stmt|;
 comment|/* process the event on the top of the queue */
 name|ev
 operator|=
@@ -541,7 +554,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"tick: ev=%x, func=%x, arg=%d\n"
+literal|"tick: ev=%x, func=%x, arg=%d, pid=%d\n"
 argument_list|,
 name|ev
 argument_list|,
@@ -552,6 +565,10 @@ argument_list|,
 name|ev
 operator|->
 name|ev_arg
+argument_list|,
+name|ev
+operator|->
+name|ev_pid
 argument_list|)
 expr_stmt|;
 endif|#
@@ -570,11 +587,25 @@ name|ev
 operator|->
 name|ev_arg
 expr_stmt|;
+name|pid
+operator|=
+name|ev
+operator|->
+name|ev_pid
+expr_stmt|;
 name|free
 argument_list|(
 name|ev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pid
+operator|!=
+name|getpid
+argument_list|()
+condition|)
+continue|continue;
 if|if
 condition|(
 name|EventQueue

@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.103
+literal|3.104
 operator|%
 name|G
 operator|%
@@ -1681,6 +1681,10 @@ argument_list|(
 name|CurEnv
 argument_list|)
 expr_stmt|;
+name|getrequests
+argument_list|()
+expr_stmt|;
+comment|/* at this point we are in a child: reset state */
 name|dropenvelope
 argument_list|(
 name|CurEnv
@@ -1700,10 +1704,6 @@ name|e_df
 operator|=
 name|NULL
 expr_stmt|;
-name|getrequests
-argument_list|()
-expr_stmt|;
-comment|/* at this point we are in a child: reset state */
 name|FatalErrors
 operator|=
 name|FALSE

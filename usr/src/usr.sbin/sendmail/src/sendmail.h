@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.82		%G%"
+literal|"@(#)sendmail.h	3.83		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1470,7 +1470,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  STRUCT EVENT -- event queue. ** **	Maintained in sorted order. */
+comment|/* **  STRUCT EVENT -- event queue. ** **	Maintained in sorted order. ** **	We store the pid of the process that set this event to insure **	that when we fork we will not take events intended for the parent. */
 end_comment
 
 begin_struct
@@ -1493,6 +1493,10 @@ name|int
 name|ev_arg
 decl_stmt|;
 comment|/* argument to ev_func */
+name|int
+name|ev_pid
+decl_stmt|;
+comment|/* pid that set this event */
 name|struct
 name|event
 modifier|*
