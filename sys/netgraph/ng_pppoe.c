@@ -716,8 +716,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
-name|stupid_isp
+name|nonstandard
 decl_stmt|;
 end_decl_stmt
 
@@ -737,7 +738,7 @@ name|val
 decl_stmt|;
 name|val
 operator|=
-name|stupid_isp
+name|nonstandard
 expr_stmt|;
 name|error
 operator|=
@@ -780,7 +781,7 @@ operator|==
 literal|1
 condition|)
 block|{
-name|stupid_isp
+name|nonstandard
 operator|=
 literal|1
 expr_stmt|;
@@ -793,7 +794,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|stupid_isp
+name|nonstandard
 operator|=
 literal|0
 expr_stmt|;
@@ -819,7 +820,7 @@ name|_net_graph
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|stupid_isp
+name|nonstandard_pppoe
 argument_list|,
 name|CTLTYPE_INT
 operator||
@@ -3798,7 +3799,7 @@ block|{
 case|case
 name|ETHERTYPE_PPPOE_STUPID_DISC
 case|:
-name|stupid_isp
+name|nonstandard
 operator|=
 literal|1
 expr_stmt|;
@@ -4615,7 +4616,7 @@ name|pkt_header
 expr_stmt|;
 if|if
 condition|(
-name|stupid_isp
+name|nonstandard
 condition|)
 name|sp
 operator|->
@@ -4815,7 +4816,7 @@ name|pkt_header
 expr_stmt|;
 if|if
 condition|(
-name|stupid_isp
+name|nonstandard
 condition|)
 name|sp
 operator|->
@@ -5977,7 +5978,7 @@ name|PADT_CODE
 expr_stmt|;
 if|if
 condition|(
-name|stupid_isp
+name|nonstandard
 condition|)
 name|wh
 operator|->
