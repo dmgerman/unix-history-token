@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	7.45 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -773,6 +773,8 @@ name|int
 name|error
 decl_stmt|,
 name|level
+decl_stmt|,
+name|inthostid
 decl_stmt|;
 specifier|extern
 name|char
@@ -1072,8 +1074,13 @@ return|;
 case|case
 name|KERN_HOSTID
 case|:
-return|return
-operator|(
+name|inthostid
+operator|=
+name|hostid
+expr_stmt|;
+comment|/* XXX assumes sizeof long<= sizeof int */
+name|error
+operator|=
 name|sysctl_int
 argument_list|(
 name|oldp
@@ -1085,8 +1092,16 @@ argument_list|,
 name|newlen
 argument_list|,
 operator|&
-name|hostid
+name|inthostid
 argument_list|)
+expr_stmt|;
+name|hostid
+operator|=
+name|inthostid
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 case|case
