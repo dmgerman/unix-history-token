@@ -831,6 +831,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|acpi_ec
+argument_list|,
+name|acpi
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Look for an ECDT and if we find one, set up default GPE and   * space handlers to catch attempts to access EC space before  * we have a real driver instance in place.  * TODO: if people report invalid ECDTs, add a tunable to disable them.  */
 end_comment
