@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Bruce D. Evans.  * All rights reserved.  *  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ufs_disksubr.c	7.16 (Berkeley) 5/4/91  *	from: ufs_disksubr.c,v 1.8 1994/06/07 01:21:39 phk Exp $  *	$Id: diskslice_machdep.c,v 1.3 1995/01/23 02:31:53 phk Exp $  */
+comment|/*-  * Copyright (c) 1994 Bruce D. Evans.  * All rights reserved.  *  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ufs_disksubr.c	7.16 (Berkeley) 5/4/91  *	from: ufs_disksubr.c,v 1.8 1994/06/07 01:21:39 phk Exp $  *	$Id: diskslice_machdep.c,v 1.4 1995/02/16 15:19:19 bde Exp $  */
 end_comment
 
 begin_include
@@ -129,7 +129,7 @@ name|diskslices
 modifier|*
 name|ssp
 decl_stmt|;
-comment|/* 	 * Allocate a dummy slices "struct" and initialize it to contain 	 * only an empty compatibility slice (pointing to itself) and a 	 * whole disk slice (which may be a dummy if the label is a dummy). 	 * If there is an error, then these slices become the only slices. 	 */
+comment|/* 	 * Allocate a dummy slices "struct" and initialize it to contain 	 * only an empty compatibility slice (pointing to itself) and a 	 * whole disk slice (covering the disk as described by the label). 	 * If there is an error, then the dummy struct becomes final. 	 */
 name|ssp
 operator|=
 name|malloc
@@ -681,27 +681,6 @@ condition|)
 goto|goto
 name|done
 goto|;
-comment|/* 	 * We're not handling extended partitions yet, so there are always 	 * BASE_SLICE + NDOSPART slices. 	 */
-if|if
-condition|(
-name|dkslice
-argument_list|(
-name|dev
-argument_list|)
-operator|>=
-name|BASE_SLICE
-operator|+
-name|NDOSPART
-condition|)
-block|{
-name|error
-operator|=
-name|ENXIO
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
 comment|/* 	 * Accept the DOS partition table. 	 * First adjust the label (we have been careful not to change it 	 * before we can guarantee success). 	 */
 if|if
 condition|(
@@ -797,14 +776,6 @@ operator|->
 name|dss_first_bsd_slice
 operator|=
 name|COMPATIBILITY_SLICE
-expr_stmt|;
-name|ssp
-operator|->
-name|dss_nslices
-operator|=
-name|BASE_SLICE
-operator|+
-name|NDOSPART
 expr_stmt|;
 name|sp
 operator|=
@@ -946,6 +917,15 @@ block|lp->d_subtype |= (lp->d_subtype& 3) + (slice - 1) | DSTYPE_INDOSPART;
 endif|#
 directive|endif
 block|}
+comment|/* 	 * We're not handling extended partitions yet, so there are always 	 * BASE_SLICE + NDOSPART slices altogether. 	 */
+name|ssp
+operator|->
+name|dss_nslices
+operator|=
+name|BASE_SLICE
+operator|+
+name|NDOSPART
+expr_stmt|;
 name|done
 label|:
 name|bp
@@ -969,18 +949,7 @@ name|EINVAL
 condition|)
 name|error
 operator|=
-operator|(
-name|dkslice
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|WHOLE_DISK_SLICE
-condition|?
 literal|0
-else|:
-name|ENXIO
-operator|)
 expr_stmt|;
 return|return
 operator|(
