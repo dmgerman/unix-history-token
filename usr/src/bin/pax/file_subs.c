@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file_subs.c	1.1 (Berkeley) %G%"
+literal|"@(#)file_subs.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -477,7 +477,7 @@ operator|.
 name|st_gid
 argument_list|)
 expr_stmt|;
-comment|/* 	 * IMPORTANT SECURITY NOTE: 	 * if not preserving mode or whe cannot set uid/gid, then PROHIBIT 	 * set uid/gid bits 	 */
+comment|/* 	 * IMPORTANT SECURITY NOTE: 	 * if not preserving mode or we cannot set uid/gid, then PROHIBIT 	 * set uid/gid bits 	 */
 if|if
 condition|(
 operator|!
@@ -641,7 +641,7 @@ name|warn
 argument_list|(
 literal|1
 argument_list|,
-literal|"A hard links to the directory %s is not allowed"
+literal|"A hard link to the directory %s is not allowed"
 argument_list|,
 name|arcn
 operator|->
@@ -758,7 +758,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * chk_same()  *	In copy mode, if we are not trying to make hard links between the src  *	and destinations, make sure we are not going to overwrite ourselves by  *	accident. This slows things down a little, but we have to protect all  *	those people who make typing errors.  * Return:  *	1 the target does not exist, go ahead and copy  *	0 skip it file exists (-k) or may be the same as source file  */
+comment|/*  * chk_same()  *	In copy mode if we are not trying to make hard links between the src  *	and destinations, make sure we are not going to overwrite ourselves by  *	accident. This slows things down a little, but we have to protect all  *	those people who make typing errors.  * Return:  *	1 the target does not exist, go ahead and copy  *	0 skip it file exists (-k) or may be the same as source file  */
 end_comment
 
 begin_if
@@ -884,7 +884,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * mk_link()  *	try to make a hard link between two files. if ign set, we do not  *	complain.  * Return:  *	0 if successful (or we are done with this file but no error, such as  *	finding the from file exists and the user has set -k).  *	1 when ign set, indicates we couldn't make the link but try to  *	copy/extract the file as that might work.  *	-1 an error occurred.  */
+comment|/*  * mk_link()  *	try to make a hard link between two files. if ign set, we do not  *	complain.  * Return:  *	0 if successful (or we are done with this file but no error, such as  *	finding the from file exists and the user has set -k).  *	1 when ign was set to indicates we could not make the link but we  *	should try to copy/extract the file as that might work (and is an  *	allowed option). -1 an error occurred.  */
 end_comment
 
 begin_if
@@ -1390,7 +1390,7 @@ name|warn
 argument_list|(
 literal|0
 argument_list|,
-literal|"%s not created, sockets are not supported"
+literal|"%s skipped. Sockets cannot be copied or extracted"
 argument_list|,
 name|arcn
 operator|->
@@ -1443,13 +1443,13 @@ case|:
 case|case
 name|PAX_REG
 case|:
-comment|/* 			 * should never be called to create these 			 */
 default|default:
+comment|/* 			 * we should never get here 			 */
 name|warn
 argument_list|(
-literal|1
+literal|0
 argument_list|,
-literal|"Unknown file system type skip: %s"
+literal|"%s has an unknown file type, skipping"
 argument_list|,
 name|arcn
 operator|->
@@ -1585,7 +1585,7 @@ name|res
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * IMPORTANT SECURITY NOTE: 	 * if not preserving mode or whe cannot set uid/gid, then PROHIBIT any 	 * set uid/gid bits 	 */
+comment|/* 	 * IMPORTANT SECURITY NOTE: 	 * if not preserving mode or we cannot set uid/gid, then PROHIBIT any 	 * set uid/gid bits 	 */
 if|if
 condition|(
 operator|!
@@ -2110,7 +2110,7 @@ name|spt
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 		 * if it exists we assume it is a directory, it is not within 		 * the spec (at least it seems to reads that way) to alter the 		 * file system for nodes NOT EXPLICITLY stored on the archive. 		 * If that assumption is changed, you would test the node here 		 * and figure out how to get rid of it (probably like some 		 * recursive unlink()) 		 */
+comment|/* 		 * if it exists we assume it is a directory, it is not within 		 * the spec (at least it seems to read that way) to alter the 		 * file system for nodes NOT EXPLICITLY stored on the archive. 		 * If that assumption is changed, you would test the node here 		 * and figure out how to get rid of it (probably like some 		 * recursive unlink()) or fix up the directory permissions if 		 * required (do an access()). 		 */
 if|if
 condition|(
 name|lstat
