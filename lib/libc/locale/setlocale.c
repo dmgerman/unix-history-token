@@ -803,6 +803,7 @@ name|i
 operator|<
 name|_LC_LAST
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -821,6 +822,10 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+block|}
 block|}
 block|}
 if|if
