@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2053,53 +2053,6 @@ name|fs_fmod
 operator|=
 literal|1
 expr_stmt|;
-end_if
-
-begin_if
-if|if
-condition|(
-name|havepart
-condition|)
-block|{
-name|dpart
-operator|.
-name|part
-operator|->
-name|p_fstype
-operator|=
-name|FS_BSDFFS
-expr_stmt|;
-name|dpart
-operator|.
-name|part
-operator|->
-name|p_fsize
-operator|=
-name|fs
-operator|->
-name|fs_fsize
-expr_stmt|;
-name|dpart
-operator|.
-name|part
-operator|->
-name|p_frag
-operator|=
-name|fs
-operator|->
-name|fs_frag
-expr_stmt|;
-name|dpart
-operator|.
-name|part
-operator|->
-name|p_cpg
-operator|=
-name|fs
-operator|->
-name|fs_cpg
-expr_stmt|;
-block|}
 end_if
 
 begin_ifdef
