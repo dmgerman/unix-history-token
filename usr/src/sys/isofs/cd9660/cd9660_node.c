@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_node.c	8.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_node.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -884,6 +884,15 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|ap
+operator|->
+name|a_p
+decl_stmt|;
 specifier|register
 name|struct
 name|iso_node
@@ -925,15 +934,18 @@ name|i_flag
 operator|=
 literal|0
 expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we are done with the inode, reclaim it 	 * so that it can be reused immediately. 	 */
 if|if
 condition|(
-name|vp
-operator|->
-name|v_usecount
-operator|==
-literal|0
-operator|&&
 name|ip
 operator|->
 name|inode
@@ -942,9 +954,18 @@ name|iso_mode
 operator|==
 literal|0
 condition|)
-name|vgone
+name|vrecycle
 argument_list|(
 name|vp
+argument_list|,
+operator|(
+expr|struct
+name|simplelock
+operator|*
+operator|)
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
