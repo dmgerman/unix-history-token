@@ -773,7 +773,11 @@ name|len
 condition|)
 name|printf
 argument_list|(
-literal|"cksum: out of data\n"
+literal|"%s: out of data by %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -1539,7 +1543,11 @@ name|len
 condition|)
 name|printf
 argument_list|(
-literal|"cksum: out of data\n"
+literal|"%s: out of data by %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 if|if
