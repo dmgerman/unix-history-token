@@ -244,7 +244,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
 end_decl_stmt
