@@ -645,43 +645,6 @@ begin_comment
 comment|/* Lock a file. */
 end_comment
 
-begin_comment
-comment|/*#define FILE_LOCK_DEBUG*/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FILE_LOCK_DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FILE_LOCK
-parameter_list|(
-name|f
-parameter_list|)
-define|\
-value|do {							\ 		printf("FLCK: %p %s %d\n",&(f)->f_mtx, __FILE__, __LINE__);	\ 		mtx_lock(&(f)->f_mtx);				\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_UNLOCK
-parameter_list|(
-name|f
-parameter_list|)
-define|\
-value|do {							\ 		printf("FREL: %p %s %d\n",&(f)->f_mtx, __FILE__, __LINE__);	\ 		mtx_unlock(&(f)->f_mtx);			\ 	} while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -701,11 +664,6 @@ name|f
 parameter_list|)
 value|mtx_unlock(&(f)->f_mtx)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

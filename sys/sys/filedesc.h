@@ -310,43 +310,6 @@ begin_comment
 comment|/* Lock a file descriptor table. */
 end_comment
 
-begin_comment
-comment|/*#define FILEDESC_LOCK_DEBUG*/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FILEDESC_LOCK_DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FILEDESC_LOCK
-parameter_list|(
-name|fd
-parameter_list|)
-define|\
-value|do {							\ 		printf("FD_LCK: %p %s %d\n",&(fd)->fd_mtx, __FILE__, __LINE__);	\ 		mtx_lock(&(fd)->fd_mtx);			\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILEDESC_UNLOCK
-parameter_list|(
-name|fd
-parameter_list|)
-define|\
-value|do {							\ 		printf("FD_REL: %p %s %d\n",&(fd)->fd_mtx, __FILE__, __LINE__);	\ 		mtx_unlock(&(fd)->fd_mtx);			\ 	} while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -366,11 +329,6 @@ name|fd
 parameter_list|)
 value|mtx_unlock(&(fd)->fd_mtx)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
