@@ -205,5 +205,19 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sun_disklabel
+argument_list|)
+operator|==
+literal|512
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
