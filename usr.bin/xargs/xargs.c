@@ -698,9 +698,10 @@ expr_stmt|;
 comment|/* 	 * Use the user's name for the utility as argv[0], just like the 	 * shell.  Echo is the default.  Set up pointers for the user's 	 * arguments. 	 */
 if|if
 condition|(
-operator|!
 operator|*
 name|argv
+operator|==
+name|NULL
 condition|)
 name|cnt
 operator|=
@@ -785,6 +786,8 @@ condition|(
 operator|*
 operator|++
 name|argv
+operator|!=
+name|NULL
 condition|)
 do|;
 block|}
@@ -1751,6 +1754,8 @@ literal|1
 init|;
 operator|*
 name|p
+operator|!=
+name|NULL
 condition|;
 operator|++
 name|p
