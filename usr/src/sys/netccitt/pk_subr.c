@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_subr.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_subr.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1439,6 +1439,9 @@ name|lcd_flags
 operator|=
 name|X25_MBS_HOLD
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|error
 operator|=
 name|pk_bind
@@ -1447,7 +1450,12 @@ name|lcp
 argument_list|,
 name|nam
 argument_list|)
-operator|||
+operator|)
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
 name|pk_listen
 argument_list|(
 name|lcp
@@ -1737,7 +1745,7 @@ operator|(
 name|ENETUNREACH
 operator|)
 return|;
-comment|/* 		 * use first net configured (last in list 		 * headed by pkcbhead) if net is zero 		 */
+comment|/* 		 * use first net configured (last in list 		 * headed by pkcbhead) if net is zero 		 * 		 * This is clearly bogus for many llc2's sharing 		 * the same xcp; we will replace this with a 		 * routing lookup. 		 */
 if|if
 condition|(
 name|sa
@@ -1873,7 +1881,9 @@ call|(
 modifier|*
 name|pkp
 operator|->
-name|pk_start
+name|pk_ia
+operator|->
+name|ia_start
 call|)
 argument_list|(
 name|lcp
@@ -2914,9 +2924,9 @@ name|lcd_lcn
 argument_list|,
 name|inhibit
 condition|?
-name|RNR
+name|X25_RNR
 else|:
-name|RR
+name|X25_RR
 argument_list|)
 expr_stmt|;
 name|pk_output
@@ -3971,6 +3981,12 @@ name|xp
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lcp
+operator|->
+name|lcd_so
+condition|)
 name|lcp
 operator|->
 name|lcd_so
@@ -4284,62 +4300,6 @@ name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_expr_stmt
-name|pk_ifattach
-argument_list|(
-name|ia
-argument_list|,
-name|lloutput
-argument_list|,
-name|llnext
-argument_list|)
-specifier|register
-expr|struct
-name|x25_ifaddr
-operator|*
-name|ia
-expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|lloutput
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|caddr_t
-name|llnext
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-comment|/* this is here because you can't include both pk_var and hd_var */
-comment|/* this will probably be replace by a streams gluing mechanism */
-name|ia
-operator|->
-name|ia_pkcb
-operator|.
-name|pk_lloutput
-operator|=
-name|lloutput
-expr_stmt|;
-name|ia
-operator|->
-name|ia_pkcb
-operator|.
-name|pk_llnext
-operator|=
-name|llnext
 expr_stmt|;
 block|}
 end_block
