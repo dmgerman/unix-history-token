@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_extern.h	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_extern.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -912,7 +912,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|vm_fault_wire
 name|__P
 argument_list|(
@@ -1003,6 +1003,8 @@ name|vm_offset_t
 operator|*
 operator|,
 name|vm_size_t
+operator|,
+name|vm_prot_t
 operator|,
 name|vm_prot_t
 operator|,
