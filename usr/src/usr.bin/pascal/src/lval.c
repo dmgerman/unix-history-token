@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lval.c 1.5 %G%"
+literal|"@(#)lval.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -448,12 +448,16 @@ operator|&
 name|ASGN
 operator|)
 operator|&&
+operator|(
 name|p
 operator|->
 name|value
 index|[
 name|NL_FORV
 index|]
+operator|&
+name|FORBOUND
+operator|)
 condition|)
 block|{
 name|error
