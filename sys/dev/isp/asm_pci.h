@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: asm_pci.h,v 1.4 1998/12/28 19:22:22 mjacob Exp $ */
+comment|/* $Id: asm_pci.h,v 1.5 1999/01/30 07:20:50 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_01_29_99 */
+comment|/* release_02_05_99 */
 end_comment
 
 begin_comment
