@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/randomdev/hash.h>
+file|<dev/random/hash.h>
 end_include
 
 begin_comment

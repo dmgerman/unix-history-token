@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/select.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/random.h>
 end_include
 
@@ -94,13 +100,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/randomdev/hash.h>
+file|<dev/random/hash.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/randomdev/yarrow.h>
+file|<dev/random/yarrow.h>
 end_include
 
 begin_comment
@@ -207,7 +213,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* These are used to queue harvested packets of entropy. The entropy  * buffer size of 16 is pretty arbitrary.  */
+comment|/* These are used to queue harvested packets of entropy. The entropy  * buffer size is pretty arbitrary.  */
 end_comment
 
 begin_struct
@@ -222,7 +228,7 @@ comment|/* nanotime for clock jitter */
 name|u_char
 name|entropy
 index|[
-literal|16
+name|HARVESTSIZE
 index|]
 decl_stmt|;
 comment|/* the harvested entropy */
@@ -267,7 +273,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The entropy harvest mutex */
+comment|/* The entropy harvest mutex, as well as the mutex associated  * with the msleep() call during deinit  */
 end_comment
 
 begin_decl_stmt
@@ -275,20 +281,6 @@ specifier|static
 name|struct
 name|mtx
 name|random_harvest_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*<0 until the kthread starts, 0 for running */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|random_kthread_status
-init|=
-operator|-
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -321,7 +313,8 @@ name|random_kthread
 parameter_list|(
 name|void
 modifier|*
-name|status
+name|arg
+comment|/* NOTUSED */
 parameter_list|)
 block|{
 name|int
@@ -357,7 +350,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"At %s, line %d: mtx_owned(&Giant) == %d\n"
+literal|"At %s, line %d: mtx_owned(&Giant) == %d, mtx_owned(&sched_lock) == %d\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -368,15 +361,6 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"At %s, line %d: mtx_owned(&sched_lock) == %d\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
 argument_list|,
 name|mtx_owned
 argument_list|(
@@ -387,17 +371,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|random_set_wakeup
-argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
-name|status
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|pl
@@ -644,8 +617,6 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-comment|/* XXX abuse tsleep() to get at mi_switch() */
-comment|/* tsleep(&harvestqueue, PUSER, "rndprc", 1); */
 block|}
 ifdef|#
 directive|ifdef
@@ -763,7 +734,7 @@ comment|/* Is the thread scheduled for a shutdown? */
 if|if
 condition|(
 name|random_kthread_control
-operator|<
+operator|!=
 literal|0
 condition|)
 block|{
@@ -843,18 +814,11 @@ endif|#
 directive|endif
 name|random_set_wakeup_exit
 argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
-name|status
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|0
+operator|&
+name|random_kthread_control
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 break|break;
 block|}
 block|}
@@ -959,8 +923,7 @@ name|kthread_create
 argument_list|(
 name|random_kthread
 argument_list|,
-operator|&
-name|random_kthread_status
+name|NULL
 argument_list|,
 operator|&
 name|random_kthread_proc
@@ -983,6 +946,8 @@ comment|/* Register the randomness harvesting routine */
 name|random_init_harvester
 argument_list|(
 name|random_harvest_internal
+argument_list|,
+name|read_random_real
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1033,28 +998,44 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Command the hash/reseed thread to end and wait for it to finish */
+name|mtx_enter
+argument_list|(
+operator|&
+name|random_harvest_mtx
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|random_kthread_control
 operator|=
 operator|-
 literal|1
 expr_stmt|;
-while|while
-condition|(
-name|random_kthread_status
-operator|!=
-operator|-
-literal|1
-condition|)
-name|tsleep
+name|msleep
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
-name|random_kthread_status
+name|random_kthread_control
+argument_list|,
+operator|&
+name|random_harvest_mtx
 argument_list|,
 name|PUSER
 argument_list|,
 literal|"rndend"
 argument_list|,
-name|hz
+literal|0
+argument_list|)
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|random_harvest_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1595,12 +1576,41 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|!
+name|random_state
+operator|.
+name|seeded
+condition|)
+block|{
+name|random_state
+operator|.
+name|seeded
+operator|=
+literal|1
+expr_stmt|;
+name|selwakeup
+argument_list|(
+operator|&
+name|random_state
+operator|.
+name|rsel
+argument_list|)
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|random_state
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
 begin_function
 name|u_int
-name|read_random
+name|read_random_real
 parameter_list|(
 name|void
 modifier|*
@@ -1938,7 +1948,7 @@ name|struct
 name|timespec
 name|timebuf
 decl_stmt|;
-comment|/* arbitrarily break the input up into 8-byte chunks */
+comment|/* arbitrarily break the input up into HARVESTSIZE chunks */
 for|for
 control|(
 name|i
@@ -1951,7 +1961,7 @@ name|count
 condition|;
 name|i
 operator|+=
-literal|8
+name|HARVESTSIZE
 control|)
 block|{
 name|nanotime
@@ -1973,7 +1983,7 @@ name|buf
 operator|+
 name|i
 argument_list|,
-literal|8
+name|HARVESTSIZE
 argument_list|,
 literal|0
 argument_list|,
@@ -1992,12 +2002,12 @@ name|count
 condition|)
 name|i
 operator|-=
-literal|8
+name|HARVESTSIZE
 expr_stmt|;
-comment|/* Get the last bytes even if the input length is not a multiple of 8 */
+comment|/* Get the last bytes even if the input length is not a multiple of HARVESTSIZE */
 name|count
 operator|%=
-literal|8
+name|HARVESTSIZE
 expr_stmt|;
 if|if
 condition|(
@@ -2198,9 +2208,6 @@ name|harvest
 modifier|*
 name|event
 decl_stmt|;
-name|u_int64_t
-name|entropy_buf
-decl_stmt|;
 if|#
 directive|if
 literal|0
@@ -2253,12 +2260,16 @@ name|count
 operator|>
 sizeof|sizeof
 argument_list|(
-name|entropy_buf
+name|event
+operator|->
+name|entropy
 argument_list|)
 condition|?
 sizeof|sizeof
 argument_list|(
-name|entropy_buf
+name|event
+operator|->
+name|entropy
 argument_list|)
 else|:
 name|count

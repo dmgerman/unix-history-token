@@ -32,6 +32,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HARVESTSIZE
+value|16
+end_define
+
+begin_comment
+comment|/* max size of each harvested entropy unit */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FAST
 value|0
 end_define
@@ -86,6 +97,17 @@ parameter_list|,
 name|enum
 name|esource
 parameter_list|)
+parameter_list|,
+name|u_int
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -101,26 +123,22 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|random_set_wakeup
+name|random_set_wakeup_exit
 parameter_list|(
-name|int
+name|void
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|random_set_wakeup_exit
+name|u_int
+name|read_random_real
 parameter_list|(
-name|int
+name|void
 modifier|*
 parameter_list|,
-name|int
-parameter_list|,
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -210,6 +228,15 @@ name|int
 name|which
 decl_stmt|;
 comment|/* toggle - shows the current insertion pool */
+name|int
+name|seeded
+decl_stmt|;
+comment|/* 0 until first reseed, then 1 */
+name|struct
+name|selinfo
+name|rsel
+decl_stmt|;
+comment|/* For poll(2) */
 block|}
 struct|;
 end_struct
