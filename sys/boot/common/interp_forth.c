@@ -629,6 +629,14 @@ operator|=
 name|ficlNewVM
 argument_list|()
 expr_stmt|;
+comment|/* Put all private definitions in a "builtins" vocabulary */
+name|ficlExec
+argument_list|(
+name|bf_vm
+argument_list|,
+literal|"vocabulary builtins also builtins definitions"
+argument_list|)
+expr_stmt|;
 comment|/* Builtin constructor word  */
 name|ficlExec
 argument_list|(
@@ -659,6 +667,13 @@ argument_list|,
 name|FW_DEFAULT
 argument_list|)
 expr_stmt|;
+name|ficlExec
+argument_list|(
+name|bf_vm
+argument_list|,
+literal|"also forth definitions"
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|create_buf
@@ -680,7 +695,21 @@ argument_list|,
 name|create_buf
 argument_list|)
 expr_stmt|;
+name|ficlExec
+argument_list|(
+name|bf_vm
+argument_list|,
+literal|"previous definitions"
+argument_list|)
+expr_stmt|;
 block|}
+name|ficlExec
+argument_list|(
+name|bf_vm
+argument_list|,
+literal|"only forth definitions"
+argument_list|)
+expr_stmt|;
 comment|/* Export some version numbers so that code can detect the loader/host version */
 name|ficlSetEnv
 argument_list|(
