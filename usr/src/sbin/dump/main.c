@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.5 (Berkeley) %G%"
+literal|"@(#)main.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -696,7 +696,7 @@ name|SBLOCK
 argument_list|,
 name|sblock
 argument_list|,
-name|MAXBSIZE
+name|SBSIZE
 argument_list|)
 expr_stmt|;
 if|if
