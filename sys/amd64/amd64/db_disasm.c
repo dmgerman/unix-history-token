@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_disasm.c,v 1.12 1995/12/07 12:45:29 davidg Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_disasm.c,v 1.13 1996/01/15 22:40:17 phk Exp $  */
 end_comment
 
 begin_comment
@@ -504,6 +504,7 @@ begin_struct
 struct|struct
 name|inst
 block|{
+specifier|const
 name|char
 modifier|*
 name|i_name
@@ -570,6 +571,7 @@ begin_struct
 struct|struct
 name|finst
 block|{
+specifier|const
 name|char
 modifier|*
 name|f_name
@@ -594,8 +596,10 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_Grp6
 index|[]
 init|=
@@ -621,8 +625,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_Grp7
 index|[]
 init|=
@@ -648,8 +654,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_Grp8
 index|[]
 init|=
@@ -675,6 +683,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|inst
 name|db_inst_0f0x
@@ -918,6 +927,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|inst
 name|db_inst_0f2x
@@ -1169,6 +1179,227 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
+name|struct
+name|inst
+name|db_inst_0f3x
+index|[]
+init|=
+block|{
+comment|/*30*/
+block|{
+literal|"wrmsr"
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/*31*/
+block|{
+literal|"rdtsc"
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/*32*/
+block|{
+literal|"rdmsr"
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/*33*/
+block|{
+literal|"rdpmc"
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/*34*/
+block|{
+literal|""
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/*35*/
+block|{
+literal|""
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/*36*/
+block|{
+literal|""
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/*37*/
+block|{
+literal|""
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/*38*/
+block|{
+literal|""
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/*39*/
+block|{
+literal|""
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/*3a*/
+block|{
+literal|""
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/*3b*/
+block|{
+literal|""
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/*3c*/
+block|{
+literal|""
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/*3d*/
+block|{
+literal|""
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/*3e*/
+block|{
+literal|""
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/*3f*/
+block|{
+literal|""
+block|,
+name|FALSE
+block|,
+name|NONE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|inst
 name|db_inst_0f8x
@@ -1436,6 +1667,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|inst
 name|db_inst_0f9x
@@ -1703,6 +1935,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|inst
 name|db_inst_0fax
@@ -1977,6 +2210,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|inst
 name|db_inst_0fbx
@@ -2260,6 +2494,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|inst
 name|db_inst_0fcx
@@ -2513,6 +2748,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|inst
 name|db_inst_0fdx
@@ -2742,9 +2978,11 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|inst
 modifier|*
+specifier|const
 name|db_inst_0f
 index|[]
 init|=
@@ -2755,7 +2993,7 @@ literal|0
 block|,
 name|db_inst_0f2x
 block|,
-literal|0
+name|db_inst_0f3x
 block|,
 literal|0
 block|,
@@ -2786,8 +3024,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_Esc92
 index|[]
 init|=
@@ -2813,8 +3053,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_Esc93
 index|[]
 init|=
@@ -2840,8 +3082,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_Esc94
 index|[]
 init|=
@@ -2867,8 +3111,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_Esc95
 index|[]
 init|=
@@ -2894,8 +3140,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_Esc96
 index|[]
 init|=
@@ -2921,8 +3169,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_Esc97
 index|[]
 init|=
@@ -2948,8 +3198,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_Esca4
 index|[]
 init|=
@@ -2975,8 +3227,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_Escb4
 index|[]
 init|=
@@ -3002,8 +3256,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_Esce3
 index|[]
 init|=
@@ -3029,8 +3285,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_Escf4
 index|[]
 init|=
@@ -3056,6 +3314,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|finst
 name|db_Esc8
@@ -3195,6 +3454,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|finst
 name|db_Esc9
@@ -3342,6 +3602,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|finst
 name|db_Esca
@@ -3448,6 +3709,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|finst
 name|db_Escb
@@ -3554,6 +3816,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|finst
 name|db_Escc
@@ -3693,6 +3956,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|finst
 name|db_Escd
@@ -3807,6 +4071,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|finst
 name|db_Esce
@@ -3943,6 +4208,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|finst
 name|db_Escf
@@ -4049,9 +4315,11 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|finst
 modifier|*
+specifier|const
 name|db_Esc_inst
 index|[]
 init|=
@@ -4077,8 +4345,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_Grp1
 index|[]
 init|=
@@ -4104,8 +4374,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_Grp2
 index|[]
 init|=
@@ -4131,6 +4403,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|inst
 name|db_Grp3
@@ -4274,6 +4547,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|inst
 name|db_Grp4
@@ -4387,6 +4661,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|inst
 name|db_Grp5
@@ -4515,6 +4790,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|inst
 name|db_inst_table
@@ -8799,6 +9075,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|inst
 name|db_bad_inst
@@ -8888,10 +9165,12 @@ comment|/* if reg, reg number is in 'disp' */
 name|int
 name|disp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|base
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|index
@@ -8905,8 +9184,10 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_index_reg_16
 index|[
 literal|8
@@ -8934,8 +9215,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_reg
 index|[
 literal|3
@@ -8998,8 +9281,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|db_seg_reg
 index|[
 literal|8
@@ -9031,6 +9316,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|db_lengths
 index|[]
@@ -9761,6 +10047,7 @@ block|{
 name|int
 name|regmodrm
 decl_stmt|;
+specifier|const
 name|struct
 name|finst
 modifier|*
@@ -9773,6 +10060,7 @@ name|struct
 name|i_addr
 name|address
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -10146,11 +10434,13 @@ name|char
 modifier|*
 name|seg
 decl_stmt|;
+specifier|const
 name|struct
 name|inst
 modifier|*
 name|ip
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|i_name
