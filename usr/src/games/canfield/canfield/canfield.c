@@ -9,12 +9,12 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)canfield.c 4.1 %G%"
+literal|"@(#)canfield.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The canfield program  *  * Authors:  *	Originally written: Steve Levine  *	Converted to use curses and debugged: Steve Feldman  *	Card counting: Kirk McKusick and Mikey Olson  */
+comment|/*  * The canfield program  *  * Authors:  *	Originally written: Steve Levine  *	Converted to use curses and debugged: Steve Feldman  *	Card counting: Kirk McKusick and Mikey Olson  *	User interface cleanups: Eric Allman and Kirk McKusick  */
 end_comment
 
 begin_include
@@ -81,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|bboxrow
-value|16
+value|17
 end_define
 
 begin_define
@@ -95,7 +95,7 @@ begin_define
 define|#
 directive|define
 name|moverow
-value|15
+value|16
 end_define
 
 begin_define
@@ -109,7 +109,7 @@ begin_define
 define|#
 directive|define
 name|msgrow
-value|14
+value|15
 end_define
 
 begin_define
@@ -641,6 +641,10 @@ decl_stmt|,
 name|Cflag
 init|=
 name|FALSE
+decl_stmt|,
+name|Iflag
+init|=
+name|TRUE
 decl_stmt|;
 end_decl_stmt
 
@@ -654,6 +658,53 @@ end_comment
 
 begin_macro
 name|movebox
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|printtopinstructions
+argument_list|()
+expr_stmt|;
+name|move
+argument_list|(
+name|moverow
+argument_list|,
+name|boxcol
+argument_list|)
+expr_stmt|;
+name|printw
+argument_list|(
+literal|"|                          |"
+argument_list|)
+expr_stmt|;
+name|move
+argument_list|(
+name|msgrow
+argument_list|,
+name|boxcol
+argument_list|)
+expr_stmt|;
+name|printw
+argument_list|(
+literal|"|                          |"
+argument_list|)
+expr_stmt|;
+name|printbottominstructions
+argument_list|()
+expr_stmt|;
+name|refresh
+argument_list|()
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * print directions above move box  */
+end_comment
+
+begin_macro
+name|printtopinstructions
 argument_list|()
 end_macro
 
@@ -808,7 +859,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|q = quit to end the game  |"
+literal|"|i = toggle instructions   |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -822,33 +873,97 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
+literal|"|q = quit to end the game  |"
+argument_list|)
+expr_stmt|;
+name|move
+argument_list|(
+name|tboxrow
+operator|+
+literal|12
+argument_list|,
+name|boxcol
+argument_list|)
+expr_stmt|;
+name|printw
+argument_list|(
 literal|"|==========================|"
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * clear directions above move box  */
+end_comment
+
+begin_macro
+name|cleartopinstructions
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+literal|11
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|move
 argument_list|(
-name|moverow
+name|tboxrow
+operator|+
+name|i
 argument_list|,
 name|boxcol
 argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|                          |"
+literal|"                            "
 argument_list|)
 expr_stmt|;
+block|}
 name|move
 argument_list|(
-name|msgrow
+name|tboxrow
+operator|+
+literal|12
 argument_list|,
 name|boxcol
 argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|                          |"
+literal|"*--------------------------*"
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * print instructions below move box  */
+end_comment
+
+begin_macro
+name|printbottominstructions
+argument_list|()
+end_macro
+
+begin_block
+block|{
 name|move
 argument_list|(
 name|bboxrow
@@ -858,7 +973,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|Replace the # with the    |"
+literal|"|Replace # with the number |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -872,7 +987,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|number of the tableau you |"
+literal|"|of the tableau you want.  |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -886,14 +1001,29 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|want, 1, 2, 3, or 4.      |"
+literal|"*--------------------------*"
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * clear directions below move box  */
+end_comment
+
+begin_macro
+name|clearbottominstructions
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|int
+name|i
+decl_stmt|;
 name|move
 argument_list|(
 name|bboxrow
-operator|+
-literal|3
 argument_list|,
 name|boxcol
 argument_list|)
@@ -903,14 +1033,40 @@ argument_list|(
 literal|"*--------------------------*"
 argument_list|)
 expr_stmt|;
-name|refresh
-argument_list|()
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<=
+literal|2
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|move
+argument_list|(
+name|bboxrow
+operator|+
+name|i
+argument_list|,
+name|boxcol
+argument_list|)
 expr_stmt|;
+name|printw
+argument_list|(
+literal|"                            "
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
 begin_comment
-comment|/* procedure to put the board on the screen using addressable cursor */
+comment|/*  * procedure to put the board on the screen using addressable cursor  */
 end_comment
 
 begin_macro
@@ -5416,6 +5572,36 @@ name|done
 operator|=
 name|TRUE
 expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|Iflag
+operator|=
+operator|!
+name|Iflag
+expr_stmt|;
+if|if
+condition|(
+name|Iflag
+condition|)
+block|{
+name|printtopinstructions
+argument_list|()
+expr_stmt|;
+name|printbottominstructions
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|cleartopinstructions
+argument_list|()
+expr_stmt|;
+name|clearbottominstructions
+argument_list|()
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'c'
