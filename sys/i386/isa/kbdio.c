@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996 Kazutaka YOKOTA (yokota@zodiac.mech.utsunomiya-u.ac.jp)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   *    products derived from this software without specific prior written   *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: kbdio.c,v 1.1 1996/11/14 22:19:06 sos Exp $  */
+comment|/*-  * Copyright (c) 1996 Kazutaka YOKOTA (yokota@zodiac.mech.utsunomiya-u.ac.jp)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   *    products derived from this software without specific prior written   *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: kbdio.c,v 1.1.2.1 1996/12/03 10:45:00 phk Exp $  */
 end_comment
 
 begin_include
@@ -27,11 +27,33 @@ directive|include
 file|<machine/clock.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pc98/pc98/pc98.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<i386/isa/isa.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -84,6 +106,19 @@ name|int
 name|port
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|PC98
+name|DELAY
+argument_list|(
+name|KBDC_DELAYTIME
+argument_list|)
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+else|#
+directive|else
 comment|/* CPU will stay inside the loop for 100msec at most */
 name|int
 name|retry
@@ -104,7 +139,7 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|20
+name|KBDC_DELAYTIME
 argument_list|)
 expr_stmt|;
 if|if
@@ -121,6 +156,8 @@ block|}
 return|return
 name|TRUE
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -160,7 +197,7 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|20
+name|KBDC_DELAYTIME
 argument_list|)
 expr_stmt|;
 if|if
@@ -176,7 +213,7 @@ return|;
 block|}
 name|DELAY
 argument_list|(
-literal|7
+name|KBDD_DELAYTIME
 argument_list|)
 expr_stmt|;
 return|return
@@ -221,7 +258,7 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|20
+name|KBDC_DELAYTIME
 argument_list|)
 expr_stmt|;
 if|if
@@ -237,7 +274,7 @@ return|;
 block|}
 name|DELAY
 argument_list|(
-literal|7
+name|KBDD_DELAYTIME
 argument_list|)
 expr_stmt|;
 return|return
@@ -282,7 +319,7 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|20
+name|KBDC_DELAYTIME
 argument_list|)
 expr_stmt|;
 if|if
@@ -298,7 +335,7 @@ return|;
 block|}
 name|DELAY
 argument_list|(
-literal|7
+name|KBDD_DELAYTIME
 argument_list|)
 expr_stmt|;
 return|return
@@ -904,6 +941,16 @@ operator|-
 literal|1
 return|;
 comment|/* timeout */
+ifdef|#
+directive|ifdef
+name|PC98
+name|DELAY
+argument_list|(
+name|KBDC_DELAYTIME
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|inb
 argument_list|(
@@ -949,7 +996,7 @@ return|;
 comment|/* no data */
 name|DELAY
 argument_list|(
-literal|7
+name|KBDD_DELAYTIME
 argument_list|)
 expr_stmt|;
 return|return
@@ -1057,7 +1104,7 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|7
+name|KBDD_DELAYTIME
 argument_list|)
 expr_stmt|;
 name|b
@@ -1165,7 +1212,7 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|7
+name|KBDD_DELAYTIME
 argument_list|)
 expr_stmt|;
 name|b
@@ -1269,7 +1316,7 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|7
+name|KBDD_DELAYTIME
 argument_list|)
 expr_stmt|;
 name|b

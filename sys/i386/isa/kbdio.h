@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996 Kazutaka YOKOTA (yokota@zodiac.mech.utsunomiya-u.ac.jp)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   *    products derived from this software without specific prior written   *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: kbdio.h,v 1.1 1996/11/14 22:19:09 sos Exp $  */
+comment|/*-  * Copyright (c) 1996 Kazutaka YOKOTA (yokota@zodiac.mech.utsunomiya-u.ac.jp)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   *    products derived from this software without specific prior written   *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: kbdio.h,v 1.1.2.1 1996/12/03 10:45:16 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -22,6 +22,50 @@ end_comment
 begin_comment
 comment|/* I/O ports */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KBD_STATUS_PORT
+value|2
+end_define
+
+begin_comment
+comment|/* status port, read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KBD_COMMAND_PORT
+value|2
+end_define
+
+begin_comment
+comment|/* controller command port, write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KBD_DATA_PORT
+value|0
+end_define
+
+begin_comment
+comment|/* data port, read/write  					   also used as keyboard command 					   and mouse command port */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -54,6 +98,15 @@ end_define
 
 begin_comment
 comment|/* data port, read/write  					   also used as keyboard command 					   and mouse command port */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PC98 */
 end_comment
 
 begin_comment
@@ -495,6 +548,45 @@ begin_comment
 comment|/* status bits (KBD_STATUS_PORT) */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KBDS_BUFFER_FULL
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|KBDS_ANY_BUFFER_FULL
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|KBDS_KBD_BUFFER_FULL
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|KBDS_AUX_BUFFER_FULL
+value|0x0002
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -522,6 +614,11 @@ directive|define
 name|KBDS_AUX_BUFFER_FULL
 value|0x0021
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -703,6 +800,54 @@ end_define
 begin_comment
 comment|/* wait 5 times at most after reset */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* I/O recovery time */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KBDC_DELAYTIME
+value|37
+end_define
+
+begin_define
+define|#
+directive|define
+name|KBDD_DELAYTIME
+value|37
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KBDC_DELAYTIME
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|KBDD_DELAYTIME
+value|7
+end_define
 
 begin_endif
 endif|#
