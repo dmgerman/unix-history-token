@@ -134,14 +134,14 @@ begin_define
 define|#
 directive|define
 name|CURFRMT
-value|"%b %e %H:%M"
+value|"%Ef %H:%M"
 end_define
 
 begin_define
 define|#
 directive|define
 name|OLDFRMT
-value|"%b %e  %Y"
+value|"%Ef  %Y"
 end_define
 
 begin_ifndef
