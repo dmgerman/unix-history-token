@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.34 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -309,83 +309,6 @@ begin_comment
 comment|/* look in user database (requires NEWDB) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|BTREE_MAP
-value|1
-end_define
-
-begin_comment
-comment|/* enable BTREE mapping type (requires NEWDB) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASH_MAP
-value|1
-end_define
-
-begin_comment
-comment|/* enable HASH mapping type (requires NEWDB) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NIS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NIS_ALIASES
-value|1
-end_define
-
-begin_comment
-comment|/* include NIS support for aliases */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NIS_MAP
-value|1
-end_define
-
-begin_comment
-comment|/* include NIS mapping type */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NDBM
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DBM_MAP
-value|1
-end_define
-
-begin_comment
-comment|/* enable DBM mapping type (requires NDBM) */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
@@ -411,6 +334,17 @@ directive|define
 name|SYSTEM5
 value|1
 end_define
+
+begin_define
+define|#
+directive|define
+name|UNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* need unsetenv(3) support */
+end_comment
 
 begin_endif
 endif|#
@@ -447,6 +381,17 @@ end_define
 
 begin_comment
 comment|/* no vfork primitive available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* need unsetenv(3) support */
 end_comment
 
 begin_endif
@@ -515,7 +460,33 @@ name|defined
 argument_list|(
 name|BSD
 argument_list|)
-operator|&&
+end_if
+
+begin_define
+define|#
+directive|define
+name|UNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* need unsetenv(3) support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSTATFS
+value|1
+end_define
+
+begin_comment
+comment|/* has the statfs(2) syscall */
+end_comment
+
+begin_if
+if|#
+directive|if
 operator|!
 name|defined
 argument_list|(
@@ -528,6 +499,33 @@ include|#
 directive|include
 file|<vfork.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ultrix
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASSTATFS
+value|1
+end_define
+
+begin_comment
+comment|/* has the statfs(2) syscall */
+end_comment
 
 begin_endif
 endif|#
