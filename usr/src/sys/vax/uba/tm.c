@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.47	82/03/28	*/
+comment|/*	tm.c	4.48	82/05/27	*/
 end_comment
 
 begin_include
@@ -368,7 +368,7 @@ comment|/* timeout is active */
 block|}
 name|te_softc
 index|[
-name|NTM
+name|NTE
 index|]
 struct|;
 end_struct
