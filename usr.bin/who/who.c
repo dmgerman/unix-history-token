@@ -1429,10 +1429,7 @@ expr_stmt|;
 else|else
 return|return
 operator|(
-operator|(
-name|int
-operator|)
-name|cols
+name|width
 operator|)
 return|;
 block|}
