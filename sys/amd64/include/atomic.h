@@ -203,7 +203,7 @@ parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 			 : "=m" (*p)			\ 			 :  "0" (*p), "ir" (V)); 	\ }
+value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 			 : "+m" (*p)			\ 			 : "ir" (V));			\ }
 end_define
 
 begin_comment
@@ -489,7 +489,7 @@ name|set
 operator|,
 name|char
 operator|,
-literal|"orb %b2,%0"
+literal|"orb %b1,%0"
 operator|,
 name|v
 operator|)
@@ -499,7 +499,7 @@ argument|clear
 argument_list|,
 argument|char
 argument_list|,
-literal|"andb %b2,%0"
+literal|"andb %b1,%0"
 argument_list|,
 argument|~v
 argument_list|)
@@ -509,7 +509,7 @@ argument|add
 argument_list|,
 argument|char
 argument_list|,
-literal|"addb %b2,%0"
+literal|"addb %b1,%0"
 argument_list|,
 argument|v
 argument_list|)
@@ -519,7 +519,7 @@ argument|subtract
 argument_list|,
 argument|char
 argument_list|,
-literal|"subb %b2,%0"
+literal|"subb %b1,%0"
 argument_list|,
 argument|v
 argument_list|)
@@ -529,7 +529,7 @@ argument|set
 argument_list|,
 argument|short
 argument_list|,
-literal|"orw %w2,%0"
+literal|"orw %w1,%0"
 argument_list|,
 argument|v
 argument_list|)
@@ -539,7 +539,7 @@ argument|clear
 argument_list|,
 argument|short
 argument_list|,
-literal|"andw %w2,%0"
+literal|"andw %w1,%0"
 argument_list|,
 argument|~v
 argument_list|)
@@ -549,7 +549,7 @@ argument|add
 argument_list|,
 argument|short
 argument_list|,
-literal|"addw %w2,%0"
+literal|"addw %w1,%0"
 argument_list|,
 argument|v
 argument_list|)
@@ -559,7 +559,7 @@ argument|subtract
 argument_list|,
 argument|short
 argument_list|,
-literal|"subw %w2,%0"
+literal|"subw %w1,%0"
 argument_list|,
 argument|v
 argument_list|)
@@ -569,7 +569,7 @@ argument|set
 argument_list|,
 argument|int
 argument_list|,
-literal|"orl %2,%0"
+literal|"orl %1,%0"
 argument_list|,
 argument|v
 argument_list|)
@@ -579,7 +579,7 @@ argument|clear
 argument_list|,
 argument|int
 argument_list|,
-literal|"andl %2,%0"
+literal|"andl %1,%0"
 argument_list|,
 argument|~v
 argument_list|)
@@ -589,7 +589,7 @@ argument|add
 argument_list|,
 argument|int
 argument_list|,
-literal|"addl %2,%0"
+literal|"addl %1,%0"
 argument_list|,
 argument|v
 argument_list|)
@@ -599,7 +599,7 @@ argument|subtract
 argument_list|,
 argument|int
 argument_list|,
-literal|"subl %2,%0"
+literal|"subl %1,%0"
 argument_list|,
 argument|v
 argument_list|)
@@ -609,7 +609,7 @@ argument|set
 argument_list|,
 argument|long
 argument_list|,
-literal|"orl %2,%0"
+literal|"orl %1,%0"
 argument_list|,
 argument|v
 argument_list|)
@@ -619,7 +619,7 @@ argument|clear
 argument_list|,
 argument|long
 argument_list|,
-literal|"andl %2,%0"
+literal|"andl %1,%0"
 argument_list|,
 argument|~v
 argument_list|)
@@ -629,7 +629,7 @@ argument|add
 argument_list|,
 argument|long
 argument_list|,
-literal|"addl %2,%0"
+literal|"addl %1,%0"
 argument_list|,
 argument|v
 argument_list|)
@@ -639,7 +639,7 @@ argument|subtract
 argument_list|,
 argument|long
 argument_list|,
-literal|"subl %2,%0"
+literal|"subl %1,%0"
 argument_list|,
 argument|v
 argument_list|)
