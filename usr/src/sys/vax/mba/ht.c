@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ht.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ht.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -598,18 +598,6 @@ operator|>=
 name|NTU
 operator|||
 operator|(
-name|sc
-operator|=
-operator|&
-name|tu_softc
-index|[
-name|tuunit
-index|]
-operator|)
-operator|->
-name|sc_openf
-operator|||
-operator|(
 name|mi
 operator|=
 name|htinfo
@@ -632,6 +620,25 @@ condition|)
 return|return
 operator|(
 name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|sc
+operator|=
+operator|&
+name|tu_softc
+index|[
+name|tuunit
+index|]
+operator|)
+operator|->
+name|sc_openf
+condition|)
+return|return
+operator|(
+name|EBUSY
 operator|)
 return|;
 name|olddens
