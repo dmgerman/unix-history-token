@@ -1868,6 +1868,11 @@ operator|*
 name|p
 operator|==
 literal|' '
+operator|||
+operator|*
+name|p
+operator|==
+literal|'\t'
 condition|)
 name|p
 operator|++

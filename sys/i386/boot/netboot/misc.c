@@ -1201,7 +1201,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|80
+literal|1024
 index|]
 decl_stmt|,
 modifier|*
@@ -1226,6 +1226,19 @@ condition|(
 operator|*
 name|p
 condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\n'
+condition|)
+name|putchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
 name|putchar
 argument_list|(
 operator|*
@@ -1233,6 +1246,7 @@ name|p
 operator|++
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
