@@ -1908,7 +1908,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|loadmodules
 parameter_list|(
 name|int
@@ -1922,6 +1922,11 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
+name|int
+name|loaded
+init|=
+literal|0
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -1960,7 +1965,10 @@ argument_list|)
 operator|==
 operator|-
 literal|1
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|ID0kldload
 argument_list|(
 name|module
@@ -1968,7 +1976,10 @@ argument_list|)
 operator|==
 operator|-
 literal|1
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|how
 operator|==
 name|LOAD_VERBOSLY
@@ -1982,6 +1993,12 @@ argument_list|,
 name|module
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|loaded
+operator|++
+expr_stmt|;
+block|}
 name|module
 operator|=
 name|va_arg
@@ -2001,6 +2018,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+name|loaded
+return|;
 block|}
 end_function
 

@@ -3559,7 +3559,9 @@ name|kldtried
 operator|++
 condition|)
 block|{
-comment|/* 	 * Attempt to load the tunnel interface KLD if it isn't loaded 	 * already.          */
+comment|/*          * Attempt to load the tunnel interface KLD if it isn't loaded          * already.          */
+if|if
+condition|(
 name|loadmodules
 argument_list|(
 name|LOAD_VERBOSLY
@@ -3568,6 +3570,11 @@ literal|"if_tun"
 argument_list|,
 name|NULL
 argument_list|)
+condition|)
+name|bundle
+operator|.
+name|unit
+operator|--
 expr_stmt|;
 continue|continue;
 block|}
