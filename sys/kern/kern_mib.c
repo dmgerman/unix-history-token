@@ -311,6 +311,26 @@ name|SYSCTL_STRING
 argument_list|(
 name|_kern
 argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ident
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|ident
+argument_list|,
+literal|0
+argument_list|,
+literal|"Kernel identifier"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_STRING
+argument_list|(
+name|_kern
+argument_list|,
 name|KERN_OSRELEASE
 argument_list|,
 name|osrelease
