@@ -94,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"console.h"
+file|"machine/console.h"
 end_include
 
 begin_include
