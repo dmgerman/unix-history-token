@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.53 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.54 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1231,6 +1231,8 @@ argument_list|,
 name|FileMode
 argument_list|,
 name|SFF_NOSLINK
+operator||
+name|SFF_REGONLY
 argument_list|)
 expr_stmt|;
 if|if

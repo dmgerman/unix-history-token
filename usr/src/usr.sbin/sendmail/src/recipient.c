@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.70 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.71 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3008,11 +3008,7 @@ decl_stmt|;
 name|int
 name|sfflags
 init|=
-name|forwarding
-condition|?
-name|SFF_MUSTOWN
-else|:
-name|SFF_ANYFILE
+name|SFF_REGONLY
 decl_stmt|;
 name|struct
 name|stat
@@ -3157,6 +3153,14 @@ argument_list|,
 name|geteuid
 argument_list|()
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|forwarding
+condition|)
+name|sfflags
+operator||=
+name|SFF_MUSTOWN
 expr_stmt|;
 name|ca
 operator|=

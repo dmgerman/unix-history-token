@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.19.1.1 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.33 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.19.1.1 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.33 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2732,7 +2732,7 @@ name|O_RDONLY
 argument_list|,
 literal|0
 argument_list|,
-name|SFF_ANYFILE
+name|SFF_REGONLY
 argument_list|)
 operator|)
 operator|==
