@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, University of Vermont and State  *  Agricultural College.  * Copyright (c) 1992, 1993, Garrett A. Wollman.  *  * Portions:  * Copyright (c) 1990, 1991, William F. Jolitz  * Copyright (c) 1990, The Regents of the University of California  *  * 3Com 3C507 support:  * Copyright (c) 1993, 1994, Charles M. Hannum  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	Vermont and State Agricultural College and Garrett A. Wollman,  *	by William F. Jolitz, by the University of California,  *	Berkeley, by Larwence Berkeley Laboratory, by Charles M. Hannum,  *	and their contributors.  * 4. Neither the names of the Universities nor the names of the authors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE UNIVERSITY OR AUTHORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ie.c,v 1.13 1994/09/02 23:23:57 ats Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993, University of Vermont and State  *  Agricultural College.  * Copyright (c) 1992, 1993, Garrett A. Wollman.  *  * Portions:  * Copyright (c) 1990, 1991, William F. Jolitz  * Copyright (c) 1990, The Regents of the University of California  *  * 3Com 3C507 support:  * Copyright (c) 1993, 1994, Charles M. Hannum  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	Vermont and State Agricultural College and Garrett A. Wollman,  *	by William F. Jolitz, by the University of California,  *	Berkeley, by Larwence Berkeley Laboratory, by Charles M. Hannum,  *	and their contributors.  * 4. Neither the names of the Universities nor the names of the authors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE UNIVERSITY OR AUTHORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ie.c,v 1.14 1994/09/05 22:28:31 ats Exp $  */
 end_comment
 
 begin_comment
@@ -244,27 +244,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|(
-name|NBPFILTER
-operator|>
-literal|0
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|MULTICAST
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|FILTER
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -273,11 +252,6 @@ modifier|*
 name|last_not_for_us
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -699,12 +673,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTICAST
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|void
@@ -715,11 +683,6 @@ name|unit
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -2249,18 +2212,12 @@ name|IFF_SIMPLEX
 operator||
 name|IFF_NOTRAILERS
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 name|ifp
 operator|->
 name|if_flags
 operator||=
 name|IFF_MULTICAST
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MULTICAST */
 name|ifp
 operator|->
 name|if_init
@@ -3478,12 +3435,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FILTER
-end_ifdef
-
 begin_comment
 comment|/*  * Compare two Ether/802 addresses for equality, inlined and  * unrolled for speed.  I'd love to have an inline assembler  * version of this...  */
 end_comment
@@ -3753,9 +3704,6 @@ expr_stmt|;
 comment|/* we don't need to see it */
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|MULTICAST
 comment|/*      * Not a multicast, so BPF wants to see it but we don't.      */
 if|if
 condition|(
@@ -3835,9 +3783,6 @@ literal|1
 return|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* MULTICAST */
 return|return
 literal|1
 return|;
@@ -3949,15 +3894,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FILTER */
-end_comment
 
 begin_comment
 comment|/*  * We want to isolate the bits that have meaning...  This assumes that  * IE_RBUF_SIZE is an even power of two.  If somehow the act_len exceeds  * the size of the buffer, then we are screwed anyway.  */
@@ -4262,9 +4198,6 @@ argument_list|)
 expr_stmt|;
 comment|/* ignore cast-qual warning here */
 comment|/*    * As quickly as possible, check if this packet is for us.    * If not, don't waste a single cycle copying the rest of the    * packet in.    * This is only a consideration when FILTER is defined; i.e., when    * we are either running BPF or doing multicasting.    */
-ifdef|#
-directive|ifdef
-name|FILTER
 if|if
 condition|(
 operator|!
@@ -4300,8 +4233,6 @@ operator|-
 literal|1
 return|;
 block|}
-endif|#
-directive|endif
 name|totlen
 operator|-=
 operator|(
@@ -5110,9 +5041,6 @@ operator|!
 name|m
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|FILTER
 if|if
 condition|(
 name|last_not_for_us
@@ -5196,9 +5124,6 @@ endif|#
 directive|endif
 comment|/* NBPFILTER> 0 */
 comment|/*    * In here there used to be code to check destination addresses upon    * receipt of a packet.  We have deleted that code, and replaced it    * with code to check the address much earlier in the cycle, before    * copying the data in; this saves us valuable cycles when operating    * as a multicast router or when using BPF.    */
-endif|#
-directive|endif
-comment|/* FILTER */
 name|eh
 operator|.
 name|ether_type
@@ -8745,9 +8670,6 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 case|case
 name|SIOCADDMULTI
 case|:
@@ -8806,9 +8728,6 @@ literal|0
 expr_stmt|;
 block|}
 break|break;
-endif|#
-directive|endif
-comment|/* MULTICAST */
 case|case
 name|SIOCSIFMTU
 case|:
@@ -8855,12 +8774,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTICAST
-end_ifdef
 
 begin_function
 specifier|static
@@ -9015,11 +8928,6 @@ literal|1
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
