@@ -579,7 +579,9 @@ end_comment
 begin_function
 name|void
 name|initring
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -625,19 +627,15 @@ begin_function
 name|void
 name|chargen_dg
 parameter_list|(
-name|s
-parameter_list|,
-name|sep
-parameter_list|)
-comment|/* Character generator */
 name|int
 name|s
-decl_stmt|;
+parameter_list|,
 name|struct
 name|servtab
 modifier|*
 name|sep
-decl_stmt|;
+parameter_list|)
+comment|/* Character generator */
 block|{
 name|struct
 name|sockaddr_storage
@@ -841,19 +839,15 @@ begin_function
 name|void
 name|chargen_stream
 parameter_list|(
-name|s
-parameter_list|,
-name|sep
-parameter_list|)
-comment|/* Character generator */
 name|int
 name|s
-decl_stmt|;
+parameter_list|,
 name|struct
 name|servtab
 modifier|*
 name|sep
-decl_stmt|;
+parameter_list|)
+comment|/* Character generator */
 block|{
 name|int
 name|len
@@ -1015,19 +1009,15 @@ begin_function
 name|void
 name|daytime_dg
 parameter_list|(
-name|s
-parameter_list|,
-name|sep
-parameter_list|)
-comment|/* Return human-readable time of day */
 name|int
 name|s
-decl_stmt|;
+parameter_list|,
 name|struct
 name|servtab
 modifier|*
 name|sep
-decl_stmt|;
+parameter_list|)
+comment|/* Return human-readable time of day */
 block|{
 name|char
 name|buffer
@@ -1163,20 +1153,15 @@ begin_function
 name|void
 name|daytime_stream
 parameter_list|(
-name|s
-parameter_list|,
-name|sep
-parameter_list|)
-comment|/* Return human-readable time of day */
 name|int
 name|s
-decl_stmt|;
+parameter_list|,
 name|struct
 name|servtab
 modifier|*
 name|sep
-name|__unused
-decl_stmt|;
+parameter_list|)
+comment|/* Return human-readable time of day */
 block|{
 name|char
 name|buffer
@@ -1246,20 +1231,15 @@ begin_function
 name|void
 name|discard_dg
 parameter_list|(
-name|s
-parameter_list|,
-name|sep
-parameter_list|)
-comment|/* Discard service -- ignore data */
 name|int
 name|s
-decl_stmt|;
+parameter_list|,
 name|struct
 name|servtab
 modifier|*
 name|sep
-name|__unused
-decl_stmt|;
+parameter_list|)
+comment|/* Discard service -- ignore data */
 block|{
 name|char
 name|buffer
@@ -1293,19 +1273,15 @@ begin_function
 name|void
 name|discard_stream
 parameter_list|(
-name|s
-parameter_list|,
-name|sep
-parameter_list|)
-comment|/* Discard service -- ignore data */
 name|int
 name|s
-decl_stmt|;
+parameter_list|,
 name|struct
 name|servtab
 modifier|*
 name|sep
-decl_stmt|;
+parameter_list|)
+comment|/* Discard service -- ignore data */
 block|{
 name|int
 name|ret
@@ -1383,19 +1359,15 @@ begin_function
 name|void
 name|echo_dg
 parameter_list|(
-name|s
-parameter_list|,
-name|sep
-parameter_list|)
-comment|/* Echo service -- echo data back */
 name|int
 name|s
-decl_stmt|;
+parameter_list|,
 name|struct
 name|servtab
 modifier|*
 name|sep
-decl_stmt|;
+parameter_list|)
+comment|/* Echo service -- echo data back */
 block|{
 name|char
 name|buffer
@@ -1506,19 +1478,15 @@ begin_function
 name|void
 name|echo_stream
 parameter_list|(
-name|s
-parameter_list|,
-name|sep
-parameter_list|)
-comment|/* Echo service -- echo data back */
 name|int
 name|s
-decl_stmt|;
+parameter_list|,
 name|struct
 name|servtab
 modifier|*
 name|sep
-decl_stmt|;
+parameter_list|)
+comment|/* Echo service -- echo data back */
 block|{
 name|char
 name|buffer
@@ -1638,27 +1606,21 @@ begin_function
 name|void
 name|iderror
 parameter_list|(
-name|lport
-parameter_list|,
-name|fport
-parameter_list|,
-name|s
-parameter_list|,
-name|er
-parameter_list|)
-comment|/* Generic ident_stream error-sending func */
 name|int
 name|lport
-decl_stmt|,
+parameter_list|,
+name|int
 name|fport
-decl_stmt|,
+parameter_list|,
+name|int
 name|s
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|er
-decl_stmt|;
+parameter_list|)
+comment|/* Generic ident_stream error-sending func */
 block|{
 name|char
 modifier|*
@@ -1733,19 +1695,15 @@ begin_function
 name|void
 name|ident_stream
 parameter_list|(
-name|s
-parameter_list|,
-name|sep
-parameter_list|)
-comment|/* Ident service (AKA "auth") */
 name|int
 name|s
-decl_stmt|;
+parameter_list|,
 name|struct
 name|servtab
 modifier|*
 name|sep
-decl_stmt|;
+parameter_list|)
+comment|/* Ident service (AKA "auth") */
 block|{
 name|struct
 name|utsname
@@ -3471,7 +3429,9 @@ begin_function
 name|unsigned
 name|long
 name|machtime
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|timeval
@@ -3545,18 +3505,14 @@ begin_function
 name|void
 name|machtime_dg
 parameter_list|(
-name|s
-parameter_list|,
-name|sep
-parameter_list|)
 name|int
 name|s
-decl_stmt|;
+parameter_list|,
 name|struct
 name|servtab
 modifier|*
 name|sep
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -3675,19 +3631,14 @@ begin_function
 name|void
 name|machtime_stream
 parameter_list|(
-name|s
-parameter_list|,
-name|sep
-parameter_list|)
 name|int
 name|s
-decl_stmt|;
+parameter_list|,
 name|struct
 name|servtab
 modifier|*
 name|sep
-name|__unused
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -3756,22 +3707,16 @@ name|int
 comment|/* # of characters upto \r,\n or \0 */
 name|getline
 parameter_list|(
-name|fd
-parameter_list|,
-name|buf
-parameter_list|,
-name|len
-parameter_list|)
 name|int
 name|fd
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|count
@@ -3926,11 +3871,9 @@ name|servtab
 modifier|*
 name|tcpmux
 parameter_list|(
-name|s
-parameter_list|)
 name|int
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|servtab
