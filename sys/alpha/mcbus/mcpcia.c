@@ -963,7 +963,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Register our interrupt service requirements with out parent. 	 */
+comment|/* 	 * Register our interrupt service requirements with our parent. 	 */
 name|rval
 operator|=
 name|BUS_SETUP_INTR
