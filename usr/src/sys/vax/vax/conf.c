@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)conf.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)conf.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3241,25 +3241,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|int
-name|logopen
-argument_list|()
-decl_stmt|,
-name|logclose
-argument_list|()
-decl_stmt|,
-name|logread
-argument_list|()
-decl_stmt|,
-name|logioctl
-argument_list|()
-decl_stmt|,
-name|logselect
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
 begin_include
 include|#
 directive|include
@@ -4157,6 +4138,32 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|int
+name|logopen
+argument_list|()
+decl_stmt|,
+name|logclose
+argument_list|()
+decl_stmt|,
+name|logread
+argument_list|()
+decl_stmt|,
+name|logioctl
+argument_list|()
+decl_stmt|,
+name|logselect
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
+name|fdopen
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int
@@ -5398,6 +5405,29 @@ block|,
 name|nodev
 block|,
 name|kdbstrategy
+block|,
+name|fdopen
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+comment|/*53*/
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|NULL
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|NULL
 block|, }
 decl_stmt|;
 end_decl_stmt
