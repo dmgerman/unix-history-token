@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_INTRQ_H_
+name|_NET_INTRQ_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_INTRQ_H_
+name|_NET_INTRQ_H_
 end_define
 
 begin_ifdef
@@ -23,65 +23,18 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|int
-name|atintrq1_present
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|int
-name|atintrq2_present
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|int
-name|atmintrq_present
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|int
-name|ipintrq_present
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|int
-name|ip6intrq_present
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|int
-name|ipxintrq_present
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|int
-name|natmintrq_present
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|int
-name|nsintrq_present
+name|family_enqueue
+name|__P
+argument_list|(
+operator|(
+name|sa_family_t
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +49,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _INTRQ_H_ */
+comment|/* _NET_INTRQ_H_ */
 end_comment
 
 end_unit
