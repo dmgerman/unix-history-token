@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: log.c,v 1.2 1997/08/18 07:16:03 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,7 +120,7 @@ name|passwd
 modifier|*
 name|pwd
 decl_stmt|;
-name|long
+name|time_t
 name|t
 decl_stmt|;
 if|if

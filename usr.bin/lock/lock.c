@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: lock.c,v 1.4 1997/07/21 12:09:34 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,6 +248,9 @@ decl_stmt|;
 name|struct
 name|timeval
 name|timval
+decl_stmt|;
+name|time_t
+name|timval_sec
 decl_stmt|;
 name|struct
 name|itimerval
@@ -523,14 +526,18 @@ operator|*
 literal|60
 operator|)
 expr_stmt|;
+name|timval_sec
+operator|=
+name|timval
+operator|.
+name|tv_sec
+expr_stmt|;
 name|timp
 operator|=
 name|localtime
 argument_list|(
 operator|&
-name|timval
-operator|.
-name|tv_sec
+name|timval_sec
 argument_list|)
 expr_stmt|;
 name|ap
