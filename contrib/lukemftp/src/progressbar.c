@@ -110,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|SECSPERHOUR
-value|60
+value|(60 * 60)
 end_define
 
 begin_define
