@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 106 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 107 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExGetObjectReference  *  * PARAMETERS:  ObjDesc         - Create a reference to this object  *              ReturnDesc         - Where to store the reference  *  * RETURN:      Status  *  * DESCRIPTION: Obtain and return a "reference" to the target object  *              Common code for the RefOfOp and the CondRefOfOp.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExGetObjectReference  *  * PARAMETERS:  ObjDesc             - Create a reference to this object  *              ReturnDesc          - Where to store the reference  *              WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Obtain and return a "reference" to the target object  *              Common code for the RefOfOp and the CondRefOfOp.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -73,10 +73,13 @@ modifier|*
 name|WalkState
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-init|=
-name|AE_OK
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ReferenceObj
+decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ReferencedObj
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
@@ -84,6 +87,11 @@ literal|"ExGetObjectReference"
 argument_list|,
 name|ObjDesc
 argument_list|)
+expr_stmt|;
+operator|*
+name|ReturnDesc
+operator|=
+name|NULL
 expr_stmt|;
 switch|switch
 condition|(
@@ -106,20 +114,13 @@ operator|!=
 name|INTERNAL_TYPE_REFERENCE
 condition|)
 block|{
-operator|*
-name|ReturnDesc
-operator|=
-name|NULL
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_OPERAND_TYPE
+argument_list|)
 expr_stmt|;
-name|Status
-operator|=
-name|AE_TYPE
-expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
 block|}
-comment|/*          * Not a Name -- an indirect name pointer would have          * been converted to a direct name pointer in AcpiExResolveOperands          */
+comment|/*          * Must be a reference to a Local or Arg          */
 switch|switch
 condition|(
 name|ObjDesc
@@ -135,31 +136,14 @@ case|:
 case|case
 name|AML_ARG_OP
 case|:
-name|Status
+comment|/* The referenced object is the pseudo-node for the local/arg */
+name|ReferencedObj
 operator|=
-name|AcpiDsMethodDataGetNode
-argument_list|(
 name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|Opcode
-argument_list|,
-name|ObjDesc
-operator|->
-name|Reference
-operator|.
-name|Offset
-argument_list|,
-name|WalkState
-argument_list|,
-name|ACPI_CAST_INDIRECT_PTR
-argument_list|(
-name|ACPI_NAMESPACE_NODE
-argument_list|,
-name|ReturnDesc
-argument_list|)
-argument_list|)
+name|Object
 expr_stmt|;
 break|break;
 default|default:
@@ -168,7 +152,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"(Internal) Unknown Ref subtype %02x\n"
+literal|"Unknown Reference subtype %X\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -178,52 +162,99 @@ name|Opcode
 operator|)
 argument_list|)
 expr_stmt|;
-operator|*
-name|ReturnDesc
-operator|=
-name|NULL
-expr_stmt|;
-name|Status
-operator|=
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_AML_INTERNAL
+argument_list|)
 expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
 block|}
 break|break;
 case|case
 name|ACPI_DESC_TYPE_NAMED
 case|:
-comment|/* Must be a named object;  Just return the Node */
-operator|*
-name|ReturnDesc
+comment|/*           * A named reference that has already been resolved to a Node          */
+name|ReferencedObj
 operator|=
 name|ObjDesc
 expr_stmt|;
 break|break;
 default|default:
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Invalid descriptor type %X in %p\n"
+operator|,
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
+operator|,
+name|ObjDesc
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_TYPE
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Create a new reference object */
+name|ReferenceObj
+operator|=
+name|AcpiUtCreateInternalObject
+argument_list|(
+name|INTERNAL_TYPE_REFERENCE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ReferenceObj
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
+expr_stmt|;
+block|}
+name|ReferenceObj
+operator|->
+name|Reference
+operator|.
+name|Opcode
+operator|=
+name|AML_REF_OF_OP
+expr_stmt|;
+name|ReferenceObj
+operator|->
+name|Reference
+operator|.
+name|Object
+operator|=
+name|ReferencedObj
+expr_stmt|;
 operator|*
 name|ReturnDesc
 operator|=
-name|NULL
+name|ReferenceObj
 expr_stmt|;
-name|Status
-operator|=
-name|AE_TYPE
-expr_stmt|;
-break|break;
-block|}
-name|Cleanup
-label|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Obj=%p Ref=%p\n"
+literal|"Object %p Type [%s], returning Reference %p\n"
 operator|,
 name|ObjDesc
+operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+name|ObjDesc
+argument_list|)
 operator|,
 operator|*
 name|ReturnDesc
@@ -232,7 +263,7 @@ argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|Status
+name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}

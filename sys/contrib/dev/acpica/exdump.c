@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 155 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 157 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -286,6 +286,21 @@ case|:
 name|AcpiOsPrintf
 argument_list|(
 literal|"Reference: Index %p\n"
+argument_list|,
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Object
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AML_REF_OF_OP
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"Reference: (RefOf) %p\n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1545,7 +1560,8 @@ operator|)
 operator|)
 condition|)
 block|{
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -1565,7 +1581,8 @@ argument_list|,
 name|ObjDesc
 argument_list|)
 expr_stmt|;
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 comment|/* Common Fields */
 name|AcpiExOutString

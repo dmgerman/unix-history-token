@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 59 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 61 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|"acdebug.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acdisasm.h"
 end_include
 
 begin_ifdef
@@ -450,7 +456,7 @@ block|}
 block|}
 block|}
 comment|/* Now we can display it */
-name|AcpiDbDisplayOp
+name|AcpiDmDisassemble
 argument_list|(
 name|WalkState
 argument_list|,
@@ -956,10 +962,6 @@ operator|!
 name|AcpiGbl_DbOpt_verbose
 condition|)
 block|{
-name|AcpiGbl_DbDisasmIndent
-operator|=
-literal|"    "
-expr_stmt|;
 name|AcpiGbl_DbOpt_disasm
 operator|=
 name|TRUE

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 61 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 62 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -54,6 +54,9 @@ parameter_list|,
 name|ACPI_TABLE_DESC
 modifier|*
 name|TableInfo
+parameter_list|,
+name|UINT8
+name|SearchType
 parameter_list|)
 block|{
 name|NATIVE_UINT
@@ -79,6 +82,24 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|(
+name|AcpiGbl_AcpiTableData
+index|[
+name|i
+index|]
+operator|.
+name|Flags
+operator|&
+name|ACPI_TABLE_TYPE_MASK
+operator|)
+operator|!=
+name|SearchType
+condition|)
+block|{
+continue|continue;
+block|}
 if|if
 condition|(
 operator|!
@@ -123,7 +144,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"ACPI Signature match %4.4s\n"
+literal|"Table [%4.4s] matched and is a required ACPI table\n"
 operator|,
 operator|(
 name|char
@@ -145,6 +166,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"Table [%4.4s] is not a required ACPI table - ignored\n"
+operator|,
+operator|(
+name|char
+operator|*
+operator|)
+name|Signature
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_TABLE_NOT_SUPPORTED
@@ -154,7 +190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInstallTable  *  * PARAMETERS:  TableInfo           - Return value from AcpiTbGetTable  *  * RETURN:      Status  *  * DESCRIPTION: Load and validate all tables other than the RSDT.  The RSDT must  *              already be loaded and validated.  *              Install the table into the global data structs.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInstallTable  *  * PARAMETERS:  TableInfo           - Return value from AcpiTbGetTableBody  *  * RETURN:      Status  *  * DESCRIPTION: Load and validate all tables other than the RSDT.  The RSDT must  *              already be loaded and validated.  *              Install the table into the global data structs.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -174,28 +210,6 @@ argument_list|(
 literal|"TbInstallTable"
 argument_list|)
 expr_stmt|;
-comment|/*      * Check the table signature and make sure it is recognized      * Also checks the header checksum      */
-name|Status
-operator|=
-name|AcpiTbRecognizeTable
-argument_list|(
-name|TableInfo
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Lock tables while installing */
 name|Status
 operator|=
@@ -212,6 +226,24 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Could not acquire table mutex for [%4.4s], %s\n"
+operator|,
+name|TableInfo
+operator|->
+name|Pointer
+operator|->
+name|Signature
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -230,6 +262,33 @@ argument_list|,
 name|TableInfo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Could not install ACPI table [%s], %s\n"
+operator|,
+name|TableInfo
+operator|->
+name|Pointer
+operator|->
+name|Signature
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -269,7 +328,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbRecognizeTable  *  * PARAMETERS:  TableInfo           - Return value from AcpiTbGetTable  *  * RETURN:      Status  *  * DESCRIPTION: Check a table signature for a match against known table types  *  * NOTE:  All table pointers are validated as follows:  *          1) Table pointer must point to valid physical memory  *          2) Signature must be 4 ASCII chars, even if we don't recognize the  *             name  *          3) Table must be readable for length specified in the header  *          4) Table checksum must be valid (with the exception of the FACS  *             which has no checksum for some odd reason)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbRecognizeTable  *  * PARAMETERS:  TableInfo           - Return value from AcpiTbGetTableBody  *  * RETURN:      Status  *  * DESCRIPTION: Check a table signature for a match against known table types  *  * NOTE:  All table pointers are validated as follows:  *          1) Table pointer must point to valid physical memory  *          2) Signature must be 4 ASCII chars, even if we don't recognize the  *             name  *          3) Table must be readable for length specified in the header  *          4) Table checksum must be valid (with the exception of the FACS  *             which has no checksum for some odd reason)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -279,6 +338,9 @@ parameter_list|(
 name|ACPI_TABLE_DESC
 modifier|*
 name|TableInfo
+parameter_list|,
+name|UINT8
+name|SearchType
 parameter_list|)
 block|{
 name|ACPI_TABLE_HEADER
@@ -326,6 +388,8 @@ operator|->
 name|Signature
 argument_list|,
 name|TableInfo
+argument_list|,
+name|SearchType
 argument_list|)
 expr_stmt|;
 if|if
@@ -375,46 +439,6 @@ name|TableHeader
 operator|->
 name|Length
 expr_stmt|;
-comment|/*      * Validate checksum for _most_ tables,      * even the ones whose signature we don't recognize      */
-if|if
-condition|(
-name|TableInfo
-operator|->
-name|Type
-operator|!=
-name|ACPI_TABLE_FACS
-condition|)
-block|{
-name|Status
-operator|=
-name|AcpiTbVerifyTableChecksum
-argument_list|(
-name|TableHeader
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-operator|(
-operator|!
-name|ACPI_CHECKSUM_ABORT
-operator|)
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-comment|/* Ignore the error if configuration says so */
-name|Status
-operator|=
-name|AE_OK
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

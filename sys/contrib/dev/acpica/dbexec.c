@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 41 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 42 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -542,6 +542,18 @@ name|Flags
 operator|=
 name|Flags
 expr_stmt|;
+name|ReturnObj
+operator|.
+name|Pointer
+operator|=
+name|NULL
+expr_stmt|;
+name|ReturnObj
+operator|.
+name|Length
+operator|=
+name|ACPI_ALLOCATE_BUFFER
+expr_stmt|;
 name|AcpiDbExecuteSetup
 argument_list|(
 operator|&
@@ -657,6 +669,18 @@ operator|.
 name|Pointer
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"No return object from execution of %s\n"
+argument_list|,
+name|AcpiGbl_DbMethodInfo
+operator|.
+name|Pathname
 argument_list|)
 expr_stmt|;
 block|}

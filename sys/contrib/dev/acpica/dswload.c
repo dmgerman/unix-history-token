@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 66 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -141,6 +141,9 @@ break|break;
 case|case
 literal|3
 case|:
+ifndef|#
+directive|ifndef
+name|ACPI_NO_METHOD_EXECUTION
 name|WalkState
 operator|->
 name|ParseFlags
@@ -161,6 +164,8 @@ name|AscendingCallback
 operator|=
 name|AcpiDsExecEndOp
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 return|return
@@ -434,6 +439,33 @@ name|Name
 operator|.
 name|Integer
 expr_stmt|;
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|ACPI_NO_METHOD_EXECUTION
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ACPI_CONSTANT_EVAL_ONLY
+argument_list|)
+operator|)
+name|Op
+operator|->
+name|Named
+operator|.
+name|Path
+operator|=
+operator|(
+name|UINT8
+operator|*
+operator|)
+name|Path
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*      * Put the Node in the "op" object that the parser uses, so we      * can get it again quickly when this scope is closed      */
 name|Op
 operator|->
@@ -552,6 +584,9 @@ name|OpInfo
 operator|->
 name|ObjectType
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ACPI_NO_METHOD_EXECUTION
 if|if
 condition|(
 name|WalkState
@@ -666,6 +701,8 @@ operator|)
 return|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|Op
@@ -1245,9 +1282,14 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|NewNode
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|ACPI_NO_METHOD_EXECUTION
 name|UINT32
 name|i
 decl_stmt|;
+endif|#
+directive|endif
 name|ACPI_FUNCTION_NAME
 argument_list|(
 literal|"DsLoad2EndOp"
@@ -1323,36 +1365,6 @@ name|WalkState
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Op
-operator|->
-name|Named
-operator|.
-name|Name
-operator|==
-name|ACPI_UINT16_MAX
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"Unnamed scope! Op=%p State=%p\n"
-operator|,
-name|Op
-operator|,
-name|WalkState
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
-block|}
 block|}
 name|ObjectType
 operator|=
@@ -1483,6 +1495,9 @@ operator|->
 name|Type
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|ACPI_NO_METHOD_EXECUTION
 case|case
 name|AML_TYPE_CREATE_FIELD
 case|:
@@ -1721,6 +1736,9 @@ name|NULL
 expr_stmt|;
 block|}
 break|break;
+endif|#
+directive|endif
+comment|/* ACPI_NO_METHOD_EXECUTION */
 case|case
 name|AML_TYPE_NAMED_COMPLEX
 case|:
@@ -1803,6 +1821,9 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+ifndef|#
+directive|ifndef
+name|ACPI_NO_METHOD_EXECUTION
 case|case
 name|AML_REGION_OP
 case|:
@@ -1858,6 +1879,9 @@ name|Op
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* ACPI_NO_METHOD_EXECUTION */
 default|default:
 comment|/* All NAMED_COMPLEX opcodes must be handled above */
 break|break;

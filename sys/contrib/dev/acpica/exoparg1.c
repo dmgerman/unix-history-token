@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 139 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 141 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -948,7 +948,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Get the object reference and store it */
+comment|/* Get the object reference, store it, and remove our reference */
 name|Status
 operator|=
 name|AcpiExGetObjectReference
@@ -988,6 +988,11 @@ literal|1
 index|]
 argument_list|,
 name|WalkState
+argument_list|)
+expr_stmt|;
+name|AcpiUtRemoveReference
+argument_list|(
+name|ReturnDesc2
 argument_list|)
 expr_stmt|;
 comment|/* The object exists in the namespace, return TRUE */
@@ -2016,6 +2021,37 @@ operator|=
 name|TempDesc
 expr_stmt|;
 break|break;
+case|case
+name|AML_REF_OF_OP
+case|:
+comment|/* Get the object to which the reference refers */
+name|TempDesc
+operator|=
+name|Operand
+index|[
+literal|0
+index|]
+operator|->
+name|Reference
+operator|.
+name|Object
+expr_stmt|;
+name|AcpiUtRemoveReference
+argument_list|(
+name|Operand
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|Operand
+index|[
+literal|0
+index|]
+operator|=
+name|TempDesc
+expr_stmt|;
+break|break;
 default|default:
 comment|/* Must be an Index op - handled below */
 break|break;
@@ -2161,7 +2197,6 @@ block|{
 case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
-comment|/* Ensure that the Buffer arguments are evaluated */
 name|TempDesc
 operator|=
 name|Operand
@@ -2173,12 +2208,6 @@ name|Reference
 operator|.
 name|Object
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|Status = AcpiDsGetBufferArguments (TempDesc);                     if (ACPI_FAILURE (Status))                     {                         goto Cleanup;                     }
-endif|#
-directive|endif
 comment|/*                      * Create a new object that contains one element of the                       * buffer -- the element pointed to by the index.                      *                      * NOTE: index into a buffer is NOT a pointer to a                      * sub-buffer of the main buffer, it is only a pointer to a                      * single element (byte) of the buffer!                      */
 name|ReturnDesc
 operator|=
@@ -2228,13 +2257,6 @@ break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-if|#
-directive|if
-literal|0
-comment|/* Ensure that the Package arguments are evaluated */
-block|Status = AcpiDsGetPackageArguments (Operand[0]->Reference.Object);                     if (ACPI_FAILURE (Status))                     {                         goto Cleanup;                     }
-endif|#
-directive|endif
 comment|/*                      * Return the referenced element of the package.  We must add                       * another reference to the referenced object, however.                      */
 name|ReturnDesc
 operator|=
@@ -2332,6 +2354,28 @@ name|Reference
 operator|.
 name|Object
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|ReturnDesc
+argument_list|)
+operator|==
+name|ACPI_DESC_TYPE_NAMED
+condition|)
+block|{
+name|ReturnDesc
+operator|=
+name|AcpiNsGetAttachedObject
+argument_list|(
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|ReturnDesc
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Add another reference to the object! */
 name|AcpiUtAddReference
 argument_list|(

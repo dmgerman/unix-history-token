@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 63 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 64 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -86,7 +86,7 @@ argument_list|(
 name|Signature
 argument_list|)
 operator|>
-literal|4
+name|ACPI_NAME_SIZE
 operator|)
 operator|||
 operator|(
@@ -95,7 +95,12 @@ argument_list|(
 name|OemId
 argument_list|)
 operator|>
-literal|6
+sizeof|sizeof
+argument_list|(
+name|Table
+operator|->
+name|OemId
+argument_list|)
 operator|)
 operator|||
 operator|(
@@ -104,7 +109,12 @@ argument_list|(
 name|OemTableId
 argument_list|)
 operator|>
-literal|8
+sizeof|sizeof
+argument_list|(
+name|Table
+operator|->
+name|OemTableId
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -199,7 +209,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetFirmwareTable  *  * PARAMETERS:  Signature       - Any ACPI table signature  *              Instance        - the non zero instance of the table, allows  *                                support for multiple tables of the same type  *              Flags           - 0: Physical/Virtual support  *              RetBuffer       - pointer to a structure containing a buffer to  *                                receive the table  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get an ACPI table.  The caller  *              supplies an OutBuffer large enough to contain the entire ACPI  *              table.  Upon completion  *              the OutBuffer->Length field will indicate the number of bytes  *              copied into the OutBuffer->BufPtr buffer.  This table will be  *              a complete table including the header.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetFirmwareTable  *  * PARAMETERS:  Signature       - Any ACPI table signature  *              Instance        - the non zero instance of the table, allows  *                                support for multiple tables of the same type  *              Flags           - Physical/Virtual support  *              RetBuffer       - pointer to a structure containing a buffer to  *                                receive the table  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get an ACPI table.  The caller  *              supplies an OutBuffer large enough to contain the entire ACPI  *              table.  Upon completion  *              the OutBuffer->Length field will indicate the number of bytes  *              copied into the OutBuffer->BufPtr buffer.  This table will be  *              a complete table including the header.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -227,26 +237,17 @@ decl_stmt|;
 name|ACPI_POINTER
 name|Address
 decl_stmt|;
-name|ACPI_TABLE_HEADER
-modifier|*
-name|RsdtPtr
-init|=
-name|NULL
-decl_stmt|;
-name|ACPI_TABLE_HEADER
-modifier|*
-name|TablePtr
-decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_SIZE
-name|RsdtSize
-init|=
-literal|0
+name|ACPI_TABLE_HEADER
+name|Header
 decl_stmt|;
-name|ACPI_SIZE
-name|TableSize
+name|ACPI_TABLE_DESC
+name|TableInfo
+decl_stmt|;
+name|ACPI_TABLE_DESC
+name|RsdtInfo
 decl_stmt|;
 name|UINT32
 name|TableCount
@@ -289,6 +290,12 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
+name|RsdtInfo
+operator|.
+name|Pointer
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -416,13 +423,11 @@ literal|0
 condition|)
 block|{
 comment|/* Nope, BAD Signature */
-name|Status
-operator|=
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_BAD_SIGNATURE
+argument_list|)
 expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
 block|}
 if|if
 condition|(
@@ -437,13 +442,11 @@ literal|0
 condition|)
 block|{
 comment|/* Nope, BAD Checksum */
-name|Status
-operator|=
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_BAD_CHECKSUM
+argument_list|)
 expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
 block|}
 block|}
 comment|/* Get the RSDT and validate it */
@@ -482,20 +485,22 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Insert ProcessorMode flags */
+name|Address
+operator|.
+name|PointerType
+operator||=
+name|Flags
+expr_stmt|;
 name|Status
 operator|=
-name|AcpiTbGetTablePointer
+name|AcpiTbGetTable
 argument_list|(
 operator|&
 name|Address
 argument_list|,
-name|Flags
-argument_list|,
 operator|&
-name|RsdtSize
-argument_list|,
-operator|&
-name|RsdtPtr
+name|RsdtInfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -516,7 +521,9 @@ name|Status
 operator|=
 name|AcpiTbValidateRsdt
 argument_list|(
-name|RsdtPtr
+name|RsdtInfo
+operator|.
+name|Pointer
 argument_list|)
 expr_stmt|;
 if|if
@@ -538,8 +545,18 @@ name|AcpiTbGetTableCount
 argument_list|(
 name|AcpiGbl_RSDP
 argument_list|,
-name|RsdtPtr
+name|RsdtInfo
+operator|.
+name|Pointer
 argument_list|)
+expr_stmt|;
+name|Address
+operator|.
+name|PointerType
+operator|=
+name|AcpiGbl_TableFlags
+operator||
+name|Flags
 expr_stmt|;
 comment|/*      * Search the RSDT/XSDT for the correct instance of the      * requested table      */
 for|for
@@ -560,13 +577,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Get the next table pointer */
-name|Address
-operator|.
-name|PointerType
-operator|=
-name|AcpiGbl_TableFlags
-expr_stmt|;
+comment|/* Get the next table pointer, handle RSDT vs. XSDT */
 if|if
 condition|(
 name|AcpiGbl_RSDP
@@ -587,7 +598,9 @@ operator|(
 name|RSDT_DESCRIPTOR
 operator|*
 operator|)
-name|RsdtPtr
+name|RsdtInfo
+operator|.
+name|Pointer
 operator|)
 operator|->
 name|TableOffsetEntry
@@ -611,7 +624,9 @@ operator|(
 name|XSDT_DESCRIPTOR
 operator|*
 operator|)
-name|RsdtPtr
+name|RsdtInfo
+operator|.
+name|Pointer
 operator|)
 operator|->
 name|TableOffsetEntry
@@ -621,21 +636,16 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Get addressibility if necessary */
+comment|/* Get the table header */
 name|Status
 operator|=
-name|AcpiTbGetTablePointer
+name|AcpiTbGetTableHeader
 argument_list|(
 operator|&
 name|Address
 argument_list|,
-name|Flags
-argument_list|,
 operator|&
-name|TableSize
-argument_list|,
-operator|&
-name|TablePtr
+name|Header
 argument_list|)
 expr_stmt|;
 if|if
@@ -656,18 +666,13 @@ condition|(
 operator|!
 name|ACPI_STRNCMP
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|TablePtr
+name|Header
+operator|.
+name|Signature
 argument_list|,
 name|Signature
 argument_list|,
-name|ACPI_STRLEN
-argument_list|(
-name|Signature
-argument_list|)
+name|ACPI_NAME_SIZE
 argument_list|)
 condition|)
 block|{
@@ -682,42 +687,44 @@ operator|>=
 name|Instance
 condition|)
 block|{
-comment|/* Found the correct instance */
+comment|/* Found the correct instance, get the entire table */
+name|Status
+operator|=
+name|AcpiTbGetTableBody
+argument_list|(
+operator|&
+name|Address
+argument_list|,
+operator|&
+name|Header
+argument_list|,
+operator|&
+name|TableInfo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|Cleanup
+goto|;
+block|}
 operator|*
 name|TablePointer
 operator|=
-name|TablePtr
+name|TableInfo
+operator|.
+name|Pointer
 expr_stmt|;
 goto|goto
 name|Cleanup
 goto|;
 block|}
-block|}
-comment|/* Delete table mapping if using virtual addressing */
-if|if
-condition|(
-operator|(
-name|TableSize
-operator|)
-operator|&&
-operator|(
-operator|(
-name|Flags
-operator|&
-name|ACPI_MEMORY_MODE
-operator|)
-operator|==
-name|ACPI_LOGICAL_ADDRESSING
-operator|)
-condition|)
-block|{
-name|AcpiOsUnmapMemory
-argument_list|(
-name|TablePtr
-argument_list|,
-name|TableSize
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 comment|/* Did not find the table */
@@ -727,19 +734,22 @@ name|AE_NOT_EXIST
 expr_stmt|;
 name|Cleanup
 label|:
-if|if
-condition|(
-name|RsdtSize
-condition|)
-block|{
 name|AcpiOsUnmapMemory
 argument_list|(
-name|RsdtPtr
+name|RsdtInfo
+operator|.
+name|Pointer
 argument_list|,
-name|RsdtSize
+operator|(
+name|ACPI_SIZE
+operator|)
+name|RsdtInfo
+operator|.
+name|Pointer
+operator|->
+name|Length
 argument_list|)
 expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

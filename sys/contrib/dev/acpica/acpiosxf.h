@@ -634,6 +634,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|AcpiOsRedirectOutput
+parameter_list|(
+name|void
+modifier|*
+name|Destination
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Debug input  */
 end_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 139 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 142 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -225,6 +225,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|NATIVE_CHAR
 modifier|*
@@ -247,11 +252,6 @@ name|ObjDesc
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|NATIVE_CHAR
@@ -702,6 +702,36 @@ parameter_list|(
 name|c
 parameter_list|)
 value|(_acpi_ctype[(unsigned char)(c)]& (_ACPI_LO))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_PRINT
+parameter_list|(
+name|c
+parameter_list|)
+value|(_acpi_ctype[(unsigned char)(c)]& (_ACPI_LO | _ACPI_UP | _ACPI_DI | _ACPI_SP | _ACPI_PU))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_ALPHA
+parameter_list|(
+name|c
+parameter_list|)
+value|(_acpi_ctype[(unsigned char)(c)]& (_ACPI_LO | _ACPI_UP))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_ASCII
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)< 0x80)
 end_define
 
 begin_endif

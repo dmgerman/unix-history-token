@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 114 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 115 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -466,6 +466,9 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
+case|case
+name|AML_REF_OF_OP
+case|:
 case|case
 name|AML_DEBUG_OP
 case|:

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 55 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 57 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -58,107 +58,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiLoadNamespace  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Load the name space from what ever is pointed to by DSDT.  *              (DSDT points to either the BIOS or a buffer.)  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|ACPI_STATUS
-name|AcpiNsLoadNamespace
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-literal|"AcpiLoadNameSpace"
-argument_list|)
-expr_stmt|;
-comment|/* There must be at least a DSDT installed */
-if|if
-condition|(
-name|AcpiGbl_DSDT
-operator|==
-name|NULL
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"DSDT is not in memory\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_ACPI_TABLES
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Load the namespace.  The DSDT is required,      * but the SSDT and PSDT tables are optional.      */
-name|Status
-operator|=
-name|AcpiNsLoadTableByType
-argument_list|(
-name|ACPI_TABLE_DSDT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Ignore exceptions from these */
-operator|(
-name|void
-operator|)
-name|AcpiNsLoadTableByType
-argument_list|(
-name|ACPI_TABLE_SSDT
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|AcpiNsLoadTableByType
-argument_list|(
-name|ACPI_TABLE_PSDT
-argument_list|)
-expr_stmt|;
-name|ACPI_DEBUG_PRINT_RAW
-argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|"ACPI Namespace successfully loaded at root %p\n"
-operator|,
-name|AcpiGbl_RootNode
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsOneParsePass  *  * PARAMETERS:  PassNumber              - 1 or 2  *              TableDesc               - The table to be parsed.  *  * RETURN:      Status  *  * DESCRIPTION: Perform one complete parse of an ACPI/AML table.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    NsOneCompleteParse  *  * PARAMETERS:  PassNumber              - 1 or 2  *              TableDesc               - The table to be parsed.  *  * RETURN:      Status  *  * DESCRIPTION: Perform one complete parse of an ACPI/AML table.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -192,10 +92,8 @@ expr_stmt|;
 comment|/* Create and init a Root Node */
 name|ParseRoot
 operator|=
-name|AcpiPsAllocOp
-argument_list|(
-name|AML_SCOPE_OP
-argument_list|)
+name|AcpiPsCreateScopeOp
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -209,14 +107,6 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-name|ParseRoot
-operator|->
-name|Named
-operator|.
-name|Name
-operator|=
-name|ACPI_ROOT_NAME
-expr_stmt|;
 comment|/* Create and initialize a new walk state */
 name|WalkState
 operator|=
@@ -404,6 +294,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_NO_METHOD_EXECUTION
+end_ifndef
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsLoadTable  *  * PARAMETERS:  TableDesc       - Descriptor for table to be loaded  *              Node            - Owning NS node  *  * RETURN:      Status  *  * DESCRIPTION: Load one ACPI table into the namespace  *  ******************************************************************************/
@@ -939,6 +835,106 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiLoadNamespace  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Load the name space from what ever is pointed to by DSDT.  *              (DSDT points to either the BIOS or a buffer.)  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiNsLoadNamespace
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+literal|"AcpiLoadNameSpace"
+argument_list|)
+expr_stmt|;
+comment|/* There must be at least a DSDT installed */
+if|if
+condition|(
+name|AcpiGbl_DSDT
+operator|==
+name|NULL
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"DSDT is not in memory\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_ACPI_TABLES
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Load the namespace.  The DSDT is required,      * but the SSDT and PSDT tables are optional.      */
+name|Status
+operator|=
+name|AcpiNsLoadTableByType
+argument_list|(
+name|ACPI_TABLE_DSDT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Ignore exceptions from these */
+operator|(
+name|void
+operator|)
+name|AcpiNsLoadTableByType
+argument_list|(
+name|ACPI_TABLE_SSDT
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|AcpiNsLoadTableByType
+argument_list|(
+name|ACPI_TABLE_PSDT
+argument_list|)
+expr_stmt|;
+name|ACPI_DEBUG_PRINT_RAW
+argument_list|(
+operator|(
+name|ACPI_DB_OK
+operator|,
+literal|"ACPI Namespace successfully loaded at root %p\n"
+operator|,
+name|AcpiGbl_RootNode
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDeleteSubtree  *  * PARAMETERS:  StartHandle         - Handle in namespace where search begins  *  * RETURNS      Status  *  * DESCRIPTION: Walks the namespace starting at the given handle and deletes  *              all objects, entries, and scopes in the entire subtree.  *  *              Namespace/Interpreter should be locked or the subsystem should  *              be in shutdown before this routine is called.  *  ******************************************************************************/
 end_comment
 
@@ -1170,6 +1166,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

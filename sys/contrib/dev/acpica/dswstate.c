@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 65 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 67 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2013,9 +2013,21 @@ operator|=
 name|Thread
 expr_stmt|;
 comment|/* Init the method args/local */
-ifndef|#
-directive|ifndef
-name|_ACPI_ASL_COMPILER
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|ACPI_NO_METHOD_EXECUTION
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|ACPI_CONSTANT_EVAL_ONLY
+argument_list|)
+operator|)
 name|AcpiDsMethodDataInit
 argument_list|(
 name|WalkState
@@ -2066,12 +2078,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ACPI_ASL_COMPILER
-end_ifndef
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsInitAmlWalk  *  * PARAMETERS:  WalkState       - New state to be initialized  *  * RETURN:      None  *  * DESCRIPTION: Initialize a walk state for a pass 1 or 2 parse tree walk  *  ******************************************************************************/
@@ -2365,11 +2371,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsDeleteWalkState  *  * PARAMETERS:  WalkState       - State to delete  *  * RETURN:      Status  *  * DESCRIPTION: Delete a walk state including all internal data structures  *  ******************************************************************************/

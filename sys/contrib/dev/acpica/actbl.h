@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actbl.h - Table data structures defined in ACPI specification  *       $Revision: 52 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actbl.h - Table data structures defined in ACPI specification  *       $Revision: 53 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -567,21 +567,56 @@ begin_define
 define|#
 directive|define
 name|ACPI_TABLE_SINGLE
-value|0
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_TABLE_MULTIPLE
-value|1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_TABLE_EXECUTABLE
-value|2
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TABLE_ROOT
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TABLE_PRIMARY
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TABLE_SECONDARY
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TABLE_OTHER
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TABLE_TYPE_MASK
+value|0x30
 end_define
 
 begin_comment

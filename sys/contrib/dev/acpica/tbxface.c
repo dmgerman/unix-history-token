@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 57 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 58 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -61,11 +61,6 @@ name|RsdpAddress
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
-decl_stmt|;
-name|UINT32
-name|NumberOfTables
-init|=
-literal|0
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -150,10 +145,7 @@ comment|/* Get the RSDT via the RSDP */
 name|Status
 operator|=
 name|AcpiTbGetTableRsdt
-argument_list|(
-operator|&
-name|NumberOfTables
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -179,13 +171,11 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
-comment|/* Now get the rest of the tables */
+comment|/* Now get the tables needed by this subsystem (FADT, DSDT, etc.) */
 name|Status
 operator|=
-name|AcpiTbGetAllTables
-argument_list|(
-name|NumberOfTables
-argument_list|)
+name|AcpiTbGetRequiredTables
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -322,6 +312,8 @@ operator|.
 name|PointerType
 operator|=
 name|ACPI_LOGICAL_POINTER
+operator||
+name|ACPI_LOGICAL_ADDRESSING
 expr_stmt|;
 name|Address
 operator|.
@@ -333,10 +325,12 @@ name|TablePtr
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiTbGetTable
+name|AcpiTbGetTableBody
 argument_list|(
 operator|&
 name|Address
+argument_list|,
+name|TablePtr
 argument_list|,
 operator|&
 name|TableInfo
@@ -373,7 +367,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* Free table allocated by AcpiTbGetTable */
+comment|/* Free table allocated by AcpiTbGetTableBody */
 name|AcpiTbDeleteSingleTable
 argument_list|(
 operator|&

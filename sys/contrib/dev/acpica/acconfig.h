@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 104 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 107 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20020611
+value|0x20020725
 end_define
 
 begin_comment
@@ -361,6 +361,52 @@ define|#
 directive|define
 name|ACPI_MAX_ADDRESS_SPACE
 value|255
+end_define
+
+begin_comment
+comment|/* Array sizes.  Used for range checking also */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUM_ACCESS_TYPES
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUM_UPDATE_RULES
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUM_LOCK_RULES
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUM_MATCH_OPS
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUM_OPCODES
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUM_FIELD_NAMES
+value|2
 end_define
 
 begin_comment

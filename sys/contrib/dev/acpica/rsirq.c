@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsirq - IRQ resource descriptors  *              $Revision: 28 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsirq - IRQ resource descriptors  *              $Revision: 30 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -205,20 +205,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|i
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* Zero interrupts is invalid! */
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_BAD_DATA
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* Zero interrupts is valid */
 name|OutputStruct
 operator|->
 name|Data
@@ -229,26 +216,28 @@ name|NumberOfInterrupts
 operator|=
 name|i
 expr_stmt|;
-comment|/*      * Calculate the structure size based upon the number of interrupts      */
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
+comment|/*          * Calculate the structure size based upon the number of interrupts          */
 name|StructSize
 operator|+=
 operator|(
 operator|(
 name|ACPI_SIZE
 operator|)
-name|OutputStruct
-operator|->
-name|Data
-operator|.
-name|Irq
-operator|.
-name|NumberOfInterrupts
+name|i
 operator|-
 literal|1
 operator|)
 operator|*
 literal|4
 expr_stmt|;
+block|}
 comment|/*      * Point to Byte 3 if it is used      */
 if|if
 condition|(
@@ -329,6 +318,15 @@ block|}
 else|else
 block|{
 comment|/*                  * Only _LL and _HE polarity/trigger interrupts                  * are allowed (ACPI spec v1.0b ection 6.4.2.1),                  * so an error will occur if we reach this point                  */
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Invalid interrupt polarity/trigger in resource list\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_BAD_DATA

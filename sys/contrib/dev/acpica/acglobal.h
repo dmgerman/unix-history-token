@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 125 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 128 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -97,6 +97,13 @@ begin_decl_stmt
 name|ACPI_EXTERN
 name|UINT32
 name|AcpiGbl_TableFlags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|UINT32
+name|AcpiGbl_RsdtTableCount
 decl_stmt|;
 end_decl_stmt
 
@@ -403,6 +410,18 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|NATIVE_CHAR
+modifier|*
+name|AcpiGbl_RegionTypes
+index|[
+name|ACPI_NUM_PREDEFINED_REGIONS
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*****************************************************************************  *  * Namespace globals  *  ****************************************************************************/
 end_comment
@@ -671,6 +690,31 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|ACPI_DISASSEMBLER
+end_ifdef
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|BOOLEAN
+name|AcpiGbl_DbOpt_disasm
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|BOOLEAN
+name|AcpiGbl_DbOpt_verbose
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ENABLE_DEBUGGER
 end_ifdef
 
@@ -713,21 +757,7 @@ end_decl_stmt
 begin_decl_stmt
 name|ACPI_EXTERN
 name|BOOLEAN
-name|AcpiGbl_DbOpt_disasm
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|BOOLEAN
 name|AcpiGbl_DbOpt_stats
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|BOOLEAN
-name|AcpiGbl_DbOpt_verbose
 decl_stmt|;
 end_decl_stmt
 
@@ -809,14 +839,6 @@ name|ACPI_EXTERN
 name|NATIVE_CHAR
 modifier|*
 name|AcpiGbl_DbFilename
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_DbDisasmIndent
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acfreebsd.h - OS specific defines, etc.  *       $Revision: 7 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acfreebsd.h - OS specific defines, etc.  *       $Revision: 9 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|"acgcc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/acpica_machdep.h>
 end_include
 
 begin_ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 100 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 102 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -60,6 +60,60 @@ argument_list|(
 literal|"exutils"
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExValidateObjectType  *  * PARAMETERS:  Type            Object type to validate  *  * DESCRIPTION: Determine if a type is a valid ACPI object type  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|BOOLEAN
+name|AcpiExValidateObjectType
+parameter_list|(
+name|ACPI_OBJECT_TYPE
+name|Type
+parameter_list|)
+block|{
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|Type
+operator|>
+name|ACPI_TYPE_MAX
+operator|&&
+name|Type
+operator|<
+name|INTERNAL_TYPE_BEGIN
+operator|)
+operator|||
+operator|(
+name|Type
+operator|>
+name|INTERNAL_TYPE_MAX
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_NO_METHOD_EXECUTION
+end_ifndef
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiExEnterInterpreter  *  * PARAMETERS:  None  *  * DESCRIPTION: Enter the interpreter execution region.  Failure to enter  *              the interpreter region is a fatal system error  *  ******************************************************************************/
@@ -155,54 +209,6 @@ expr_stmt|;
 block|}
 name|return_VOID
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExValidateObjectType  *  * PARAMETERS:  Type            Object type to validate  *  * DESCRIPTION: Determine if a type is a valid ACPI object type  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|BOOLEAN
-name|AcpiExValidateObjectType
-parameter_list|(
-name|ACPI_OBJECT_TYPE
-name|Type
-parameter_list|)
-block|{
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|Type
-operator|>
-name|ACPI_TYPE_MAX
-operator|&&
-name|Type
-operator|<
-name|INTERNAL_TYPE_BEGIN
-operator|)
-operator|||
-operator|(
-name|Type
-operator|>
-name|INTERNAL_TYPE_MAX
-operator|)
-condition|)
-block|{
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
 block|}
 end_function
 
@@ -395,6 +401,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 
@@ -741,6 +749,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

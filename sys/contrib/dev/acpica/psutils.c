@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psutils - Parser miscellaneous utilities (Parser only)  *              $Revision: 51 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psutils - Parser miscellaneous utilities (Parser only)  *              $Revision: 54 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -25,6 +25,12 @@ directive|include
 file|"amlcode.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acnamesp.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -38,6 +44,57 @@ argument_list|(
 literal|"psutils"
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsCreateScopeOp  *  * PARAMETERS:  None  *  * RETURN:      ScopeOp  *  * DESCRIPTION: Create a Scope and associated namepath op with the root name  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|AcpiPsCreateScopeOp
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ScopeOp
+decl_stmt|;
+name|ScopeOp
+operator|=
+name|AcpiPsAllocOp
+argument_list|(
+name|AML_SCOPE_OP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ScopeOp
+condition|)
+block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+name|ScopeOp
+operator|->
+name|Named
+operator|.
+name|Name
+operator|=
+name|ACPI_ROOT_NAME
+expr_stmt|;
+return|return
+operator|(
+name|ScopeOp
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsInitOp  *  * PARAMETERS:  Op              - A newly allocated Op object  *              Opcode          - Opcode to store in the Op  *  * RETURN:      Status  *  * DESCRIPTION: Allocate an acpi_op, choose op type (and thus size) based on  *              opcode  *  ******************************************************************************/
@@ -74,7 +131,7 @@ name|AmlOpcode
 operator|=
 name|Opcode
 expr_stmt|;
-name|ACPI_DEBUG_ONLY_MEMBERS
+name|ACPI_DISASM_ONLY_MEMBERS
 argument_list|(
 name|ACPI_STRNCPY
 argument_list|(
@@ -332,7 +389,7 @@ operator|->
 name|Common
 operator|.
 name|Flags
-operator|==
+operator|&
 name|ACPI_PARSEOP_GENERIC
 condition|)
 block|{

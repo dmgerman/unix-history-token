@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 95 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 99 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -29,11 +29,22 @@ directive|ifdef
 name|_ACPI_DUMP_APP
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MSDOS
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|ACPI_DEBUG
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -44,19 +55,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|ENABLE_DEBUGGER
+name|ACPI_DISASSEMBLER
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NO_METHOD_EXECUTION
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_USE_SYSTEM_CLIBRARY
-end_define
-
-begin_define
-define|#
-directive|define
-name|PARSER_ONLY
 end_define
 
 begin_endif
@@ -104,6 +115,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_DISASSEMBLER
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_USE_SYSTEM_CLIBRARY
 end_define
 
@@ -130,9 +147,17 @@ directive|define
 name|ACPI_APPLICATION
 end_define
 
-begin_comment
-comment|/* #define ENABLE_DEBUGGER */
-end_comment
+begin_define
+define|#
+directive|define
+name|ACPI_DISASSEMBLER
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_CONSTANT_EVAL_ONLY
+end_define
 
 begin_define
 define|#
@@ -429,7 +454,7 @@ name|ACPI_USE_SYSTEM_CLIBRARY
 end_ifdef
 
 begin_comment
-comment|/*  * Use the standard C library headers.  * We want to keep these to a minimum.  *  */
+comment|/*  * Use the standard C library headers.  * We want to keep these to a minimum.  */
 end_comment
 
 begin_ifdef
@@ -671,6 +696,27 @@ define|#
 directive|define
 name|ACPI_IS_UPPER
 value|isupper
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_PRINT
+value|isprint
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_ALPHA
+value|isalpha
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_ASCII
+value|isascii
 end_define
 
 begin_comment

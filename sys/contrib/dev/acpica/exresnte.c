@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 57 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -506,7 +506,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Unsupported reference opcode %X\n"
+literal|"Unsupported Reference opcode %X\n"
 operator|,
 name|SourceDesc
 operator|->

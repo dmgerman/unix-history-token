@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 124 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 126 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1159,12 +1159,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ACPI_DEBUG
+name|ACPI_DISASSEMBLER
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|ENABLE_DEBUGGER
+name|ACPI_DEBUG
 argument_list|)
 end_if
 
@@ -1215,6 +1215,41 @@ parameter_list|,
 name|Flags
 parameter_list|)
 value|{PArgs,IArgs,Flags,ObjType,Class,Type}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DISASSEMBLER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DISASM_ONLY_MEMBERS
+parameter_list|(
+name|a
+parameter_list|)
+value|a;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_DISASM_ONLY_MEMBERS
+parameter_list|(
+name|a
+parameter_list|)
 end_define
 
 begin_endif
@@ -1884,12 +1919,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_OPCODE_NAMES
-end_define
-
-begin_define
-define|#
-directive|define
 name|_VERBOSE_STRUCTURES
 end_define
 
@@ -2356,23 +2385,6 @@ name|s
 parameter_list|)
 value|return(s)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENABLE_DEBUGGER
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_OPCODE_NAMES
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

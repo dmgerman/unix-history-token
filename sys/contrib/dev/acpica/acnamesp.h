@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acnamesp.h - Namespace subcomponent prototypes and defines  *       $Revision: 125 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acnamesp.h - Namespace subcomponent prototypes and defines  *       $Revision: 126 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -82,11 +82,11 @@ begin_define
 define|#
 directive|define
 name|ACPI_ROOT_NAME
-value|(UINT32) 0x2F202020
+value|(UINT32) 0x5F5F5F5C
 end_define
 
 begin_comment
-comment|/* Root name is     "/   " */
+comment|/* Root name is     "\___" */
 end_comment
 
 begin_define

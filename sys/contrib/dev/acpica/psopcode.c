@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psopcode - Parser/Interpreter opcode information table  *              $Revision: 70 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psopcode - Parser/Interpreter opcode information table  *              $Revision: 71 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -5406,7 +5406,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUG
+name|ACPI_DISASSEMBLER
 specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*

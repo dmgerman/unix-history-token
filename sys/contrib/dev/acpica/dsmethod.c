@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 86 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 87 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -696,10 +696,8 @@ block|}
 comment|/* Create and init a Root Node */
 name|Op
 operator|=
-name|AcpiPsAllocOp
-argument_list|(
-name|AML_SCOPE_OP
-argument_list|)
+name|AcpiPsCreateScopeOp
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

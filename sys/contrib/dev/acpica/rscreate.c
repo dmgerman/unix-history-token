@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscreate - Create resource lists/tables  *              $Revision: 57 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscreate - Create resource lists/tables  *              $Revision: 58 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreateResourceList  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource byte stream  *              OutputBuffer            - Pointer to the user's buffer  *              OutputBufferLength      - Pointer to the size of OutputBuffer  *  * RETURN:      Status  - AE_OK if okay, else a valid ACPI_STATUS code  *              If OutputBuffer is not large enough, OutputBufferLength  *              indicates how large OutputBuffer should be, else it  *              indicates how may UINT8 elements of OutputBuffer are valid.  *  * DESCRIPTION: Takes the byte stream returned from a _CRS, _PRS control method  *              execution and parses the stream to create a linked list  *              of device resources.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreateResourceList  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource byte stream  *              OutputBuffer            - Pointer to the user's buffer  *  * RETURN:      Status  - AE_OK if okay, else a valid ACPI_STATUS code  *              If OutputBuffer is not large enough, OutputBufferLength  *              indicates how large OutputBuffer should be, else it  *              indicates how may UINT8 elements of OutputBuffer are valid.  *  * DESCRIPTION: Takes the byte stream returned from a _CRS, _PRS control method  *              execution and parses the stream to create a linked list  *              of device resources.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -240,7 +240,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreatePciRoutingTable  *  * PARAMETERS:  PackageObject           - Pointer to an ACPI_OPERAND_OBJECT  *                                        package  *              OutputBuffer            - Pointer to the user's buffer  *              OutputBufferLength      - Size of OutputBuffer  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBuffer->Length will point  *              to the size buffer needed.  *  * DESCRIPTION: Takes the ACPI_OPERAND_OBJECT  package and creates a  *              linked list of PCI interrupt descriptions  *  * NOTE: It is the caller's responsibility to ensure that the start of the  * output buffer is aligned properly (if necessary).  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreatePciRoutingTable  *  * PARAMETERS:  PackageObject           - Pointer to an ACPI_OPERAND_OBJECT  *                                        package  *              OutputBuffer            - Pointer to the user's buffer  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBuffer->Length will point  *              to the size buffer needed.  *  * DESCRIPTION: Takes the ACPI_OPERAND_OBJECT  package and creates a  *              linked list of PCI interrupt descriptions  *  * NOTE: It is the caller's responsibility to ensure that the start of the  * output buffer is aligned properly (if necessary).  *  ******************************************************************************/
 end_comment
 
 begin_function

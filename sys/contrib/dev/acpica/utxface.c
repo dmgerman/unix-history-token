@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 96 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 97 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -436,6 +436,36 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInitializeObjects  *  * PARAMETERS:  Flags           - Init/enable Options  *  * RETURN:      Status  *  * DESCRIPTION: Completes namespace initialization by initializing device   *              objects and executing AML code for Regions, buffers, etc.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiInitializeObjects
+parameter_list|(
+name|UINT32
+name|Flags
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+literal|"AcpiInitializeObjects"
+argument_list|)
+expr_stmt|;
 comment|/*      * Initialize all device objects in the namespace      * This runs the _STA and _INI methods.      */
 if|if
 condition|(

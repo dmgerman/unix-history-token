@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg2 - AML execution - opcodes with 2 arguments  *              $Revision: 108 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg2 - AML execution - opcodes with 2 arguments  *              $Revision: 109 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -933,7 +933,18 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Index value beyond package end\n"
+literal|"Index value (%X) beyond package end (%X)\n"
+operator|,
+name|Index
+operator|,
+name|Operand
+index|[
+literal|0
+index|]
+operator|->
+name|Package
+operator|.
+name|Count
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1109,7 +1120,18 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Index value beyond end of buffer\n"
+literal|"Index value (%X) beyond end of buffer (%X)\n"
+operator|,
+name|Index
+operator|,
+name|Operand
+index|[
+literal|0
+index|]
+operator|->
+name|Buffer
+operator|.
+name|Length
 operator|)
 argument_list|)
 expr_stmt|;

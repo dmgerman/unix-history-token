@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 63 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 67 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -31,11 +31,17 @@ directive|include
 file|"actables.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
 name|ENABLE_DEBUGGER
-end_ifdef
+operator|||
+name|defined
+name|ACPI_DISASSEMBLER
+operator|)
+end_if
 
 begin_define
 define|#
@@ -184,6 +190,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENABLE_DEBUGGER
+end_ifdef
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbCloseDebugFile  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: If open, close the current debug output file  *  ******************************************************************************/
 end_comment
@@ -296,6 +308,11 @@ directive|endif
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -399,10 +416,10 @@ name|TableHeader
 operator|.
 name|Length
 operator|>
-literal|524288
+literal|0x800000
 operator|)
 condition|)
-comment|/* 1/2 Mbyte should be enough */
+comment|/* 8 Mbyte should be enough */
 block|{
 name|AcpiOsPrintf
 argument_list|(
@@ -693,13 +710,37 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Install the new table into the local data structures */
 name|TableInfo
 operator|.
 name|Pointer
 operator|=
 name|TablePtr
 expr_stmt|;
+name|Status
+operator|=
+name|AcpiTbRecognizeTable
+argument_list|(
+operator|&
+name|TableInfo
+argument_list|,
+name|ACPI_TABLE_SECONDARY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Install the new table into the local data structures */
 name|Status
 operator|=
 name|AcpiTbInstallTable
@@ -729,9 +770,21 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|PARSER_ONLY
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|ACPI_NO_METHOD_EXECUTION
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|ACPI_CONSTANT_EVAL_ONLY
+argument_list|)
+operator|)
 name|Status
 operator|=
 name|AcpiNsLoadTable
@@ -828,8 +881,10 @@ operator|)
 return|;
 block|}
 comment|/* Get the entire file */
-name|AcpiOsPrintf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Loading Acpi table from file %s\n"
 argument_list|,
 name|Filename
@@ -977,15 +1032,15 @@ name|Status
 operator|)
 return|;
 block|}
-name|AcpiOsPrintf
+name|fprintf
 argument_list|(
-literal|"%4.4s at %p successfully installed and loaded\n"
+name|stderr
+argument_list|,
+literal|"Acpi table [%4.4s] successfully installed and loaded\n"
 argument_list|,
 name|AcpiGbl_DbTablePtr
 operator|->
 name|Signature
-argument_list|,
-name|AcpiGbl_DbTablePtr
 argument_list|)
 expr_stmt|;
 name|AcpiGbl_AcpiHardwarePresent
