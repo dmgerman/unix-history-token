@@ -1687,6 +1687,28 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|VM_OBJECT_TRYLOCK
+argument_list|(
+name|robject
+argument_list|)
+condition|)
+block|{
+comment|/* 					 * Avoid a potential deadlock. 					 */
+name|object
+operator|->
+name|ref_count
+operator|++
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
 operator|(
 name|robject
 operator|->
@@ -1732,6 +1754,12 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|robject
+argument_list|)
+expr_stmt|;
 name|vm_object_pip_sleep
 argument_list|(
 name|robject
@@ -1744,6 +1772,12 @@ argument_list|(
 name|object
 argument_list|,
 literal|"objde2"
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|robject
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -1767,12 +1801,6 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* XXX */
-name|VM_OBJECT_LOCK
-argument_list|(
-name|robject
-argument_list|)
-expr_stmt|;
 name|robject
 operator|->
 name|ref_count
@@ -1790,6 +1818,12 @@ name|object
 operator|=
 name|robject
 expr_stmt|;
+comment|/* XXX */
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_object_collapse
 argument_list|(
 name|object
@@ -1797,6 +1831,11 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|robject
+argument_list|)
+expr_stmt|;
 block|}
 name|VM_OBJECT_UNLOCK
 argument_list|(
