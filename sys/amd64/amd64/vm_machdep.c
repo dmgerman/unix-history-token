@@ -353,7 +353,7 @@ argument_list|)
 operator|==
 name|td1
 condition|)
-name|npxsave
+name|fpusave
 argument_list|(
 operator|&
 name|td1
@@ -699,7 +699,7 @@ argument_list|(
 name|fpcurthread
 argument_list|)
 condition|)
-name|npxdrop
+name|fpudrop
 argument_list|()
 expr_stmt|;
 block|}
@@ -857,7 +857,7 @@ operator|->
 name|pcb_flags
 operator|&=
 operator|~
-name|PCB_NPXINITDONE
+name|PCB_FPUINITDONE
 expr_stmt|;
 comment|/* 	 * Create a new fresh stack for the new thread. 	 * Don't forget to set this stack value into whatever supplies 	 * the address for the fault handlers. 	 * The contexts are filled in at the time we actually DO the 	 * upcall as only then do we know which KSE we got. 	 */
 name|bcopy

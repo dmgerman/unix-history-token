@@ -374,7 +374,7 @@ name|savefpu
 modifier|*
 name|addr
 decl_stmt|;
-comment|/* 	 * XXX mc_fpstate might be misaligned, since its declaration is not 	 * unportabilized using __attribute__((aligned(16))) like the 	 * declaration of struct savemm, and anyway, alignment doesn't work 	 * for auto variables since we don't use gcc's pessimal stack 	 * alignment.  Work around this by abusing the spare fields after 	 * mcp->mc_fpstate. 	 * 	 * XXX unpessimize most cases by only aligning when fxsave might be 	 * called, although this requires knowing too much about 	 * npxgetregs()'s internals. 	 */
+comment|/* 	 * XXX mc_fpstate might be misaligned, since its declaration is not 	 * unportabilized using __attribute__((aligned(16))) like the 	 * declaration of struct savemm, and anyway, alignment doesn't work 	 * for auto variables since we don't use gcc's pessimal stack 	 * alignment.  Work around this by abusing the spare fields after 	 * mcp->mc_fpstate. 	 * 	 * XXX unpessimize most cases by only aligning when fxsave might be 	 * called, although this requires knowing too much about 	 * fpugetregs()'s internals. 	 */
 name|addr
 operator|=
 operator|(
@@ -446,7 +446,7 @@ name|mcp
 operator|->
 name|mc_ownedfp
 operator|=
-name|npxgetregs
+name|fpugetregs
 argument_list|(
 name|td
 argument_list|,
@@ -505,7 +505,7 @@ name|mcp
 operator|->
 name|mc_fpformat
 operator|=
-name|npxformat
+name|fpuformat
 argument_list|()
 expr_stmt|;
 block|}
@@ -676,8 +676,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * XXX we violate the dubious requirement that npxsetregs() 		 * be called with interrupts disabled. 		 */
-name|npxsetregs
+comment|/* 		 * XXX we violate the dubious requirement that fpusetregs() 		 * be called with interrupts disabled. 		 */
+name|fpusetregs
 argument_list|(
 name|td
 argument_list|,

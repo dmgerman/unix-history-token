@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_debug_npx.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_isa.h"
 end_include
 
@@ -106,23 +100,6 @@ include|#
 directive|include
 file|<sys/rman.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NPX_DEBUG
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/syslog.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -214,7 +191,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * 387 and 287 Numeric Coprocessor Extension (NPX) Driver.  */
+comment|/*  * Floating point support.  */
 end_comment
 
 begin_if
@@ -448,7 +425,7 @@ end_typedef
 begin_function_decl
 specifier|static
 name|int
-name|npx_attach
+name|fpu_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -459,7 +436,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|npx_identify
+name|fpu_identify
 parameter_list|(
 name|driver_t
 modifier|*
@@ -474,7 +451,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|npx_probe
+name|fpu_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -515,14 +492,14 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|savefpu
-name|npx_cleanstate
+name|fpu_cleanstate
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|bool_t
-name|npx_cleanstate_ready
+name|fpu_cleanstate_ready
 decl_stmt|;
 end_decl_stmt
 
@@ -533,19 +510,15 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|npx_identify
+name|fpu_identify
 parameter_list|(
-name|driver
-parameter_list|,
-name|parent
-parameter_list|)
 name|driver_t
 modifier|*
 name|driver
-decl_stmt|;
+parameter_list|,
 name|device_t
 name|parent
-decl_stmt|;
+parameter_list|)
 block|{
 name|device_t
 name|child
@@ -558,7 +531,7 @@ name|parent
 argument_list|,
 literal|0
 argument_list|,
-literal|"npx"
+literal|"fpu"
 argument_list|,
 literal|0
 argument_list|)
@@ -571,45 +544,26 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"npx_identify"
+literal|"fpu_identify"
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Probe routine.  Initialize cr0 to give correct behaviour for [f]wait  * whether the device exists or not (XXX should be elsewhere).  * Modify device struct if npx doesn't need to use interrupts.  * Return 0 if device exists.  */
+comment|/*  * Probe routine.  Initialize cr0 to give correct behaviour for [f]wait  * whether the device exists or not (XXX should be elsewhere).  * Modify device struct if fpu doesn't need to use interrupts.  * Return 0 if device exists.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|npx_probe
+name|fpu_probe
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* 	 * Partially reset the coprocessor, if any.  Some BIOS's don't reset 	 * it after a warm boot. 	 */
-name|outb
-argument_list|(
-literal|0xf1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* full reset on some systems, NOP on others */
-name|outb
-argument_list|(
-literal|0xf0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* clear BUSY# latch */
-comment|/* 	 * Prepare to trap all ESC (i.e., NPX) instructions and all WAIT 	 * instructions.  We must set the CR0_MP bit and use the CR0_TS 	 * bit to control the trap, because setting the CR0_EM bit does 	 * not cause WAIT instructions to trap.  It's important to trap 	 * WAIT instructions - otherwise the "wait" variants of no-wait 	 * control instructions would degenerate to the "no-wait" variants 	 * after FP context switches but work correctly otherwise.  It's 	 * particularly important to trap WAITs when there is no NPX - 	 * otherwise the "wait" variants would always degenerate. 	 * 	 * Try setting CR0_NE to get correct error reporting on 486DX's. 	 * Setting it should fail or do nothing on lesser processors. 	 */
+comment|/* 	 * Prepare to trap all ESC (i.e., FPU) instructions and all WAIT 	 * instructions.  We must set the CR0_MP bit and use the CR0_TS 	 * bit to control the trap, because setting the CR0_EM bit does 	 * not cause WAIT instructions to trap.  It's important to trap 	 * WAIT instructions - otherwise the "wait" variants of no-wait 	 * control instructions would degenerate to the "no-wait" variants 	 * after FP context switches but work correctly otherwise.  It's 	 * particularly important to trap WAITs when there is no FPU - 	 * otherwise the "wait" variants would always degenerate. 	 * 	 * Try setting CR0_NE to get correct error reporting on 486DX's. 	 * Setting it should fail or do nothing on lesser processors. 	 */
 name|load_cr0
 argument_list|(
 name|rcr0
@@ -635,6 +589,11 @@ argument_list|,
 literal|"math processor"
 argument_list|)
 expr_stmt|;
+name|device_quiet
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -650,25 +609,23 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|npx_attach
+name|fpu_attach
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|register_t
 name|s
 decl_stmt|;
-name|npxinit
+name|fpuinit
 argument_list|(
-name|__INITIAL_NPXCW__
+name|__INITIAL_FPUCW__
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|npx_cleanstate_ready
+name|fpu_cleanstate_ready
 operator|==
 literal|0
 condition|)
@@ -684,13 +641,13 @@ expr_stmt|;
 name|fxsave
 argument_list|(
 operator|&
-name|npx_cleanstate
+name|fpu_cleanstate
 argument_list|)
 expr_stmt|;
 name|start_emulating
 argument_list|()
 expr_stmt|;
-name|npx_cleanstate_ready
+name|fpu_cleanstate_ready
 operator|=
 literal|1
 expr_stmt|;
@@ -715,13 +672,11 @@ end_comment
 
 begin_function
 name|void
-name|npxinit
+name|fpuinit
 parameter_list|(
-name|control
-parameter_list|)
 name|u_short
 name|control
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|struct
@@ -731,13 +686,13 @@ decl_stmt|;
 name|register_t
 name|savecrit
 decl_stmt|;
-comment|/* 	 * fninit has the same h/w bugs as fnsave.  Use the detoxified 	 * fnsave to throw away any junk in the fpu.  npxsave() initializes 	 * the fpu and sets fpcurthread = NULL as important side effects. 	 */
+comment|/* 	 * fninit has the same h/w bugs as fnsave.  Use the detoxified 	 * fnsave to throw away any junk in the fpu.  fpusave() initializes 	 * the fpu and sets fpcurthread = NULL as important side effects. 	 */
 name|savecrit
 operator|=
 name|intr_disable
 argument_list|()
 expr_stmt|;
-name|npxsave
+name|fpusave
 argument_list|(
 operator|&
 name|dummy
@@ -746,7 +701,7 @@ expr_stmt|;
 name|stop_emulating
 argument_list|()
 expr_stmt|;
-comment|/* XXX npxsave() doesn't actually initialize the fpu in the SSE case. */
+comment|/* XXX fpusave() doesn't actually initialize the fpu in the SSE case. */
 name|fninit
 argument_list|()
 expr_stmt|;
@@ -773,24 +728,14 @@ end_comment
 
 begin_function
 name|void
-name|npxexit
+name|fpuexit
 parameter_list|(
-name|td
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|NPX_DEBUG
-name|u_int
-name|masked_exceptions
-decl_stmt|;
-endif|#
-directive|endif
 name|register_t
 name|savecrit
 decl_stmt|;
@@ -808,7 +753,7 @@ argument_list|(
 name|fpcurthread
 argument_list|)
 condition|)
-name|npxsave
+name|fpusave
 argument_list|(
 operator|&
 name|PCPU_GET
@@ -824,59 +769,12 @@ argument_list|(
 name|savecrit
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NPX_DEBUG
-name|masked_exceptions
-operator|=
-name|GET_FPU_CW
-argument_list|(
-name|td
-argument_list|)
-operator|&
-name|GET_FPU_SW
-argument_list|(
-name|td
-argument_list|)
-operator|&
-literal|0x7f
-expr_stmt|;
-comment|/* 	 * Log exceptions that would have trapped with the old 	 * control word (overflow, divide by 0, and invalid operand). 	 */
-if|if
-condition|(
-name|masked_exceptions
-operator|&
-literal|0x0d
-condition|)
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"pid %d (%s) exited with masked floating point exceptions 0x%02x\n"
-argument_list|,
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_pid
-argument_list|,
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_comm
-argument_list|,
-name|masked_exceptions
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
 begin_function
 name|int
-name|npxformat
+name|fpuformat
 parameter_list|()
 block|{
 return|return
@@ -1293,7 +1191,7 @@ end_comment
 
 begin_function
 name|int
-name|npxtrap
+name|fputrap
 parameter_list|()
 block|{
 name|register_t
@@ -1404,7 +1302,7 @@ end_decl_stmt
 
 begin_function
 name|int
-name|npxdna
+name|fpudna
 parameter_list|()
 block|{
 name|struct
@@ -1430,7 +1328,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"npxdna: fpcurthread == curthread %d times\n"
+literal|"fpudna: fpcurthread == curthread %d times\n"
 argument_list|,
 operator|++
 name|err_count
@@ -1457,7 +1355,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"npxdna: fpcurthread = %p (%d), curthread = %p (%d)\n"
+literal|"fpudna: fpcurthread = %p (%d), curthread = %p (%d)\n"
 argument_list|,
 name|PCPU_GET
 argument_list|(
@@ -1484,7 +1382,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"npxdna"
+literal|"fpudna"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1496,7 +1394,7 @@ expr_stmt|;
 name|stop_emulating
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Record new context early in case frstor causes an IRQ13. 	 */
+comment|/* 	 * Record new context early in case frstor causes a trap. 	 */
 name|PCPU_SET
 argument_list|(
 name|fpcurthread
@@ -1518,7 +1416,7 @@ name|pcb
 operator|->
 name|pcb_flags
 operator|&
-name|PCB_NPXINITDONE
+name|PCB_FPUINITDONE
 operator|)
 operator|==
 literal|0
@@ -1530,7 +1428,7 @@ argument_list|()
 expr_stmt|;
 name|control
 operator|=
-name|__INITIAL_NPXCW__
+name|__INITIAL_FPUCW__
 expr_stmt|;
 name|fldcw
 argument_list|(
@@ -1542,12 +1440,12 @@ name|pcb
 operator|->
 name|pcb_flags
 operator||=
-name|PCB_NPXINITDONE
+name|PCB_FPUINITDONE
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * The following frstor may cause a trap when the state 		 * being restored has a pending error.  The error will 		 * appear to have been triggered by the current (npx) user 		 * instruction even when that instruction is a no-wait 		 * instruction that should not trigger an error (e.g., 		 * instructions are broken the same as frstor, so our 		 * treatment does not amplify the breakage. 		 */
+comment|/* 		 * The following frstor may cause a trap when the state 		 * being restored has a pending error.  The error will 		 * appear to have been triggered by the current (fpu) user 		 * instruction even when that instruction is a no-wait 		 * instruction that should not trigger an error (e.g., 		 * instructions are broken the same as frstor, so our 		 * treatment does not amplify the breakage. 		 */
 name|fxrstor
 argument_list|(
 operator|&
@@ -1571,20 +1469,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wrapper for fnsave instruction, partly to handle hardware bugs.  When npx  * exceptions are reported via IRQ13, spurious IRQ13's may be triggered by  * no-wait npx instructions.  See the Intel application note AP-578 for  * details.  This doesn't cause any additional complications here.  IRQ13's  * are inherently asynchronous unless the CPU is frozen to deliver them --  * one that started in userland may be delivered many instructions later,  * after the process has entered the kernel.  It may even be delivered after  * the fnsave here completes.  A spurious IRQ13 for the fnsave is handled in  * the same way as a very-late-arriving non-spurious IRQ13 from user mode:  * it is normally ignored at first because we set fpcurthread to NULL; it is  * normally retriggered in npxdna() after return to user mode.  *  * npxsave() must be called with interrupts disabled, so that it clears  * fpcurthread atomically with saving the state.  We require callers to do the  * disabling, since most callers need to disable interrupts anyway to call  * npxsave() atomically with checking fpcurthread.  *  * A previous version of npxsave() went to great lengths to excecute fnsave  * with interrupts enabled in case executing it froze the CPU.  This case  * can't happen, at least for Intel CPU/NPX's.  Spurious IRQ13's don't imply  * spurious freezes.  */
+comment|/*  * Wrapper for fnsave instruction.  *  * fpusave() must be called with interrupts disabled, so that it clears  * fpcurthread atomically with saving the state.  We require callers to do the  * disabling, since most callers need to disable interrupts anyway to call  * fpusave() atomically with checking fpcurthread.  */
 end_comment
 
 begin_function
 name|void
-name|npxsave
+name|fpusave
 parameter_list|(
-name|addr
-parameter_list|)
 name|struct
 name|savefpu
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|stop_emulating
 argument_list|()
@@ -1613,7 +1509,7 @@ end_comment
 
 begin_function
 name|void
-name|npxdrop
+name|fpudrop
 parameter_list|()
 block|{
 name|struct
@@ -1642,7 +1538,7 @@ operator|->
 name|pcb_flags
 operator|&=
 operator|~
-name|PCB_NPXINITDONE
+name|PCB_FPUINITDONE
 expr_stmt|;
 name|start_emulating
 argument_list|()
@@ -1656,22 +1552,18 @@ end_comment
 
 begin_function
 name|int
-name|npxgetregs
+name|fpugetregs
 parameter_list|(
-name|td
-parameter_list|,
-name|addr
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|savefpu
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|register_t
 name|s
@@ -1685,7 +1577,7 @@ name|td_pcb
 operator|->
 name|pcb_flags
 operator|&
-name|PCB_NPXINITDONE
+name|PCB_FPUINITDONE
 operator|)
 operator|==
 literal|0
@@ -1693,18 +1585,18 @@ condition|)
 block|{
 if|if
 condition|(
-name|npx_cleanstate_ready
+name|fpu_cleanstate_ready
 condition|)
 name|bcopy
 argument_list|(
 operator|&
-name|npx_cleanstate
+name|fpu_cleanstate
 argument_list|,
 name|addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|npx_cleanstate
+name|fpu_cleanstate
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1797,22 +1689,18 @@ end_comment
 
 begin_function
 name|void
-name|npxsetregs
+name|fpusetregs
 parameter_list|(
-name|td
-parameter_list|,
-name|addr
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|savefpu
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|register_t
 name|s
@@ -1875,7 +1763,7 @@ name|td_pcb
 operator|->
 name|pcb_flags
 operator||=
-name|PCB_NPXINITDONE
+name|PCB_FPUINITDONE
 expr_stmt|;
 block|}
 end_function
@@ -1883,7 +1771,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|npx_methods
+name|fpu_methods
 index|[]
 init|=
 block|{
@@ -1892,21 +1780,21 @@ name|DEVMETHOD
 argument_list|(
 name|device_identify
 argument_list|,
-name|npx_identify
+name|fpu_identify
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|npx_probe
+name|fpu_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|npx_attach
+name|fpu_attach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -1949,12 +1837,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|npx_driver
+name|fpu_driver
 init|=
 block|{
-literal|"npx"
+literal|"fpu"
 block|,
-name|npx_methods
+name|fpu_methods
 block|,
 literal|1
 block|,
@@ -1966,7 +1854,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|npx_devclass
+name|fpu_devclass
 decl_stmt|;
 end_decl_stmt
 
@@ -1977,13 +1865,13 @@ end_comment
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|npx
+name|fpu
 argument_list|,
 name|nexus
 argument_list|,
-name|npx_driver
+name|fpu_driver
 argument_list|,
-name|npx_devclass
+name|fpu_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -2006,7 +1894,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|isa_pnp_id
-name|npxisa_ids
+name|fpuisa_ids
 index|[]
 init|=
 block|{
@@ -2027,7 +1915,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
-name|npxisa_probe
+name|fpuisa_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -2036,9 +1924,6 @@ block|{
 name|int
 name|result
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|result
 operator|=
 name|ISA_PNP_PROBE
@@ -2050,19 +1935,20 @@ argument_list|)
 argument_list|,
 name|dev
 argument_list|,
-name|npxisa_ids
+name|fpuisa_ids
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|result
 operator|<=
 literal|0
 condition|)
-block|{
 name|device_quiet
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|result
@@ -2074,7 +1960,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|npxisa_attach
+name|fpuisa_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -2091,7 +1977,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|npxisa_methods
+name|fpuisa_methods
 index|[]
 init|=
 block|{
@@ -2100,14 +1986,14 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|npxisa_probe
+name|fpuisa_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|npxisa_attach
+name|fpuisa_attach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -2150,12 +2036,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|npxisa_driver
+name|fpuisa_driver
 init|=
 block|{
-literal|"npxisa"
+literal|"fpuisa"
 block|,
-name|npxisa_methods
+name|fpuisa_methods
 block|,
 literal|1
 block|,
@@ -2167,20 +2053,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|npxisa_devclass
+name|fpuisa_devclass
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|npxisa
+name|fpuisa
 argument_list|,
 name|isa
 argument_list|,
-name|npxisa_driver
+name|fpuisa_driver
 argument_list|,
-name|npxisa_devclass
+name|fpuisa_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -2192,13 +2078,13 @@ end_expr_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|npxisa
+name|fpuisa
 argument_list|,
 name|acpi
 argument_list|,
-name|npxisa_driver
+name|fpuisa_driver
 argument_list|,
-name|npxisa_devclass
+name|fpuisa_devclass
 argument_list|,
 literal|0
 argument_list|,

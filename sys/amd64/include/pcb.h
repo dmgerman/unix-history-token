@@ -92,7 +92,7 @@ name|pcb_flags
 decl_stmt|;
 define|#
 directive|define
-name|PCB_NPXINITDONE
+name|PCB_FPUINITDONE
 value|0x01
 comment|/* fpu state is initialized */
 define|#

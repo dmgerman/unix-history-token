@@ -38,7 +38,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* "Math" Present (NPX or NPX emulator) */
+comment|/* "Math" (fpu) Present */
 end_comment
 
 begin_define
@@ -49,7 +49,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* EMulate non-NPX coproc. (trap ESC only) */
+comment|/* EMulate FPU instructions. (trap ESC only) */
 end_comment
 
 begin_define
@@ -62,28 +62,6 @@ end_define
 begin_comment
 comment|/* Task Switched (if MP, trap ESC and WAIT) */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notused
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CR0_ET
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* Extension Type (387 (if set) vs 287) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

@@ -2163,7 +2163,6 @@ name|tf_rip
 operator|=
 name|entry
 expr_stmt|;
-comment|/* This strangeness is to ensure alignment after the implied return address */
 name|regs
 operator|->
 name|tf_rsp
@@ -2214,7 +2213,7 @@ name|tf_cs
 operator|=
 name|_ucodesel
 expr_stmt|;
-comment|/* 	 * Arrange to trap the next npx or `fwait' instruction (see npx.c 	 * for why fwait must be trapped at least if there is an npx or an 	 * emulator).  This is mainly to handle the case where npx0 is not 	 * configured, since the npx routines normally set up the trap 	 * otherwise.  It should be done only at boot time, but doing it 	 * here allows modifying `npx_exists' for testing the emulator on 	 * systems with an npx. 	 */
+comment|/* 	 * Arrange to trap the next fpu or `fwait' instruction (see fpu.c 	 * for why fwait must be trapped at least if there is an fpu or an 	 * emulator).  This is mainly to handle the case where npx0 is not 	 * configured, since the fpu routines normally set up the trap 	 * otherwise.  It should be done only at boot time, but doing it 	 * here allows modifying `fpu_exists' for testing the emulator on 	 * systems with an fpu. 	 */
 name|load_cr0
 argument_list|(
 name|rcr0
@@ -2225,8 +2224,8 @@ operator||
 name|CR0_TS
 argument_list|)
 expr_stmt|;
-comment|/* Initialize the npx (if any) for the current process. */
-comment|/* 	 * XXX the above load_cr0() also initializes it and is a layering 	 * violation if NPX is configured.  It drops the npx partially 	 * and this would be fatal if we were interrupted now, and decided 	 * to force the state to the pcb, and checked the invariant 	 * (CR0_TS clear) if and only if PCPU_GET(fpcurthread) != NULL). 	 * ALL of this can happen except the check.  The check used to 	 * happen and be fatal later when we didn't complete the drop 	 * before returning to user mode.  This should be fixed properly 	 * soon. 	 */
+comment|/* Initialize the fpu (if any) for the current process. */
+comment|/* 	 * XXX the above load_cr0() also initializes it and is a layering 	 * violation.  It drops the fpu state partially 	 * and this would be fatal if we were interrupted now, and decided 	 * to force the state to the pcb, and checked the invariant 	 * (CR0_TS clear) if and only if PCPU_GET(fpcurthread) != NULL). 	 * ALL of this can happen except the check.  The check used to 	 * happen and be fatal later when we didn't complete the drop 	 * before returning to user mode.  This should be fixed properly 	 * soon. 	 */
 name|fpstate_drop
 argument_list|(
 name|td
@@ -2254,7 +2253,7 @@ name|cr0
 operator||=
 name|CR0_NE
 expr_stmt|;
-comment|/* Done by npxinit() */
+comment|/* Done by fpuinit() */
 name|cr0
 operator||=
 name|CR0_MP
@@ -7190,7 +7189,7 @@ name|mcp
 operator|->
 name|mc_ownedfp
 operator|=
-name|npxgetregs
+name|fpugetregs
 argument_list|(
 name|td
 argument_list|,
@@ -7209,7 +7208,7 @@ name|mcp
 operator|->
 name|mc_fpformat
 operator|=
-name|npxformat
+name|fpuformat
 argument_list|()
 expr_stmt|;
 block|}
@@ -7289,8 +7288,8 @@ operator|==
 name|_MC_FPOWNED_PCB
 condition|)
 block|{
-comment|/* 		 * XXX we violate the dubious requirement that npxsetregs() 		 * be called with interrupts disabled. 		 * XXX obsolete on trap-16 systems? 		 */
-name|npxsetregs
+comment|/* 		 * XXX we violate the dubious requirement that fpusetregs() 		 * be called with interrupts disabled. 		 * XXX obsolete on trap-16 systems? 		 */
+name|fpusetregs
 argument_list|(
 name|td
 argument_list|,
@@ -7347,10 +7346,10 @@ argument_list|)
 operator|==
 name|td
 condition|)
-name|npxdrop
+name|fpudrop
 argument_list|()
 expr_stmt|;
-comment|/* 	 * XXX force a full drop of the npx.  The above only drops it if we 	 * owned it. 	 * 	 * XXX I don't much like npxgetregs()'s semantics of doing a full 	 * drop.  Dropping only to the pcb matches fnsave's behaviour. 	 * We only need to drop to !PCB_INITDONE in sendsig().  But 	 * sendsig() is the only caller of npxgetregs()... perhaps we just 	 * have too many layers. 	 */
+comment|/* 	 * XXX force a full drop of the fpu.  The above only drops it if we 	 * owned it. 	 * 	 * XXX I don't much like fpugetregs()'s semantics of doing a full 	 * drop.  Dropping only to the pcb matches fnsave's behaviour. 	 * We only need to drop to !PCB_INITDONE in sendsig().  But 	 * sendsig() is the only caller of fpugetregs()... perhaps we just 	 * have too many layers. 	 */
 name|curthread
 operator|->
 name|td_pcb
@@ -7358,7 +7357,7 @@ operator|->
 name|pcb_flags
 operator|&=
 operator|~
-name|PCB_NPXINITDONE
+name|PCB_FPUINITDONE
 expr_stmt|;
 name|intr_restore
 argument_list|(

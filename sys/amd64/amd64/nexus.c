@@ -1128,7 +1128,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a resource on behalf of child.  NB: child is usually going to be a  * child of one of our descendants, not a direct child of nexus0.  * (Exceptions include npx.)  */
+comment|/*  * Allocate a resource on behalf of child.  NB: child is usually going to be a  * child of one of our descendants, not a direct child of nexus0.  */
 end_comment
 
 begin_function

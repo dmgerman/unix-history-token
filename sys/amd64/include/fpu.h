@@ -4,19 +4,19 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  * 287/387 NPX Coprocessor Data Structures and Constants  * W. Jolitz 1/90  */
+comment|/*  * Floating Point Data Structures and Constants  * W. Jolitz 1/90  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_NPX_H_
+name|_MACHINE_FPU_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_NPX_H_
+name|_MACHINE_FPU_H_
 end_define
 
 begin_comment
@@ -153,7 +153,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__INITIAL_NPXCW__
+name|__INITIAL_FPUCW__
 value|0x037F
 end_define
 
@@ -179,7 +179,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|npxdna
+name|fpudna
 parameter_list|(
 name|void
 parameter_list|)
@@ -188,7 +188,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|npxdrop
+name|fpudrop
 parameter_list|(
 name|void
 parameter_list|)
@@ -197,7 +197,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|npxexit
+name|fpuexit
 parameter_list|(
 name|struct
 name|thread
@@ -209,7 +209,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|npxformat
+name|fpuformat
 parameter_list|(
 name|void
 parameter_list|)
@@ -218,7 +218,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|npxgetregs
+name|fpugetregs
 parameter_list|(
 name|struct
 name|thread
@@ -235,7 +235,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|npxinit
+name|fpuinit
 parameter_list|(
 name|u_short
 name|control
@@ -245,7 +245,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|npxsave
+name|fpusave
 parameter_list|(
 name|struct
 name|savefpu
@@ -257,7 +257,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|npxsetregs
+name|fpusetregs
 parameter_list|(
 name|struct
 name|thread
@@ -274,7 +274,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|npxtrap
+name|fputrap
 parameter_list|(
 name|void
 parameter_list|)
@@ -292,7 +292,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_NPX_H_ */
+comment|/* !_MACHINE_FPU_H_ */
 end_comment
 
 end_unit

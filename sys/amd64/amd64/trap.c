@@ -862,7 +862,7 @@ case|:
 comment|/* arithmetic trap */
 name|ucode
 operator|=
-name|npxtrap
+name|fputrap
 argument_list|()
 expr_stmt|;
 if|if
@@ -1074,7 +1074,7 @@ case|:
 comment|/* transparent fault (due to context switch "late") */
 if|if
 condition|(
-name|npxdna
+name|fpudna
 argument_list|()
 condition|)
 goto|goto
@@ -1162,16 +1162,16 @@ goto|;
 case|case
 name|T_DNA
 case|:
-comment|/* 			 * The kernel is apparently using npx for copying. 			 * XXX this should be fatal unless the kernel has 			 * registered such use. 			 */
+comment|/* 			 * The kernel is apparently using fpu for copying. 			 * XXX this should be fatal unless the kernel has 			 * registered such use. 			 */
 if|if
 condition|(
-name|npxdna
+name|fpudna
 argument_list|()
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"npxdna in kernel mode!\n"
+literal|"fpudna in kernel mode!\n"
 argument_list|)
 expr_stmt|;
 goto|goto
