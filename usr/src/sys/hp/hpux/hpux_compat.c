@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.3 90/09/17$  *  *	@(#)hpux_compat.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.3 90/09/17$  *  *	@(#)hpux_compat.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -16,115 +16,115 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/signalvar.h"
+file|"signalvar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/kernel.h"
+file|"kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/filedesc.h"
+file|"filedesc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/wait.h"
+file|"wait.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/file.h"
+file|"file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/namei.h"
+file|"namei.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/vnode.h"
+file|"vnode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ioctl.h"
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ptrace.h"
+file|"ptrace.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/stat.h"
+file|"stat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/syslog.h"
+file|"syslog.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/malloc.h"
+file|"malloc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/mount.h"
+file|"mount.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ipc.h"
+file|"ipc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|"user.h"
 end_include
 
 begin_include
@@ -3215,8 +3215,10 @@ block|{
 case|case
 literal|0
 case|:
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_flags
@@ -6135,6 +6137,14 @@ begin_comment
 comment|/*  * Brutal hack!  Map HPUX u-area offsets into BSD u offsets.  * No apologies offered, if you don't like it, rewrite it!  */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|kstack
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -6378,8 +6388,7 @@ operator|+
 operator|(
 name|u_int
 operator|)
-operator|&
-name|u
+name|kstack
 operator|)
 expr_stmt|;
 comment|/* 	 * 68020 registers. 	 * We know that the HPUX registers are in the same order as ours. 	 * The only difference is that their PS is 2 bytes instead of a 	 * padded 4 like ours throwing the alignment off. 	 */
@@ -6500,8 +6509,7 @@ operator|-
 operator|(
 name|u_int
 operator|)
-operator|&
-name|u
+name|kstack
 argument_list|)
 operator|)
 return|;
@@ -6644,8 +6652,10 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_exec
@@ -6726,8 +6736,10 @@ name|bsdfp
 operator|*
 operator|)
 operator|&
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_fpregs
@@ -6856,14 +6868,9 @@ operator|(
 name|int
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-literal|0
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Dump the remaining UPAGES-1 pages normally 	 */
@@ -6880,13 +6887,7 @@ name|UIO_WRITE
 argument_list|,
 name|vp
 argument_list|,
-operator|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|u
-operator|)
+name|kstack
 operator|+
 name|ctob
 argument_list|(
@@ -6920,14 +6921,9 @@ operator|(
 name|int
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-literal|0
+name|p
 argument_list|)
 expr_stmt|;
 name|free
@@ -8237,11 +8233,7 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|u
+name|kstack
 argument_list|,
 name|PPAUSE
 operator||
