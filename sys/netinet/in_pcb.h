@@ -1050,23 +1050,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IN6P_TCLASS
-value|0x400000
-end_define
-
-begin_comment
-comment|/* receive traffic class value */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IN6P_RTHDRDSTOPTS
 value|0x200000
 end_define
 
 begin_comment
 comment|/* receive dstoptions before rthdr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN6P_TCLASS
+value|0x400000
+end_define
+
+begin_comment
+comment|/* receive traffic class value */
 end_comment
 
 begin_define
