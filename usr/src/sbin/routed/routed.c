@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)routed.c	4.18 82/06/20"
+literal|"@(#)routed.c	4.19 82/06/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -2709,12 +2709,6 @@ block|{
 case|case
 name|RIPCMD_REQUEST
 case|:
-if|if
-condition|(
-operator|!
-name|supplier
-condition|)
-return|return;
 name|newsize
 operator|=
 literal|0
