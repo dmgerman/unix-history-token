@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: trap.c,v 1.9 1998/12/16 15:21:50 bde Exp $ */
+comment|/* $Id: trap.c,v 1.10 1998/12/30 10:38:58 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -1488,6 +1488,9 @@ operator|->
 name|p_lock
 expr_stmt|;
 comment|/* 				 * Grow the stack if necessary 				 */
+ifndef|#
+directive|ifndef
+name|VM_STACK
 if|if
 condition|(
 operator|(
@@ -1529,6 +1532,35 @@ name|nogo
 goto|;
 block|}
 block|}
+else|#
+directive|else
+comment|/* grow_stack returns false only if va falls into 				 * a growable stack region and the stack growth 				 * fails.  It returns true if va was not within 				 * a growable stack region, or if the stack  				 * growth succeeded. 				 */
+if|if
+condition|(
+operator|!
+name|grow_stack
+argument_list|(
+name|p
+argument_list|,
+name|va
+argument_list|)
+condition|)
+block|{
+name|rv
+operator|=
+name|KERN_FAILURE
+expr_stmt|;
+operator|--
+name|p
+operator|->
+name|p_lock
+expr_stmt|;
+goto|goto
+name|nogo
+goto|;
+block|}
+endif|#
+directive|endif
 comment|/* Fault in the user page: */
 name|rv
 operator|=
