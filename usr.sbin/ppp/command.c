@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.80 1997/09/09 23:56:29 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.81 1997/09/16 23:15:11 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -2625,6 +2625,19 @@ argument_list|,
 name|VarAuthKey
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|VarTerm
+argument_list|,
+literal|"Encrypt  = %s\n"
+argument_list|,
+name|VarEncMD4
+condition|?
+literal|"MD4"
+else|:
+literal|"MD5"
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
@@ -3031,7 +3044,7 @@ name|ShowAuthKey
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Show auth name/key"
+literal|"Show auth name, key and algorithm"
 block|,
 literal|"show auth"
 block|}
@@ -6407,6 +6420,13 @@ name|VAR_HANGUP
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|VAR_ENC
+value|8
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -6717,6 +6737,20 @@ literal|1
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+break|break;
+case|case
+name|VAR_ENC
+case|:
+name|VarEncMD4
+operator|=
+operator|!
+name|strcasecmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"md4"
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -7043,6 +7077,26 @@ name|void
 operator|*
 operator|)
 name|VAR_DIAL
+block|}
+block|,
+block|{
+literal|"encrypt"
+block|,
+name|NULL
+block|,
+name|SetVariable
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Set CHAP encryption algorithm"
+block|,
+literal|"set encrypt MD4|MD5"
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+name|VAR_ENC
 block|}
 block|,
 block|{
