@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optab.c 4.1 %G%"
+literal|"@(#)optab.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -214,7 +214,7 @@ parameter_list|)
 value|{a,b,c,d,e,f,g,h,i}
 include|#
 directive|include
-file|"../as/instrs"
+file|"instrs"
 literal|0
 block|}
 struct|;
