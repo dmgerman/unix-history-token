@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printsym.c 1.10 %G%"
+literal|"@(#)printsym.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1629,6 +1629,20 @@ operator|.
 name|beginaddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isinline
+argument_list|(
+name|s
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"inline procedure"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|nosource
