@@ -468,6 +468,8 @@ parameter_list|)
 block|{
 name|int
 name|speed
+init|=
+literal|0
 decl_stmt|;
 name|T
 argument_list|(
