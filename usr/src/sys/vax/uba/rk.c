@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.32	81/03/21	*/
+comment|/*	rk.c	4.33	81/04/02	*/
 end_comment
 
 begin_include
@@ -2062,11 +2062,6 @@ operator|.
 name|b_active
 condition|)
 block|{
-name|ubadone
-argument_list|(
-name|um
-argument_list|)
-expr_stmt|;
 name|dp
 operator|=
 name|um
@@ -2649,6 +2644,11 @@ name|ui
 operator|->
 name|ui_slave
 operator|)
+expr_stmt|;
+name|ubadone
+argument_list|(
+name|um
+argument_list|)
 expr_stmt|;
 block|}
 for|for

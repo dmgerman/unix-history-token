@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.35	81/04/01	*/
+comment|/*	up.c	4.36	81/04/02	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * TODO:  *	Add reading of bad sector information and disk layout from sector 1  *	Add bad sector forwarding code  *	Check multiple drive handling  *	Check unibus reset code  *	Check that offset recovery code, etc works  */
+comment|/*  * UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * TODO:  *	Add bad sector forwarding code  *	Check that offset recovery code works  */
 end_comment
 
 begin_include
@@ -472,29 +472,29 @@ literal|16
 index|]
 init|=
 block|{
-name|UP_P400
+name|UPOF_P400
 block|,
-name|UP_M400
+name|UPOF_M400
 block|,
-name|UP_P400
+name|UPOF_P400
 block|,
-name|UP_M400
+name|UPOF_M400
 block|,
-name|UP_P800
+name|UPOF_P800
 block|,
-name|UP_M800
+name|UPOF_M800
 block|,
-name|UP_P800
+name|UPOF_P800
 block|,
-name|UP_M800
+name|UPOF_M800
 block|,
-name|UP_P1200
+name|UPOF_P1200
 block|,
-name|UP_M1200
+name|UPOF_M1200
 block|,
-name|UP_P1200
+name|UPOF_P1200
 block|,
-name|UP_M1200
+name|UPOF_M1200
 block|,
 literal|0
 block|,
@@ -709,7 +709,7 @@ name|upaddr
 operator|->
 name|upcs2
 operator|&
-name|UP_NED
+name|UPCS2_NED
 condition|)
 block|{
 name|upaddr
@@ -1326,7 +1326,7 @@ name|upaddr
 operator|->
 name|upds
 operator|&
-name|UP_VV
+name|UPDS_VV
 operator|)
 operator|==
 literal|0
@@ -1357,7 +1357,7 @@ name|upaddr
 operator|->
 name|upof
 operator|=
-name|UP_FMT22
+name|UPOF_FMT22
 expr_stmt|;
 name|didie
 operator|=
@@ -1373,16 +1373,16 @@ operator|->
 name|upds
 operator|&
 operator|(
-name|UP_DPR
+name|UPDS_DPR
 operator||
-name|UP_MOL
+name|UPDS_MOL
 operator|)
 operator|)
 operator|!=
 operator|(
-name|UP_DPR
+name|UPDS_DPR
 operator||
-name|UP_MOL
+name|UPDS_MOL
 operator|)
 condition|)
 goto|goto
@@ -1872,7 +1872,7 @@ name|upaddr
 operator|->
 name|upds
 operator|&
-name|UP_DRY
+name|UPDS_DRY
 operator|)
 operator|==
 literal|0
@@ -1897,10 +1897,10 @@ name|upaddr
 operator|->
 name|upds
 operator|&
-name|UP_DREADY
+name|UPDS_DREADY
 operator|)
 operator|!=
-name|UP_DREADY
+name|UPDS_DREADY
 condition|)
 block|{
 name|printf
@@ -1920,10 +1920,10 @@ name|upaddr
 operator|->
 name|upds
 operator|&
-name|UP_DREADY
+name|UPDS_DREADY
 operator|)
 operator|!=
-name|UP_DREADY
+name|UPDS_DREADY
 condition|)
 block|{
 name|printf
@@ -2335,7 +2335,7 @@ name|upaddr
 operator|->
 name|upds
 operator|&
-name|UP_ERR
+name|UPDS_ERR
 operator|)
 operator|||
 operator|(
@@ -2358,7 +2358,7 @@ name|upaddr
 operator|->
 name|upds
 operator|&
-name|UP_DRY
+name|UPDS_DRY
 operator|)
 operator|==
 literal|0
@@ -2382,7 +2382,7 @@ name|upaddr
 operator|->
 name|uper1
 operator|&
-name|UP_WLE
+name|UPER1_WLE
 condition|)
 block|{
 comment|/* 			 * Give up on write locked devices 			 * immediately. 			 */
@@ -2474,13 +2474,13 @@ operator|->
 name|uper1
 operator|&
 operator|(
-name|UP_DCK
+name|UPER1_DCK
 operator||
-name|UP_ECH
+name|UPER1_ECH
 operator|)
 operator|)
 operator|==
-name|UP_DCK
+name|UPER1_DCK
 condition|)
 if|if
 condition|(
@@ -2625,7 +2625,7 @@ operator|&
 literal|017
 index|]
 operator||
-name|UP_FMT22
+name|UPOF_FMT22
 expr_stmt|;
 name|upaddr
 operator|->
@@ -2703,7 +2703,7 @@ name|upaddr
 operator|->
 name|upof
 operator|=
-name|UP_FMT22
+name|UPOF_FMT22
 expr_stmt|;
 name|upaddr
 operator|->
@@ -2721,7 +2721,7 @@ name|upaddr
 operator|->
 name|upds
 operator|&
-name|UP_PIP
+name|UPDS_PIP
 condition|)
 name|DELAY
 argument_list|(
@@ -3240,6 +3240,9 @@ name|up
 operator|->
 name|upec2
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UPECCDEBUG
 name|printf
 argument_list|(
 literal|"npf %d reg %x o %d mask %o pos %d\n"
@@ -3257,6 +3260,8 @@ operator|->
 name|upec1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Flush the buffered data path, and compute the 	 * byte and bit position of the error.  The variable i 	 * is the byte offset in the transfer, the variable byte 	 * is the offset from a page boundary in main memory. 	 */
 name|ubapurge
 argument_list|(
@@ -3347,6 +3352,9 @@ operator|&
 name|PGOFSET
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UPECCDEBUG
 name|printf
 argument_list|(
 literal|"addr %x map reg %x\n"
@@ -3384,6 +3392,8 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|putmemc
 argument_list|(
 name|addr
@@ -3400,6 +3410,9 @@ name|bit
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UPECCDEBUG
 name|printf
 argument_list|(
 literal|"new: %x\n"
@@ -3410,6 +3423,8 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|byte
 operator|++
 expr_stmt|;
@@ -3764,7 +3779,7 @@ operator|)
 operator|->
 name|upcs2
 operator|=
-name|UP_CLR
+name|UPCS2_CLR
 expr_stmt|;
 for|for
 control|(
@@ -4215,7 +4230,7 @@ name|upaddr
 operator|->
 name|upds
 operator|&
-name|UP_VV
+name|UPDS_VV
 operator|)
 operator|==
 literal|0
@@ -4241,7 +4256,7 @@ name|upaddr
 operator|->
 name|upof
 operator|=
-name|UP_FMT22
+name|UPOF_FMT22
 expr_stmt|;
 block|}
 if|if
@@ -4251,10 +4266,10 @@ name|upaddr
 operator|->
 name|upds
 operator|&
-name|UP_DREADY
+name|UPDS_DREADY
 operator|)
 operator|!=
-name|UP_DREADY
+name|UPDS_DREADY
 condition|)
 return|return
 operator|(
@@ -4535,9 +4550,9 @@ if|if
 condition|(
 name|upaddr
 operator|->
-name|upcs1
+name|upds
 operator|&
-name|UP_ERR
+name|UPDS_ERR
 condition|)
 return|return
 operator|(
