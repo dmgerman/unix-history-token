@@ -190,6 +190,27 @@ file|<vm/vm_extern.h>
 end_include
 
 begin_comment
+comment|/*   * Force MUTEX_WAKE_ALL for now.  * single thread wakeup needs fixes to avoid race conditions with   * priority inheritance.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MUTEX_WAKE_ALL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MUTEX_WAKE_ALL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Internal utility macros.  */
 end_comment
 
