@@ -594,23 +594,6 @@ argument_list|)
 expr_stmt|;
 comment|/* before we start the daemon */
 block|}
-else|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't open history file %s: %s (%d)\n"
-argument_list|,
-name|historyfile
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
 name|superdev
 operator|=
 name|open
@@ -1189,6 +1172,16 @@ block|,
 name|FUNKEY
 argument_list|(
 name|stripe
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|raid4
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|raid5
 argument_list|)
 block|,
 name|FUNKEY
@@ -2306,7 +2299,7 @@ argument_list|,
 comment|/* user only */
 name|makedev
 argument_list|(
-name|CDEV_MAJOR
+name|VINUM_CDEV_MAJOR
 argument_list|,
 name|VINUM_SUPERDEV
 argument_list|)
@@ -2343,7 +2336,7 @@ argument_list|,
 comment|/* user only */
 name|makedev
 argument_list|(
-name|CDEV_MAJOR
+name|VINUM_CDEV_MAJOR
 argument_list|,
 name|VINUM_WRONGSUPERDEV
 argument_list|)
@@ -2391,7 +2384,7 @@ argument_list|,
 comment|/* user only */
 name|makedev
 argument_list|(
-name|CDEV_MAJOR
+name|VINUM_CDEV_MAJOR
 argument_list|,
 name|VINUM_DAEMON_DEV
 argument_list|)
@@ -3086,7 +3079,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Create the contents of /dev/vinum/sd */
+comment|/* Create the contents of /dev/vinum/sd and /dev/vinum/rsd */
 end_comment
 
 begin_function
@@ -3561,6 +3554,15 @@ name|LOG_INFO
 operator||
 name|LOG_KERN
 argument_list|,
+literal|"reviving %s"
+argument_list|,
+name|sd
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+name|setproctitle
+argument_list|(
 literal|"reviving %s"
 argument_list|,
 name|sd
