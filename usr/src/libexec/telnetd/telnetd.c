@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.27 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5026,10 +5026,6 @@ block|{
 name|rmut
 argument_list|()
 expr_stmt|;
-name|vhangup
-argument_list|()
-expr_stmt|;
-comment|/* XXX */
 name|shutdown
 argument_list|(
 name|net

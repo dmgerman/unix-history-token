@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.14 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1910,10 +1910,6 @@ block|{
 name|rmut
 argument_list|()
 expr_stmt|;
-name|vhangup
-argument_list|()
-expr_stmt|;
-comment|/* XXX */
 name|shutdown
 argument_list|(
 name|netf
