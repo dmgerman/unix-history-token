@@ -520,5 +520,30 @@ parameter_list|)
 value|((ms) * hz / 1000)
 end_define
 
+begin_function_decl
+name|void
+name|ohci_shutdown
+parameter_list|(
+name|void
+modifier|*
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ohci_power
+parameter_list|(
+name|int
+name|state
+parameter_list|,
+name|void
+modifier|*
+name|priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

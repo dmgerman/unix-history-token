@@ -5065,20 +5065,6 @@ begin_comment
 comment|/*  * Shut down the controller when the system is going down.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-end_if
-
 begin_function
 name|void
 name|ohci_shutdown
@@ -5167,17 +5153,13 @@ operator|=
 name|splhardusb
 argument_list|()
 expr_stmt|;
-switch|switch
+if|if
 condition|(
 name|why
+operator|!=
+name|PWR_RESUME
 condition|)
 block|{
-case|case
-name|PWR_SUSPEND
-case|:
-case|case
-name|PWR_STANDBY
-case|:
 name|sc
 operator|->
 name|sc_bus
@@ -5255,10 +5237,9 @@ operator|.
 name|use_polling
 operator|--
 expr_stmt|;
-break|break;
-case|case
-name|PWR_RESUME
-case|:
+block|}
+else|else
+block|{
 name|sc
 operator|->
 name|sc_bus
@@ -5425,17 +5406,6 @@ operator|.
 name|use_polling
 operator|--
 expr_stmt|;
-break|break;
-case|case
-name|PWR_SOFTSUSPEND
-case|:
-case|case
-name|PWR_SOFTSTANDBY
-case|:
-case|case
-name|PWR_SOFTRESUME
-case|:
-break|break;
 block|}
 name|splx
 argument_list|(
@@ -5444,11 +5414,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
