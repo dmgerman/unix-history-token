@@ -431,6 +431,28 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
+name|char
+name|quantum
+index|[]
+init|=
+literal|"QUANTUM"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|microp
+index|[]
+init|=
+literal|"MICROP"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|da_quirk_entry
 name|da_quirk_table
@@ -462,7 +484,7 @@ name|T_DIRECT
 block|,
 name|SIP_MEDIA_FIXED
 block|,
-literal|"MICROP"
+name|microp
 block|,
 literal|"2217*"
 block|,
@@ -480,7 +502,7 @@ name|T_DIRECT
 block|,
 name|SIP_MEDIA_FIXED
 block|,
-literal|"MICROP"
+name|microp
 block|,
 literal|"2112*"
 block|,
@@ -510,13 +532,49 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * Doesn't like the synchronize cache command. 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+name|quantum
+block|,
+literal|"MAVERICK 540S"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * Doesn't like the synchronize cache command. 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+name|quantum
+block|,
+literal|"LPS525S"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * Doesn't work correctly with 6 byte reads/writes. 		 * Returns illegal request, and points to byte 9 of the 		 * 6-byte CDB. 		 * Reported by:  Adam McDougall<bsdx@spawnet.com> 		 */
 block|{
 name|T_DIRECT
 block|,
 name|SIP_MEDIA_FIXED
 block|,
-literal|"QUANTUM"
+name|quantum
 block|,
 literal|"VIKING 4*"
 block|,
@@ -534,7 +592,7 @@ name|T_DIRECT
 block|,
 name|SIP_MEDIA_FIXED
 block|,
-literal|"QUANTUM"
+name|quantum
 block|,
 literal|"VIKING 2*"
 block|,
