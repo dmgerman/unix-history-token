@@ -90,23 +90,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|pcib_route_interrupt
-parameter_list|(
-name|device_t
-name|pcib
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|pin
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -2167,7 +2150,6 @@ comment|/*  * Route an interrupt across a PCI bridge.  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|pcib_route_interrupt
 parameter_list|(
