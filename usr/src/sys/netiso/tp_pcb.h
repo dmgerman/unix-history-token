@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_pcb.h,v 5.2 88/11/18 17:09:32 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_pcb.h,v $  *	@(#)tp_pcb.h	7.4 (Berkeley) %G% *  *  *   * This file defines the transport protocol control block (tpcb).  * and a bunch of #define values that are used in the tpcb.  */
+comment|/*   * ARGO TP  *  * $Header: tp_pcb.h,v 5.2 88/11/18 17:09:32 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_pcb.h,v $  *	@(#)tp_pcb.h	7.5 (Berkeley) %G% *  *  *   * This file defines the transport protocol control block (tpcb).  * and a bunch of #define values that are used in the tpcb.  */
 end_comment
 
 begin_ifndef
@@ -397,6 +397,16 @@ name|u_short
 name|tp_cong_win
 decl_stmt|;
 comment|/* congestion window : set to 1 on 										 * source quench 										 * Minimizes the amount of retrans- 										 * missions (independently of the 										 * retrans strategy).  Increased 										 * by one for each good ack received. 										 * Minimizes the amount sent in a 										 * regular tp_send() also. 										 */
+name|u_int
+name|tp_ackrcvd
+decl_stmt|;
+comment|/* ACKs received since the send window was updated */
+name|SeqNum
+name|tp_last_retrans
+decl_stmt|;
+name|SeqNum
+name|tp_retrans_hiwat
+decl_stmt|;
 name|SeqNum
 name|tp_snduna
 decl_stmt|;
@@ -454,6 +464,29 @@ modifier|*
 name|tp_rcvnxt_rtc
 decl_stmt|;
 comment|/* unacked stuff recvd out of order */
+comment|/* receiver congestion state stuff ...  */
+name|u_int
+name|tp_win_recv
+decl_stmt|;
+comment|/* receive window as a scaled int (8 bit fraction part) */
+struct|struct
+name|cong_sample
+block|{
+name|ushort
+name|cs_size
+decl_stmt|;
+comment|/* current window size */
+name|ushort
+name|cs_received
+decl_stmt|;
+comment|/* PDUs received in this sample */
+name|ushort
+name|cs_ce_set
+decl_stmt|;
+comment|/* PDUs received in this sample with CE bit set */
+block|}
+name|tp_cong_sample
+struct|;
 comment|/* parameters per-connection controllable by user */
 name|struct
 name|tp_conn_param
@@ -602,9 +635,14 @@ decl_stmt|,
 comment|/* have we reneged on cdt since last ack? */
 name|tp_decbit
 range|:
-literal|4
+literal|3
 decl_stmt|,
 comment|/* dec bit was set, we're in reneg mode  */
+name|tp_cebit_off
+range|:
+literal|1
+decl_stmt|,
+comment|/* the real DEC bit algorithms not in use */
 name|tp_flags
 range|:
 literal|8
@@ -757,6 +795,67 @@ comment|/* highest recv subseq */
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+name|u_int
+name|tp_start_win
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ROUND
+parameter_list|(
+name|scaled_int
+parameter_list|)
+value|(((scaled_int)>> 8) + (((scaled_int)& 0x80) ? 1:0))
+end_define
+
+begin_comment
+comment|/* to round off a scaled int with an 8 bit fraction part */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONG_INIT_SAMPLE
+parameter_list|(
+name|pcb
+parameter_list|)
+define|\
+value|pcb->tp_cong_sample.cs_received = \     pcb->tp_cong_sample.cs_ce_set = 0; \     pcb->tp_cong_sample.cs_size = MAX(pcb->tp_lcredit, 1)<< 1;
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONG_UPDATE_SAMPLE
+parameter_list|(
+name|pcb
+parameter_list|,
+name|ce_bit
+parameter_list|)
+define|\
+value|pcb->tp_cong_sample.cs_received++; \     if (ce_bit) { \         pcb->tp_cong_sample.cs_ce_set++; \     } \     if (pcb->tp_cong_sample.cs_size<= pcb->tp_cong_sample.cs_received) { \         if ((pcb->tp_cong_sample.cs_ce_set<< 1)>=  \                     pcb->tp_cong_sample.cs_size ) { \             pcb->tp_win_recv -= pcb->tp_win_recv>> 3;
+comment|/* multiply by .875 */
+value|\             pcb->tp_win_recv = MAX(1<< 8, pcb->tp_win_recv); \         } \         else { \             pcb->tp_win_recv += (1<< 8);
+comment|/* add one to the scaled int */
+value|\         } \         pcb->tp_lcredit = ROUND(pcb->tp_win_recv); \         CONG_INIT_SAMPLE(pcb); \     }
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONG_ACK
+parameter_list|(
+name|pcb
+parameter_list|,
+name|seq
+parameter_list|)
+define|\
+value|{ int   newacks = SEQ_SUB(pcb, seq, pcb->tp_snduna); \ 	if (newacks> 0) { \ 		pcb->tp_ackrcvd += newacks; \ 		if (pcb->tp_ackrcvd>= MIN(pcb->tp_fcredit, pcb->tp_cong_win)) { \ 			++pcb->tp_cong_win; \ 			pcb->tp_ackrcvd = 0; \ 		} \ 	} \ }
+end_define
 
 begin_decl_stmt
 specifier|extern
