@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dnd.c	4.1 (Berkeley) %G%"
+literal|"@(#)dnd.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,11 +248,18 @@ condition|(
 name|fork
 argument_list|()
 condition|)
+block|{
+name|sleep
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
 name|wait
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|strcpy
 argument_list|(
 name|argv
@@ -305,6 +312,11 @@ name|cc
 argument_list|)
 expr_stmt|;
 block|}
+name|_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
