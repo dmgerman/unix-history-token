@@ -113,6 +113,23 @@ name|OUT
 value|(malloc_reentered = 0)
 end_define
 
+begin_struct
+struct|struct
+block|{
+name|int
+name|nomap
+decl_stmt|;
+name|int
+name|atlimit
+decl_stmt|;
+name|int
+name|freemem
+decl_stmt|;
+block|}
+name|KFail
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Allocate a block of memory  */
 end_comment
@@ -245,6 +262,11 @@ operator|&
 name|M_NOWAIT
 condition|)
 block|{
+name|KFail
+operator|.
+name|atlimit
+operator|++
+expr_stmt|;
 name|OUT
 expr_stmt|;
 name|splx
@@ -344,6 +366,11 @@ operator|<
 name|npg
 condition|)
 block|{
+name|KFail
+operator|.
+name|freemem
+operator|++
+expr_stmt|;
 name|OUT
 expr_stmt|;
 name|splx
@@ -380,6 +407,11 @@ operator|&
 name|M_NOWAIT
 condition|)
 block|{
+name|KFail
+operator|.
+name|nomap
+operator|++
+expr_stmt|;
 name|OUT
 expr_stmt|;
 name|splx
