@@ -8,8 +8,22 @@ comment|/*  * Copyright (c) 1994, 1995 Carnegie-Mellon University.  * All rights
 end_comment
 
 begin_comment
-comment|/*  * Additional Copyright (c) 1999 by Andrew Gallatin  * $FreeBSD$  */
+comment|/*  * Additional Copyright (c) 1999 by Andrew Gallatin  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
