@@ -37,7 +37,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)aux.c	1.3 %G%"
+literal|"@(#)aux.c	1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2148,7 +2148,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|savestr
+argument_list|(
 name|namebuf
+argument_list|)
 operator|)
 return|;
 block|}
