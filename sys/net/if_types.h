@@ -554,6 +554,17 @@ name|IFT_STF
 value|0x39
 end_define
 
+begin_define
+define|#
+directive|define
+name|IFT_L2VLAN
+value|0x87
+end_define
+
+begin_comment
+comment|/* Layer 2 Virtual LAN using 802.1Q */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

@@ -6164,9 +6164,8 @@ case|case
 name|IFT_ISO88025
 case|:
 case|case
-name|IFT_PROPVIRTUAL
+name|IFT_L2VLAN
 case|:
-comment|/* XXX waiting for IFT_8021_VLAN */
 name|bcopy
 argument_list|(
 name|lladdr

@@ -168,14 +168,14 @@ comment|/* length in octets of encapsulation */
 end_comment
 
 begin_comment
-comment|/* When these sorts of interfaces get their own identifier... */
+comment|/* These sorts of interfaces got their own identifier from IANA */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IFT_8021_VLAN
-value|IFT_PROPVIRTUAL
+value|IFT_L2VLAN
 end_define
 
 begin_comment
