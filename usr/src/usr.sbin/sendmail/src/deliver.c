@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.10 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1490,6 +1490,19 @@ name|EX_OK
 condition|)
 block|{
 comment|/* shouldn't happen */
+name|syserr
+argument_list|(
+literal|"deliver: rcode=%d, mci_state=%d, sig=%s"
+argument_list|,
+name|rcode
+argument_list|,
+name|mci
+operator|->
+name|mci_state
+argument_list|,
+name|firstsig
+argument_list|)
+expr_stmt|;
 name|rcode
 operator|=
 name|EX_SOFTWARE
