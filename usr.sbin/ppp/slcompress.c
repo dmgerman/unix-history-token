@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.9 1997/06/09 03:27:37 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
+comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.6.2.2 1997/08/25 00:34:39 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ specifier|const
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slcompress.c,v 1.9 1997/06/09 03:27:37 brian Exp $"
+literal|"$Id: slcompress.c,v 1.6.2.2 1997/08/25 00:34:39 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,6 +144,9 @@ name|struct
 name|slcompress
 modifier|*
 name|comp
+parameter_list|,
+name|int
+name|max_state
 parameter_list|)
 block|{
 specifier|register
@@ -179,9 +182,7 @@ for|for
 control|(
 name|i
 operator|=
-name|MAX_STATES
-operator|-
-literal|1
+name|max_state
 init|;
 name|i
 operator|>
@@ -226,9 +227,7 @@ operator|=
 operator|&
 name|tstate
 index|[
-name|MAX_STATES
-operator|-
-literal|1
+name|max_state
 index|]
 expr_stmt|;
 name|tstate
@@ -1330,9 +1329,6 @@ operator|)
 name|ip
 expr_stmt|;
 comment|/*    * Since fastq traffic can jump ahead of the background traffic, we don't    * know what order packets will go on the line.  In this case, we always    * send a "new" connection id so the receiver state stays synchronized.    */
-ifdef|#
-directive|ifdef
-name|SL_NOFASTQ
 if|if
 condition|(
 name|comp
@@ -1342,6 +1338,8 @@ operator|==
 name|cs
 operator|->
 name|cs_id
+operator|&&
+name|compress_cid
 condition|)
 block|{
 name|hlen
@@ -1362,8 +1360,6 @@ name|changes
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 name|comp
 operator|->
@@ -1664,14 +1660,7 @@ argument_list|,
 name|hlen
 argument_list|)
 expr_stmt|;
-name|cs
-operator|->
-name|cs_ip
-operator|.
-name|ip_sum
-operator|=
-literal|0
-expr_stmt|;
+comment|/* cs->cs_ip.ip_sum = 0; */
 name|cs
 operator|->
 name|cs_hlen
@@ -2234,6 +2223,14 @@ operator|*
 operator|)
 name|cp
 decl_stmt|;
+name|cs
+operator|->
+name|cs_ip
+operator|.
+name|ip_sum
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|changes
