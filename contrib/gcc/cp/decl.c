@@ -24732,6 +24732,21 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* Force minimum function alignment if using the least significant      bit of function pointers to store the virtual bit.  */
+if|if
+condition|(
+name|TARGET_PTRMEMFUNC_VBIT_LOCATION
+operator|==
+name|ptrmemfunc_vbit_in_pfn
+operator|&&
+name|force_align_functions_log
+operator|<
+literal|1
+condition|)
+name|force_align_functions_log
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Initially, C.  */
 name|current_lang_name
 operator|=
@@ -27770,19 +27785,6 @@ block|{
 case|case
 name|TYPE_DECL
 case|:
-comment|/* typedef foo = bar  means give foo the same type as bar. 	   We haven't parsed bar yet, so `cp_finish_decl' will fix that up. 	   Any other case of an initialization in a TYPE_DECL is an error.  */
-if|if
-condition|(
-name|pedantic
-operator|||
-name|list_length
-argument_list|(
-name|declspecs
-argument_list|)
-operator|>
-literal|1
-condition|)
-block|{
 name|error
 argument_list|(
 literal|"typedef `%D' is initialized"
@@ -27794,7 +27796,6 @@ name|initialized
 operator|=
 literal|0
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|FUNCTION_DECL
@@ -31054,39 +31055,6 @@ operator|==
 name|TYPE_DECL
 condition|)
 block|{
-if|if
-condition|(
-name|init
-operator|&&
-name|DECL_INITIAL
-argument_list|(
-name|decl
-argument_list|)
-condition|)
-block|{
-comment|/* typedef foo = bar; store the type of bar as the type of foo.  */
-name|TREE_TYPE
-argument_list|(
-name|decl
-argument_list|)
-operator|=
-name|type
-operator|=
-name|TREE_TYPE
-argument_list|(
-name|init
-argument_list|)
-expr_stmt|;
-name|DECL_INITIAL
-argument_list|(
-name|decl
-argument_list|)
-operator|=
-name|init
-operator|=
-name|NULL_TREE
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|type
@@ -42217,15 +42185,6 @@ argument_list|,
 name|raises
 operator|!=
 name|NULL_TREE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|initialized
-condition|)
-name|error
-argument_list|(
-literal|"typedef declaration includes an initializer"
 argument_list|)
 expr_stmt|;
 return|return
