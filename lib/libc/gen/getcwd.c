@@ -179,6 +179,8 @@ name|eup
 decl_stmt|,
 modifier|*
 name|up
+decl_stmt|,
+name|c
 decl_stmt|;
 comment|/* 	 * If no buffer specified by the user, allocate one as necessary. 	 * If a buffer is specified, the size has to be non-zero.  The path 	 * is built from the end of the buffer backwards. 	 */
 if|if
@@ -268,13 +270,12 @@ name|__getcwd
 argument_list|(
 name|pt
 argument_list|,
-name|ptsize
+name|ept
+operator|-
+name|pt
 argument_list|)
 condition|)
 block|{
-name|char
-name|c
-decl_stmt|;
 name|bpt
 operator|=
 name|pt
