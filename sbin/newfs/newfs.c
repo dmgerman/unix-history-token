@@ -185,7 +185,14 @@ directive|include
 file|<stdarg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"newfs.h"
+end_include
+
 begin_function_decl
+specifier|static
 name|void
 name|fatal
 parameter_list|(
@@ -207,6 +214,23 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_function_decl
+specifier|static
+name|struct
+name|disklabel
+modifier|*
+name|getdisklabel
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|fd
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -811,12 +835,6 @@ modifier|*
 name|lp
 decl_stmt|;
 name|struct
-name|disklabel
-modifier|*
-name|getdisklabel
-parameter_list|()
-function_decl|;
-name|struct
 name|partition
 name|oldpartition
 decl_stmt|;
@@ -841,9 +859,6 @@ name|s2
 decl_stmt|,
 modifier|*
 name|special
-decl_stmt|,
-modifier|*
-name|opstring
 decl_stmt|;
 name|int
 name|ch
@@ -885,10 +900,6 @@ operator|=
 operator|*
 name|argv
 expr_stmt|;
-name|opstring
-operator|=
-literal|"NOS:T:Ua:b:c:d:e:f:g:h:i:k:l:m:n:o:p:r:s:t:u:vx:"
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -900,7 +911,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-name|opstring
+literal|"NOS:T:Ua:b:c:d:e:f:g:h:i:k:l:m:n:o:p:r:s:t:u:vx:"
 argument_list|)
 operator|)
 operator|!=
@@ -2672,10 +2683,6 @@ name|struct
 name|disklabel
 modifier|*
 name|lp
-decl_stmt|,
-modifier|*
-name|getdiskbyname
-argument_list|()
 decl_stmt|;
 name|unlabeled
 operator|++

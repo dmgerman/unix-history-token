@@ -155,6 +155,12 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"newfs.h"
+end_include
+
 begin_comment
 comment|/*  * make file system for cylinder-group style file systems  */
 end_comment
@@ -197,319 +203,8 @@ parameter_list|)
 value|(((num)& ((num) - 1)) == 0)
 end_define
 
-begin_comment
-comment|/*  * variables set up by front end.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|Nflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* run mkfs without writing file system */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|Oflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* format as an 4.3BSD file system */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|Uflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* enable soft updates for file system */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|fssize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* file system size */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ntracks
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # tracks/cylinder */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nsectors
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # sectors/track */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nphyssectors
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # sectors/track including spares */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|secpercyl
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sectors per cylinder */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sectorsize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* bytes/sector */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|realsectorsize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* bytes/sector in hardware*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|rpm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* revolutions/minute of drive */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|interleave
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* hardware sector interleave */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|trackskew
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sector 0 skew, per track */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|fsize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* fragment size */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|bsize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* block size */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cpg
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* cylinders/cylinder group */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cpgflg
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* cylinders/cylinder group flag was given */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|minfree
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* free space threshold */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|opt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* optimization preference (space or time) */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|density
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of bytes per inode */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|maxcontig
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* max contiguous blocks to allocate */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|rotdelay
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* rotational delay between blocks */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|maxbpg
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maximum blocks per file in a cyl group */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nrpos
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # of distinguished rotational positions */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|bbsize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* boot block size */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sbsize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* superblock size */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|avgfilesize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* expected average file size */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|avgfilesperdir
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* expected number of files per directory */
-end_comment
-
 begin_union
+specifier|static
 union|union
 block|{
 name|struct
@@ -535,6 +230,7 @@ value|fsun.fs
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|csum
 modifier|*
@@ -543,6 +239,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_union
+specifier|static
 union|union
 block|{
 name|struct
@@ -568,6 +265,7 @@ value|cgun.cg
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|dinode
 name|zino
@@ -584,6 +282,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fsi
 decl_stmt|,
@@ -592,22 +291,41 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|randinit
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|daddr_t
 name|alloc
-parameter_list|()
+parameter_list|(
+name|int
+name|size
+parameter_list|,
+name|int
+name|mode
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|long
 name|calcipg
-parameter_list|()
+parameter_list|(
+name|long
+name|cpg
+parameter_list|,
+name|long
+name|bpcg
+parameter_list|,
+name|off_t
+modifier|*
+name|usedbp
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -615,11 +333,14 @@ begin_function_decl
 specifier|static
 name|int
 name|charsperline
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|clrblock
 parameter_list|(
@@ -637,6 +358,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|fsinit
 parameter_list|(
@@ -656,6 +378,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|initcg
 parameter_list|(
@@ -667,6 +390,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|isblock
 parameter_list|(
@@ -684,6 +408,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iput
 parameter_list|(
@@ -697,6 +422,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|makedir
 parameter_list|(
@@ -710,6 +436,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|rdfs
 parameter_list|(
@@ -724,6 +451,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|setblock
 parameter_list|(
@@ -741,6 +469,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|wtfs
 parameter_list|(
@@ -755,6 +484,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|wtfsflush
 parameter_list|(
@@ -7829,7 +7559,9 @@ begin_function
 specifier|static
 name|int
 name|charsperline
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|columns
