@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.56	%G%"
+literal|"@(#)deliver.c	3.57	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2986,7 +2986,7 @@ name|char
 name|SentDate
 index|[]
 decl_stmt|;
-comment|/* 	**  Output "From" line unless supressed 	*/
+comment|/* 	**  Output "From" line unless supressed 	** 	**>>>>>>>>>>	One of the ugliest hacks seen by human eyes is 	**>>>>>>>>>>	contained herein: UUCP wants those stupid 	**>> NOTE>>	"remote from<host>" lines.  Why oh why does a 	**>>>>>>>>>>	well-meaning programmer such as myself have to 	**>>>>>>>>>>	deal with this kind of antique garbage???? 	*/
 if|if
 condition|(
 operator|!
@@ -3000,6 +3000,39 @@ name|m_flags
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|m
+operator|->
+name|m_name
+argument_list|,
+literal|"uucp"
+argument_list|)
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|expand
+argument_list|(
+literal|"From $f  $d remote from $h"
+argument_list|,
+name|buf
+argument_list|,
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 operator|(
 name|void
 operator|)
