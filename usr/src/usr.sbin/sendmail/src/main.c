@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.94 (Berkeley) %G%"
+literal|"@(#)main.c	8.95 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7031,6 +7031,9 @@ index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|ARGV_T
+operator|)
 name|SaveArgv
 argument_list|)
 expr_stmt|;

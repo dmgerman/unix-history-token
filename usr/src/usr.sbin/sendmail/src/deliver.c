@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.140 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.141 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5540,8 +5540,14 @@ name|m
 operator|->
 name|m_mailer
 argument_list|,
+operator|(
+name|ARGV_T
+operator|)
 name|pv
 argument_list|,
+operator|(
+name|ARGV_T
+operator|)
 name|env
 argument_list|)
 expr_stmt|;

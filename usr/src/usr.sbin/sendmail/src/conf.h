@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.143 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.144 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -860,6 +860,13 @@ define|#
 directive|define
 name|GIDSET_T
 value|gid_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGV_T
+value|const char **
 end_define
 
 begin_define
@@ -1927,6 +1934,17 @@ end_define
 
 begin_comment
 comment|/* use "union wait" as wait argument type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UID_T
+value|int
+end_define
+
+begin_comment
+comment|/* compiler gripes on uid_t */
 end_comment
 
 begin_define
@@ -6438,6 +6456,42 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|UID_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|UID_T
+value|uid_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ARGV_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ARGV_T
+value|char **
+end_define
 
 begin_endif
 endif|#
