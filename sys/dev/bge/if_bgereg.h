@@ -9476,7 +9476,7 @@ name|BGE_HOSTADDR
 parameter_list|(
 name|x
 parameter_list|)
-value|x.bge_addr_lo
+value|((x).bge_addr_lo)
 end_define
 
 begin_comment
@@ -9490,11 +9490,8 @@ block|{
 name|bge_hostaddr
 name|bge_hostaddr
 decl_stmt|;
-name|u_int16_t
-name|bge_flags
-decl_stmt|;
-name|u_int16_t
-name|bge_max_len
+name|u_int32_t
+name|bge_maxlen_flags
 decl_stmt|;
 name|u_int32_t
 name|bge_nicaddr
@@ -9503,25 +9500,17 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|bge_rcb_opaque
-block|{
-name|u_int32_t
-name|bge_reg0
-decl_stmt|;
-name|u_int32_t
-name|bge_reg1
-decl_stmt|;
-name|u_int32_t
-name|bge_reg2
-decl_stmt|;
-name|u_int32_t
-name|bge_reg3
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_define
+define|#
+directive|define
+name|BGE_RCB_MAXLEN_FLAGS
+parameter_list|(
+name|maxlen
+parameter_list|,
+name|flags
+parameter_list|)
+value|((maxlen)<< 16 | (flags))
+end_define
 
 begin_define
 define|#
