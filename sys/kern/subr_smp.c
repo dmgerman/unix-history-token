@@ -584,7 +584,7 @@ name|id
 operator|=
 name|pc
 operator|->
-name|pc_cpuid
+name|pc_cpumask
 expr_stmt|;
 if|if
 condition|(
@@ -592,7 +592,7 @@ name|id
 operator|!=
 name|PCPU_GET
 argument_list|(
-name|cpuid
+name|cpumask
 argument_list|)
 operator|&&
 operator|(
