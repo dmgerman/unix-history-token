@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -563,6 +563,72 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_NQLEASE
+value|47
+end_define
+
+begin_comment
+comment|/* Nqnfs lease */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NQMHOST
+value|48
+end_define
+
+begin_comment
+comment|/* Nqnfs host address table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NETADDR
+value|49
+end_define
+
+begin_comment
+comment|/* Export host address structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NFSSVC
+value|50
+end_define
+
+begin_comment
+comment|/* Nfs server structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NFSUID
+value|51
+end_define
+
+begin_comment
+comment|/* Nfs uid mapping structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NFSD
+value|52
+end_define
+
+begin_comment
+comment|/* Nfs server daemon structure */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_TEMP
 value|74
 end_define
@@ -680,7 +746,19 @@ value|\ 	"FFS node",
 comment|/* 45 M_FFSNODE */
 value|\ 	"MFS node",
 comment|/* 46 M_MFSNODE */
-value|\ 	NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, \ 	"temp",
+value|\ 	"NQNFS Lease",
+comment|/* 47 M_NQLEASE */
+value|\ 	"NQNFS Host",
+comment|/* 48 M_NQMHOST */
+value|\ 	"Export Host",
+comment|/* 49 M_NETADDR */
+value|\ 	"NFS srvsock",
+comment|/* 50 M_NFSSVC */
+value|\ 	"NFS uid",
+comment|/* 51 M_NFSUID */
+value|\ 	"NFS daemon",
+comment|/* 52 M_NFSD */
+value|\ 	NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, \ 	"temp",
 comment|/* 74 M_TEMP */
 value|\ }
 end_define
