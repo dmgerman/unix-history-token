@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pw_copy.c	5.2 (Berkeley) %G%"
+literal|"@(#)pw_copy.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,9 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|char
+modifier|*
+name|progname
+decl_stmt|,
 modifier|*
 name|tempname
 decl_stmt|;
@@ -194,17 +197,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: %s: line too long\n"
+literal|"%s: %s: line too long\n"
+argument_list|,
+name|progname
 argument_list|,
 name|_PATH_MASTERPASSWD
 argument_list|)
 expr_stmt|;
 name|pw_error
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|,
 literal|0
@@ -230,6 +231,16 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|to
+argument_list|)
+condition|)
+goto|goto
+name|err
+goto|;
 continue|continue;
 block|}
 if|if
@@ -254,17 +265,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: %s: corrupted entry\n"
+literal|"%s: %s: corrupted entry\n"
+argument_list|,
+name|progname
 argument_list|,
 name|_PATH_MASTERPASSWD
 argument_list|)
 expr_stmt|;
 name|pw_error
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|,
 literal|0
@@ -307,6 +316,16 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|to
+argument_list|)
+condition|)
+goto|goto
+name|err
+goto|;
 continue|continue;
 block|}
 operator|(
@@ -363,6 +382,16 @@ name|done
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|to
+argument_list|)
+condition|)
+goto|goto
+name|err
+goto|;
 block|}
 if|if
 condition|(
@@ -417,6 +446,24 @@ argument_list|,
 name|pw
 operator|->
 name|pw_shell
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|to
+argument_list|)
+condition|)
+name|err
+label|:
+name|pw_error
+argument_list|(
+name|NULL
+argument_list|,
+literal|1
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 operator|(
