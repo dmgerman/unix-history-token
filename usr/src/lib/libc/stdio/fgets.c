@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fgets.c	5.3 (Berkeley) %G%"
+literal|"@(#)fgets.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,19 +222,19 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|memcpy
+name|bcopy
 argument_list|(
 operator|(
 name|void
 operator|*
 operator|)
-name|s
+name|p
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
-name|p
+name|s
 argument_list|,
 name|len
 argument_list|)
@@ -267,19 +267,19 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|memcpy
+name|bcopy
 argument_list|(
 operator|(
 name|void
 operator|*
 operator|)
-name|s
+name|p
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
-name|p
+name|s
 argument_list|,
 name|len
 argument_list|)

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ungetc.c	5.5 (Berkeley) %G%"
+literal|"@(#)ungetc.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -230,8 +230,14 @@ return|;
 operator|(
 name|void
 operator|)
-name|memcpy
+name|bcopy
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|p
+argument_list|,
 operator|(
 name|void
 operator|*
@@ -241,12 +247,6 @@ name|p
 operator|+
 name|i
 operator|)
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|p
 argument_list|,
 operator|(
 name|size_t

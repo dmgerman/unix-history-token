@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fread.c	5.3 (Berkeley) %G%"
+literal|"@(#)fread.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,14 +158,8 @@ block|{
 operator|(
 name|void
 operator|)
-name|memcpy
+name|bcopy
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|p
-argument_list|,
 operator|(
 name|void
 operator|*
@@ -173,6 +167,12 @@ operator|)
 name|fp
 operator|->
 name|_p
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|p
 argument_list|,
 operator|(
 name|size_t
@@ -220,14 +220,8 @@ block|}
 operator|(
 name|void
 operator|)
-name|memcpy
+name|bcopy
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|p
-argument_list|,
 operator|(
 name|void
 operator|*
@@ -235,6 +229,12 @@ operator|)
 name|fp
 operator|->
 name|_p
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|p
 argument_list|,
 name|resid
 argument_list|)
