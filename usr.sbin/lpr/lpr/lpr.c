@@ -1561,6 +1561,11 @@ expr_stmt|;
 if|if
 condition|(
 name|hdr
+operator|&&
+operator|!
+name|pp
+operator|->
+name|no_header
 condition|)
 block|{
 if|if
