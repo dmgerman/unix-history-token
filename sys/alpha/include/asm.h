@@ -3,6 +3,18 @@ begin_comment
 comment|/*   * Copyright (c) 1991,1990,1989,1994,1995,1996 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *	From: NetBSD: asm.h,v 1.18 1997/11/03 04:22:06 ross Exp  * $FreeBSD$  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MACHINE_ASM_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_MACHINE_ASM_H_
+end_define
+
 begin_comment
 comment|/*  *	Assembly coding style  *  *	This file contains macros and register defines to  *	aid in writing more readable assembly code.  *	Some rules to make assembly code understandable by  *	a debugger are also noted.  *  *	The document  *  *		"ALPHA Calling Standard", DEC 27-Apr-90  *  *	defines (a superset of) the rules and conventions  *	we use.  While we make no promise of adhering to  *	such standard and its evolution (esp where we  *	can get faster code paths) it is certainly intended  *	that we be interoperable with such standard.  *  *	In this sense, this file is a proper part of the  *	definition of the (software) Alpha architecture.  */
 end_comment
@@ -1848,6 +1860,15 @@ end_endif
 
 begin_comment
 comment|/* not lint and not STRIP_FBSDID */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_MACHINE_ASM_H_ */
 end_comment
 
 end_unit
