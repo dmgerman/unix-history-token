@@ -2987,7 +2987,7 @@ argument|; 	int			error; 	uint8_t			irql;
 comment|/* 	 * According to the NDIS spec, MiniportQueryInformation() 	 * and MiniportSetInformation() requests are handled serially: 	 * once one request has been issued, we must wait for it to  	 * finish before allowing another request to proceed. 	 */
 argument|sc = arg;  	KeAcquireSpinLock(&sc->ndis_block->nmb_lock,&irql);  	if (sc->ndis_block->nmb_pendingreq != NULL) 		panic(
 literal|"ndis_set_info() called while other request pending"
-argument|); 	else 		sc->ndis_block->nmb_pendingreq = (ndis_request *)sc;  	setfunc = sc->ndis_chars->nmc_setinfo_func; 	adapter = sc->ndis_block->nmb_miniportadapterctx;  	if (adapter == NULL || setfunc == NULL) { 		KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql); 		return(ENXIO); 	}  	rval = MSCALL6(setfunc, adapter, oid, buf, *buflen,&byteswritten,&bytesneeded);  	sc->ndis_block->nmb_pendingreq = NULL;  	KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql);  	if (rval == NDIS_STATUS_PENDING) { 		mtx_lock(&ndis_req_mtx); 		error = msleep(&sc->ndis_block->nmb_setstat,&ndis_req_mtx, 		    curthread->td_priority|PDROP,
+argument|); 	else 		sc->ndis_block->nmb_pendingreq = (ndis_request *)sc;  	setfunc = sc->ndis_chars->nmc_setinfo_func; 	adapter = sc->ndis_block->nmb_miniportadapterctx;  	if (adapter == NULL || setfunc == NULL) { 		sc->ndis_block->nmb_pendingreq = NULL; 		KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql); 		return(ENXIO); 	}  	rval = MSCALL6(setfunc, adapter, oid, buf, *buflen,&byteswritten,&bytesneeded);  	sc->ndis_block->nmb_pendingreq = NULL;  	KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql);  	if (rval == NDIS_STATUS_PENDING) { 		mtx_lock(&ndis_req_mtx); 		error = msleep(&sc->ndis_block->nmb_setstat,&ndis_req_mtx, 		    curthread->td_priority|PDROP,
 literal|"ndisset"
 argument|,
 literal|5
@@ -3037,21 +3037,7 @@ argument|; i< NdisMediumMax; i++) 		mediumarray[i] = i;          status = MSCALL
 comment|/* 	 * If the init fails, blow away the other exported routines 	 * we obtained from the driver so we can't call them later. 	 * If the init failed, none of these will work. 	 */
 argument|if (status != NDIS_STATUS_SUCCESS) { 		NDIS_LOCK(sc); 		sc->ndis_block->nmb_miniportadapterctx = NULL; 		NDIS_UNLOCK(sc); 		return(ENXIO); 	}  	return(
 literal|0
-argument|); }  void ndis_enable_intr(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_enable_interrupts_handler	intrenbfunc;  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	intrenbfunc = sc->ndis_chars->nmc_enable_interrupts_func; 	if (adapter == NULL || intrenbfunc == NULL) 		return; 	MSCALL1(intrenbfunc, adapter);  	return; }  void ndis_disable_intr(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_disable_interrupts_handler	intrdisfunc;  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	intrdisfunc = sc->ndis_chars->nmc_disable_interrupts_func; 	if (adapter == NULL || intrdisfunc == NULL) 	    return;  	MSCALL1(intrdisfunc, adapter);  	return; }  int ndis_isr(arg, ourintr, callhandler) 	void			*arg; 	int			*ourintr; 	int			*callhandler; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_isr_handler	isrfunc; 	uint8_t			accepted, queue;  	if (arg == NULL || ourintr == NULL || callhandler == NULL) 		return(EINVAL);  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	isrfunc = sc->ndis_chars->nmc_isr_func;  	if (adapter == NULL || isrfunc == NULL) 		return(ENXIO);
-ifdef|#
-directive|ifdef
-name|notdef
-argument|if (NDIS_SERIALIZED(sc->ndis_block)) 		mtx_lock(&sc->ndis_block->nmb_serialmtx);
-endif|#
-directive|endif
-argument|MSCALL3(isrfunc,&accepted,&queue, adapter);
-ifdef|#
-directive|ifdef
-name|notdef
-argument|if (NDIS_SERIALIZED(sc->ndis_block)) 		mtx_unlock(&sc->ndis_block->nmb_serialmtx);
-endif|#
-directive|endif
-argument|*ourintr = accepted; 	*callhandler = queue;  	return(
+argument|); }  void ndis_enable_intr(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_enable_interrupts_handler	intrenbfunc;  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	intrenbfunc = sc->ndis_chars->nmc_enable_interrupts_func; 	if (adapter == NULL || intrenbfunc == NULL) 		return; 	MSCALL1(intrenbfunc, adapter);  	return; }  void ndis_disable_intr(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_disable_interrupts_handler	intrdisfunc;  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	intrdisfunc = sc->ndis_chars->nmc_disable_interrupts_func; 	if (adapter == NULL || intrdisfunc == NULL) 	    return;  	MSCALL1(intrdisfunc, adapter);  	return; }  int ndis_isr(arg, ourintr, callhandler) 	void			*arg; 	int			*ourintr; 	int			*callhandler; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_isr_handler	isrfunc; 	uint8_t			accepted, queue;  	if (arg == NULL || ourintr == NULL || callhandler == NULL) 		return(EINVAL);  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	isrfunc = sc->ndis_chars->nmc_isr_func;  	if (adapter == NULL || isrfunc == NULL) 		return(ENXIO);  	MSCALL3(isrfunc,&accepted,&queue, adapter);  	*ourintr = accepted; 	*callhandler = queue;  	return(
 literal|0
 argument|); }  __stdcall static void ndis_intrhand(dpc, dobj, ip, sc) 	kdpc			*dpc; 	device_object		*dobj; 	irp			*ip; 	struct ndis_softc	*sc; { 	ndis_handle		adapter; 	__stdcall ndis_interrupt_handler	intrfunc; 	uint8_t			irql;  	adapter = sc->ndis_block->nmb_miniportadapterctx; 	intrfunc = sc->ndis_chars->nmc_interrupt_func;  	if (adapter == NULL || intrfunc == NULL) 		return;  	if (NDIS_SERIALIZED(sc->ndis_block)) 		KeAcquireSpinLock(&sc->ndis_block->nmb_lock,&irql);  	MSCALL1(intrfunc, adapter);
 comment|/* If there's a MiniportEnableInterrupt() routine, call it. */
@@ -3061,7 +3047,7 @@ argument|, bytesneeded =
 literal|0
 argument|; 	int			error; 	uint8_t			irql; 	 	sc = arg; 	KeAcquireSpinLock(&sc->ndis_block->nmb_lock,&irql);  	if (sc->ndis_block->nmb_pendingreq != NULL) 		panic(
 literal|"ndis_get_info() called while other request pending"
-argument|); 	else 		sc->ndis_block->nmb_pendingreq = (ndis_request *)sc;  	queryfunc = sc->ndis_chars->nmc_queryinfo_func; 	adapter = sc->ndis_block->nmb_miniportadapterctx;  	if (adapter == NULL || queryfunc == NULL) { 		KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql); 		return(ENXIO); 	}  	rval = MSCALL6(queryfunc, adapter, oid, buf, *buflen,&byteswritten,&bytesneeded);  	sc->ndis_block->nmb_pendingreq = NULL;  	KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql);
+argument|); 	else 		sc->ndis_block->nmb_pendingreq = (ndis_request *)sc;  	queryfunc = sc->ndis_chars->nmc_queryinfo_func; 	adapter = sc->ndis_block->nmb_miniportadapterctx;  	if (adapter == NULL || queryfunc == NULL) { 		sc->ndis_block->nmb_pendingreq = NULL; 		KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql); 		return(ENXIO); 	}  	rval = MSCALL6(queryfunc, adapter, oid, buf, *buflen,&byteswritten,&bytesneeded);  	sc->ndis_block->nmb_pendingreq = NULL;  	KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql);
 comment|/* Wait for requests that block. */
 argument|if (rval == NDIS_STATUS_PENDING) { 		mtx_lock(&ndis_req_mtx); 		error = msleep(&sc->ndis_block->nmb_getstat,&ndis_req_mtx, 		    curthread->td_priority|PDROP,
 literal|"ndisget"
