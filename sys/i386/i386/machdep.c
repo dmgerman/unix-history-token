@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.24 1994/01/03 07:55:21 davidg Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.25 1994/01/14 16:23:35 davidg Exp $  */
 end_comment
 
 begin_include
@@ -250,28 +250,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|EXPECT_BASEMEM
-value|640
-end_define
-
-begin_comment
-comment|/* The expected base memory*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INFORM_WAIT
-value|1
-end_define
-
-begin_comment
-comment|/* Set to pause berfore crash in weird cases*/
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -5003,37 +4981,31 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*printf("bios base %d ext %d ", biosbasemem, biosextmem);*/
-end_comment
-
-begin_comment
-comment|/* 	 * 15 Aug 92	Terry Lambert		The real fix for the CMOS bug 	 */
+comment|/* 	 * If BIOS tells us that it has more than 640k in the basemem, 	 *	don't believe it - set it to 640k. 	 */
 end_comment
 
 begin_if
 if|if
 condition|(
 name|biosbasemem
-operator|!=
-name|EXPECT_BASEMEM
+operator|>
+literal|640
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Warning: Base memory %dK, assuming %dK\n"
-argument_list|,
-name|biosbasemem
-argument_list|,
-name|EXPECT_BASEMEM
-argument_list|)
-expr_stmt|;
 name|biosbasemem
 operator|=
-name|EXPECT_BASEMEM
+literal|640
 expr_stmt|;
-comment|/* assume base*/
-block|}
 end_if
+
+begin_comment
+comment|/* 	 * Some 386 machines might give us a bogus number for extended 	 *	mem. If this happens, stop now. 	 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LARGEMEM
+end_ifndef
 
 begin_if
 if|if
@@ -5043,33 +5015,26 @@ operator|>
 literal|65536
 condition|)
 block|{
-name|printf
+name|panic
 argument_list|(
-literal|"Warning: Extended memory %dK(>64M), assuming 0K\n"
-argument_list|,
-name|biosextmem
+literal|"extended memory beyond limit of 64MB"
 argument_list|)
 expr_stmt|;
-name|biosextmem
-operator|=
-literal|0
-expr_stmt|;
-comment|/* assume none*/
+comment|/* NOT REACHED */
 block|}
 end_if
 
-begin_comment
-comment|/* 	 * Go into normal calculation; Note that we try to run in 640K, and 	 * that invalid CMOS values of non 0xffff are no longer a cause of 	 * ptdi problems.  I have found a gutted kernel can run in 640K. 	 */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|pagesinbase
 operator|=
-literal|640
-operator|/
-literal|4
-operator|-
-name|first
+name|biosbasemem
+operator|*
+literal|1024
 operator|/
 name|NBPG
 expr_stmt|;
@@ -5079,30 +5044,18 @@ begin_expr_stmt
 name|pagesinext
 operator|=
 name|biosextmem
+operator|*
+literal|1024
 operator|/
-literal|4
+name|NBPG
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* use greater of either base or extended memory. do this 	 * until I reinstitue discontiguous allocation of vm_page 	 * array. 	 */
+comment|/* 	 * Maxmem isn't the "maximum memory", it's the highest page of 	 * of the physical address space. It should be "Maxphyspage". 	 */
 end_comment
 
-begin_if
-if|if
-condition|(
-name|pagesinbase
-operator|>
-name|pagesinext
-condition|)
-name|Maxmem
-operator|=
-literal|640
-operator|/
-literal|4
-expr_stmt|;
-else|else
-block|{
+begin_expr_stmt
 name|Maxmem
 operator|=
 name|pagesinext
@@ -5111,12 +5064,7 @@ literal|0x100000
 operator|/
 name|NBPG
 expr_stmt|;
-block|}
-end_if
-
-begin_comment
-comment|/* This used to explode, since Maxmem used to be 0 for bas CMOS*/
-end_comment
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -5170,14 +5118,10 @@ begin_comment
 comment|/* number of pages of physmem addr space */
 end_comment
 
-begin_comment
-comment|/*printf("using first 0x%x to 0x%x\n ", first, maxmem*NBPG);*/
-end_comment
-
 begin_if
 if|if
 condition|(
-name|maxmem
+name|Maxmem
 operator|<
 literal|2048
 operator|/
@@ -5186,7 +5130,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"Too little RAM memory.\n"
+literal|"Too little memory (2MB required)"
 argument_list|)
 expr_stmt|;
 comment|/* NOT REACHED */
@@ -5216,33 +5160,48 @@ comment|/* avail_start and avail_end are initialized in pmap_bootstrap */
 end_comment
 
 begin_expr_stmt
-name|phys_avail
-index|[
+name|x
+operator|=
 literal|0
-index|]
-operator|=
-literal|0x1000
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* memory up to the ISA hole */
-end_comment
-
-begin_expr_stmt
-name|phys_avail
-index|[
+begin_if
+if|if
+condition|(
+name|pagesinbase
+operator|>
 literal|1
+condition|)
+block|{
+name|phys_avail
+index|[
+name|x
+operator|++
 index|]
 operator|=
-literal|0xa0000
+name|NBPG
 expr_stmt|;
-end_expr_stmt
+comment|/* skip first page of memory */
+name|phys_avail
+index|[
+name|x
+operator|++
+index|]
+operator|=
+name|pagesinbase
+operator|*
+name|NBPG
+expr_stmt|;
+comment|/* memory up to the ISA hole */
+block|}
+end_if
 
 begin_expr_stmt
 name|phys_avail
 index|[
-literal|2
+name|x
+operator|++
 index|]
 operator|=
 name|avail_start
@@ -5256,7 +5215,8 @@ end_comment
 begin_expr_stmt
 name|phys_avail
 index|[
-literal|3
+name|x
+operator|++
 index|]
 operator|=
 name|avail_end
@@ -5266,7 +5226,8 @@ end_expr_stmt
 begin_expr_stmt
 name|phys_avail
 index|[
-literal|4
+name|x
+operator|++
 index|]
 operator|=
 literal|0
@@ -5280,7 +5241,8 @@ end_comment
 begin_expr_stmt
 name|phys_avail
 index|[
-literal|5
+name|x
+operator|++
 index|]
 operator|=
 literal|0
