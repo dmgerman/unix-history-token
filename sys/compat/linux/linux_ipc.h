@@ -15,6 +15,32 @@ directive|define
 name|_LINUX_IPC_H_
 end_define
 
+begin_comment
+comment|/*  * Version flags for semctl, msgctl, and shmctl commands  * These are passed as bitflags or-ed with the actual command  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_IPC_OLD
+value|0
+end_define
+
+begin_comment
+comment|/* Old version (no 32-bit UID support on many 				   architectures) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_IPC_64
+value|0x0100
+end_define
+
+begin_comment
+comment|/* New version (support 32-bit UIDs, bigger 				   message sizes, etc. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

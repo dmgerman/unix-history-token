@@ -556,6 +556,31 @@ value|11
 end_define
 
 begin_comment
+comment|/*  * VFAT  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_VFAT_READDIR_BOTH
+value|0x7201
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_IOCTL_VFAT_MIN
+value|LINUX_VFAT_READDIR_BOTH
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_IOCTL_VFAT_MAX
+value|LINUX_VFAT_READDIR_BOTH
+end_define
+
+begin_comment
 comment|/*  * console  */
 end_comment
 
@@ -1070,6 +1095,13 @@ define|#
 directive|define
 name|LINUX_OSS_GETVERSION
 value|0x4d76
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SOUND_MIXER_READ_STEREODEVS
+value|0x4dfb
 end_define
 
 begin_define
