@@ -6,25 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_bootp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_isa.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_nfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_nfsroot.h"
 end_include
 
 begin_include
