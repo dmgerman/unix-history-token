@@ -3265,6 +3265,10 @@ operator|=
 name|VOP_BWRITE
 argument_list|(
 name|bp
+operator|->
+name|b_vp
+argument_list|,
+name|bp
 argument_list|)
 expr_stmt|;
 name|dp
@@ -3430,6 +3434,10 @@ operator|=
 name|VOP_BWRITE
 argument_list|(
 name|bp
+operator|->
+name|b_vp
+argument_list|,
+name|bp
 argument_list|)
 expr_stmt|;
 name|dp
@@ -3501,6 +3509,10 @@ name|error
 operator|=
 name|VOP_BWRITE
 argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -3625,6 +3637,10 @@ name|error
 operator|=
 name|VOP_BWRITE
 argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
