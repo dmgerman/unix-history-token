@@ -4586,12 +4586,6 @@ argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;
-name|ieee80211_ref_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
-comment|/* hold reference */
 block|}
 return|return
 name|ni
@@ -4909,6 +4903,8 @@ name|ic_opmode
 operator|==
 name|IEEE80211_M_AHDEMO
 condition|)
+block|{
+comment|/* 			 * In adhoc mode cons up a node for the destination. 			 * Note that we need an additional reference for the 			 * caller to be consistent with _ieee80211_find_node. 			 */
 name|ni
 operator|=
 name|ieee80211_fakeup_adhoc_node
@@ -4918,6 +4914,21 @@ argument_list|,
 name|macaddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ni
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|ieee80211_ref_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|IEEE80211_DPRINTF
