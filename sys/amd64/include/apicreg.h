@@ -450,43 +450,6 @@ comment|/** GRAB_LOPRIO */
 end_comment
 
 begin_comment
-comment|/* XXX these 2 don't really belong here... */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COUNT_FIELD
-value|0x00ffffff
-end_define
-
-begin_comment
-comment|/* count portion of the lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_FIELD
-value|0xff000000
-end_define
-
-begin_comment
-comment|/* cpu portion of the lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FREE_LOCK
-value|0xffffffff
-end_define
-
-begin_comment
-comment|/* value of lock when free */
-end_comment
-
-begin_comment
 comment|/*  * XXX This code assummes that the reserved field of the  *      local APIC TPR can be written with all 0s.  *     This saves quite a few memory accesses.  *     If the silicon ever changes then things will break!  *     It affects mplock.s, swtch.s, and possibly other files.  */
 end_comment
 
