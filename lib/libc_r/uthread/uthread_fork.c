@@ -406,7 +406,7 @@ name|TAILQ_NEXT
 argument_list|(
 name|pthread
 argument_list|,
-name|dle
+name|tle
 argument_list|)
 expr_stmt|;
 comment|/* Make sure this isn't the running thread: */
