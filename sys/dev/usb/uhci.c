@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.140 2001/10/24 20:20:03 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.141 2001/10/24 21:04:04 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -5826,6 +5826,17 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function_decl
+name|Static
+name|int
+name|uhci_intr1
+parameter_list|(
+name|uhci_softc_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|uhci_intr
@@ -5841,6 +5852,60 @@ name|sc
 init|=
 name|arg
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|15
+argument_list|,
+operator|(
+literal|"uhci_intr: real interrupt\n"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|use_polling
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|printf
+argument_list|(
+literal|"uhci_intr: ignored interrupt while polling\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|uhci_intr1
+argument_list|(
+name|sc
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|uhci_intr1
+parameter_list|(
+name|uhci_softc_t
+modifier|*
+name|sc
+parameter_list|)
+block|{
 name|int
 name|status
 decl_stmt|;
@@ -5906,7 +5971,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: uhci_intr\n"
+literal|"%s: uhci_intr1\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -7334,7 +7399,7 @@ operator|&
 name|UHCI_STS_USBINT
 condition|)
 block|{
-name|uhci_intr
+name|uhci_intr1
 argument_list|(
 name|sc
 argument_list|)
@@ -7445,7 +7510,7 @@ argument_list|)
 operator|&
 name|UHCI_STS_USBINT
 condition|)
-name|uhci_intr
+name|uhci_intr1
 argument_list|(
 name|sc
 argument_list|)
