@@ -963,6 +963,23 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* 	 * Sometimes people have to call this from the kernel debugger.  	 * (if 'panic' can not dump) 	 * Give them a clue as to why they can't dump. 	 */
+if|if
+condition|(
+name|dumper
+operator|.
+name|dumper
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"cannot dump. No dump device defined.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|savectx
 argument_list|(
 operator|&
@@ -1510,12 +1527,6 @@ name|RB_DUMP
 operator|&&
 operator|!
 name|cold
-operator|&&
-name|dumper
-operator|.
-name|dumper
-operator|!=
-name|NULL
 operator|&&
 operator|!
 name|dumping
