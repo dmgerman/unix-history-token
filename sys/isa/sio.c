@@ -108,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"i386/isa/comreg.h"
+file|"i386/isa/sioreg.h"
 end_include
 
 begin_include
