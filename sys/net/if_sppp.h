@@ -507,6 +507,7 @@ decl_stmt|;
 comment|/* auth params, i'm authenticator */
 name|struct
 name|slcompress
+modifier|*
 name|pp_comp
 decl_stmt|;
 comment|/* for VJ compression */
