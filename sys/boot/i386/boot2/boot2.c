@@ -456,7 +456,7 @@ specifier|static
 name|char
 name|cmd
 index|[
-literal|80
+literal|512
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -466,7 +466,7 @@ specifier|static
 name|char
 name|kname
 index|[
-literal|128
+literal|1024
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1067,11 +1067,10 @@ control|)
 block|{
 name|printf
 argument_list|(
-comment|/* " \n>> FreeBSD/i386 BOOT\n" */
-comment|/* "Default: */
-literal|"%u:%s(%u,%c)%s:"
+literal|" \n>> FreeBSD/i386 BOOT\n"
+literal|"Default: %u:%s(%u,%c)%s\n"
+literal|"boot: "
 argument_list|,
-comment|/* "boot: ", */
 name|dsk
 operator|.
 name|drive
@@ -1235,7 +1234,18 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* if (!ls) 	    printf("No %s\n", fname); */
+if|if
+condition|(
+operator|!
+name|ls
+condition|)
+name|printf
+argument_list|(
+literal|"No %s\n"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -2052,7 +2062,17 @@ argument_list|)
 operator|&
 literal|0x10
 expr_stmt|;
-comment|/* printf("Keyboard: %s\n", i ? "yes" : "no"); */
+name|printf
+argument_list|(
+literal|"Keyboard: %s\n"
+argument_list|,
+name|i
+condition|?
+literal|"yes"
+else|:
+literal|"no"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
