@@ -506,6 +506,15 @@ name|st_rdev
 argument_list|)
 operator|>
 literal|255
+operator|||
+name|minor
+argument_list|(
+name|sp
+operator|->
+name|st_rdev
+argument_list|)
+operator|<
+literal|0
 condition|)
 operator|(
 name|void
@@ -521,6 +530,9 @@ operator|->
 name|st_rdev
 argument_list|)
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|minor
 argument_list|(
 name|sp
