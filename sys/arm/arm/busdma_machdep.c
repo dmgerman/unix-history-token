@@ -2451,6 +2451,19 @@ operator|==
 name|UIO_USERSPACE
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|uio
+operator|->
+name|uio_td
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"bus_dmamap_load_uio: USERSPACE but no proc"
+operator|)
+argument_list|)
+expr_stmt|;
 name|pmap
 operator|=
 name|vmspace_pmap
@@ -2462,17 +2475,6 @@ operator|->
 name|td_proc
 operator|->
 name|p_vmspace
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|td
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"bus_dmamap_load_uio: USERSPACE but no proc"
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
