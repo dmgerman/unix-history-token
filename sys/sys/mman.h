@@ -655,7 +655,7 @@ end_ifndef
 
 begin_function_decl
 name|__BEGIN_DECLS
-comment|/*  * XXX not yet implemented: posix_madvise(), posix_mem_offset(),  * posix_typed_mem_get_info(), posix_typed_mem_open().  */
+comment|/*  * XXX not yet implemented: mlockall(), munlockall(), posix_madvise(),  * posix_mem_offset(), posix_typed_mem_get_info(), posix_typed_mem_open().  */
 if|#
 directive|if
 name|__BSD_VISIBLE
@@ -719,28 +719,6 @@ name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-name|__POSIX_VISIBLE
-operator|>=
-literal|199309
-end_if
-
-begin_function_decl
-name|int
-name|mlockall
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -821,28 +799,6 @@ name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-name|__POSIX_VISIBLE
-operator|>=
-literal|199309
-end_if
-
-begin_function_decl
-name|int
-name|munlockall
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int
