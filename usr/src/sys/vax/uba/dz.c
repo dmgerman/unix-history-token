@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	3.2	%H%	*/
+comment|/*	dz.c	3.3	%H%	*/
 end_comment
 
 begin_comment
@@ -170,19 +170,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SAE
+value|010000
+end_define
+
+begin_comment
+comment|/* Silo Alarm Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TIE
 value|040000
 end_define
 
 begin_comment
-comment|/* Transmit interrupt enable */
+comment|/* Transmit Interrupt Enable */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DZ_IEN
-value|(MSE+RIE+TIE)
+value|(MSE+RIE+TIE+SAE)
 end_define
 
 begin_define
@@ -197,6 +208,13 @@ define|#
 directive|define
 name|FRERROR
 value|020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OVERRUN
+value|040000
 end_define
 
 begin_define
@@ -276,6 +294,12 @@ init|=
 block|{
 name|NDZ
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|dzact
 decl_stmt|;
 end_decl_stmt
 
@@ -1414,6 +1438,7 @@ operator|(
 name|tp
 operator|)
 block|; }
+comment|/*ARGSUSED*/
 name|dzrint
 argument_list|(
 argument|dev
@@ -1435,17 +1460,64 @@ name|device
 operator|*
 name|dzaddr
 block|;
+specifier|register
+expr|struct
+name|tty
+operator|*
+name|tp0
+block|;
+comment|/* as long as we are here, service them all */
+for|for
+control|(
+name|dev
+operator|=
+literal|0
+init|;
+name|dev
+operator|<
+name|NDZ
+condition|;
+name|dev
+operator|+=
+literal|8
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|dzact
+operator|&
+operator|(
+literal|1
+operator|<<
+operator|(
+name|dev
+operator|>>
+literal|3
+operator|)
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|dzaddr
 operator|=
 name|dzpdma
 index|[
 name|dev
-operator|*
-literal|8
 index|]
 operator|.
 name|p_addr
-block|;
+expr_stmt|;
+name|tp0
+operator|=
+operator|&
+name|dz_tty
+index|[
+name|dev
+index|]
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1462,9 +1534,8 @@ block|{
 comment|/* char present */
 name|tp
 operator|=
-operator|&
-name|dz_tty
-index|[
+name|tp0
+operator|+
 operator|(
 operator|(
 name|c
@@ -1474,13 +1545,6 @@ operator|)
 operator|&
 literal|07
 operator|)
-operator||
-operator|(
-name|dev
-operator|<<
-literal|3
-operator|)
-index|]
 expr_stmt|;
 if|if
 condition|(
@@ -1552,6 +1616,20 @@ end_if
 begin_comment
 comment|/* DEL = interrupt */
 end_comment
+
+begin_if
+if|if
+condition|(
+name|c
+operator|&
+name|OVERRUN
+condition|)
+name|printf
+argument_list|(
+literal|"o"
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_if
 if|if
@@ -1649,28 +1727,25 @@ expr_stmt|;
 end_if
 
 begin_comment
-unit|} }
+unit|} 	} }
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
-name|dzioctl
-argument_list|(
-argument|dev
-argument_list|,
-argument|cmd
-argument_list|,
-argument|addr
-argument_list|,
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_expr_stmt
+unit|dzioctl
+operator|(
+name|dev
+operator|,
+name|cmd
+operator|,
+name|addr
+operator|,
+name|flag
+operator|)
 name|caddr_t
 name|addr
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|dev_t
@@ -1815,6 +1890,18 @@ operator|->
 name|dzcsr
 operator|=
 name|DZ_IEN
+expr_stmt|;
+name|dzact
+operator||=
+operator|(
+literal|1
+operator|<<
+operator|(
+name|dev
+operator|>>
+literal|3
+operator|)
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -2658,6 +2745,21 @@ argument_list|,
 literal|2
 operator|*
 name|HZ
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|dztimer
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|dzrint
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
