@@ -4900,7 +4900,6 @@ argument_list|(
 name|bus
 argument_list|)
 decl_stmt|;
-comment|/* PCCARD_IVAR_ETHADDR unhandled from oldcard */
 switch|switch
 condition|(
 name|which
@@ -5102,7 +5101,7 @@ name|card
 operator|.
 name|cis1_info
 index|[
-literal|2
+literal|3
 index|]
 expr_stmt|;
 break|break;
