@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	8.11 (Berkeley) %G%"
+literal|"@(#)man.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -399,15 +399,19 @@ operator|*
 literal|2
 index|]
 decl_stmt|;
-name|conffile
-operator|=
-name|NULL
-expr_stmt|;
 name|f_cat
 operator|=
 name|f_how
 operator|=
 literal|0
+expr_stmt|;
+name|conffile
+operator|=
+name|p_add
+operator|=
+name|p_path
+operator|=
+name|NULL
 expr_stmt|;
 while|while
 condition|(
@@ -2057,14 +2061,14 @@ operator|=
 literal|'*'
 expr_stmt|;
 comment|/* For each element in the list... */
-if|if
-condition|(
-name|tag
-operator|!=
-name|NULL
-condition|)
 name|e_tag
 operator|=
+name|tag
+operator|==
+name|NULL
+condition|?
+name|NULL
+else|:
 name|tag
 operator|->
 name|list
