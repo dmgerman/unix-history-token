@@ -324,6 +324,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|Device
 index|[
 name|COMPUTER
@@ -347,6 +349,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|Device
 index|[
 name|SRSCAN
