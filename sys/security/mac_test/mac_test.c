@@ -182,7 +182,7 @@ specifier|static
 name|int
 name|mac_test_enabled
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
