@@ -2406,7 +2406,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"spec_fsync: not dirty"
+literal|"fsync: not dirty"
 argument_list|)
 expr_stmt|;
 if|if
