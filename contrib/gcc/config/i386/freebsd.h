@@ -197,7 +197,7 @@ begin_define
 define|#
 directive|define
 name|LIB_SPEC
-value|"%{!shared:%{!pg:-lc}%{pg:-lc_p}}"
+value|"%{!shared:%{!pg:%{!pthread:-lc}%{pthread:-lc_r}}%{pg:%{!pthread:-lc_p}%{pthread:-lc_r_p}}}"
 end_define
 
 begin_define
