@@ -7820,6 +7820,8 @@ name|off
 decl_stmt|,
 name|xfsize
 decl_stmt|,
+name|hdtr_size
+decl_stmt|,
 name|sbytes
 init|=
 literal|0
@@ -7834,6 +7836,10 @@ decl_stmt|;
 name|vp
 operator|=
 name|NULL
+expr_stmt|;
+name|hdtr_size
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * Do argument checking. Must be a regular file in, stream 	 * type and connected socket out, positive offset. 	 */
 name|fp
@@ -8105,7 +8111,7 @@ condition|)
 goto|goto
 name|done
 goto|;
-name|sbytes
+name|hdtr_size
 operator|+=
 name|p
 operator|->
@@ -9086,7 +9092,7 @@ condition|)
 goto|goto
 name|done
 goto|;
-name|sbytes
+name|hdtr_size
 operator|+=
 name|p
 operator|->
@@ -9107,6 +9113,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|sbytes
+operator|+=
+name|hdtr_size
+expr_stmt|;
 name|copyout
 argument_list|(
 operator|&
