@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)skeleton.c	5.5 (Berkeley) %G%"
+literal|"@(#)skeleton.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,15 +35,11 @@ file|"defs.h"
 end_include
 
 begin_comment
-comment|/*  The three line banner used here should be replaced with a one line	*/
+comment|/*  The banner used here should be replaced with an #ident directive	*/
 end_comment
 
 begin_comment
-comment|/*  #ident directive if the target C compiler supports #ident		*/
-end_comment
-
-begin_comment
-comment|/*  directives.								*/
+comment|/*  if the target C compiler supports #ident directives.		*/
 end_comment
 
 begin_comment
@@ -67,7 +63,47 @@ init|=
 block|{
 literal|"#ifndef lint"
 block|,
-literal|"char yysccsid[] = \"@(#)yaccpar	1.4 (Berkeley) 02/25/90\";"
+literal|"static char yysccsid[] = \"@(#)yaccpar	1.8 (Berkeley) 01/20/90\";"
+block|,
+literal|"#endif"
+block|,
+literal|"#define YYBYACC 1"
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|tables
+index|[]
+init|=
+block|{
+literal|"extern short yylhs[];"
+block|,
+literal|"extern short yylen[];"
+block|,
+literal|"extern short yydefred[];"
+block|,
+literal|"extern short yydgoto[];"
+block|,
+literal|"extern short yysindex[];"
+block|,
+literal|"extern short yyrindex[];"
+block|,
+literal|"extern short yygindex[];"
+block|,
+literal|"extern short yytable[];"
+block|,
+literal|"extern short yycheck[];"
+block|,
+literal|"#if YYDEBUG"
+block|,
+literal|"extern char *yyname[];"
+block|,
+literal|"extern char *yyrule[];"
 block|,
 literal|"#endif"
 block|,
@@ -87,7 +123,15 @@ literal|"#define yyclearin (yychar=(-1))"
 block|,
 literal|"#define yyerrok (yyerrflag=0)"
 block|,
-literal|"#ifndef YYSTACKSIZE"
+literal|"#ifdef YYSTACKSIZE"
+block|,
+literal|"#ifndef YYMAXDEPTH"
+block|,
+literal|"#define YYMAXDEPTH YYSTACKSIZE"
+block|,
+literal|"#endif"
+block|,
+literal|"#else"
 block|,
 literal|"#ifdef YYMAXDEPTH"
 block|,
@@ -95,7 +139,9 @@ literal|"#define YYSTACKSIZE YYMAXDEPTH"
 block|,
 literal|"#else"
 block|,
-literal|"#define YYSTACKSIZE 300"
+literal|"#define YYSTACKSIZE 500"
+block|,
+literal|"#define YYMAXDEPTH 500"
 block|,
 literal|"#endif"
 block|,
@@ -117,11 +163,11 @@ literal|"YYSTYPE yyval;"
 block|,
 literal|"YYSTYPE yylval;"
 block|,
-literal|"#define yystacksize YYSTACKSIZE"
-block|,
 literal|"short yyss[YYSTACKSIZE];"
 block|,
 literal|"YYSTYPE yyvs[YYSTACKSIZE];"
+block|,
+literal|"#define yystacksize YYSTACKSIZE"
 block|,
 literal|0
 block|}
@@ -439,7 +485,7 @@ literal|"    if (yystate == 0&& yym == 0)"
 block|,
 literal|"    {"
 block|,
-literal|"#ifdef YYDEBUG"
+literal|"#if YYDEBUG"
 block|,
 literal|"        if (yydebug)"
 block|,
@@ -499,7 +545,7 @@ literal|"    else"
 block|,
 literal|"        yystate = yydgoto[yym];"
 block|,
-literal|"#ifdef YYDEBUG"
+literal|"#if YYDEBUG"
 block|,
 literal|"    if (yydebug)"
 block|,
@@ -563,6 +609,15 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+specifier|register
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|fp
+operator|=
+name|code_file
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -583,7 +638,7 @@ name|outline
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|output_file
+name|fp
 argument_list|,
 literal|"%s\n"
 argument_list|,
