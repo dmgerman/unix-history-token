@@ -1265,12 +1265,6 @@ operator||
 name|MA_NOTRECURSED
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|loop
 label|:
 name|mtx_lock
@@ -1470,12 +1464,6 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We would like to bring someone in. (only if there is space). 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1489,12 +1477,6 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|mtx_lock_spin
