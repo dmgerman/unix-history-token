@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.9 2001/01/14 14:58:01 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.1.2.3 1999/11/18 13:55:26 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -1565,17 +1565,6 @@ define|#
 directive|define
 name|ACTUALLY_LKM_NOT_KERNEL
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
 
 begin_endif
 endif|#

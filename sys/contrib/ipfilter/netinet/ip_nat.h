@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.17.2.14 2000/11/18 03:58:04 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1995-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.17.2.6 2000/07/15 14:50:06 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

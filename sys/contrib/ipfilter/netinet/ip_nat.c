@@ -13,6 +13,17 @@ name|lint
 argument_list|)
 end_if
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)ip_nat.c	1.11 6/5/96 (C) 1995 Darren Reed"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*static const char rcsid[] = "@(#)$Id: ip_nat.c,v 2.37.2.16 2000/07/18 13:57:40 darrenr Exp $";*/
 end_comment

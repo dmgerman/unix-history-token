@@ -24,6 +24,10 @@ literal|"@(#)ip_frag.c	1.11 3/24/96 (C) 1993-1995 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*static const char rcsid[] = "@(#)$Id: ip_frag.c,v 2.10.2.4 2000/06/06 15:49:15 darrenr Exp $";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const

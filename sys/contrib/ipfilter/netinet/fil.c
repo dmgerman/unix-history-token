@@ -20,7 +20,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fil.c	1.36 6/5/96 (C) 1993-2000 Darren Reed"
+literal|"@(#)fil.c	1.36 6/5/96 (C) 1993-1996 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
@@ -5222,9 +5222,6 @@ directive|endif
 endif|#
 directive|endif
 comment|/* _KERNEL */
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
 comment|/* 	 * Be careful here: ip_id is in network byte order when called 	 * from ip_output() 	 */
 if|if
 condition|(
@@ -5249,8 +5246,6 @@ operator|->
 name|ip_id
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|changed
 operator|=
 literal|0
@@ -6527,9 +6522,6 @@ block|}
 endif|#
 directive|endif
 comment|/* IPFILTER_LOG */
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
 if|if
 condition|(
 operator|(
@@ -6553,8 +6545,6 @@ operator|->
 name|ip_id
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|_KERNEL

@@ -708,7 +708,11 @@ name|nopsize
 block|,
 comment|/* flags */
 literal|0
-block|, }
+block|,
+comment|/* bmaj */
+operator|-
+literal|1
+block|}
 decl_stmt|;
 end_decl_stmt
 
