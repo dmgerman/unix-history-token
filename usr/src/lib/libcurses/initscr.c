@@ -27,7 +27,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	This routine initializes the current and standard screen.  *  * %G% (Berkeley) @(#)initscr.c	1.3  */
+comment|/*  *	This routine initializes the current and standard screen.  *  * %G% (Berkeley) @(#)initscr.c	1.4  */
 end_comment
 
 begin_function
