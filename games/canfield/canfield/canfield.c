@@ -2985,9 +2985,9 @@ end_macro
 
 begin_block
 block|{
-specifier|register
+name|int
 name|i
-expr_stmt|;
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -3285,7 +3285,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|;
@@ -4387,7 +4386,6 @@ name|row
 decl_stmt|,
 name|col
 decl_stmt|;
-specifier|register
 name|struct
 name|cardtype
 modifier|*
@@ -4862,7 +4860,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|cardtype
 modifier|*
@@ -5159,7 +5156,6 @@ decl_stmt|;
 name|time_t
 name|now
 decl_stmt|;
-specifier|register
 name|long
 name|dollars
 decl_stmt|;
@@ -5984,20 +5980,22 @@ begin_comment
 comment|/*  * procedure to move from the tableau to the tableau  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|tabtotab
 argument_list|(
-name|sour
+argument|sour
 argument_list|,
-name|des
+argument|des
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|sour
-operator|,
+decl_stmt|,
 name|des
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -7729,7 +7727,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 modifier|*

@@ -69,13 +69,11 @@ name|char
 name|z
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|event
 modifier|*
 name|e
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -239,7 +237,6 @@ block|{
 name|double
 name|date
 decl_stmt|;
-specifier|register
 name|struct
 name|event
 modifier|*
@@ -320,7 +317,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|event
 modifier|*
@@ -427,7 +423,6 @@ decl_stmt|,
 name|z
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ev
 decl_stmt|;
@@ -509,11 +504,9 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|ev
 decl_stmt|;
-specifier|register
 name|struct
 name|event
 modifier|*

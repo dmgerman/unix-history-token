@@ -51,15 +51,12 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|ch
 decl_stmt|;
-specifier|register
 name|bool
 name|correct
 decl_stmt|;
@@ -258,7 +255,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|cnt
 decl_stmt|,

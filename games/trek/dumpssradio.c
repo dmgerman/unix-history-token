@@ -45,17 +45,14 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|event
 modifier|*
 name|e
 decl_stmt|;
-specifier|register
 name|int
 name|j
 decl_stmt|;
-specifier|register
 name|int
 name|chkrest
 decl_stmt|;

@@ -24,7 +24,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2335,7 +2334,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|k
 decl_stmt|;
@@ -2611,7 +2609,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|tmp
 decl_stmt|;
@@ -2898,7 +2895,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -4049,20 +4045,21 @@ begin_comment
 comment|/*  *	function to adjust time when time warping and taking courses in school  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|adjtime
 argument_list|(
-name|tim
+argument|tim
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|long
 name|tim
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|;
@@ -4141,7 +4138,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -4923,7 +4919,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -5274,20 +5269,21 @@ begin_comment
 comment|/* 	function to read a book  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|readbook
 argument_list|(
-name|lev
+argument|lev
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|lev
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -5526,7 +5522,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|long
 name|i
 decl_stmt|;
@@ -5621,7 +5616,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

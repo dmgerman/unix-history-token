@@ -1099,12 +1099,10 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|object
 modifier|*
 name|obj
 decl_stmt|;
-specifier|register
 name|i
 expr_stmt|;
 name|boolean
@@ -1515,7 +1513,6 @@ block|{
 name|short
 name|ch
 decl_stmt|;
-specifier|register
 name|object
 modifier|*
 name|obj
@@ -1742,7 +1739,6 @@ block|{
 name|short
 name|ch
 decl_stmt|;
-specifier|register
 name|object
 modifier|*
 name|obj
@@ -2010,7 +2006,6 @@ block|{
 name|short
 name|ch
 decl_stmt|;
-specifier|register
 name|object
 modifier|*
 name|obj

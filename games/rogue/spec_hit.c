@@ -1908,20 +1908,22 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|imitating
 argument_list|(
-name|row
+argument|row
 argument_list|,
-name|col
+argument|col
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|short
 name|row
-operator|,
+decl_stmt|,
 name|col
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

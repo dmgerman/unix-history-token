@@ -559,16 +559,18 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|addch
 argument_list|(
-name|ch
+argument|ch
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|ch
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -676,7 +678,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|i
 operator|,
 name|j
@@ -1197,7 +1198,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|i
 operator|,
 name|j
@@ -1266,16 +1266,18 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|put_char_at
 argument_list|(
-name|row
+argument|row
 argument_list|,
-name|col
+argument|col
 argument_list|,
-name|ch
+argument|ch
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|row
 operator|,
 name|col
@@ -1317,14 +1319,16 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|put_cursor
 argument_list|(
-name|row
+argument|row
 argument_list|,
-name|col
+argument|col
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|row
 operator|,
 name|col
@@ -1333,7 +1337,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
 name|i
 operator|,
 name|rdif
@@ -1650,12 +1653,14 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|put_st_char
 argument_list|(
-name|ch
+argument|ch
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|ch
 expr_stmt|;
 end_expr_stmt

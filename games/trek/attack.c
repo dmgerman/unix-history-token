@@ -57,7 +57,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|hit
 decl_stmt|,

@@ -1087,14 +1087,16 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|is_passable
 argument_list|(
-name|row
+argument|row
 argument_list|,
-name|col
+argument|col
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|row
 operator|,
 name|col
@@ -1203,14 +1205,16 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|next_to_something
 argument_list|(
-name|drow
+argument|drow
 argument_list|,
-name|dcol
+argument|dcol
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|drow
 operator|,
 name|dcol
@@ -1963,7 +1967,6 @@ name|boolean
 name|msg_only
 decl_stmt|;
 block|{
-specifier|register
 name|short
 name|i
 decl_stmt|,

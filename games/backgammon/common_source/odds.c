@@ -34,20 +34,22 @@ directive|include
 file|"back.h"
 end_include
 
-begin_expr_stmt
+begin_macro
 name|odds
 argument_list|(
-name|r1
+argument|r1
 argument_list|,
-name|r2
+argument|r2
 argument_list|,
-name|val
+argument|val
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|r1
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -59,7 +61,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -191,15 +192,12 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|j
 decl_stmt|;
-specifier|register
 name|int
 name|total
 decl_stmt|;
@@ -273,7 +271,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|,

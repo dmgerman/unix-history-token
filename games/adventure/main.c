@@ -107,7 +107,6 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;

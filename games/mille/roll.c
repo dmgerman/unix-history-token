@@ -48,7 +48,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|reg
 name|int
 name|ndie
 decl_stmt|,
@@ -58,7 +57,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|reg
 name|int
 name|tot
 decl_stmt|;

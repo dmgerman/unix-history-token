@@ -1814,7 +1814,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1990,7 +1989,6 @@ name|struct
 name|point
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;

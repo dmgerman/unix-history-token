@@ -735,11 +735,9 @@ specifier|extern
 name|int
 name|optind
 decl_stmt|;
-specifier|register
 name|int
 name|ch
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p

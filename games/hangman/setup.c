@@ -51,7 +51,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 modifier|*

@@ -149,14 +149,16 @@ name|blind
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_macro
 name|trap_at
 argument_list|(
-name|row
+argument|row
 argument_list|,
-name|col
+argument|col
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|row
 operator|,
 name|col

@@ -1693,7 +1693,6 @@ modifier|*
 name|ss
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|bwidth
 init|=
@@ -1703,7 +1702,6 @@ name|ss
 operator|->
 name|length
 decl_stmt|;
-specifier|register
 name|int
 name|bdepth
 init|=
@@ -3932,7 +3930,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-comment|/* register a hit on the targeted ship */
+comment|/* a hit on the targeted ship */
 name|int
 name|x
 decl_stmt|,
@@ -6231,7 +6229,6 @@ name|op
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -6450,13 +6447,11 @@ name|int
 name|who
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|shots
 decl_stmt|;
-specifier|register
 name|ship_t
 modifier|*
 name|sp
@@ -6601,7 +6596,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

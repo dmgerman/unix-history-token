@@ -60,13 +60,11 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|,
 name|retval
 decl_stmt|;
-specifier|register
 name|int
 name|y
 decl_stmt|,

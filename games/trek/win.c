@@ -75,7 +75,6 @@ name|cvntab
 name|Skitab
 index|[]
 decl_stmt|;
-specifier|register
 name|struct
 name|cvntab
 modifier|*

@@ -1149,7 +1149,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|nusers
 decl_stmt|,
@@ -1256,7 +1255,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|fd
 decl_stmt|,

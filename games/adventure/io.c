@@ -93,7 +93,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|s
@@ -326,7 +325,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|result
 decl_stmt|;
@@ -466,7 +464,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|result
 decl_stmt|;
@@ -718,11 +715,9 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|sect
 decl_stmt|;
-specifier|register
 name|char
 name|ch
 decl_stmt|;
@@ -987,7 +982,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|s
@@ -1101,7 +1095,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|s
@@ -1109,7 +1102,6 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
-specifier|register
 name|int
 name|locc
 decl_stmt|;
@@ -1471,17 +1463,14 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|locc
 decl_stmt|;
-specifier|register
 name|struct
 name|travlist
 modifier|*
 name|t
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|s
@@ -1797,7 +1786,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|travlist
 modifier|*
@@ -1926,13 +1914,11 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
 comment|/* read the vocabulary          */
-specifier|register
 name|int
 name|index
 decl_stmt|;
@@ -2158,7 +2144,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|bitnum
 decl_stmt|;
@@ -2218,7 +2203,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|hintnum
 decl_stmt|,
@@ -2376,7 +2360,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|s
@@ -2571,7 +2554,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|s

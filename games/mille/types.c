@@ -46,7 +46,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|reg
 name|CARD
 name|card
 decl_stmt|;
@@ -82,7 +81,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|reg
 name|CARD
 name|card
 decl_stmt|;

@@ -93,17 +93,19 @@ name|con_mon
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_macro
 name|mon_hit
 argument_list|(
-name|monster
+argument|monster
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|object
-operator|*
+modifier|*
 name|monster
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -439,19 +441,21 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|rogue_hit
 argument_list|(
-name|monster
+argument|monster
 argument_list|,
-name|force_hit
+argument|force_hit
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|object
-operator|*
+modifier|*
 name|monster
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|boolean
@@ -716,7 +720,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|i
 operator|=
 literal|0
@@ -870,12 +873,10 @@ index|[
 literal|12
 index|]
 decl_stmt|;
-specifier|register
 name|to_hit
 operator|,
 name|damage
 expr_stmt|;
-specifier|register
 name|i
 operator|=
 literal|0
@@ -985,12 +986,10 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|i
 operator|=
 literal|0
 expr_stmt|;
-specifier|register
 name|total
 operator|=
 literal|0

@@ -1173,7 +1173,6 @@ name|monster
 argument_list|,
 name|mn
 argument_list|)
-decl|register
 name|object
 modifier|*
 name|monster
@@ -1181,7 +1180,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-specifier|register
 name|mn
 expr_stmt|;
 end_expr_stmt
@@ -1309,7 +1307,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|object
 modifier|*
 name|monster
@@ -1859,14 +1856,16 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|gmc_row_col
 argument_list|(
-name|row
+argument|row
 argument_list|,
-name|col
+argument|col
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|row
 operator|,
 name|col
@@ -1875,7 +1874,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
 name|object
 modifier|*
 name|monster
@@ -2039,21 +2037,23 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|mv_1_monster
 argument_list|(
-name|monster
+argument|monster
 argument_list|,
-name|row
+argument|row
 argument_list|,
-name|col
+argument|col
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|object
-operator|*
+modifier|*
 name|monster
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|short
@@ -2921,24 +2921,25 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|mtry
 argument_list|(
-name|monster
+argument|monster
 argument_list|,
-name|row
+argument|row
 argument_list|,
-name|col
+argument|col
 argument_list|)
-specifier|register
-name|object
-operator|*
-name|monster
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
-specifier|register
+name|object
+modifier|*
+name|monster
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|short
 name|row
 decl_stmt|,
@@ -2983,24 +2984,25 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|move_mon_to
 argument_list|(
-name|monster
+argument|monster
 argument_list|,
-name|row
+argument|row
 argument_list|,
-name|col
+argument|col
 argument_list|)
-specifier|register
-name|object
-operator|*
-name|monster
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
-specifier|register
+name|object
+modifier|*
+name|monster
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|short
 name|row
 decl_stmt|,
@@ -3013,7 +3015,6 @@ block|{
 name|short
 name|c
 decl_stmt|;
-specifier|register
 name|mrow
 operator|,
 name|mcol
@@ -3343,7 +3344,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|short
 name|row
 decl_stmt|,
@@ -4053,14 +4053,16 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_macro
 name|rogue_is_around
 argument_list|(
-name|row
+argument|row
 argument_list|,
-name|col
+argument|col
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|row
 operator|,
 name|col
@@ -4839,14 +4841,16 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|rogue_can_see
 argument_list|(
-name|row
+argument|row
 argument_list|,
-name|col
+argument|col
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|row
 operator|,
 name|col
@@ -4855,7 +4859,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
 name|retval
 expr_stmt|;
 name|retval

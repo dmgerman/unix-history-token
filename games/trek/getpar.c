@@ -60,7 +60,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -150,7 +149,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -344,7 +342,6 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-specifier|register
 name|struct
 name|cvntab
 modifier|*
@@ -353,7 +350,6 @@ decl_stmt|;
 name|int
 name|flag
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -697,7 +693,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -707,7 +702,6 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|f
 decl_stmt|;
@@ -814,7 +808,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|;
@@ -964,7 +957,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|;
@@ -1040,7 +1032,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|;

@@ -34,20 +34,22 @@ directive|include
 file|"externs.h"
 end_include
 
-begin_expr_stmt
+begin_macro
 name|maxturns
 argument_list|(
-name|ship
+argument|ship
 argument_list|,
-name|af
+argument|af
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|ship
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -58,7 +60,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|turns
 decl_stmt|;
@@ -112,22 +113,24 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|maxmove
 argument_list|(
-name|ship
+argument|ship
 argument_list|,
-name|dir
+argument|dir
 argument_list|,
-name|fs
+argument|fs
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|ship
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -139,7 +142,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|riggone
 init|=

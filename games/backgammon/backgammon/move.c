@@ -394,12 +394,10 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
 comment|/* index */
-specifier|register
 name|int
 name|l
 decl_stmt|;
@@ -796,18 +794,20 @@ end_block
 begin_escape
 end_escape
 
-begin_expr_stmt
+begin_macro
 name|trymove
 argument_list|(
-name|mvnum
+argument|mvnum
 argument_list|,
-name|swapped
+argument|swapped
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|mvnum
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* number of move (rel zero) */
@@ -825,12 +825,10 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|pos
 decl_stmt|;
 comment|/* position on board */
-specifier|register
 name|int
 name|rval
 decl_stmt|;
@@ -1028,7 +1026,6 @@ modifier|*
 name|bsave
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1190,7 +1187,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|BOARD
 modifier|*
@@ -1199,7 +1195,6 @@ init|=
 name|checkq
 decl_stmt|;
 comment|/* queue pointer */
-specifier|register
 name|int
 name|result
 decl_stmt|;
@@ -1400,7 +1395,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 modifier|*
 name|aloc
@@ -1410,7 +1404,6 @@ operator|->
 name|b_board
 decl_stmt|;
 comment|/* pointer to board a */
-specifier|register
 name|int
 modifier|*
 name|bloc
@@ -1420,7 +1413,6 @@ operator|->
 name|b_board
 decl_stmt|;
 comment|/* pointer to board b */
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1483,23 +1475,24 @@ end_block
 begin_escape
 end_escape
 
-begin_expr_stmt
+begin_macro
 name|mvcheck
 argument_list|(
-name|incumbent
+argument|incumbent
 argument_list|,
-name|candidate
+argument|candidate
 argument_list|)
-specifier|register
-expr|struct
-name|BOARD
-operator|*
-name|incumbent
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
-specifier|register
+name|struct
+name|BOARD
+modifier|*
+name|incumbent
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|BOARD
 modifier|*
@@ -1509,11 +1502,9 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|result
 decl_stmt|;
@@ -1749,7 +1740,6 @@ end_macro
 begin_block
 block|{
 comment|/* current game position */
-specifier|register
 name|struct
 name|BOARD
 modifier|*
@@ -1758,7 +1748,6 @@ init|=
 name|bsave
 argument_list|()
 decl_stmt|;
-specifier|register
 name|struct
 name|BOARD
 modifier|*
@@ -1852,18 +1841,20 @@ end_block
 begin_escape
 end_escape
 
-begin_expr_stmt
+begin_macro
 name|boardcopy
 argument_list|(
-name|s
+argument|s
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|BOARD
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* game situation */
@@ -1871,7 +1862,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1992,11 +1982,9 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -2473,7 +2461,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|;

@@ -724,7 +724,6 @@ name|BOOLEAN
 name|blank
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -793,7 +792,6 @@ modifier|*
 name|prompt
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1050,7 +1048,6 @@ modifier|*
 name|crd
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1484,7 +1481,6 @@ name|int
 name|getuchar
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -1546,12 +1542,10 @@ modifier|*
 name|prompt
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|sum
 decl_stmt|;
@@ -1926,11 +1920,9 @@ name|lastline
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|len
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|mp
@@ -2295,12 +2287,10 @@ name|wait_for
 parameter_list|(
 name|ch
 parameter_list|)
-specifier|register
 name|int
 name|ch
 decl_stmt|;
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|;
@@ -2343,7 +2333,6 @@ name|int
 name|readchar
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|cnt
 decl_stmt|;
@@ -2441,12 +2430,10 @@ modifier|*
 name|getline
 parameter_list|()
 block|{
-specifier|register
 name|char
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|,
@@ -2454,7 +2441,6 @@ name|oy
 decl_stmt|,
 name|ox
 decl_stmt|;
-specifier|register
 name|WINDOW
 modifier|*
 name|oscr
@@ -2527,7 +2513,6 @@ operator|>
 name|linebuf
 condition|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

@@ -64,11 +64,9 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -134,7 +132,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -210,12 +207,10 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|q
@@ -291,11 +286,9 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|l
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p

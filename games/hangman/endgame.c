@@ -45,7 +45,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|char
 name|ch
 decl_stmt|;

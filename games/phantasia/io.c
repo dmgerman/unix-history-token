@@ -19,22 +19,23 @@ begin_comment
 comment|/************************************************************************ / / FUNCTION NAME: getstring() / / FUNCTION: read a string from operator / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *cp - pointer to buffer area to fill /	int mx - maximum number of characters to put in buffer / / RETURN VALUE: none / / MODULES CALLED: wmove(), _filbuf(), clearok(), waddstr(), wrefresh(), /	wclrtoeol() / / GLOBAL INPUTS: Echo, _iob[], Wizard, *stdscr / / GLOBAL OUTPUTS: _iob[] / / DESCRIPTION: /	Read a string from the keyboard. /	This routine is specially designed to: / /	    - strip non-printing characters (unless Wizard) /	    - echo, if desired /	    - redraw the screen if CH_REDRAW is entered /	    - read in only 'mx - 1' characters or less characters /	    - nul-terminate string, and throw away newline / /	'mx' is assumed to be at least 2. / *************************************************************************/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|getstring
 argument_list|(
-name|cp
+argument|cp
 argument_list|,
-name|mx
+argument|mx
 argument_list|)
-specifier|register
-name|char
-operator|*
-name|cp
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
-specifier|register
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|mx
 decl_stmt|;
@@ -42,7 +43,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|inptr
@@ -389,7 +389,6 @@ literal|81
 index|]
 decl_stmt|;
 comment|/* a place to store data already on screen */
-specifier|register
 name|int
 name|loop
 decl_stmt|;

@@ -51,7 +51,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|ix
 decl_stmt|,
@@ -74,7 +73,6 @@ name|course
 decl_stmt|,
 name|course2
 decl_stmt|;
-specifier|register
 name|int
 name|k
 decl_stmt|;
@@ -729,7 +727,6 @@ block|{
 name|double
 name|r
 decl_stmt|;
-specifier|register
 name|int
 name|d
 decl_stmt|;

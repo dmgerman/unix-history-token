@@ -72,19 +72,16 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|index
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|propct
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|sp
@@ -359,7 +356,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|n
 init|=
@@ -468,7 +464,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|sp0
@@ -518,7 +513,6 @@ operator|+
 literal|1
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|lp1
@@ -952,7 +946,6 @@ operator|==
 literal|'#'
 condition|)
 block|{
-specifier|register
 name|char
 name|pch
 decl_stmt|;
@@ -1081,7 +1074,6 @@ case|case
 literal|'"'
 case|:
 block|{
-specifier|register
 name|char
 modifier|*
 name|sp
@@ -1090,11 +1082,9 @@ name|string
 operator|+
 name|prefix
 decl_stmt|;
-specifier|register
 name|char
 name|pch
 decl_stmt|;
-specifier|register
 name|int
 name|store
 init|=
@@ -1167,17 +1157,19 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|capitalize
 argument_list|(
-name|sp
+argument|sp
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|sp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1203,16 +1195,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|letter
 argument_list|(
-name|ch
+argument|ch
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
 name|ch
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1242,16 +1236,18 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|digit
 argument_list|(
-name|ch
+argument|ch
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
 name|ch
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

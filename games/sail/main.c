@@ -73,14 +73,12 @@ parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p

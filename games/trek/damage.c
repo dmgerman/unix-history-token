@@ -69,11 +69,9 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|struct
 name|event
 modifier|*
@@ -82,7 +80,6 @@ decl_stmt|;
 name|int
 name|f
 decl_stmt|;
-specifier|register
 name|int
 name|dev
 decl_stmt|;

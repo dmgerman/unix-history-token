@@ -116,18 +116,15 @@ end_macro
 
 begin_block
 block|{
-name|reg
 name|PLAY
 modifier|*
 name|pp
 decl_stmt|;
-name|reg
 name|int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|reg
 name|bool
 name|goodplay
 decl_stmt|;
@@ -597,11 +594,9 @@ end_macro
 
 begin_block
 block|{
-name|reg
 name|CARD
 name|card
 decl_stmt|;
-name|reg
 name|PLAY
 modifier|*
 name|pp
@@ -609,7 +604,6 @@ decl_stmt|,
 modifier|*
 name|op
 decl_stmt|;
-name|reg
 name|int
 name|i
 decl_stmt|;
@@ -789,7 +783,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|reg
 name|PLAY
 modifier|*
 name|pp
@@ -798,11 +791,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|reg
 name|int
 name|v
 decl_stmt|;
-name|reg
 name|CARD
 name|card
 decl_stmt|;
@@ -1638,7 +1629,6 @@ end_macro
 
 begin_block
 block|{
-name|reg
 name|char
 name|c
 decl_stmt|,
@@ -2207,7 +2197,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|reg
 name|PLAY
 modifier|*
 name|pp
@@ -2216,7 +2205,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|reg
 name|int
 name|card
 decl_stmt|;
@@ -2286,7 +2274,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|reg
 name|CARD
 name|card
 decl_stmt|;
@@ -2294,7 +2281,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|reg
 name|CARD
 name|oppos
 decl_stmt|;
@@ -2501,7 +2487,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|reg
 name|CARD
 modifier|*
 name|hand
@@ -2510,7 +2495,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|reg
 name|CARD
 modifier|*
 name|cp
@@ -2518,7 +2502,6 @@ decl_stmt|,
 modifier|*
 name|tp
 decl_stmt|;
-name|reg
 name|CARD
 name|temp
 decl_stmt|;

@@ -48,14 +48,12 @@ block|,
 literal|'T'
 block|}
 decl_stmt|;
-specifier|register
 name|struct
 name|player
 modifier|*
 name|playerp
 decl_stmt|;
 comment|/* pointer to structure to alter */
-specifier|register
 name|char
 modifier|*
 name|prompt
@@ -1966,7 +1964,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|count
 init|=
@@ -2075,7 +2072,6 @@ name|scoreboard
 name|sbuf
 decl_stmt|;
 comment|/* for reading entries */
-specifier|register
 name|FILE
 modifier|*
 name|fp

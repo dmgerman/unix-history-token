@@ -66,7 +66,6 @@ name|bulky
 decl_stmt|,
 name|value
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;

@@ -57,7 +57,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -96,13 +95,11 @@ name|ix
 decl_stmt|,
 name|iy
 decl_stmt|;
-specifier|register
 name|struct
 name|quad
 modifier|*
 name|q
 decl_stmt|;
-specifier|register
 name|struct
 name|event
 modifier|*

@@ -361,7 +361,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|wiz
 decl_stmt|;
@@ -446,12 +445,10 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|outfd
 decl_stmt|,

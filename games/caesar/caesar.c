@@ -225,7 +225,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ch
 decl_stmt|,
@@ -239,7 +238,6 @@ name|winnerdot
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|inbuf
@@ -643,7 +641,6 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ch
 decl_stmt|,

@@ -69,7 +69,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|resp
 decl_stmt|;
@@ -259,12 +258,10 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|;
 comment|/* accumulated judgment */
-specifier|register
 name|int
 name|OFFC
 init|=
@@ -272,7 +269,6 @@ operator|*
 name|offptr
 decl_stmt|;
 comment|/* no. of computer's men off */
-specifier|register
 name|int
 name|OFFO
 init|=
@@ -283,7 +279,6 @@ comment|/* no. of player's men off */
 ifdef|#
 directive|ifdef
 name|DEBUG
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -669,7 +664,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -830,7 +824,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1025,7 +1018,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,

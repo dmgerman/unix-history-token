@@ -64,11 +64,9 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|y
 decl_stmt|,
@@ -691,7 +689,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|x
 decl_stmt|,
@@ -1046,21 +1043,22 @@ begin_comment
 comment|/*  * eaten:  *	Player would get eaten at this place  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|eaten
 argument_list|(
-name|pos
+argument|pos
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|COORD
-operator|*
+modifier|*
 name|pos
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|x
 decl_stmt|,

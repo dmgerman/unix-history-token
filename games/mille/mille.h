@@ -757,27 +757,6 @@ directive|endif
 endif|SYSV
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|reg
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|reg
-end_define
-
-begin_comment
-comment|/* register */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_typedef
 typedef|typedef
 struct|struct

@@ -762,30 +762,25 @@ name|stop
 decl_stmt|;
 comment|/* don't generate at or above this value */
 block|{
-specifier|register
 name|char
 modifier|*
 name|q
 decl_stmt|;
 comment|/* sieve spot */
-specifier|register
 name|ubig
 name|factor
 decl_stmt|;
 comment|/* index and factor */
-specifier|register
 name|char
 modifier|*
 name|tab_lim
 decl_stmt|;
 comment|/* the limit to sieve on the table */
-specifier|register
 name|ubig
 modifier|*
 name|p
 decl_stmt|;
 comment|/* prime table pointer */
-specifier|register
 name|ubig
 name|fact_lim
 decl_stmt|;

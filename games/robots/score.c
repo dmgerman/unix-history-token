@@ -119,20 +119,16 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|inf
 decl_stmt|;
-specifier|register
 name|SCORE
 modifier|*
 name|scp
 decl_stmt|;
-specifier|register
 name|int
 name|uid
 decl_stmt|;
-specifier|register
 name|bool
 name|done_show
 init|=
@@ -574,21 +570,22 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|set_name
 argument_list|(
-name|scp
+argument|scp
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|SCORE
-operator|*
+modifier|*
 name|scp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|PASSWD
 modifier|*
 name|pp
@@ -634,22 +631,24 @@ begin_comment
 comment|/*  * cmp_sc:  *	Compare two scores.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|cmp_sc
 argument_list|(
-name|s1
+argument|s1
 argument_list|,
-name|s2
+argument|s2
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|SCORE
-operator|*
+modifier|*
 name|s1
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|s2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -676,12 +675,10 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|SCORE
 modifier|*
 name|scp
 decl_stmt|;
-specifier|register
 name|int
 name|inf
 decl_stmt|;

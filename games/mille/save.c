@@ -134,16 +134,13 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
-name|reg
 name|char
 modifier|*
 name|sp
 decl_stmt|;
-name|reg
 name|int
 name|outf
 decl_stmt|;
-name|reg
 name|time_t
 modifier|*
 name|tp
@@ -468,7 +465,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|reg
 name|char
 modifier|*
 name|file
@@ -477,12 +473,10 @@ end_decl_stmt
 
 begin_block
 block|{
-name|reg
 name|char
 modifier|*
 name|sp
 decl_stmt|;
-name|reg
 name|int
 name|inf
 decl_stmt|;

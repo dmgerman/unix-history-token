@@ -41,7 +41,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*

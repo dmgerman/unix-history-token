@@ -68,14 +68,12 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|reg
 name|int
 name|file
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|reg
 name|int
 function_decl|(
 modifier|*

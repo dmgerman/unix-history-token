@@ -988,7 +988,6 @@ name|crb
 parameter_list|,
 name|do_explain
 parameter_list|)
-specifier|register
 name|CARD
 name|hand
 index|[]
@@ -1008,17 +1007,14 @@ name|do_explain
 decl_stmt|;
 comment|/* true if must explain this hand */
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|k
 decl_stmt|;
-specifier|register
 name|int
 name|score
 decl_stmt|;
-specifier|register
 name|BOOLEAN
 name|flag
 decl_stmt|;
@@ -1409,7 +1405,6 @@ name|hand
 parameter_list|,
 name|n
 parameter_list|)
-specifier|register
 name|CARD
 name|hand
 index|[]
@@ -1418,7 +1413,6 @@ name|int
 name|n
 decl_stmt|;
 block|{
-specifier|register
 name|int
 modifier|*
 name|sp
@@ -1426,11 +1420,9 @@ decl_stmt|,
 modifier|*
 name|np
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|CARD
 modifier|*
 name|endp
@@ -1608,7 +1600,6 @@ name|int
 name|n
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1958,7 +1949,6 @@ index|[
 name|RANKS
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,

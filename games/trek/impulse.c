@@ -48,7 +48,6 @@ block|{
 name|int
 name|course
 decl_stmt|;
-specifier|register
 name|int
 name|power
 decl_stmt|;
@@ -57,7 +56,6 @@ name|dist
 decl_stmt|,
 name|time
 decl_stmt|;
-specifier|register
 name|int
 name|percent
 decl_stmt|;

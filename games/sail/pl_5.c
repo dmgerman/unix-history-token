@@ -92,7 +92,6 @@ name|last
 init|=
 literal|'\0'
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -709,13 +708,11 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -1115,24 +1112,26 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|parties
 argument_list|(
-name|crew
+argument|crew
 argument_list|,
-name|to
+argument|to
 argument_list|,
-name|isdefense
+argument|isdefense
 argument_list|,
-name|buf
+argument|buf
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|to
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1157,7 +1156,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|k
 decl_stmt|,

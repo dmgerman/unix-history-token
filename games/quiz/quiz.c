@@ -298,7 +298,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ch
 decl_stmt|;
@@ -438,12 +437,10 @@ modifier|*
 name|file
 decl_stmt|;
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|QE
 modifier|*
 name|qp
@@ -653,12 +650,10 @@ name|void
 name|show_index
 parameter_list|()
 block|{
-specifier|register
 name|QE
 modifier|*
 name|qp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -837,7 +832,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|QE
 modifier|*
 name|qp
@@ -996,12 +990,10 @@ name|void
 name|quiz
 parameter_list|()
 block|{
-specifier|register
 name|QE
 modifier|*
 name|qp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1460,7 +1452,6 @@ name|next_cat
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
@@ -1521,7 +1512,6 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|tp
@@ -1530,7 +1520,6 @@ name|size_t
 name|len
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|mp
@@ -1538,7 +1527,6 @@ decl_stmt|,
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|int
 name|ch
 decl_stmt|;
@@ -1745,13 +1733,11 @@ name|downcase
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ch
 decl_stmt|;

@@ -49,11 +49,9 @@ name|long
 name|score
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|u
 decl_stmt|;
-specifier|register
 name|int
 name|t
 decl_stmt|;

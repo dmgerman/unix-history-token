@@ -377,7 +377,6 @@ name|getargs
 parameter_list|(
 name|av
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|av
@@ -442,17 +441,14 @@ name|order_unstr
 parameter_list|(
 name|tbl
 parameter_list|)
-specifier|register
 name|STRFILE
 modifier|*
 name|tbl
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|sp

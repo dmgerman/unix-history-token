@@ -79,7 +79,6 @@ name|d
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -159,7 +158,6 @@ name|d
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|,
@@ -297,7 +295,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -369,7 +366,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -451,7 +447,6 @@ name|h
 parameter_list|,
 name|n
 parameter_list|)
-specifier|register
 name|CARD
 name|h
 index|[]
@@ -460,7 +455,6 @@ name|int
 name|n
 decl_stmt|;
 block|{
-specifier|register
 name|CARD
 modifier|*
 name|cp

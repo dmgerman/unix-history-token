@@ -197,7 +197,6 @@ name|void
 name|mailbill
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

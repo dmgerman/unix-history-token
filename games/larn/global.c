@@ -201,20 +201,21 @@ begin_comment
 comment|/* 	**************** 	RAISE EXPERIENCE 	**************** 	raiseexperience(x)  	subroutine to increase experience points  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|raiseexperience
 argument_list|(
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|long
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -389,20 +390,21 @@ begin_comment
 comment|/* 	**************** 	LOOSE EXPERIENCE 	**************** 	loseexperience(x)  	subroutine to lose experience points  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|loseexperience
 argument_list|(
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|long
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -593,16 +595,18 @@ begin_comment
 comment|/* 	******** 	LOOSE HP 	******** 	losehp(x) 	losemhp(x)  	subroutine to remove hit points from the player 	warning -- will kill player if hp goes to zero  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|losehp
 argument_list|(
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -642,16 +646,18 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|losemhp
 argument_list|(
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -708,16 +714,18 @@ begin_comment
 comment|/* 	******** 	RAISE HP 	******** 	raisehp(x) 	raisemhp(x)  	subroutine to gain maximum hit points  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|raisehp
 argument_list|(
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -750,16 +758,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|raisemhp
 argument_list|(
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -784,16 +794,18 @@ begin_comment
 comment|/* 	************ 	RAISE SPELLS 	************ 	raisespells(x) 	raisemspells(x)  	subroutine to gain maximum spells  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|raisespells
 argument_list|(
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -826,16 +838,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|raisemspells
 argument_list|(
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -860,16 +874,18 @@ begin_comment
 comment|/* 	************ 	LOOSE SPELLS 	************ 	losespells(x) 	losemspells(x)  	subroutine to lose maximum spells  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|losespells
 argument_list|(
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -896,16 +912,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|losemspells
 argument_list|(
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -956,20 +974,21 @@ begin_comment
 comment|/* 	makemonst(lev) 		int lev;  	function to return monster number for a randomly selected monster 		for the given cave level  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|makemonst
 argument_list|(
-name|lev
+argument|lev
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|lev
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|tmp
 decl_stmt|,
@@ -1197,7 +1216,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1851,7 +1869,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2020,7 +2037,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2552,7 +2568,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|tmp
 decl_stmt|;
@@ -2679,7 +2694,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|tmp
 decl_stmt|;
@@ -2794,7 +2808,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2869,7 +2882,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|tmp
 decl_stmt|,
@@ -2944,7 +2956,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -3063,7 +3074,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3138,7 +3148,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -3240,7 +3249,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|flag
 decl_stmt|;
@@ -3427,21 +3435,22 @@ begin_comment
 comment|/* 	function to read a string from token input "string" 	returns a pointer to the string  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|gettokstr
 argument_list|(
-name|str
+argument|str
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|str
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -3560,13 +3569,11 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|gpwp
@@ -3679,7 +3686,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3725,7 +3731,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,

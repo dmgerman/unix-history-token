@@ -61,7 +61,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -275,13 +274,11 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|quad
 modifier|*
 name|q
 decl_stmt|;
-specifier|register
 name|struct
 name|xy
 modifier|*
@@ -551,19 +548,16 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|quad
 modifier|*
 name|q
 decl_stmt|;
-specifier|register
 name|struct
 name|event
 modifier|*
 name|e
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|name
@@ -751,17 +745,14 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|event
 modifier|*
 name|e
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|struct
 name|quad
 modifier|*

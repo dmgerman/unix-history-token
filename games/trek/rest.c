@@ -54,7 +54,6 @@ block|{
 name|double
 name|t
 decl_stmt|;
-specifier|register
 name|int
 name|percent
 decl_stmt|;

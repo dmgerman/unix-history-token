@@ -93,16 +93,13 @@ modifier|*
 name|av
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|bool
 name|bad_arg
 decl_stmt|;
-specifier|register
 name|bool
 name|show_only
 decl_stmt|;
@@ -581,7 +578,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|y
 decl_stmt|;

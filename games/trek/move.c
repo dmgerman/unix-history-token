@@ -75,7 +75,6 @@ name|dx
 decl_stmt|,
 name|dy
 decl_stmt|;
-specifier|register
 name|int
 name|ix
 decl_stmt|,
@@ -87,7 +86,6 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;

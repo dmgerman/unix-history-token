@@ -457,11 +457,9 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -856,7 +854,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1493,7 +1490,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|int
 modifier|*
 name|hand
@@ -1502,7 +1498,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|cb
 decl_stmt|,
@@ -1743,7 +1738,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|book
 decl_stmt|,
@@ -1859,21 +1853,22 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|countcards
 argument_list|(
-name|hand
+argument|hand
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
-operator|*
+modifier|*
 name|hand
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1999,7 +1994,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,

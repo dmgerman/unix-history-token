@@ -45,11 +45,9 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|struct
 name|kling
 modifier|*
@@ -297,7 +295,6 @@ modifier|*
 name|selectklingon
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

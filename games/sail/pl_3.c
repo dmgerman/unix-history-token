@@ -1154,13 +1154,11 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1410,13 +1408,11 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*
 name|to
 decl_stmt|;
-specifier|register
 name|i
 expr_stmt|;
 name|foreachship

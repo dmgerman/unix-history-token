@@ -125,7 +125,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|x
 decl_stmt|,

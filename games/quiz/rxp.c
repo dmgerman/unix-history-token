@@ -241,7 +241,6 @@ name|rxp_compile
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
@@ -269,7 +268,6 @@ name|s
 parameter_list|,
 name|first
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
@@ -728,7 +726,6 @@ name|rxp_match
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
@@ -801,7 +798,6 @@ name|char
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|int
 name|ch
 decl_stmt|;

@@ -521,7 +521,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|r
 decl_stmt|,
@@ -610,7 +609,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -677,7 +675,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -744,7 +741,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|;

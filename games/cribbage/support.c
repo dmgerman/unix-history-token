@@ -128,7 +128,6 @@ decl_stmt|,
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -578,13 +577,11 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-specifier|register
 name|BOOLEAN
 name|win
 decl_stmt|;
@@ -780,7 +777,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|;
@@ -967,7 +963,6 @@ name|peg
 parameter_list|,
 name|myturn
 parameter_list|)
-specifier|register
 name|int
 name|score
 decl_stmt|;
@@ -978,7 +973,6 @@ name|BOOLEAN
 name|myturn
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|y
 decl_stmt|,
@@ -1163,7 +1157,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1642,7 +1635,6 @@ decl_stmt|,
 name|sum
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1746,7 +1738,6 @@ decl_stmt|,
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1819,7 +1810,6 @@ decl_stmt|,
 name|v
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1889,7 +1879,6 @@ name|int
 name|n
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

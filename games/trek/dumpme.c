@@ -53,20 +53,17 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|f
 decl_stmt|;
 name|double
 name|x
 decl_stmt|;
-specifier|register
 name|struct
 name|event
 modifier|*
 name|e
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;

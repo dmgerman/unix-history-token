@@ -64,16 +64,18 @@ begin_comment
 comment|/*  *	routine to take a nap for n milliseconds  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|nap
 argument_list|(
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -433,7 +435,6 @@ name|unsigned
 name|short
 name|matchmilli
 decl_stmt|;
-specifier|register
 name|struct
 name|timeb
 modifier|*

@@ -190,7 +190,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -422,7 +421,6 @@ block|{
 name|int
 name|oldtime
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;

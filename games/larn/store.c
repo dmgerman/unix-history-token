@@ -1126,7 +1126,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1238,7 +1237,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1680,12 +1678,10 @@ name|dnditem
 parameter_list|(
 name|i
 parameter_list|)
-specifier|register
 name|int
 name|i
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|,
@@ -2140,7 +2136,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2779,7 +2774,6 @@ operator|>
 literal|0
 condition|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2887,7 +2881,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3048,7 +3041,6 @@ name|unsigned
 name|long
 name|amt
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -3830,20 +3822,21 @@ begin_comment
 comment|/* 	subroutine to appraise any stone for the bank  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|appraise
 argument_list|(
-name|gemstone
+argument|gemstone
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|gemstone
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|,
@@ -4083,7 +4076,6 @@ block|; 	}
 name|otradepost
 argument_list|()
 block|{
-specifier|register
 name|int
 name|i
 block|,
@@ -4724,7 +4716,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,

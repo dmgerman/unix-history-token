@@ -706,17 +706,19 @@ name|COLUMNS
 value|48
 end_define
 
-begin_expr_stmt
+begin_macro
 name|printcard
 argument_list|(
-name|str
+argument|str
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|str
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -727,13 +729,11 @@ index|[]
 init|=
 literal|"   123456789"
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|row
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p

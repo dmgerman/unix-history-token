@@ -78,7 +78,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|bow1r
 operator|,
 name|bow1c
@@ -96,7 +95,6 @@ name|stern2c
 decl_stmt|,
 name|stern2r
 decl_stmt|;
-specifier|register
 name|int
 name|bb
 decl_stmt|,
@@ -316,7 +314,6 @@ name|side
 parameter_list|,
 name|anyship
 parameter_list|)
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -328,13 +325,11 @@ decl_stmt|,
 name|anyship
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|char
 name|a
 decl_stmt|;
@@ -445,14 +440,16 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_macro
 name|angle
 argument_list|(
-name|dr
+argument|dr
 argument_list|,
-name|dc
+argument|dc
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|dr
 operator|,
 name|dc
@@ -461,7 +458,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
 name|i
 expr_stmt|;
 if|if
@@ -606,24 +602,29 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|gunsbear
 argument_list|(
-name|from
+argument|from
 argument_list|,
-name|to
+argument|to
 argument_list|)
+end_macro
+
+begin_comment
 comment|/* checks for target bow or stern */
-specifier|register
-expr|struct
+end_comment
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|from
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|to
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -634,7 +635,6 @@ name|Dc
 decl_stmt|,
 name|i
 decl_stmt|;
-specifier|register
 name|ang
 expr_stmt|;
 name|Dr
@@ -759,25 +759,27 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|portside
 argument_list|(
-name|from
+argument|from
 argument_list|,
-name|on
+argument|on
 argument_list|,
-name|quick
+argument|quick
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|from
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|on
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -792,10 +794,8 @@ end_comment
 begin_block
 block|{
 comment|/* shooting at onship's starboard side */
-specifier|register
 name|ang
 expr_stmt|;
-specifier|register
 name|Dr
 operator|,
 name|Dc
@@ -905,22 +905,23 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|colours
 argument_list|(
-name|sp
+argument|sp
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|sp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 name|flag
 decl_stmt|;
@@ -1007,18 +1008,20 @@ directive|include
 file|<sys/file.h>
 end_include
 
-begin_expr_stmt
+begin_macro
 name|log
 argument_list|(
-name|s
+argument|s
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1042,7 +1045,6 @@ decl_stmt|;
 name|float
 name|net
 decl_stmt|;
-specifier|register
 name|struct
 name|logs
 modifier|*

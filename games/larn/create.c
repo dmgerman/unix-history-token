@@ -56,7 +56,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -288,20 +287,21 @@ begin_comment
 comment|/* 	newcavelevel(level) 	int level;  	function to enter a new level.  This routine must be called anytime the 	player changes levels.  If that level is unknown it will be created. 	A new set of monsters will be created for a new level, and existing 	levels will get a few more monsters. 	Note that it is here we remove genocided monsters from the present level.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|newcavelevel
 argument_list|(
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -516,7 +516,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -921,24 +920,25 @@ begin_comment
 comment|/* 	function to eat away a filled in maze  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|eat
 argument_list|(
-name|xx
+argument|xx
 argument_list|,
-name|yy
+argument|yy
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|xx
-operator|,
+decl_stmt|,
 name|yy
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|dir
 decl_stmt|,
@@ -1314,7 +1314,6 @@ modifier|*
 name|lgetl
 argument_list|()
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1691,20 +1690,21 @@ begin_comment
 comment|/* 	function to make a treasure room on a level 	level 10's treasure room has the eye in it and demon lords 	level V3 has potion of cure dianthroritis and demon prince  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|treasureroom
 argument_list|(
-name|lv
+argument|lv
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|lv
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|tx
 decl_stmt|,
@@ -1900,7 +1900,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2331,20 +2330,21 @@ begin_comment
 comment|/* 	*********** 	MAKE_OBJECT 	*********** 	subroutine to create the objects in the maze for the given level  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|makeobject
 argument_list|(
-name|j
+argument|j
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|j
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3224,7 +3224,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3317,7 +3316,6 @@ name|char
 name|what
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|x
 decl_stmt|,
@@ -3484,7 +3482,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|x
 decl_stmt|,
@@ -3637,7 +3634,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -3768,7 +3764,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|x
 decl_stmt|,

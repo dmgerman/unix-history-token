@@ -132,17 +132,19 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_macro
 name|errexit
 argument_list|(
-name|s
+argument|s
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -172,7 +174,6 @@ name|addbuf
 parameter_list|(
 name|c
 parameter_list|)
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -613,7 +614,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -697,7 +697,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|r
 decl_stmt|,
@@ -857,7 +856,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -937,16 +935,18 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|yorn
 argument_list|(
-name|special
+argument|special
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
 name|special
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* special response */
@@ -954,11 +954,9 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1073,16 +1071,18 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|wrhit
 argument_list|(
-name|i
+argument|i
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|i
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1116,7 +1116,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -1171,21 +1170,22 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|getarg
 argument_list|(
-name|argc
+argument|argc
 argument_list|,
-name|argv
+argument|argv
 argument_list|)
-specifier|register
-name|int
-name|argc
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
-specifier|register
+name|int
+name|argc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 modifier|*
@@ -1195,7 +1195,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 name|ch
 decl_stmt|;
@@ -1535,7 +1534,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1805,15 +1803,12 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|row
 decl_stmt|;
-specifier|register
 name|int
 name|col
 decl_stmt|;

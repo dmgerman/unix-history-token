@@ -209,7 +209,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1317,7 +1316,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1374,7 +1372,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1535,16 +1532,18 @@ begin_comment
 comment|/*  *	subroutine to clear screen depending on # lines to display  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|t_setup
 argument_list|(
-name|count
+argument|count
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|count
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1587,16 +1586,18 @@ begin_comment
 comment|/*  *	subroutine to restore normal display screen depending on t_setup()  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|t_endup
 argument_list|(
-name|count
+argument|count
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|count
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1649,7 +1650,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1841,7 +1841,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2055,7 +2054,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2198,7 +2196,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2335,7 +2332,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2461,21 +2457,22 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|show1
 argument_list|(
-name|idx
+argument|idx
 argument_list|,
-name|str2
+argument|str2
 argument_list|)
-specifier|register
-name|int
-name|idx
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
-specifier|register
+name|int
+name|idx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|str2
@@ -2568,16 +2565,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|show3
 argument_list|(
-name|index
+argument|index
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|index
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2847,7 +2846,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -3594,7 +3592,6 @@ operator|+=
 literal|25000
 expr_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -4270,7 +4267,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4353,7 +4349,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4602,7 +4597,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4794,11 +4788,9 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -5103,7 +5095,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -5252,7 +5243,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -5398,7 +5388,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -5603,11 +5592,9 @@ name|long
 name|mx
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|unsigned
 name|long
 name|amt
@@ -5719,17 +5706,19 @@ begin_comment
 comment|/*  *	routine to zero every byte in a string  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|szero
 argument_list|(
-name|str
+argument|str
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|str
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

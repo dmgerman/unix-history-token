@@ -49,7 +49,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|x
 decl_stmt|,
@@ -271,7 +270,6 @@ name|itm
 parameter_list|,
 name|monst
 parameter_list|)
-specifier|register
 name|int
 name|x
 decl_stmt|,
@@ -424,7 +422,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|x
 decl_stmt|,
@@ -569,7 +566,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -832,7 +828,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -849,7 +844,6 @@ name|yl
 decl_stmt|,
 name|yh
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -2942,7 +2936,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|tmp
 decl_stmt|;
@@ -3045,7 +3038,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3172,7 +3164,6 @@ name|x
 decl_stmt|,
 name|y
 decl_stmt|;
-specifier|register
 name|int
 name|m
 decl_stmt|;
@@ -3426,12 +3417,10 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|x
 decl_stmt|,
@@ -4156,7 +4145,6 @@ name|x
 decl_stmt|,
 name|y
 decl_stmt|;
-specifier|register
 name|int
 name|m
 decl_stmt|;
@@ -4296,7 +4284,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|x
 decl_stmt|,
@@ -4457,7 +4444,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4861,7 +4847,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|tmp
 decl_stmt|,
@@ -5178,14 +5163,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-specifier|register
 name|amt
 expr_stmt|;
 end_expr_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|monst
 decl_stmt|;
@@ -5479,7 +5462,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|dam
 decl_stmt|,
@@ -6057,16 +6039,18 @@ begin_comment
 comment|/*  *	dropgold(amount) 	Function to drop some gold around player  *		int amount;  *  *	Enter with the number of gold pieces to drop  *	Returns nothing of value.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|dropgold
 argument_list|(
-name|amount
+argument|amount
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|amount
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -6115,7 +6099,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|;
@@ -6261,25 +6244,26 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_macro
 name|newobject
 argument_list|(
-name|lev
+argument|lev
 argument_list|,
-name|i
+argument|i
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|lev
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|i
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|tmp
 init|=
@@ -6784,7 +6768,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -6796,7 +6779,6 @@ name|k
 decl_stmt|,
 name|m
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -7710,11 +7692,9 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-specifier|register
 name|long
 name|k
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -8404,7 +8384,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|sphere
 modifier|*
@@ -8588,7 +8567,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -8755,7 +8733,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,

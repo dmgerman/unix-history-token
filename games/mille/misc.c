@@ -151,7 +151,6 @@ name|CARD
 name|getcard
 parameter_list|()
 block|{
-name|reg
 name|int
 name|c
 decl_stmt|,
@@ -390,7 +389,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|reg
 name|bool
 name|forcomp
 decl_stmt|;
@@ -454,7 +452,6 @@ block|}
 block|}
 else|else
 block|{
-name|reg
 name|PLAY
 modifier|*
 name|pp
@@ -462,7 +459,6 @@ decl_stmt|,
 modifier|*
 name|op
 decl_stmt|;
-name|reg
 name|int
 name|i
 decl_stmt|,
@@ -676,20 +672,21 @@ begin_comment
 comment|/*  *	Get a yes or no answer to the given question.  Saves are  * also allowed.  Return TRUE if the answer was yes, FALSE if no.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|getyn
 argument_list|(
-name|promptno
+argument|promptno
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|promptno
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-name|reg
 name|char
 name|c
 decl_stmt|;
@@ -985,7 +982,6 @@ end_macro
 
 begin_block
 block|{
-name|reg
 name|int
 name|cnt
 decl_stmt|;

@@ -500,7 +500,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -595,7 +594,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -707,11 +705,9 @@ name|long
 name|x
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|long
 name|amt
 decl_stmt|;
@@ -847,13 +843,11 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|wscofmt
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1026,7 +1020,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1386,7 +1379,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1460,7 +1452,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1599,7 +1590,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1844,7 +1834,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2137,7 +2126,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|wscofmt
 modifier|*
@@ -2261,11 +2249,9 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|;
-specifier|register
 name|struct
 name|scofmt
 modifier|*
@@ -2418,7 +2404,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|f
 decl_stmt|,
@@ -3142,7 +3127,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 name|ch
 decl_stmt|,
@@ -3284,11 +3268,9 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -3703,7 +3685,6 @@ literal|999
 decl_stmt|,
 name|no
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p

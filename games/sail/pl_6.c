@@ -44,12 +44,10 @@ block|{
 name|char
 name|c
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|repairs
 decl_stmt|;
-specifier|register
 name|struct
 name|shipspecs
 modifier|*
@@ -57,7 +55,6 @@ name|ptr
 init|=
 name|mc
 decl_stmt|;
-specifier|register
 name|int
 name|count
 decl_stmt|;
@@ -588,7 +585,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -636,7 +632,6 @@ block|{
 name|char
 name|c
 decl_stmt|;
-specifier|register
 name|loadL
 operator|,
 name|loadR

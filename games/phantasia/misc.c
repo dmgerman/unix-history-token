@@ -26,7 +26,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|charstats
 modifier|*
@@ -328,12 +327,10 @@ name|double
 name|circle
 decl_stmt|;
 comment|/* corresponding circle for coordinates */
-specifier|register
 name|int
 name|quadrant
 decl_stmt|;
 comment|/* quandrant of grid */
-specifier|register
 name|char
 modifier|*
 name|label
@@ -650,12 +647,10 @@ name|int
 name|ch
 decl_stmt|;
 comment|/* input */
-specifier|register
 name|int
 name|size
 decl_stmt|;
 comment|/* size of the trading post */
-specifier|register
 name|int
 name|loop
 decl_stmt|;
@@ -2355,7 +2350,6 @@ name|bool
 name|shortflag
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|type
 decl_stmt|;
@@ -2558,12 +2552,10 @@ name|name
 parameter_list|,
 name|playerp
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|name
 decl_stmt|;
-specifier|register
 name|struct
 name|player
 modifier|*
@@ -3429,20 +3421,22 @@ begin_comment
 comment|/************************************************************************ / / FUNCTION NAME: writerecord() / / FUNCTION: update structure in player file / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct player *playerp - pointer to structure to write out /	long place - location in file to updata / / RETURN VALUE: none / / MODULES CALLED: fseek(), fwrite(), fflush() / / GLOBAL INPUTS: *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Update location in player file with given structure. / *************************************************************************/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|writerecord
 argument_list|(
-name|playerp
+argument|playerp
 argument_list|,
-name|place
+argument|place
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|player
-operator|*
+modifier|*
 name|playerp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|long
@@ -3556,21 +3550,22 @@ begin_comment
 comment|/************************************************************************ / / FUNCTION NAME: truncstring() / / FUNCTION: truncate trailing blanks off a string / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *string - pointer to null terminated string / / RETURN VALUE: none / / MODULES CALLED: strlen() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Put nul characters in place of spaces at the end of the string. / *************************************************************************/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|truncstring
 argument_list|(
-name|string
+argument|string
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|string
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|length
 decl_stmt|;
@@ -3926,20 +3921,22 @@ begin_comment
 comment|/************************************************************************ / / FUNCTION NAME: readrecord() / / FUNCTION: read a player structure from file / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct player *playerp - pointer to structure to fill /	int loc - location of record to read / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek() / / GLOBAL INPUTS: *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Read structure information from player file. / *************************************************************************/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|readrecord
 argument_list|(
-name|playerp
+argument|playerp
 argument_list|,
-name|loc
+argument|loc
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|player
-operator|*
+modifier|*
 name|playerp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|long
@@ -4463,18 +4460,20 @@ begin_comment
 comment|/************************************************************************ / / FUNCTION NAME: initplayer() / / FUNCTION: initialize a character / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct player *playerp - pointer to structure to init / / RETURN VALUE: none / / MODULES CALLED: floor(), drandom() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Put a bunch of default values in the given structure. / *************************************************************************/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|initplayer
 argument_list|(
-name|playerp
+argument|playerp
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|player
-operator|*
+modifier|*
 name|playerp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -5014,7 +5013,6 @@ name|descrstatus
 parameter_list|(
 name|playerp
 parameter_list|)
-specifier|register
 name|struct
 name|player
 modifier|*

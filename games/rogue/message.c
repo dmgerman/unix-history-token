@@ -802,7 +802,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|ch
 expr_stmt|;
 for|for
@@ -874,12 +873,14 @@ begin_comment
 comment|/* Level: 99 Gold: 999999 Hp: 999(999) Str: 99(99) Arm: 99 Exp: 21/10000000 Hungry 0    5    1    5    2    5    3    5    4    5    5    5    6    5    7    5 */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|print_stats
 argument_list|(
-name|stat_mask
+argument|stat_mask
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|stat_mask
 expr_stmt|;
 end_expr_stmt

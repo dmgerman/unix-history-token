@@ -200,11 +200,11 @@ name|objs
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
+name|int
 name|i
-operator|,
+decl_stmt|,
 name|j
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|tothis
@@ -388,7 +388,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|;

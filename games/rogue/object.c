@@ -1375,7 +1375,6 @@ name|row
 parameter_list|,
 name|col
 parameter_list|)
-specifier|register
 name|object
 modifier|*
 name|pack

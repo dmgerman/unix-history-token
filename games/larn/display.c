@@ -187,7 +187,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1133,7 +1132,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1280,7 +1278,6 @@ name|idx
 parameter_list|,
 name|str
 parameter_list|)
-specifier|register
 name|int
 name|idx
 decl_stmt|;
@@ -1289,7 +1286,6 @@ modifier|*
 name|str
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|x
 decl_stmt|,
@@ -1417,7 +1413,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1604,7 +1599,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2191,7 +2185,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2755,7 +2748,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|k
 decl_stmt|,
@@ -3076,7 +3068,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,

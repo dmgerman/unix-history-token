@@ -61,7 +61,6 @@ name|array
 operator|+
 name|size
 decl_stmt|;
-specifier|register
 name|int
 name|i
 init|=
@@ -103,7 +102,6 @@ modifier|*
 name|array
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|j
 init|=

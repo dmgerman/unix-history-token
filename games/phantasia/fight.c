@@ -4071,7 +4071,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|whichtreasure
 decl_stmt|;
@@ -5867,14 +5866,12 @@ decl_stmt|,
 name|dtemp2
 decl_stmt|;
 comment|/* for swapping values */
-specifier|register
 name|int
 name|first
 decl_stmt|,
 name|second
 decl_stmt|;
 comment|/* indices for swapping */
-specifier|register
 name|double
 modifier|*
 name|dptr

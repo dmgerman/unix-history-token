@@ -191,7 +191,6 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

@@ -76,7 +76,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|hhits
 init|=
@@ -126,7 +125,6 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -1082,27 +1080,29 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|Cleansnag
 argument_list|(
-name|from
+argument|from
 argument_list|,
-name|to
+argument|to
 argument_list|,
-name|all
+argument|all
 argument_list|,
-name|flag
+argument|flag
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|from
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|to
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -1311,23 +1311,25 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|strike
 argument_list|(
-name|ship
+argument|ship
 argument_list|,
-name|from
+argument|from
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|ship
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|from
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

@@ -59,12 +59,10 @@ end_macro
 
 begin_block
 block|{
-name|reg
 name|PLAY
 modifier|*
 name|pp
 decl_stmt|;
-name|reg
 name|int
 name|i
 decl_stmt|,
@@ -227,12 +225,10 @@ name|i
 operator|++
 control|)
 block|{
-name|reg
 name|char
 modifier|*
 name|name
 decl_stmt|;
-name|reg
 name|int
 name|end
 decl_stmt|;
@@ -476,7 +472,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|CARD
 name|c
 decl_stmt|,
@@ -535,7 +530,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|reg
 name|bool
 name|for_real
 decl_stmt|;
@@ -543,12 +537,10 @@ end_decl_stmt
 
 begin_block
 block|{
-name|reg
 name|PLAY
 modifier|*
 name|pp
 decl_stmt|;
-name|reg
 name|int
 name|x
 decl_stmt|;
@@ -849,7 +841,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|int
 name|s
 decl_stmt|,

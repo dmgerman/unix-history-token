@@ -739,7 +739,6 @@ name|void
 name|game
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1157,7 +1156,6 @@ name|BOOLEAN
 name|mycrib
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|deckpos
 decl_stmt|;
@@ -1276,7 +1274,6 @@ name|BOOLEAN
 name|mycrib
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1374,7 +1371,6 @@ name|BOOLEAN
 name|mycrib
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|prompt
@@ -1564,7 +1560,6 @@ name|int
 name|pos
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1773,7 +1768,6 @@ decl_stmt|,
 name|blank
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|y
 decl_stmt|,
@@ -1901,7 +1895,6 @@ index|[
 name|CINHAND
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1909,11 +1902,9 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|;
-specifier|register
 name|int
 name|l
 decl_stmt|;
-specifier|register
 name|int
 name|cnum
 decl_stmt|,
@@ -1921,7 +1912,6 @@ name|pnum
 decl_stmt|,
 name|sum
 decl_stmt|;
-specifier|register
 name|BOOLEAN
 name|myturn
 decl_stmt|,

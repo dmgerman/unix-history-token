@@ -67,7 +67,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|int
 name|totalfrom
 decl_stmt|,
@@ -80,7 +79,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -274,7 +272,6 @@ name|men
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -285,7 +282,6 @@ name|c2
 decl_stmt|,
 name|c3
 decl_stmt|;
-specifier|register
 name|struct
 name|BP
 modifier|*

@@ -41,7 +41,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -305,20 +304,21 @@ end_block
 begin_escape
 end_escape
 
-begin_expr_stmt
+begin_macro
 name|movokay
 argument_list|(
-name|mv
+argument|mv
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|mv
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,

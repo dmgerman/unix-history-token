@@ -68,7 +68,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|l
 decl_stmt|;
@@ -915,11 +914,9 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|m
 decl_stmt|;
-specifier|register
 name|char
 name|d
 decl_stmt|;

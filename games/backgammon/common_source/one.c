@@ -34,20 +34,21 @@ directive|include
 file|"back.h"
 end_include
 
-begin_expr_stmt
+begin_macro
 name|makmove
 argument_list|(
-name|i
+argument|i
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|i
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|,
@@ -456,20 +457,21 @@ end_block
 begin_escape
 end_escape
 
-begin_expr_stmt
+begin_macro
 name|moverr
 argument_list|(
-name|i
+argument|i
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|i
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|;
@@ -555,16 +557,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|checkd
 argument_list|(
-name|d
+argument|d
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|d
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -591,7 +595,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -640,20 +643,21 @@ end_block
 begin_escape
 end_escape
 
-begin_expr_stmt
+begin_macro
 name|movback
 argument_list|(
-name|i
+argument|i
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|i
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|;
@@ -680,16 +684,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|backone
 argument_list|(
-name|i
+argument|i
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|i
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

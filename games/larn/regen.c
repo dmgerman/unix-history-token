@@ -24,13 +24,11 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|flag
 decl_stmt|;
-specifier|register
 name|long
 modifier|*
 name|d

@@ -41,7 +41,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|wlist
 modifier|*
@@ -80,11 +79,11 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
+name|int
 name|hashval
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 while|while
 condition|(
 operator|*
@@ -126,7 +125,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|wlist
 modifier|*
@@ -184,18 +182,20 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_macro
 name|install
 argument_list|(
-name|wp
+argument|wp
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|wlist
-operator|*
+modifier|*
 name|wp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -260,15 +260,14 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|wlist
 modifier|*
 name|wp
 decl_stmt|;
-specifier|register
+name|int
 name|n
-expr_stmt|;
+decl_stmt|;
 name|wordnumber
 operator|=
 literal|0

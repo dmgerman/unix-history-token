@@ -56,7 +56,6 @@ block|{
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|struct
 name|kling
 modifier|*
@@ -72,7 +71,6 @@ name|nextx
 decl_stmt|,
 name|nexty
 decl_stmt|;
-specifier|register
 name|int
 name|lookx
 decl_stmt|,

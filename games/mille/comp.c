@@ -52,16 +52,13 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|CARD
 name|card
 decl_stmt|;
-specifier|register
 name|int
 modifier|*
 name|value
 decl_stmt|;
-specifier|register
 name|PLAY
 modifier|*
 name|pp
@@ -69,7 +66,6 @@ decl_stmt|,
 modifier|*
 name|op
 decl_stmt|;
-specifier|register
 name|bool
 name|foundend
 decl_stmt|,
@@ -79,7 +75,6 @@ name|canstop
 decl_stmt|,
 name|foundlow
 decl_stmt|;
-specifier|register
 name|unsgn
 name|int
 name|i
@@ -94,13 +89,11 @@ name|nummax
 decl_stmt|,
 name|diff
 decl_stmt|;
-specifier|register
 name|int
 name|curmin
 decl_stmt|,
 name|curmax
 decl_stmt|;
-specifier|register
 name|CARD
 name|safe
 decl_stmt|,
@@ -2186,21 +2179,22 @@ begin_comment
 comment|/*  * Return true if the given player could conceivably win with his next card.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|onecard
 argument_list|(
-name|pp
+argument|pp
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|PLAY
-operator|*
+modifier|*
 name|pp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|CARD
 name|bat
 decl_stmt|,
@@ -2390,27 +2384,28 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|canplay
 argument_list|(
-name|pp
+argument|pp
 argument_list|,
-name|op
+argument|op
 argument_list|,
-name|card
+argument|card
 argument_list|)
-specifier|register
-name|PLAY
-operator|*
-name|pp
-operator|,
-operator|*
-name|op
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
-specifier|register
+name|PLAY
+modifier|*
+name|pp
+decl_stmt|,
+modifier|*
+name|op
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|CARD
 name|card
 decl_stmt|;

@@ -229,7 +229,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -291,7 +290,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -529,13 +527,11 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-specifier|register
 name|struct
 name|travlist
 modifier|*
@@ -1540,7 +1536,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|ll1
 decl_stmt|,
@@ -1978,7 +1973,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|travlist
 modifier|*
@@ -1987,7 +1981,6 @@ decl_stmt|,
 modifier|*
 name|j
 decl_stmt|;
-specifier|register
 name|int
 name|ll
 decl_stmt|;
@@ -2606,7 +2599,6 @@ name|checkhints
 parameter_list|()
 comment|/* 2600&c              */
 block|{
-specifier|register
 name|int
 name|hint
 decl_stmt|;
@@ -2919,7 +2911,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3007,7 +2998,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4238,7 +4228,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4793,7 +4782,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -5607,7 +5595,6 @@ name|closing
 parameter_list|()
 comment|/* 10000 */
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -5760,7 +5747,6 @@ name|caveclose
 parameter_list|()
 comment|/* 11000 */
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

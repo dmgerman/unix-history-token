@@ -151,32 +151,31 @@ begin_comment
 comment|/*  * shifts to UPPERCASE if flag> 0, lowercase if flag< 0,  * and leaves it unchanged if flag = 0  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|char
 modifier|*
 name|getword
-argument_list|(
+parameter_list|(
 name|buf1
-argument_list|,
+parameter_list|,
 name|buf2
-argument_list|,
+parameter_list|,
 name|flag
-argument_list|)
-decl|register
+parameter_list|)
 name|char
 modifier|*
 name|buf1
 decl_stmt|,
-modifier|*
+decl|*
 name|buf2
 decl_stmt|;
-end_decl_stmt
+end_function
 
-begin_expr_stmt
-specifier|register
+begin_decl_stmt
+name|int
 name|flag
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

@@ -50,7 +50,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|reg
 name|PLAY
 modifier|*
 name|pp
@@ -59,7 +58,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|reg
 name|int
 name|temp
 decl_stmt|,
@@ -289,7 +287,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|reg
 name|PLAY
 modifier|*
 name|pp
@@ -298,7 +295,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|reg
 name|int
 name|x
 decl_stmt|,

@@ -616,11 +616,9 @@ name|int
 name|nr
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*

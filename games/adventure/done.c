@@ -55,7 +55,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|scor
 decl_stmt|,
@@ -358,7 +357,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -539,7 +537,6 @@ name|int
 name|entry
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

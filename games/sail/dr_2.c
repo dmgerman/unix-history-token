@@ -59,7 +59,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -234,7 +233,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -243,7 +241,6 @@ decl_stmt|,
 modifier|*
 name|sq
 decl_stmt|;
-specifier|register
 name|char
 name|explode
 decl_stmt|,
@@ -456,7 +453,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -620,7 +616,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -654,31 +649,33 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|closeon
 argument_list|(
-name|from
+argument|from
 argument_list|,
-name|to
+argument|to
 argument_list|,
-name|command
+argument|command
 argument_list|,
-name|ta
+argument|ta
 argument_list|,
-name|ma
+argument|ma
 argument_list|,
-name|af
+argument|af
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|from
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|to
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -808,7 +805,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -841,7 +837,6 @@ name|total
 decl_stmt|,
 name|ran
 decl_stmt|;
-specifier|register
 name|struct
 name|File
 modifier|*
@@ -1020,30 +1015,31 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|sail_move
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|ship
+argument|ship
 argument_list|,
-name|dir
+argument|dir
 argument_list|,
-name|row
+argument|row
 argument_list|,
-name|col
+argument|col
 argument_list|,
-name|drift
+argument|drift
 argument_list|)
-specifier|register
-name|char
-operator|*
-name|p
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
-specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|ship
 modifier|*
@@ -1052,7 +1048,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|char
 modifier|*
 name|dir
@@ -1060,7 +1055,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|short
 modifier|*
 name|row
@@ -1071,7 +1065,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|char
 modifier|*
 name|drift
@@ -1286,41 +1279,43 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|try
 argument_list|(
-name|command
+argument|command
 argument_list|,
-name|temp
+argument|temp
 argument_list|,
-name|ma
+argument|ma
 argument_list|,
-name|ta
+argument|ta
 argument_list|,
-name|af
+argument|af
 argument_list|,
-name|vma
+argument|vma
 argument_list|,
-name|dir
+argument|dir
 argument_list|,
-name|f
+argument|f
 argument_list|,
-name|t
+argument|t
 argument_list|,
-name|high
+argument|high
 argument_list|,
-name|rakeme
+argument|rakeme
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|f
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|t
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1353,7 +1348,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|new
 decl_stmt|,
@@ -1864,7 +1858,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|p

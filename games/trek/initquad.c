@@ -53,7 +53,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -69,7 +68,6 @@ name|nbases
 decl_stmt|,
 name|nstars
 decl_stmt|;
-specifier|register
 name|struct
 name|quad
 modifier|*
@@ -487,7 +485,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,

@@ -45,7 +45,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -59,7 +58,6 @@ name|m1
 decl_stmt|,
 name|m2
 decl_stmt|;
-specifier|register
 name|struct
 name|event
 modifier|*

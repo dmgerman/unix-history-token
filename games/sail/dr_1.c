@@ -41,7 +41,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -52,11 +51,9 @@ name|ship
 modifier|*
 name|to
 decl_stmt|;
-specifier|register
 name|int
 name|nat
 decl_stmt|;
-specifier|register
 name|i
 expr_stmt|;
 name|foreachship
@@ -165,7 +162,6 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -1357,7 +1353,6 @@ block|{
 name|int
 name|thwart
 decl_stmt|;
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -1555,10 +1550,8 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|n
 expr_stmt|;
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -2503,7 +2496,6 @@ operator|==
 literal|7
 condition|)
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*

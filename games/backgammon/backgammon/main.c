@@ -402,17 +402,14 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
 comment|/* non-descript index */
-specifier|register
 name|int
 name|l
 decl_stmt|;
 comment|/* non-descript index */
-specifier|register
 name|char
 name|c
 decl_stmt|;

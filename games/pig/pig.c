@@ -133,7 +133,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|len
 decl_stmt|;
@@ -298,7 +297,6 @@ name|int
 name|len
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ch
 decl_stmt|,

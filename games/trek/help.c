@@ -63,7 +63,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -72,7 +71,6 @@ name|dist
 decl_stmt|,
 name|x
 decl_stmt|;
-specifier|register
 name|int
 name|dx
 decl_stmt|,

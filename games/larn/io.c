@@ -483,7 +483,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|long
 modifier|*
 name|p
@@ -645,12 +644,10 @@ name|va_list
 name|ap
 decl_stmt|;
 comment|/* pointer for variable argument list */
-specifier|register
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|outb
@@ -658,7 +655,6 @@ decl_stmt|,
 modifier|*
 name|tmpb
 decl_stmt|;
-specifier|register
 name|long
 name|wide
 decl_stmt|,
@@ -1148,16 +1144,18 @@ begin_comment
 comment|/*  *	lprint(long-integer)				send binary integer to output buffer  *		long integer;  *  *		+---------+---------+---------+---------+  *		|	high  |			|		  |	  low	|  *		|  order  |			|		  |  order	|  *		|   byte  |			|		  |	  byte	|  *		+---------+---------+---------+---------+  *	   31  ---  24 23 --- 16 15 ---  8 7  ---   0  *  *	The save order is low order first, to high order (4 bytes total)  *		and is written to be system independent.  *	No checking for output buffer overflow is done, but flushes if needed!  *	Returns nothing of value.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|lprint
 argument_list|(
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|long
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1221,19 +1219,21 @@ begin_comment
 comment|/*  *	lwrite(buf,len)					write a buffer to the output buffer  *		char *buf;  *		int len;  *  *	Enter with the address and number of bytes to write out  *	Returns nothing of value  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|lwrite
 argument_list|(
-name|buf
+argument|buf
 argument_list|,
-name|len
+argument|len
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|buf
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1243,12 +1243,10 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|str
 decl_stmt|;
-specifier|register
 name|int
 name|num2
 decl_stmt|;
@@ -1388,7 +1386,6 @@ name|long
 name|lgetc
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1489,7 +1486,6 @@ name|long
 name|lrint
 parameter_list|()
 block|{
-specifier|register
 name|unsigned
 name|long
 name|i
@@ -1546,19 +1542,21 @@ begin_comment
 comment|/*  *	lrfill(address,number)			put input bytes into a buffer  *		char *address;  *		int number;  *  *	Reads "number" bytes into the buffer pointed to by "address".  *	Returns nothing of value  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|lrfill
 argument_list|(
-name|adr
+argument|adr
 argument_list|,
-name|num
+argument|num
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|adr
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1568,12 +1566,10 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|pnt
 decl_stmt|;
-specifier|register
 name|int
 name|num2
 decl_stmt|;
@@ -1699,14 +1695,12 @@ modifier|*
 name|lgetw
 parameter_list|()
 block|{
-specifier|register
 name|char
 modifier|*
 name|lgp
 decl_stmt|,
 name|cc
 decl_stmt|;
-specifier|register
 name|int
 name|n
 init|=
@@ -1840,7 +1834,6 @@ modifier|*
 name|lgetl
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 init|=
@@ -1848,7 +1841,6 @@ name|LINBUFSIZE
 decl_stmt|,
 name|ch
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|str
@@ -2243,21 +2235,22 @@ begin_comment
 comment|/*  *	lprcat(string)					append a string to the output buffer  *								    avoids calls to lprintf (time consuming)  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|lprcat
 argument_list|(
-name|str
+argument|str
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|str
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|str2
@@ -2558,7 +2551,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -3230,20 +3222,22 @@ begin_comment
 comment|/*  * cl_up(x,y) Clear screen from [x,1] to current position. Leave cursor at [x,y]  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|cl_up
 argument_list|(
-name|x
+argument|x
 argument_list|,
-name|y
+argument|y
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|x
-operator|,
+decl_stmt|,
 name|y
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3265,7 +3259,6 @@ expr_stmt|;
 else|#
 directive|else
 else|VT100
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3320,20 +3313,22 @@ begin_comment
 comment|/*  * cl_dn(x,y) 	Clear screen from [1,y] to end of display. Leave cursor at [x,y]  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|cl_dn
 argument_list|(
-name|x
+argument|x
 argument_list|,
-name|y
+argument|y
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|x
-operator|,
+decl_stmt|,
 name|y
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3355,7 +3350,6 @@ expr_stmt|;
 else|#
 directive|else
 else|VT100
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3443,17 +3437,19 @@ begin_comment
 comment|/*  * standout(str)	Print the argument string in inverse video (standout mode).  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|standout
 argument_list|(
-name|str
+argument|str
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|str
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3562,11 +3558,9 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|lpoint
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|str
@@ -4006,7 +4000,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|lpoint
 decl_stmt|;
@@ -4165,7 +4158,6 @@ name|sd
 parameter_list|,
 name|ss
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|sd
@@ -4177,7 +4169,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|int
 name|tmstate
 init|=

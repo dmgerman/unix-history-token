@@ -57,7 +57,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -229,7 +228,6 @@ name|struct
 name|kling
 name|t
 decl_stmt|;
-specifier|register
 name|int
 name|f
 decl_stmt|,

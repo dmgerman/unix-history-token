@@ -96,7 +96,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -154,7 +153,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|from
 decl_stmt|;
@@ -268,7 +266,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|temp
 decl_stmt|;
@@ -490,7 +487,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|adr
 decl_stmt|;
@@ -499,7 +495,6 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|t
@@ -898,7 +893,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,

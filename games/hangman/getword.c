@@ -51,12 +51,10 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|inf
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|wp
@@ -64,7 +62,6 @@ decl_stmt|,
 modifier|*
 name|gp
 decl_stmt|;
-specifier|register
 name|long
 name|pos
 decl_stmt|;

@@ -432,7 +432,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1255,17 +1254,14 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|;
 comment|/* index */
-specifier|register
 name|int
 name|n
 decl_stmt|;
 comment|/* number of men on position */
-specifier|register
 name|int
 name|bct
 decl_stmt|;
@@ -1512,7 +1508,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2031,7 +2026,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|o
 decl_stmt|,
@@ -2668,29 +2662,27 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|fixcol
 argument_list|(
-name|r
+argument|r
 argument_list|,
-name|c
+argument|c
 argument_list|,
-name|l
+argument|l
 argument_list|,
-name|ch
+argument|ch
 argument_list|,
-name|inc
+argument|inc
 argument_list|)
-specifier|register
-name|int
-name|l
-operator|,
-name|ch
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
 name|int
+name|l
+decl_stmt|,
+name|ch
+decl_stmt|,
 name|r
 decl_stmt|,
 name|c
@@ -2701,7 +2693,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2754,20 +2745,22 @@ end_block
 begin_escape
 end_escape
 
-begin_expr_stmt
+begin_macro
 name|curmove
 argument_list|(
-name|r
+argument|r
 argument_list|,
-name|c
+argument|c
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|r
-operator|,
+decl_stmt|,
 name|c
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2817,17 +2810,14 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|r
 decl_stmt|;
 comment|/* destination row */
-specifier|register
 name|int
 name|c
 decl_stmt|;
 comment|/* destination column */
-specifier|register
 name|int
 name|mode
 init|=
@@ -3701,7 +3691,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3778,16 +3767,18 @@ end_block
 begin_escape
 end_escape
 
-begin_expr_stmt
+begin_macro
 name|fancyc
 argument_list|(
-name|c
+argument|c
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
 name|c
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* character to output */
@@ -3795,7 +3786,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|int
 name|sp
 decl_stmt|;
@@ -3995,11 +3985,9 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|s
@@ -4104,15 +4092,12 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|s
@@ -4253,13 +4238,11 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|code
 decl_stmt|;
 comment|/* two letter code */
-specifier|register
 name|char
 modifier|*
 modifier|*

@@ -33,13 +33,11 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|cel
 modifier|*
 name|pcel
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|pitem
@@ -50,7 +48,6 @@ decl_stmt|,
 modifier|*
 name|pmitem
 decl_stmt|;
-specifier|register
 name|short
 modifier|*
 name|phitp
@@ -58,7 +55,6 @@ decl_stmt|,
 modifier|*
 name|piarg
 decl_stmt|;
-specifier|register
 name|struct
 name|cel
 modifier|*
@@ -184,13 +180,11 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|cel
 modifier|*
 name|pcel
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|pitem
@@ -201,7 +195,6 @@ decl_stmt|,
 modifier|*
 name|pmitem
 decl_stmt|;
-specifier|register
 name|short
 modifier|*
 name|phitp
@@ -209,7 +202,6 @@ decl_stmt|,
 modifier|*
 name|piarg
 decl_stmt|;
-specifier|register
 name|struct
 name|cel
 modifier|*

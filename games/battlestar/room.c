@@ -49,9 +49,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
+name|int
 name|c
-expr_stmt|;
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"\n\t%s\n"
@@ -148,7 +148,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 modifier|*
 name|p
@@ -160,9 +159,9 @@ index|]
 operator|.
 name|objects
 decl_stmt|;
-specifier|register
+name|int
 name|n
-expr_stmt|;
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"\n"

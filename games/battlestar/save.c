@@ -89,14 +89,12 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
 name|int
 name|tmp
 decl_stmt|;
-specifier|register
 name|FILE
 modifier|*
 name|fp
@@ -646,7 +644,6 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;

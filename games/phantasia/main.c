@@ -1404,7 +1404,6 @@ modifier|*
 name|fp
 decl_stmt|;
 comment|/* for opening files */
-specifier|register
 name|int
 name|loop
 decl_stmt|;
@@ -2257,7 +2256,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|fp
@@ -2919,7 +2917,6 @@ init|=
 literal|0L
 decl_stmt|;
 comment|/* location in player file */
-specifier|register
 name|int
 name|loop
 decl_stmt|;
@@ -3665,12 +3662,10 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|subscript
 decl_stmt|;
 comment|/* used for subscripting into Stattable */
-specifier|register
 name|struct
 name|charstats
 modifier|*

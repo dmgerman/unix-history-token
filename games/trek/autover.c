@@ -48,7 +48,6 @@ block|{
 name|double
 name|dist
 decl_stmt|;
-specifier|register
 name|int
 name|course
 decl_stmt|;

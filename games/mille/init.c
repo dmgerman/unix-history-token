@@ -45,18 +45,15 @@ end_macro
 
 begin_block
 block|{
-name|reg
 name|PLAY
 modifier|*
 name|pp
 decl_stmt|;
-name|reg
 name|int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|reg
 name|CARD
 name|card
 decl_stmt|;
@@ -309,13 +306,11 @@ end_macro
 
 begin_block
 block|{
-name|reg
 name|int
 name|i
 decl_stmt|,
 name|r
 decl_stmt|;
-name|reg
 name|CARD
 name|temp
 decl_stmt|;
@@ -415,11 +410,9 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|PLAY
 modifier|*
 name|pp
@@ -828,13 +821,11 @@ end_macro
 
 begin_block
 block|{
-name|reg
 name|int
 name|i
 decl_stmt|,
 name|new
 decl_stmt|;
-specifier|register
 name|PLAY
 modifier|*
 name|pp

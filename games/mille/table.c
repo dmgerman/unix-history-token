@@ -73,7 +73,6 @@ begin_function
 name|main
 parameter_list|()
 block|{
-name|reg
 name|int
 name|i
 decl_stmt|,

@@ -145,7 +145,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|passwd
 modifier|*
@@ -343,20 +342,22 @@ begin_comment
 comment|/*  * print out info for specified password entry  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|printuser
 argument_list|(
-name|pw
+argument|pw
 argument_list|,
-name|printfail
+argument|printfail
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|passwd
-operator|*
+modifier|*
 name|pw
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

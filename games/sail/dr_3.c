@@ -45,7 +45,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -55,12 +54,10 @@ modifier|*
 name|sq
 decl_stmt|;
 comment|/* r11, r10 */
-specifier|register
 name|int
 name|n
 decl_stmt|;
 comment|/* r9 */
-specifier|register
 name|int
 name|k
 decl_stmt|,
@@ -908,20 +905,21 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|stillmoving
 argument_list|(
-name|k
+argument|k
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|k
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -951,22 +949,23 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|isolated
 argument_list|(
-name|ship
+argument|ship
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|ship
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -1002,27 +1001,28 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|push
 argument_list|(
-name|from
+argument|from
 argument_list|,
-name|to
+argument|to
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|from
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|to
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|bs
 decl_stmt|,
@@ -1088,7 +1088,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -1105,7 +1104,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|dist
 decl_stmt|;
@@ -1344,27 +1342,29 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|sendbp
 argument_list|(
-name|from
+argument|from
 argument_list|,
-name|to
+argument|to
 argument_list|,
-name|sections
+argument|sections
 argument_list|,
-name|isdefense
+argument|isdefense
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|from
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|to
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1383,7 +1383,6 @@ block|{
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|struct
 name|BP
 modifier|*
@@ -1492,27 +1491,29 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|toughmelee
 argument_list|(
-name|ship
+argument|ship
 argument_list|,
-name|to
+argument|to
 argument_list|,
-name|isdefense
+argument|isdefense
 argument_list|,
-name|count
+argument|count
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|ship
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|to
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1524,13 +1525,11 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|BP
 modifier|*
 name|bp
 decl_stmt|;
-specifier|register
 name|obp
 operator|=
 literal|0
@@ -1760,7 +1759,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -1790,13 +1788,11 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|int
 name|rig
 decl_stmt|,

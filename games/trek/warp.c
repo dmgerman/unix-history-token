@@ -83,11 +83,9 @@ decl_stmt|;
 name|double
 name|frac
 decl_stmt|;
-specifier|register
 name|int
 name|percent
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;

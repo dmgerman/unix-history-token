@@ -74,7 +74,6 @@ name|call
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|i
 init|=

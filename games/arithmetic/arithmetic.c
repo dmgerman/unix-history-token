@@ -238,7 +238,6 @@ case|case
 literal|'o'
 case|:
 block|{
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -512,7 +511,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1108,7 +1106,6 @@ block|{
 name|int
 name|value
 decl_stmt|;
-specifier|register
 name|struct
 name|penalty
 modifier|*

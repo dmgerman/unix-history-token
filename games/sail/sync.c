@@ -159,7 +159,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -713,7 +712,6 @@ name|sighup
 decl_stmt|,
 name|sigint
 decl_stmt|;
-specifier|register
 name|n
 expr_stmt|;
 name|int
@@ -931,7 +929,6 @@ condition|(
 name|isstr
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1223,7 +1220,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -1254,7 +1250,6 @@ case|case
 name|W_DBP
 case|:
 block|{
-specifier|register
 name|struct
 name|BP
 modifier|*
@@ -1297,7 +1292,6 @@ case|case
 name|W_OBP
 case|:
 block|{
-specifier|register
 name|struct
 name|BP
 modifier|*
@@ -1340,7 +1334,6 @@ case|case
 name|W_FOUL
 case|:
 block|{
-specifier|register
 name|struct
 name|snag
 modifier|*
@@ -1398,7 +1391,6 @@ case|case
 name|W_GRAP
 case|:
 block|{
-specifier|register
 name|struct
 name|snag
 modifier|*
@@ -1456,7 +1448,6 @@ case|case
 name|W_UNFOUL
 case|:
 block|{
-specifier|register
 name|struct
 name|snag
 modifier|*
@@ -1525,7 +1516,6 @@ case|case
 name|W_UNGRAP
 case|:
 block|{
-specifier|register
 name|struct
 name|snag
 modifier|*
@@ -1629,7 +1619,6 @@ case|case
 name|W_CREW
 case|:
 block|{
-specifier|register
 name|struct
 name|shipspecs
 modifier|*
@@ -1804,7 +1793,6 @@ case|case
 name|W_GUNL
 case|:
 block|{
-specifier|register
 name|struct
 name|shipspecs
 modifier|*
@@ -1832,7 +1820,6 @@ case|case
 name|W_GUNR
 case|:
 block|{
-specifier|register
 name|struct
 name|shipspecs
 modifier|*
@@ -1957,7 +1944,6 @@ case|case
 name|W_RIGG
 case|:
 block|{
-specifier|register
 name|struct
 name|shipspecs
 modifier|*

@@ -551,7 +551,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|body
 modifier|*
@@ -560,7 +559,6 @@ decl_stmt|,
 modifier|*
 name|np
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -910,7 +908,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|x
 decl_stmt|,

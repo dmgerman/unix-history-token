@@ -788,14 +788,16 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|get_dungeon_char
 argument_list|(
-name|row
+argument|row
 argument_list|,
-name|col
+argument|col
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|row
 operator|,
 name|col
@@ -804,7 +806,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
 name|unsigned
 name|short
 name|mask
@@ -1093,17 +1094,19 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|get_mask_char
 argument_list|(
-name|mask
+argument|mask
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|unsigned
 name|short
 name|mask
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1655,14 +1658,16 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|get_room_number
 argument_list|(
-name|row
+argument|row
 argument_list|,
-name|col
+argument|col
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|row
 operator|,
 name|col

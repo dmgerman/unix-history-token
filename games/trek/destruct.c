@@ -51,7 +51,6 @@ index|[
 literal|15
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,

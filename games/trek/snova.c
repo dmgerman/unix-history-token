@@ -62,7 +62,6 @@ name|qx
 decl_stmt|,
 name|qy
 decl_stmt|;
-specifier|register
 name|int
 name|ix
 decl_stmt|,
@@ -79,7 +78,6 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|struct
 name|quad
 modifier|*

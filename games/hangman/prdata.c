@@ -45,7 +45,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|bool
 modifier|*
 name|bp

@@ -209,7 +209,6 @@ name|ix
 decl_stmt|,
 name|iy
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -247,7 +246,6 @@ name|quad
 modifier|*
 name|q
 decl_stmt|;
-specifier|register
 name|struct
 name|event
 modifier|*
@@ -1187,7 +1185,6 @@ decl_stmt|;
 name|double
 name|angle
 decl_stmt|;
-specifier|register
 name|int
 name|course
 decl_stmt|;

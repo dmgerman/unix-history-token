@@ -23,14 +23,16 @@ parameter_list|)
 value|(random() % x)
 end_define
 
-begin_expr_stmt
+begin_macro
 name|rn1
 argument_list|(
-name|x
+argument|x
 argument_list|,
-name|y
+argument|y
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|x
 operator|,
 name|y
@@ -52,12 +54,14 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|rn2
 argument_list|(
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|x
 expr_stmt|;
 end_expr_stmt
@@ -75,12 +79,14 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|rnd
 argument_list|(
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|x
 expr_stmt|;
 end_expr_stmt
@@ -100,14 +106,16 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|d
 argument_list|(
-name|n
+argument|n
 argument_list|,
-name|x
+argument|x
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|n
 operator|,
 name|x
@@ -116,7 +124,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
 name|tmp
 operator|=
 name|n

@@ -115,7 +115,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|ix
 decl_stmt|,
@@ -124,7 +123,6 @@ decl_stmt|;
 name|int
 name|co
 decl_stmt|;
-specifier|register
 name|struct
 name|xy
 modifier|*

@@ -53,7 +53,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|dev
 decl_stmt|;

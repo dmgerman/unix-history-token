@@ -45,12 +45,10 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|COORD
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|y
 decl_stmt|,

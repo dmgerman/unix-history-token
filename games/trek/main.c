@@ -135,18 +135,15 @@ name|argv
 decl_stmt|;
 block|{
 comment|/* extern FILE		*f_log; */
-specifier|register
 name|char
 name|opencode
 decl_stmt|;
 name|int
 name|prio
 decl_stmt|;
-specifier|register
 name|int
 name|ac
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*

@@ -51,16 +51,13 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|WINDOW
 modifier|*
 name|wp
 decl_stmt|;
-specifier|register
 name|int
 name|j
 decl_stmt|;

@@ -214,7 +214,6 @@ index|[
 literal|60
 index|]
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -289,7 +288,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -301,7 +299,6 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-specifier|register
 name|char
 name|c
 decl_stmt|;
@@ -405,7 +402,6 @@ name|sp
 parameter_list|,
 name|flag
 parameter_list|)
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -474,18 +470,20 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_macro
 name|eyeball
 argument_list|(
-name|ship
+argument|ship
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ship
-operator|*
+modifier|*
 name|ship
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

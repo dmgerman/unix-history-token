@@ -77,12 +77,10 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|x
 operator|,
 name|y
 expr_stmt|;
-specifier|register
 name|struct
 name|rm
 modifier|*
@@ -227,12 +225,10 @@ end_comment
 begin_block
 block|{
 comment|/* 1 means misc movement, 0 means blindness */
-specifier|register
 name|x
 operator|,
 name|y
 expr_stmt|;
-specifier|register
 name|struct
 name|rm
 modifier|*
@@ -403,13 +399,11 @@ name|oldx
 decl_stmt|,
 name|oldy
 decl_stmt|;
-specifier|register
 name|struct
 name|monst
 modifier|*
 name|mtmp
 decl_stmt|;
-specifier|register
 name|struct
 name|rm
 modifier|*
@@ -423,7 +417,6 @@ name|trap
 modifier|*
 name|trap
 decl_stmt|;
-specifier|register
 name|struct
 name|obj
 modifier|*
@@ -978,7 +971,6 @@ name|dy
 argument_list|)
 condition|)
 block|{
-specifier|register
 name|xchar
 name|rx
 init|=
@@ -1004,7 +996,6 @@ name|u
 operator|.
 name|dy
 decl_stmt|;
-specifier|register
 name|struct
 name|trap
 modifier|*
@@ -2022,25 +2013,26 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|movobj
 argument_list|(
-name|obj
+argument|obj
 argument_list|,
-name|ox
+argument|ox
 argument_list|,
-name|oy
+argument|oy
 argument_list|)
-specifier|register
-expr|struct
-name|obj
-operator|*
-name|obj
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
-specifier|register
+name|struct
+name|obj
+modifier|*
+name|obj
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|ox
 decl_stmt|,
@@ -2169,13 +2161,11 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|gold
 modifier|*
 name|gold
 decl_stmt|;
-specifier|register
 name|struct
 name|obj
 modifier|*
@@ -2184,7 +2174,6 @@ decl_stmt|,
 modifier|*
 name|obj2
 decl_stmt|;
-specifier|register
 name|int
 name|wt
 decl_stmt|;
@@ -2278,7 +2267,6 @@ operator|!
 name|all
 condition|)
 block|{
-specifier|register
 name|int
 name|ct
 init|=
@@ -2839,7 +2827,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|x
 operator|,
 name|y
@@ -2856,7 +2843,6 @@ name|i0
 operator|=
 literal|9
 expr_stmt|;
-specifier|register
 name|int
 name|corrct
 init|=
@@ -2866,7 +2852,6 @@ name|noturn
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|struct
 name|monst
 modifier|*
@@ -3657,13 +3642,11 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|x
 decl_stmt|,
 name|y
 decl_stmt|;
-specifier|register
 name|struct
 name|monst
 modifier|*
@@ -3831,7 +3814,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|dx
 decl_stmt|,
@@ -4194,20 +4176,22 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|rroom
 argument_list|(
-name|x
+argument|x
 argument_list|,
-name|y
+argument|y
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|x
-operator|,
+decl_stmt|,
 name|y
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -4338,16 +4322,18 @@ directive|endif
 endif|QUEST
 end_endif
 
-begin_expr_stmt
+begin_macro
 name|sgn
 argument_list|(
-name|a
+argument|a
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|a
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -4389,7 +4375,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|x
 operator|,
 name|y
@@ -4487,7 +4472,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|x
 operator|,
 name|y
@@ -4881,12 +4865,14 @@ directive|endif
 endif|QUEST
 end_endif
 
-begin_expr_stmt
+begin_macro
 name|nomul
 argument_list|(
-name|nval
+argument|nval
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|nval
 expr_stmt|;
 end_expr_stmt
@@ -5138,13 +5124,18 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|losestr
 argument_list|(
-name|num
+argument|num
 argument_list|)
+end_macro
+
+begin_comment
 comment|/* may kill you; cause may be poison or monster like 'A' */
-specifier|register
+end_comment
+
+begin_expr_stmt
 name|num
 expr_stmt|;
 end_expr_stmt
@@ -5193,20 +5184,21 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|losehp
 argument_list|(
-name|n
+argument|n
 argument_list|,
-name|knam
+argument|knam
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|n
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|register
 name|char
 modifier|*
 name|knam
@@ -5269,20 +5261,21 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|losehp_m
 argument_list|(
-name|n
+argument|n
 argument_list|,
-name|mtmp
+argument|mtmp
 argument_list|)
-specifier|register
+end_macro
+
+begin_expr_stmt
 name|n
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|register
 name|struct
 name|monst
 modifier|*
@@ -5331,7 +5324,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
 name|num
 expr_stmt|;
 specifier|extern
@@ -5407,7 +5399,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|obj
 modifier|*
@@ -5415,7 +5406,6 @@ name|otmp
 init|=
 name|invent
 decl_stmt|;
-specifier|register
 name|int
 name|wt
 init|=
@@ -5429,7 +5419,6 @@ operator|)
 operator|/
 literal|1000
 decl_stmt|;
-specifier|register
 name|int
 name|carrcap
 decl_stmt|;
@@ -5536,7 +5525,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|obj
 modifier|*
@@ -5544,7 +5532,6 @@ name|otmp
 init|=
 name|invent
 decl_stmt|;
-specifier|register
 name|int
 name|ct
 init|=

@@ -166,14 +166,12 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
 name|int
 name|j
 decl_stmt|;
-specifier|register
 name|struct
 name|kling
 modifier|*
@@ -189,7 +187,6 @@ name|anglefactor
 decl_stmt|,
 name|distfactor
 decl_stmt|;
-specifier|register
 name|struct
 name|banks
 modifier|*

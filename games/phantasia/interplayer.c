@@ -214,7 +214,6 @@ init|=
 literal|0.0
 decl_stmt|;
 comment|/* previous damage inflicted by foe */
-specifier|register
 name|int
 name|loop
 decl_stmt|;
@@ -2407,7 +2406,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|numusers
 init|=
@@ -3945,20 +3943,22 @@ begin_comment
 comment|/************************************************************************ / / FUNCTION NAME: writevoid() / / FUNCTION: update energy void entry in energy void file / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct energyvoid *vp - pointer to structure to write to file /	long loc - location in file to update / / RETURN VALUE: none / / MODULES CALLED: fseek(), fwrite(), fflush() / / GLOBAL INPUTS: *Energyvoidfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Write out energy void structure at specified location. / *************************************************************************/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|writevoid
 argument_list|(
-name|vp
+argument|vp
 argument_list|,
-name|loc
+argument|loc
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|energyvoid
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|long

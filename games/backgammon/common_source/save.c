@@ -145,24 +145,24 @@ literal|"Can't recover file:  "
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_macro
 name|save
 argument_list|(
-name|n
+argument|n
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|n
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|fdesc
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|fs
@@ -646,7 +646,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
