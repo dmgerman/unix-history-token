@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.72 1998/07/05 06:49:14 jonathan Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.83 1998/06/13 17:19:59 peter Exp $ */
+comment|/*	$Id: if_de.c,v 1.84 1998/07/08 01:24:37 peter Exp $ */
 end_comment
 
 begin_comment
@@ -22830,7 +22830,7 @@ operator|-
 operator|(
 operator|(
 operator|(
-name|u_long
+name|uintptr_t
 operator|)
 name|addr
 operator|)
