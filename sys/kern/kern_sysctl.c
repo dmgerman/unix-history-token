@@ -1153,6 +1153,7 @@ parameter_list|,
 name|int
 name|number
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1176,10 +1177,12 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|descr
