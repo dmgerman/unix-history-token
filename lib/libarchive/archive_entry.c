@@ -1583,6 +1583,12 @@ modifier|*
 name|entry
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|entry
+expr_stmt|;
+comment|/* entry can be unused here. */
 return|return
 operator|(
 name|ARCHIVE_STAT_ATIME_NANOS
@@ -1928,6 +1934,12 @@ modifier|*
 name|entry
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|entry
+expr_stmt|;
+comment|/* entry can be unused here. */
 return|return
 operator|(
 name|ARCHIVE_STAT_MTIME_NANOS
