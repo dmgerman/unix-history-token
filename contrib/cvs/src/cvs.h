@@ -1773,6 +1773,17 @@ begin_comment
 comment|/* Don't write history entry */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|require_real_user
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* skip CVSROOT/passwd, /etc/passwd users only*/
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

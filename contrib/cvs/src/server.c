@@ -17847,6 +17847,8 @@ name|found_password
 decl_stmt|,
 modifier|*
 name|host_user_tmp
+init|=
+name|NULL
 decl_stmt|;
 name|strtok
 argument_list|(
@@ -17864,6 +17866,10 @@ argument_list|,
 literal|": \n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|found_password
+condition|)
 name|host_user_tmp
 operator|=
 name|strtok
@@ -17885,6 +17891,15 @@ name|username
 expr_stmt|;
 if|if
 condition|(
+name|found_passwd
+operator|==
+name|NULL
+operator|||
+operator|*
+name|found_passwd
+operator|==
+literal|'\0'
+operator|||
 name|strcmp
 argument_list|(
 name|found_password
@@ -17999,6 +18014,16 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* First we see if this user has a password in the CVS-specific        password file.  If so, that's enough to authenticate with.  If        not, we'll check /etc/passwd. */
+if|if
+condition|(
+name|require_real_user
+condition|)
+name|rc
+operator|=
+literal|0
+expr_stmt|;
+comment|/* "not found" */
+else|else
 name|rc
 operator|=
 name|check_repository_password

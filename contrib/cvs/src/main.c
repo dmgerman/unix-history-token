@@ -158,6 +158,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|require_real_user
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|logoff
 init|=
 literal|0
@@ -1797,7 +1805,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"+QqrwtnRlvb:T:e:d:Hfz:s:xa"
+literal|"+QqrwtnRlvb:T:e:d:Hfz:s:xaU"
 argument_list|,
 name|long_options
 argument_list|,
@@ -2173,6 +2181,19 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* If no CLIENT_SUPPORT, ignore -a, so that users can                    have it in their .cvsrc and not cause any trouble.                    We will issue an error later if stream                    authentication is not supported.  */
+break|break;
+case|case
+literal|'U'
+case|:
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+name|require_real_user
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 literal|'?'
