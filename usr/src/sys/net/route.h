@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.h	6.1	83/07/29	*/
+comment|/*	route.h	6.2	84/05/30	*/
 end_comment
 
 begin_comment
@@ -167,8 +167,54 @@ begin_define
 define|#
 directive|define
 name|RTHASHSIZ
-value|7
+value|8
 end_define
+
+begin_if
+if|#
+directive|if
+operator|(
+name|RTHASHSIZ
+operator|&
+operator|(
+name|RTHASHSIZ
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|RTHASHMOD
+parameter_list|(
+name|h
+parameter_list|)
+value|((h)& (RTHASHSIZ - 1))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|RTHASHMOD
+parameter_list|(
+name|h
+parameter_list|)
+value|((h) % RTHASHSIZ)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
