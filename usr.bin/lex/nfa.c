@@ -4,11 +4,11 @@ comment|/* nfa - NFA construction routines */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Vern Paxson.  *  * The United States Government has rights in this work pursuant  * to contract no. DE-AC03-76SF00098 between the United States  * Department of Energy and the University of California.  *  * Redistribution and use in source and binary forms are permitted provided  * that: (1) source distributions retain this entire copyright notice and  * comment, and (2) distributions including binaries display the following  * acknowledgement:  ``This product includes software developed by the  * University of California, Berkeley and its contributors'' in the  * documentation or other materials provided with the distribution and in  * all advertising materials mentioning features or use of this software.  * Neither the name of the University nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Vern Paxson.  *   * The United States Government has rights in this work pursuant  * to contract no. DE-AC03-76SF00098 between the United States  * Department of Energy and the University of California.  *  * Redistribution and use in source and binary forms are permitted provided  * that: (1) source distributions retain this entire copyright notice and  * comment, and (2) distributions including binaries display the following  * acknowledgement:  ``This product includes software developed by the  * University of California, Berkeley and its contributors'' in the  * documentation or other materials provided with the distribution and in  * all advertising materials mentioning features or use of this software.  * Neither the name of the University nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_comment
-comment|/* $Header: /home/ncvs/src/usr.bin/lex/nfa.c,v 1.1.1.1 1994/08/24 13:10:32 csgr Exp $ */
+comment|/* $Header: /home/ncvs/src/usr.bin/lex/nfa.c,v 1.1.1.2 1996/06/19 20:26:24 nate Exp $ */
 end_comment
 
 begin_include
@@ -209,7 +209,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"\n\n********** beginning dump of nfa with start state %d\n"
+argument_list|)
 argument_list|,
 name|state1
 argument_list|)
@@ -234,7 +237,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"state # %4d\t"
+argument_list|)
 argument_list|,
 name|ns
 argument_list|)
@@ -307,7 +313,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"********** end of dump\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -454,7 +463,10 @@ literal|0
 condition|)
 name|flexfatal
 argument_list|(
+name|_
+argument_list|(
 literal|"empty machine in dupmachine()"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|state_offset
@@ -607,7 +619,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Variable trailing context rule at line %d\n"
+argument_list|)
 argument_list|,
 name|rule_linenum
 index|[
@@ -710,7 +725,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Okay, in the action code at this point yytext and yyleng have 	 * their proper final values for this rule, so here's the point 	 * to do any user action.  But don't do it for continued actions, 	 * as that'll result in multiple YY_USER_ACTION's. 	 */
+comment|/* Okay, in the action code at this point yytext and yyleng have 	 * their proper final values for this rule, so here's the point 	 * to do any user action.  But don't do it for continued actions, 	 * as that'll result in multiple YY_RULE_SETUP's. 	 */
 if|if
 condition|(
 operator|!
@@ -718,7 +733,7 @@ name|continued_action
 condition|)
 name|add_action
 argument_list|(
-literal|"YY_USER_ACTION\n"
+literal|"YY_RULE_SETUP\n"
 argument_list|)
 expr_stmt|;
 name|line_directive_out
@@ -728,6 +743,8 @@ name|FILE
 operator|*
 operator|)
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -922,7 +939,10 @@ break|break;
 default|default:
 name|flexerror
 argument_list|(
+name|_
+argument_list|(
 literal|"bad state type in mark_beginning_as_normal()"
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1541,7 +1561,10 @@ name|MAXIMUM_MNS
 condition|)
 name|lerrif
 argument_list|(
+name|_
+argument_list|(
 literal|"input rules are too complicated (>= %d NFA states)"
+argument_list|)
 argument_list|,
 name|current_mns
 argument_list|)
@@ -1803,7 +1826,10 @@ operator|)
 condition|)
 name|flexfatal
 argument_list|(
+name|_
+argument_list|(
 literal|"found too many transitions in mkxtion()"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -1883,7 +1909,10 @@ name|MAX_RULE
 condition|)
 name|lerrif
 argument_list|(
+name|_
+argument_list|(
 literal|"too many rules (> %d)!"
+argument_list|)
 argument_list|,
 name|MAX_RULE
 argument_list|)

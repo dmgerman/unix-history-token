@@ -4,11 +4,11 @@ comment|/* sym - symbol table routines */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Vern Paxson.  *  * The United States Government has rights in this work pursuant  * to contract no. DE-AC03-76SF00098 between the United States  * Department of Energy and the University of California.  *  * Redistribution and use in source and binary forms are permitted provided  * that: (1) source distributions retain this entire copyright notice and  * comment, and (2) distributions including binaries display the following  * acknowledgement:  ``This product includes software developed by the  * University of California, Berkeley and its contributors'' in the  * documentation or other materials provided with the distribution and in  * all advertising materials mentioning features or use of this software.  * Neither the name of the University nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Vern Paxson.  *   * The United States Government has rights in this work pursuant  * to contract no. DE-AC03-76SF00098 between the United States  * Department of Energy and the University of California.  *  * Redistribution and use in source and binary forms are permitted provided  * that: (1) source distributions retain this entire copyright notice and  * comment, and (2) distributions including binaries display the following  * acknowledgement:  ``This product includes software developed by the  * University of California, Berkeley and its contributors'' in the  * documentation or other materials provided with the distribution and in  * all advertising materials mentioning features or use of this software.  * Neither the name of the University nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_comment
-comment|/* $Header: /home/ncvs/src/usr.bin/lex/sym.c,v 1.1.1.1 1994/08/24 13:10:31 csgr Exp $ */
+comment|/* $Header: /home/ncvs/src/usr.bin/lex/sym.c,v 1.1.1.2 1996/06/19 20:26:39 nate Exp $ */
 end_comment
 
 begin_include
@@ -205,7 +205,10 @@ name|NULL
 condition|)
 name|flexfatal
 argument_list|(
+name|_
+argument_list|(
 literal|"symbol table memory allocation failed"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -218,6 +221,8 @@ index|[
 name|hash_val
 index|]
 operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|new_entry
@@ -612,7 +617,10 @@ argument_list|)
 condition|)
 name|synerr
 argument_list|(
+name|_
+argument_list|(
 literal|"name defined twice"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -714,15 +722,6 @@ argument_list|,
 name|current_max_scs
 argument_list|)
 expr_stmt|;
-name|actvsc
-operator|=
-name|reallocate_integer_array
-argument_list|(
-name|actvsc
-argument_list|,
-name|current_max_scs
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -752,10 +751,8 @@ name|copy_string
 parameter_list|()
 function_decl|;
 comment|/* Generate start condition definition, for use in BEGIN et al. */
-name|printf
+name|action_define
 argument_list|(
-literal|"#define %s %d\n"
-argument_list|,
 name|str
 argument_list|,
 name|lastsc
@@ -805,7 +802,10 @@ argument_list|)
 condition|)
 name|format_pinpoint_message
 argument_list|(
+name|_
+argument_list|(
 literal|"start condition %s declared twice"
+argument_list|)
 argument_list|,
 name|str
 argument_list|)

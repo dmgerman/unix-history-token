@@ -4,11 +4,11 @@ comment|/* flexdef - definitions file for flex */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Vern Paxson.  *  * The United States Government has rights in this work pursuant  * to contract no. DE-AC03-76SF00098 between the United States  * Department of Energy and the University of California.  *  * Redistribution and use in source and binary forms are permitted provided  * that: (1) source distributions retain this entire copyright notice and  * comment, and (2) distributions including binaries display the following  * acknowledgement:  ``This product includes software developed by the  * University of California, Berkeley and its contributors'' in the  * documentation or other materials provided with the distribution and in  * all advertising materials mentioning features or use of this software.  * Neither the name of the University nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Vern Paxson.  *   * The United States Government has rights in this work pursuant  * to contract no. DE-AC03-76SF00098 between the United States  * Department of Energy and the University of California.  *  * Redistribution and use in source and binary forms are permitted provided  * that: (1) source distributions retain this entire copyright notice and  * comment, and (2) distributions including binaries display the following  * acknowledgement:  ``This product includes software developed by the  * University of California, Berkeley and its contributors'' in the  * documentation or other materials provided with the distribution and in  * all advertising materials mentioning features or use of this software.  * Neither the name of the University nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_comment
-comment|/* @(#) $Header: /home/ncvs/src/usr.bin/lex/flexdef.h,v 1.1.1.1 1994/08/24 13:10:32 csgr Exp $ (LBL) */
+comment|/* @(#) $Header: /home/ncvs/src/usr.bin/lex/flexdef.h,v 1.1.1.2 1996/06/19 20:26:08 nate Exp $ (LBL) */
 end_comment
 
 begin_include
@@ -23,11 +23,108 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__TURBOC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
 name|HAVE_STRING_H
-end_if
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MS_DOS
+value|1
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__STDC__
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warn
+name|-
+name|pro
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warn
+name|-
+name|rch
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warn
+name|-
+name|use
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warn
+name|-
+name|aus
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warn
+name|-
+name|par
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warn
+name|-
+name|pia
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
 
 begin_include
 include|#
@@ -51,11 +148,45 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_TYPES_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_MALLOC_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<malloc.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STDC_HEADERS
+end_ifdef
 
 begin_include
 include|#
@@ -67,6 +198,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* As an aid for the internationalization patch to flex, which  * is maintained outside this distribution for copyright reasons.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_
+parameter_list|(
+name|String
+parameter_list|)
+value|(String)
+end_define
 
 begin_comment
 comment|/* Always be prepared to generate an 8-bit scanner. */
@@ -114,11 +259,11 @@ directive|ifndef
 name|PROTO
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|__STDC__
-end_ifdef
+end_if
 
 begin_define
 define|#
@@ -161,11 +306,17 @@ directive|ifdef
 name|VMS
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__VMS_POSIX
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|unlink
-value|delete
+value|remove
 end_define
 
 begin_define
@@ -173,6 +324,11 @@ define|#
 directive|define
 name|SHORT_FILE_NAMES
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -313,6 +469,13 @@ name|false
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|unspecified
+value|-1
+end_define
+
 begin_comment
 comment|/* Special chk[] values marking the slots taking by end-of-buffer and action  * numbers.  */
 end_comment
@@ -354,14 +517,14 @@ value|10
 end_define
 
 begin_comment
-comment|/* Transition_struct_out() definitions. */
+comment|/* transition_struct_out() definitions. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TRANS_STRUCT_PRINT_LENGTH
-value|15
+value|14
 end_define
 
 begin_comment
@@ -607,6 +770,17 @@ comment|/* marks a reference to the state that always jams */
 end_comment
 
 begin_comment
+comment|/* Maximum number of NFA states. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXIMUM_MNS
+value|31999
+end_define
+
+begin_comment
 comment|/* Enough so that if it's subtracted from an NFA state number, the result  * is guaranteed to be negative.  */
 end_comment
 
@@ -614,14 +788,7 @@ begin_define
 define|#
 directive|define
 name|MARKER_DIFFERENCE
-value|32000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXIMUM_MNS
-value|31999
+value|(MAXIMUM_MNS+2)
 end_define
 
 begin_comment
@@ -727,7 +894,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* The percentage the number of homogeneous out-transitions of a state  * must be of the number of total out-transitions of the state in order  * that the state's transition table is first compared with a potential  * template of the most common out-transition instead of with the first  * proto in the proto queue.  */
+comment|/* The percentage the number of homogeneous out-transitions of a state  * must be of the number of total out-transitions of the state in order  * that the state's transition table is first compared with a potential   * template of the most common out-transition instead of with the first  * proto in the proto queue.  */
 end_comment
 
 begin_define
@@ -961,7 +1128,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Variables for flags:  * printstats - if true (-v), dump statistics  * syntaxerror - true if a syntax error has been found  * eofseen - true if we've seen an eof in the input file  * ddebug - if true (-d), make a "debug" scanner  * trace - if true (-T), trace processing  * nowarn - if true (-w), do not generate warnings  * spprdflt - if true (-s), suppress the default rule  * interactive - if true (-I), generate an interactive scanner  * caseins - if true (-i), generate a case-insensitive scanner  * lex_compat - if true (-l), maximize compatibility with AT&T lex  * useecs - if true (-Ce flag), use equivalence classes  * fulltbl - if true (-Cf flag), don't compress the DFA state table  * usemecs - if true (-Cm flag), use meta-equivalence classes  * fullspd - if true (-F flag), use Jacobson method of table representation  * gen_line_dirs - if true (i.e., no -L flag), generate #line directives  * performance_report - if> 0 (i.e., -p flag), generate a report relating  *   to scanner performance; if> 1 (-p -p), report on minor performance  *   problems, too  * backing_up_report - if true (i.e., -b flag), generate "lex.backup" file  *   listing backing-up states  * C_plus_plus - if true (i.e., -+ flag), generate a C++ scanner class;  *   otherwise, a standard C scanner  * long_align - if true (-Ca flag), favor long-word alignment.  * use_read - if true (-f, -F, or -Cr) then use read() for scanner input;  *   otherwise, use fread().  * yytext_is_array - if true (i.e., %array directive), then declare  *   yytext as a array instead of a character pointer.  Nice and inefficient.  * csize - size of character set for the scanner we're generating;  *   128 for 7-bit chars and 256 for 8-bit  * yymore_used - if true, yymore() is used in input rules  * reject - if true, generate back-up tables for REJECT macro  * real_reject - if true, scanner really uses REJECT (as opposed to just  *   having "reject" set for variable trailing context)  * continued_action - true if this rule's action is to "fall through" to  *   the next rule's action (i.e., the '|' action)  * yymore_really_used - has a REALLY_xxx value indicating whether a  *   %used or %notused was used with yymore()  * reject_really_used - same for REJECT  */
+comment|/* Variables for flags:  * printstats - if true (-v), dump statistics  * syntaxerror - true if a syntax error has been found  * eofseen - true if we've seen an eof in the input file  * ddebug - if true (-d), make a "debug" scanner  * trace - if true (-T), trace processing  * nowarn - if true (-w), do not generate warnings  * spprdflt - if true (-s), suppress the default rule  * interactive - if true (-I), generate an interactive scanner  * caseins - if true (-i), generate a case-insensitive scanner  * lex_compat - if true (-l), maximize compatibility with AT&T lex  * do_yylineno - if true, generate code to maintain yylineno  * useecs - if true (-Ce flag), use equivalence classes  * fulltbl - if true (-Cf flag), don't compress the DFA state table  * usemecs - if true (-Cm flag), use meta-equivalence classes  * fullspd - if true (-F flag), use Jacobson method of table representation  * gen_line_dirs - if true (i.e., no -L flag), generate #line directives  * performance_report - if> 0 (i.e., -p flag), generate a report relating  *   to scanner performance; if> 1 (-p -p), report on minor performance  *   problems, too  * backing_up_report - if true (i.e., -b flag), generate "lex.backup" file  *   listing backing-up states  * C_plus_plus - if true (i.e., -+ flag), generate a C++ scanner class;  *   otherwise, a standard C scanner  * long_align - if true (-Ca flag), favor long-word alignment.  * use_read - if true (-f, -F, or -Cr) then use read() for scanner input;  *   otherwise, use fread().  * yytext_is_array - if true (i.e., %array directive), then declare  *   yytext as a array instead of a character pointer.  Nice and inefficient.  * do_yywrap - do yywrap() processing on EOF.  If false, EOF treated as  *   "no more files".  * csize - size of character set for the scanner we're generating;  *   128 for 7-bit chars and 256 for 8-bit  * yymore_used - if true, yymore() is used in input rules  * reject - if true, generate back-up tables for REJECT macro  * real_reject - if true, scanner really uses REJECT (as opposed to just  *   having "reject" set for variable trailing context)  * continued_action - true if this rule's action is to "fall through" to  *   the next rule's action (i.e., the '|' action)  * in_rule - true if we're inside an individual rule, false if not.  * yymore_really_used - whether to treat yymore() as really used, regardless  *   of what we think based on references to it in the user's actions.  * reject_really_used - same for REJECT  */
 end_comment
 
 begin_decl_stmt
@@ -992,19 +1159,26 @@ name|caseins
 decl_stmt|,
 name|lex_compat
 decl_stmt|,
-name|useecs
-decl_stmt|,
-name|fulltbl
-decl_stmt|,
-name|usemecs
+name|do_yylineno
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|fullspd
+name|useecs
 decl_stmt|,
+name|fulltbl
+decl_stmt|,
+name|usemecs
+decl_stmt|,
+name|fullspd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|gen_line_dirs
 decl_stmt|,
 name|performance_report
@@ -1024,6 +1198,13 @@ name|use_read
 decl_stmt|,
 name|yytext_is_array
 decl_stmt|,
+name|do_yywrap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|csize
 decl_stmt|;
 end_decl_stmt
@@ -1038,29 +1219,10 @@ decl_stmt|,
 name|real_reject
 decl_stmt|,
 name|continued_action
+decl_stmt|,
+name|in_rule
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|REALLY_NOT_DETERMINED
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|REALLY_USED
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|REALLY_NOT_USED
-value|2
-end_define
 
 begin_decl_stmt
 specifier|extern
@@ -1072,7 +1234,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Variables used in the flex input routines:  * datapos - characters on current output line  * dataline - number of contiguous lines of data in current data  * 	statement.  Used to generate readable -f output  * linenum - current input line number  * skelfile - the skeleton file  * skel - compiled-in skeleton array  * skel_ind - index into "skel" array, if skelfile is nil  * yyin - input file  * backing_up_file - file to summarize backing-up states to  * infilename - name of input file  * input_files - array holding names of input files  * num_input_files - size of input_files array  * program_name - name with which program was invoked  *  * action_array - array to hold the rule actions  * action_size - size of action_array  * defs1_offset - index where the user's section 1 definitions start  *	in action_array  * prolog_offset - index where the prolog starts in action_array  * action_offset - index where the non-prolog starts in action_array  * action_index - index where the next action should go, with respect  * 	to "action_array"  */
+comment|/* Variables used in the flex input routines:  * datapos - characters on current output line  * dataline - number of contiguous lines of data in current data  * 	statement.  Used to generate readable -f output  * linenum - current input line number  * out_linenum - current output line number  * skelfile - the skeleton file  * skel - compiled-in skeleton array  * skel_ind - index into "skel" array, if skelfile is nil  * yyin - input file  * backing_up_file - file to summarize backing-up states to  * infilename - name of input file  * outfilename - name of output file  * did_outfilename - whether outfilename was explicitly set  * prefix - the prefix used for externally visible names ("yy" by default)  * yyclass - yyFlexLexer subclass to use for YY_DECL  * do_stdinit - whether to initialize yyin/yyout to stdin/stdout  * use_stdout - the -t flag  * input_files - array holding names of input files  * num_input_files - size of input_files array  * program_name - name with which program was invoked   *  * action_array - array to hold the rule actions  * action_size - size of action_array  * defs1_offset - index where the user's section 1 definitions start  *	in action_array  * prolog_offset - index where the prolog starts in action_array  * action_offset - index where the non-prolog starts in action_array  * action_index - index where the next action should go, with respect  * 	to "action_array"  */
 end_comment
 
 begin_decl_stmt
@@ -1083,6 +1245,8 @@ decl_stmt|,
 name|dataline
 decl_stmt|,
 name|linenum
+decl_stmt|,
+name|out_linenum
 decl_stmt|;
 end_decl_stmt
 
@@ -1102,6 +1266,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|skel
@@ -1121,6 +1286,36 @@ specifier|extern
 name|char
 modifier|*
 name|infilename
+decl_stmt|,
+modifier|*
+name|outfilename
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|did_outfilename
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|prefix
+decl_stmt|,
+modifier|*
+name|yyclass
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|do_stdinit
+decl_stmt|,
+name|use_stdout
 decl_stmt|;
 end_decl_stmt
 
@@ -1221,18 +1416,18 @@ specifier|extern
 name|int
 name|current_mns
 decl_stmt|,
-name|num_rules
-decl_stmt|,
-name|num_eof_rules
-decl_stmt|,
-name|default_rule
+name|current_max_rules
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|current_max_rules
+name|num_rules
+decl_stmt|,
+name|num_eof_rules
+decl_stmt|,
+name|default_rule
 decl_stmt|,
 name|lastnfa
 decl_stmt|;
@@ -1449,15 +1644,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Variables for start conditions:  * lastsc - last start condition created  * current_max_scs - current limit on number of start conditions  * scset - set of rules active in start condition  * scbol - set of rules active only at the beginning of line in a s.c.  * scxclu - true if start condition is exclusive  * sceof - true if start condition has EOF rule  * scname - start condition name  * actvsc - stack of active start conditions for the current rule;  * 	a negative entry means that the start condition is *not*  *	active for the current rule.  Start conditions may appear  *	multiple times on the stack; the entry for it closest  *	to the top of the stack (i.e., actvsc[actvp]) is the  *	one to use.  Others are present from "<sc>{" scoping  *	constructs.  */
+comment|/* Variables for start conditions:  * lastsc - last start condition created  * current_max_scs - current limit on number of start conditions  * scset - set of rules active in start condition  * scbol - set of rules active only at the beginning of line in a s.c.  * scxclu - true if start condition is exclusive  * sceof - true if start condition has EOF rule  * scname - start condition name  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
 name|lastsc
-decl_stmt|,
-name|current_max_scs
 decl_stmt|,
 modifier|*
 name|scset
@@ -1470,9 +1663,13 @@ name|scxclu
 decl_stmt|,
 modifier|*
 name|sceof
-decl_stmt|,
-modifier|*
-name|actvsc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|current_max_scs
 decl_stmt|;
 end_decl_stmt
 
@@ -1608,8 +1805,6 @@ specifier|extern
 name|int
 name|lastccl
 decl_stmt|,
-name|current_maxccls
-decl_stmt|,
 modifier|*
 name|cclmap
 decl_stmt|,
@@ -1626,6 +1821,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|current_maxccls
+decl_stmt|,
 name|current_max_ccl_tbl_size
 decl_stmt|;
 end_decl_stmt
@@ -1706,7 +1903,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1724,7 +1921,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1737,8 +1934,7 @@ name|flex_alloc
 name|PROTO
 argument_list|(
 operator|(
-name|unsigned
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1754,8 +1950,7 @@ operator|(
 name|void
 operator|*
 operator|,
-name|unsigned
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2016,6 +2211,82 @@ comment|/* from file dfa.c */
 end_comment
 
 begin_comment
+comment|/* Check a DFA state for backing up. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|check_for_backing_up
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Check to see if NFA state set constitutes "dangerous" trailing context. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|check_trailing_context
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Construct the epsilon closure of a set of ndfa states. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+modifier|*
+name|epsclosure
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+index|[]
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Increase the maximum number of dfas. */
 end_comment
 
@@ -2048,6 +2319,36 @@ end_decl_stmt
 begin_comment
 comment|/* convert a ndfa to a dfa */
 end_comment
+
+begin_comment
+comment|/* Converts a set of ndfa states into a dfa state. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|snstods
+name|PROTO
+argument_list|(
+operator|(
+name|int
+index|[]
+operator|,
+name|int
+operator|,
+name|int
+index|[]
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* from file ecs.c */
@@ -2153,6 +2454,250 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|void
+name|do_indent
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* indent to the current level */
+end_comment
+
+begin_comment
+comment|/* Generate the code to keep backing-up information. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|gen_backing_up
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Generate the code to perform the backing up. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|gen_bu_action
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Generate full speed compressed transition table. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|genctbl
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Generate the code to find the action number. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|gen_find_action
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|genftbl
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* generate full transition table */
+end_comment
+
+begin_comment
+comment|/* Generate the code to find the next compressed-table state. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|gen_next_compressed_state
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Generate the code to find the next match. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|gen_next_match
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Generate the code to find the next state. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|gen_next_state
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Generate the code to make a NUL transition. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|gen_NUL_trans
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Generate the code to find the start state. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|gen_start_state
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Generate data statements for the transition tables. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|gentabs
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Write out a formatted string at the current indentation level. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|indent_put2s
+name|PROTO
+argument_list|(
+operator|(
+name|char
+index|[]
+operator|,
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Write out a string + newline at the current indentation level. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|indent_puts
+name|PROTO
+argument_list|(
+operator|(
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|make_tables
 name|PROTO
 argument_list|(
@@ -2170,6 +2715,19 @@ end_comment
 begin_comment
 comment|/* from file main.c */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|check_options
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -2200,6 +2758,28 @@ end_decl_stmt
 begin_comment
 comment|/* from file misc.c */
 end_comment
+
+begin_comment
+comment|/* Add a #define to the action file. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|action_define
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+name|defname
+operator|,
+name|int
+name|value
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Add the given text to the stored actions. */
@@ -2297,6 +2877,64 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Replace upper-case letter to lower-case. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Char
+name|clower
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Returns a dynamically allocated copy of a string. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|copy_string
+name|PROTO
+argument_list|(
+operator|(
+specifier|register
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Returns a dynamically allocated copy of a (potentially) unsigned string. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Char
+modifier|*
+name|copy_unsigned_string
+name|PROTO
+argument_list|(
+operator|(
+specifier|register
+name|Char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Shell sort a character array. */
 end_comment
 
@@ -2336,6 +2974,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Flush generated data statements. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dataflush
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Report an error message and terminate. */
 end_comment
 
@@ -2346,6 +3001,7 @@ name|flexerror
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 index|[]
 operator|)
@@ -2364,7 +3020,26 @@ name|flexfatal
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Convert a hexadecimal digit string to an integer value. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|htoi
+name|PROTO
+argument_list|(
+operator|(
+name|Char
 index|[]
 operator|)
 argument_list|)
@@ -2382,6 +3057,7 @@ name|lerrif
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 index|[]
 operator|,
@@ -2402,9 +3078,11 @@ name|lerrsf
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 index|[]
 operator|,
+specifier|const
 name|char
 index|[]
 operator|)
@@ -2413,7 +3091,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Spit out a "# line" statement. */
+comment|/* Spit out a "#line" statement. */
 end_comment
 
 begin_decl_stmt
@@ -2425,6 +3103,8 @@ argument_list|(
 operator|(
 name|FILE
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2509,6 +3189,225 @@ name|myctoi
 name|PROTO
 argument_list|(
 operator|(
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Return character corresponding to escape sequence. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Char
+name|myesc
+name|PROTO
+argument_list|(
+operator|(
+name|Char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Convert an octal digit string to an integer value. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|otoi
+name|PROTO
+argument_list|(
+operator|(
+name|Char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Output a (possibly-formatted) string to the generated scanner. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|out
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|out_dec
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+index|[]
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|out_dec2
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+index|[]
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|out_hex
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+index|[]
+operator|,
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|out_line_count
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|out_str
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+index|[]
+operator|,
+specifier|const
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|out_str3
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+index|[]
+operator|,
+specifier|const
+name|char
+index|[]
+operator|,
+specifier|const
+name|char
+index|[]
+operator|,
+specifier|const
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|out_str_dec
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+index|[]
+operator|,
+specifier|const
+name|char
+index|[]
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|outc
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|outn
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
 name|char
 index|[]
 operator|)
@@ -2602,7 +3501,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2876,6 +3775,23 @@ comment|/* from file parse.y */
 end_comment
 
 begin_comment
+comment|/* Build the "<<EOF>>" action for the active start conditions. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|build_eof_action
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Write out a message formatted with one string, pinpointing its location. */
 end_comment
 
@@ -2919,6 +3835,7 @@ comment|/* Write out a warning, pinpointing it at the given line. */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|void
 name|line_warning
 name|PROTO
@@ -2938,6 +3855,7 @@ comment|/* Write out a message, pinpointing it at the given line. */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|void
 name|line_pinpoint
 name|PROTO
@@ -2994,6 +3912,23 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|void
+name|format_warn
+name|PROTO
+argument_list|(
+operator|(
+name|char
+index|[]
+operator|,
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|warn
 name|PROTO
 argument_list|(
@@ -3007,6 +3942,24 @@ end_decl_stmt
 
 begin_comment
 comment|/* report a warning */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|yyerror
+name|PROTO
+argument_list|(
+operator|(
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* report a parse error */
 end_comment
 
 begin_decl_stmt
@@ -3087,6 +4040,34 @@ comment|/* from file sym.c */
 end_comment
 
 begin_comment
+comment|/* Add symbol and definitions to symbol table. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|addsym
+name|PROTO
+argument_list|(
+operator|(
+specifier|register
+name|char
+index|[]
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|hash_table
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Save the text of a character class. */
 end_comment
 
@@ -3124,6 +4105,31 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Find symbol in symbol table. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|hash_entry
+modifier|*
+name|findsym
+name|PROTO
+argument_list|(
+operator|(
+specifier|register
+name|char
+index|[]
+operator|,
+name|hash_table
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -3143,6 +4149,25 @@ end_decl_stmt
 
 begin_comment
 comment|/* install a name definition */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Char
+modifier|*
+name|ndlookup
+name|PROTO
+argument_list|(
+operator|(
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* lookup a name definition */
 end_comment
 
 begin_comment
@@ -3263,6 +4288,26 @@ end_decl_stmt
 begin_comment
 comment|/* increase nxt/chk arrays */
 end_comment
+
+begin_comment
+comment|/* Finds a space in the table for a state to be placed. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|find_table_space
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
