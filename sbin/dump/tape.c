@@ -591,6 +591,9 @@ condition|(
 name|blocksperfile
 operator|==
 literal|0
+operator|&&
+operator|!
+name|unlimited
 condition|)
 name|tenths
 operator|=
@@ -1439,6 +1442,9 @@ if|if
 condition|(
 operator|!
 name|pipeout
+operator|&&
+operator|!
+name|unlimited
 operator|&&
 operator|(
 name|blocksperfile

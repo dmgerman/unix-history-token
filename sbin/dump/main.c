@@ -783,17 +783,17 @@ operator|&
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/* XXX restore is unable to restore dumps that  			   were created  with a blocksize larger than 32K. 			   Possibly a bug in the scsi tape driver. */
+comment|/* 			 * XXX 			 * physio(9) currently slices all requests to 			 * 64 KB chunks.  So now, if somebody entered 			 * e.g. 96 KB block size here, he would effectively 			 * yield one 64 KB and one 32 KB block, which 			 * restore cannot handle. 			 * Thus we currently enforce pyhsio(9)'s limit 			 * here, too. 			 */
 if|if
 condition|(
 name|ntrec
 operator|>
-literal|32
+literal|64
 condition|)
 block|{
 name|msg
 argument_list|(
-literal|"please choose a blocksize<= 32\n"
+literal|"please choose a blocksize<= 64\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -832,6 +832,15 @@ literal|'c'
 case|:
 comment|/* Tape is cart. not 9-track */
 name|cartridge
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
+comment|/* `auto-size', Write to EOM. */
+name|unlimited
 operator|=
 literal|1
 expr_stmt|;
@@ -1075,7 +1084,12 @@ operator|*
 name|ntrec
 expr_stmt|;
 comment|/* round down */
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|unlimited
+condition|)
 block|{
 comment|/* 		 * Determine how to default tape size and density 		 * 		 *         	density				tape size 		 * 9-track	1600 bpi (160 bytes/.1")	2300 ft. 		 * 9-track	6250 bpi (625 bytes/.1")	2300 ft. 		 * cartridge	8000 bpi (100 bytes/.1")	1700 ft. 		 *						(450*4 - slop) 		 * hilit19 hits again: " 		 */
 if|if
@@ -1892,6 +1906,8 @@ block|}
 if|if
 condition|(
 name|pipeout
+operator|||
+name|unlimited
 condition|)
 block|{
 name|tapesize

@@ -297,6 +297,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|unlimited
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if set, write to end of medium */
+end_comment
+
+begin_decl_stmt
+name|int
 name|notify
 decl_stmt|;
 end_decl_stmt
