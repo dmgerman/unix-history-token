@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)tz.c	7.3 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/RCS/devSCSITape.c,  *	v 8.14 89/07/31 17:26:13 mendel Exp $ SPRITE (Berkeley)  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)tz.c	7.4 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/RCS/devSCSITape.c,  *	v 8.14 89/07/31 17:26:13 mendel Exp $ SPRITE (Berkeley)  */
 end_comment
 
 begin_comment
@@ -2080,13 +2080,6 @@ name|SCSI_STATUS_CHECKCOND
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|tzdebug
-condition|)
 name|printf
 argument_list|(
 literal|"tz%d: error reading sense data: error %d scsi status 0x%x\n"
@@ -2098,8 +2091,6 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 			 * We got an error during the REQUEST_SENSE, 			 * fill in no sense for data. 			 */
 name|sc
 operator|->
