@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.24 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1453,6 +1453,17 @@ operator|==
 name|EX_OK
 condition|)
 block|{
+specifier|register
+name|char
+modifier|*
+name|t
+init|=
+name|tobuf
+decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
 comment|/* send the recipient list */
 name|tobuf
 index|[
@@ -1476,17 +1487,6 @@ operator|->
 name|q_tchain
 control|)
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|t
-init|=
-name|tobuf
-decl_stmt|;
 name|e
 operator|->
 name|e_to
