@@ -3629,6 +3629,14 @@ name|sep
 operator|->
 name|se_ctrladdr
 operator|.
+name|sin_addr
+operator|=
+name|bind_address
+expr_stmt|;
+name|sep
+operator|->
+name|se_ctrladdr
+operator|.
 name|sin_port
 operator|=
 name|sp
