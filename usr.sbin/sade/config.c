@@ -4820,6 +4820,9 @@ condition|)
 block|{     }
 else|else
 block|{
+name|configTtys
+argument_list|()
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|cmd
