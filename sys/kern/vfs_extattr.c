@@ -2319,6 +2319,17 @@ operator|(
 name|error
 operator|)
 return|;
+name|VOP_UNLOCK
+argument_list|(
+name|nd
+operator|.
+name|ni_vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|NDFREE
 argument_list|(
 operator|&
@@ -2668,7 +2679,9 @@ condition|)
 block|{
 name|vput
 argument_list|(
-name|vp
+name|nd
+operator|.
+name|ni_vp
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2677,6 +2690,17 @@ goto|;
 block|}
 endif|#
 directive|endif
+name|VOP_UNLOCK
+argument_list|(
+name|nd
+operator|.
+name|ni_vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|FILEDESC_LOCK
 argument_list|(
 name|fdp
@@ -2815,7 +2839,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common routine for chroot and chdir.  */
+comment|/*  * Common routine for chroot and chdir.  On success, the directory vnode  * is returned locked, and must be unlocked by the caller.  */
 end_comment
 
 begin_function
@@ -2884,10 +2908,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-elseif|else
 if|if
 condition|(
-operator|(
+name|error
+operator|==
+literal|0
+condition|)
 name|error
 operator|=
 name|mac_check_vnode_chdir
@@ -2898,14 +2924,15 @@ name|td_ucred
 argument_list|,
 name|vp
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{ 	}
+expr_stmt|;
 endif|#
 directive|endif
-else|else
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|error
 operator|=
 name|VOP_ACCESS
@@ -2928,16 +2955,6 @@ condition|)
 name|vput
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-else|else
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
