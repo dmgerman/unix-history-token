@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	5.11 (Berkeley) %G%"
+literal|"@(#)err.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -361,6 +361,45 @@ argument_list|(
 name|MsgBuf
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|1
+operator|&&
+name|LogUsrErrs
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+operator|==
+name|NULL
+condition|?
+literal|"NOQUEUE"
+else|:
+name|CurEnv
+operator|->
+name|e_id
+argument_list|,
+operator|&
+name|MsgBuf
+index|[
+literal|4
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|LOG
 if|if
 condition|(
 name|QuickAbort

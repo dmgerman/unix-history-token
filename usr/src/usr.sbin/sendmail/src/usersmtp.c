@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.16 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	5.17 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.16 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	5.17 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -717,7 +717,7 @@ comment|/* 	**  Send the HOPS command. 	**	This is non-standard and may give an 
 comment|/* 	**  Send the MAIL command. 	**	Designates the sender. 	*/
 name|expand
 argument_list|(
-literal|"\001g"
+literal|"\001<"
 argument_list|,
 name|buf
 argument_list|,

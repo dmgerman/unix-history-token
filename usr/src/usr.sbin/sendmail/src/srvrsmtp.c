@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.31 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	5.32 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.31 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	5.32 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -551,6 +551,10 @@ name|HoldErrs
 operator|=
 name|FALSE
 expr_stmt|;
+name|LogUsrErrs
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/* setup for the read */
 name|CurEnv
 operator|->
@@ -1040,6 +1044,10 @@ expr_stmt|;
 break|break;
 block|}
 name|QuickAbort
+operator|=
+name|TRUE
+expr_stmt|;
+name|LogUsrErrs
 operator|=
 name|TRUE
 expr_stmt|;
