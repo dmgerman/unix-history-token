@@ -219,7 +219,17 @@ name|ENTRY
 parameter_list|(
 name|x
 parameter_list|)
-value|_ENTRY(x); \ 			pushl %ebp; movl %esp,%ebp; \ 			call PIC_PLT(HIDENAME(mcount)); \ 			popl %ebp
+value|_ENTRY(x); 9: \ 			pushl %ebp; movl %esp,%ebp; \ 			call PIC_PLT(HIDENAME(mcount)); \ 			popl %ebp
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALTENTRY
+parameter_list|(
+name|x
+parameter_list|)
+value|_ENTRY(x) ; call PIC_PLT(HIDENAME(mcount)) ; jmp 9f
 end_define
 
 begin_else
@@ -231,6 +241,16 @@ begin_define
 define|#
 directive|define
 name|ENTRY
+parameter_list|(
+name|x
+parameter_list|)
+value|_ENTRY(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALTENTRY
 parameter_list|(
 name|x
 parameter_list|)
