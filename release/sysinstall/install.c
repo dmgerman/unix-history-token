@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.45 1995/10/20 15:40:40 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.47 1995/10/20 21:57:11 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1513,55 +1513,6 @@ condition|)
 return|return
 name|RET_FAIL
 return|;
-if|if
-condition|(
-operator|!
-name|msgYesNo
-argument_list|(
-literal|"Since you're running the express installation, a few post-configuration\n"
-literal|"questions will be asked at this point.\n\n"
-literal|"The FreeBSD package collection is a collection of over 300 ready-to-run\n"
-literal|"applications, from text editors to games to WEB servers.  If you've never\n"
-literal|"done so, it's definitely worth browsing through.\n\n"
-literal|"Would you like to do so now?"
-argument_list|)
-condition|)
-name|configPackages
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|msgYesNo
-argument_list|(
-literal|"Would you like to configure any additional network devices or services?"
-argument_list|)
-condition|)
-name|dmenuOpenSimple
-argument_list|(
-operator|&
-name|MenuNetworking
-argument_list|)
-expr_stmt|;
-comment|/* XXX Put whatever other nice configuration questions you'd like to ask the user here XXX */
-comment|/* Final menu of last resort */
-if|if
-condition|(
-operator|!
-name|msgYesNo
-argument_list|(
-literal|"Would you like to go to the general configuration menu for any last\n"
-literal|"additional configuration options?"
-argument_list|)
-condition|)
-name|dmenuOpenSimple
-argument_list|(
-operator|&
-name|MenuConfigure
-argument_list|)
-expr_stmt|;
 return|return
 name|RET_DONE
 return|;
@@ -1679,6 +1630,74 @@ name|i
 operator|=
 name|RET_FAIL
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+name|RET_FAIL
+operator|&&
+name|str
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|str
+argument_list|,
+literal|"express"
+argument_list|)
+condition|)
+block|{
+comment|/* Ask this now, before installFinal() tries do actually do any of it */
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Since you're running the express installation, a few post-configuration\n"
+literal|"questions will be asked at this point.\n\n"
+literal|"The FreeBSD package collection is a collection of over 300 ready-to-run\n"
+literal|"applications, from text editors to games to WEB servers.  If you've never\n"
+literal|"done so, it's definitely worth browsing through.\n\n"
+literal|"Would you like to do so now?"
+argument_list|)
+condition|)
+name|configPackages
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Would you like to configure any additional network devices or services?"
+argument_list|)
+condition|)
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuNetworking
+argument_list|)
+expr_stmt|;
+comment|/* XXX Put whatever other nice configuration questions you'd like to ask the user here XXX */
+comment|/* Final menu of last resort */
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Would you like to go to the general configuration menu for any last\n"
+literal|"additional configuration options?"
+argument_list|)
+condition|)
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuConfigure
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|i
