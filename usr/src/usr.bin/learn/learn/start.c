@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)start.c	4.6	(Berkeley)	%G%"
+literal|"@(#)start.c	4.7	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ directive|include
 file|<dirent.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_macro
 name|start
 argument_list|(
@@ -61,20 +67,12 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|dirent
-name|dbuf
-decl_stmt|;
 specifier|register
 name|struct
 name|dirent
 modifier|*
 name|ep
-init|=
-operator|&
-name|dbuf
 decl_stmt|;
-comment|/* directory entry pointer */
 name|int
 name|c
 decl_stmt|,
@@ -90,35 +88,18 @@ name|DIR
 modifier|*
 name|dp
 decl_stmt|;
-define|#
-directive|define
-name|OPENDIR
-parameter_list|(
-name|s
-parameter_list|)
-value|((dp = opendir(s)) != NULL)
-define|#
-directive|define
-name|DIRLOOP
-parameter_list|(
-name|s
-parameter_list|)
-value|for (s = readdir(dp); s != NULL; s = readdir(dp))
-define|#
-directive|define
-name|EPSTRLEN
-value|ep->d_namlen
-define|#
-directive|define
-name|CLOSEDIR
-value|closedir(dp)
 if|if
 condition|(
-operator|!
-name|OPENDIR
+operator|(
+name|dp
+operator|=
+name|opendir
 argument_list|(
 literal|"."
 argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 comment|/* clean up play directory */
@@ -133,10 +114,19 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|DIRLOOP
+while|while
+condition|(
+operator|(
+name|ep
+operator|=
+name|readdir
 argument_list|(
-argument|ep
+name|dp
 argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
 block|{
 if|if
 condition|(
@@ -149,10 +139,16 @@ condition|)
 continue|continue;
 name|n
 operator|=
-name|EPSTRLEN
+name|ep
+operator|->
+name|d_namlen
 expr_stmt|;
 if|if
 condition|(
+name|n
+operator|>=
+literal|2
+operator|&&
 name|ep
 operator|->
 name|d_name
@@ -203,7 +199,13 @@ name|d_name
 argument_list|)
 expr_stmt|;
 block|}
-name|CLOSEDIR
+operator|(
+name|void
+operator|)
+name|closedir
+argument_list|(
+name|dp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -229,7 +231,7 @@ name|access
 argument_list|(
 name|where
 argument_list|,
-literal|04
+name|R_OK
 argument_list|)
 operator|==
 literal|0
