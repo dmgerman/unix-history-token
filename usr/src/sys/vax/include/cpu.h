@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -184,14 +184,23 @@ struct|struct
 name|cpu630
 block|{
 name|u_int
-label|:
-literal|24
-operator|,
-comment|/* reserved */
-name|cp_type
-operator|:
+name|cp_hrev
+range|:
 literal|8
-expr_stmt|;
+decl_stmt|,
+comment|/* hardware rev level */
+name|cp_urev
+range|:
+literal|8
+decl_stmt|,
+comment|/* ucode rev level */
+range|:
+literal|8
+decl_stmt|,
+name|cp_type
+range|:
+literal|8
+decl_stmt|;
 comment|/* VAX_630 */
 block|}
 name|cpu630
@@ -250,10 +259,6 @@ directive|define
 name|VAX_8800
 value|6
 end_define
-
-begin_comment
-comment|/* not positive */
-end_comment
 
 begin_define
 define|#
@@ -339,6 +344,13 @@ define|#
 directive|define
 name|IO_BI
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IO_NMI
+value|7
 end_define
 
 begin_ifndef
