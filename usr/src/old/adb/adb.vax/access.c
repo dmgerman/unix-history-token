@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)access.c 4.4 5/15/81"
+literal|"@(#) 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
