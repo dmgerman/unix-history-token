@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.8.2.4 1997/01/04 17:05:45 kato Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.8.2.5 1997/01/30 12:00:59 kato Exp $  */
 end_comment
 
 begin_include
@@ -5552,24 +5552,7 @@ operator|->
 name|esp
 condition|)
 block|{
-name|outb
-argument_list|(
-name|iobase
-operator|+
-name|com_fifo
-argument_list|,
-name|FIFO_DMA_MODE
-operator||
-name|FIFO_ENABLE
-operator||
-name|FIFO_RCV_RST
-operator||
-name|FIFO_XMT_RST
-operator||
-name|FIFO_RX_MEDH
-argument_list|)
-expr_stmt|;
-comment|/* Set 16550 compatibility mode. */
+comment|/* 		 * Set 16550 compatibility mode. 		 * We don't use the ESP_MODE_SCALE bit to increase the 		 * fifo trigger levels because we can't handle large 		 * bursts of input. 		 * XXX flow control should be set in comparam(), not here. 		 */
 name|outb
 argument_list|(
 name|com
@@ -5589,8 +5572,6 @@ name|esp_port
 operator|+
 name|ESP_CMD2
 argument_list|,
-name|ESP_MODE_SCALE
-operator||
 name|ESP_MODE_RTS
 operator||
 name|ESP_MODE_FIFO
@@ -6514,9 +6495,10 @@ operator|->
 name|fifo_image
 argument_list|)
 expr_stmt|;
+comment|/* 				 * XXX the delays are for superstitious 				 * historical reasons.  It must be less than 				 * the character time at the maximum 				 * supported speed (87 usec at 115200 bps 				 * 8N1).  Otherwise we might loop endlessly 				 * if data is streaming in.  We used to use 				 * delays of 100.  That usually worked 				 * because DELAY(100) used to usually delay 				 * for about 85 usec instead of 100. 				 */
 name|DELAY
 argument_list|(
-literal|100
+literal|50
 argument_list|)
 expr_stmt|;
 if|if
@@ -6545,7 +6527,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|100
+literal|50
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7205,7 +7187,13 @@ name|com
 operator|->
 name|do_timestamp
 operator|=
-literal|0
+name|FALSE
+expr_stmt|;
+name|com
+operator|->
+name|do_dcd_timestamp
+operator|=
+name|FALSE
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -11741,6 +11729,24 @@ name|FIFO_ENABLE
 operator||
 name|FIFO_RX_HIGH
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COM_ESP
+comment|/* 		 * The Hayes ESP card needs the fifo DMA mode bit set 		 * in compatibility mode.  If not, it will interrupt 		 * for each character received. 		 */
+if|if
+condition|(
+name|com
+operator|->
+name|esp
+condition|)
+name|com
+operator|->
+name|fifo_image
+operator||=
+name|FIFO_DMA_MODE
+expr_stmt|;
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|iobase
@@ -13165,6 +13171,19 @@ name|com
 operator|->
 name|hasfifo
 condition|)
+ifdef|#
+directive|ifdef
+name|COM_ESP
+comment|/* XXX avoid h/w bug. */
+if|if
+condition|(
+operator|!
+name|com
+operator|->
+name|esp
+condition|)
+endif|#
+directive|endif
 comment|/* XXX does this flush everything? */
 name|outb
 argument_list|(
@@ -13254,6 +13273,19 @@ name|com
 operator|->
 name|hasfifo
 condition|)
+ifdef|#
+directive|ifdef
+name|COM_ESP
+comment|/* XXX avoid h/w bug. */
+if|if
+condition|(
+operator|!
+name|com
+operator|->
+name|esp
+condition|)
+endif|#
+directive|endif
 comment|/* XXX does this flush everything? */
 name|outb
 argument_list|(
