@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)order.c	1.15 (Berkeley) %G%"
+literal|"@(#)order.c	1.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,6 @@ end_decl_stmt
 begin_block
 block|{
 comment|/* should the assignment op p be stored, 	   given that it lies as the right operand of o 	   (or the left, if o==UNARY MUL) */
-comment|/* 	if( p->in.op == INCR || p->in.op == DECR ) return; 	if( o==UNARY MUL&& p->in.left->in.op == REG&& !isbreg(p->in.left->tn.rval) ) SETSTO(p,INAREG);  */
 block|}
 end_block
 
@@ -286,8 +285,9 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
+name|int
 name|o
-expr_stmt|;
+decl_stmt|;
 name|o
 operator|=
 name|p
@@ -535,7 +535,6 @@ end_decl_stmt
 begin_block
 block|{
 comment|/* is it legal to make an OREG or NAME entry which has an 	/* offset of off, (from a register of r), if the 	/* resulting thing had type t */
-comment|/*	if( r == R0 ) return( 1 );  /* NO */
 return|return
 operator|(
 literal|0
@@ -621,7 +620,7 @@ operator|.
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* 2 for float or double, else 1 */
+comment|/* 2 for double, else 1 */
 empty_stmt|;
 if|if
 condition|(
@@ -1166,7 +1165,6 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* 		if( o==ASG MUL || o==ASG DIV || o==ASG MOD) p->in.su = max(p->in.su,fregs);  */
 return|return;
 block|}
 switch|switch
@@ -1209,10 +1207,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
-name|MUL
+name|PLUS
 case|:
 case|case
-name|PLUS
+name|MUL
 case|:
 case|case
 name|OR
@@ -1380,7 +1378,6 @@ operator|+
 name|sur
 argument_list|)
 expr_stmt|;
-comment|/* 	if( o==MUL||o==DIV||o==MOD) p->in.su = max(p->in.su,fregs);  */
 block|}
 end_block
 
@@ -1412,16 +1409,15 @@ begin_block
 block|{
 comment|/* do register allocation */
 specifier|register
+name|int
 name|o
-operator|,
-name|type
-operator|,
+decl_stmt|,
 name|down1
-operator|,
+decl_stmt|,
 name|down2
-operator|,
+decl_stmt|,
 name|ty
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|radebug
@@ -1469,39 +1465,6 @@ operator|.
 name|op
 argument_list|)
 expr_stmt|;
-name|type
-operator|=
-name|p
-operator|->
-name|in
-operator|.
-name|type
-expr_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|DOUBLE
-operator|||
-name|type
-operator|==
-name|FLOAT
-condition|)
-block|{
-if|if
-condition|(
-name|o
-operator|==
-name|FORCE
-condition|)
-name|down1
-operator|=
-name|R0
-operator||
-name|MUSTDO
-expr_stmt|;
-block|}
-else|else
 switch|switch
 condition|(
 name|o
@@ -2116,10 +2079,11 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
+name|int
 name|ro
-operator|,
+decl_stmt|,
 name|rt
-expr_stmt|;
+decl_stmt|;
 name|rt
 operator|=
 name|p
@@ -2232,7 +2196,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* try putting LHS into a reg */
-comment|/*		order( p->in.left, logop(p->in.op)?(INAREG|INBREG|INTAREG|INTBREG|SOREG):(INTAREG|INTBREG|SOREG) );*/
 name|order
 argument_list|(
 name|p
@@ -2313,10 +2276,15 @@ name|rt
 operator|==
 name|USHORT
 operator|||
+ifndef|#
+directive|ifndef
+name|SPRECC
 name|rt
 operator|==
 name|FLOAT
 operator|||
+endif|#
+directive|endif
 operator|(
 name|ro
 operator|!=
@@ -2355,8 +2323,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	else if( logop(p->in.op)&& rt==USHORT ){  /* must get rhs into register */
-comment|/* 		order( p->in.right, INAREG ); 		return( 1 ); 		}  */
 return|return
 operator|(
 literal|0
@@ -2733,10 +2699,11 @@ begin_block
 block|{
 comment|/* setup for =ops */
 specifier|register
+name|int
 name|rt
-operator|,
+decl_stmt|,
 name|ro
-expr_stmt|;
+decl_stmt|;
 name|rt
 operator|=
 name|p
@@ -2857,7 +2824,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	if( (p->in.op == ASG LS || p->in.op == ASG RS)&& ro != ICON&& ro != REG ){ 		order( p->in.right, INAREG ); 		return(1); 		}  */
 name|p
 operator|=
 name|p
@@ -3036,11 +3002,13 @@ modifier|*
 name|pasg
 decl_stmt|;
 specifier|register
+name|int
 name|align
-expr_stmt|;
+decl_stmt|;
 specifier|register
+name|int
 name|size
-expr_stmt|;
+decl_stmt|;
 name|int
 name|count
 decl_stmt|;
@@ -3294,8 +3262,9 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
+name|int
 name|t
-expr_stmt|;
+decl_stmt|;
 name|t
 operator|=
 literal|0
