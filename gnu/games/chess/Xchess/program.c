@@ -4,7 +4,7 @@ comment|/* This file contains code for X-CHESS.    Copyright (C) 1986 Free Softw
 end_comment
 
 begin_comment
-comment|/* RCS Info: $Revision: 1.1.1.1 $ on $Date: 1993/06/12 14:41:13 $  *           $Source: /a/cvs/386BSD/src/gnu/chess/Xchess/program.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  *  * The interface to whichever chess playing program we are using...  */
+comment|/* RCS Info: $Revision: 1.2 $ on $Date: 1994/01/07 11:10:40 $  *           $Source: /home/ncvs/src/gnu/games/chess/Xchess/program.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  *  * The interface to whichever chess playing program we are using...  */
 end_comment
 
 begin_include
@@ -657,7 +657,7 @@ decl_stmt|;
 comment|/* Do a poll... */
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 if|if
 condition|(
 operator|!

@@ -30,7 +30,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 end_ifdef
 
 begin_define

@@ -2988,7 +2988,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 name|XFillRectangle
 argument_list|(
 name|display
@@ -4883,7 +4883,7 @@ expr_stmt|;
 comment|/* First,  draw the arrow */
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 name|XCopyArea
 argument_list|(
 name|display
@@ -7312,7 +7312,7 @@ expr_stmt|;
 comment|/* Clear out bottom space region */
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 name|XClearArea
 argument_list|(
 name|display

@@ -1776,7 +1776,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 end_ifdef
 
 begin_ifdef
@@ -1884,7 +1884,7 @@ end_ifdef
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__386BSD__
+name|__FreeBSD__
 end_ifndef
 
 begin_ifndef

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rusers_proc.c,v 1.2 1994/03/06 02:07:58 jkh Exp $"
+literal|"$Id: rusers_proc.c,v 1.1.1.1 1994/08/28 14:53:44 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -668,7 +668,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|__386BSD__
+name|__FreeBSD__
 argument_list|)
 name|kbd_idle
 operator|=
