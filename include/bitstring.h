@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Paul Vixie.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)bitstring.h	5.5 (Berkeley) 4/3/91  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Paul Vixie.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)bitstring.h	5.5 (Berkeley) 4/3/91  *	$Id$  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,10 @@ define|#
 directive|define
 name|_BITSTRING_H_
 end_define
+
+begin_comment
+comment|/* modified for SV/AT and bitstring bugfix by M.R.Murphy, 11oct91  * bitstr_size changed gratuitously, but shorter  * bit_alloc   spelling error fixed  * the following were efficient, but didn't work, they've been made to  * work, but are no longer as efficient :-)  * bit_nclear, bit_nset, bit_ffc, bit_ffs  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -73,7 +77,7 @@ parameter_list|(
 name|nbits
 parameter_list|)
 define|\
-value|((((nbits) - 1)>> 3) + 1)
+value|(((nbits) + 7)>> 3)
 end_define
 
 begin_comment
@@ -88,7 +92,7 @@ parameter_list|(
 name|nbits
 parameter_list|)
 define|\
-value|(bitstr_t *)calloc(1, \ 	    (unsigned int)_bitstr_size(nbits) * sizeof(bitstr_t))
+value|(bitstr_t *)calloc((size_t)bitstr_size(nbits), sizeof(bitstr_t))
 end_define
 
 begin_comment
@@ -174,7 +178,7 @@ name|start
 parameter_list|,
 name|stop
 parameter_list|)
-value|{ \ 	register bitstr_t *_name = name; \ 	register int _start = start, _stop = stop; \ 	register int _startbyte = _bit_byte(_start); \ 	register int _stopbyte = _bit_byte(_stop); \ 	_name[_startbyte]&= 0xff>> (8 - (_start&0x7)); \ 	while (++_startbyte< _stopbyte) \ 		_name[_startbyte] = 0; \ 	_name[_stopbyte]&= 0xff<< ((_stop&0x7) + 1); \ }
+value|{ \ 	register bitstr_t *_name = name; \ 	register int _start = start, _stop = stop; \ 	while (_start<= _stop) { \ 		bit_clear(_name, _start); \ 		_start++; \ 		} \ }
 end_define
 
 begin_comment
@@ -192,7 +196,7 @@ name|start
 parameter_list|,
 name|stop
 parameter_list|)
-value|{ \ 	register bitstr_t *_name = name; \ 	register int _start = start, _stop = stop; \ 	register int _startbyte = _bit_byte(_start); \ 	register int _stopbyte = _bit_byte(_stop); \ 	_name[_startbyte] |= 0xff<< ((start)&0x7); \ 	while (++_startbyte< _stopbyte) \ 	    _name[_startbyte] = 0xff; \ 	_name[_stopbyte] |= 0xff>> (7 - (_stop&0x7)); \ }
+value|{ \ 	register bitstr_t *_name = name; \ 	register int _start = start, _stop = stop; \ 	while (_start<= _stop) { \ 		bit_set(_name, _start); \ 		_start++; \ 		} \ }
 end_define
 
 begin_comment
@@ -210,7 +214,7 @@ name|nbits
 parameter_list|,
 name|value
 parameter_list|)
-value|{ \ 	register bitstr_t *_name = name; \ 	register int _byte, _nbits = nbits; \ 	register int _stopbyte = _bit_byte(_nbits), _value = -1; \ 	for (_byte = 0; _byte<= _stopbyte; ++_byte) \ 		if (_name[_byte] != 0xff) { \ 			_value = _byte<< 3; \ 			for (_stopbyte = _name[_byte]; (_stopbyte&0x1); \ 			    ++_value, _stopbyte>>= 1); \ 			break; \ 		} \ 	*(value) = _value; \ }
+value|{ \ 	register bitstr_t *_name = name; \ 	register int _bit, _nbits = nbits, _value = -1; \ 	for (_bit = 0; _bit< _nbits; ++_bit) \ 		if (!bit_test(_name, _bit)) { \ 			_value = _bit; \ 			break; \ 		} \ 	*(value) = _value; \ }
 end_define
 
 begin_comment
@@ -228,7 +232,7 @@ name|nbits
 parameter_list|,
 name|value
 parameter_list|)
-value|{ \ 	register bitstr_t *_name = name; \ 	register int _byte, _nbits = nbits; \ 	register int _stopbyte = _bit_byte(_nbits), _value = -1; \ 	for (_byte = 0; _byte<= _stopbyte; ++_byte) \ 		if (_name[_byte]) { \ 			_value = _byte<< 3; \ 			for (_stopbyte = _name[_byte]; !(_stopbyte&0x1); \ 			    ++_value, _stopbyte>>= 1); \ 			break; \ 		} \ 	*(value) = _value; \ }
+value|{ \ 	register bitstr_t *_name = name; \ 	register int _bit, _nbits = nbits, _value = -1; \ 	for (_bit = 0; _bit< _nbits; ++_bit) \ 		if (bit_test(_name, _bit)) { \ 			_value = _bit; \ 			break; \ 		} \ 	*(value) = _value; \ }
 end_define
 
 begin_endif
