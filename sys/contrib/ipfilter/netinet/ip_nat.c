@@ -5003,6 +5003,12 @@ name|NULL
 expr_stmt|;
 name|nat
 operator|->
+name|nat_hm
+operator|=
+name|NULL
+expr_stmt|;
+name|nat
+operator|->
 name|nat_data
 operator|=
 name|NULL
