@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_xxx.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_xxx.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -237,6 +237,7 @@ condition|;
 operator|++
 name|bit
 control|)
+block|{
 if|if
 condition|(
 name|mask
@@ -253,10 +254,10 @@ operator|>>=
 literal|1
 expr_stmt|;
 block|}
+block|}
 end_block
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
@@ -278,14 +279,14 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-unit|bcmp
-operator|(
+name|bcmp
+argument_list|(
 name|s1
-operator|,
+argument_list|,
 name|s2
-operator|,
+argument_list|,
 name|len
-operator|)
+argument_list|)
 specifier|register
 name|char
 operator|*
