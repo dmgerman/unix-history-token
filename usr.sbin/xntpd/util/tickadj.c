@@ -2093,6 +2093,13 @@ name|kernels
 index|[]
 operator|=
 block|{
+ifdef|#
+directive|ifdef
+name|_PATH_UNIX
+name|_PATH_UNIX
+block|,
+endif|#
+directive|endif
 literal|"/vmunix"
 block|,
 literal|"/unix"
@@ -2104,8 +2111,6 @@ block|,
 literal|"/386bsd"
 block|,
 literal|"/netbsd"
-block|,
-literal|"/hp-ux"
 block|,
 name|NULL
 block|}
