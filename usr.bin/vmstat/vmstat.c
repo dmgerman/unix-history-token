@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)vmstat.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,19 +154,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nlist.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<kvm.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -164,19 +172,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<kvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -194,13 +214,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<limits.h>
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -653,7 +673,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|void
+name|printhdr
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -671,15 +704,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
 specifier|register
 name|int
 name|c
@@ -896,25 +920,15 @@ name|kd
 operator|==
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"vmstat: kvm_openfiles: %s\n"
+literal|"kvm_openfiles: %s"
 argument_list|,
 name|errbuf
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -938,14 +952,9 @@ operator|>
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"vmstat: undefined symbols:"
+literal|"undefined symbols:"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1009,14 +1018,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"vmstat: kvm_nlist: %s\n"
+literal|"kvm_nlist: %s"
 argument_list|,
 name|kvm_geterr
 argument_list|(
@@ -1279,25 +1283,15 @@ name|dk_ndrive
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"vmstat: dk_ndrive %d\n"
+literal|"dk_ndrive %d"
 argument_list|,
 name|dk_ndrive
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|dr_select
 operator|=
 name|calloc
@@ -1691,23 +1685,13 @@ literal|365
 operator|*
 literal|10
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"vmstat: time makes no sense; namelist must be wrong.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"time makes no sense; namelist must be wrong"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|uptime
@@ -2011,6 +1995,9 @@ name|printf
 argument_list|(
 literal|"%8ld%6ld "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pgtok
 argument_list|(
 name|total
@@ -2018,6 +2005,9 @@ operator|.
 name|t_avm
 argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pgtok
 argument_list|(
 name|total
@@ -2277,12 +2267,10 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|printhdr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -2412,7 +2400,7 @@ operator|-
 literal|2
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Force a header to be prepended to the next output.  */
@@ -2563,24 +2551,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_function
+name|long
 name|pct
-argument_list|(
-argument|top
-argument_list|,
-argument|bot
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|top
+parameter_list|,
+name|bot
+parameter_list|)
 name|long
 name|top
 decl_stmt|,
 name|bot
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|long
 name|ans
@@ -2613,7 +2596,7 @@ name|ans
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -3103,7 +3086,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9s cache hits (%d%% pos + %d%% neg) system %d%% per-directory\n"
+literal|"%9s cache hits (%ld%% pos + %ld%% neg) system %ld%% per-directory\n"
 argument_list|,
 literal|""
 argument_list|,
@@ -3140,7 +3123,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9s deletions %d%%, falsehits %d%%, toolong %d%%\n"
+literal|"%9s deletions %ld%%, falsehits %ld%%, toolong %ld%%\n"
 argument_list|,
 literal|""
 argument_list|,
@@ -3817,28 +3800,13 @@ name|intrname
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"vmstat: %s.\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
-block|}
 name|kread
 argument_list|(
 name|X_INTRCNT
@@ -4719,21 +4687,13 @@ condition|)
 operator|++
 name|sym
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"vmstat: symbol %s not defined\n"
-argument_list|,
-name|sym
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"symbol %s not defined"
+argument_list|,
+name|sym
 argument_list|)
 expr_stmt|;
 block|}
@@ -4777,14 +4737,11 @@ condition|)
 operator|++
 name|sym
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"vmstat: %s: %s\n"
+literal|"%s: %s"
 argument_list|,
 name|sym
 argument_list|,
@@ -4792,11 +4749,6 @@ name|kvm_geterr
 argument_list|(
 name|kd
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4815,7 +4767,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: vmstat [-ims] [-c count] [-M core] \ [-N system] [-w wait] [disks]\n"
+literal|"usage: vmstat [-ims] [-c count] [-M core] [-N system] [-w wait] [disks]\n"
 argument_list|)
 expr_stmt|;
 name|exit
