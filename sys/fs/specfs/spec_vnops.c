@@ -366,6 +366,17 @@ block|}
 block|,
 block|{
 operator|&
+name|vop_bmap_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|spec_bmap
+block|}
+block|,
+block|{
+operator|&
 name|vop_close_desc
 block|,
 operator|(
