@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1040,6 +1040,22 @@ name|p
 parameter_list|)
 define|\
 value|(((p)->p_sig == 0 || \ 	    ((p)->p_flag&STRC) == 0&& ((p)->p_sig&~ (p)->p_sigmask) == 0) ? \ 	    0 : issig())
+end_define
+
+begin_comment
+comment|/*  * Clear a pending signal from a process.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLRSIG
+parameter_list|(
+name|p
+parameter_list|,
+name|sig
+parameter_list|)
+value|{ (p)->p_sig&= ~sigmask(sig); }
 end_define
 
 begin_endif
