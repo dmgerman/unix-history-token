@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	1.3	%G%"
+literal|"@(#)parseaddr.c	1.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -972,9 +972,12 @@ name|c
 operator|==
 literal|'('
 condition|)
+block|{
 name|cmntcnt
 operator|++
 expr_stmt|;
+continue|continue;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1009,13 +1012,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-if|if
-condition|(
-name|cmntcnt
-operator|>
-literal|0
-condition|)
-continue|continue;
 elseif|else
 if|if
 condition|(
@@ -1085,7 +1081,7 @@ literal|0
 condition|)
 continue|continue;
 block|}
-comment|/* 		**  Turn "at" into "@", 		**	but only if "at" is a word in and to itself. 		**	By the way, I violate the ARPANET RFC-733 		**	standard here, by assuming that 'space' delimits 		**	atoms.  I assume that is just a mistake, since 		**	it violates the spirit of the semantics 		**	of the document..... 		*/
+comment|/* 		**  Turn "at" into "@", 		**	but only if "at" is a word. 		**	By the way, I violate the ARPANET RFC-733 		**	standard here, by assuming that 'space' delimits 		**	atoms.  I assume that is just a mistake, since 		**	it violates the spirit of the semantics 		**	of the document..... 		*/
 if|if
 condition|(
 name|space
