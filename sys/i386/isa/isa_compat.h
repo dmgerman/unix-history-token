@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ar.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"cx.h"
 end_include
 
@@ -49,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|"rdp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sr.h"
 end_include
 
 begin_include
@@ -297,14 +285,6 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|isa_driver
-name|ardriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
 name|cxdriver
 decl_stmt|;
 end_decl_stmt
@@ -338,14 +318,6 @@ specifier|extern
 name|struct
 name|isa_driver
 name|rdpdriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|srdriver
 decl_stmt|;
 end_decl_stmt
 
@@ -928,20 +900,6 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|NAR
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_NET
-block|,
-operator|&
-name|ardriver
-block|}
-block|,
-endif|#
-directive|endif
-if|#
-directive|if
 name|NCX
 operator|>
 literal|0
@@ -964,20 +922,6 @@ name|INTR_TYPE_NET
 block|,
 operator|&
 name|eldriver
-block|}
-block|,
-endif|#
-directive|endif
-if|#
-directive|if
-name|NSR
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_NET
-block|,
-operator|&
-name|srdriver
 block|}
 block|,
 endif|#
