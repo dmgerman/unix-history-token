@@ -3994,7 +3994,7 @@ condition|)
 block|{
 name|outn
 argument_list|(
-literal|"\n#include<g++/FlexLexer.h>"
+literal|"\n#include<FlexLexer.h>"
 argument_list|)
 expr_stmt|;
 if|if
