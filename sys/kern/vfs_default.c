@@ -189,6 +189,11 @@ operator|=
 name|NULL
 block|,
 operator|.
+name|vop_bypass
+operator|=
+name|VOP_EOPNOTSUPP
+block|,
+operator|.
 name|vop_advlock
 operator|=
 name|VOP_EINVAL
