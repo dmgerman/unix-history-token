@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|ATH_TXBUF
-value|60
+value|100
 end_define
 
 begin_comment
@@ -82,7 +82,7 @@ begin_define
 define|#
 directive|define
 name|ATH_TXDESC
-value|8
+value|10
 end_define
 
 begin_comment
@@ -273,7 +273,8 @@ decl_stmt|;
 define|#
 directive|define
 name|ATH_MAX_SCATTER
-value|64
+value|ATH_TXDESC
+comment|/* max(tx,rx,beacon) desc's */
 name|bus_dma_segment_t
 name|bf_segs
 index|[
