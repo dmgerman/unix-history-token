@@ -39,6 +39,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<tap.h>
+end_include
+
 begin_function
 name|int
 name|main
@@ -59,9 +65,9 @@ decl_stmt|;
 name|int
 name|iret
 decl_stmt|;
-name|printf
+name|plan_tests
 argument_list|(
-literal|"1..2\n"
+literal|25
 argument_list|)
 expr_stmt|;
 comment|/* 	 * strerror() failure tests. 	 */
@@ -76,7 +82,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|strcmp
 argument_list|(
@@ -88,7 +94,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|errno
 operator|==
@@ -120,7 +126,7 @@ argument_list|,
 name|INT_MAX
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|strcmp
 argument_list|(
@@ -132,7 +138,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|errno
 operator|==
@@ -151,7 +157,7 @@ argument_list|(
 name|EPERM
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|strcmp
 argument_list|(
@@ -163,7 +169,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|errno
 operator|==
@@ -181,7 +187,7 @@ argument_list|(
 name|EPFNOSUPPORT
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|strcmp
 argument_list|(
@@ -193,7 +199,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|errno
 operator|==
@@ -211,16 +217,11 @@ argument_list|(
 name|ELAST
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|errno
 operator|==
 literal|0
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ok 1 - strerror()\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * strerror_r() failure tests. 	 */
@@ -250,7 +251,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|strcmp
 argument_list|(
@@ -262,7 +263,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|iret
 operator|==
@@ -296,7 +297,7 @@ literal|"Operation not permitted"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|strcmp
 argument_list|(
@@ -308,7 +309,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|iret
 operator|==
@@ -343,7 +344,7 @@ literal|"Unknown error: -1"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|strcmp
 argument_list|(
@@ -355,7 +356,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|iret
 operator|==
@@ -392,7 +393,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|strcmp
 argument_list|(
@@ -404,7 +405,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|iret
 operator|==
@@ -441,7 +442,7 @@ operator|-
 literal|2
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|strcmp
 argument_list|(
@@ -453,7 +454,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|iret
 operator|==
@@ -487,7 +488,7 @@ literal|"Unknown error: 12345"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|strcmp
 argument_list|(
@@ -499,7 +500,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|iret
 operator|==
@@ -533,7 +534,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|strcmp
 argument_list|(
@@ -545,7 +546,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|iret
 operator|==
@@ -578,7 +579,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|strcmp
 argument_list|(
@@ -590,23 +591,17 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ok1
 argument_list|(
 name|iret
 operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"ok 2 - strerror_r()\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+return|return
+name|exit_status
+argument_list|()
+return|;
 block|}
 end_function
 
