@@ -3431,10 +3431,6 @@ modifier|*
 name|sc_intrhand
 decl_stmt|;
 name|struct
-name|mtx
-name|sc_mtx
-decl_stmt|;
-name|struct
 name|txp_ldata
 modifier|*
 name|sc_ldata
