@@ -366,7 +366,7 @@ comment|/* Types match kernel declarations. */
 end_comment
 
 begin_decl_stmt
-name|long
+name|off_t
 name|dumplo
 decl_stmt|;
 end_decl_stmt
@@ -1047,6 +1047,11 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+name|unsigned
+name|long
+name|kdumplo
+decl_stmt|;
+comment|/* where dump starts on dumpdev */
 comment|/* 	 * Some names we need for the currently running system, others for 	 * the system that was running when the dump was made.  The values 	 * obtained from the current system are used to look for things in 	 * /dev/kmem that cannot be found in the dump_sys namelist, but are 	 * presumed to be the same (since the disk partitions are probably 	 * the same!) 	 */
 if|if
 condition|(
@@ -1339,13 +1344,17 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|&
-name|dumplo
+name|kdumplo
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|dumplo
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|dumplo
+operator|=
+name|kdumplo
 expr_stmt|;
 if|if
 condition|(
