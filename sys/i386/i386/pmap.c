@@ -475,6 +475,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pmaplist
 name|allpmaps
@@ -4384,10 +4385,15 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-operator|--
+name|atomic_subtract_int
+argument_list|(
+operator|&
 name|cnt
 operator|.
 name|v_wire_count
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -5078,10 +5084,15 @@ operator|->
 name|wire_count
 operator|--
 expr_stmt|;
+name|atomic_subtract_int
+argument_list|(
+operator|&
 name|cnt
 operator|.
 name|v_wire_count
-operator|--
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|vm_page_free_zero
 argument_list|(
@@ -6089,6 +6100,14 @@ name|s
 operator|=
 name|splvm
 argument_list|()
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
