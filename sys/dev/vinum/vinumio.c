@@ -979,6 +979,65 @@ name|drive
 argument_list|)
 expr_stmt|;
 comment|/* keep the daemon out */
+comment|/* 	 * If we can't access the drive, we can't flush  	 * the queues, which spec_close() will try to 	 * do.  Get rid of them here first 	 */
+if|if
+condition|(
+name|drive
+operator|->
+name|state
+operator|<
+name|drive_up
+condition|)
+block|{
+comment|/* we can't access the drive, */
+name|vn_lock
+argument_list|(
+name|drive
+operator|->
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|drive
+operator|->
+name|p
+argument_list|)
+expr_stmt|;
+name|vinvalbuf
+argument_list|(
+name|drive
+operator|->
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|NOCRED
+argument_list|,
+name|drive
+operator|->
+name|p
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|drive
+operator|->
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|drive
+operator|->
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 name|vn_close
 argument_list|(
 name|drive
@@ -996,13 +1055,25 @@ operator|->
 name|p
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
 if|if
 condition|(
+operator|(
+name|debug
+operator|&
+name|DEBUG_WARNINGS
+operator|)
+comment|/* want to hear about them */
+operator|&&
+operator|(
 name|drive
 operator|->
 name|vp
 operator|->
 name|v_usecount
+operator|)
 condition|)
 comment|/* XXX shouldn't happen */
 name|log
@@ -1022,6 +1093,8 @@ operator|->
 name|v_usecount
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|drive
 operator|->
 name|vp
@@ -2363,7 +2436,7 @@ name|check_drive
 parameter_list|(
 name|char
 modifier|*
-name|drivename
+name|devicename
 parameter_list|)
 block|{
 name|int
@@ -2381,12 +2454,12 @@ name|driveno
 operator|=
 name|find_drive_by_dev
 argument_list|(
-name|drivename
+name|devicename
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* entry doesn't exist, create it */
+comment|/* if entry doesn't exist, create it */
 name|drive
 operator|=
 operator|&
@@ -2406,37 +2479,11 @@ name|drive
 argument_list|,
 literal|0
 argument_list|)
-operator|!=
+operator|==
 name|DL_OURS
 condition|)
 block|{
 comment|/* not ours */
-if|if
-condition|(
-name|drive
-operator|->
-name|lasterror
-operator|==
-literal|0
-condition|)
-name|drive
-operator|->
-name|lasterror
-operator|=
-name|ENODEV
-expr_stmt|;
-name|set_drive_state
-argument_list|(
-name|drive
-operator|->
-name|driveno
-argument_list|,
-name|drive_down
-argument_list|,
-name|setstate_force
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -2526,7 +2573,7 @@ literal|'/'
 condition|)
 block|{
 comment|/* we know a device name for it */
-comment|/* 		 * set an error, but don't take the drive down: 		 * that would cause unneeded error messages. 		 */
+comment|/* 		     * set an error, but don't take the drive down: 		     * that would cause unneeded error messages. 		     */
 name|drive
 operator|->
 name|lasterror
@@ -2568,7 +2615,7 @@ index|]
 operator|.
 name|driveno
 operator|==
-name|driveno
+name|i
 operator|)
 comment|/* it's pointing to this one, */
 operator|&&
@@ -2605,13 +2652,49 @@ expr_stmt|;
 comment|/* and update its state */
 block|}
 block|}
-name|free_drive
+name|bzero
 argument_list|(
 name|mydrive
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|drive
+argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* don't deallocate it, just remove it */
 block|}
 block|}
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|drive
+operator|->
+name|lasterror
+operator|==
+literal|0
+condition|)
+name|drive
+operator|->
+name|lasterror
+operator|=
+name|ENODEV
+expr_stmt|;
+name|set_drive_state
+argument_list|(
+name|drive
+operator|->
+name|driveno
+argument_list|,
+name|drive_down
+argument_list|,
+name|setstate_force
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|drive
@@ -4577,7 +4660,7 @@ name|vinum_scandisk
 parameter_list|(
 name|char
 modifier|*
-name|drivename
+name|devicename
 index|[]
 parameter_list|,
 name|int
@@ -4770,7 +4853,7 @@ name|DRIVENAMELEN
 argument_list|,
 literal|"%s%c"
 argument_list|,
-name|drivename
+name|devicename
 index|[
 name|driveno
 index|]
