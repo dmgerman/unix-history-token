@@ -300,11 +300,9 @@ name|FETCH_VERBOSE
 value|19
 end_define
 
-begin_comment
-comment|/* FILE-specific functions */
-end_comment
-
 begin_function_decl
+name|__BEGIN_DECLS
+comment|/* FILE-specific functions */
 name|FILE
 modifier|*
 name|fetchXGetFile
@@ -815,6 +813,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_macro
+name|__END_DECLS
+end_macro
+
 begin_comment
 comment|/* Authentication */
 end_comment
@@ -869,12 +871,20 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* I/O timeout */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|fetchTimeout
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Restart interrupted syscalls */
+end_comment
 
 begin_decl_stmt
 specifier|extern
