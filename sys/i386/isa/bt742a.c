@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *	$Id$  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *	$Id: bt742a.c,v 1.5 1993/08/21 20:01:32 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -4534,18 +4534,11 @@ directive|ifdef
 name|__386BSD__
 name|printf
 argument_list|(
-literal|"bt%d reading board settings, "
+literal|"bt%d: reading board settings, "
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|PRNT
-parameter_list|(
-name|x
-parameter_list|)
-value|printf(x)
 else|#
 directive|else
 else|__386BSD__
@@ -4556,13 +4549,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|PRNT
-parameter_list|(
-name|x
-parameter_list|)
-value|printf(x)
 endif|#
 directive|endif
 endif|__386BSD__
@@ -4603,11 +4589,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"eisa dma,"
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|CHAN0
@@ -4632,11 +4613,6 @@ name|unit
 index|]
 operator|=
 literal|0
-expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"dma=0,"
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4663,11 +4639,6 @@ index|]
 operator|=
 literal|5
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"dma=5,"
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|CHAN6
@@ -4692,11 +4663,6 @@ name|unit
 index|]
 operator|=
 literal|6
-expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"dma=6,"
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4723,11 +4689,6 @@ index|]
 operator|=
 literal|7
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"dma=7,"
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 name|printf
@@ -4745,6 +4706,32 @@ name|EIO
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|bt_dma
+index|[
+name|unit
+index|]
+operator|==
+operator|-
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"eisa dma, "
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"dma=%d, "
+argument_list|,
+name|bt_dma
+index|[
+name|unit
+index|]
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|conf
@@ -4762,11 +4749,6 @@ index|]
 operator|=
 literal|9
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=9,"
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|INT10
@@ -4777,11 +4759,6 @@ name|unit
 index|]
 operator|=
 literal|10
-expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=10,"
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4794,11 +4771,6 @@ index|]
 operator|=
 literal|11
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=11,"
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|INT12
@@ -4809,11 +4781,6 @@ name|unit
 index|]
 operator|=
 literal|12
-expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=12,"
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4826,11 +4793,6 @@ index|]
 operator|=
 literal|14
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=14,"
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|INT15
@@ -4841,11 +4803,6 @@ name|unit
 index|]
 operator|=
 literal|15
-expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=15,"
-argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -4860,6 +4817,34 @@ name|EIO
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|__386BSD__
+name|printf
+argument_list|(
+literal|"int=%d\n"
+argument_list|,
+name|bt_int
+index|[
+name|unit
+index|]
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"int=%d "
+argument_list|,
+name|bt_int
+index|[
+name|unit
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|__386BSD__
 comment|/* who are we on the scsi bus */
 name|bt_scsi_dev
 index|[
@@ -5181,7 +5166,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ver%c.%c,"
+literal|"bt%d: version %c.%c, "
+argument_list|,
+name|unit
 argument_list|,
 name|bID
 operator|.
@@ -5226,7 +5213,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sync,"
+literal|"sync, "
 argument_list|)
 expr_stmt|;
 block|}
@@ -5234,7 +5221,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"async,"
+literal|"async, "
 argument_list|)
 expr_stmt|;
 block|}
@@ -5247,7 +5234,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"parity,"
+literal|"parity, "
 argument_list|)
 expr_stmt|;
 block|}
@@ -5255,13 +5242,13 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"no parity,"
+literal|"no parity, "
 argument_list|)
 expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%dmbxs,%dccbs"
+literal|"%d mbxs, %d ccbs\n"
 argument_list|,
 name|setup
 operator|.
@@ -5332,7 +5319,9 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"\ndev%02d Offset=%d,Transfer period=%d, Synchronous? %s"
+literal|"bt%d: dev%02d Offset=%d,Transfer period=%d, Synchronous? %s"
+argument_list|,
+name|unit
 argument_list|,
 name|i
 argument_list|,
@@ -6775,7 +6764,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"abort failed in wait\n"
+literal|"bt%d: abort failed in wait\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|ccb

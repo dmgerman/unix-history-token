@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *	$Id$  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *	$Id: aha1742.c,v 1.7 1993/08/21 20:01:31 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -3894,13 +3894,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|PRNT
-parameter_list|(
-name|x
-parameter_list|)
-value|printf(x)
 else|#
 directive|else
 else|__386BSD__
@@ -3911,13 +3904,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|PRNT
-parameter_list|(
-name|x
-parameter_list|)
-value|printf(x)
 endif|#
 directive|endif
 endif|__386BSD__
@@ -3949,11 +3935,6 @@ name|vect
 operator|=
 literal|9
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=9 "
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|INT10
@@ -3966,11 +3947,6 @@ operator|.
 name|vect
 operator|=
 literal|10
-expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=10 "
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -3985,11 +3961,6 @@ name|vect
 operator|=
 literal|11
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=11 "
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|INT12
@@ -4002,11 +3973,6 @@ operator|.
 name|vect
 operator|=
 literal|12
-expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=12 "
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4021,11 +3987,6 @@ name|vect
 operator|=
 literal|14
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=14 "
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|INT15
@@ -4038,11 +3999,6 @@ operator|.
 name|vect
 operator|=
 literal|15
-expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=15 "
-argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -4062,7 +4018,29 @@ directive|ifdef
 name|__386BSD__
 name|printf
 argument_list|(
-literal|"\n"
+literal|"int=%d\n"
+argument_list|,
+name|ahb_data
+index|[
+name|unit
+index|]
+operator|.
+name|vect
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+else|__386BSD__
+name|printf
+argument_list|(
+literal|"int=%d "
+argument_list|,
+name|ahb_data
+index|[
+name|unit
+index|]
+operator|.
+name|vect
 argument_list|)
 expr_stmt|;
 endif|#
