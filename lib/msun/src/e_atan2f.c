@@ -64,17 +64,18 @@ decl_stmt|,
 comment|/* 0x3fc90fdb */
 name|pi
 init|=
-literal|3.1415925026e+00
+literal|3.1415927410e+00
 decl_stmt|,
-comment|/* 0x40490fda */
+comment|/* 0x40490fdb */
 name|pi_lo
 init|=
-literal|1.5099578832e-07
+operator|-
+literal|8.7422776573e-08
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 0x34222168 */
+comment|/* 0xb3bbbd2e */
 end_comment
 
 begin_function
