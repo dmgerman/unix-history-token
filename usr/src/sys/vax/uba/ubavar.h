@@ -1,36 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	4.16	81/03/06	*/
+comment|/*	ubavar.h	4.17	81/03/08	*/
 end_comment
 
 begin_comment
-comment|/*  * UNIBUS adaptor  */
+comment|/*  * This file contains definitions related to the kernel structures  * for dealing with the unibus adapters.  *  * Each uba has a uba_hd structure.  * Each unibus controller which is not a device has a uba_ctlr structure.  * Each unibus device has a uba_device structure.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|VAX750
-end_if
-
-begin_define
-define|#
-directive|define
-name|UBA750
-value|((struct uba_regs *)0xf30000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UMEM750
-value|((u_short *)0xfc0000)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -39,627 +14,88 @@ name|LOCORE
 end_ifndef
 
 begin_comment
-comment|/*  * UBA registers  */
+comment|/*  * Per-uba structure.  *  * This structure holds the interrupt vector for the uba,  * and its address in physical and virtual space.  At boot time  * we determine the devices attached to the uba's and their  * interrupt vectors, filling in uh_vec.  We free the map  * register and bdp resources of the uba into the structures  * defined here.  *  * During normal operation, resources are allocated and returned  * to the structures here.  We watch the number of passive releases  * on each uba, and if the number is excessive may reset the uba.  *   * When uba resources are needed and not available, or if a device  * which can tolerate no other uba activity (rk07) gets on the bus,  * then device drivers may have to wait to get to the bus and are  * queued here.  It is also possible for processes to block in  * the unibus driver in resource wait (mrwant, bdpwant); these  * wait states are also recorded here.  */
 end_comment
 
 begin_struct
 struct|struct
-name|uba_regs
+name|uba_hd
 block|{
-name|int
-name|uba_cnfgr
-decl_stmt|;
-comment|/* configuration register */
-name|int
-name|uba_cr
-decl_stmt|;
-comment|/* control register */
-name|int
-name|uba_sr
-decl_stmt|;
-comment|/* status register */
-name|int
-name|uba_dcr
-decl_stmt|;
-comment|/* diagnostic control register */
-name|int
-name|uba_fmer
-decl_stmt|;
-comment|/* failed map entry register */
-name|int
-name|uba_fubar
-decl_stmt|;
-comment|/* failed UNIBUS address register */
-name|int
-name|pad1
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|int
-name|uba_brsvr
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|int
-name|uba_brrvr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* receive vector registers */
-name|int
-name|uba_dpr
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* buffered data path register */
-name|int
-name|pad2
-index|[
-literal|480
-index|]
-decl_stmt|;
 name|struct
-name|pte
-name|uba_map
-index|[
-literal|496
-index|]
+name|uba_regs
+modifier|*
+name|uh_uba
 decl_stmt|;
-comment|/* unibus map register */
+comment|/* virt addr of uba */
+name|struct
+name|uba_regs
+modifier|*
+name|uh_physuba
+decl_stmt|;
+comment|/* phys addr of uba */
 name|int
-name|pad3
-index|[
-literal|16
-index|]
+function_decl|(
+modifier|*
+modifier|*
+name|uh_vec
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* interrupt vector */
+name|struct
+name|uba_device
+modifier|*
+name|uh_actf
 decl_stmt|;
-comment|/* no maps for device address space */
+comment|/* head of queue to transfer */
+name|struct
+name|uba_device
+modifier|*
+name|uh_actl
+decl_stmt|;
+comment|/* tail of queue to transfer */
+name|short
+name|uh_mrwant
+decl_stmt|;
+comment|/* someone is waiting for map reg */
+name|short
+name|uh_bdpwant
+decl_stmt|;
+comment|/* someone awaits bdp's */
+name|int
+name|uh_bdpfree
+decl_stmt|;
+comment|/* free bdp's */
+name|int
+name|uh_hangcnt
+decl_stmt|;
+comment|/* number of ticks hung */
+name|int
+name|uh_zvcnt
+decl_stmt|;
+comment|/* number of 0 vectors */
+name|short
+name|uh_users
+decl_stmt|;
+comment|/* transient bdp use count */
+name|short
+name|uh_xclu
+decl_stmt|;
+comment|/* an rk07 is using this uba! */
+define|#
+directive|define
+name|UAMSIZ
+value|25
+name|struct
+name|map
+modifier|*
+name|uh_map
+decl_stmt|;
+comment|/* buffered data path regs free */
 block|}
 struct|;
 end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|VAX780
-end_if
-
-begin_comment
-comment|/* UBA control register, UBACR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_MRD16
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* map reg disable bit 4 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_MRD8
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* map reg disable bit 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_MRD4
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* map reg disable bit 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_MRD2
-value|0x08000000
-end_define
-
-begin_comment
-comment|/* map reg disable bit 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_MRD1
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* map reg disable bit 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_IFS
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* interrupt field switch */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_BRIE
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* BR interrupt enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_USEFIE
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* UNIBUS to SBI error field IE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_SUEFIE
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* SBI to UNIBUS error field IE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_CNFIE
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* configuration IE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_UPF
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* UNIBUS power fail */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_ADINIT
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* adapter init */
-end_comment
-
-begin_comment
-comment|/* UBA status register, UASR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_BR7FULL
-value|0x08000000
-end_define
-
-begin_comment
-comment|/* BR7 receive vector reg full */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_BR6FULL
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* BR6 receive vector reg full */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_BR5FULL
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* BR5 receive vector reg full */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_BR4FULL
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* BR4 receive vector reg full */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_RDTO
-value|0x00000400
-end_define
-
-begin_comment
-comment|/* UNIBUS to SBI read data timeout */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_RDS
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* read data substitute */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_CRD
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* corrected read data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_CXTER
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* command transmit error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_CXTMO
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* command transmit timeout */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_DPPE
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* data path parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_IVMR
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* invalid map register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_MRPF
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* map register parity failure */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_LEB
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* lost error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_UBSTO
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* UNIBUS select timeout */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_UBSSYNTO
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* UNIBUS slave sync timeout */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBASR_BITS
-define|\
-value|"\20\13RDTO\12RDS\11CRD\10CXTER\7CXTMO\6DPPE\5IVMR\4MRPF\3LEB\2UBSTO\1UBSSYNTO"
-end_define
-
-begin_comment
-comment|/* BR receive vector register, BRRVR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_AIRI
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* adapter interrupt request */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_DIV
-value|0x0000ffff
-end_define
-
-begin_comment
-comment|/* device interrupt vector field */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* data path register, DPR */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|VAX780
-end_if
-
-begin_define
-define|#
-directive|define
-name|UBA_BNE
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* buffer not empty - purge */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_BTE
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* buffer transfer error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_DPF
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* DP function (RO) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_BS
-value|0x007f0000
-end_define
-
-begin_comment
-comment|/* buffer state field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_BUBA
-value|0x0000ffff
-end_define
-
-begin_comment
-comment|/* buffered UNIBUS address */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|VAX750
-end_if
-
-begin_define
-define|#
-directive|define
-name|UBA_ERROR
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* error occurred */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_NXM
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* nxm from memory */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_UCE
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* uncorrectable error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_PURGE
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* purge bdp */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* map register, MR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_MRV
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* map register valid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_BO
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* byte offset bit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_DPDB
-value|0x01e00000
-end_define
-
-begin_comment
-comment|/* data path designator field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_SBIPFN
-value|0x000fffff
-end_define
-
-begin_comment
-comment|/* SBI page address field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UBA_DPSHIFT
-value|21
-end_define
-
-begin_comment
-comment|/* shift to data path designator */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -667,12 +103,12 @@ name|LOCORE
 end_ifndef
 
 begin_comment
-comment|/*  * Each UNIBUS mass storage controller has uba_minfo structure,  * and a uba_dinfo structure (as below) for each attached drive.  */
+comment|/*  * Per-controller structure.  * (E.g. one for each disk and tape controller, and other things  * which use and release buffered data paths.)  *  * If a controller has devices attached, then there are  * cross-referenced uba_drive structures.  * This structure is the one which is queued in unibus resource wait,  * and saves the information about unibus resources which are used.  * The queue of devices waiting to transfer is also attached here.  */
 end_comment
 
 begin_struct
 struct|struct
-name|uba_minfo
+name|uba_ctlr
 block|{
 name|struct
 name|uba_driver
@@ -709,6 +145,7 @@ name|uba_hd
 modifier|*
 name|um_hd
 decl_stmt|;
+comment|/* the driver saves the prototype command here for use in its go routine */
 name|int
 name|um_cmd
 decl_stmt|;
@@ -721,18 +158,18 @@ name|struct
 name|buf
 name|um_tab
 decl_stmt|;
-comment|/* queue for this controller */
+comment|/* queue of devices for this controller */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Each UNIBUS device has a uba_dinfo structure.  * If a controller has many drives attached, then there will  * be several uba_dinfo structures associated with a single uba_minfo  * structure.  */
+comment|/*  * Per ``device'' structure.  * (A controller has devices or uses and releases buffered data paths).  * (Everything else is a ``device''.)  *  * If a controller has many drives attached, then there will  * be several uba_device structures associated with a single uba_ctlr  * structure.  *  * This structure contains all the information necessary to run  * a unibus device such as a dz or a dh.  It also contains information  * for slaves of unibus controllers as to which device on the slave  * this is.  A flags field here can also be given in the system specification  * and is used to tell which dz lines are hard wired or other device  * specific parameters.  */
 end_comment
 
 begin_struct
 struct|struct
-name|uba_dinfo
+name|uba_device
 block|{
 name|struct
 name|uba_driver
@@ -775,7 +212,7 @@ comment|/* if init 1 set to number for iostat */
 name|short
 name|ui_flags
 decl_stmt|;
-comment|/* param to device init. */
+comment|/* parameter from system specification */
 name|short
 name|ui_alive
 decl_stmt|;
@@ -788,14 +225,15 @@ name|caddr_t
 name|ui_physaddr
 decl_stmt|;
 comment|/* phys addr, for standalone (dump) code */
+comment|/* this is the forward link in a list of devices on a controller */
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui_forw
 decl_stmt|;
-comment|/* if the device isn't also a controller, this is the controller it is on */
+comment|/* if the device is connected to a controller, this is the controller */
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|ui_mi
 decl_stmt|;
@@ -813,161 +251,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|NUBA780
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUBA750
-value|1
-end_define
-
-begin_if
-if|#
-directive|if
-name|VAX780
-end_if
-
-begin_define
-define|#
-directive|define
-name|MAXNUBA
-value|4
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MAXNUBA
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
 begin_comment
-comment|/*  * This structure exists per-uba.  */
-end_comment
-
-begin_struct
-struct|struct
-name|uba_hd
-block|{
-name|struct
-name|uba_regs
-modifier|*
-name|uh_uba
-decl_stmt|;
-comment|/* virt addr of uba */
-name|struct
-name|uba_regs
-modifier|*
-name|uh_physuba
-decl_stmt|;
-comment|/* phys addr of uba */
-name|int
-function_decl|(
-modifier|*
-modifier|*
-name|uh_vec
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* interrupt vector */
-name|struct
-name|uba_dinfo
-modifier|*
-name|uh_actf
-decl_stmt|;
-comment|/* head of queue to transfer */
-name|struct
-name|uba_dinfo
-modifier|*
-name|uh_actl
-decl_stmt|;
-comment|/* tail of queue to transfer */
-name|short
-name|uh_mrwant
-decl_stmt|;
-comment|/* someone is waiting for map reg */
-name|short
-name|uh_bdpwant
-decl_stmt|;
-comment|/* someone awaits bdp's */
-name|int
-name|uh_bdpfree
-decl_stmt|;
-comment|/* free bdp's */
-name|int
-name|uh_hangcnt
-decl_stmt|;
-comment|/* number of ticks hung */
-name|int
-name|uh_zvcnt
-decl_stmt|;
-comment|/* number of 0 vectors */
-name|short
-name|uh_users
-decl_stmt|;
-comment|/* transient bdp use count */
-name|short
-name|uh_xclu
-decl_stmt|;
-comment|/* an rk07 is using this uba! */
-define|#
-directive|define
-name|UAMSIZ
-value|50
-name|struct
-name|map
-modifier|*
-name|uh_map
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|uba_hd
-name|uba_hd
-index|[
-name|MAXNUBA
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Each UNIBUS driver defines entries for a set of routines  * as well as an array of types which are acceptable to it.  */
+comment|/*  * Per-driver structure.  *  * Each unibus driver defines entries for a set of routines  * as well as an array of types which are acceptable to it.  * These are used at boot time by the configuration program.  */
 end_comment
 
 begin_struct
@@ -1017,7 +302,7 @@ name|ud_dname
 decl_stmt|;
 comment|/* name of a device */
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 modifier|*
 name|ud_dinfo
@@ -1029,7 +314,7 @@ name|ud_mname
 decl_stmt|;
 comment|/* name of a controller */
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 modifier|*
 name|ud_minfo
@@ -1049,39 +334,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * unibus maps  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NBDP780
-value|15
-end_define
-
-begin_define
-define|#
-directive|define
-name|NBDP750
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXNBDP
-value|15
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUBMREG
-value|496
-end_define
-
-begin_comment
-comment|/*  * flags to uba map/bdp allocation routines  */
+comment|/*  * Flags to UBA map/bdp allocation routines  */
 end_comment
 
 begin_define
@@ -1117,10 +370,6 @@ begin_comment
 comment|/* need 16 bit addresses only */
 end_comment
 
-begin_comment
-comment|/*  * UNIBUS related kernel variables  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1133,10 +382,37 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_comment
+comment|/*  * UBA related kernel variables  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|numuba
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of uba's */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
-name|uba_minfo
+name|uba_hd
+name|uba_hd
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Ubminit and ubdinit initialize the mass storage controller and  * device tables specifying possible devices.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|uba_ctlr
 name|ubminit
 index|[]
 decl_stmt|;
@@ -1145,39 +421,37 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|uba_dinfo
+name|uba_device
 name|ubdinit
 index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|numuba
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * UNIbus device address space is mapped by UMEMmap  * into virtual address umem[][].  */
+end_comment
 
 begin_decl_stmt
 specifier|extern
 name|struct
 name|pte
 name|UMEMmap
-index|[
-name|MAXNUBA
-index|]
+index|[]
 index|[
 literal|16
 index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* uba device addr pte's */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|char
 name|umem
-index|[
-name|MAXNUBA
-index|]
+index|[]
 index|[
 literal|16
 operator|*
@@ -1185,6 +459,14 @@ name|NBPG
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* uba device addr space */
+end_comment
+
+begin_comment
+comment|/*  * Since some VAXen vector their first (and only) unibus interrupt  * vector just adjacent to the system control block, we must  * allocate space there when running on ``any'' cpu.  This space is  * used for the vector for uba0 on all cpu's.  */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -1198,11 +480,19 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* unibus vec for uba0 */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|VAX780
 end_if
+
+begin_comment
+comment|/*  * On 780's, we must set the scb vectors for the nexus of the  * UNIbus adaptors to vector to locore unibus adaptor interrupt dispatchers  * which make 780's look like the other VAXen.  */
+end_comment
 
 begin_extern
 extern|extern	Xua0int(
@@ -1228,16 +518,19 @@ end_expr_stmt
 begin_endif
 endif|#
 directive|endif
+endif|VAX780
 end_endif
 
 begin_endif
 endif|#
 directive|endif
+endif|KERNEL
 end_endif
 
 begin_endif
 endif|#
 directive|endif
+endif|!LOCORE
 end_endif
 
 end_unit
