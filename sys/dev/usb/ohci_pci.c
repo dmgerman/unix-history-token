@@ -566,6 +566,9 @@ argument_list|,
 name|intr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
 name|device_printf
 argument_list|(
 name|self
@@ -573,6 +576,8 @@ argument_list|,
 literal|"Please switch on USB support and switch PNP-OS to 'No' in BIOS\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|ENXIO
 return|;
