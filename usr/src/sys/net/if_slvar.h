@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_slvar.h	7.3 (Berkeley) %G% */
+comment|/*	@(#)if_slvar.h	7.4 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -84,7 +84,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* flags */
+comment|/* visible flags */
 end_comment
 
 begin_define
@@ -112,8 +112,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SC_ABORT
+name|SC_AUTOCOMP
 value|0x0008
+end_define
+
+begin_comment
+comment|/* auto-enable TCP compression */
+end_comment
+
+begin_comment
+comment|/* internal flags (should be separate) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_ABORT
+value|0x10000
 end_define
 
 begin_comment
