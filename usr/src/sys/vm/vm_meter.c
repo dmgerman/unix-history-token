@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	4.8	81/04/24	*/
+comment|/*	vm_meter.c	4.9	81/04/24	*/
 end_comment
 
 begin_include
@@ -199,7 +199,7 @@ name|nclust
 decl_stmt|,
 name|nkb
 decl_stmt|;
-comment|/* 	 * Setup thresholds for paging: 	 *	lotsfree	is threshold where paging daemon turns on 	 *	desfree		is amount of memory desired free.  if less 	 *			than this for extended period, do swapping 	 *	minfree		is minimal amount of free memory which is 	 *			tolerable. 	 * 	 * Strategy of 4/22/81: 	 *	lotsfree is 1/4 of memory free. 	 *	desfree is 200k bytes, but at most 1/8 of memory 	 *	minfree is 32k bytes. 	 */
+comment|/* 	 * Setup thresholds for paging: 	 *	lotsfree	is threshold where paging daemon turns on 	 *	desfree		is amount of memory desired free.  if less 	 *			than this for extended period, do swapping 	 *	minfree		is minimal amount of free memory which is 	 *			tolerable. 	 * 	 * Strategy of 4/22/81: 	 *	lotsfree is 1/4 of memory free. 	 *	desfree is 200k bytes, but at most 1/8 of memory 	 *	minfree is 64k bytes, but at most 1/2 of desfree 	 */
 if|if
 condition|(
 name|lotsfree
@@ -250,16 +250,32 @@ name|minfree
 operator|==
 literal|0
 condition|)
+block|{
 name|minfree
 operator|=
 operator|(
-literal|32
+literal|64
 operator|*
 literal|1024
 operator|)
 operator|/
 name|NBPG
 expr_stmt|;
+if|if
+condition|(
+name|minfree
+operator|>
+name|desfree
+operator|/
+literal|2
+condition|)
+name|minfree
+operator|=
+name|desfree
+operator|/
+literal|2
+expr_stmt|;
+block|}
 comment|/* 	 * Maxpgio thresholds how much paging is acceptable. 	 * This figures that 2/3 busy on an arm is all that is 	 * tolerable for paging.  We assume one operation per disk rev. 	 */
 if|if
 condition|(
@@ -545,7 +561,6 @@ name|biggot
 decl_stmt|,
 name|gives
 decl_stmt|;
-comment|/* 	 * Check if paging rate is too high, or average of 	 * free list very low and if so, adjust multiprogramming 	 * load by swapping someone out. 	 */
 name|loop
 label|:
 name|wantin
@@ -564,7 +579,7 @@ name|p
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Conditions for hard outswap are: 	 *	if need kernel map (mix it up). 	 * or 	 *	1. if there are at least 2 runnable processes (on the average) 	 * and	2. the paging rate is excessive or memory is now VERY low. 	 * and	3. the short (5-second) and longer (30-second) average 	 *	   memory is less than desirable. 	 */
+comment|/* 	 * See if paging system is overloaded; if so swap someone out. 	 * Conditions for hard outswap are: 	 *	if need kernel map (mix it up). 	 * or 	 *	1. if there are at least 2 runnable processes (on the average) 	 * and	2. the paging rate is excessive or memory is now VERY low. 	 * and	3. the short (5-second) and longer (30-second) average 	 *	   memory is less than desirable. 	 */
 if|if
 condition|(
 name|kmapwnt
