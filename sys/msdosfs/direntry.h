@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: direntry.h,v 1.5 1998/02/18 09:28:27 jkh Exp $ */
+comment|/*	$Id: direntry.h,v 1.6 1998/02/22 15:09:36 ache Exp $ */
 end_comment
 
 begin_comment
@@ -527,6 +527,13 @@ name|wep
 operator|,
 name|int
 name|chksum
+operator|,
+name|int
+name|table_loaded
+operator|,
+name|u_int16_t
+operator|*
+name|u2w
 operator|)
 argument_list|)
 decl_stmt|;
