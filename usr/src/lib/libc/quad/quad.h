@@ -1,256 +1,219 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)quad.h	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989, 1992 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/*  * Quad arithmetic.  *  * This library makes the following assumptions:  *  *  - The type long long (aka quad) exists.  *  *  - A quad variable is exactly twice as long as `long'.  *  *  - The machine's arithmetic is two's complement.  *  * All other machine parameters are encapsulated here.  This library can  * provide 128-bit arithmetic on a machine with 128-bit quads and 64-bit  * longs, for instance, or 96-bit arithmetic on machines with 48-bit longs.  */
 end_comment
 
-begin_comment
-comment|/* As a special exception, if you link this library with files    compiled with GCC to produce an executable, this does not cause    the resulting executable to be covered by the GNU General Public License.    This exception does not however invalidate any other reasons why    the executable file might be covered by the GNU General Public License.  */
-end_comment
-
-begin_comment
-comment|/* More subroutines needed by GCC output code on some machines.  */
-end_comment
-
-begin_comment
-comment|/* Compile this one with gcc.  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SPARC_XXX
+end_ifndef
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<machine/endian.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|BITS_PER_WORD
-value|(NBBY * sizeof(long))
-end_define
-
 begin_comment
-comment|/* We need this union to unpack/pack longlongs, since we don't have    any arithmetic yet.  Incoming long long parameters are stored    into the `ll' field, and the unpacked result is read from the struct    longlong.  */
+comment|/* see #else case */
 end_comment
-
-begin_typedef
-typedef|typedef
-union|union
-block|{
-name|long
-name|long
-name|ll
-decl_stmt|;
-struct|struct
-block|{
-name|long
-name|val
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-name|s
-struct|;
-block|}
-name|long_long
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|high
-value|val[_QUAD_HIGHWORD]
-end_define
-
-begin_define
-define|#
-directive|define
-name|low
-value|val[_QUAD_LOWWORD]
-end_define
-
-begin_define
-define|#
-directive|define
-name|HIGH
-value|_QUAD_HIGHWORD
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOW
-value|_QUAD_LOWWORD
-end_define
-
-begin_comment
-comment|/* Internally, long long ints are strings of unsigned shorts in the    order determined by BYTE_ORDER.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B
-value|0x10000
-end_define
-
-begin_define
-define|#
-directive|define
-name|low16
-value|(B - 1)
-end_define
-
-begin_if
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-end_if
-
-begin_define
-define|#
-directive|define
-name|big_end
-parameter_list|(
-name|n
-parameter_list|)
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|little_end
-parameter_list|(
-name|n
-parameter_list|)
-value|((n) - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|next_msd
-parameter_list|(
-name|i
-parameter_list|)
-value|((i) - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|next_lsd
-parameter_list|(
-name|i
-parameter_list|)
-value|((i) + 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|is_not_msd
-parameter_list|(
-name|i
-parameter_list|,
-name|n
-parameter_list|)
-value|((i)>= 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|is_not_lsd
-parameter_list|(
-name|i
-parameter_list|,
-name|n
-parameter_list|)
-value|((i)< (n))
-end_define
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_define
-define|#
-directive|define
-name|big_end
-parameter_list|(
-name|n
-parameter_list|)
-value|((n) - 1)
-end_define
+begin_comment
+comment|/*  * These are for testing and for illustration: we expect<machine/endian.h>  * to define these.  Actually, these match most big-endian machines; for  * most little-endian machines, all you need do is exchange _QUAD_HIGHWORD  * and _QUAD_LOWWORD.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|little_end
-parameter_list|(
-name|n
-parameter_list|)
+name|_QUAD_HIGHWORD
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|next_msd
-parameter_list|(
-name|i
-parameter_list|)
-value|((i) + 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|next_lsd
-parameter_list|(
-name|i
-parameter_list|)
-value|((i) - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|is_not_msd
-parameter_list|(
-name|i
-parameter_list|,
-name|n
-parameter_list|)
-value|((i)< (n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|is_not_lsd
-parameter_list|(
-name|i
-parameter_list|,
-name|n
-parameter_list|)
-value|((i)>= 0)
+name|_QUAD_LOWWORD
+value|1
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_typedef
+typedef|typedef
+name|long
+name|long
+name|quad
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|long
+name|u_quad
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|u_long
+typedef|;
+end_typedef
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_comment
+comment|/*  * We expect something like these from<limits.h>, which should be provided on  * any ANSI C system. #define	USHRT_MAX	0xffff #define	CHAR_BIT	8  */
+end_comment
+
+begin_comment
+comment|/*  * Depending on the desired operation, we view a `long long' (aka quad) in  * one or more of the following formats.  */
+end_comment
+
+begin_union
+union|union
+name|uu
+block|{
+name|quad
+name|q
+decl_stmt|;
+comment|/* as a (signed) quad */
+name|quad
+name|uq
+decl_stmt|;
+comment|/* as an unsigned quad */
+name|long
+name|sl
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* as two signed longs */
+name|u_long
+name|ul
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* as two unsigned longs */
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * Define high and low longwords.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H
+value|_QUAD_HIGHWORD
+end_define
+
+begin_define
+define|#
+directive|define
+name|L
+value|_QUAD_LOWWORD
+end_define
+
+begin_comment
+comment|/*  * Total number of bits in a quad and in the pieces that make it up.  * These are used for shifting, and also below for halfword extraction  * and assembly.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUAD_BITS
+value|(sizeof(quad) * CHAR_BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LONG_BITS
+value|(sizeof(long) * CHAR_BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HALF_BITS
+value|(sizeof(long) * CHAR_BIT / 2)
+end_define
+
+begin_comment
+comment|/*  * Extract high and low shortwords from longword, and move low shortword of  * longword to upper half of long, i.e., produce the upper longword of  * ((quad)(x)<< (number_of_bits_in_long/2)).  (`x' must actually be u_long.)  *  * These are used in the multiply code, to split a longword into upper  * and lower halves, and to reassemble a product as a quad, shifted left  * (sizeof(long)*CHAR_BIT/2).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HHALF
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> HALF_BITS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LHALF
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ((1<< HALF_BITS) - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LHUP
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< HALF_BITS)
+end_define
+
+begin_function_decl
+specifier|extern
+name|u_quad
+name|__qdivrem
+parameter_list|(
+name|u_quad
+name|u
+parameter_list|,
+name|u_quad
+name|v
+parameter_list|,
+name|u_quad
+modifier|*
+name|rem
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

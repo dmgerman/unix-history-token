@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fixdfdi.c	5.2 (Berkeley) %G%"
+literal|"@(#)fixdfdi.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,58 +37,107 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_comment
-comment|/* Copyright (C) 1989, 1992 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
-end_comment
-
-begin_comment
-comment|/* As a special exception, if you link this library with files    compiled with GCC to produce an executable, this does not cause    the resulting executable to be covered by the GNU General Public License.    This exception does not however invalidate any other reasons why    the executable file might be covered by the GNU General Public License.  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|"longlong.h"
+file|"quad.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|QUAD_MAX
+end_ifndef
+
+begin_comment
+comment|/* should be in<limits.h> maybe? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUAD_MAX
+value|((quad)(((u_quad)1<< (QUAD_BITS - 1)) - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|QUAD_MIN
+value|(-QUAD_MAX - 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Convert double to (signed) quad.  * We clamp anything that is out of range.  */
+end_comment
+
 begin_function
-name|long
-name|long
+name|quad
 name|__fixdfdi
 parameter_list|(
-name|a
+name|double
+name|x
 parameter_list|)
-name|double
-name|a
-decl_stmt|;
 block|{
-name|long
-name|long
-name|__fixunsdfdi
-argument_list|(
-name|double
-name|a
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
-name|a
+name|x
 operator|<
 literal|0
 condition|)
+if|if
+condition|(
+name|x
+operator|<=
+name|QUAD_MIN
+condition|)
 return|return
-operator|-
-name|__fixunsdfdi
-argument_list|(
-operator|-
-name|a
-argument_list|)
+operator|(
+name|QUAD_MIN
+operator|)
 return|;
+else|else
 return|return
-name|__fixunsdfdi
-argument_list|(
-name|a
-argument_list|)
+operator|(
+operator|(
+name|quad
+operator|)
+operator|-
+operator|(
+name|u_quad
+operator|)
+operator|-
+name|x
+operator|)
+return|;
+elseif|else
+if|if
+condition|(
+name|x
+operator|>=
+name|QUAD_MAX
+condition|)
+return|return
+operator|(
+name|QUAD_MAX
+operator|)
+return|;
+else|else
+return|return
+operator|(
+operator|(
+name|quad
+operator|)
+operator|(
+name|u_quad
+operator|)
+name|x
+operator|)
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fixunsdfdi.c	5.2 (Berkeley) %G%"
+literal|"@(#)fixunsdfdi.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,117 +37,198 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_comment
-comment|/* Copyright (C) 1989, 1992 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
-end_comment
-
-begin_comment
-comment|/* As a special exception, if you link this library with files    compiled with GCC to produce an executable, this does not cause    the resulting executable to be covered by the GNU General Public License.    This exception does not however invalidate any other reasons why    the executable file might be covered by the GNU General Public License.  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|"longlong.h"
+file|"quad.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|UQUAD_MAX
+end_ifndef
+
+begin_comment
+comment|/* should be in<limits.h> maybe? */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HIGH_WORD_COEFF
-value|(((long long) 1)<< BITS_PER_WORD)
+name|UQUAD_MAX
+value|((u_quad)0 - 1)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|ONE_FOURTH
+value|(1<< (LONG_BITS - 2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ONE_HALF
+value|(ONE_FOURTH * 2.0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ONE
+value|(ONE_FOURTH * 4.0)
+end_define
+
+begin_comment
+comment|/*  * Convert double to (unsigned) quad.  * Not sure what to do with negative numbers---for now, anything out  * of range becomes UQUAD_MAX.  */
+end_comment
+
 begin_function
-name|long
-name|long
+name|u_quad
 name|__fixunsdfdi
 parameter_list|(
-name|a
-parameter_list|)
 name|double
-name|a
-decl_stmt|;
+name|x
+parameter_list|)
 block|{
 name|double
-name|b
+name|toppart
 decl_stmt|;
-name|unsigned
-name|long
-name|long
-name|v
+name|union
+name|uu
+name|t
 decl_stmt|;
 if|if
 condition|(
-name|a
+name|x
 operator|<
 literal|0
 condition|)
 return|return
-literal|0
+operator|(
+name|UQUAD_MAX
+operator|)
 return|;
-comment|/* Compute high word of result, as a flonum.  */
-name|b
+comment|/* ??? should be 0?  ERANGE??? */
+if|if
+condition|(
+name|x
+operator|>=
+name|UQUAD_MAX
+condition|)
+return|return
+operator|(
+name|UQUAD_MAX
+operator|)
+return|;
+comment|/* 	 * Get the upper part of the result.  Note that the divide 	 * may round up; we want to avoid this if possible, so we 	 * subtract `1/2' first. 	 */
+name|toppart
 operator|=
 operator|(
-name|a
-operator|/
-name|HIGH_WORD_COEFF
+name|x
+operator|-
+name|ONE_HALF
 operator|)
+operator|/
+name|ONE
 expr_stmt|;
-comment|/* Convert that to fixed (but not to long long!),      and shift it into the high word.  */
-name|v
+comment|/* 	 * Now build a u_quad out of the top part.  The difference 	 * between x and this is the bottom part (this may introduce 	 * a few fuzzy bits, but what the heck).  With any luck this 	 * difference will be nonnegative: x should wind up in the 	 * range [0..ULONG_MAX].  For paranoia, we assume [LONG_MIN.. 	 * 2*ULONG_MAX] instead. 	 */
+name|t
+operator|.
+name|ul
+index|[
+name|H
+index|]
 operator|=
 operator|(
 name|unsigned
 name|long
-name|int
 operator|)
-name|b
+name|toppart
 expr_stmt|;
-name|v
-operator|<<=
-name|BITS_PER_WORD
+name|t
+operator|.
+name|ul
+index|[
+name|L
+index|]
+operator|=
+literal|0
 expr_stmt|;
-comment|/* Remove high part from the double, leaving the low part as flonum.  */
-name|a
+name|x
 operator|-=
 operator|(
 name|double
 operator|)
-name|v
+name|t
+operator|.
+name|uq
 expr_stmt|;
-comment|/* Convert that to fixed (but not to long long!) and add it in.      Sometimes A comes out negative.  This is significant, since      A has more bits than a long int does.  */
 if|if
 condition|(
-name|a
+name|x
 operator|<
 literal|0
 condition|)
-name|v
-operator|-=
-call|(
-name|unsigned
-name|long
-name|int
-call|)
-argument_list|(
-operator|-
-name|a
-argument_list|)
+block|{
+name|t
+operator|.
+name|ul
+index|[
+name|H
+index|]
+operator|--
 expr_stmt|;
-else|else
-name|v
+name|x
 operator|+=
+name|ULONG_MAX
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|x
+operator|>
+name|ULONG_MAX
+condition|)
+block|{
+name|t
+operator|.
+name|ul
+index|[
+name|H
+index|]
+operator|++
+expr_stmt|;
+name|x
+operator|-=
+name|ULONG_MAX
+expr_stmt|;
+block|}
+name|t
+operator|.
+name|ul
+index|[
+name|L
+index|]
+operator|=
 operator|(
-name|unsigned
-name|long
-name|int
+name|u_long
 operator|)
-name|a
+name|x
 expr_stmt|;
 return|return
-name|v
+operator|(
+name|t
+operator|.
+name|uq
+operator|)
 return|;
 block|}
 end_function

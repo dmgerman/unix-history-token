@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)floatdidf.c	5.2 (Berkeley) %G%"
+literal|"@(#)floatdidf.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,107 +37,102 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_comment
-comment|/* Copyright (C) 1989, 1992 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
-end_comment
-
-begin_comment
-comment|/* As a special exception, if you link this library with files    compiled with GCC to produce an executable, this does not cause    the resulting executable to be covered by the GNU General Public License.    This exception does not however invalidate any other reasons why    the executable file might be covered by the GNU General Public License.  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|"longlong.h"
+file|"quad.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|HIGH_HALFWORD_COEFF
-value|(((long long) 1)<< (BITS_PER_WORD / 2))
-end_define
-
-begin_define
-define|#
-directive|define
-name|HIGH_WORD_COEFF
-value|(((long long) 1)<< BITS_PER_WORD)
-end_define
+begin_comment
+comment|/*  * Convert (signed) quad to double.  */
+end_comment
 
 begin_function
 name|double
 name|__floatdidf
 parameter_list|(
-name|u
+name|quad
+name|x
 parameter_list|)
-name|long
-name|long
-name|u
-decl_stmt|;
 block|{
 name|double
 name|d
 decl_stmt|;
-name|int
-name|negate
-init|=
-literal|0
+name|union
+name|uu
+name|u
 decl_stmt|;
+name|int
+name|neg
+decl_stmt|;
+comment|/* 	 * Get an unsigned number first, by negating if necessary. 	 */
 if|if
 condition|(
-name|u
+name|x
 operator|<
 literal|0
 condition|)
 name|u
+operator|.
+name|q
 operator|=
 operator|-
-name|u
+name|x
 operator|,
-name|negate
+name|neg
 operator|=
 literal|1
 expr_stmt|;
+else|else
+name|u
+operator|.
+name|q
+operator|=
+name|x
+operator|,
+name|neg
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * Now u.ul[H] has the factor of 2^32 (or whatever) and u.ul[L] 	 * has the units.  Ideally we could just set d, add LONG_BITS to 	 * its exponent, and then add the units, but this is portable 	 * code and does not know how to get at an exponent.  Machine- 	 * specific code may be able to do this more efficiently. 	 */
 name|d
 operator|=
-call|(
-name|unsigned
-name|int
-call|)
-argument_list|(
+operator|(
+name|double
+operator|)
 name|u
-operator|>>
-name|BITS_PER_WORD
-argument_list|)
-expr_stmt|;
-name|d
-operator|*=
-name|HIGH_HALFWORD_COEFF
-expr_stmt|;
-name|d
-operator|*=
-name|HIGH_HALFWORD_COEFF
+operator|.
+name|ul
+index|[
+name|H
+index|]
+operator|*
+operator|(
+operator|(
+literal|1
+operator|<<
+operator|(
+name|LONG_BITS
+operator|-
+literal|2
+operator|)
+operator|)
+operator|*
+literal|4.0
+operator|)
 expr_stmt|;
 name|d
 operator|+=
-call|(
-name|unsigned
-name|int
-call|)
-argument_list|(
 name|u
-operator|&
-operator|(
-name|HIGH_WORD_COEFF
-operator|-
-literal|1
-operator|)
-argument_list|)
+operator|.
+name|ul
+index|[
+name|L
+index|]
 expr_stmt|;
 return|return
 operator|(
-name|negate
+name|neg
 condition|?
 operator|-
 name|d
