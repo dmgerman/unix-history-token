@@ -1710,7 +1710,7 @@ name|T_REMOV
 block|,
 literal|"NAKAMICH"
 block|,
-literal|"MJ-4*"
+literal|"MJ-*"
 block|,
 literal|"*"
 block|,
