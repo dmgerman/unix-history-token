@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.10 (Berkeley) %G%"
+literal|"@(#)main.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,7 +227,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"df:sXx"
+literal|"Hdf:hXx"
 argument_list|)
 operator|)
 operator|!=
@@ -238,6 +238,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'H'
+case|:
+name|ftsoptions
+operator||=
+name|FTS_COMFOLLOW
+expr_stmt|;
+break|break;
 case|case
 literal|'d'
 case|:
@@ -257,7 +265,7 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
-literal|'s'
+literal|'h'
 case|:
 name|ftsoptions
 operator|&=
@@ -401,7 +409,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: find [-dsXx] [-f file] [file ...] expression\n"
+literal|"usage: find [-HdhXx] [-f file] [file ...] expression\n"
 argument_list|)
 expr_stmt|;
 name|exit
