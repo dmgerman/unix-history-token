@@ -211,6 +211,17 @@ modifier|*
 name|dev
 decl_stmt|;
 comment|/* device which owns this */
+name|uint32_t
+name|bar
+index|[
+name|PCI_MAXMAPS_0
+index|]
+decl_stmt|;
+comment|/* BARs */
+name|uint32_t
+name|bios
+decl_stmt|;
+comment|/* BIOS mapping */
 name|uint16_t
 name|subvendor
 decl_stmt|;
