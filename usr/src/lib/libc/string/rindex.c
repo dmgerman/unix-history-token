@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rindex.c	5.9 (Berkeley) %G%"
+literal|"@(#)rindex.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,7 +76,9 @@ specifier|const
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|ch
 decl_stmt|;
 block|{
