@@ -70,6 +70,17 @@ value|0x4320
 end_define
 
 begin_comment
+comment|/*  * Belkin F5D5005  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_BELKIN_5005
+value|0x5005
+end_define
+
+begin_comment
 comment|/*  * 3Com PCI vendor ID  */
 end_comment
 
