@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)create.c	5.3 (Berkeley) %G%"
+literal|"@(#)create.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1378,6 +1378,10 @@ end_macro
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|dflag
+decl_stmt|;
 specifier|register
 name|ID
 modifier|*
