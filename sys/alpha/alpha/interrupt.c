@@ -1698,7 +1698,7 @@ literal|"interrupt vector without a thread"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * As an optomization, if an ithread has no handlers, don't 	 * schedule it to run. 	 */
+comment|/* 	 * As an optimization, if an ithread has no handlers, don't 	 * schedule it to run. 	 */
 if|if
 condition|(
 name|TAILQ_EMPTY
