@@ -7,16 +7,6 @@ begin_comment
 comment|/* created by Michael K. Johnson, johnsonm@redhat.com  *  * $Id: pam_static.c,v 1.4 1996/12/01 03:14:13 morgan Exp $  *  * $Log: pam_static.c,v $  * Revision 1.4  1996/12/01 03:14:13  morgan  * use _pam_macros.h  *  * Revision 1.3  1996/11/10 20:09:16  morgan  * name convention change _pam_  *  * Revision 1.2  1996/06/02 08:02:56  morgan  * Michael's minor alterations  *  * Revision 1.1  1996/05/26 04:34:04  morgan  * Initial revision  *  */
 end_comment
 
-begin_comment
-comment|/* This whole file is only used for PAM_STATIC */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PAM_STATIC
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -42,39 +32,22 @@ file|"pam_private.h"
 end_include
 
 begin_comment
-comment|/*  * Need to include pointers to static modules; this was built by each  * of the modules that register...  */
+comment|/* This whole file is only used for PAM_STATIC */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"../modules/_static_module_list"
-end_include
-
-begin_comment
-comment|/*  * and here is a structure that connects libpam to the above static  * modules  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAM_STATIC
+end_ifdef
 
 begin_decl_stmt
-specifier|static
+specifier|extern
 name|struct
-name|pam_module
-modifier|*
-name|static_modules
-index|[]
-init|=
-block|{
-include|#
-directive|include
-file|"../modules/_static_module_entry"
-name|NULL
-block|}
+name|linker_set
+name|_pam_static_modules
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * and now for the functions  */
-end_comment
 
 begin_comment
 comment|/* Return pointer to data structure used to define a static module */
@@ -102,6 +75,22 @@ name|path
 decl_stmt|,
 modifier|*
 name|end
+decl_stmt|;
+name|struct
+name|pam_module
+modifier|*
+modifier|*
+name|static_modules
+init|=
+operator|(
+expr|struct
+name|pam_module
+operator|*
+operator|*
+operator|)
+name|_pam_static_modules
+operator|.
+name|ls_items
 decl_stmt|;
 if|if
 condition|(
@@ -214,30 +203,6 @@ condition|)
 block|{
 break|break;
 block|}
-block|}
-if|if
-condition|(
-name|static_modules
-index|[
-name|i
-index|]
-operator|==
-name|NULL
-condition|)
-block|{
-name|pam_system_log
-argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
-name|LOG_ERR
-argument_list|,
-literal|"no static module named %s"
-argument_list|,
-name|lpath
-argument_list|)
-expr_stmt|;
 block|}
 name|free
 argument_list|(
