@@ -2653,6 +2653,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s"
+argument_list|,
 name|ipsec_strerror
 argument_list|()
 argument_list|)
@@ -2671,6 +2673,8 @@ condition|)
 name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|ipsec_strerror
 argument_list|()
@@ -3668,6 +3672,8 @@ condition|)
 name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|gai_strerror
 argument_list|(
@@ -9637,6 +9643,8 @@ condition|)
 name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|ipsec_strerror
 argument_list|()

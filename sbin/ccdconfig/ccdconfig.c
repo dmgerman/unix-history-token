@@ -2197,7 +2197,7 @@ name|kd
 parameter_list|,
 name|str
 parameter_list|)
-value|{						\ 	(void)kvm_close((kd));						\ 	warnx((str));							\ 	warnx(kvm_geterr((kd)));					\ 	return (1);							\ }
+value|{						\ 	(void)kvm_close((kd));						\ 	warnx("%s", (str));							\ 	warnx("%s", kvm_geterr((kd)));					\ 	return (1);							\ }
 end_define
 
 begin_function
@@ -2878,6 +2878,8 @@ argument_list|)
 expr_stmt|;
 name|warnx
 argument_list|(
+literal|"%s"
+argument_list|,
 name|kvm_geterr
 argument_list|(
 name|kd
@@ -2955,6 +2957,8 @@ argument_list|)
 expr_stmt|;
 name|warnx
 argument_list|(
+literal|"%s"
+argument_list|,
 name|kvm_geterr
 argument_list|(
 name|kd
