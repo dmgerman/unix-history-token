@@ -747,10 +747,7 @@ name|wreqq
 operator|.
 name|data
 operator|=
-name|htonl
-argument_list|(
 name|data
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -1312,6 +1312,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|OHCI_ATRETRY
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
 name|OHCI_CROMHDR
 value|0x18
 end_define
@@ -5256,6 +5263,40 @@ index|[
 name|i
 operator|/
 literal|4
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* XXX payload must be network byte order */
+if|if
+condition|(
+name|tcode
+operator|==
+name|FWTCODE_WREQQ
+operator|||
+name|tcode
+operator|==
+name|FWTCODE_RRESQ
+condition|)
+block|{
+name|ohcifp
+operator|->
+name|mode
+operator|.
+name|ld
+index|[
+literal|3
+index|]
+operator|=
+name|htonl
+argument_list|(
+name|ohcifp
+operator|->
+name|mode
+operator|.
+name|ld
+index|[
+literal|3
 index|]
 argument_list|)
 expr_stmt|;
@@ -11995,6 +12036,24 @@ argument_list|,
 literal|0x10000
 argument_list|)
 expr_stmt|;
+comment|/* Set ATRetries register */
+name|OWRITE
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_ATRETRY
+argument_list|,
+literal|1
+operator|<<
+operator|(
+literal|13
+operator|+
+literal|16
+operator|)
+operator||
+literal|0xfff
+argument_list|)
+expr_stmt|;
 comment|/* ** Checking whether the node is root or not. If root, turn on  ** cycle master. */
 name|device_printf
 argument_list|(
@@ -14529,7 +14588,7 @@ argument|; 				switch(stat){ 				case FWOHCIEV_ACKPEND:
 if|#
 directive|if
 literal|0
-argument|printf("fwohci_arcv: ack pending..\n");
+argument|printf("fwohci_arcv: ack pending tcode=0x%x..\n", fp->mode.common.tcode);
 endif|#
 directive|endif
 comment|/* fall through */
