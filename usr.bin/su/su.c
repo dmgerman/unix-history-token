@@ -1473,6 +1473,7 @@ name|getpgrp
 argument_list|()
 condition|)
 block|{
+block|{
 name|tcsetpgrp
 argument_list|(
 literal|1
@@ -1864,9 +1865,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|export_pam_environment
@@ -1919,13 +1917,7 @@ return|return
 name|PAM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Sanity checks on PAM environmental variables:  * - Make sure there is an '=' in the string.  * - Make sure the string doesn't run on too long.  * - Do not export certain variables.  This list was taken from the  *   Solaris pam_putenv(3) man page.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|ok_to_export
@@ -2059,9 +2051,6 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|usage
@@ -2082,9 +2071,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|chshell
@@ -2142,9 +2128,6 @@ return|return
 name|r
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|char
 modifier|*
