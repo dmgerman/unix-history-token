@@ -323,6 +323,26 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|static
+name|int
+name|acpi_ec_event_driven
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.acpi.ec.event_driven"
+argument_list|,
+operator|&
+name|acpi_ec_event_driven
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -1982,6 +2002,8 @@ comment|/* XXX this should test whether interrupts are available some other way 
 if|if
 condition|(
 name|cold
+operator|||
+name|acpi_ec_event_driven
 condition|)
 name|return_ACPI_STATUS
 argument_list|(
