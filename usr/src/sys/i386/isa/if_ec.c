@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ec.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ec.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2848,12 +2848,21 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return
-name|ec_rxstart
+block|{
+name|ecrerror
 argument_list|(
-name|ec
+name|unit
+argument_list|,
+literal|"out of sync, resetting"
+argument_list|)
+expr_stmt|;
+return|return
+name|ecreset
+argument_list|(
+name|unit
 argument_list|)
 return|;
+block|}
 comment|/* 	 * Process all buffers with valid data 	 */
 while|while
 condition|(
