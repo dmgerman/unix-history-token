@@ -12571,6 +12571,16 @@ block|,
 literal|'<'
 block|}
 block|,
+block|{
+literal|" Securelevel"
+block|,
+literal|"Configure securelevels for the system"
+block|,
+name|NULL
+block|,
+name|configSecurelevel
+block|}
+block|,
 if|#
 directive|if
 literal|0
@@ -12596,6 +12606,96 @@ name|NULL
 block|}
 block|}
 block|, }
+block|;
+name|DMenu
+name|MenuSecurelevel
+operator|=
+block|{
+name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Securelevel Configuration Menu"
+block|,
+literal|"This menu allows you to select the securelevel your system runs with.\n"
+literal|"When operating at a securelevel, certain root privileges are disabled,\n"
+literal|"which may increase resistance to exploits and protect system integrity.\n"
+literal|"In secure mode system flags may not be overriden by the root user,\n"
+literal|"access to direct kernel memory is limited, and kernel modules may not\n"
+literal|"be changed.  In highly secure mode, mounted file systems may not be\n"
+literal|"modified on-disk, tampering with the system clock is prohibited.  In\n"
+literal|"network secure mode configuration changes to firwalling are prohibited.\n"
+block|,
+literal|"Select a securelevel to operate at - F1 for help"
+block|,
+literal|"securelevel"
+block|,
+block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
+block|{
+literal|"Disabled"
+block|,
+literal|"Disable securelevels"
+block|,
+name|NULL
+block|,
+name|configSecurelevelDisabled
+block|, }
+block|,
+block|{
+literal|"Secure"
+block|,
+literal|"Secure mode"
+block|,
+name|NULL
+block|,
+name|configSecurelevelSecure
+block|}
+block|,
+block|{
+literal|"Highly Secure"
+block|,
+literal|"Highly secure mode"
+block|,
+name|NULL
+block|,
+name|configSecurelevelHighlySecure
+block|}
+block|,
+block|{
+literal|"Network Secure"
+block|,
+literal|"Network secure mode"
+block|,
+name|NULL
+block|,
+name|configSecurelevelNetworkSecure
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|}
 block|;
 name|DMenu
 name|MenuFixit
