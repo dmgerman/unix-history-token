@@ -902,7 +902,7 @@ block|,
 block|{
 literal|0xEF
 block|,
-literal|"EFI System Parition"
+literal|"EFI System Partition"
 block|}
 block|,
 block|{
