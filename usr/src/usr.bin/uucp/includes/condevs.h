@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	condevs.h	4.4	86/01/24	*/
+comment|/*	condevs.h	4.5	86/02/12	*/
 end_comment
 
 begin_include
@@ -634,6 +634,29 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
+endif|SYTEK
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATT2224
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|attopn
+argument_list|()
+decl_stmt|,
+name|attcls
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|ATT2224
 end_endif
 
 end_unit
