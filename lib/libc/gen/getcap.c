@@ -3133,6 +3133,25 @@ literal|'\0'
 condition|)
 break|break;
 comment|/* drop unfinished escape */
+if|if
+condition|(
+operator|*
+name|bp
+operator|==
+literal|'?'
+condition|)
+block|{
+operator|*
+name|mp
+operator|++
+operator|=
+literal|'\177'
+expr_stmt|;
+name|bp
+operator|++
+expr_stmt|;
+block|}
+else|else
 operator|*
 name|mp
 operator|++
