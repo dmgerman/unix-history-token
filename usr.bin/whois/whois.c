@@ -559,7 +559,7 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/* 	 * If no nic host is specified determine the top level domain from 	 * the query.  If the TLD is a number, query ARIN.  Otherwise, use  	 * TLD.whois-server.net.  If the domain does not contain '.', fall 	 * back to NICHOST. 	 */
+comment|/* 	 * If no nic host is specified determine the top level domain from 	 * the query.  If the TLD is a number, query ARIN.  Otherwise, use 	 * TLD.whois-server.net.  If the domain does not contain '.', fall 	 * back to NICHOST. 	 */
 if|if
 condition|(
 name|host
