@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_xxx.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_xxx.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -563,19 +563,18 @@ directive|ifdef
 name|NEED_STRLEN
 end_ifdef
 
-begin_expr_stmt
+begin_function
+name|size_t
 name|strlen
-argument_list|(
+parameter_list|(
 name|s1
-argument_list|)
+parameter_list|)
 specifier|register
+specifier|const
 name|char
-operator|*
+modifier|*
 name|s1
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -603,7 +602,7 @@ name|len
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
