@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)case.c	1.1 (Berkeley) %G%"
+literal|"@(#)case.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ file|"tree.h"
 end_include
 
 begin_comment
-comment|/*  * Case statement  */
+comment|/*  * Case statement  *	r	[0]	T_CASE  *		[1]	lineof "case"  *		[2]	expression  *		[3]	list of cased statements:  *			cstat	[0]	T_CSTAT  *				[1]	lineof ":"  *				[2]	list of constant labels  *				[3]	statement  */
 end_comment
 
 begin_macro
@@ -66,6 +66,54 @@ name|struct
 name|pxcnt
 name|scnt
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RMOTHERS
+name|int
+modifier|*
+name|othersp
+decl_stmt|;
+comment|/* tree where others is, or NIL */
+name|int
+name|hasothers
+decl_stmt|;
+comment|/* 1 if others found, else 0 */
+endif|#
+directive|endif
+endif|RMOTHERS
+ifdef|#
+directive|ifdef
+name|RMOTHERS
+if|if
+condition|(
+name|rmothers
+condition|)
+block|{
+name|hasothers
+operator|=
+name|needscaseguard
+argument_list|(
+name|r
+argument_list|,
+operator|&
+name|othersp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hasothers
+condition|)
+block|{
+name|precaseguard
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+endif|RMOTHERS
 name|savecnt
 argument_list|(
 operator|&
@@ -367,6 +415,29 @@ argument_list|(
 literal|"end"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RMOTHERS
+if|if
+condition|(
+name|rmothers
+condition|)
+block|{
+if|if
+condition|(
+name|hasothers
+condition|)
+block|{
+name|postcaseguard
+argument_list|(
+name|othersp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+endif|RMOTHERS
 block|}
 end_block
 
