@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.25 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5131,7 +5131,7 @@ name|node
 operator|.
 name|di_atime
 operator|.
-name|tv_sec
+name|ts_sec
 operator|=
 name|utime
 expr_stmt|;
@@ -5139,7 +5139,7 @@ name|node
 operator|.
 name|di_mtime
 operator|.
-name|tv_sec
+name|ts_sec
 operator|=
 name|utime
 expr_stmt|;
@@ -5147,7 +5147,7 @@ name|node
 operator|.
 name|di_ctime
 operator|.
-name|tv_sec
+name|ts_sec
 operator|=
 name|utime
 expr_stmt|;
