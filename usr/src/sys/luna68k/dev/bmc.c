@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)bmc.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)bmc.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -62,79 +62,79 @@ end_if
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/tty.h"
+file|<sys/tty.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/conf.h"
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/uio.h"
+file|<sys/uio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/syslog.h"
+file|<sys/syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"device.h"
+file|<luna68k/dev/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sioreg.h"
+file|<luna68k/dev/sioreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"siovar.h"
+file|<luna68k/dev/siovar.h>
 end_include
 
 begin_ifdef
