@@ -945,9 +945,6 @@ block|{
 name|abort_hunk
 argument_list|()
 expr_stmt|;
-name|failed
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|verbose

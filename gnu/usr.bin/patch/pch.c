@@ -919,6 +919,8 @@ condition|(
 name|force
 operator|||
 name|batch
+operator|||
+name|skip_rest_of_patch
 condition|)
 block|{
 name|say1
