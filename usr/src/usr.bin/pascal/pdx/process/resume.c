@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)resume.c 1.6 %G%"
+literal|"@(#)resume.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -630,24 +630,18 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|isatty
-argument_list|(
-name|fileno
+name|isterm
 argument_list|(
 name|stdin
-argument_list|)
 argument_list|)
 condition|)
 block|{
 if|if
 condition|(
 operator|!
-name|isatty
-argument_list|(
-name|fileno
+name|isterm
 argument_list|(
 name|stderr
-argument_list|)
 argument_list|)
 operator|||
 name|freopen
