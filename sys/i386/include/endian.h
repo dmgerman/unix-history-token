@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/ansi.h>
 end_include
 
@@ -105,6 +111,7 @@ name|__GNUC__
 end_ifdef
 
 begin_function
+name|__BEGIN_DECLS
 specifier|static
 name|__inline
 name|__uint32_t
@@ -227,6 +234,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#

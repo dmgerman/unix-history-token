@@ -21,6 +21,12 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/ansi.h>
+end_include
+
 begin_comment
 comment|/*  * Define the order of 32-bit words in 64-bit words.  */
 end_comment
@@ -105,6 +111,7 @@ name|__GNUC__
 end_ifdef
 
 begin_function
+name|__BEGIN_DECLS
 specifier|static
 name|__inline
 name|__uint64_t
@@ -229,6 +236,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
