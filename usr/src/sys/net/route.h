@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)route.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)route.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,6 +24,54 @@ name|struct
 name|sockaddr
 name|ro_dst
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * These numbers are used by reliable protocols for determining  * retransmission behavior and are included in the routing structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|rt_metrics
+block|{
+name|u_long
+name|rmx_locks
+decl_stmt|;
+comment|/* Kernel must leave these values alone */
+name|u_long
+name|rmx_mtu
+decl_stmt|;
+comment|/* MTU for this path */
+name|u_long
+name|rmx_hopcount
+decl_stmt|;
+comment|/* max hops expected */
+name|u_long
+name|rmx_expire
+decl_stmt|;
+comment|/* lifetime for route, e.g. redirect */
+name|u_long
+name|rmx_recvpipe
+decl_stmt|;
+comment|/* inbound delay-bandwith product */
+name|u_long
+name|rmx_sendpipe
+decl_stmt|;
+comment|/* outbound delay-bandwith product */
+name|u_long
+name|rmx_ssthresh
+decl_stmt|;
+comment|/* outbound gateway buffer limit */
+name|u_long
+name|rmx_rtt
+decl_stmt|;
+comment|/* estimated round trip time */
+name|u_long
+name|rmx_rttvar
+decl_stmt|;
+comment|/* estimated rtt variance */
 block|}
 struct|;
 end_struct
@@ -104,6 +152,11 @@ name|caddr_t
 name|rt_llinfo
 decl_stmt|;
 comment|/* pointer to link level info cache */
+name|struct
+name|rt_metrics
+name|rt_rmx
+decl_stmt|;
+comment|/* metrics used by rx'ing protocols */
 block|}
 struct|;
 end_struct
@@ -289,46 +342,6 @@ end_comment
 
 begin_struct
 struct|struct
-name|rt_metrics
-block|{
-name|u_long
-name|rtm_mtu
-decl_stmt|;
-comment|/* MTU for this path */
-name|u_long
-name|rtm_hopcount
-decl_stmt|;
-comment|/* max hops expected */
-name|u_long
-name|rtm_expire
-decl_stmt|;
-comment|/* lifetime for route, e.g. redirect */
-name|u_long
-name|rtm_recvpipe
-decl_stmt|;
-comment|/* inbound delay-bandwith product */
-name|u_long
-name|rtm_sendpipe
-decl_stmt|;
-comment|/* outbound delay-bandwith product */
-name|u_long
-name|rtm_ssthresh
-decl_stmt|;
-comment|/* outbound gateway buffer limit */
-name|u_long
-name|rtm_rtt
-decl_stmt|;
-comment|/* estimated round trip time */
-name|u_long
-name|rtm_rttvar
-decl_stmt|;
-comment|/* estimated rtt variance */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|rt_msghdr
 block|{
 name|u_short
@@ -343,14 +356,18 @@ name|u_char
 name|rtm_type
 decl_stmt|;
 comment|/* message type */
-name|u_char
-name|rtm_count
+name|u_short
+name|rtm_index
 decl_stmt|;
-comment|/* number of sockaddrs */
+comment|/* index for associated ifp */
 name|pid_t
 name|rtm_pid
 decl_stmt|;
 comment|/* identify sender */
+name|int
+name|rtm_addrs
+decl_stmt|;
+comment|/* bitmask identifying sockaddrs in msg */
 name|int
 name|rtm_seq
 decl_stmt|;
@@ -364,30 +381,18 @@ name|rtm_flags
 decl_stmt|;
 comment|/* flags, incl. kern& message, e.g. DONE */
 name|int
-name|rtm_locks
+name|rtm_use
 decl_stmt|;
-comment|/* which values kernel can alter */
-name|int
+comment|/* from rtentry */
+name|u_long
 name|rtm_inits
 decl_stmt|;
-comment|/* which values we are initializing */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|rt_chgmsg
-block|{
-comment|/* Good for RTM_ADD, RTM_CHANGE, RTM_GET */
-name|struct
-name|rt_msghdr
-name|cm_h
-decl_stmt|;
+comment|/* which metrics we are initializing */
 name|struct
 name|rt_metrics
-name|cm_m
+name|rtm_rmx
 decl_stmt|;
+comment|/* metrics themselves */
 block|}
 struct|;
 end_struct
@@ -411,6 +416,17 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|RTM_VERSION
+value|2
+end_define
+
+begin_comment
+comment|/* Up the ante and ignore older versions */
+end_comment
 
 begin_define
 define|#
@@ -619,6 +635,83 @@ end_define
 
 begin_comment
 comment|/* init or lock _rttvar */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTA_DST
+value|0x1
+end_define
+
+begin_comment
+comment|/* destination sockaddr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTA_GATEWAY
+value|0x2
+end_define
+
+begin_comment
+comment|/* gateway sockaddr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTA_NETMASK
+value|0x4
+end_define
+
+begin_comment
+comment|/* netmask sockaddr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTA_GENMASK
+value|0x8
+end_define
+
+begin_comment
+comment|/* cloning mask sockaddr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTA_IFP
+value|0x10
+end_define
+
+begin_comment
+comment|/* interface name sockaddr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTA_IFA
+value|0x20
+end_define
+
+begin_comment
+comment|/* interface addr sockaddr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTA_AUTHOR
+value|0x40
+end_define
+
+begin_comment
+comment|/* sockaddr for author of redirect */
 end_comment
 
 begin_ifdef
