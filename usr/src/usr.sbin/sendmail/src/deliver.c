@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.86
+literal|3.87
 operator|%
 name|G
 operator|%
@@ -3817,7 +3817,7 @@ argument_list|)
 expr_stmt|;
 name|putline
 argument_list|(
-name|obp
+name|obuf
 argument_list|,
 name|fp
 argument_list|,
