@@ -626,6 +626,15 @@ expr_stmt|;
 name|reset_prog_mode
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|enter_ca_mode
+condition|)
+name|putp
+argument_list|(
+name|enter_ca_mode
+argument_list|)
+expr_stmt|;
 comment|/* is this necessary? */
 if|if
 condition|(
@@ -672,7 +681,7 @@ argument_list|)
 expr_stmt|;
 name|ClrUpdate
 argument_list|(
-name|curscr
+name|newscr
 argument_list|)
 expr_stmt|;
 comment|/* yes, clear all& update */
@@ -684,8 +693,7 @@ name|FALSE
 expr_stmt|;
 comment|/* reset flag */
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|newscr
@@ -751,7 +759,6 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|T
@@ -1002,7 +1009,16 @@ literal|0
 init|;
 name|i
 operator|<
+name|min
+argument_list|(
 name|lines
+argument_list|,
+name|scr
+operator|->
+name|_maxy
+operator|+
+literal|1
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -1010,9 +1026,9 @@ control|)
 block|{
 name|lastNonBlank
 operator|=
-name|columns
-operator|-
-literal|1
+name|scr
+operator|->
+name|_maxx
 expr_stmt|;
 while|while
 condition|(
@@ -1090,24 +1106,16 @@ name|j
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|parm_right_cursor
-condition|)
-block|{
-specifier|static
 name|int
 name|inspace
 init|=
 literal|0
 decl_stmt|;
-name|T
-argument_list|(
-operator|(
-literal|"trying to use parm_right_cursor"
-operator|)
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|parm_right_cursor
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1171,6 +1179,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|T
+argument_list|(
+operator|(
+literal|"trying to use parm_right_cursor"
+operator|)
+argument_list|)
+expr_stmt|;
 name|putp
 argument_list|(
 name|tparm
