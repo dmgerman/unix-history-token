@@ -393,7 +393,7 @@ begin_define
 define|#
 directive|define
 name|MEMINTVL
-value|(hz*60*10)
+value|(60*10)
 end_define
 
 begin_comment
