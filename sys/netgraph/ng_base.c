@@ -1679,7 +1679,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Get length of an array when the length is stored as a 32 bit    value immediately preceeding the array -- as with struct namelist    and struct typelist. */
+comment|/* Get length of an array when the length is stored as a 32 bit    value immediately preceding the array -- as with struct namelist    and struct typelist. */
 end_comment
 
 begin_function

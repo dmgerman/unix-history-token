@@ -4916,7 +4916,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Encode an information element using field identifiers  *  * The AAL parameters and ATM user cell rate IEs are formatted  * with a one-byte identifier preceeding each field.  The routine  * encodes these IEs by using a table which relates the field  * identifiers with the fields in the appropriate IE structure.  *  * Arguments:  *	usf	pointer to a unisig formatting structure  *	ie	pointer to a cell rate IE structure  *	tbl	pointer to an IE decoding table  *  * Returns:  *	0	success  *	errno	error encountered  *  */
+comment|/*  * Encode an information element using field identifiers  *  * The AAL parameters and ATM user cell rate IEs are formatted  * with a one-byte identifier preceding each field.  The routine  * encodes these IEs by using a table which relates the field  * identifiers with the fields in the appropriate IE structure.  *  * Arguments:  *	usf	pointer to a unisig formatting structure  *	ie	pointer to a cell rate IE structure  *	tbl	pointer to an IE decoding table  *  * Returns:  *	0	success  *	errno	error encountered  *  */
 end_comment
 
 begin_function

@@ -1898,7 +1898,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * TargPrintOnlySrc --  *	Print only those targets that are just a source.  *  * Results:  *	0.  *  * Side Effects:  *	The name of each file is printed preceeded by #\t  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * TargPrintOnlySrc --  *	Print only those targets that are just a source.  *  * Results:  *	0.  *  * Side Effects:  *	The name of each file is printed preceded by #\t  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function

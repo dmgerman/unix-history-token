@@ -7312,7 +7312,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 	 * Get station address from the EEPROM. Note: the manual states 	 * that the MAC address is at offset 0x8c, however the data is 	 * stored as two longwords (since that's how it's loaded into 	 * the NIC). This means the MAC address is actually preceeded 	 * by two zero bytes. We need to skip over those. 	 */
+comment|/* 	 * Get station address from the EEPROM. Note: the manual states 	 * that the MAC address is at offset 0x8c, however the data is 	 * stored as two longwords (since that's how it's loaded into 	 * the NIC). This means the MAC address is actually preceded 	 * by two zero bytes. We need to skip over those. 	 */
 if|if
 condition|(
 name|ti_read_eeprom

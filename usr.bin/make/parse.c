@@ -6794,7 +6794,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Strip trailing blanks and tabs from the line. 	 * Do not strip a blank or tab that is preceeded by 	 * a '\' 	 */
+comment|/* 	 * Strip trailing blanks and tabs from the line. 	 * Do not strip a blank or tab that is preceded by 	 * a '\' 	 */
 name|ep
 operator|=
 name|line

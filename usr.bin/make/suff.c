@@ -2648,7 +2648,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Suff_DoPaths --  *	Extend the search paths for all suffixes to include the default  *	search path.  *  * Results:  *	None.  *  * Side Effects:  *	The searchPath field of all the suffixes is extended by the  *	directories in dirSearchPath. If paths were specified for the  *	".h" suffix, the directories are stuffed into a global variable  *	called ".INCLUDES" with each directory preceeded by a -I. The same  *	is done for the ".a" suffix, except the variable is called  *	".LIBS" and the flag is -L.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Suff_DoPaths --  *	Extend the search paths for all suffixes to include the default  *	search path.  *  * Results:  *	None.  *  * Side Effects:  *	The searchPath field of all the suffixes is extended by the  *	directories in dirSearchPath. If paths were specified for the  *	".h" suffix, the directories are stuffed into a global variable  *	called ".INCLUDES" with each directory preceded by a -I. The same  *	is done for the ".a" suffix, except the variable is called  *	".LIBS" and the flag is -L.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function

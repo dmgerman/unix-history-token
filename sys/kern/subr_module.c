@@ -593,7 +593,7 @@ name|type
 condition|)
 break|break;
 block|}
-comment|/*  	 * Attribute match? Return pointer to data. 	 * Consumer may safely assume that size value preceeds	 	 * data. 	 */
+comment|/*  	 * Attribute match? Return pointer to data. 	 * Consumer may safely assume that size value precedes	 	 * data. 	 */
 if|if
 condition|(
 name|hdr

@@ -17492,7 +17492,7 @@ name|cookiep
 operator|=
 name|cookies
 expr_stmt|;
-comment|/* 	 * For some reason FreeBSD's ufs_readdir() chooses to back the 	 * directory offset up to a block boundary, so it is necessary to 	 * skip over the records that preceed the requested offset. This 	 * requires the assumption that file offset cookies monotonically 	 * increase. 	 */
+comment|/* 	 * For some reason FreeBSD's ufs_readdir() chooses to back the 	 * directory offset up to a block boundary, so it is necessary to 	 * skip over the records that precede the requested offset. This 	 * requires the assumption that file offset cookies monotonically 	 * increase. 	 */
 while|while
 condition|(
 name|cpos
@@ -18988,7 +18988,7 @@ name|cookiep
 operator|=
 name|cookies
 expr_stmt|;
-comment|/* 	 * For some reason FreeBSD's ufs_readdir() chooses to back the 	 * directory offset up to a block boundary, so it is necessary to 	 * skip over the records that preceed the requested offset. This 	 * requires the assumption that file offset cookies monotonically 	 * increase. 	 */
+comment|/* 	 * For some reason FreeBSD's ufs_readdir() chooses to back the 	 * directory offset up to a block boundary, so it is necessary to 	 * skip over the records that precede the requested offset. This 	 * requires the assumption that file offset cookies monotonically 	 * increase. 	 */
 while|while
 condition|(
 name|cpos
