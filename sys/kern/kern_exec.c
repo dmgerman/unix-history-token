@@ -2378,7 +2378,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|pmap_kenter
+name|pmap_qenter
 argument_list|(
 operator|(
 name|vm_offset_t
@@ -2387,13 +2387,9 @@ name|imgp
 operator|->
 name|image_header
 argument_list|,
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|ma
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|imgp
@@ -2432,7 +2428,7 @@ operator|->
 name|firstpage
 condition|)
 block|{
-name|pmap_kremove
+name|pmap_qremove
 argument_list|(
 operator|(
 name|vm_offset_t
@@ -2440,6 +2436,8 @@ operator|)
 name|imgp
 operator|->
 name|image_header
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|vm_page_unwire
