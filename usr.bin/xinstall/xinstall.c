@@ -178,12 +178,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
-end_include
-
 begin_comment
 comment|/* Bootstrap aid - this doesn't exist in most older releases */
 end_comment
