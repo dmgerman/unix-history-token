@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.147 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.148 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9694,7 +9694,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|fgetc
+name|getc
 argument_list|(
 name|e
 operator|->
@@ -9904,7 +9904,7 @@ name|padc
 operator|!=
 name|EOF
 condition|)
-name|fputc
+name|putc
 argument_list|(
 name|padc
 argument_list|,
@@ -9924,7 +9924,7 @@ condition|;
 name|xp
 operator|++
 control|)
-name|fputc
+name|putc
 argument_list|(
 operator|*
 name|xp
@@ -9957,7 +9957,7 @@ operator|!=
 name|EOF
 condition|)
 block|{
-name|fputc
+name|putc
 argument_list|(
 name|padc
 argument_list|,
@@ -9983,7 +9983,7 @@ condition|;
 name|xp
 operator|++
 control|)
-name|fputc
+name|putc
 argument_list|(
 operator|*
 name|xp
@@ -10236,7 +10236,7 @@ name|TrafficLogFile
 operator|!=
 name|NULL
 condition|)
-name|fputc
+name|putc
 argument_list|(
 name|c
 argument_list|,

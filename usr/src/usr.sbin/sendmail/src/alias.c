@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.45 (Berkeley) %G%"
+literal|"@(#)alias.c	8.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2680,7 +2680,7 @@ block|}
 comment|/* see if there should be a continuation line */
 name|c
 operator|=
-name|fgetc
+name|getc
 argument_list|(
 name|af
 argument_list|)

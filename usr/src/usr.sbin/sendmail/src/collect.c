@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.37 (Berkeley) %G%"
+literal|"@(#)collect.c	8.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -614,7 +614,7 @@ literal|0
 expr_stmt|;
 name|c
 operator|=
-name|fgetc
+name|getc
 argument_list|(
 name|fp
 argument_list|)
@@ -676,7 +676,7 @@ literal|"[EOF]\n"
 argument_list|)
 expr_stmt|;
 else|else
-name|fputc
+name|putc
 argument_list|(
 name|c
 argument_list|,
@@ -986,7 +986,7 @@ name|e_msgsize
 operator|<=
 name|MaxMessageSize
 condition|)
-name|fputc
+name|putc
 argument_list|(
 name|c
 argument_list|,
@@ -1211,7 +1211,7 @@ literal|0
 expr_stmt|;
 name|c
 operator|=
-name|fgetc
+name|getc
 argument_list|(
 name|fp
 argument_list|)
@@ -1397,7 +1397,7 @@ name|bp
 operator|!=
 literal|'\0'
 condition|)
-name|fputc
+name|putc
 argument_list|(
 operator|*
 name|bp
