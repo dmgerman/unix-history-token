@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -255,7 +255,7 @@ begin_define
 define|#
 directive|define
 name|TTYHOG
-value|255
+value|1024
 end_define
 
 begin_ifdef
@@ -718,6 +718,44 @@ directive|define
 name|DMGET
 value|3
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_comment
+comment|/* symbolic sleep message strings */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|ttyin
+index|[]
+decl_stmt|,
+name|ttyout
+index|[]
+decl_stmt|,
+name|ttopen
+index|[]
+decl_stmt|,
+name|ttclos
+index|[]
+decl_stmt|,
+name|ttybg
+index|[]
+decl_stmt|,
+name|ttybuf
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
