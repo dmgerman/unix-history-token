@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	5.19 (Berkeley) %G%"
+literal|"@(#)inet.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,6 +98,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/icmp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/igmp_var.h>
 end_include
 
 begin_include
@@ -868,6 +874,13 @@ argument_list|,
 literal|"\t\t%d completely duplicate packet%s (%d byte%s)\n"
 argument_list|)
 expr_stmt|;
+name|p
+argument_list|(
+name|tcps_pawsdrop
+argument_list|,
+literal|"\t\t%d old duplicate packet%s\n"
+argument_list|)
+expr_stmt|;
 name|p2
 argument_list|(
 name|tcps_rcvpartduppack
@@ -1058,6 +1071,9 @@ name|struct
 name|udpstat
 name|udpstat
 decl_stmt|;
+name|u_long
+name|delivered
+decl_stmt|;
 if|if
 condition|(
 name|off
@@ -1100,37 +1116,103 @@ parameter_list|)
 value|if (udpstat.f || sflag<= 1) \     printf(m, udpstat.f, plural(udpstat.f))
 name|p
 argument_list|(
+name|udps_ipackets
+argument_list|,
+literal|"\t%u datagram%s received\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
 name|udps_hdrops
 argument_list|,
-literal|"\t%u incomplete header%s\n"
+literal|"\t%u with incomplete header\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|udps_badlen
 argument_list|,
-literal|"\t%u bad data length field%s\n"
+literal|"\t%u with bad data length field\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|udps_badsum
 argument_list|,
-literal|"\t%u bad checksum%s\n"
+literal|"\t%u with bad checksum\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|udps_noport
 argument_list|,
-literal|"\t%u no port%s\n"
+literal|"\t%u dropped due to no socket\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|udps_noportbcast
 argument_list|,
-literal|"\t%u (arrived as bcast) no port%s\n"
+literal|"\t%u broadcast/multicast datagram%s dropped due to no socket\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|udps_fullsock
+argument_list|,
+literal|"\t%u dropped due to full socket buffers\n"
+argument_list|)
+expr_stmt|;
+name|delivered
+operator|=
+name|udpstat
+operator|.
+name|udps_ipackets
+operator|-
+name|udpstat
+operator|.
+name|udps_hdrops
+operator|-
+name|udpstat
+operator|.
+name|udps_badlen
+operator|-
+name|udpstat
+operator|.
+name|udps_badsum
+operator|-
+name|udpstat
+operator|.
+name|udps_noport
+operator|-
+name|udpstat
+operator|.
+name|udps_noportbcast
+operator|-
+name|udpstat
+operator|.
+name|udps_fullsock
+expr_stmt|;
+if|if
+condition|(
+name|delivered
+operator|||
+name|sflag
+operator|<=
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"\t%u delivered\n"
+argument_list|,
+name|delivered
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|udps_opackets
+argument_list|,
+literal|"\t%u datagram%s output\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -1268,6 +1350,20 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
+name|ips_badoptions
+argument_list|,
+literal|"\t%u with bad options\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_badvers
+argument_list|,
+literal|"\t%u with incorrect version number\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
 name|ips_fragments
 argument_list|,
 literal|"\t%u fragment%s received\n"
@@ -1289,6 +1385,27 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
+name|ips_reassembled
+argument_list|,
+literal|"\t%u packet%s reassembled ok\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_delivered
+argument_list|,
+literal|"\t%u packet%s for this host\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_noproto
+argument_list|,
+literal|"\t%u packet%s for unknown/unsupported protocol\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
 name|ips_forward
 argument_list|,
 literal|"\t%u packet%s forwarded\n"
@@ -1306,6 +1423,55 @@ argument_list|(
 name|ips_redirectsent
 argument_list|,
 literal|"\t%u redirect%s sent\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_localout
+argument_list|,
+literal|"\t%u packet%s sent from this host\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_rawout
+argument_list|,
+literal|"\t%u packet%s sent with fabricated ip header\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_odropped
+argument_list|,
+literal|"\t%u output packet%s dropped due to no bufs, etc.\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_noroute
+argument_list|,
+literal|"\t%u output packet%s discarded due to no route\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_fragmented
+argument_list|,
+literal|"\t%u output datagram%s fragmented\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_ofragments
+argument_list|,
+literal|"\t%u fragment%s created\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_cantfrag
+argument_list|,
+literal|"\t%u datagram%s that can't be fragmented\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -1615,6 +1781,151 @@ expr_stmt|;
 undef|#
 directive|undef
 name|p
+block|}
+end_function
+
+begin_comment
+comment|/*  * Dump IGMP statistics structure.  */
+end_comment
+
+begin_function
+name|void
+name|igmp_stats
+parameter_list|(
+name|off
+parameter_list|,
+name|name
+parameter_list|)
+name|u_long
+name|off
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|{
+name|struct
+name|igmpstat
+name|igmpstat
+decl_stmt|;
+if|if
+condition|(
+name|off
+operator|==
+literal|0
+condition|)
+return|return;
+name|kread
+argument_list|(
+name|off
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|igmpstat
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|igmpstat
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s:\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+define|#
+directive|define
+name|p
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|if (igmpstat.f || sflag<= 1) \     printf(m, igmpstat.f, plural(igmpstat.f))
+define|#
+directive|define
+name|py
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|if (igmpstat.f || sflag<= 1) \     printf(m, igmpstat.f, igmpstat.f != 1 ? "ies" : "y")
+name|p
+argument_list|(
+name|igps_rcv_total
+argument_list|,
+literal|"\t%u message%s received\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|igps_rcv_tooshort
+argument_list|,
+literal|"\t%u message%s received with too few bytes\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|igps_rcv_badsum
+argument_list|,
+literal|"\t%u message%s received with bad checksum\n"
+argument_list|)
+expr_stmt|;
+name|py
+argument_list|(
+name|igps_rcv_queries
+argument_list|,
+literal|"\t%u membership quer%s received\n"
+argument_list|)
+expr_stmt|;
+name|py
+argument_list|(
+name|igps_rcv_badqueries
+argument_list|,
+literal|"\t%u membership quer%s received with invalid field(s)\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|igps_rcv_reports
+argument_list|,
+literal|"\t%u membership report%s received\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|igps_rcv_badreports
+argument_list|,
+literal|"\t%u membership report%s received with invalid field(s)\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|igps_rcv_ourreports
+argument_list|,
+literal|"\t%u membership report%s received for groups to which we belong\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|igps_snd_reports
+argument_list|,
+literal|"\t%u membership report%s sent\n"
+argument_list|)
+expr_stmt|;
+undef|#
+directive|undef
+name|p
+undef|#
+directive|undef
+name|py
 block|}
 end_function
 
