@@ -342,6 +342,12 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|LOCKING_WORKED_AS_IT_SHOULD
+end_if
+
 begin_define
 define|#
 directive|define
@@ -412,6 +418,83 @@ parameter_list|)
 define|\
 value|mtx_unlock(&Giant); mtx_lock(&(mpt)->mpt_lock)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MPT_IFLAGS
+value|INTR_TYPE_CAM | INTR_ENTROPY
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPT_LOCK_SETUP
+parameter_list|(
+name|mpt
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPT_LOCK_DESTROY
+parameter_list|(
+name|mpt
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPT_LOCK
+parameter_list|(
+name|mpt
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPT_UNLOCK
+parameter_list|(
+name|mpt
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPTLOCK_2_CAMLOCK
+parameter_list|(
+name|mpt
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAMLOCK_2_MPTLOCK
+parameter_list|(
+name|mpt
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
