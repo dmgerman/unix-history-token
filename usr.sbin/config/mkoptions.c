@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkoptions.c,v 1.7 1998/07/12 02:31:08 bde Exp $"
+literal|"$Id: mkoptions.c,v 1.8 1998/07/12 08:10:33 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,70 +118,7 @@ block|,
 literal|512
 block|}
 block|,
-comment|/* MACHINE_VAX */
-block|{
-literal|8
-block|,
-literal|2
-block|,
-literal|512
-block|}
-block|,
-comment|/* MACHINE_TAHOE */
-block|{
-literal|8
-block|,
-literal|2
-block|,
-literal|512
-block|}
-block|,
-comment|/* MACHINE_HP300 */
-block|{
-literal|8
-block|,
-literal|2
-block|,
-literal|512
-block|}
-block|,
 comment|/* MACHINE_I386 */
-block|{
-literal|8
-block|,
-literal|2
-block|,
-literal|512
-block|}
-block|,
-comment|/* MACHINE_MIPS */
-block|{
-literal|8
-block|,
-literal|2
-block|,
-literal|512
-block|}
-block|,
-comment|/* MACHINE_PMAX */
-block|{
-literal|8
-block|,
-literal|2
-block|,
-literal|512
-block|}
-block|,
-comment|/* MACHINE_LUNA68K */
-block|{
-literal|8
-block|,
-literal|2
-block|,
-literal|512
-block|}
-block|,
-comment|/* MACHINE_NEWS3400 */
 block|{
 literal|8
 block|,
@@ -227,6 +164,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|read_options
 name|__P
@@ -239,8 +177,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|do_option
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|tooption
 name|__P
 argument_list|(
 operator|(
@@ -372,7 +326,7 @@ operator|=
 operator|&
 name|users
 index|[
-name|MACHINE_VAX
+name|MACHINE_I386
 operator|-
 literal|1
 index|]
@@ -556,6 +510,7 @@ comment|/*  * Generate an<options>.h file  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|do_option
 parameter_list|(
@@ -572,10 +527,6 @@ name|file
 decl_stmt|,
 modifier|*
 name|inw
-decl_stmt|,
-modifier|*
-name|tooption
-argument_list|()
 decl_stmt|;
 name|struct
 name|opt
@@ -1225,6 +1176,7 @@ comment|/*  * Find the filename to store the option spec into.  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|tooption
@@ -1332,6 +1284,7 @@ comment|/*  * read the options and options.<machine> files  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|read_options
 parameter_list|()
@@ -1503,7 +1456,7 @@ name|fname
 argument_list|,
 literal|"options.%s"
 argument_list|,
-name|raise
+name|raisestr
 argument_list|(
 name|ident
 argument_list|)

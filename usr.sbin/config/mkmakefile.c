@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.36 1999/04/11 03:40:10 grog Exp $"
+literal|"$Id: mkmakefile.c,v 1.37 1999/04/13 18:22:57 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,14 +132,6 @@ name|fcur
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|char
-modifier|*
-name|tail
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -148,6 +140,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|tail
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
 name|do_swapspec
 name|__P
@@ -164,6 +172,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|do_clean
 name|__P
@@ -177,6 +186,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|do_load
 name|__P
@@ -190,6 +200,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|do_rules
 name|__P
@@ -203,6 +214,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|do_sfiles
 name|__P
@@ -216,6 +228,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|do_mfiles
 name|__P
@@ -229,6 +242,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|do_cfiles
 name|__P
@@ -242,6 +256,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|do_objs
 name|__P
@@ -255,6 +270,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|do_before_depend
 name|__P
@@ -268,6 +284,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|struct
+name|file_list
+modifier|*
+name|do_systemspec
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+expr|struct
+name|file_list
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|opteq
 name|__P
@@ -284,6 +323,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|read_files
 name|__P
@@ -312,6 +352,7 @@ comment|/*  * Lookup a file, by name.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|file_list
 modifier|*
@@ -378,6 +419,7 @@ comment|/*  * Lookup a file, by final component name.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|file_list
 modifier|*
@@ -450,6 +492,7 @@ comment|/*  * Make a new file list entry  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|file_list
 modifier|*
@@ -631,7 +674,7 @@ name|ofp
 argument_list|,
 literal|"KERN_IDENT=%s\n"
 argument_list|,
-name|raise
+name|raisestr
 argument_list|(
 name|ident
 argument_list|)
@@ -1194,6 +1237,7 @@ comment|/*  * Read in the information about files used in making the system.  * 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|read_files
 parameter_list|()
@@ -1414,7 +1458,7 @@ name|fname
 argument_list|,
 literal|"files.%s"
 argument_list|,
-name|raise
+name|raisestr
 argument_list|(
 name|ident
 argument_list|)
@@ -2513,6 +2557,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|opteq
 parameter_list|(
@@ -2619,6 +2664,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|void
 name|do_before_depend
 parameter_list|(
@@ -2766,6 +2812,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|do_objs
 parameter_list|(
@@ -2997,6 +3044,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|do_cfiles
 parameter_list|(
@@ -3281,6 +3329,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|do_mfiles
 parameter_list|(
@@ -3433,6 +3482,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|do_sfiles
 parameter_list|(
@@ -3585,6 +3635,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|tail
@@ -3636,6 +3687,7 @@ comment|/*  * Create the makerules for each file  * which is part of the system.
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|do_rules
 parameter_list|(
@@ -3965,6 +4017,7 @@ comment|/*  * Create the load strings  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|do_load
 parameter_list|(
@@ -3986,12 +4039,6 @@ specifier|register
 name|int
 name|first
 decl_stmt|;
-name|struct
-name|file_list
-modifier|*
-name|do_systemspec
-parameter_list|()
-function_decl|;
 for|for
 control|(
 name|first
@@ -4080,6 +4127,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|do_clean
 parameter_list|(
@@ -4199,6 +4247,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|file_list
 modifier|*
@@ -4325,6 +4374,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|do_swapspec
 parameter_list|(
@@ -4388,7 +4438,7 @@ end_function
 begin_function
 name|char
 modifier|*
-name|raise
+name|raisestr
 parameter_list|(
 name|str
 parameter_list|)

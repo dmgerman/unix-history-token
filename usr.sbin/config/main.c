@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.28 1999/04/10 14:03:38 ache Exp $"
+literal|"$Id: main.c,v 1.29 1999/04/11 03:40:10 grog Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -192,6 +192,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|debugging
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|profiling
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
+name|loadaddress
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
@@ -205,6 +223,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|configfile
 name|__P
@@ -552,41 +571,6 @@ name|machine
 condition|)
 block|{
 case|case
-name|MACHINE_VAX
-case|:
-name|vax_ioconf
-argument_list|()
-expr_stmt|;
-comment|/* Print ioconf.c */
-name|ubglue
-argument_list|()
-expr_stmt|;
-comment|/* Create ubglue.s */
-break|break;
-case|case
-name|MACHINE_TAHOE
-case|:
-name|tahoe_ioconf
-argument_list|()
-expr_stmt|;
-name|vbglue
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|MACHINE_HP300
-case|:
-case|case
-name|MACHINE_LUNA68K
-case|:
-name|hp300_ioconf
-argument_list|()
-expr_stmt|;
-name|hpglue
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
 name|MACHINE_I386
 case|:
 case|case
@@ -596,27 +580,6 @@ name|i386_ioconf
 argument_list|()
 expr_stmt|;
 comment|/* Print ioconf.c */
-name|vector
-argument_list|()
-expr_stmt|;
-comment|/* Create vector.s */
-break|break;
-case|case
-name|MACHINE_MIPS
-case|:
-case|case
-name|MACHINE_PMAX
-case|:
-name|pmax_ioconf
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|MACHINE_NEWS3400
-case|:
-name|news_ioconf
-argument_list|()
-expr_stmt|;
 break|break;
 case|case
 name|MACHINE_ALPHA
@@ -1318,6 +1281,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|configfile
 parameter_list|()

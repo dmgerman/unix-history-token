@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkswapconf.c,v 1.15 1998/06/09 14:02:08 dfr Exp $"
+literal|"$Id: mkswapconf.c,v 1.16 1999/04/15 14:52:22 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,23 +75,6 @@ directive|include
 file|<sys/diskslice.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|linux
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/sysmacros.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -121,12 +104,30 @@ value|strdup(s)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|void
 name|initdevtable
 name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|file_list
+modifier|*
+name|do_swap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|file_list
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -143,12 +144,6 @@ name|file_list
 modifier|*
 name|fl
 decl_stmt|;
-name|struct
-name|file_list
-modifier|*
-name|do_swap
-parameter_list|()
-function_decl|;
 name|fl
 operator|=
 name|conf_list
@@ -187,6 +182,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|file_list
 modifier|*
@@ -1032,6 +1028,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|initdevtable
 parameter_list|()

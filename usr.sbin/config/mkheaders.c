@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkheaders.c,v 1.7 1997/10/28 07:21:02 joerg Exp $"
+literal|"$Id: mkheaders.c,v 1.8 1997/11/07 00:09:40 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +92,7 @@ value|strdup(s)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|void
 name|do_header
 name|__P
@@ -110,6 +111,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|do_count
 name|__P
@@ -122,6 +124,36 @@ name|char
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|toheader
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|tomacro
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -245,6 +277,7 @@ comment|/*  * count all the devices of a certain type and recurse to count  * wh
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|do_count
 parameter_list|(
@@ -457,6 +490,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|void
 name|do_header
 parameter_list|(
@@ -492,14 +526,6 @@ name|name
 decl_stmt|,
 modifier|*
 name|inw
-decl_stmt|,
-modifier|*
-name|toheader
-argument_list|()
-decl_stmt|,
-modifier|*
-name|tomacro
-argument_list|()
 decl_stmt|;
 name|struct
 name|file_list
@@ -987,6 +1013,7 @@ comment|/*  * convert a dev name to a .h file name  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|toheader
@@ -1041,6 +1068,7 @@ comment|/*  * convert a dev name to a macro name  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|tomacro
