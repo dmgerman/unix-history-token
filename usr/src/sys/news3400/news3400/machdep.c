@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -177,6 +177,32 @@ end_include
 begin_decl_stmt
 name|vm_map_t
 name|buffer_map
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the following is used externally (sysctl_hw) */
+end_comment
+
+begin_decl_stmt
+name|char
+name|machine
+index|[]
+init|=
+literal|"SONY"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* cpu "architecture" */
+end_comment
+
+begin_decl_stmt
+name|char
+name|cpu_model
+index|[
+literal|30
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -531,6 +557,11 @@ name|boothowto
 operator|&
 name|RB_MINIROOT
 condition|)
+block|{
+name|boothowto
+operator||=
+name|RB_DFLTROOT
+expr_stmt|;
 name|v
 operator|+=
 name|mfs_initminiroot
@@ -538,6 +569,7 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * Init mapping for u page(s) for proc[0], pm_tlbpid 1. 	 */
