@@ -8691,7 +8691,7 @@ argument|;
 comment|/* XXX??? */
 argument|cpi->hba_inquiry = PI_TAG_ABLE; 		cpi->target_sprt =
 literal|0
-argument|; 		cpi->hba_misc = PIM_NOBUSRESET; 		cpi->hba_eng_cnt =
+argument|; 		cpi->hba_misc = PIM_NOBUSRESET | PIM_NO_6_BYTE; 		cpi->hba_eng_cnt =
 literal|0
 argument|; 		cpi->max_target = SBP_NUM_TARGETS -
 literal|1

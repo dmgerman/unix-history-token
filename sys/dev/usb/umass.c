@@ -9846,7 +9846,7 @@ name|cpi
 operator|->
 name|hba_misc
 operator|=
-literal|0
+name|PIM_NO_6_BYTE
 expr_stmt|;
 name|cpi
 operator|->
