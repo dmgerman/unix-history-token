@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.h	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.h	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -97,6 +97,17 @@ end_define
 
 begin_comment
 comment|/* base roundtrip time; 						   if 0, no idea yet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPTV_SRTTDFLT
+value|(  5*PR_SLOWHZ)
+end_define
+
+begin_comment
+comment|/* assumed RTT if no info */
 end_comment
 
 begin_define
@@ -206,7 +217,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Retransmission smoothing constants.  * Smoothed round trip time is updated by  *    tp->t_srtt = (tcp_alpha * tp->t_srtt) + ((1 - tcp_alpha) * tp->t_rtt)  * each time a new value of tp->t_rtt is available.  The initial  * retransmit timeout is then based on  *    tp->t_timer[TCPT_REXMT] = tcp_beta * tp->t_srtt;  * limited, however to be at least TCPTV_REXMTLO and at most TCPTV_REXMTHI.  */
+comment|/*  * Retransmission smoothing constants.  * Smoothed round trip time is updated by  *    tp->t_srtt = (tcp_alpha * tp->t_srtt) + ((1 - tcp_alpha) * tp->t_rtt)  * each time a new value of tp->t_rtt is available.  The initial  * retransmit timeout is then based on  *    tp->t_timer[TCPT_REXMT] = tcp_beta * tp->t_srtt;  * limited, however to be at least TCPTV_MIN and at most TCPTV_MAX.  */
 end_comment
 
 begin_decl_stmt
