@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.5 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5956,7 +5956,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
 end_block
