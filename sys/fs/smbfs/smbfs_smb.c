@@ -1830,10 +1830,14 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|np
 operator|->
-name|n_opencount
-operator|<=
+name|n_flag
+operator|&
+name|NOPEN
+operator|)
+operator|!=
 literal|0
 operator|||
 operator|!
