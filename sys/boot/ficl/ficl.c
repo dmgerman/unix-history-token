@@ -989,7 +989,7 @@ name|rval
 return|;
 block|}
 block|}
-comment|/*     ** Pass an empty line with SOURCE-ID == 0 to flush     ** any pending REFILLs (as required by FILE wordset)     */
+comment|/*     ** Pass an empty line with SOURCE-ID == -1 to flush     ** any pending REFILLs (as required by FILE wordset)     */
 name|pVM
 operator|->
 name|sourceID
