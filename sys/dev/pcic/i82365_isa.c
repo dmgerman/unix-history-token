@@ -102,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/pccard/pccardchip.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/pcic/i82365reg.h>
 end_include
 

@@ -20,12 +20,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/pccard/pccardchip.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/pcic/i82365reg.h>
 end_include
 
@@ -307,10 +301,6 @@ name|port_res
 decl_stmt|;
 name|int
 name|port_rid
-decl_stmt|;
-comment|/* this needs to be large enough to hold PCIC_MEM_PAGES bits */
-name|int
-name|subregionmask
 decl_stmt|;
 define|#
 directive|define

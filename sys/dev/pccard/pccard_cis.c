@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/pccard/pccardchip.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/pccard/pccardvar.h>
 end_include
 
@@ -547,6 +541,12 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
+name|tuple
+operator|.
+name|ptr
+operator|=
+literal|0
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -686,6 +686,14 @@ goto|goto
 name|done
 goto|;
 block|}
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+comment|/* XXX IMP XXX */
 name|tuple
 operator|.
 name|ptr

@@ -350,18 +350,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|void		pcic_deactivate_card(struct pcic_handle *);
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -999,6 +987,7 @@ return|return
 name|err
 return|;
 block|}
+comment|/* XXX This might not be needed in future, get it directly from 	 * XXX parent */
 name|sc
 operator|->
 name|mem_rid
@@ -1061,38 +1050,6 @@ return|return
 name|ENOMEM
 return|;
 block|}
-name|sc
-operator|->
-name|subregionmask
-operator|=
-operator|(
-literal|1
-operator|<<
-operator|(
-operator|(
-name|rman_get_end
-argument_list|(
-name|sc
-operator|->
-name|mem_res
-argument_list|)
-operator|-
-name|rman_get_start
-argument_list|(
-name|sc
-operator|->
-name|mem_res
-argument_list|)
-operator|+
-literal|1
-operator|)
-operator|/
-name|PCIC_MEM_PAGESIZE
-operator|)
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 name|sc
 operator|->
 name|iot
@@ -3218,7 +3175,8 @@ if|#
 directive|if
 literal|0
 comment|/* XXX */
-comment|/*	SHould do this later */
+comment|/*	Should do this later */
+comment|/* maybe as part of interrupt routing verification */
 block|if ((reg& PCIC_IF_STATUS_CARDDETECT_MASK) == 	    PCIC_IF_STATUS_CARDDETECT_PRESENT) { 		pcic_attach_card(h); 		h->laststate = PCIC_LASTSTATE_PRESENT; 	} else { 		h->laststate = PCIC_LASTSTATE_EMPTY; 	}
 endif|#
 directive|endif
@@ -3801,33 +3759,6 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|void pcic_deactivate_card(struct pcic_handle *h) {
-comment|/* call the MI deactivate function */
-end_comment
-
-begin_comment
-unit|pccard_card_deactivate(h->dev);
-comment|/* power down the socket */
-end_comment
-
-begin_comment
-unit|pcic_write(h, PCIC_PWRCTL, 0);
-comment|/* reset the socket */
-end_comment
-
-begin_endif
-unit|pcic_write(h, PCIC_INTR, 0); }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
@@ -3837,6 +3768,11 @@ name|struct
 name|pcic_handle
 modifier|*
 name|h
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+name|r
 parameter_list|,
 name|bus_size_t
 name|size
@@ -3857,11 +3793,7 @@ name|bus_size_t
 name|sizepg
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|mask
-decl_stmt|,
-name|mhandle
 decl_stmt|;
 name|struct
 name|pcic_softc
@@ -3911,81 +3843,14 @@ literal|1
 expr_stmt|;
 name|addr
 operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX gcc -Wuninitialized */
-name|mhandle
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX gcc -Wuninitialized */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<=
-name|PCIC_MAX_MEM_PAGES
-operator|-
-name|sizepg
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|subregionmask
-operator|&
-operator|(
-name|mask
-operator|<<
-name|i
-operator|)
-operator|)
-operator|==
-operator|(
-name|mask
-operator|<<
-name|i
-operator|)
-condition|)
-block|{
-name|mhandle
-operator|=
-name|mask
-operator|<<
-name|i
-expr_stmt|;
-name|addr
-operator|=
-name|sc
-operator|->
-name|membase
-operator|+
-operator|(
-name|i
-operator|*
-name|PCIC_MEM_PAGESIZE
-operator|)
+name|rman_get_start
+argument_list|(
+name|r
+argument_list|)
 expr_stmt|;
 name|memh
 operator|=
 name|addr
-expr_stmt|;
-name|sc
-operator|->
-name|subregionmask
-operator|&=
-operator|~
-operator|(
-name|mhandle
-operator|)
 expr_stmt|;
 name|pcmhp
 operator|->
@@ -4012,12 +3877,6 @@ operator|->
 name|size
 operator|=
 name|size
-expr_stmt|;
-name|pcmhp
-operator|->
-name|mhandle
-operator|=
-name|mhandle
 expr_stmt|;
 name|pcmhp
 operator|->
@@ -4030,13 +3889,6 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-block|}
-return|return
-operator|(
-literal|1
 operator|)
 return|;
 block|}
@@ -4057,25 +3909,7 @@ name|pccard_mem_handle
 modifier|*
 name|pcmhp
 parameter_list|)
-block|{
-name|struct
-name|pcic_softc
-modifier|*
-name|sc
-init|=
-name|h
-operator|->
-name|sc
-decl_stmt|;
-name|sc
-operator|->
-name|subregionmask
-operator||=
-name|pcmhp
-operator|->
-name|mhandle
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_struct
@@ -4648,15 +4482,6 @@ name|i
 decl_stmt|,
 name|win
 decl_stmt|;
-name|struct
-name|pcic_softc
-modifier|*
-name|sc
-init|=
-name|h
-operator|->
-name|sc
-decl_stmt|;
 name|win
 operator|=
 operator|-
@@ -4740,13 +4565,6 @@ name|windowp
 operator|=
 name|win
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX this is pretty gross */
-block|if (sc->memt != pcmhp->memt) 		panic("pcic_chip_mem_map memt is bogus");
-endif|#
-directive|endif
 name|busaddr
 operator|=
 name|pcmhp
@@ -5563,15 +5381,12 @@ block|}
 decl_stmt|;
 endif|#
 directive|endif
-name|struct
-name|pcic_softc
-modifier|*
-name|sc
-init|=
-name|h
-operator|->
-name|sc
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct pcic_softc *sc = h->sc;
+endif|#
+directive|endif
 comment|/* XXX Sanity check offset/size. */
 name|win
 operator|=
@@ -7127,6 +6942,37 @@ argument_list|,
 name|child
 argument_list|)
 decl_stmt|;
+comment|/* Nearly default */
+if|if
+condition|(
+name|type
+operator|==
+name|SYS_RES_MEMORY
+operator|&&
+name|start
+operator|==
+literal|0
+operator|&&
+name|end
+operator|==
+operator|~
+literal|0
+operator|&&
+name|count
+operator|!=
+literal|1
+condition|)
+block|{
+name|start
+operator|=
+literal|0xd0000
+expr_stmt|;
+comment|/* XXX */
+name|end
+operator|=
+literal|0xdffff
+expr_stmt|;
+block|}
 name|r
 operator|=
 name|bus_generic_alloc_resource
@@ -7150,8 +6996,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|r
+operator|==
+name|NULL
 condition|)
 return|return
 name|r
@@ -7235,6 +7082,8 @@ operator|=
 name|pcic_chip_mem_alloc
 argument_list|(
 name|h
+argument_list|,
+name|r
 argument_list|,
 name|sz
 argument_list|,
@@ -7435,19 +7284,21 @@ argument_list|,
 name|child
 argument_list|)
 decl_stmt|;
-name|printf
+name|DPRINTF
 argument_list|(
+operator|(
 literal|"%p %p %d %d %#x\n"
-argument_list|,
+operator|,
 name|dev
-argument_list|,
+operator|,
 name|child
-argument_list|,
+operator|,
 name|type
-argument_list|,
+operator|,
 name|rid
-argument_list|,
+operator|,
 name|flags
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
