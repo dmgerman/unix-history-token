@@ -1964,6 +1964,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|timeout
+condition|)
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|sigalrm
 operator|||
 name|sigint
