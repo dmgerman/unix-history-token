@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_process.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_process.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -507,8 +507,10 @@ name|p_slptime
 operator|=
 literal|0
 expr_stmt|;
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_kproc
 operator|.
 name|kp_proc
@@ -624,8 +626,10 @@ directive|ifdef
 name|HPUXCOMPAT
 if|if
 condition|(
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_flags
@@ -685,8 +689,9 @@ operator|*
 operator|)
 name|PHYSOFF
 argument_list|(
-operator|&
-name|u
+name|p
+operator|->
+name|p_addr
 argument_list|,
 name|i
 argument_list|)
@@ -886,8 +891,10 @@ directive|ifdef
 name|HPUXCOMPAT
 if|if
 condition|(
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_flags
@@ -923,8 +930,9 @@ operator|*
 operator|)
 name|PHYSOFF
 argument_list|(
-operator|&
-name|u
+name|p
+operator|->
+name|p_addr
 argument_list|,
 name|i
 argument_list|)
@@ -1027,8 +1035,10 @@ operator|(
 name|int
 operator|*
 operator|)
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_fpregs
@@ -1042,8 +1052,10 @@ name|int
 operator|*
 operator|)
 operator|&
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_fpregs
