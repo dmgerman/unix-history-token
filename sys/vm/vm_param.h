@@ -305,42 +305,48 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|u_quad_t
+name|unsigned
+name|long
 name|maxtsiz
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_quad_t
+name|unsigned
+name|long
 name|dfldsiz
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_quad_t
+name|unsigned
+name|long
 name|maxdsiz
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_quad_t
+name|unsigned
+name|long
 name|dflssiz
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_quad_t
+name|unsigned
+name|long
 name|maxssiz
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_quad_t
+name|unsigned
+name|long
 name|sgrowsiz
 decl_stmt|;
 end_decl_stmt

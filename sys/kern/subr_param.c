@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/vmparam.h>
+file|<vm/vm_param.h>
 end_include
 
 begin_comment
@@ -250,7 +250,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|maxswzone
 decl_stmt|;
 end_decl_stmt
@@ -260,7 +260,7 @@ comment|/* max swmeta KVA storage */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|maxbcache
 decl_stmt|;
 end_decl_stmt
@@ -280,7 +280,7 @@ comment|/* Limit on pipe KVA */
 end_comment
 
 begin_decl_stmt
-name|u_quad_t
+name|u_long
 name|maxtsiz
 decl_stmt|;
 end_decl_stmt
@@ -290,7 +290,7 @@ comment|/* max text size */
 end_comment
 
 begin_decl_stmt
-name|u_quad_t
+name|u_long
 name|dfldsiz
 decl_stmt|;
 end_decl_stmt
@@ -300,7 +300,7 @@ comment|/* initial data size limit */
 end_comment
 
 begin_decl_stmt
-name|u_quad_t
+name|u_long
 name|maxdsiz
 decl_stmt|;
 end_decl_stmt
@@ -310,7 +310,7 @@ comment|/* max data size */
 end_comment
 
 begin_decl_stmt
-name|u_quad_t
+name|u_long
 name|dflssiz
 decl_stmt|;
 end_decl_stmt
@@ -320,7 +320,7 @@ comment|/* initial stack size limit */
 end_comment
 
 begin_decl_stmt
-name|u_quad_t
+name|u_long
 name|maxssiz
 decl_stmt|;
 end_decl_stmt
@@ -330,7 +330,7 @@ comment|/* max stack size */
 end_comment
 
 begin_decl_stmt
-name|u_quad_t
+name|u_long
 name|sgrowsiz
 decl_stmt|;
 end_decl_stmt
@@ -389,7 +389,7 @@ name|VM_SWZONE_SIZE_MAX
 expr_stmt|;
 endif|#
 directive|endif
-name|TUNABLE_INT_FETCH
+name|TUNABLE_LONG_FETCH
 argument_list|(
 literal|"kern.maxswzone"
 argument_list|,
@@ -406,7 +406,7 @@ name|VM_BCACHE_SIZE_MAX
 expr_stmt|;
 endif|#
 directive|endif
-name|TUNABLE_INT_FETCH
+name|TUNABLE_LONG_FETCH
 argument_list|(
 literal|"kern.maxbcache"
 argument_list|,
@@ -418,7 +418,7 @@ name|maxtsiz
 operator|=
 name|MAXTSIZ
 expr_stmt|;
-name|TUNABLE_QUAD_FETCH
+name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"kern.maxtsiz"
 argument_list|,
@@ -430,7 +430,7 @@ name|dfldsiz
 operator|=
 name|DFLDSIZ
 expr_stmt|;
-name|TUNABLE_QUAD_FETCH
+name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"kern.dfldsiz"
 argument_list|,
@@ -442,7 +442,7 @@ name|maxdsiz
 operator|=
 name|MAXDSIZ
 expr_stmt|;
-name|TUNABLE_QUAD_FETCH
+name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"kern.maxdsiz"
 argument_list|,
@@ -454,7 +454,7 @@ name|dflssiz
 operator|=
 name|DFLSSIZ
 expr_stmt|;
-name|TUNABLE_QUAD_FETCH
+name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"kern.dflssiz"
 argument_list|,
@@ -466,7 +466,7 @@ name|maxssiz
 operator|=
 name|MAXSSIZ
 expr_stmt|;
-name|TUNABLE_QUAD_FETCH
+name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"kern.maxssiz"
 argument_list|,
@@ -478,7 +478,7 @@ name|sgrowsiz
 operator|=
 name|SGROWSIZ
 expr_stmt|;
-name|TUNABLE_QUAD_FETCH
+name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"kern.sgrowsiz"
 argument_list|,
