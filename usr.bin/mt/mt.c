@@ -149,6 +149,13 @@ name|IS_DENSITY
 value|0x04
 end_define
 
+begin_define
+define|#
+directive|define
+name|DISABLE_THIS
+value|0x08
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -205,6 +212,25 @@ block|,
 literal|1
 block|}
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+comment|/* XXX FreeBSD considered "eof" dangerous, since it's being 	   confused with "eom" (and is an alias for "weof" anyway) */
+block|{
+literal|"eof"
+block|,
+name|MTWEOF
+block|,
+literal|0
+block|,
+name|DISABLE_THIS
+block|}
+block|,
+else|#
+directive|else
 block|{
 literal|"eof"
 block|,
@@ -213,6 +239,8 @@ block|,
 literal|0
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"fsf"
 block|,
@@ -443,6 +471,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|void
+name|warn_eof
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -653,6 +693,19 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|comp
+operator|->
+name|c_flags
+operator|&
+name|DISABLE_THIS
+condition|)
+block|{
+name|warn_eof
+argument_list|()
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* defined(__FreeBSD__) */
@@ -2142,6 +2195,31 @@ name|bp
 operator|->
 name|mt_blksiz3
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|warn_eof
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"The \"eof\" command has been disabled.\n"
+literal|"Use \"weof\" if you really want to write end-of-file marks,\n"
+literal|"or \"eom\" if you rather want to skip to the end of "
+literal|"recorded medium.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
