@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	6.4	84/04/06	*/
+comment|/*	if.h	6.5	84/04/13	*/
 end_comment
 
 begin_comment
@@ -379,6 +379,10 @@ name|struct
 name|sockaddr
 name|ifru_dstaddr
 decl_stmt|;
+name|struct
+name|sockaddr
+name|ifru_broadaddr
+decl_stmt|;
 name|short
 name|ifru_flags
 decl_stmt|;
@@ -398,6 +402,11 @@ directive|define
 name|ifr_dstaddr
 value|ifr_ifru.ifru_dstaddr
 comment|/* other end of p-to-p link */
+define|#
+directive|define
+name|ifr_broadaddr
+value|ifr_ifru.ifru_broadaddr
+comment|/* broadcast address */
 define|#
 directive|define
 name|ifr_flags
