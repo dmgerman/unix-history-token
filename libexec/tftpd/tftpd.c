@@ -2769,10 +2769,17 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 name|errno
 operator|+
 literal|100
+operator|)
 return|;
 block|}
 return|return
