@@ -83,21 +83,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|CV_DECLARE
-parameter_list|(
-name|modifiers
-parameter_list|,
-name|name
-parameter_list|,
-name|descr
-parameter_list|)
-define|\
-value|static const char __cv_descr_##name[] = descr;			\ 	modifiers struct cv name = {{NULL, NULL}, NULL, __cv_descr_##name}
-end_define
-
 begin_function_decl
 name|void
 name|cv_init
