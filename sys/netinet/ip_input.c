@@ -506,6 +506,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ip_checkinterface
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_ip
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|check_interface
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ip_checkinterface
+argument_list|,
+literal|0
+argument_list|,
+literal|"Verify packet arrives on correct interface"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2325,6 +2355,8 @@ operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
+operator|&&
+name|ip_checkinterface
 operator|&&
 operator|(
 name|m
