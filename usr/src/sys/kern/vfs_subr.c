@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2918,6 +2918,7 @@ argument_list|,
 name|v_freelist
 argument_list|)
 expr_stmt|;
+block|}
 name|vp
 operator|->
 name|v_freelist
@@ -2946,11 +2947,17 @@ operator|)
 literal|0xdeadb
 expr_stmt|;
 block|}
+end_block
+
+begin_expr_stmt
 name|vp
 operator|->
 name|v_usecount
 operator|++
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|lockflag
@@ -2960,6 +2967,9 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|printcnt
@@ -2974,21 +2984,23 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_block
+end_return
 
-begin_decl_stmt
-name|int
+begin_expr_stmt
+unit|}  int
 name|bug_refs
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Vnode reference, just increment the count  */
