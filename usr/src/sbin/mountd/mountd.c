@@ -37,7 +37,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mountd.c	8.8 (Berkeley) %G%"
+literal|"@(#)mountd.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1952,14 +1952,22 @@ operator|<
 literal|0
 operator|||
 operator|(
+operator|!
+name|S_ISDIR
+argument_list|(
 name|stb
 operator|.
 name|st_mode
-operator|&
-name|S_IFMT
+argument_list|)
+operator|&&
+operator|!
+name|S_ISREG
+argument_list|(
+name|stb
+operator|.
+name|st_mode
+argument_list|)
 operator|)
-operator|!=
-name|S_IFDIR
 operator|||
 name|statfs
 argument_list|(
@@ -10562,15 +10570,13 @@ argument_list|)
 operator|<
 literal|0
 operator|||
-operator|(
+operator|!
+name|S_ISDIR
+argument_list|(
 name|sb
 operator|.
 name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|!=
-name|S_IFDIR
+argument_list|)
 condition|)
 name|ret
 operator|=
@@ -10598,15 +10604,13 @@ argument_list|)
 operator|<
 literal|0
 operator|||
-operator|(
+operator|!
+name|S_ISDIR
+argument_list|(
 name|sb
 operator|.
 name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|!=
-name|S_IFDIR
+argument_list|)
 condition|)
 name|ret
 operator|=
