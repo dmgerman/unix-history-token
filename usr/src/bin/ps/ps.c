@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.33 (Berkeley) %G%"
+literal|"@(#)ps.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -234,11 +234,15 @@ begin_enum
 enum|enum
 name|sort
 block|{
+name|DEFAULT
+block|,
 name|SORTMEM
 block|,
 name|SORTCPU
 block|}
 name|sortby
+init|=
+name|DEFAULT
 enum|;
 end_enum
 
@@ -277,13 +281,6 @@ directive|define
 name|LFMT
 define|\
 value|"uid pid ppid cpu pri nice vsz rss wchan state tt time command"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SFMT
-value|"uid pid sig sigmask sigignore sigcatch state tt command"
 end_define
 
 begin_define
@@ -674,19 +671,6 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'s'
-case|:
-name|parsefmt
-argument_list|(
-name|SFMT
-argument_list|)
-expr_stmt|;
-name|fmt
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
 literal|'T'
 case|:
 if|if
@@ -793,9 +777,11 @@ name|stderr
 argument_list|,
 literal|"ps: %s: %s\n"
 argument_list|,
+name|ttypath
+argument_list|,
 name|strerror
 argument_list|(
-name|ttypath
+name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;

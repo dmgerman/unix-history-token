@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyword.c	5.1 (Berkeley) %G%"
+literal|"@(#)keyword.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1282,14 +1282,6 @@ block|,
 name|USHORT
 block|,
 name|UIDFMT
-block|}
-block|,
-block|{
-literal|"rusage"
-block|,
-literal|""
-block|,
-literal|"minflt majflt nswap inblock oublock msgsnd msgrcv nsigs \ 		 nvcsw nivcsw"
 block|}
 block|,
 block|{
