@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mcount.c,v 1.5 1995/12/30 07:01:50 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -292,7 +292,7 @@ name|VM_MAXUSER_ADDRESS
 operator|+
 name|UPAGES
 operator|*
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 condition|)
 goto|goto
