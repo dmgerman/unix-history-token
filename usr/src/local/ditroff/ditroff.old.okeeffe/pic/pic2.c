@@ -80,7 +80,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|2000
+literal|4000
 index|]
 decl_stmt|,
 modifier|*
@@ -727,7 +727,7 @@ begin_define
 define|#
 directive|define
 name|PBSIZE
-value|2000
+value|4000
 end_define
 
 begin_decl_stmt
