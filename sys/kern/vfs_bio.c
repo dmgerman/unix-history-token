@@ -3647,6 +3647,14 @@ if|if
 condition|(
 name|bp
 operator|->
+name|b_vp
+operator|->
+name|v_type
+operator|!=
+name|VCHR
+operator|&&
+name|bp
+operator|->
 name|b_lblkno
 operator|==
 name|bp
