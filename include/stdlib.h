@@ -324,6 +324,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|long
+name|long
 name|atoll
 name|__P
 argument_list|(
