@@ -100,6 +100,17 @@ begin_comment
 comment|/* file is open */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NGONE
+value|0x4000
+end_define
+
+begin_comment
+comment|/* file has been removed/renamed */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|smbfs_fctx
