@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: reg.h 1.1 90/07/09$  *  *	@(#)reg.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: reg.h 1.1 90/07/09$  *  *	@(#)reg.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -150,7 +150,7 @@ begin_define
 define|#
 directive|define
 name|NIPCREG
-value|17
+value|16
 end_define
 
 begin_decl_stmt
@@ -192,8 +192,6 @@ block|,
 name|A6
 block|,
 name|A7
-block|,
-name|PC
 block|}
 decl_stmt|;
 end_decl_stmt
