@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_define
@@ -267,13 +273,93 @@ name|DBTYPE
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * !!!  * The following flags are included in the dbopen(3) call as part of the  * open(2) flags.  In order to avoid conflicts with the open flags, start  * at the top of the 16 or 32-bit number space and work our way down.  If  * the open flags were significantly expanded in the future, it could be  * a problem.  Wish I'd left another flags word in the dbopen call.  *  * !!!  * None of this stuff is implemented yet.  The only reason that it's here  * is so that the access methods can skip copying the key/data pair when  * the DB_LOCK flag isn't set.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|UINT_MAX
+operator|>
+literal|65535
+end_if
+
 begin_define
 define|#
 directive|define
-name|__USE_OPEN_FLAGS
-define|\
-value|(O_CREAT|O_EXCL|O_EXLOCK|O_RDONLY|O_RDWR|O_SHLOCK|O_TRUNC)
+name|DB_LOCK
+value|0x20000000
 end_define
+
+begin_comment
+comment|/* Do locking. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DB_SHMEM
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Use shared memory. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DB_TXN
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Do transactions. */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DB_LOCK
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Do locking. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DB_SHMEM
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* Use shared memory. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DB_TXN
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Do transactions. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Access method description structure. */
@@ -287,7 +373,7 @@ block|{
 name|DBTYPE
 name|type
 decl_stmt|;
-comment|/* underlying db type */
+comment|/* Underlying db type. */
 name|int
 argument_list|(
 argument|*close
@@ -649,7 +735,7 @@ name|BLSWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{ \ 	u_long _tmp = a; \ 	((char *)&a)[0] = ((char *)&_tmp)[3]; \ 	((char *)&a)[1] = ((char *)&_tmp)[2]; \ 	((char *)&a)[2] = ((char *)&_tmp)[1]; \ 	((char *)&a)[3] = ((char *)&_tmp)[0]; \ }
+value|{							\ 	u_long _tmp = a;						\ 	((char *)&a)[0] = ((char *)&_tmp)[3];				\ 	((char *)&a)[1] = ((char *)&_tmp)[2];				\ 	((char *)&a)[2] = ((char *)&_tmp)[1];				\ 	((char *)&a)[3] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
@@ -659,7 +745,7 @@ name|BLPSWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{ \ 	u_long _tmp = *(u_long *)a; \ 	((char *)a)[0] = ((char *)&_tmp)[3]; \ 	((char *)a)[1] = ((char *)&_tmp)[2]; \ 	((char *)a)[2] = ((char *)&_tmp)[1]; \ 	((char *)a)[3] = ((char *)&_tmp)[0]; \ }
+value|{							\ 	u_long _tmp = *(u_long *)a;					\ 	((char *)a)[0] = ((char *)&_tmp)[3];				\ 	((char *)a)[1] = ((char *)&_tmp)[2];				\ 	((char *)a)[2] = ((char *)&_tmp)[1];				\ 	((char *)a)[3] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
@@ -671,7 +757,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ \ 	((char *)&(b))[0] = ((char *)&(a))[3]; \ 	((char *)&(b))[1] = ((char *)&(a))[2]; \ 	((char *)&(b))[2] = ((char *)&(a))[1]; \ 	((char *)&(b))[3] = ((char *)&(a))[0]; \ }
+value|{						\ 	((char *)&(b))[0] = ((char *)&(a))[3];				\ 	((char *)&(b))[1] = ((char *)&(a))[2];				\ 	((char *)&(b))[2] = ((char *)&(a))[1];				\ 	((char *)&(b))[3] = ((char *)&(a))[0];				\ }
 end_define
 
 begin_comment
@@ -685,7 +771,7 @@ name|BSSWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{ \ 	u_short _tmp = a; \ 	((char *)&a)[0] = ((char *)&_tmp)[1]; \ 	((char *)&a)[1] = ((char *)&_tmp)[0]; \ }
+value|{							\ 	u_short _tmp = a;						\ 	((char *)&a)[0] = ((char *)&_tmp)[1];				\ 	((char *)&a)[1] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
@@ -695,7 +781,7 @@ name|BSPSWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{ \ 	u_short _tmp = *(u_short *)a; \ 	((char *)a)[0] = ((char *)&_tmp)[1]; \ 	((char *)a)[1] = ((char *)&_tmp)[0]; \ }
+value|{							\ 	u_short _tmp = *(u_short *)a;					\ 	((char *)a)[0] = ((char *)&_tmp)[1];				\ 	((char *)a)[1] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
@@ -707,7 +793,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ \ 	((char *)&(b))[0] = ((char *)&(a))[1]; \ 	((char *)&(b))[1] = ((char *)&(a))[0]; \ }
+value|{						\ 	((char *)&(b))[0] = ((char *)&(a))[1];				\ 	((char *)&(b))[1] = ((char *)&(a))[0];				\ }
 end_define
 
 begin_decl_stmt
@@ -760,6 +846,8 @@ operator|,
 specifier|const
 name|BTREEINFO
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -783,6 +871,8 @@ operator|,
 specifier|const
 name|HASHINFO
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -806,6 +896,8 @@ operator|,
 specifier|const
 name|RECNOINFO
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
