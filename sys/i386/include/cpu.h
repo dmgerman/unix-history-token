@@ -181,7 +181,7 @@ define|#
 directive|define
 name|need_resched
 parameter_list|()
-value|{ want_resched = 1; aston(); }
+value|do { want_resched = 1; aston(); } while (0)
 end_define
 
 begin_define
@@ -203,7 +203,8 @@ name|need_proftick
 parameter_list|(
 name|p
 parameter_list|)
-value|{ (p)->p_flag |= P_OWEUPC; aston(); }
+define|\
+value|do { (p)->p_flag |= P_OWEUPC; aston(); } while (0)
 end_define
 
 begin_comment
