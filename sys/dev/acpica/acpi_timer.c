@@ -96,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/pcivar.h>
+file|<dev/pci/pcivar.h>
 end_include
 
 begin_comment

@@ -60,13 +60,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/pcivar.h>
+file|<dev/pci/pcivar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pci/pcib_private.h>
+file|<dev/pci/pcib_private.h>
 end_include
 
 begin_include
