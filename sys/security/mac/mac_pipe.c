@@ -11680,13 +11680,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|ASSERT_VOP_LOCKED
-argument_list|(
-name|vp
-argument_list|,
-literal|"mac_check_system_reboot"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
