@@ -870,6 +870,7 @@ name|i
 decl_stmt|,
 name|len
 decl_stmt|;
+name|unsigned
 name|char
 name|c
 index|[
