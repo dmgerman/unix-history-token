@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * Changes Copyright 1993 by Gary Clark II  *  * Rewrote probe routine to work on newer Mitsumi drives.  * Additional changes (C) 1994 by Jordan K. Hubbard  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *	for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.17 1994/05/25 08:59:30 rgrimes Exp $  */
+comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * Changes Copyright 1993 by Gary Clark II  *  * Rewrote probe routine to work on newer Mitsumi drives.  * Additional changes (C) 1994 by Jordan K. Hubbard  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *	for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.18 1994/08/13 03:50:09 wollman Exp $  */
 end_comment
 
 begin_decl_stmt
@@ -143,6 +143,10 @@ begin_comment
 comment|/* define for a mini configuration for boot kernel */
 end_comment
 
+begin_comment
+comment|/*#define DEBUG*/
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -245,7 +249,7 @@ begin_define
 define|#
 directive|define
 name|RAW_PART
-value|0
+value|3
 end_define
 
 begin_comment
@@ -1208,13 +1212,6 @@ end_define
 begin_comment
 comment|/* 20000 * 1us */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|mcd_delay
-value|DELAY
-end_define
 
 begin_function
 name|int
@@ -3311,9 +3308,9 @@ condition|)
 return|return
 literal|0
 return|;
-name|mcd_delay
+name|DELAY
 argument_list|(
-literal|1
+literal|10
 argument_list|)
 expr_stmt|;
 block|}
@@ -5157,6 +5154,9 @@ decl_stmt|;
 name|int
 name|retry
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"mcd%d: setting mode to %d\n"
@@ -5166,6 +5166,8 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|retry
@@ -5352,6 +5354,9 @@ return|return
 literal|0
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"mcd%d: reading toc header\n"
@@ -5359,6 +5364,8 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|mcd_toc_header
@@ -5376,6 +5383,9 @@ return|return
 name|ENXIO
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"mcd%d: stopping play\n"
@@ -5383,6 +5393,8 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -5434,6 +5446,9 @@ return|return
 name|EIO
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"mcd%d: get_toc reading qchannel info\n"
@@ -5441,6 +5456,8 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|trk
@@ -6152,6 +6169,9 @@ operator|-
 literal|1
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|cd
@@ -6221,6 +6241,8 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -6258,6 +6280,9 @@ name|struct
 name|cd_sub_channel_info
 name|data
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"mcd%d: subchan af=%d, df=%d\n"
@@ -6273,6 +6298,8 @@ operator|->
 name|data_format
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
@@ -6444,6 +6471,9 @@ return|return
 name|rc
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"mcd%d: playtracks from %d:%d to %d:%d\n"
@@ -6463,6 +6493,8 @@ operator|->
 name|end_index
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|a
@@ -6807,6 +6839,9 @@ block|{
 break|break;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|cd
@@ -6826,6 +6861,8 @@ name|st
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|st
@@ -6885,6 +6922,9 @@ operator|!=
 name|CD_AS_PLAY_IN_PROGRESS
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"mcd%d: pause attempted when not playing\n"
@@ -6892,6 +6932,8 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|EINVAL
 return|;
