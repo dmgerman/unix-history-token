@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)badsect.c	5.10 (Berkeley) %G%"
+literal|"@(#)badsect.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,6 +84,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -838,9 +844,13 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|int
+name|daddr_t
 name|bno
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|size
 decl_stmt|;
 end_decl_stmt
@@ -863,11 +873,14 @@ name|lseek
 argument_list|(
 name|fsi
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|bno
 operator|*
 name|dev_bsize
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 operator|<
 literal|0
