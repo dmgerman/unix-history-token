@@ -3075,9 +3075,10 @@ operator|->
 name|b_blkno
 expr_stmt|;
 comment|/* start offset of transfer */
+comment|/* Build requests for the plex. 	 * We take the best possible result here (min, 	 * not max): we're happy if we can write at all */
 name|status
 operator|=
-name|max
+name|min
 argument_list|(
 name|status
 argument_list|,
@@ -3085,7 +3086,6 @@ name|bre
 argument_list|(
 name|rq
 argument_list|,
-comment|/* build requests for the plex */
 name|vol
 operator|->
 name|plex
