@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: error.c,v 1.10 1998/05/18 06:43:32 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"trap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -112,13 +118,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+specifier|volatile
+name|sig_atomic_t
 name|exception
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|volatile
 name|int
 name|suppressint
 decl_stmt|;
@@ -126,7 +132,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|volatile
-name|int
+name|sig_atomic_t
 name|intpending
 decl_stmt|;
 end_decl_stmt
@@ -196,7 +202,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called from trap.c when a SIGINT is received.  (If the user specifies  * that SIGINT is to be trapped or ignored using the trap builtin, then  * this routine is not called.)  Suppressint is nonzero when interrupts  * are held using the INTOFF macro.  The call to _exit is necessary because  * there is a short period after a fork before the signal handlers are  * set to the appropriate value for the child.  (The test for iflag is  * just defensive programming.)  */
+comment|/*  * Called from trap.c when a SIGINT is received.  (If the user specifies  * that SIGINT is to be trapped or ignored using the trap builtin, then  * this routine is not called.)  Supressint is nonzero when interrupts  * are held using the INTOFF macro.  If SIGINTs are not suppressed and  * the shell is not a root shell, then we want to be terminated if we  * get here, as if we were terminated directly by a SIGINT.  Arrange for  * this here.  */
 end_comment
 
 begin_function
@@ -207,9 +213,13 @@ block|{
 name|sigset_t
 name|sigset
 decl_stmt|;
+comment|/* The !in_dotrap is save. The only way we can arrive here with 	 * in_dotrap set is that a trap handler set SIGINT to default 	 * and killed itself. 	 */
 if|if
 condition|(
 name|suppressint
+operator|&&
+operator|!
+name|in_dotrap
 condition|)
 block|{
 name|intpending
@@ -237,11 +247,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|out2str
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
+comment|/* This doesn't seem to be needed. Note that main emit a newline 	 * as well.          */
+if|#
+directive|if
+literal|0
+block|if (tcgetpgrp(0) == getpid())	 		write(STDERR_FILENO, "\n", 1);
+endif|#
+directive|endif
 if|if
 condition|(
 name|rootshell
@@ -254,13 +266,23 @@ name|EXINT
 argument_list|)
 expr_stmt|;
 else|else
-name|_exit
+block|{
+name|signal
 argument_list|(
-literal|128
-operator|+
+name|SIGINT
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+name|kill
+argument_list|(
+name|getpid
+argument_list|()
+argument_list|,
 name|SIGINT
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

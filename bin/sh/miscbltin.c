@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: miscbltin.c,v 1.15 1998/05/18 06:43:58 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,16 @@ end_comment
 
 begin_comment
 comment|/*  * Miscelaneous builtins.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_comment
+comment|/* strtol() */
 end_comment
 
 begin_include

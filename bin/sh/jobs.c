@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: jobs.c,v 1.20 1998/05/18 06:43:47 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,6 +318,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|int
+name|in_waitcmd
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Are we in waitcmd? */
+end_comment
+
+begin_decl_stmt
+specifier|volatile
+name|sig_atomic_t
+name|breakwaitcmd
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Should wait be terminated? */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -400,6 +425,7 @@ end_if
 
 begin_decl_stmt
 name|STATIC
+specifier|volatile
 name|int
 name|onsigchild
 name|__P
@@ -1654,13 +1680,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-for|for
-control|(
-init|;
-condition|;
-control|)
+name|in_waitcmd
+operator|++
+expr_stmt|;
+do|do
 block|{
-comment|/* loop until process terminated or stopped */
+comment|/* loop until process terminated or stopped or SIGINT is 		 * received  		 */
 if|if
 condition|(
 name|job
@@ -1793,6 +1818,9 @@ condition|)
 break|break;
 block|}
 block|}
+block|}
+do|while
+condition|(
 name|dowait
 argument_list|(
 literal|1
@@ -1804,8 +1832,18 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+do|;
+name|in_waitcmd
+operator|--
 expr_stmt|;
-block|}
+comment|/* Not reachable */
+return|return
+literal|0
+return|;
 block|}
 name|int
 name|jobidcmd
@@ -3308,8 +3346,12 @@ argument_list|(
 name|jp
 argument_list|)
 expr_stmt|;
-name|CLEAR_PENDING_INT
-expr_stmt|;
+if|if
+condition|(
+name|int_pending
+argument_list|()
+condition|)
+block|{
 if|if
 condition|(
 name|WIFSIGNALED
@@ -3332,6 +3374,10 @@ argument_list|,
 name|SIGINT
 argument_list|)
 expr_stmt|;
+else|else
+name|CLEAR_PENDING_INT
+expr_stmt|;
+block|}
 name|INTON
 expr_stmt|;
 return|return
@@ -3432,8 +3478,28 @@ operator|&&
 name|errno
 operator|==
 name|EINTR
+operator|&&
+name|breakwaitcmd
+operator|==
+literal|0
 condition|)
 do|;
+if|if
+condition|(
+name|breakwaitcmd
+operator|!=
+literal|0
+condition|)
+block|{
+name|breakwaitcmd
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|pid
@@ -3871,7 +3937,7 @@ ifdef|#
 directive|ifdef
 name|SYSV
 name|STATIC
-name|int
+name|sig_atomic_t
 name|gotsigchild
 decl_stmt|;
 name|STATIC

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: trap.c,v 1.11 1998/05/18 06:44:22 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,6 +225,18 @@ comment|/* indicates some signal received */
 end_comment
 
 begin_decl_stmt
+name|int
+name|in_dotrap
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Do we execute in a trap handler? */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
@@ -241,7 +253,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|char
+specifier|volatile
+name|sig_atomic_t
 name|gotsig
 index|[
 name|NSIG
@@ -926,8 +939,6 @@ name|S_IGN
 expr_stmt|;
 if|if
 condition|(
-name|rootshell
-operator|&&
 name|action
 operator|==
 name|S_DFL
@@ -941,10 +952,6 @@ block|{
 case|case
 name|SIGINT
 case|:
-if|if
-condition|(
-name|iflag
-condition|)
 name|action
 operator|=
 name|S_CATCH
@@ -969,12 +976,18 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/* FALLTHROUGH */
+name|action
+operator|=
+name|S_IGN
+expr_stmt|;
+break|break;
 case|case
 name|SIGTERM
 case|:
 if|if
 condition|(
+name|rootshell
+operator|&&
 name|iflag
 condition|)
 name|action
@@ -993,6 +1006,8 @@ name|SIGTTOU
 case|:
 if|if
 condition|(
+name|rootshell
+operator|&&
 name|mflag
 condition|)
 name|action
@@ -1412,6 +1427,25 @@ expr_stmt|;
 name|pendingsigs
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|signo
+operator|==
+name|SIGINT
+operator|&&
+name|in_waitcmd
+operator|!=
+literal|0
+condition|)
+block|{
+name|dotrap
+argument_list|()
+expr_stmt|;
+name|breakwaitcmd
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -1430,6 +1464,9 @@ decl_stmt|;
 name|int
 name|savestatus
 decl_stmt|;
+name|in_dotrap
+operator|++
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1520,6 +1557,9 @@ name|NSIG
 condition|)
 break|break;
 block|}
+name|in_dotrap
+operator|--
+expr_stmt|;
 name|pendingsigs
 operator|=
 literal|0
@@ -1545,7 +1585,8 @@ specifier|static
 name|int
 name|is_interactive
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 if|if
 condition|(
