@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	(c)Copyright 1998, Matthew Dillon.  Terms for use and redistribution  *	are covered by the BSD Copyright as found in /usr/src/COPYRIGHT.  *  * $FreeBSD$  */
+comment|/*  *	(c)Copyright 1998, Matthew Dillon.  Terms for use and redistribution  *	are covered by the BSD Copyright as found in /usr/src/COPYRIGHT.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -342,7 +356,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	vm_pageq_enqueue:  *  */
+comment|/*  *	vm_pageq_enqueue:  */
 end_comment
 
 begin_function

@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 John Dyson  * Copyright (c) 2001 Matt Dillon  *  * All rights reserved.  Terms for use and redistribution  * are covered by the BSD Copyright as found in /usr/src/COPYRIGHT.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1994 John Dyson  * Copyright (c) 2001 Matt Dillon  *  * All rights reserved.  Terms for use and redistribution  * are covered by the BSD Copyright as found in /usr/src/COPYRIGHT.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
