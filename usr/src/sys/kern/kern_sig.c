@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -4280,6 +4280,8 @@ name|sig_t
 name|action
 decl_stmt|;
 name|int
+name|code
+decl_stmt|,
 name|mask
 decl_stmt|,
 name|returnmask
@@ -4473,6 +4475,35 @@ operator|.
 name|ru_nsignals
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|ps
+operator|->
+name|ps_sig
+operator|!=
+name|signum
+condition|)
+block|{
+name|code
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|code
+operator|=
+name|ps
+operator|->
+name|ps_code
+expr_stmt|;
+name|ps
+operator|->
+name|ps_code
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|sendsig
 argument_list|(
 name|action
@@ -4481,7 +4512,7 @@ name|signum
 argument_list|,
 name|returnmask
 argument_list|,
-literal|0
+name|code
 argument_list|)
 expr_stmt|;
 block|}
