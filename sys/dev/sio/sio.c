@@ -3347,6 +3347,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"sio%d: configured irq %ld not in bitmap of probed irqs %#x\n"
@@ -3371,6 +3372,7 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|bootverbose
