@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opcodes to be simulated by kernel software: */
+comment|/*	Kfp.h	1.2	86/01/03	*/
+end_comment
+
+begin_comment
+comment|/*  * Opcodes to be emulated by kernel software.  */
 end_comment
 
 begin_define
