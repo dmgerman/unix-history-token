@@ -36,7 +36,7 @@ file|<unistd.h>
 end_include
 
 begin_comment
-comment|/*  * Gnu like getopt_long() and BSD4.4 getsubopt()/optreset extensions  */
+comment|/*  * GNU-like getopt_long()  */
 end_comment
 
 begin_if
