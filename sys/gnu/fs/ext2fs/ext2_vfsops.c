@@ -859,7 +859,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|CIRCLEQ_INSERT_TAIL
+name|CIRCLEQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|mountlist
