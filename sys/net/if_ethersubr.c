@@ -2935,14 +2935,12 @@ return|return;
 block|}
 if|if
 condition|(
+name|ETHER_IS_MULTICAST
+argument_list|(
 name|eh
 operator|->
 name|ether_dhost
-index|[
-literal|0
-index|]
-operator|&
-literal|1
+argument_list|)
 condition|)
 block|{
 if|if
