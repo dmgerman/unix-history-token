@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	telnet.c	4.2	82/03/01	*/
+comment|/*	telnet.c	4.3	82/03/01	*/
 end_comment
 
 begin_comment
@@ -820,8 +820,12 @@ operator|.
 name|sin_addr
 operator|.
 name|s_addr
-operator|<=
-literal|0
+operator|==
+operator|(
+name|u_long
+operator|)
+operator|-
+literal|1
 condition|)
 block|{
 name|printf
