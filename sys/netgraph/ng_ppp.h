@@ -346,7 +346,7 @@ comment|/* link latency (in milliseconds) */
 name|u_int32_t
 name|bandwidth
 decl_stmt|;
-comment|/* link bandwidth (in bytes/second) */
+comment|/* link bandwidth (in bytes/sec/10) */
 block|}
 struct|;
 end_struct
