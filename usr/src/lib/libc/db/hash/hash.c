@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.5 (Berkeley) %G%"
+literal|"@(#)hash.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -2339,7 +2345,7 @@ name|fp
 argument_list|,
 literal|0
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 operator|==
 operator|-

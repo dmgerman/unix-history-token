@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	5.4 (Berkeley) %G%"
+literal|"@(#)hash_page.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -2704,7 +2710,7 @@ name|hashp
 operator|->
 name|BSHIFT
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 operator|==
 operator|-
@@ -3126,7 +3132,7 @@ name|hashp
 operator|->
 name|BSHIFT
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 operator|==
 operator|-
