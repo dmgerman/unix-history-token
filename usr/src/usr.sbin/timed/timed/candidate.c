@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)candidate.c	1.2 (Berkeley) %G%"
+literal|"@(#)candidate.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,8 +207,8 @@ operator|&
 name|msg
 argument_list|)
 expr_stmt|;
-name|loop
-label|:
+do|do
+block|{
 name|wait
 operator|.
 name|tv_sec
@@ -271,7 +271,7 @@ case|:
 case|case
 name|TSP_MASTERREQ
 case|:
-comment|/* 			 * If a timedaemon is coming up at the same time, 			 * give up the candidature: it will be the master. 			 */
+comment|/* 				 * If a timedaemon is coming up at the same time, 				 * give up the candidature: it will be the master. 				 */
 name|ret
 operator|=
 name|SLAVE
@@ -283,7 +283,7 @@ case|:
 case|case
 name|TSP_REFUSE
 case|:
-comment|/* 			 * Collision: change value of election timer  			 * using exponential backoff. 			 * The value of timer will be recomputed (in slave.c) 			 * using the original interval when election will  			 * be successfully completed. 			 */
+comment|/* 				 * Collision: change value of election timer  				 * using exponential backoff. 				 * The value of timer will be recomputed (in slave.c) 				 * using the original interval when election will  				 * be successfully completed. 				 */
 name|backoff
 operator|*=
 literal|2
@@ -423,16 +423,19 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-if|if
+block|}
+else|else
+block|{
+break|break;
+block|}
+block|}
+do|while
 condition|(
 name|ret
 operator|==
 name|MASTER
 condition|)
-goto|goto
-name|loop
-goto|;
-block|}
+do|;
 return|return
 operator|(
 name|ret
