@@ -503,7 +503,7 @@ name|skip_comment
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

@@ -201,9 +201,15 @@ operator|==
 argument_list|,
 literal|'*'
 argument_list|)
+operator|||
+name|c
+operator|==
+literal|'/'
 condition|)
 name|skip_comment
-argument_list|()
+argument_list|(
+name|c
+argument_list|)
 expr_stmt|;
 else|else
 operator|(
