@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 John Hay.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Hay.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY John Hay ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL John Hay BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ar.c,v 1.4 1995/12/15 00:54:03 bde Exp $  */
+comment|/*  * Copyright (c) 1995 John Hay.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Hay.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY John Hay ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL John Hay BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ar.c,v 1.5 1996/02/06 18:50:32 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -2855,7 +2855,8 @@ condition|)
 name|msci
 operator|->
 name|ctl
-operator||=
+operator|&=
+operator|~
 name|SCA_CTL_RTS
 expr_stmt|;
 if|if
@@ -2879,13 +2880,15 @@ name|sc
 operator|->
 name|scano
 index|]
-operator||=
+operator|&=
 name|sc
 operator|->
 name|scachan
 condition|?
+operator|~
 name|AR_TXC_DTR_DTR1
 else|:
+operator|~
 name|AR_TXC_DTR_DTR0
 expr_stmt|;
 name|outb
@@ -3087,8 +3090,7 @@ condition|)
 name|msci
 operator|->
 name|ctl
-operator|&=
-operator|~
+operator||=
 name|SCA_CTL_RTS
 expr_stmt|;
 if|if
@@ -3296,34 +3298,6 @@ name|ar_softc
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * reset the card and wait at least 1uS. 	 */
-name|outb
-argument_list|(
-name|hc
-operator|->
-name|iobase
-operator|+
-name|AR_TXC_DTR0
-argument_list|,
-name|AR_TXC_DTR_RESET
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|hc
-operator|->
-name|iobase
-operator|+
-name|AR_TXC_DTR0
-argument_list|,
-name|AR_TXC_DTR_NOTRESET
-argument_list|)
-expr_stmt|;
 name|hc
 operator|->
 name|txc_dtr
@@ -3332,6 +3306,10 @@ literal|0
 index|]
 operator|=
 name|AR_TXC_DTR_NOTRESET
+operator||
+name|AR_TXC_DTR_DTR0
+operator||
+name|AR_TXC_DTR_DTR1
 expr_stmt|;
 name|hc
 operator|->
@@ -3340,7 +3318,9 @@ index|[
 literal|1
 index|]
 operator|=
-literal|0
+name|AR_TXC_DTR_DTR0
+operator||
+name|AR_TXC_DTR_DTR1
 expr_stmt|;
 name|hc
 operator|->
@@ -3359,6 +3339,47 @@ literal|1
 index|]
 operator|=
 name|AR_TXC_DTR2
+expr_stmt|;
+comment|/* 	 * reset the card and wait at least 1uS. 	 */
+name|outb
+argument_list|(
+name|hc
+operator|->
+name|iobase
+operator|+
+name|AR_TXC_DTR0
+argument_list|,
+operator|~
+name|AR_TXC_DTR_NOTRESET
+operator|&
+name|hc
+operator|->
+name|txc_dtr
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|hc
+operator|->
+name|iobase
+operator|+
+name|AR_TXC_DTR0
+argument_list|,
+name|hc
+operator|->
+name|txc_dtr
+index|[
+literal|0
+index|]
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Configure the card. 	 * Mem address, irq,  	 */
 name|mar
@@ -3963,6 +3984,8 @@ operator|=
 name|SCA_CTL_IDLPAT
 operator||
 name|SCA_CTL_UDRNC
+operator||
+name|SCA_CTL_RTS
 expr_stmt|;
 comment|/* 	 * For now all interfaces are programmed to use the RX clock for 	 * the TX clock. 	 */
 switch|switch
