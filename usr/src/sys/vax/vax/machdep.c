@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -139,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|"quota.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"malloc.h"
 end_include
 
 begin_include
@@ -618,6 +624,30 @@ expr|struct
 name|namecache
 argument_list|,
 name|nchsize
+argument_list|)
+expr_stmt|;
+name|valloc
+argument_list|(
+name|kmemmap
+argument_list|,
+expr|struct
+name|map
+argument_list|,
+name|ekmempt
+operator|-
+name|kmempt
+argument_list|)
+expr_stmt|;
+name|valloc
+argument_list|(
+name|kmemusage
+argument_list|,
+expr|struct
+name|kmemusage
+argument_list|,
+name|ekmempt
+operator|-
+name|kmempt
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1330,6 +1360,10 @@ operator|/
 literal|4
 argument_list|)
 expr_stmt|;
+name|kmeminit
+argument_list|()
+expr_stmt|;
+comment|/* now safe to do malloc/free */
 comment|/* 	 * Set up CPU-specific registers, cache, etc. 	 */
 name|initcpu
 argument_list|()
