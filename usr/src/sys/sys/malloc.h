@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -364,6 +364,94 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_VMMAP
+value|30
+end_define
+
+begin_comment
+comment|/* VM map structures */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VMMAPENT
+value|31
+end_define
+
+begin_comment
+comment|/* VM map entry structures */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VMOBJ
+value|32
+end_define
+
+begin_comment
+comment|/* VM object structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VMOBJHASH
+value|33
+end_define
+
+begin_comment
+comment|/* VM object hash structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VMPMAP
+value|34
+end_define
+
+begin_comment
+comment|/* VM pmap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VMPVENT
+value|35
+end_define
+
+begin_comment
+comment|/* VM phys-virt mapping entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VMPAGER
+value|36
+end_define
+
+begin_comment
+comment|/* XXX: VM pager struct */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VMPGDATA
+value|37
+end_define
+
+begin_comment
+comment|/* XXX: VM pager private data */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_TEMP
 value|49
 end_define
@@ -443,7 +531,23 @@ value|\ 	"mapmem",
 comment|/* 28 M_MAPMEM */
 value|\ 	"shm",
 comment|/* 29 M_SHM */
-value|\ 	0, 0, 0, 0, \ 	0, 0, 0, 0, 0, \ 	0, 0, 0, 0, 0, \ 	0, 0, 0, 0, 0, \ 	"temp",
+value|\ 	"VM map",
+comment|/* 30 M_VMMAP */
+value|\ 	"VM mapent",
+comment|/* 31 M_VMMAPENT */
+value|\ 	"VM object",
+comment|/* 32 M_VMOBJ */
+value|\ 	"VM objhash",
+comment|/* 33 M_VMOBJHASH */
+value|\ 	"VM pmap",
+comment|/* 34 M_VMPMAP */
+value|\ 	"VM pvmap",
+comment|/* 35 M_VMPVENT */
+value|\ 	"VM pager",
+comment|/* 36 M_VMPAGER */
+value|\ 	"VM pgdata",
+comment|/* 37 M_VMPGDATA */
+value|\ 	0, \ 	0, 0, 0, 0, 0, \ 	0, 0, 0, 0, 0, \ 	"temp",
 comment|/* 49 M_TEMP */
 value|\ }
 end_define
@@ -768,8 +872,11 @@ end_function_decl
 begin_endif
 endif|#
 directive|endif
-endif|KERNEL
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 end_unit
 
