@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dm.c	5.6 (Berkeley) %G%"
+literal|"@(#)dm.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,45 +106,6 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|GAMEHIDE
-value|"/usr/games/hide/"
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOGAMING
-value|"/usr/games/nogames"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONTROL
-value|"/usr/games/dm.config"
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|LOGFILE
-value|"/usr/adm/dm.log"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|time_t
@@ -183,6 +144,10 @@ end_decl_stmt
 
 begin_comment
 comment|/* from tty? */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -295,6 +260,13 @@ begin_comment
 comment|/*  * play --  *	play the game  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|GAMEHIDE
+value|"/usr/games/hide/"
+end_define
+
 begin_expr_stmt
 specifier|static
 name|play
@@ -397,6 +369,13 @@ begin_comment
 comment|/*  * read_config --  *	read through config file, looking for key words.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CONTROL
+value|"/usr/games/dm.config"
+end_define
+
 begin_expr_stmt
 specifier|static
 name|read_config
@@ -407,11 +386,37 @@ operator|*
 name|cfp
 block|;
 name|char
+operator|*
+name|control
+block|,
+operator|*
+name|host
+block|,
+operator|*
+name|index
+argument_list|()
+block|,
+operator|*
+name|strcpy
+argument_list|()
+block|;
+name|char
 name|lbuf
 index|[
 name|BUFSIZ
 index|]
 block|,
+name|path
+index|[
+name|MAXHOSTNAMELEN
+operator|+
+sizeof|sizeof
+argument_list|(
+name|CONTROL
+argument_list|)
+index|]
+block|;
+name|char
 name|f1
 index|[
 literal|40
@@ -437,6 +442,83 @@ index|[
 literal|40
 index|]
 block|;
+name|host
+operator|=
+operator|&
+name|path
+index|[
+sizeof|sizeof
+argument_list|(
+name|CONTROL
+argument_list|)
+index|]
+block|;
+if|if
+condition|(
+name|gethostname
+argument_list|(
+name|host
+argument_list|,
+name|MAXHOSTNAMELEN
+argument_list|)
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"dm: gethostname"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|path
+argument_list|,
+name|control
+operator|=
+name|CONTROL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|host
+index|[
+operator|-
+literal|1
+index|]
+operator|=
+literal|'.'
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|host
+operator|=
+name|index
+argument_list|(
+name|host
+argument_list|,
+literal|'.'
+argument_list|)
+condition|)
+operator|*
+name|host
+operator|=
+literal|'\0'
+expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -445,7 +527,19 @@ name|cfp
 operator|=
 name|fopen
 argument_list|(
-name|CONTROL
+name|path
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|&&
+operator|!
+operator|(
+name|cfp
+operator|=
+name|fopen
+argument_list|(
+name|control
 argument_list|,
 literal|"r"
 argument_list|)
@@ -456,9 +550,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"dm: unable to read %s.\n"
+literal|"dm: unable to read %s or %s.\n"
 argument_list|,
-name|CONTROL
+name|path
+argument_list|,
+name|control
 argument_list|)
 expr_stmt|;
 name|exit
@@ -467,7 +563,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+end_if
 
 begin_while
 while|while
@@ -1291,6 +1387,13 @@ unit|}
 comment|/*  * nogamefile --  *	if the file NOGAMING exists, no games allowed.  *	file may also contain a message for the user.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NOGAMING
+value|"/usr/games/nogames"
+end_define
+
 begin_macro
 unit|static
 name|nogamefile
@@ -1472,6 +1575,17 @@ ifdef|#
 directive|ifdef
 name|LOG
 end_ifdef
+
+begin_comment
+comment|/*  * logfile --  *	log play of game  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOGFILE
+value|"/usr/adm/dm.log"
+end_define
 
 begin_expr_stmt
 specifier|static
@@ -1659,6 +1773,10 @@ unit|} }
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* LOG */
+end_comment
 
 end_unit
 
