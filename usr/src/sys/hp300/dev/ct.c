@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ct.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ct.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,31 +24,37 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ioctl.h"
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/mtio.h"
+file|"mtio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/errno.h"
+file|"tprintf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"proc.h"
 end_include
 
 begin_include
@@ -61,24 +67,6 @@ begin_include
 include|#
 directive|include
 file|"device.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/user.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/tty.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/proc.h"
 end_include
 
 begin_comment
@@ -199,8 +187,8 @@ decl_stmt|;
 name|short
 name|sc_punit
 decl_stmt|;
-name|caddr_t
-name|sc_ctty
+name|tpr_t
+name|sc_tpr
 decl_stmt|;
 name|struct
 name|devqueue
@@ -1378,12 +1366,32 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|flag
+argument_list|,
+argument|type
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|,
+name|type
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1617,29 +1625,11 @@ operator|)
 return|;
 name|sc
 operator|->
-name|sc_ctty
+name|sc_tpr
 operator|=
-call|(
-name|caddr_t
-call|)
+name|tprintf_open
 argument_list|(
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_flag
-operator|&
-name|SCTTY
-condition|?
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_session
-operator|->
-name|s_ttyvp
-else|:
-literal|0
+name|p
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1838,11 +1828,12 @@ operator||
 name|CTF_WRTTN
 operator|)
 expr_stmt|;
+name|tprintf_close
+argument_list|(
 name|sc
 operator|->
-name|sc_ctty
-operator|=
-name|NULL
+name|sc_tpr
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3946,7 +3937,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ctty
+name|sc_tpr
 argument_list|,
 literal|"ct%d: uninitialized media\n"
 argument_list|,
@@ -3967,7 +3958,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ctty
+name|sc_tpr
 argument_list|,
 literal|"ct%d: not ready\n"
 argument_list|,
@@ -3988,7 +3979,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ctty
+name|sc_tpr
 argument_list|,
 literal|"ct%d: write protect\n"
 argument_list|,

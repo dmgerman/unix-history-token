@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -63,12 +63,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/errno.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"sys/dkstat.h"
 end_include
 
@@ -81,25 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"device.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"sys/malloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"scsireg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/user.h"
 end_include
 
 begin_include
@@ -111,13 +87,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/uio.h"
+file|"device.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"scsireg.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"vm/vm_param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vm/lock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vm/vm_statistics.h"
 end_include
 
 begin_include
@@ -215,39 +209,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|printf
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|bcopy
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|disksort
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|splbio
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|splx
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -578,16 +540,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|buf
-name|sdbuf
-index|[
-name|NSD
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
 name|scsi_fmt_cdb
 name|sdcmd
 index|[
@@ -641,7 +593,7 @@ name|sdunit
 parameter_list|(
 name|x
 parameter_list|)
-value|((minor(x)>> 3)& 0x7)
+value|(minor(x)>> 3)
 end_define
 
 begin_define
@@ -2446,12 +2398,23 @@ parameter_list|(
 name|dev
 parameter_list|,
 name|flags
+parameter_list|,
+name|mode
+parameter_list|,
+name|p
 parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
 name|int
 name|flags
+decl_stmt|,
+name|mode
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 specifier|register
@@ -2500,14 +2463,14 @@ literal|0
 operator|&&
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|p
+operator|->
+name|p_acflag
 argument_list|)
 condition|)
 return|return
@@ -2637,10 +2600,9 @@ name|cbp
 operator|->
 name|b_proc
 operator|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 expr_stmt|;
+comment|/* XXX */
 name|cbp
 operator|->
 name|b_dev
@@ -3176,13 +3138,12 @@ name|sc
 operator|->
 name|sc_format_pid
 operator|!=
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 condition|)
 block|{
+comment|/* XXX */
 name|bp
 operator|->
 name|b_error
@@ -4438,6 +4399,8 @@ parameter_list|(
 name|dev
 parameter_list|,
 name|uio
+parameter_list|,
+name|flags
 parameter_list|)
 name|dev_t
 name|dev
@@ -4446,6 +4409,9 @@ name|struct
 name|uio
 modifier|*
 name|uio
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 block|{
 specifier|register
@@ -4476,9 +4442,9 @@ operator|)
 operator|&&
 name|pid
 operator|!=
-name|u
-operator|.
-name|u_procp
+name|uio
+operator|->
+name|uio_procp
 operator|->
 name|p_pid
 condition|)
@@ -4493,11 +4459,7 @@ name|physio
 argument_list|(
 name|sdstrategy
 argument_list|,
-operator|&
-name|sdbuf
-index|[
-name|unit
-index|]
+name|NULL
 argument_list|,
 name|dev
 argument_list|,
@@ -4519,6 +4481,8 @@ parameter_list|(
 name|dev
 parameter_list|,
 name|uio
+parameter_list|,
+name|flags
 parameter_list|)
 name|dev_t
 name|dev
@@ -4527,6 +4491,9 @@ name|struct
 name|uio
 modifier|*
 name|uio
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 block|{
 specifier|register
@@ -4557,9 +4524,9 @@ operator|)
 operator|&&
 name|pid
 operator|!=
-name|u
-operator|.
-name|u_procp
+name|uio
+operator|->
+name|uio_procp
 operator|->
 name|p_pid
 condition|)
@@ -4574,11 +4541,7 @@ name|physio
 argument_list|(
 name|sdstrategy
 argument_list|,
-operator|&
-name|sdbuf
-index|[
-name|unit
-index|]
+name|NULL
 argument_list|,
 name|dev
 argument_list|,
@@ -4604,6 +4567,8 @@ parameter_list|,
 name|data
 parameter_list|,
 name|flag
+parameter_list|,
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -4616,6 +4581,11 @@ name|data
 decl_stmt|;
 name|int
 name|flag
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 specifier|register
@@ -4658,14 +4628,14 @@ if|if
 condition|(
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|p
+operator|->
+name|p_acflag
 argument_list|)
 condition|)
 return|return
@@ -4698,9 +4668,7 @@ name|sc
 operator|->
 name|sc_format_pid
 operator|=
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 expr_stmt|;
@@ -4747,9 +4715,7 @@ name|sc
 operator|->
 name|sc_format_pid
 operator|!=
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 condition|)

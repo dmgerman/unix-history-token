@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dma.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dma.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,31 +10,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/time.h"
+file|"time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/kernel.h"
+file|"kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|"proc.h"
 end_include
 
 begin_include
@@ -78,22 +78,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|printf
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|panic
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|_insque
 parameter_list|()
 function_decl|;
@@ -111,22 +95,6 @@ begin_function_decl
 specifier|extern
 name|void
 name|timeout
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|splbio
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|splx
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite.c 1.1 90/07/09$  *  *	@(#)ite.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite.c 1.1 90/07/09$  *  *	@(#)ite.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -43,55 +43,43 @@ end_define
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/conf.h"
+file|"conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ioctl.h"
+file|"tty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/tty.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/uio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/malloc.h"
+file|"malloc.h"
 end_include
 
 begin_include
@@ -115,7 +103,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../include/cpu.h"
+file|"machine/cpu.h"
 end_include
 
 begin_define
@@ -874,15 +862,43 @@ block|}
 end_block
 
 begin_comment
-comment|/*ARGSUSED*/
+comment|/* ARGSUSED */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_macro
+name|iteopen
+argument_list|(
+argument|dev_t dev
+argument_list|,
+argument|int mode
+argument_list|,
+argument|int devtype
+argument_list|,
+argument|struct proc *p
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_macro
 name|iteopen
 argument_list|(
 argument|dev
 argument_list|,
-argument|flag
+argument|mode
+argument_list|,
+argument|devtype
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -891,6 +907,27 @@ name|dev_t
 name|dev
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mode
+decl_stmt|,
+name|devtype
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
@@ -955,9 +992,11 @@ operator||
 name|TS_XCLUDE
 operator|)
 operator|&&
-name|u
-operator|.
-name|u_uid
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_uid
 operator|!=
 literal|0
 condition|)
@@ -4089,11 +4128,6 @@ name|unit
 decl_stmt|,
 name|pri
 decl_stmt|;
-specifier|extern
-name|int
-name|iteopen
-parameter_list|()
-function_decl|;
 comment|/* locate the major number */
 for|for
 control|(

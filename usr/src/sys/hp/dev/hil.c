@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil.c 1.33 89/12/22$  *  *	@(#)hil.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil.c 1.33 89/12/22$  *  *	@(#)hil.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|"sys/user.h"
 end_include
 
 begin_include
@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../include/cpu.h"
+file|"machine/cpu.h"
 end_include
 
 begin_include
@@ -413,12 +413,20 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|hilopen
 argument_list|(
 argument|dev
 argument_list|,
 argument|flags
+argument_list|,
+argument|mode
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -428,18 +436,24 @@ name|dev
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|,
+name|mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|u
-operator|.
-name|u_procp
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|struct
 name|hilloop
@@ -751,9 +765,7 @@ name|proc
 modifier|*
 name|p
 init|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 decl_stmt|;
 comment|/* XXX */
 specifier|register
@@ -1408,6 +1420,8 @@ argument_list|,
 argument|data
 argument_list|,
 argument|flag
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1423,18 +1437,16 @@ name|data
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|u
-operator|.
-name|u_procp
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|struct
 name|hilloop
@@ -2689,7 +2701,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * XXX: the mmap inteface for HIL devices should be rethought.  * We used it only briefly in conjuntion with shared queues  * (instead of HILIOCMAPQ ioctl).  Perhaps mmap()ing a device  * should give a single queue per process.  */
+comment|/*  * XXX: the mmap interface for HIL devices should be rethought.  * We used it only briefly in conjuntion with shared queues  * (instead of HILIOCMAPQ ioctl).  Perhaps mmap()ing a device  * should give a single queue per process.  */
 end_comment
 
 begin_comment
@@ -2730,9 +2742,7 @@ name|proc
 modifier|*
 name|p
 init|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 decl_stmt|;
 comment|/* XXX */
 specifier|register
@@ -2849,6 +2859,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|rw
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -2858,18 +2870,16 @@ name|dev
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|u
-operator|.
-name|u_procp
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|struct
 name|hilloop
@@ -4363,9 +4373,7 @@ name|proc
 modifier|*
 name|p
 init|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 decl_stmt|;
 comment|/* XXX */
 ifdef|#
@@ -4418,9 +4426,7 @@ name|proc
 modifier|*
 name|p
 init|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 decl_stmt|;
 comment|/* XXX */
 ifdef|#
@@ -4475,9 +4481,7 @@ name|proc
 modifier|*
 name|p
 init|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 decl_stmt|;
 comment|/* XXX */
 specifier|register
@@ -4576,13 +4580,17 @@ name|dptr
 operator|->
 name|hd_qmask
 operator|&&
-name|u
-operator|.
-name|u_uid
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_uid
 operator|&&
-name|u
-operator|.
-name|u_uid
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_uid
 operator|!=
 name|dptr
 operator|->
@@ -4619,9 +4627,11 @@ name|dptr
 operator|->
 name|hd_uid
 operator|=
-name|u
-operator|.
-name|u_uid
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_uid
 expr_stmt|;
 name|s
 operator|=
@@ -4705,9 +4715,7 @@ name|proc
 modifier|*
 name|p
 init|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 decl_stmt|;
 comment|/* XXX */
 specifier|register

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf.c 1.28 89/08/14$  *  *	@(#)grf.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf.c 1.28 89/08/14$  *  *	@(#)grf.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,37 +24,31 @@ end_if
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ioctl.h"
+file|"file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/file.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/malloc.h"
+file|"malloc.h"
 end_include
 
 begin_include
@@ -78,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../include/cpu.h"
+file|"machine/cpu.h"
 end_include
 
 begin_ifdef
@@ -101,13 +95,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"vm/vm_param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm/vm_map.h"
+file|"vm/vm.h"
 end_include
 
 begin_include
@@ -131,19 +119,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/specdev.h"
+file|"specdev.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/vnode.h"
+file|"vnode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/mman.h"
+file|"mman.h"
 end_include
 
 begin_include
@@ -947,9 +935,7 @@ name|HPUXCOMPAT
 comment|/* 	 * XXX: cannot handle both HPUX and BSD processes at the same time 	 */
 if|if
 condition|(
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_flag
 operator|&
@@ -1118,6 +1104,8 @@ argument_list|,
 argument|data
 argument_list|,
 argument|flag
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1130,6 +1118,14 @@ end_decl_stmt
 begin_decl_stmt
 name|caddr_t
 name|data
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1158,9 +1154,7 @@ directive|ifdef
 name|HPUXCOMPAT
 if|if
 condition|(
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_flag
 operator|&
@@ -1177,6 +1171,8 @@ argument_list|,
 name|data
 argument_list|,
 name|flag
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -1274,6 +1270,8 @@ name|caddr_t
 operator|*
 operator|)
 name|data
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1292,6 +1290,8 @@ name|caddr_t
 operator|*
 operator|)
 name|data
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1378,9 +1378,7 @@ name|proc
 modifier|*
 name|p
 init|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 decl_stmt|;
 comment|/* XXX */
 name|int
@@ -1699,9 +1697,7 @@ name|printf
 argument_list|(
 literal|"grfunlock(%d): dev %x flags %x lockpid %d\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 argument_list|,
@@ -1735,9 +1731,7 @@ name|gp
 operator|->
 name|g_lockp
 operator|!=
-name|u
-operator|.
-name|u_procp
+name|curproc
 condition|)
 return|return
 operator|(
@@ -1922,6 +1916,8 @@ argument_list|,
 argument|data
 argument_list|,
 argument|flag
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1934,6 +1930,14 @@ end_decl_stmt
 begin_decl_stmt
 name|caddr_t
 name|data
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -2059,6 +2063,8 @@ name|caddr_t
 operator|*
 operator|)
 name|data
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2077,6 +2083,8 @@ name|caddr_t
 operator|*
 operator|)
 name|data
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* XXX: HP-UX uses GCUNMAP to get rid of GCSLOT memory */
@@ -2369,6 +2377,8 @@ operator|(
 name|caddr_t
 operator|)
 literal|0
+argument_list|,
+name|curproc
 argument_list|)
 expr_stmt|;
 name|error
@@ -2702,6 +2712,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|addrp
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -2718,18 +2730,16 @@ name|addrp
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|u
-operator|.
-name|u_procp
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 name|struct
 name|grf_softc
 modifier|*
@@ -2848,11 +2858,12 @@ name|error
 operator|=
 name|vm_mmap
 argument_list|(
-name|u
-operator|.
-name|u_procp
+operator|&
+name|p
 operator|->
-name|p_map
+name|p_vmspace
+operator|->
+name|vm_map
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -2892,6 +2903,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|addr
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -2907,18 +2920,16 @@ name|addr
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|u
-operator|.
-name|u_procp
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 name|struct
 name|grf_softc
 modifier|*
@@ -2998,7 +3009,9 @@ name|vm_deallocate
 argument_list|(
 name|p
 operator|->
-name|p_map
+name|p_vmspace
+operator|->
+name|vm_map
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -3057,9 +3070,7 @@ name|proc
 modifier|*
 name|p
 init|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -3159,9 +3170,7 @@ name|printf
 argument_list|(
 literal|"iounmmap(%d): id %d addr %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 argument_list|,
@@ -3268,9 +3277,7 @@ expr_stmt|;
 block|}
 name|pid
 operator|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 expr_stmt|;
@@ -3482,9 +3489,7 @@ condition|)
 return|return;
 name|pid
 operator|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 expr_stmt|;
@@ -3628,19 +3633,17 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|struct
 name|proc
 modifier|*
 name|p
 init|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 decl_stmt|;
 comment|/* XXX */
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|grfdebug
@@ -3696,6 +3699,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|int
 name|unit
 init|=
@@ -3704,9 +3710,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|grfdebug
@@ -3721,9 +3724,7 @@ name|printf
 argument_list|(
 literal|"grflckunmmap(%d): id %d addr %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_subr.c 1.1 90/07/09$  *  *	@(#)ite_subr.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_subr.c 1.1 90/07/09$  *  *	@(#)ite_subr.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -20,49 +20,37 @@ end_if
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/conf.h"
+file|"conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ioctl.h"
+file|"tty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/tty.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/uio.h"
+file|"systm.h"
 end_include
 
 begin_include
@@ -80,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../include/cpu.h"
+file|"machine/cpu.h"
 end_include
 
 begin_macro

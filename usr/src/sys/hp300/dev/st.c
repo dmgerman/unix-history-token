@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: st.c 1.8 90/10/14$  *  *      @(#)st.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: st.c 1.8 90/10/14$  *  *      @(#)st.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -46,18 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"errno.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"device.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"scsireg.h"
 end_include
 
@@ -71,12 +59,6 @@ begin_include
 include|#
 directive|include
 file|"tty.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -100,13 +82,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"uio.h"
+file|"kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"tprintf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"device.h"
 end_include
 
 begin_include
@@ -287,7 +275,7 @@ name|short
 name|sc_tticntdwn
 decl_stmt|;
 comment|/* interrupts between TTi display updates */
-name|caddr_t
+name|tpr_t
 name|sc_ctty
 decl_stmt|;
 name|struct
@@ -1773,6 +1761,10 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|flag
+argument_list|,
+argument|type
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1785,6 +1777,16 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|flag
+decl_stmt|,
+name|type
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -3127,27 +3129,9 @@ name|sc
 operator|->
 name|sc_ctty
 operator|=
-call|(
-name|caddr_t
-call|)
+name|tprintf_open
 argument_list|(
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_flag
-operator|&
-name|SCTTY
-condition|?
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_session
-operator|->
-name|s_ttyvp
-else|:
-literal|0
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* save total number of blocks on tape */
@@ -3457,11 +3441,12 @@ operator||
 name|STF_WRTTN
 operator|)
 expr_stmt|;
+name|tprintf_close
+argument_list|(
 name|sc
 operator|->
 name|sc_ctty
-operator|=
-name|NULL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
