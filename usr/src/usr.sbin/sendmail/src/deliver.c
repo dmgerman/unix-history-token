@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.79 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.80 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,6 +141,27 @@ name|lfd
 decl_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_FATALERRS
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+comment|/* this will get a return message -- so don't send it */
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_CLRQUEUE
+expr_stmt|;
+return|return;
+block|}
 comment|/* determine actual delivery mode */
 if|if
 condition|(
