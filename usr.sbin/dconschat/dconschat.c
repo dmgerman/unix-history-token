@@ -1483,7 +1483,9 @@ argument|i; 	u_int32_t ptr[DCONS_NPORT*
 literal|2
 argument|+
 literal|1
-argument|]; 	static int retry = RETRY;  again: 	dlen = dread(dc,&ptr, sizeof(ptr), 		dc->paddr + __offsetof(struct dcons_buf, magic));  	if (dlen<
+argument|]; 	static int retry = RETRY; 	char ebuf[
+literal|64
+argument|];  again: 	dlen = dread(dc,&ptr, sizeof(ptr), 		dc->paddr + __offsetof(struct dcons_buf, magic));  	if (dlen<
 literal|0
 argument|) { 		if (errno == ETIMEDOUT) 			if (retry -->
 literal|0
@@ -1495,11 +1497,17 @@ argument|); 		return(-
 literal|1
 argument|); 	} 	if (ptr[
 literal|0
-argument|] != htonl(DCONS_MAGIC)) { 		dconschat_ready(dc,
+argument|] != htonl(DCONS_MAGIC)) { 		if ((dc->flags& F_USE_CROM) !=
 literal|0
-argument|,
-literal|"wrong magic"
-argument|); 		return(-
+argument|) 			dc->paddr =
+literal|0
+argument|; 		snprintf(ebuf, sizeof(ebuf),
+literal|"wrong magic 0x%08x"
+argument|, ptr[
+literal|0
+argument|]); 		dconschat_ready(dc,
+literal|0
+argument|, ebuf); 		return(-
 literal|1
 argument|); 	} 	retry = RETRY; 	for (i =
 literal|0
