@@ -757,27 +757,17 @@ name|needipsec
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|FAST_IPSEC
-name|int
-name|needipsectun
-init|=
-literal|0
-decl_stmt|;
-name|struct
-name|secpolicy
-modifier|*
-name|sp
-init|=
-name|NULL
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* FAST_IPSEC */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IPSEC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|FAST_IPSEC
+argument_list|)
 name|int
 name|needipsectun
 init|=
@@ -792,7 +782,7 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* IPSEC */
+comment|/*IPSEC || FAST_IPSEC*/
 name|ip6
 operator|=
 name|mtod

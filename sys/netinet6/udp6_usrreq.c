@@ -738,9 +738,17 @@ name|mbuf
 modifier|*
 name|n
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IPSEC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|FAST_IPSEC
+argument_list|)
 comment|/* 				 * Check AH/ESP integrity. 				 */
 if|if
 condition|(
@@ -751,34 +759,24 @@ argument_list|,
 name|last
 argument_list|)
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|IPSEC
 name|ipsec6stat
 operator|.
 name|in_polvio
 operator|++
 expr_stmt|;
-comment|/* do not inject data into pcb */
-elseif|else
 endif|#
 directive|endif
 comment|/* IPSEC */
-ifdef|#
-directive|ifdef
-name|FAST_IPSEC
-comment|/* 				 * Check AH/ESP integrity. 				 */
-if|if
-condition|(
-name|ipsec6_in_reject
-argument_list|(
-name|m
-argument_list|,
-name|last
-argument_list|)
-condition|)
-empty_stmt|;
+comment|/* do not inject data into pcb */
+block|}
 elseif|else
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/*IPSEC || FAST_IPSEC*/
 if|if
 condition|(
 operator|(
@@ -945,9 +943,17 @@ goto|goto
 name|bad
 goto|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IPSEC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|FAST_IPSEC
+argument_list|)
 comment|/* 		 * Check AH/ESP integrity. 		 */
 if|if
 condition|(
@@ -959,39 +965,24 @@ name|last
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|IPSEC
 name|ipsec6stat
 operator|.
 name|in_polvio
 operator|++
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 endif|#
 directive|endif
 comment|/* IPSEC */
-ifdef|#
-directive|ifdef
-name|FAST_IPSEC
-comment|/* 		 * Check AH/ESP integrity. 		 */
-if|if
-condition|(
-name|ipsec6_in_reject
-argument_list|(
-name|m
-argument_list|,
-name|last
-argument_list|)
-condition|)
-block|{
 goto|goto
 name|bad
 goto|;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/*IPSEC || FAST_IPSEC*/
 if|if
 condition|(
 name|last
@@ -1219,9 +1210,17 @@ return|return
 name|IPPROTO_DONE
 return|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IPSEC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|FAST_IPSEC
+argument_list|)
 comment|/* 	 * Check AH/ESP integrity. 	 */
 if|if
 condition|(
@@ -1233,39 +1232,24 @@ name|in6p
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|IPSEC
 name|ipsec6stat
 operator|.
 name|in_polvio
 operator|++
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 endif|#
 directive|endif
 comment|/* IPSEC */
-ifdef|#
-directive|ifdef
-name|FAST_IPSEC
-comment|/* 	 * Check AH/ESP integrity. 	 */
-if|if
-condition|(
-name|ipsec6_in_reject
-argument_list|(
-name|m
-argument_list|,
-name|in6p
-argument_list|)
-condition|)
-block|{
 goto|goto
 name|bad
 goto|;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/*IPSEC || FAST_IPSEC*/
 comment|/* 	 * Construct sockaddr format source address. 	 * Stuff source address and datagram in user buffer. 	 */
 name|init_sin6
 argument_list|(

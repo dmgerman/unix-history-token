@@ -2101,9 +2101,17 @@ name|opts
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IPSEC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|FAST_IPSEC
+argument_list|)
 comment|/* check AH/ESP integrity. */
 if|if
 condition|(
@@ -2115,35 +2123,17 @@ name|last
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|IPSEC
 name|ipsecstat
 operator|.
 name|in_polvio
 operator|++
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|n
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 endif|#
 directive|endif
 comment|/*IPSEC*/
-ifdef|#
-directive|ifdef
-name|FAST_IPSEC
-comment|/* check AH/ESP integrity. */
-if|if
-condition|(
-name|ipsec4_in_reject
-argument_list|(
-name|n
-argument_list|,
-name|last
-argument_list|)
-condition|)
-block|{
 name|m_freem
 argument_list|(
 name|n
@@ -2153,7 +2143,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/*FAST_IPSEC*/
+comment|/*IPSEC || FAST_IPSEC*/
 ifdef|#
 directive|ifdef
 name|MAC

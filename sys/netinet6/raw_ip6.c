@@ -591,9 +591,17 @@ operator|)
 name|M_COPYALL
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IPSEC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|FAST_IPSEC
+argument_list|)
 comment|/* 			 * Check AH/ESP integrity. 			 */
 if|if
 condition|(
@@ -612,44 +620,23 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IPSEC
 name|ipsec6stat
 operator|.
 name|in_polvio
 operator|++
 expr_stmt|;
-comment|/* do not inject data into pcb */
-block|}
-elseif|else
 endif|#
 directive|endif
 comment|/*IPSEC*/
-ifdef|#
-directive|ifdef
-name|FAST_IPSEC
-comment|/* 			 * Check AH/ESP integrity. 			 */
-if|if
-condition|(
-name|n
-operator|&&
-name|ipsec6_in_reject
-argument_list|(
-name|n
-argument_list|,
-name|last
-argument_list|)
-condition|)
-block|{
-name|m_freem
-argument_list|(
-name|n
-argument_list|)
-expr_stmt|;
 comment|/* do not inject data into pcb */
 block|}
 elseif|else
 endif|#
 directive|endif
-comment|/*FAST_IPSEC*/
+comment|/*IPSEC || FAST_IPSEC*/
 if|if
 condition|(
 name|n
@@ -756,9 +743,17 @@ operator|=
 name|in6p
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IPSEC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|FAST_IPSEC
+argument_list|)
 comment|/* 	 * Check AH/ESP integrity. 	 */
 if|if
 condition|(
@@ -777,43 +772,17 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IPSEC
 name|ipsec6stat
 operator|.
 name|in_polvio
 operator|++
 expr_stmt|;
-name|ip6stat
-operator|.
-name|ip6s_delivered
-operator|--
-expr_stmt|;
-comment|/* do not inject data into pcb */
-block|}
-elseif|else
 endif|#
 directive|endif
 comment|/*IPSEC*/
-ifdef|#
-directive|ifdef
-name|FAST_IPSEC
-comment|/* 	 * Check AH/ESP integrity. 	 */
-if|if
-condition|(
-name|last
-operator|&&
-name|ipsec6_in_reject
-argument_list|(
-name|m
-argument_list|,
-name|last
-argument_list|)
-condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|ip6stat
 operator|.
 name|ip6s_delivered
@@ -824,7 +793,7 @@ block|}
 elseif|else
 endif|#
 directive|endif
-comment|/*FAST_IPSEC*/
+comment|/*IPSEC || FAST_IPSEC*/
 if|if
 condition|(
 name|last
