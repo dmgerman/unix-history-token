@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.53	82/05/27	*/
+comment|/*	up.c	4.54	82/06/05	*/
 end_comment
 
 begin_include
@@ -2009,6 +2009,20 @@ operator|==
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"up%d: ds wait ds=%o\n"
+argument_list|,
+name|dkunit
+argument_list|(
+name|bp
+argument_list|)
+argument_list|,
+name|upaddr
+operator|->
+name|upds
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|++
