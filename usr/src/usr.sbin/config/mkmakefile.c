@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.13 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2371,6 +2371,17 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|eq
+argument_list|(
+name|fl
+operator|->
+name|f_fn
+argument_list|,
+literal|"generic"
+argument_list|)
+condition|)
 name|fprintf
 argument_list|(
 name|fp
@@ -2378,6 +2389,16 @@ argument_list|,
 literal|"../%s/%s "
 argument_list|,
 name|machinename
+argument_list|,
+name|swapname
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%s "
 argument_list|,
 name|swapname
 argument_list|)
