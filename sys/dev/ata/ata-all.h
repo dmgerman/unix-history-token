@@ -1902,12 +1902,8 @@ name|ATA_USE_16BIT
 value|0x02
 define|#
 directive|define
-name|ATA_USE_PC98GEOM
-value|0x04
-define|#
-directive|define
 name|ATA_ATAPI_DMA_RO
-value|0x08
+value|0x04
 define|#
 directive|define
 name|ATA_48BIT_ACTIVE
