@@ -188,23 +188,6 @@ directive|include
 file|<machine/cpu.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SWTCH_OPTIM_STATS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/md_var.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -2166,15 +2149,6 @@ name|newtd
 argument_list|)
 expr_stmt|;
 comment|/* SHAZAM!! */
-ifdef|#
-directive|ifdef
-name|SWTCH_OPTIM_STATS
-else|else
-name|stupid_switch
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
 else|#
 directive|else
 name|cpu_switch
