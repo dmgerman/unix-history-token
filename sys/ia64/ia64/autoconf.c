@@ -48,22 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disklabel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/diskslice.h>
-end_include
-
-begin_comment
-comment|/* for BASE_SLICE, MAX_SLICES */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/reboot.h>
 end_include
 
