@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|OS_DEPENDENT
+value|ACPI_OS_SERVICES
 end_define
 
 begin_macro
@@ -140,7 +140,7 @@ name|arg
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|oh
@@ -185,7 +185,7 @@ name|arg
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|oh
@@ -220,7 +220,7 @@ name|i
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -328,7 +328,7 @@ name|i
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -425,7 +425,7 @@ name|i
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -533,7 +533,7 @@ name|i
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -618,7 +618,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|shutdown_nice

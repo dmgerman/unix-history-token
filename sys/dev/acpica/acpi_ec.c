@@ -75,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|EMBEDDED_CONTROLLER
+value|ACPI_EMBEDDED_CONTROLLER
 end_define
 
 begin_macro
@@ -545,7 +545,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* XXX implement - need an ACPI 2.0 system to test this */
@@ -633,7 +633,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/*      * Fetch/initialise softc      */
@@ -960,7 +960,7 @@ name|sc
 operator|->
 name|ec_handle
 argument_list|,
-name|ADDRESS_SPACE_EC
+name|ACPI_ADR_SPACE_EC
 argument_list|,
 name|EcSpaceHandler
 argument_list|,
@@ -1044,7 +1044,7 @@ index|]
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 for|for
@@ -1345,7 +1345,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/*      * Just pass the context through, there's nothing to do here.      */
@@ -1414,7 +1414,7 @@ name|i
 decl_stmt|;
 name|FUNCTION_TRACE_U32
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|,
 operator|(
 name|UINT32
@@ -1461,7 +1461,7 @@ name|Function
 condition|)
 block|{
 case|case
-name|ADDRESS_SPACE_READ
+name|ACPI_READ_ADR_SPACE
 case|:
 name|EcRequest
 operator|.
@@ -1475,15 +1475,16 @@ name|Address
 operator|=
 name|Address
 expr_stmt|;
-name|EcRequest
-operator|.
-name|Data
+operator|(
+operator|*
+name|Value
+operator|)
 operator|=
 literal|0
 expr_stmt|;
 break|break;
 case|case
-name|ADDRESS_SPACE_WRITE
+name|ACPI_WRITE_ADR_SPACE
 case|:
 name|EcRequest
 operator|.
@@ -1496,18 +1497,6 @@ operator|.
 name|Address
 operator|=
 name|Address
-expr_stmt|;
-name|EcRequest
-operator|.
-name|Data
-operator|=
-call|(
-name|UINT8
-call|)
-argument_list|(
-operator|*
-name|Value
-argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -1529,13 +1518,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Perform the transaction.      */
-operator|(
-operator|*
-name|Value
-operator|)
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1555,7 +1537,7 @@ if|if
 condition|(
 name|Function
 operator|==
-name|ADDRESS_SPACE_READ
+name|ACPI_READ_ADR_SPACE
 condition|)
 name|EcRequest
 operator|.
@@ -1845,7 +1827,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*      * Wait For Event:      * ---------------      * Poll the EC status register to detect completion of the last      * command.  Wait up to 10ms (in 100us chunks) for this to occur.      */
+comment|/*      * Wait For Event:      * ---------------      * Poll the EC status register to detect completion of the last      * command.  Wait up to 10ms (in 10us chunks) for this to occur.      */
 for|for
 control|(
 name|i
@@ -1854,7 +1836,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|100
+literal|1000
 condition|;
 name|i
 operator|++
@@ -1908,7 +1890,7 @@ operator|)
 return|;
 name|AcpiOsSleepUsec
 argument_list|(
-literal|100
+literal|10
 argument_list|)
 expr_stmt|;
 block|}
@@ -2110,6 +2092,12 @@ name|AE_SUPPORT
 expr_stmt|;
 break|break;
 block|}
+comment|/*      * Unlock the EC      */
+name|EcUnlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/*      * Clear& Re-Enable the EC GPE:      * -----------------------------      * 'Consume' any EC GPE events that we generated while performing      * the transaction (e.g. IBF/OBF).	Clearing the GPE here shouldn't      * have an adverse affect on outstanding EC-SCI's, as the source      * (EC-SCI) will still be high and thus should trigger the GPE      * immediately after we re-enabling it.      */
 if|if
 condition|(
@@ -2185,12 +2173,6 @@ operator|->
 name|ec_dev
 argument_list|,
 literal|"EcRequest: Unable to re-enable the EC GPE.\n"
-argument_list|)
-expr_stmt|;
-comment|/*      * Unlock the EC      */
-name|EcUnlock
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return

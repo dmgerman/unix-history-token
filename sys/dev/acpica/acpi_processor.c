@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|PROCESSOR_CONTROL
+value|ACPI_PROCESSOR_CONTROL
 end_define
 
 begin_macro
@@ -603,7 +603,7 @@ name|handle
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -689,7 +689,7 @@ name|lapic
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|acpi_pr_FindLapic
@@ -820,7 +820,7 @@ name|sc
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1063,7 +1063,7 @@ literal|0
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/*      * Set Latency Defaults:      * ---------------------      * Default state latency to ACPI_UINT32_MAX -- meaning that this state      * should not be used by policy.  This value is overriden by states      * that are present and have usable latencies (e.g.<= 1000us for C3).      */
@@ -1308,7 +1308,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* TODO... */
@@ -1357,7 +1357,7 @@ literal|0
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/*      * Get Throttling States:      * ----------------------      */
@@ -1547,7 +1547,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if

@@ -81,6 +81,24 @@ directive|include
 file|<dev/acpica/acpiio.h>
 end_include
 
+begin_comment
+comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_COMPONENT
+value|ACPI_BATTERY
+end_define
+
+begin_macro
+name|MODULE_NAME
+argument_list|(
+literal|"BATTERY"
+argument_list|)
+end_macro
+
 begin_function_decl
 specifier|static
 name|void

@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|OS_DEPENDENT
+value|ACPI_OS_SERVICES
 end_define
 
 begin_macro
@@ -123,7 +123,7 @@ name|at
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -324,7 +324,7 @@ name|Context
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|Function
@@ -377,9 +377,13 @@ block|{
 name|int
 name|timo
 decl_stmt|;
+specifier|static
+name|int
+name|dummy
+decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|timo
@@ -391,12 +395,10 @@ name|hz
 operator|)
 operator|+
 name|Milliseconds
-operator|/
-operator|(
-literal|1000
 operator|*
 name|hz
-operator|)
+operator|/
+literal|1000
 expr_stmt|;
 if|if
 condition|(
@@ -410,9 +412,10 @@ literal|1
 expr_stmt|;
 name|tsleep
 argument_list|(
-name|NULL
+operator|&
+name|dummy
 argument_list|,
-name|PZERO
+literal|0
 argument_list|,
 literal|"acpislp"
 argument_list|,
@@ -434,7 +437,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -465,6 +468,39 @@ expr_stmt|;
 block|}
 name|return_VOID
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|UINT32
+name|AcpiOsGetThreadId
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* XXX do not add FUNCTION_TRACE here, results in recursive call */
+name|KASSERT
+argument_list|(
+name|curproc
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+name|__func__
+literal|": curproc is NULL!"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|curproc
+operator|->
+name|p_pid
+operator|+
+literal|1
+operator|)
+return|;
+comment|/* can't return 0 */
 block|}
 end_function
 

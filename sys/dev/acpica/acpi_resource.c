@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|BUS_MANAGER
+value|ACPI_BUS_MANAGER
 end_define
 
 begin_macro
@@ -92,7 +92,7 @@ block|{
 name|ACPI_BUFFER
 name|buf
 decl_stmt|;
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|res
 decl_stmt|;
@@ -115,7 +115,7 @@ name|context
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/*      * Fetch the device resources      */
@@ -230,7 +230,7 @@ block|{
 name|res
 operator|=
 operator|(
-name|RESOURCE
+name|ACPI_RESOURCE
 operator|*
 operator|)
 name|curr
@@ -250,7 +250,7 @@ name|Id
 condition|)
 block|{
 case|case
-name|EndTag
+name|ACPI_RSTYPE_END_TAG
 case|:
 name|DEBUG_PRINT
 argument_list|(
@@ -267,7 +267,7 @@ name|last
 expr_stmt|;
 break|break;
 case|case
-name|FixedIo
+name|ACPI_RSTYPE_FIXED_IO
 case|:
 name|DEBUG_PRINT
 argument_list|(
@@ -321,7 +321,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|Io
+name|ACPI_RSTYPE_IO
 case|:
 if|if
 condition|(
@@ -472,7 +472,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|FixedMemory32
+name|ACPI_RSTYPE_FIXED_MEM32
 case|:
 name|DEBUG_PRINT
 argument_list|(
@@ -526,7 +526,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|Memory32
+name|ACPI_RSTYPE_MEM32
 case|:
 if|if
 condition|(
@@ -677,7 +677,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|Memory24
+name|ACPI_RSTYPE_MEM24
 case|:
 if|if
 condition|(
@@ -828,7 +828,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|Irq
+name|ACPI_RSTYPE_IRQ
 case|:
 for|for
 control|(
@@ -893,7 +893,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|Dma
+name|ACPI_RSTYPE_DMA
 case|:
 for|for
 control|(
@@ -958,7 +958,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|StartDependentFunctions
+name|ACPI_RSTYPE_START_DPF
 case|:
 name|DEBUG_PRINT
 argument_list|(
@@ -981,14 +981,14 @@ name|res
 operator|->
 name|Data
 operator|.
-name|StartDependentFunctions
+name|StartDpf
 operator|.
 name|CompatibilityPriority
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|EndDependentFunctions
+name|ACPI_RSTYPE_END_DPF
 case|:
 name|DEBUG_PRINT
 argument_list|(
@@ -1010,7 +1010,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|Address32
+name|ACPI_RSTYPE_ADDRESS32
 case|:
 name|DEBUG_PRINT
 argument_list|(
@@ -1023,7 +1023,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|Address16
+name|ACPI_RSTYPE_ADDRESS16
 case|:
 name|DEBUG_PRINT
 argument_list|(
@@ -1036,7 +1036,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ExtendedIrq
+name|ACPI_RSTYPE_EXT_IRQ
 case|:
 name|DEBUG_PRINT
 argument_list|(
@@ -1049,7 +1049,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|VendorSpecific
+name|ACPI_RSTYPE_VENDOR
 case|:
 name|DEBUG_PRINT
 argument_list|(

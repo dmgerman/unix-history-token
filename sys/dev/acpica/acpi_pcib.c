@@ -65,13 +65,13 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|BUS_MANAGER
+value|ACPI_BUS_MANAGER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"PCIB"
+literal|"PCI"
 argument_list|)
 end_macro
 
@@ -512,7 +512,7 @@ name|result
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc

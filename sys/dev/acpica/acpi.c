@@ -131,7 +131,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|BUS_MANAGER
+value|ACPI_BUS_MANAGER
 end_define
 
 begin_macro
@@ -232,6 +232,19 @@ literal|"S4B"
 block|,
 literal|"S5"
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* this has to be static, as the softc is gone when we need it */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|acpi_off_state
+init|=
+name|ACPI_STATE_S5
 decl_stmt|;
 end_decl_stmt
 
@@ -566,27 +579,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUG
-end_ifdef
-
-begin_function_decl
-specifier|static
-name|void
-name|acpi_set_debugging
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -905,7 +897,7 @@ endif|#
 directive|endif
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -937,15 +929,7 @@ name|NULL
 condition|)
 name|return_VOID
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUG
-name|acpi_set_debugging
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*      * Start up ACPICA      */
+comment|/*      * Start up the ACPI CA subsystem.      */
 ifdef|#
 directive|ifdef
 name|ENABLE_DEBUGGER
@@ -1115,7 +1099,7 @@ name|error
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -1218,7 +1202,7 @@ endif|#
 directive|endif
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1275,7 +1259,7 @@ name|AcpiInstallAddressSpaceHandler
 argument_list|(
 name|ACPI_ROOT_OBJECT
 argument_list|,
-name|ADDRESS_SPACE_SYSTEM_MEMORY
+name|ACPI_ADR_SPACE_SYSTEM_MEMORY
 argument_list|,
 name|ACPI_DEFAULT_HANDLER
 argument_list|,
@@ -1315,7 +1299,7 @@ name|AcpiInstallAddressSpaceHandler
 argument_list|(
 name|ACPI_ROOT_OBJECT
 argument_list|,
-name|ADDRESS_SPACE_SYSTEM_IO
+name|ACPI_ADR_SPACE_SYSTEM_IO
 argument_list|,
 name|ACPI_DEFAULT_HANDLER
 argument_list|,
@@ -1355,7 +1339,7 @@ name|AcpiInstallAddressSpaceHandler
 argument_list|(
 name|ACPI_ROOT_OBJECT
 argument_list|,
-name|ADDRESS_SPACE_PCI_CONFIG
+name|ACPI_ADR_SPACE_PCI_CONFIG
 argument_list|,
 name|ACPI_DEFAULT_HANDLER
 argument_list|,
@@ -2741,7 +2725,7 @@ name|i
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/*      * Create any static children by calling device identify methods.      */
@@ -2894,7 +2878,7 @@ name|context
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/*      * Skip this device if we think we'll have trouble with it.      */
@@ -3061,7 +3045,7 @@ name|status
 operator|=
 name|AcpiEnterSleepState
 argument_list|(
-name|ACPI_STATE_S5
+name|acpi_off_state
 argument_list|)
 operator|)
 operator|!=
@@ -3546,7 +3530,7 @@ name|ReturnBuffer
 decl_stmt|;
 name|FUNCTION_TRACE_U32
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|state
 argument_list|)
@@ -3849,7 +3833,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE_U32
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|state
 argument_list|)
@@ -3987,6 +3971,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_STATE_S3
+case|:
+name|acpi_off_state
+operator|=
+name|ACPI_STATE_S3
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 name|ACPI_STATE_S5
 case|:
 comment|/* 	 * Shut down cleanly and power off.  This will call us back through the 	 * shutdown handlers. 	 */
@@ -4033,7 +4025,7 @@ name|flags
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|flags
@@ -4104,7 +4096,7 @@ name|status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -4372,7 +4364,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE_U32
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|state
 argument_list|)
@@ -4419,7 +4411,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE_U32
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|state
 argument_list|)
@@ -4457,7 +4449,7 @@ name|context
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
@@ -4500,7 +4492,7 @@ name|context
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
@@ -4543,7 +4535,7 @@ name|context
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
@@ -4586,7 +4578,7 @@ name|context
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
@@ -6367,6 +6359,8 @@ name|void
 name|acpi_set_debugging
 parameter_list|(
 name|void
+modifier|*
+name|junk
 parameter_list|)
 block|{
 name|char
@@ -6446,6 +6440,22 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|acpi_debugging
+argument_list|,
+name|SI_SUB_TUNABLES
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|acpi_set_debugging
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

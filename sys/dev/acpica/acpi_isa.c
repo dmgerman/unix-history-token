@@ -63,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|BUS_MANAGER
+value|ACPI_BUS_MANAGER
 end_define
 
 begin_macro
@@ -528,7 +528,7 @@ name|status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -669,7 +669,7 @@ name|devid
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/*      * Skip this node if it's on the 'avoid' list.      */
@@ -899,7 +899,7 @@ name|cp
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|cp
@@ -987,7 +987,7 @@ name|j
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if

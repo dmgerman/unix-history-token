@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|THERMAL_CONTROL
+value|ACPI_THERMAL_ZONE
 end_define
 
 begin_macro
@@ -225,7 +225,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -286,7 +286,7 @@ name|status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -361,7 +361,7 @@ name|tp
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -456,7 +456,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 switch|switch
