@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)dir.c	3.7 (Berkeley) %G%"
+literal|"@(#)dir.c	3.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -320,14 +320,6 @@ operator|.
 name|id_number
 operator|=
 name|inumber
-expr_stmt|;
-name|curino
-operator|.
-name|id_filesize
-operator|=
-name|dp
-operator|->
-name|di_size
 expr_stmt|;
 operator|(
 name|void
@@ -1826,14 +1818,6 @@ name|id_number
 operator|=
 name|ROOTINO
 expr_stmt|;
-name|idesc
-operator|.
-name|id_filesize
-operator|=
-name|dp
-operator|->
-name|di_size
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1900,14 +1884,6 @@ name|ROOTINO
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|idesc
-operator|.
-name|id_filesize
-operator|=
-name|dp
-operator|->
-name|di_size
 expr_stmt|;
 if|if
 condition|(
@@ -2261,14 +2237,6 @@ name|lfdir
 expr_stmt|;
 name|idesc
 operator|.
-name|id_filesize
-operator|=
-name|dp
-operator|->
-name|di_size
-expr_stmt|;
-name|idesc
-operator|.
 name|id_parent
 operator|=
 name|orphan
@@ -2384,14 +2352,6 @@ operator|.
 name|id_number
 operator|=
 name|orphan
-expr_stmt|;
-name|idesc
-operator|.
-name|id_filesize
-operator|=
-name|dp
-operator|->
-name|di_size
 expr_stmt|;
 name|idesc
 operator|.
@@ -2542,14 +2502,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|idesc
-operator|->
-name|id_filesize
-operator|=
-name|dp
-operator|->
-name|di_size
-expr_stmt|;
 return|return
 operator|(
 name|ckinode

@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)pass3.c	3.3 (Berkeley) %G%"
+literal|"@(#)pass3.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,14 +189,6 @@ operator|.
 name|id_parent
 operator|=
 literal|0
-expr_stmt|;
-name|idesc
-operator|.
-name|id_filesize
-operator|=
-name|dp
-operator|->
-name|di_size
 expr_stmt|;
 name|idesc
 operator|.

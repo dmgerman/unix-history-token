@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)pass1.c	3.4 (Berkeley) %G%"
+literal|"@(#)pass1.c	3.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -691,12 +691,6 @@ name|id_number
 operator|=
 name|inumber
 expr_stmt|;
-name|idesc
-operator|.
-name|id_filesize
-operator|=
-literal|0
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -710,7 +704,7 @@ argument_list|)
 expr_stmt|;
 name|idesc
 operator|.
-name|id_filesize
+name|id_entryno
 operator|*=
 name|btodb
 argument_list|(
@@ -727,7 +721,7 @@ name|di_blocks
 operator|!=
 name|idesc
 operator|.
-name|id_filesize
+name|id_entryno
 condition|)
 block|{
 name|pwarn
@@ -742,7 +736,7 @@ name|di_blocks
 argument_list|,
 name|idesc
 operator|.
-name|id_filesize
+name|id_entryno
 argument_list|)
 expr_stmt|;
 if|if
@@ -771,7 +765,7 @@ name|di_blocks
 operator|=
 name|idesc
 operator|.
-name|id_filesize
+name|id_entryno
 expr_stmt|;
 name|inodirty
 argument_list|()
@@ -1127,9 +1121,10 @@ name|blkno
 expr_stmt|;
 block|}
 block|}
+comment|/* 		 * count the number of blocks found in id_entryno 		 */
 name|idesc
 operator|->
-name|id_filesize
+name|id_entryno
 operator|++
 expr_stmt|;
 block|}

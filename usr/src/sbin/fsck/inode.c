@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)inode.c	3.6 (Berkeley) %G%"
+literal|"@(#)inode.c	3.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,6 +122,14 @@ operator|->
 name|id_entryno
 operator|=
 literal|0
+expr_stmt|;
+name|idesc
+operator|->
+name|id_filesize
+operator|=
+name|dp
+operator|->
+name|di_size
 expr_stmt|;
 name|ndb
 operator|=
