@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.31 2002/04/05 16:25:03 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.32 2002/04/11 21:18:17 imp Exp   */
 end_comment
 
 begin_comment
@@ -554,6 +554,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_ACTIONTEC
+value|0x1668
+end_define
+
+begin_comment
+comment|/* ACTIONTEC */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_LASAT
 value|0x3401
 end_define
@@ -986,6 +997,31 @@ define|#
 directive|define
 name|PCMCIA_STR_3COM_3CRWE62092A
 value|"3Com 3CRWE62092A Wireless LAN"
+end_define
+
+begin_comment
+comment|/* ACTIONTEC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_ACTIONTEC_HWC01170
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_ACTIONTEC_HWC01170
+value|0x0101
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_ACTIONTEC_HWC01170
+value|"ACTIONTEC Wireless LAN PC CARD"
 end_define
 
 begin_comment
