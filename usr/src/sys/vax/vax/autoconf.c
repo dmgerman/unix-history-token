@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.37	82/05/06	*/
+comment|/*	autoconf.c	4.38	82/05/19	*/
 end_comment
 
 begin_comment
@@ -1714,8 +1714,6 @@ argument_list|)
 argument_list|()
 decl_stmt|,
 name|haveubasr
-init|=
-literal|0
 decl_stmt|;
 comment|/* 	 * Initialize the UNIBUS, by freeing the map 	 * registers and the buffered data path registers 	 */
 name|uhp
@@ -1746,82 +1744,17 @@ name|map
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|rminit
+name|ubainitmaps
 argument_list|(
 name|uhp
-operator|->
-name|uh_map
-argument_list|,
-name|NUBMREG
-argument_list|,
-literal|1
-argument_list|,
-literal|"uba"
-argument_list|,
-name|UAMSIZ
 argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|cpu
-condition|)
-block|{
-if|#
-directive|if
-name|VAX780
-case|case
-name|VAX_780
-case|:
-name|uhp
-operator|->
-name|uh_bdpfree
-operator|=
-operator|(
-literal|1
-operator|<<
-name|NBDP780
-operator|)
-operator|-
-literal|1
 expr_stmt|;
 name|haveubasr
 operator|=
-literal|1
+name|cpu
+operator|==
+name|VAX_780
 expr_stmt|;
-break|break;
-endif|#
-directive|endif
-if|#
-directive|if
-name|VAX750
-case|case
-name|VAX_750
-case|:
-name|uhp
-operator|->
-name|uh_bdpfree
-operator|=
-operator|(
-literal|1
-operator|<<
-name|NBDP750
-operator|)
-operator|-
-literal|1
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-if|#
-directive|if
-name|VAX7ZZ
-case|case
-name|VAX_7ZZ
-case|:
-break|break;
-endif|#
-directive|endif
-block|}
 comment|/* 	 * Save virtual and physical addresses 	 * of adaptor, and allocate and initialize 	 * the UNIBUS interrupt vector. 	 */
 name|uhp
 operator|->
@@ -1965,13 +1898,6 @@ parameter_list|(
 name|off
 parameter_list|)
 value|(u_short *)((int)vumem + ((off)&0x3ffff))
-define|#
-directive|define
-name|ubdevreg
-parameter_list|(
-name|addr
-parameter_list|)
-value|(addr&0x1fff|0760000)
 comment|/* 	 * Check each unibus mass storage controller. 	 * For each one which is potentially on this uba, 	 * see if it is really there, and if it is record it and 	 * then go looking for slaves. 	 */
 for|for
 control|(
