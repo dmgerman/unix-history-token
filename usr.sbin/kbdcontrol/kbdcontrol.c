@@ -4732,13 +4732,15 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|strcpy
+name|strncpy
 argument_list|(
 name|fkey
 operator|.
 name|keydef
 argument_list|,
 name|string
+argument_list|,
+name|MAXFK
 argument_list|)
 expr_stmt|;
 name|fkey
