@@ -258,21 +258,13 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|bread
+name|RDSECTOR
 argument_list|(
 name|udfmp
 operator|->
 name|im_devvp
 argument_list|,
 name|sector
-operator|<<
-operator|(
-name|udfmp
-operator|->
-name|bshift
-operator|-
-name|DEV_BSHIFT
-operator|)
 argument_list|,
 operator|(
 name|size
@@ -286,8 +278,6 @@ operator|~
 name|udfmp
 operator|->
 name|bmask
-argument_list|,
-name|NOCRED
 argument_list|,
 name|bp
 argument_list|)
@@ -408,6 +398,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline
 name|ino_t
 name|udf_getid
 parameter_list|(
