@@ -4147,6 +4147,14 @@ name|linkNum
 operator|!=
 name|NG_PPP_BUNDLE_LINKNUM
 condition|)
+block|{
+name|NGI_M
+argument_list|(
+name|item
+argument_list|)
+operator|=
+name|m
+expr_stmt|;
 return|return
 name|ng_ppp_mp_input
 argument_list|(
@@ -4157,6 +4165,7 @@ argument_list|,
 name|item
 argument_list|)
 return|;
+block|}
 break|break;
 case|case
 name|PROT_APPLETALK
