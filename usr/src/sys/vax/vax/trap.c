@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.13	82/07/12	*/
+comment|/*	trap.c	4.14	82/07/18	*/
 end_comment
 
 begin_include
@@ -102,9 +102,13 @@ begin_decl_stmt
 name|struct
 name|sysent
 name|sysent
-index|[
-literal|128
-index|]
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nsysent
 decl_stmt|;
 end_decl_stmt
 
@@ -788,12 +792,22 @@ literal|2
 expr_stmt|;
 name|callp
 operator|=
+operator|(
+name|code
+operator|>=
+name|nsysent
+operator|)
+condition|?
+operator|&
+name|sysent
+index|[
+literal|63
+index|]
+else|:
 operator|&
 name|sysent
 index|[
 name|code
-operator|&
-literal|0177
 index|]
 expr_stmt|;
 if|if
@@ -816,12 +830,22 @@ name|NBPW
 expr_stmt|;
 name|callp
 operator|=
+operator|(
+name|code
+operator|>=
+name|nsysent
+operator|)
+condition|?
 operator|&
 name|sysent
 index|[
-name|i
+literal|63
+index|]
+else|:
 operator|&
-literal|0177
+name|sysent
+index|[
+name|code
 index|]
 expr_stmt|;
 block|}
