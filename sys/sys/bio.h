@@ -70,10 +70,6 @@ modifier|*
 name|bio_disk
 decl_stmt|;
 comment|/* Valid below geom_disk.c only */
-name|daddr_t
-name|bio_blkno
-decl_stmt|;
-comment|/* Underlying physical block number. */
 name|off_t
 name|bio_offset
 decl_stmt|;

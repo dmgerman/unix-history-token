@@ -1191,16 +1191,6 @@ name|g_disk_done
 expr_stmt|;
 name|bp2
 operator|->
-name|bio_blkno
-operator|=
-name|bp2
-operator|->
-name|bio_offset
-operator|>>
-name|DEV_BSHIFT
-expr_stmt|;
-name|bp2
-operator|->
 name|bio_pblkno
 operator|=
 name|bp2

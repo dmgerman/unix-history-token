@@ -210,10 +210,6 @@ name|b_bcount
 value|b_io.bio_bcount
 define|#
 directive|define
-name|b_blkno
-value|b_io.bio_blkno
-define|#
-directive|define
 name|b_caller1
 value|b_io.bio_caller1
 define|#
@@ -287,6 +283,10 @@ name|buf
 modifier|*
 parameter_list|)
 function_decl|;
+name|daddr_t
+name|b_blkno
+decl_stmt|;
+comment|/* Underlying physical block number. */
 name|off_t
 name|b_offset
 decl_stmt|;
