@@ -53,9 +53,6 @@ decl_stmt|;
 name|int
 name|i_errblk
 decl_stmt|;
-name|int
-name|i_active
-decl_stmt|;
 name|char
 name|i_buf
 index|[
@@ -314,10 +311,6 @@ name|short
 modifier|*
 name|off
 decl_stmt|;
-name|short
-name|sflg
-decl_stmt|;
-comment|/* skip sector flag */
 block|}
 struct|;
 end_struct
