@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -2064,8 +2070,13 @@ return|return;
 block|}
 if|if
 condition|(
+ifdef|#
+directive|ifdef
+name|DDB
 name|db_active
 operator|||
+endif|#
+directive|endif
 name|panicstr
 operator|!=
 name|NULL
