@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: diskpart.c,v 1.6 1996/03/19 15:38:44 bde Exp $"
+literal|"$Id: diskpart.c,v 1.6.2.1 1997/09/18 06:26:47 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2294,8 +2294,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"use one of:\n"
-argument_list|,
-name|buf
 argument_list|)
 expr_stmt|;
 for|for
