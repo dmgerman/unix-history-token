@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rstatd.c,v 1.6 1997/11/26 07:34:56 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,12 +28,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -385,7 +379,13 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"unable to register (RSTATPROG, RSTATVERS_TIME, udp)"
+literal|"unable to register (RSTATPROG, RSTATVERS_TIME, %s)"
+argument_list|,
+name|proto
+condition|?
+literal|"udp"
+else|:
+literal|"(inetd)"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -415,7 +415,13 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"unable to register (RSTATPROG, RSTATVERS_SWTCH, udp)"
+literal|"unable to register (RSTATPROG, RSTATVERS_SWTCH, %s)"
+argument_list|,
+name|proto
+condition|?
+literal|"udp"
+else|:
+literal|"(inetd)"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -445,7 +451,13 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"unable to register (RSTATPROG, RSTATVERS_ORIG, udp)"
+literal|"unable to register (RSTATPROG, RSTATVERS_ORIG, %s)"
+argument_list|,
+name|proto
+condition|?
+literal|"udp"
+else|:
+literal|"(inetd)"
 argument_list|)
 expr_stmt|;
 name|exit

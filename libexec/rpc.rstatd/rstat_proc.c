@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rstat_proc.c,v 1.8 1997/11/26 07:34:55 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,12 +45,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -110,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nlist.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
 end_include
 
@@ -159,12 +147,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_mib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/rpc.h>
 end_include
 
 begin_undef
