@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termios.c	5.2 (Berkeley) %G%"
+literal|"@(#)termios.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -437,6 +437,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Make a pre-existing termios structure into "raw" mode:  * character-at-a-time mode with no characters interpreted,  * 8-bit data path.  */
+end_comment
+
 begin_macro
 name|cfmakeraw
 argument_list|(
@@ -466,6 +470,8 @@ name|BRKINT
 operator||
 name|PARMRK
 operator||
+name|ISTRIP
+operator||
 name|INLCR
 operator||
 name|IGNCR
@@ -480,11 +486,7 @@ operator|->
 name|c_oflag
 operator|&=
 operator|~
-operator|(
-name|ONLCR
-operator||
-name|OXTABS
-operator|)
+name|OPOST
 expr_stmt|;
 name|t
 operator|->
@@ -502,6 +504,23 @@ name|ISIG
 operator||
 name|IEXTEN
 operator|)
+expr_stmt|;
+name|t
+operator|->
+name|c_cflag
+operator|&=
+operator|~
+operator|(
+name|CSIZE
+operator||
+name|PARENB
+operator|)
+expr_stmt|;
+name|t
+operator|->
+name|c_cflag
+operator||=
+name|CS8
 expr_stmt|;
 comment|/* set MIN/TIME */
 block|}
