@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.52	82/10/09	*/
+comment|/*	uipc_socket.c	4.53	82/10/16	*/
 end_comment
 
 begin_include
@@ -2226,6 +2226,16 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
+name|SBCHECK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|,
+literal|"soreceive restart"
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|splnet
@@ -2386,6 +2396,16 @@ argument_list|(
 literal|"receive"
 argument_list|)
 expr_stmt|;
+name|SBCHECK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|,
+literal|"soreceive havecc"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
@@ -2506,6 +2526,34 @@ argument_list|(
 literal|"receive 2"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|SOF_PREVIEW
+operator|)
+operator|==
+literal|0
+condition|)
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_mb
+operator|=
+name|m
+expr_stmt|;
+name|SBCHECK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|,
+literal|"soreceive afteraddr"
+argument_list|)
+expr_stmt|;
 block|}
 name|eor
 operator|=
@@ -2559,6 +2607,8 @@ name|tomark
 expr_stmt|;
 if|if
 condition|(
+name|moff
+operator|+
 name|len
 operator|>
 name|m
@@ -2659,6 +2709,14 @@ name|m
 operator|=
 name|n
 expr_stmt|;
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_mb
+operator|=
+name|m
+expr_stmt|;
 block|}
 name|moff
 operator|=
@@ -2757,6 +2815,16 @@ literal|0
 condition|)
 break|break;
 block|}
+name|SBCHECK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|,
+literal|"soreceive rcvloop"
+argument_list|)
+expr_stmt|;
 block|}
 do|while
 condition|(
@@ -2775,14 +2843,6 @@ condition|)
 goto|goto
 name|release
 goto|;
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_mb
-operator|=
-name|m
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2851,6 +2911,16 @@ expr_stmt|;
 name|m
 operator|=
 name|n
+expr_stmt|;
+name|SBCHECK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|,
+literal|"soreceive atomicloop"
+argument_list|)
 expr_stmt|;
 block|}
 do|while
