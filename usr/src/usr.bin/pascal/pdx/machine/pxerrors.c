@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pxerrors.c 1.1 %G%"
+literal|"@(#)pxerrors.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,7 +102,7 @@ literal|"runtime stack overflow"
 block|,
 literal|"interrupt"
 block|,
-literal|"overflow in arithmetic operation"
+literal|"overflow, underflow, or divide by zero in arithmetic operation"
 block|, }
 decl_stmt|;
 end_decl_stmt
