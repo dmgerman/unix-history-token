@@ -33,6 +33,12 @@ name|_G_VTABLE_LABEL_HAS_LENGTH
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|_G_USING_THUNKS
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -51,12 +57,6 @@ define|#
 directive|define
 name|_G_VTABLE_LABEL_PREFIX
 value|"__vt_"
-end_define
-
-begin_define
-define|#
-directive|define
-name|_G_USING_THUNKS
 end_define
 
 begin_define
