@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.32 1998/02/18 09:28:33 jkh Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.33 1998/03/20 02:33:35 kato Exp $ */
 end_comment
 
 begin_comment
@@ -1331,11 +1331,8 @@ operator|(
 literal|0
 operator|)
 return|;
-name|TIMEVAL_TO_TIMESPEC
+name|getnanotime
 argument_list|(
-operator|&
-name|time
-argument_list|,
 operator|&
 name|ts
 argument_list|)

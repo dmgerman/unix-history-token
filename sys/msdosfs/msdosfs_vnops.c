@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.65 1998/03/06 09:46:31 msmith Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.66 1998/03/20 02:33:42 kato Exp $ */
 end_comment
 
 begin_comment
@@ -742,11 +742,8 @@ name|DE_CREATE
 operator||
 name|DE_UPDATE
 expr_stmt|;
-name|TIMEVAL_TO_TIMESPEC
+name|getnanotime
 argument_list|(
-operator|&
-name|time
-argument_list|,
 operator|&
 name|ts
 argument_list|)
@@ -997,11 +994,8 @@ operator|>
 literal|1
 condition|)
 block|{
-name|TIMEVAL_TO_TIMESPEC
+name|getnanotime
 argument_list|(
-operator|&
-name|time
-argument_list|,
 operator|&
 name|ts
 argument_list|)
@@ -1461,11 +1455,8 @@ decl_stmt|;
 name|u_long
 name|fileid
 decl_stmt|;
-name|TIMEVAL_TO_TIMESPEC
+name|getnanotime
 argument_list|(
-operator|&
-name|time
-argument_list|,
 operator|&
 name|ts
 argument_list|)
@@ -6109,11 +6100,8 @@ name|DE_CREATE
 operator||
 name|DE_UPDATE
 expr_stmt|;
-name|TIMEVAL_TO_TIMESPEC
+name|getnanotime
 argument_list|(
-operator|&
-name|time
-argument_list|,
 operator|&
 name|ts
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.38 1998/02/06 12:13:26 eivind Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.39 1998/02/09 06:09:25 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -1082,7 +1082,7 @@ name|pipe_busy
 operator|=
 literal|0
 expr_stmt|;
-name|gettime
+name|getnanotime
 argument_list|(
 operator|&
 name|cpipe
@@ -1948,7 +1948,7 @@ name|error
 operator|==
 literal|0
 condition|)
-name|gettime
+name|getnanotime
 argument_list|(
 operator|&
 name|rpipe
@@ -3978,7 +3978,7 @@ name|error
 operator|==
 literal|0
 condition|)
-name|gettime
+name|getnanotime
 argument_list|(
 operator|&
 name|wpipe
@@ -4546,44 +4546,29 @@ name|ub
 operator|->
 name|st_blksize
 expr_stmt|;
-name|TIMEVAL_TO_TIMESPEC
-argument_list|(
-operator|&
-name|pipe
-operator|->
-name|pipe_atime
-argument_list|,
-operator|&
 name|ub
 operator|->
 name|st_atimespec
-argument_list|)
-expr_stmt|;
-name|TIMEVAL_TO_TIMESPEC
-argument_list|(
-operator|&
+operator|=
 name|pipe
 operator|->
-name|pipe_mtime
-argument_list|,
-operator|&
+name|pipe_atime
+expr_stmt|;
 name|ub
 operator|->
 name|st_mtimespec
-argument_list|)
-expr_stmt|;
-name|TIMEVAL_TO_TIMESPEC
-argument_list|(
-operator|&
+operator|=
 name|pipe
 operator|->
-name|pipe_ctime
-argument_list|,
-operator|&
+name|pipe_mtime
+expr_stmt|;
 name|ub
 operator|->
 name|st_ctimespec
-argument_list|)
+operator|=
+name|pipe
+operator|->
+name|pipe_ctime
 expr_stmt|;
 comment|/* 	 * Left as 0: st_dev, st_ino, st_nlink, st_uid, st_gid, st_rdev, 	 * st_flags, st_gen. 	 * XXX (st_dev, st_ino) should be unique. 	 */
 return|return

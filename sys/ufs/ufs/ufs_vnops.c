@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_vnops.c	8.27 (Berkeley) 5/27/95  * $Id: ufs_vnops.c,v 1.78 1998/02/09 06:11:14 eivind Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_vnops.c	8.27 (Berkeley) 5/27/95  * $Id: ufs_vnops.c,v 1.79 1998/03/08 09:59:44 julian Exp $  */
 end_comment
 
 begin_include
@@ -722,6 +722,20 @@ value|{ \ 	union _qcvt tmp; \ 	tmp.qcvt = (q); \ 	tmp.val[_QUAD_LOWWORD] = (l); 
 end_define
 
 begin_comment
+comment|/*  * XXX this is too long to be a macro, and isn't used in any time-critical  * place;   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ITIMES
+parameter_list|(
+name|ip
+parameter_list|)
+value|{							\ 	struct timeval tv;						\ 	getmicrotime(&tv);						\ 	if ((ip)->i_flag& (IN_ACCESS | IN_CHANGE | IN_UPDATE)) {	\ 		(ip)->i_flag |= IN_MODIFIED;				\ 		if ((ip)->i_flag& IN_ACCESS)				\ 			(ip)->i_atime = tv.tv_sec;			\ 		if ((ip)->i_flag& IN_UPDATE) {				\ 			(ip)->i_mtime = tv.tv_sec;			\ 			(ip)->i_modrev++;				\ 		}							\ 		if ((ip)->i_flag& IN_CHANGE)				\ 			(ip)->i_ctime = tv.tv_sec;			\ 		(ip)->i_flag&= ~(IN_ACCESS | IN_CHANGE | IN_UPDATE);	\ 	}								\ }
+end_define
+
+begin_comment
 comment|/*  * A virgin directory (no blushing please).  */
 end_comment
 
@@ -1152,12 +1166,6 @@ condition|)
 name|ITIMES
 argument_list|(
 name|ip
-argument_list|,
-operator|&
-name|time
-argument_list|,
-operator|&
-name|time
 argument_list|)
 expr_stmt|;
 name|simple_unlock
@@ -1590,12 +1598,6 @@ decl_stmt|;
 name|ITIMES
 argument_list|(
 name|ip
-argument_list|,
-operator|&
-name|time
-argument_list|,
-operator|&
-name|time
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy from inode table 	 */
@@ -8618,12 +8620,6 @@ condition|)
 name|ITIMES
 argument_list|(
 name|ip
-argument_list|,
-operator|&
-name|time
-argument_list|,
-operator|&
-name|time
 argument_list|)
 expr_stmt|;
 name|simple_unlock
@@ -8820,12 +8816,6 @@ condition|)
 name|ITIMES
 argument_list|(
 name|ip
-argument_list|,
-operator|&
-name|time
-argument_list|,
-operator|&
-name|time
 argument_list|)
 expr_stmt|;
 name|simple_unlock

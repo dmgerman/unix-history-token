@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)time.h	8.5 (Berkeley) 5/4/95  * $Id: time.h,v 1.19 1998/02/25 02:14:14 bde Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)time.h	8.5 (Berkeley) 5/4/95  * $Id: time.h,v 1.20 1998/03/04 10:26:44 dufault Exp $  */
 end_comment
 
 begin_ifndef
@@ -192,7 +192,7 @@ comment|/* Canada */
 end_comment
 
 begin_comment
-comment|/*  * Structure used to interface to the machine dependent hardware  * support for timekeeping.  *  * A timecounter is a binary counter which has two simple properties:  *    * it runs at a fixed frequency.  *    * must not roll over in less than (1+epsilon)/HZ  *  * get_timecount reads the counter.  *  * get_timedelta returns difference between the counter now and offset_count  *  * counter_mask removes unimplemented bits from the count value  *  * frequency should be obvious  *  * name is a short mnemonic name for this counter.  *  * cost is a measure of how long time it takes to read the counter.  *  * adjustment [PPM<< 16] which means that the smallest unit of correction  *     you can apply amounts to 481.5 usec/year.  *  * scale_micro [2^32 * usec/tick]  *  * scale_nano_i [ns/tick]  *  * scale_nano_f [(ns/2^32)/tick]  *  * offset_count is the contents of the counter which corresponds to the  *     rest of the offset_* values  *  * offset_sec [s]  * offset_micro [usec]  * offset_nano [ns/2^32] is misnamed, the real unit is .23283064365...  *     attoseconds (10E-18) and before you ask: yes, they are in fact   *     called attoseconds, it comes from "atten" for 18 in Danish/Swedish.  */
+comment|/*  * Structure used to interface to the machine dependent hardware support  * for timekeeping.  *  * A timecounter is a (hard or soft) binary counter which has two properties:  *    * it runs at a fixed, known frequency.  *    * it must not roll over in less than (1 + delta)/HZ seconds.  "delta"  *	is expected to be less than 20 msec, but no hard data has been   *      collected on this.  16 bit at 5 MHz (31 msec) is known to work.  *  * get_timedelta() returns difference between the counter now and offset_count.  *  * get_timecount() reads the counter.  *  * counter_mask removes unimplemented bits from the count value.  *  * frequency is the counter frequency in hz.  *  * name is a short mnemonic name for this counter.  *  * cost is a measure of how long time it takes to read the counter.  *  * adjustment [PPM<< 16] which means that the smallest unit of correction  *     you can apply amounts to 481.5 usec/year.  *  * scale_micro [2^32 * usec/tick].  * scale_nano_i [ns/tick].  * scale_nano_f [(ns/2^32)/tick].  *  * offset_count is the contents of the counter which corresponds to the  *     rest of the offset_* values.  *  * offset_sec [s].  * offset_micro [usec].  * offset_nano [ns/2^32] is misnamed, the real unit is .23283064365...  *     attoseconds (10E-18) and before you ask: yes, they are in fact   *     called attoseconds, it comes from "atten" for 18 in Danish/Swedish.  *  * Each timecounter must supply an array of three timecounters, this is needed  * to guarantee atomicity in the code.  Index zero is used to transport   * modifications, for instance done with sysctl, into the timecounter being   * used in a safe way.  Such changes may be adopted with a delay of up to 1/HZ,  * index one& two are used alternately for the actual timekeeping.  *  * `other' points to the opposite "work" timecounter, ie, in index one it  *      points to index two and vice versa  *  * `tweak' points to index zero.  *  */
 end_comment
 
 begin_struct_decl
@@ -203,7 +203,7 @@ end_struct_decl
 
 begin_typedef
 typedef|typedef
-name|u_int
+name|unsigned
 name|timecounter_get_t
 name|__P
 typedef|((struct
@@ -226,7 +226,7 @@ begin_struct
 struct|struct
 name|timecounter
 block|{
-comment|/* These fields must be initialized by the driver */
+comment|/* These fields must be initialized by the driver. */
 name|timecounter_get_t
 modifier|*
 name|get_timedelta
@@ -245,7 +245,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* These fields will be managed by the generic code */
+comment|/* These fields will be managed by the generic code. */
 name|int
 name|cost
 decl_stmt|;
@@ -548,7 +548,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|gettime
+name|getmicrotime
 name|__P
 argument_list|(
 operator|(
@@ -563,6 +563,35 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|getnanotime
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|timespec
+operator|*
+name|tv
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|gettime
+parameter_list|(
+name|xxx
+parameter_list|)
+value|getmicrotime(xxx)
+end_define
+
+begin_comment
+comment|/* XXX be compatible */
+end_comment
+
+begin_decl_stmt
+name|void
 name|init_timecounter
 name|__P
 argument_list|(
@@ -570,6 +599,7 @@ operator|(
 expr|struct
 name|timecounter
 operator|*
+name|tc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -661,6 +691,7 @@ operator|(
 expr|struct
 name|timespec
 operator|*
+name|ts
 operator|)
 argument_list|)
 decl_stmt|;
