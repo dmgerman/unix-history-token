@@ -344,12 +344,12 @@ literal|0
 decl_stmt|;
 specifier|extern
 name|int
-name|optind
+name|ntp_optind
 decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|optarg
+name|ntp_optarg
 decl_stmt|;
 name|void
 name|init_chu
@@ -367,7 +367,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|getopt_l
+name|ntp_getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -474,7 +474,7 @@ if|if
 condition|(
 name|errflg
 operator|||
-name|optind
+name|ntp_optind
 operator|+
 literal|1
 operator|!=
@@ -565,7 +565,7 @@ name|openterm
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 argument_list|)
 expr_stmt|;

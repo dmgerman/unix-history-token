@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/include/parse_conf.h,v 3.3 1993/10/22 14:27:10 kardel Exp  *  * parse_conf.h,v 3.3 1993/10/22 14:27:10 kardel Exp  *  * Copyright (c) 1993  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/include/parse_conf.h,v 3.5 1994/01/25 19:04:23 kardel Exp  *  * parse_conf.h,v 3.5 1994/01/25 19:04:23 kardel Exp  *  * Copyright (c) 1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifndef
@@ -38,7 +38,7 @@ name|char
 name|dcfhrcsid
 index|[]
 init|=
-literal|"parse_conf.h,v 3.3 1993/10/22 14:27:10 kardel Exp FAU"
+literal|"parse_conf.h,v 3.5 1994/01/25 19:04:23 kardel Exp FAU"
 decl_stmt|;
 end_decl_stmt
 

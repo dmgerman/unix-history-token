@@ -28,7 +28,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__bsdi__
+name|SYS_BSDI
 end_ifdef
 
 begin_include
@@ -43,7 +43,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __bsdi__ */
+comment|/* SYS_BSDI */
 end_comment
 
 begin_include

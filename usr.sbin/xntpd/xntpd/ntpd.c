@@ -89,7 +89,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/termios.h>
+file|<termios.h>
 end_include
 
 begin_endif
@@ -122,7 +122,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/termios.h>
+file|<termios.h>
 end_include
 
 begin_endif
@@ -638,6 +638,16 @@ name|defined
 argument_list|(
 name|SYS_PTX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_AUX3
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_AIX
+argument_list|)
 operator|(
 name|void
 operator|)
@@ -706,16 +716,13 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* SYS_HPUX */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|apollo
-argument_list|)
+ifdef|#
+directive|ifdef
+name|SYS_DOMAINOS
 comment|/*  * This breaks... the program fails to listen to any packets coming  * in on the UDP socket.  So how do you break terminal affiliation?  */
 else|#
 directive|else
-comment|/* apollo */
+comment|/* SYS_DOMAINOS */
 block|{
 name|int
 name|fid
@@ -764,10 +771,21 @@ name|fid
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|setpgrp
+argument_list|(
+literal|0
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* apollo */
+comment|/* SYS_DOMAINOS */
 endif|#
 directive|endif
 comment|/* SYS_HPUX */

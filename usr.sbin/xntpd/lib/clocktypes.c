@@ -161,6 +161,14 @@ literal|"MSF_EES"
 block|}
 block|,
 block|{
+name|REFCLK_GPSTM_TRUETIME
+block|,
+literal|"TrueTime GPS/TM-TMD clock (15)"
+block|,
+literal|"GPS_TRUE"
+block|}
+block|,
+block|{
 operator|-
 literal|1
 block|,

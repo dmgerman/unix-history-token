@@ -100,13 +100,15 @@ name|buf
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Zero out the buffer 	 */
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|cbuf
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|cbuf

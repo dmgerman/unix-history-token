@@ -111,7 +111,7 @@ name|FD_ZERO
 parameter_list|(
 name|p
 parameter_list|)
-value|bzero((char *)(p), sizeof(*(p)))
+value|memset((char *)(p), 0, sizeof(*(p)))
 end_define
 
 begin_endif

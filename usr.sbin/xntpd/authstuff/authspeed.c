@@ -364,12 +364,12 @@ literal|0
 decl_stmt|;
 specifier|extern
 name|int
-name|optind
+name|ntp_optind
 decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|optarg
+name|ntp_optarg
 decl_stmt|;
 name|progname
 operator|=
@@ -387,7 +387,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|getopt_l
+name|ntp_getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -434,7 +434,7 @@ name|loops
 operator|=
 name|atoi
 argument_list|(
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 if|if
@@ -455,7 +455,7 @@ literal|"%s: %s is unlikely to be a useful number of loops\n"
 argument_list|,
 name|progname
 argument_list|,
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 name|errflg
@@ -473,7 +473,7 @@ if|if
 condition|(
 name|errflg
 operator|||
-name|optind
+name|ntp_optind
 operator|==
 name|argc
 condition|)
@@ -528,7 +528,7 @@ name|authreadkeys
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 argument_list|)
 expr_stmt|;

@@ -2449,10 +2449,8 @@ name|numresppkts
 operator|++
 expr_stmt|;
 comment|/* 		 * Copy data out of exbuf into the packet. 		 */
-name|bcopy
+name|memmove
 argument_list|(
-name|exbuf
-argument_list|,
 operator|&
 name|rpkt
 operator|.
@@ -2460,6 +2458,8 @@ name|data
 index|[
 literal|0
 index|]
+argument_list|,
+name|exbuf
 argument_list|,
 name|itemsize
 argument_list|)
@@ -4070,7 +4070,7 @@ name|peer
 modifier|*
 name|sys_peer
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -4078,6 +4078,8 @@ operator|*
 operator|)
 operator|&
 name|addr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|addr
@@ -4802,7 +4804,7 @@ name|peer
 modifier|*
 name|sys_peer
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -4810,6 +4812,8 @@ operator|*
 operator|)
 operator|&
 name|addr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|addr
@@ -6659,7 +6663,7 @@ name|inpkt
 operator|->
 name|data
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -6667,6 +6671,8 @@ operator|*
 operator|)
 operator|&
 name|peeraddr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7896,7 +7902,7 @@ name|inpkt
 operator|->
 name|data
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -7905,6 +7911,8 @@ operator|)
 operator|&
 name|matchaddr
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -7912,7 +7920,7 @@ name|sockaddr_in
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -7920,6 +7928,8 @@ operator|*
 operator|)
 operator|&
 name|matchmask
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -9586,7 +9596,7 @@ name|sockaddr_in
 name|laddr
 decl_stmt|;
 comment|/* 	 * Prepare sockaddr_in structure 	 */
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -9594,6 +9604,8 @@ operator|*
 operator|)
 operator|&
 name|laddr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|laddr
@@ -10533,7 +10545,7 @@ name|struct
 name|sockaddr_in
 name|addr
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -10541,6 +10553,8 @@ operator|*
 operator|)
 operator|&
 name|addr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|addr
@@ -10658,6 +10672,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|clock
+operator|.
+name|kv_list
+operator|=
+operator|(
+expr|struct
+name|ctl_var
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 name|refclock_control
 argument_list|(
 operator|&
@@ -10816,6 +10841,13 @@ operator|.
 name|fudgeval2
 argument_list|)
 expr_stmt|;
+name|free_varlist
+argument_list|(
+name|clock
+operator|.
+name|kv_list
+argument_list|)
+expr_stmt|;
 name|ic
 operator|=
 operator|(
@@ -10876,7 +10908,7 @@ name|struct
 name|sockaddr_in
 name|addr
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -10885,11 +10917,13 @@ operator|)
 operator|&
 name|addr
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 name|addr
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -10897,6 +10931,8 @@ operator|*
 operator|)
 operator|&
 name|clock
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|clock
@@ -11521,7 +11557,7 @@ name|struct
 name|sockaddr_in
 name|addr
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -11529,6 +11565,8 @@ operator|*
 operator|)
 operator|&
 name|addr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|addr
@@ -11646,7 +11684,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -11654,6 +11692,8 @@ operator|*
 operator|)
 operator|&
 name|bug
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|bug

@@ -280,7 +280,7 @@ name|mon_hash_count
 operator|=
 literal|0
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -288,6 +288,8 @@ operator|*
 operator|)
 operator|&
 name|mon_mru_list
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|mon_mru_list
@@ -344,13 +346,15 @@ name|mon_data
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|mon_hash
+argument_list|,
+literal|0
 argument_list|,
 name|MON_HASH_SIZE
 operator|*

@@ -189,7 +189,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|STREAM
+name|HAVE_TERMIOS
 argument_list|)
 end_if
 
@@ -198,6 +198,20 @@ include|#
 directive|include
 file|<termios.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|STREAM
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -1087,7 +1101,7 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	 * Just zero the data arrays 	 */
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -1095,17 +1109,21 @@ operator|*
 operator|)
 name|mx4200units
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 name|mx4200units
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|unitinuse
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|unitinuse
@@ -1581,9 +1599,9 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|STREAM
+name|HAVE_TERMIOS
 argument_list|)
-comment|/* 	 * POSIX/STREAMS serial line parameters (termios interface) 	 * 	 * The MX4200CLK option provides timestamping at the driver level.  	 * It requires the tty_clk streams module. 	 * 	 * The MX4200PPS option provides timestamping at the driver level. 	 * It uses a 1-pps signal and level converter (gadget box) and 	 * requires the ppsclock streams module and SunOS 4.1.1 or 	 * later. 	 */
+comment|/* 	 * POSIX serial line parameters (termios interface) 	 * 	 * The MX4200CLK option provides timestamping at the driver level.  	 * It requires the tty_clk streams module. 	 * 	 * The MX4200PPS option provides timestamping at the driver level. 	 * It uses a 1-pps signal and level converter (gadget box) and 	 * requires the ppsclock streams module and SunOS 4.1.1 or 	 * later. 	 */
 block|{
 name|struct
 name|termios
@@ -1724,6 +1742,13 @@ goto|goto
 name|screwed
 goto|;
 block|}
+block|}
+endif|#
+directive|endif
+comment|/* HAVE_TERMIOS */
+ifdef|#
+directive|ifdef
+name|STREAM
 if|#
 directive|if
 name|defined
@@ -1813,7 +1838,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MX4200PPS */
-block|}
 endif|#
 directive|endif
 comment|/* STREAM */
@@ -2093,13 +2117,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|mx4200
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2223,10 +2249,8 @@ index|]
 operator|<=
 literal|1
 condition|)
-name|bcopy
+name|memmove
 argument_list|(
-name|MX4200REFID
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -2235,6 +2259,8 @@ operator|&
 name|peer
 operator|->
 name|refid
+argument_list|,
+name|MX4200REFID
 argument_list|,
 literal|4
 argument_list|)
@@ -2967,13 +2993,13 @@ name|lencode
 operator|=
 name|n
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|dpt
-argument_list|,
 name|mx4200
 operator|->
 name|lastcode
+argument_list|,
+name|dpt
 argument_list|,
 name|n
 argument_list|)
@@ -4630,10 +4656,8 @@ index|]
 operator|<=
 literal|1
 condition|)
-name|bcopy
+name|memmove
 argument_list|(
-name|MX4200REFID
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -4642,6 +4666,8 @@ operator|&
 name|peer
 operator|->
 name|refid
+argument_list|,
+name|MX4200REFID
 argument_list|,
 literal|4
 argument_list|)
@@ -4969,13 +4995,15 @@ index|[
 name|unit
 index|]
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|bug
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -5445,13 +5473,15 @@ name|cp
 operator|=
 name|buf
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|jt
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

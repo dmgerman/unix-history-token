@@ -124,7 +124,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|STREAM
+name|HAVE_TERMIOS
 argument_list|)
 end_if
 
@@ -133,6 +133,20 @@ include|#
 directive|include
 file|<termios.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|STREAM
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -204,7 +218,7 @@ file|"ntp_stdlib.h"
 end_include
 
 begin_comment
-comment|/*  * Support for Kinemetrics Truetime 468-DC GOES Receiver  *  * Most of this code is copied from refclock_goes.c with thanks.  *  * the time code looks like follows;  Send the clock a R or C and once per  * second a timestamp will appear that looks like this:  * ADDD:HH:MM:SSQCL  * A - control A  * Q Quality indication: indicates possible error of  *     ?     +/- 500 milliseconds            #     +/- 50 milliseconds  *     *     +/- 5 milliseconds              .     +/- 1 millisecond  *   space   less than 1 millisecond  * C - Carriage return  * L - Line feed  * The cariage return start bit begins on 0 seconds and extends to 1 bit time.  *  * Unless you live on 125 degrees west longitude, you can't set your clock  * propagation delay settings correctly and still use automatic mode.  * The manual says to use a compromise when setting the switches.  This  * results in significant errors.  The solution; use fudge time1 and time2  * to incorporate corrections.  If your clock is set for 50 and it should  * be 58 for using the west and 46 for using the east, use the line  * fudge 127.127.5.0 time1 +0.008 time2 -0.004  * This corrects the 4 milliseconds advance and 5 milliseconds retard needed.  * The software will ask the clock which satellite it sees.  *  * Flag1 set to 1 will silence the clock side of xntpd, just reading the  * clock without trying to write to it.  This is usefull if several  * xntpds listen to the same clock.  This has not been tested yet...  */
+comment|/*  * Support for Kinemetrics Truetime 468-DC GOES Receiver  *  * Most of this code is copied from refclock_goes.c with thanks.  *  * the time code looks like follows;  Send the clock a R or C and once per  * second a timestamp will appear that looks like this:  * ADDD:HH:MM:SSQCL  * A - control A  * Q Quality indication: indicates possible error of  *     ?     +/- 500 milliseconds            #     +/- 50 milliseconds  *     *     +/- 5 milliseconds              .     +/- 1 millisecond  *   space   less than 1 millisecond  * C - Carriage return  * L - Line feed  * The carriage return start bit begins on 0 seconds and extends to 1 bit time.  *  * Unless you live on 125 degrees west longitude, you can't set your clock  * propagation delay settings correctly and still use automatic mode.  * The manual says to use a compromise when setting the switches.  This  * results in significant errors.  The solution; use fudge time1 and time2  * to incorporate corrections.  If your clock is set for 50 and it should  * be 58 for using the west and 46 for using the east, use the line  * fudge 127.127.5.0 time1 +0.008 time2 -0.004  * This corrects the 4 milliseconds advance and 5 milliseconds retard needed.  * The software will ask the clock which satellite it sees.  *  * Flag1 set to 1 will silence the clock side of xntpd, just reading the  * clock without trying to write to it.  This is usefull if several  * xntpds listen to the same clock.  This has not been tested yet...  */
 end_comment
 
 begin_comment
@@ -939,7 +953,7 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	 * Just zero the data arrays 	 */
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -947,17 +961,21 @@ operator|*
 operator|)
 name|goesunits
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 name|goesunits
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|unitinuse
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|unitinuse
@@ -1286,9 +1304,9 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|STREAM
+name|HAVE_TERMIOS
 argument_list|)
-comment|/* 	 * POSIX/STREAMS serial line parameters (termios interface) 	 * 	 * The GOESCLK option provides timestamping at the driver level.  	 * It requires the tty_clk streams module. 	 * 	 * The GOESPPS option provides timestamping at the driver level. 	 * It uses a 1-pps signal and level converter (gadget box) and 	 * requires the ppsclock streams module and SunOS 4.1.1 or 	 * later. 	 */
+comment|/* 	 * POSIX serial line parameters (termios interface) 	 * 	 * The GOESCLK option provides timestamping at the driver level.  	 * It requires the tty_clk streams module. 	 * 	 * The GOESPPS option provides timestamping at the driver level. 	 * It uses a 1-pps signal and level converter (gadget box) and 	 * requires the ppsclock streams module and SunOS 4.1.1 or 	 * later. 	 */
 block|{
 name|struct
 name|termios
@@ -1429,6 +1447,13 @@ goto|goto
 name|screwed
 goto|;
 block|}
+block|}
+endif|#
+directive|endif
+comment|/* HAVE_TERMIOS */
+ifdef|#
+directive|ifdef
+name|STREAM
 if|#
 directive|if
 name|defined
@@ -1518,7 +1543,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* GOESPPS */
-block|}
 endif|#
 directive|endif
 comment|/* STREAM */
@@ -1798,13 +1822,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|goes
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1936,10 +1962,8 @@ index|]
 operator|<=
 literal|1
 condition|)
-name|bcopy
+name|memmove
 argument_list|(
-name|GOESREFID
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -1948,6 +1972,8 @@ operator|&
 name|peer
 operator|->
 name|refid
+argument_list|,
+name|GOESREFID
 argument_list|,
 literal|4
 argument_list|)
@@ -4119,10 +4145,8 @@ index|]
 operator|<=
 literal|1
 condition|)
-name|bcopy
+name|memmove
 argument_list|(
-name|GOESREFID
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -4131,6 +4155,8 @@ operator|&
 name|peer
 operator|->
 name|refid
+argument_list|,
+name|GOESREFID
 argument_list|,
 literal|4
 argument_list|)

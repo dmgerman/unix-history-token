@@ -30,7 +30,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__bsdi__
+name|SYS_BSDI
 argument_list|)
 end_if
 
@@ -853,18 +853,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|sys_clock_offset
-operator|.
-name|l_ui
-operator|=
-name|offset_i
-expr_stmt|;
-name|sys_clock_offset
-operator|.
-name|l_uf
-operator|=
-name|offset_f
-expr_stmt|;
 if|if
 condition|(
 name|adjtime
@@ -892,6 +880,19 @@ literal|0
 expr_stmt|;
 block|}
 else|else
+block|{
+name|sys_clock_offset
+operator|.
+name|l_ui
+operator|=
+name|offset_i
+expr_stmt|;
+name|sys_clock_offset
+operator|.
+name|l_uf
+operator|=
+name|offset_f
+expr_stmt|;
 name|rval
 operator|=
 literal|1
@@ -979,7 +980,6 @@ directive|endif
 comment|/* DEBUGRS6000 */
 if|if
 condition|(
-operator|(
 name|oadjtv
 operator|.
 name|tv_sec
@@ -991,13 +991,6 @@ operator|.
 name|tv_usec
 operator|!=
 literal|0
-operator|)
-operator|&&
-operator|(
-name|max_no_complete
-operator|>
-literal|0
-operator|)
 condition|)
 block|{
 name|sTVTOTS
@@ -1018,6 +1011,13 @@ operator|&
 name|oadjts
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|max_no_complete
+operator|>
+literal|0
+condition|)
+block|{
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -1063,6 +1063,8 @@ argument_list|,
 literal|"*** No more 'Prev time adj didn't complete'"
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 return|return
 operator|(
@@ -1401,7 +1403,7 @@ operator|.
 name|tv_sec
 condition|)
 block|{
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -1409,6 +1411,8 @@ operator|*
 operator|)
 operator|&
 name|ut
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
