@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.18 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -661,7 +661,7 @@ name|t
 operator|->
 name|bt_fd
 argument_list|,
-name|F_SETFL
+name|F_SETFD
 argument_list|,
 literal|1
 argument_list|)
