@@ -681,12 +681,29 @@ operator|=
 name|new_thread
 expr_stmt|;
 comment|/* 	 * Start a garbage collector thread 	 * if necessary. 	 */
-if|#
-directive|if
+if|if
+condition|(
+name|f_gc
+operator|&&
+name|pthread_create
+argument_list|(
+operator|&
+name|gc_thread
+argument_list|,
+name|NULL
+argument_list|,
+name|_thread_gc
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
 literal|0
-block|if (f_gc&& pthread_create(&gc_thread,NULL, _thread_gc,NULL) != 0) 		PANIC("Can't create gc thread");
-endif|#
-directive|endif
+condition|)
+name|PANIC
+argument_list|(
+literal|"Can't create gc thread"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
