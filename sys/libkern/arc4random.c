@@ -21,12 +21,36 @@ directive|include
 file|<sys/libkern.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|ARC4_MAXRUNS
-value|64
+value|16384
 end_define
+
+begin_define
+define|#
+directive|define
+name|ARC4_RESEED_SECONDS
+value|300
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARC4_KEYBYTES
+value|32
+end_define
+
+begin_comment
+comment|/* 256 bit key */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -64,6 +88,24 @@ literal|256
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|timeval
+name|arc4_tv_nextreseed
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|u_int8_t
+name|arc4_randbyte
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -132,10 +174,7 @@ name|read_random
 argument_list|(
 name|key
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|key
-argument_list|)
+name|ARC4_KEYBYTES
 argument_list|)
 expr_stmt|;
 comment|/* if r == 0 || -1, just use what was on the stack */
@@ -223,6 +262,23 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Reset for next reseed cycle. */
+name|getmicrotime
+argument_list|(
+operator|&
+name|arc4_tv_nextreseed
+argument_list|)
+expr_stmt|;
+name|arc4_tv_nextreseed
+operator|.
+name|tv_sec
+operator|+=
+name|ARC4_RESEED_SECONDS
+expr_stmt|;
+name|arc4_numruns
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -276,6 +332,25 @@ expr_stmt|;
 name|arc4_initialized
 operator|=
 literal|1
+expr_stmt|;
+comment|/* Now, throw away the first N words out output, as suggested 	 * in the paper "Weaknesses in the Key Scheduling Algorithm 	 * of RC4" by Fluher, Mantin, and Shamir. 	 * 	 * (N = 256 in our case.) 	 */
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+literal|256
+operator|*
+literal|4
+condition|;
+name|n
+operator|++
+control|)
+name|arc4_randbyte
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -368,6 +443,10 @@ block|{
 name|u_int32_t
 name|ret
 decl_stmt|;
+name|struct
+name|timeval
+name|tv_now
+decl_stmt|;
 comment|/* Initialize array if needed. */
 if|if
 condition|(
@@ -377,20 +456,35 @@ condition|)
 name|arc4_init
 argument_list|()
 expr_stmt|;
+comment|/* Get current time. */
+name|getmicrotime
+argument_list|(
+operator|&
+name|tv_now
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+operator|(
 operator|++
 name|arc4_numruns
 operator|>
 name|ARC4_MAXRUNS
+operator|)
+operator|||
+operator|(
+name|tv_now
+operator|.
+name|tv_sec
+operator|>
+name|arc4_tv_nextreseed
+operator|.
+name|tv_sec
+operator|)
 condition|)
 block|{
 name|arc4_randomstir
 argument_list|()
-expr_stmt|;
-name|arc4_numruns
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|ret
