@@ -5578,7 +5578,7 @@ argument_list|,
 name|CAM_DEBUG_PERIPH
 argument_list|,
 operator|(
-literal|"Buffer command: data %x: datacnt %d\n"
+literal|"Buffer command: data %p: datacnt %d\n"
 operator|,
 operator|(
 name|intptr_t
