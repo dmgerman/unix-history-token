@@ -426,6 +426,50 @@ comment|/* total size of u-area */
 end_comment
 
 begin_comment
+comment|/*  * Ceiling on amount of swblock kva space.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_SWZONE_SIZE_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_SWZONE_SIZE_MAX
+value|(70 * 1024 * 1024)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Ceiling on size of buffer cache (really only effects write queueing,  * the VM page cache is not effected).  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_BCACHE_SIZE_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_BCACHE_SIZE_MAX
+value|(200 * 1024 * 1024)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Constants related to network buffer management.  * MCLBYTES must be no larger than CLBYTES (the software page size), and,  * on machines that exchange pages of input or output buffers with mbuf  * clusters (MAPPED_MBUFS), MCLBYTES must also be an integral multiple  * of the hardware page size.  */
 end_comment
 
