@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)autoconf.c	7.1 (Berkeley) 5/9/91  *	$Id: autoconf.c,v 1.74 1997/07/22 20:12:32 fsmp Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)autoconf.c	7.1 (Berkeley) 5/9/91  *	$Id: autoconf.c,v 1.75 1997/09/09 12:48:56 jmg Exp $  */
 end_comment
 
 begin_comment
@@ -710,6 +710,7 @@ name|configure_start
 argument_list|()
 expr_stmt|;
 comment|/* Allow all routines to decide for themselves if they want intrs */
+comment|/* 	 * XXX Since this cannot be achieved on all architectures, we should 	 * XXX go back to disabling all interrupts until configuration is 	 * XXX completed and switch any devices that rely on the current 	 * XXX behavior to no longer rely on interrupts or to register an 	 * XXX interrupt_driven_config_hook for the task. 	 */
 ifdef|#
 directive|ifdef
 name|APIC_IO
@@ -783,19 +784,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|setdumpdev
-argument_list|(
-name|dumpdev
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|dumpdev
-operator|=
-name|NODEV
-expr_stmt|;
 name|configure_finish
 argument_list|()
 expr_stmt|;
@@ -932,6 +920,31 @@ literal|"Device configuration finished.\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|setconf
+argument_list|()
+expr_stmt|;
+name|cold
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"configure() finished.\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|cpu_rootconf
+parameter_list|()
+block|{
+comment|/* 	 * XXX NetBSD has a much cleaner approach to finding root. 	 * XXX We should adopt their code. 	 */
 ifdef|#
 directive|ifdef
 name|CD9660
@@ -1176,21 +1189,26 @@ literal|"Nobody wants to mount my root for me"
 argument_list|)
 expr_stmt|;
 block|}
-name|setconf
-argument_list|()
-expr_stmt|;
-name|cold
-operator|=
-literal|0
-expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|cpu_dumpconf
+parameter_list|()
+block|{
 if|if
 condition|(
-name|bootverbose
-condition|)
-name|printf
+name|setdumpdev
 argument_list|(
-literal|"configure() finished.\n"
+name|dumpdev
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|dumpdev
+operator|=
+name|NODEV
 expr_stmt|;
 block|}
 end_function
