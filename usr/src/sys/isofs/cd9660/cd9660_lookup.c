@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	from: @(#)ufs_lookup.c	7.33 (Berkeley) 5/19/91  *  *	@(#)cd9660_lookup.c	8.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	from: @(#)ufs_lookup.c	7.33 (Berkeley) 5/19/91  *  *	@(#)cd9660_lookup.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -326,6 +326,43 @@ condition|)
 return|return
 operator|(
 name|error
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|ISLASTCN
+operator|)
+operator|&&
+operator|(
+name|vdp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_RDONLY
+operator|)
+operator|&&
+operator|(
+name|cnp
+operator|->
+name|cn_nameiop
+operator|==
+name|DELETE
+operator|||
+name|cnp
+operator|->
+name|cn_nameiop
+operator|==
+name|RENAME
+operator|)
+condition|)
+return|return
+operator|(
+name|EROFS
 operator|)
 return|;
 comment|/* 	 * We now have a segment name to search for, and a directory to search. 	 * 	 * Before tediously performing a linear scan of the directory, 	 * check the name cache to see if the directory/name pair 	 * we are looking for is known already. 	 */
@@ -1397,7 +1434,7 @@ name|RENAME
 condition|)
 return|return
 operator|(
-name|EJUSTRETURN
+name|EROFS
 operator|)
 return|;
 return|return
