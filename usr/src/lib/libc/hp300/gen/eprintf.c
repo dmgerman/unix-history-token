@@ -18,46 +18,56 @@ name|lint
 argument_list|)
 end_if
 
-begin_expr_stmt
-operator|.
-name|asciz
-literal|"@(#)eprintf.c	5.1 (Berkeley) %G%"
-endif|#
-directive|endif
-comment|/* LIBC_SCCS and not lint */
-include|#
-directive|include
-file|<stdio.h>
-comment|/* This is used by the `assert' macro.  */
-name|void
-name|__eprintf
-argument_list|(
-argument|string
-argument_list|,
-argument|line
-argument_list|,
-argument|filename
-argument_list|)
-name|char
-operator|*
-name|string
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
-name|int
-name|line
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)eprintf.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_comment
+comment|/* This is used by the `assert' macro.  */
+end_comment
+
+begin_function
+name|void
+name|__eprintf
+parameter_list|(
+name|string
+parameter_list|,
+name|line
+parameter_list|,
+name|filename
+parameter_list|)
+name|char
+modifier|*
+name|string
+decl_stmt|;
+name|int
+name|line
+decl_stmt|;
 name|char
 modifier|*
 name|filename
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 operator|(
 name|void
@@ -74,7 +84,7 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
