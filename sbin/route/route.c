@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.25 1997/06/18 06:30:34 charnier Exp $"
+literal|"$Id: route.c,v 1.26 1997/07/18 09:05:12 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1644,6 +1644,7 @@ if|if
 condition|(
 name|cp
 condition|)
+block|{
 name|strncpy
 argument_list|(
 name|line
@@ -1651,9 +1652,26 @@ argument_list|,
 name|cp
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|line
 argument_list|)
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
+name|line
+index|[
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* XXX - why not inet_ntoa()? */
@@ -3338,9 +3356,21 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|,
+name|MIN
+argument_list|(
 name|hp
 operator|->
 name|h_length
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|so_gate
+operator|.
+name|sin
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4732,9 +4762,21 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|,
+name|MIN
+argument_list|(
 name|hp
 operator|->
 name|h_length
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|su
+operator|->
+name|sin
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
