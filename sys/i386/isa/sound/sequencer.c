@@ -4803,6 +4803,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALLOW_SELECT
+end_ifdef
+
 begin_function
 name|int
 name|sequencer_select
@@ -4831,6 +4837,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ALLOW_SELECT */
+end_comment
 
 begin_endif
 endif|#
