@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_ktrace.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_ktrace.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -1029,9 +1029,22 @@ operator|!=
 name|VREG
 condition|)
 block|{
-name|vrele
+operator|(
+name|void
+operator|)
+name|vn_close
 argument_list|(
 name|vp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
+argument_list|,
+name|curp
+operator|->
+name|p_ucred
+argument_list|,
+name|curp
 argument_list|)
 expr_stmt|;
 return|return
@@ -1097,9 +1110,22 @@ name|p_traceflag
 operator|=
 literal|0
 expr_stmt|;
-name|vrele
+operator|(
+name|void
+operator|)
+name|vn_close
 argument_list|(
 name|vp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
+argument_list|,
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -1299,9 +1325,20 @@ name|vp
 operator|!=
 name|NULL
 condition|)
-name|vrele
+operator|(
+name|void
+operator|)
+name|vn_close
 argument_list|(
 name|vp
+argument_list|,
+name|FWRITE
+argument_list|,
+name|curp
+operator|->
+name|p_ucred
+argument_list|,
+name|curp
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -4074,6 +4074,8 @@ name|vattr
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|error1
 decl_stmt|;
 name|struct
 name|nameidata
@@ -4223,16 +4225,13 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|vput
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EFAULT
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 name|VATTR_NULL
 argument_list|(
@@ -4492,10 +4491,34 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|vput
+name|out
+label|:
+name|VOP_UNLOCK
 argument_list|(
 name|vp
 argument_list|)
+expr_stmt|;
+name|error1
+operator|=
+name|vn_close
+argument_list|(
+name|vp
+argument_list|,
+name|FWRITE
+argument_list|,
+name|cred
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+name|error
+operator|=
+name|error1
 expr_stmt|;
 return|return
 operator|(
