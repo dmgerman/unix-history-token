@@ -838,7 +838,12 @@ name|p
 operator|->
 name|p_vmspace
 expr_stmt|;
-comment|/* 	 * Release user portion of address space. 	 * This releases references to vnodes, 	 * which could cause I/O if the file has been unlinked. 	 * Need to do this early enough that we can still sleep. 	 * Can't free the entire vmspace as the kernel stack 	 * may be mapped within that space also. 	 */
+comment|/* 	 * Release user portion of address space. 	 * This releases references to vnodes, 	 * which could cause I/O if the file has been unlinked. 	 * Need to do this early enough that we can still sleep. 	 * Can't free the entire vmspace as the kernel stack 	 * may be mapped within that space also. 	 * 	 * Processes sharing the same vmspace may exit in one order, and 	 * get cleaned up by vmspace_exit() in a different order.  The 	 * last exiting process to reach this point releases as much of 	 * the environment as it can, and the last process cleaned up 	 * by vmspace_exit() (which decrements exitingcnt) cleans up the 	 * remainder. 	 */
+operator|++
+name|vm
+operator|->
+name|vm_exitingcnt
+expr_stmt|;
 if|if
 condition|(
 operator|--
@@ -916,12 +921,6 @@ operator|->
 name|vm_map
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|vm
-operator|->
-name|vm_freer
-operator|=
-name|p
 expr_stmt|;
 block|}
 name|sx_xlock

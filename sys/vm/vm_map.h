@@ -522,13 +522,11 @@ comment|/* user VA at max stack growth */
 define|#
 directive|define
 name|vm_endcopy
-value|vm_freer
-name|struct
-name|proc
-modifier|*
-name|vm_freer
+value|vm_exitingcnt
+name|int
+name|vm_exitingcnt
 decl_stmt|;
-comment|/* vm freed on whose behalf */
+comment|/* several processes zombied in exit1  */
 block|}
 struct|;
 end_struct
