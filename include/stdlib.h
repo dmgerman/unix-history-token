@@ -515,6 +515,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|sranddev
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|double
 name|strtod
 name|__P
