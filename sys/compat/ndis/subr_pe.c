@@ -939,7 +939,7 @@ operator|->
 name|ish_vaddr
 operator|<=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|rva
 operator|&&
@@ -952,7 +952,7 @@ name|fixedlen
 operator|)
 operator|>
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|rva
 condition|)

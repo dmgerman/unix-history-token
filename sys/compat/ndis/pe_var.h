@@ -1139,7 +1139,7 @@ block|{
 name|uint16_t
 name|iibn_hint
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|iibn_name
 index|[
 literal|1

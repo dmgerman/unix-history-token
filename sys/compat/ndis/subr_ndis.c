@@ -1966,7 +1966,7 @@ end_function_decl
 begin_function_decl
 name|__stdcall
 specifier|static
-name|u_int8_t
+name|uint8_t
 name|NdisSystemProcessorCount
 parameter_list|(
 name|void
