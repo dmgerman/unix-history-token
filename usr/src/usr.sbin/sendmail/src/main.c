@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.18 (Berkeley) %G%"
+literal|"@(#)main.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -484,7 +484,7 @@ name|open
 argument_list|(
 literal|"/dev/null"
 argument_list|,
-literal|2
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -514,14 +514,15 @@ for|for
 control|(
 name|i
 operator|=
-literal|3
+name|getdtablesize
+argument_list|()
 init|;
 name|i
-operator|<
-literal|50
+operator|>
+literal|2
 condition|;
+operator|--
 name|i
-operator|++
 control|)
 operator|(
 name|void
