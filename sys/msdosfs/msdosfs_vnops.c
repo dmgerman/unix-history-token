@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.21 1995/08/03 12:17:35 dfr Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.22 1995/08/25 20:12:23 bde Exp $ */
 end_comment
 
 begin_comment
@@ -7291,7 +7291,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_bmap_args
-comment|/* { 		struct vnode *a_vp; 		daddr_t a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 		int *a_runp; 	} */
+comment|/* { 		struct vnode *a_vp; 		daddr_t a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 		int *a_runp; 		int *a_runb; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -7348,6 +7348,21 @@ operator|*
 name|ap
 operator|->
 name|a_runp
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ap
+operator|->
+name|a_runb
+condition|)
+block|{
+operator|*
+name|ap
+operator|->
+name|a_runb
 operator|=
 literal|0
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.6 1995/08/01 18:50:51 davidg Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.7 1995/09/02 07:09:01 julian Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -3452,7 +3452,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_bmap_args
-comment|/* {                 struct vnode *a_vp;                 daddr_t  a_bn;                 struct vnode **a_vpp;                 daddr_t *a_bnp;                 int *a_runp;         } */
+comment|/* {                 struct vnode *a_vp;                 daddr_t  a_bn;                 struct vnode **a_vpp;                 daddr_t *a_bnp;                 int *a_runp;                 int *a_runb;         } */
 modifier|*
 name|ap
 decl_stmt|;
