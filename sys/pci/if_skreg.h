@@ -7603,7 +7603,7 @@ begin_define
 define|#
 directive|define
 name|SK_JSLOTS
-value|384
+value|((SK_RX_RING_CNT * 3) / 2)
 end_define
 
 begin_define
@@ -8043,9 +8043,33 @@ argument|sk_jpool_entry
 argument_list|)
 name|sk_jinuse_listhead
 expr_stmt|;
+name|struct
+name|mtx
+name|sk_jlist_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SK_JLIST_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sk_jlist_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_JLIST_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sk_jlist_mtx)
+end_define
 
 begin_define
 define|#
