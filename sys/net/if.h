@@ -646,6 +646,67 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Message format announcing the arrival or departure of a network interface.  */
+end_comment
+
+begin_struct
+struct|struct
+name|if_announcemsghdr
+block|{
+name|u_short
+name|ifan_msglen
+decl_stmt|;
+comment|/* to skip over non-understood messages */
+name|u_char
+name|ifan_version
+decl_stmt|;
+comment|/* future binary compatibility */
+name|u_char
+name|ifan_type
+decl_stmt|;
+comment|/* message type */
+name|u_short
+name|ifan_index
+decl_stmt|;
+comment|/* index for associated ifp */
+name|char
+name|ifan_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* if name, e.g. "en0" */
+name|u_short
+name|ifan_what
+decl_stmt|;
+comment|/* what type of announcement */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IFAN_ARRIVAL
+value|0
+end_define
+
+begin_comment
+comment|/* interface arrival */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFAN_DEPARTURE
+value|1
+end_define
+
+begin_comment
+comment|/* interface departure */
+end_comment
+
+begin_comment
 comment|/*  * Interface request structure used for socket  * ioctl's.  All interface ioctl's must have parameter  * definitions which begin with ifr_name.  The  * remainder may be interface specific.  */
 end_comment
 

@@ -847,6 +847,17 @@ begin_comment
 comment|/* mcast group membership being deleted */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RTM_IFANNOUNCE
+value|0x11
+end_define
+
+begin_comment
+comment|/* iface arrival/departure */
+end_comment
+
 begin_comment
 comment|/*  * Bitmask values for rtm_inits and rmx_locks.  */
 end_comment
@@ -1261,6 +1272,22 @@ operator|(
 expr|struct
 name|rt_addrinfo
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|rt_ifannouncemsg
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

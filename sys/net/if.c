@@ -1141,6 +1141,14 @@ name|ifa_link
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Announce the interface. */
+name|rt_ifannouncemsg
+argument_list|(
+name|ifp
+argument_list|,
+name|IFAN_ARRIVAL
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1428,6 +1436,14 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Announce that the interface is gone. */
+name|rt_ifannouncemsg
+argument_list|(
+name|ifp
+argument_list|,
+name|IFAN_DEPARTURE
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
