@@ -66,6 +66,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/sal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -210,8 +222,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|cycles_per_sec
+name|u_char
+name|itc_frequency
 decl_stmt|;
 end_decl_stmt
 
@@ -386,13 +398,6 @@ name|clockdev
 operator|=
 name|dev
 expr_stmt|;
-name|cycles_per_sec
-operator|=
-name|calibrate_clocks
-argument_list|(
-name|cycles_per_sec
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|EVCNT_COUNTERS
@@ -497,14 +502,19 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
-comment|/* 	 * XXX we should call SAL_FREQ_BASE_INTERVAL_TIMER here. 	 */
-name|cycles_per_sec
-operator|=
-literal|70000000
+if|if
+condition|(
+operator|!
+name|itc_frequency
+condition|)
+name|panic
+argument_list|(
+literal|"Unknown clock frequency"
+argument_list|)
 expr_stmt|;
 name|freq
 operator|=
-name|cycles_per_sec
+name|itc_frequency
 expr_stmt|;
 name|last_time
 operator|=
@@ -550,7 +560,7 @@ name|ia64_get_itc
 argument_list|()
 operator|+
 operator|(
-name|cycles_per_sec
+name|itc_frequency
 operator|+
 name|hz
 operator|/
@@ -751,7 +761,7 @@ name|ia64_get_itc
 argument_list|()
 operator|+
 operator|(
-name|cycles_per_sec
+name|itc_frequency
 operator|+
 name|hz
 operator|/
