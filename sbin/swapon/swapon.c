@@ -835,9 +835,6 @@ name|n
 decl_stmt|,
 name|pagesize
 decl_stmt|;
-name|size_t
-name|hsize
-decl_stmt|;
 name|long
 name|blocksize
 decl_stmt|;
@@ -901,15 +898,11 @@ default|default:
 name|getbsize
 argument_list|(
 operator|&
-name|hsize
+name|hlen
 argument_list|,
 operator|&
 name|blocksize
 argument_list|)
-expr_stmt|;
-name|hlen
-operator|=
-name|hsize
 expr_stmt|;
 break|break;
 block|}
