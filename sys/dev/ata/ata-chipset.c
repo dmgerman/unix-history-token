@@ -10241,6 +10241,34 @@ literal|"SiS 530"
 block|}
 block|,
 block|{
+name|ATA_SIS5513
+block|,
+literal|0xc2
+block|,
+name|SIS33
+block|,
+literal|0
+block|,
+name|ATA_UDMA2
+block|,
+literal|"SiS 5313"
+block|}
+block|,
+block|{
+name|ATA_SIS5513
+block|,
+literal|0x00
+block|,
+name|SIS33
+block|,
+literal|0
+block|,
+name|ATA_WDMA2
+block|,
+literal|"SiS 5313"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -10502,6 +10530,10 @@ operator|->
 name|cfg1
 condition|)
 block|{
+case|case
+name|SIS33
+case|:
+break|break;
 case|case
 name|SIS66
 case|:
@@ -11076,6 +11108,9 @@ name|SIS100OLD
 case|:
 case|case
 name|SIS66
+case|:
+case|case
+name|SIS33
 case|:
 block|{
 name|u_int16_t

@@ -1236,6 +1236,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SIS33
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
 name|VIA33
 value|0
 end_define
