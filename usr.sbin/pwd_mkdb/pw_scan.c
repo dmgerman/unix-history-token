@@ -99,6 +99,19 @@ directive|include
 file|"pw_scan.h"
 end_include
 
+begin_comment
+comment|/*  * Some software assumes that IDs are short.  We should emit warnings  * for id's which can not be stored in a short, but we are more liberal  * by default, warning for IDs greater than USHRT_MAX.  *  * If pw_big_ids_warning is anything other than -1 on entry to pw_scan()  * it will be set based on the existance of PW_SCAN_BIG_IDS in the  * environment.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|pw_big_ids_warning
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|pw_scan
@@ -130,6 +143,26 @@ decl_stmt|,
 modifier|*
 name|sh
 decl_stmt|;
+if|if
+condition|(
+name|pw_big_ids_warning
+operator|==
+operator|-
+literal|1
+condition|)
+name|pw_big_ids_warning
+operator|=
+name|getenv
+argument_list|(
+literal|"PW_SCAN_BIG_IDS"
+argument_list|)
+operator|==
+name|NULL
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
 name|pw
 operator|->
 name|pw_fields
@@ -299,6 +332,8 @@ return|;
 block|}
 if|if
 condition|(
+name|pw_big_ids_warning
+operator|&&
 name|id
 operator|>
 name|USHRT_MAX
@@ -306,7 +341,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s> max uid value (%d)"
+literal|"%s> max uid value (%u)"
 argument_list|,
 name|p
 argument_list|,
@@ -363,6 +398,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|pw_big_ids_warning
+operator|&&
 name|id
 operator|>
 name|USHRT_MAX
@@ -370,7 +407,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s> max gid value (%d)"
+literal|"%s> max gid value (%u)"
 argument_list|,
 name|p
 argument_list|,
