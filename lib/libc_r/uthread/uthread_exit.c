@@ -309,6 +309,48 @@ decl_stmt|;
 name|pthread_t
 name|pthread
 decl_stmt|;
+comment|/* Check if this thread is already in the process of exiting: */
+if|if
+condition|(
+operator|(
+name|_thread_run
+operator|->
+name|flags
+operator|&
+name|PTHREAD_EXITING
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|char
+name|msg
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|snprintf
+argument_list|(
+name|msg
+argument_list|,
+literal|"Thread %p has called pthread_exit() from a destructor. POSIX 1003.1 1996 s16.2.5.2 does not allow this!"
+argument_list|,
+name|_thread_run
+argument_list|)
+expr_stmt|;
+name|PANIC
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Flag this thread as exiting: */
+name|_thread_run
+operator|->
+name|flags
+operator||=
+name|PTHREAD_EXITING
+expr_stmt|;
 comment|/* Save the return value: */
 name|_thread_run
 operator|->
