@@ -8,6 +8,10 @@ comment|/* This is used on Alpha platforms that use the ELF format.    This was 
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$  */
+end_comment
+
+begin_comment
 comment|/* Get generic FreeBSD definitions.  */
 end_comment
 
@@ -157,6 +161,63 @@ directive|define
 name|WCHAR_TYPE_SIZE
 value|32
 end_define
+
+begin_comment
+comment|/*  * Handle cross-compilation on 32-bits machines (such as i386)  * for 64-bits machines (Alpha in this case).  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|HOST_BITS_PER_LONG
+end_undef
+
+begin_define
+define|#
+directive|define
+name|HOST_BITS_PER_LONG
+value|32
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|HOST_WIDE_INT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|HOST_WIDE_INT
+value|long long
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|HOST_BITS_PER_WIDE_INT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|HOST_BITS_PER_WIDE_INT
+value|64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Output assembler code to FILE to increment profiler label # LABELNO    for profiling a function entry.  Under FreeBSD/Alpha, the assembler does    nothing special with -pg. */
