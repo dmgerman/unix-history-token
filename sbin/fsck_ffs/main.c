@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.13 1998/03/08 09:55:26 julian Exp $"
+literal|"$Id: main.c,v 1.14 1998/06/15 07:07:16 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
 end_include
 
 begin_include
@@ -238,6 +244,43 @@ name|maxrun
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|rlimit
+name|rlim
+decl_stmt|;
+if|if
+condition|(
+name|getrlimit
+argument_list|(
+name|RLIMIT_DATA
+argument_list|,
+operator|&
+name|rlim
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|rlim
+operator|.
+name|rlim_cur
+operator|=
+name|rlim
+operator|.
+name|rlim_max
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setrlimit
+argument_list|(
+name|RLIMIT_DATA
+argument_list|,
+operator|&
+name|rlim
+argument_list|)
+expr_stmt|;
+block|}
 name|sync
 argument_list|()
 expr_stmt|;
