@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	2.1 (Berkeley) %G%"
+literal|"@(#)scan.c	2.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -589,11 +589,10 @@ name|fdef
 init|=
 literal|0
 decl_stmt|;
+specifier|extern
 name|char
 modifier|*
 name|release
-init|=
-literal|"PCC/2.1 (Berkeley) %G%"
 decl_stmt|;
 name|offsz
 operator|=
