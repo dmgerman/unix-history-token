@@ -3963,18 +3963,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* ACLINK shut off */
-name|ich_wr
-argument_list|(
-name|sc
-argument_list|,
-name|ICH_REG_GLOB_CNT
-argument_list|,
-name|ICH_GLOB_CTL_SHUT
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
