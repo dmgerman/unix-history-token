@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)kernfs_vnops.c	8.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)kernfs_vnops.c	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2754,25 +2754,6 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * /dev/fd vnode unsupported operation  */
-end_comment
-
-begin_macro
-name|kernfs_enotsupp
-argument_list|()
-end_macro
-
-begin_block
-block|{
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
 comment|/*  * /dev/fd "should never get here" operation  */
 end_comment
 
@@ -2815,14 +2796,14 @@ begin_define
 define|#
 directive|define
 name|kernfs_create
-value|((int (*) __P((struct  vop_create_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct  vop_create_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kernfs_mknod
-value|((int (*) __P((struct  vop_mknod_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct  vop_mknod_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -2836,21 +2817,28 @@ begin_define
 define|#
 directive|define
 name|kernfs_ioctl
-value|((int (*) __P((struct  vop_ioctl_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct  vop_ioctl_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kernfs_select
-value|((int (*) __P((struct  vop_select_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct  vop_select_args *)))eopnotsupp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|kernfs_revoke
+value|vop_revoke
 end_define
 
 begin_define
 define|#
 directive|define
 name|kernfs_mmap
-value|((int (*) __P((struct  vop_mmap_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct  vop_mmap_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -2871,50 +2859,49 @@ begin_define
 define|#
 directive|define
 name|kernfs_remove
-value|((int (*) __P((struct  vop_remove_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct  vop_remove_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kernfs_link
-value|((int (*) __P((struct  vop_link_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct  vop_link_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kernfs_rename
-value|((int (*) __P((struct  vop_rename_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct  vop_rename_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kernfs_mkdir
-value|((int (*) __P((struct  vop_mkdir_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct  vop_mkdir_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kernfs_rmdir
-value|((int (*) __P((struct  vop_rmdir_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct  vop_rmdir_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kernfs_symlink
-value|((int (*) __P((struct vop_symlink_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct vop_symlink_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kernfs_readlink
-define|\
-value|((int (*) __P((struct  vop_readlink_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct  vop_readlink_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -2949,6 +2936,7 @@ begin_define
 define|#
 directive|define
 name|kernfs_strategy
+define|\
 value|((int (*) __P((struct  vop_strategy_args *)))kernfs_badop)
 end_define
 
@@ -2963,44 +2951,42 @@ begin_define
 define|#
 directive|define
 name|kernfs_advlock
-value|((int (*) __P((struct vop_advlock_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct vop_advlock_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kernfs_blkatoff
-define|\
-value|((int (*) __P((struct  vop_blkatoff_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct  vop_blkatoff_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kernfs_valloc
-value|((int(*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) kernfs_enotsupp)
+value|((int(*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kernfs_truncate
-define|\
-value|((int (*) __P((struct  vop_truncate_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct  vop_truncate_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kernfs_update
-value|((int (*) __P((struct  vop_update_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct  vop_update_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kernfs_bwrite
-value|((int (*) __P((struct  vop_bwrite_args *)))kernfs_enotsupp)
+value|((int (*) __P((struct  vop_bwrite_args *)))eopnotsupp)
 end_define
 
 begin_function_decl
@@ -3124,6 +3110,14 @@ name|kernfs_select
 block|}
 block|,
 comment|/* select */
+block|{
+operator|&
+name|vop_revoke_desc
+block|,
+name|kernfs_revoke
+block|}
+block|,
+comment|/* revoke */
 block|{
 operator|&
 name|vop_mmap_desc

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	8.13 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	8.14 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -3406,6 +3406,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|fdesc_revoke
+value|vop_revoke
+end_define
+
+begin_define
+define|#
+directive|define
 name|fdesc_fsync
 value|((int (*) __P((struct  vop_fsync_args *)))nullop)
 end_define
@@ -3666,6 +3673,14 @@ name|fdesc_select
 block|}
 block|,
 comment|/* select */
+block|{
+operator|&
+name|vop_revoke_desc
+block|,
+name|fdesc_revoke
+block|}
+block|,
+comment|/* revoke */
 block|{
 operator|&
 name|vop_mmap_desc
