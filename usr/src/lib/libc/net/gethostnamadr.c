@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.38 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -575,6 +575,11 @@ name|ap
 operator|=
 name|host_aliases
 expr_stmt|;
+operator|*
+name|ap
+operator|=
+name|NULL
+expr_stmt|;
 name|host
 operator|.
 name|h_aliases
@@ -584,6 +589,11 @@ expr_stmt|;
 name|hap
 operator|=
 name|h_addr_ptrs
+expr_stmt|;
+operator|*
+name|hap
+operator|=
+name|NULL
 expr_stmt|;
 if|#
 directive|if
