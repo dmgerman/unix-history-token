@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	5.20	83/06/09	*/
+comment|/*	kern_sig.c	5.21	83/06/10	*/
 end_comment
 
 begin_include
@@ -2203,7 +2203,7 @@ operator|&
 name|STRC
 condition|)
 do|;
-comment|/* 			 * If the traced bit got turned off, 			 * then put the signal taken above back into p_sig 			 * and go back up to the top to rescan signals. 			 * This ensures that siga0 and u_signal are consistent. 			 */
+comment|/* 			 * If the traced bit got turned off or signal 			 * is being masked, then put the signal taken 			 * above back into p_sig and go back up to the 			 * top to rescan signals.  This ensures that 			 * p_sig* and u_signal are consistent. 			 */
 if|if
 condition|(
 operator|(
@@ -2215,6 +2215,14 @@ name|STRC
 operator|)
 operator|==
 literal|0
+operator|||
+operator|(
+name|p
+operator|->
+name|p_sigmask
+operator|&
+name|sigmask
+operator|)
 condition|)
 block|{
 name|p
