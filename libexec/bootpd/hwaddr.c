@@ -259,6 +259,57 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* For BSD 4.4, set arp entry by writing to routing socket */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199306
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bsd_arp_set
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|in_addr
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -733,6 +784,29 @@ comment|/* SVR4 */
 else|#
 directive|else
 comment|/* SIOCSARP */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|&&
+operator|(
+name|BSD
+operator|>=
+literal|199306
+operator|)
+name|bsd_arp_set
+argument_list|(
+name|ia
+argument_list|,
+name|haddr
+argument_list|,
+name|halen
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 comment|/* 	 * Oh well, SIOCSARP is not defined.  Just run arp(8). 	 * Need to delete partial entry first on some systems. 	 * XXX - Gag! 	 */
 name|int
 name|status
@@ -813,6 +887,9 @@ name|status
 argument_list|)
 expr_stmt|;
 return|return;
+endif|#
+directive|endif
+comment|/* ! 4.4 BSD */
 endif|#
 directive|endif
 comment|/* SIOCSARP */
