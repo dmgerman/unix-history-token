@@ -4374,6 +4374,8 @@ modifier|*
 name|sfp
 decl_stmt|;
 name|int
+name|cs
+decl_stmt|,
 name|eflags
 decl_stmt|;
 name|regs
@@ -4693,24 +4695,23 @@ name|EINVAL
 operator|)
 return|;
 block|}
-operator|*
-name|regs
+comment|/* 		 * Don't allow users to load a valid privileged %cs.  Let the 		 * hardware check for invalid selectors, excess privilege in 		 * other selectors, invalid %eip's and invalid %esp's. 		 */
+name|cs
 operator|=
 name|ucp
 operator|->
 name|uc_mcontext
 operator|.
 name|mc_tf
+operator|.
+name|tf_cs
 expr_stmt|;
-comment|/* 		 * Don't allow users to load a valid privileged %cs.  Let the 		 * hardware check for invalid selectors, excess privilege in 		 * other selectors, invalid %eip's and invalid %esp's. 		 */
 if|if
 condition|(
 operator|!
 name|CS_SECURE
 argument_list|(
-name|regs
-operator|->
-name|tf_cs
+name|cs
 argument_list|)
 condition|)
 block|{
@@ -4718,9 +4719,7 @@ name|printf
 argument_list|(
 literal|"sigreturn: cs = 0x%x\n"
 argument_list|,
-name|regs
-operator|->
-name|tf_cs
+name|cs
 argument_list|)
 expr_stmt|;
 name|trapsignal
@@ -4738,6 +4737,15 @@ name|EINVAL
 operator|)
 return|;
 block|}
+operator|*
+name|regs
+operator|=
+name|ucp
+operator|->
+name|uc_mcontext
+operator|.
+name|mc_tf
+expr_stmt|;
 block|}
 name|p
 operator|->
