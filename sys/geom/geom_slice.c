@@ -856,6 +856,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|_KERNEL
 if|if
 condition|(
 operator|!
@@ -928,6 +931,8 @@ name|length
 expr_stmt|;
 comment|/* now, pass it on downwards... */
 block|}
+endif|#
+directive|endif
 name|bp2
 operator|=
 name|g_clone_bio

@@ -299,6 +299,9 @@ name|g_event
 modifier|*
 name|event
 decl_stmt|;
+name|u_int
+name|protect
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -307,7 +310,7 @@ begin_define
 define|#
 directive|define
 name|G_CLASS_INITSTUFF
-value|{ 0, 0 }, { 0 }, 0
+value|{ 0, 0 }, { 0 }, 0, 0
 end_define
 
 begin_comment
@@ -318,6 +321,9 @@ begin_struct
 struct|struct
 name|g_geom
 block|{
+name|u_int
+name|protect
+decl_stmt|;
 name|char
 modifier|*
 name|name
@@ -431,6 +437,9 @@ begin_struct
 struct|struct
 name|g_consumer
 block|{
+name|u_int
+name|protect
+decl_stmt|;
 name|struct
 name|g_geom
 modifier|*
@@ -484,6 +493,9 @@ begin_struct
 struct|struct
 name|g_provider
 block|{
+name|u_int
+name|protect
+decl_stmt|;
 name|char
 modifier|*
 name|name
@@ -1024,6 +1036,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|g_sanity
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|g_spoil
 parameter_list|(
 name|struct
@@ -1335,6 +1358,12 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+name|g_sanity
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* printf("malloc(%d, %x) -> %p\n", size, flags, p); */
 return|return
 operator|(
 name|p
@@ -1354,6 +1383,12 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
+name|g_sanity
+argument_list|(
+name|ptr
+argument_list|)
+expr_stmt|;
+comment|/* printf("free(%p)\n", ptr); */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1397,7 +1432,7 @@ define|#
 directive|define
 name|g_topology_unlock
 parameter_list|()
-value|sx_xunlock(&topology_lock)
+value|do { g_sanity(NULL); sx_xunlock(&topology_lock); } while (0)
 end_define
 
 begin_define
@@ -1405,7 +1440,7 @@ define|#
 directive|define
 name|g_topology_assert
 parameter_list|()
-value|sx_assert(&topology_lock, SX_XLOCKED)
+value|do { g_sanity(NULL); sx_assert(&topology_lock, SX_XLOCKED); } while (0)
 end_define
 
 begin_define
@@ -1425,6 +1460,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
