@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.21 1995/04/26 07:43:30 jkh Exp $"
+literal|"$Id: perform.c,v 1.22 1995/04/26 15:06:26 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1425,9 +1425,6 @@ condition|(
 operator|!
 name|Fake
 condition|)
-block|{
-if|if
-condition|(
 name|vsystem
 argument_list|(
 literal|"/usr/sbin/mtree -u -f %s -d -e -p %s"
@@ -1442,30 +1439,20 @@ name|name
 else|:
 literal|"/"
 argument_list|)
-condition|)
-block|{
-name|perror
-argument_list|(
-literal|"error in the execution of mtree"
-argument_list|)
-expr_stmt|;
-name|unlink
-argument_list|(
-name|MTREE_FNAME
-argument_list|)
-expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
-block|}
+block|)
 name|unlink
 argument_list|(
 name|MTREE_FNAME
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* Run the installation script one last time? */
+end_comment
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -1527,7 +1514,13 @@ name|INSTALL_FNAME
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_comment
 comment|/* Time to record the deed? */
+end_comment
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -1911,6 +1904,9 @@ name|LogDir
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|p
@@ -2005,21 +2001,42 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_goto
 goto|goto
 name|success
 goto|;
+end_goto
+
+begin_label
 name|bomb
 label|:
+end_label
+
+begin_expr_stmt
 name|code
 operator|=
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_goto
 goto|goto
 name|success
 goto|;
+end_goto
+
+begin_label
 name|fail
 label|:
+end_label
+
+begin_comment
 comment|/* Nuke the whole (installed) show, XXX but don't clean directories */
+end_comment
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -2035,12 +2052,24 @@ operator|&
 name|Plist
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_label
 name|success
 label|:
+end_label
+
+begin_comment
 comment|/* delete the packing list contents */
+end_comment
+
+begin_expr_stmt
 name|leave_playpen
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|isTMP
@@ -2050,14 +2079,16 @@ argument_list|(
 name|isTMP
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_return
 return|return
 name|code
 return|;
-block|}
-end_function
+end_return
 
 begin_function
-specifier|static
+unit|}  static
 name|int
 name|sanity_check
 parameter_list|(
