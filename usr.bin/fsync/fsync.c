@@ -41,6 +41,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -158,7 +164,7 @@ argument_list|)
 expr_stmt|;
 name|rval
 operator|=
-literal|1
+name|errno
 expr_stmt|;
 continue|continue;
 block|}
@@ -184,7 +190,7 @@ argument_list|)
 expr_stmt|;
 name|rval
 operator|=
-literal|1
+name|errno
 expr_stmt|;
 block|}
 name|close
