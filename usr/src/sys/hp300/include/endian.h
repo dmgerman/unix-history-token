@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)endian.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)endian.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -46,10 +46,6 @@ directive|define
 name|BYTE_ORDER
 value|BIG_ENDIAN
 end_define
-
-begin_comment
-comment|/* byte order on tahoe */
-end_comment
 
 begin_comment
 comment|/*  * Macros for network/external number representation conversion.  */
