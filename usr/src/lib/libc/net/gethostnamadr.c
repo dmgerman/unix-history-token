@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.35 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,8 +272,8 @@ name|querybuf
 typedef|;
 end_typedef
 
-begin_union
-specifier|static
+begin_typedef
+typedef|typedef
 union|union
 block|{
 name|long
@@ -284,8 +284,8 @@ name|ac
 decl_stmt|;
 block|}
 name|align
-union|;
-end_union
+typedef|;
+end_typedef
 
 begin_decl_stmt
 name|int
