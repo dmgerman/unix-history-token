@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n3.c	2.2 (CWI) 85/08/14"
+literal|"@(#)n3.c	2.3 (CWI) 86/11/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -4360,7 +4360,6 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|xx
 operator|=
@@ -4371,6 +4370,17 @@ index|]
 operator|.
 name|rq
 operator|)
+operator|==
+literal|0
+operator|||
+name|contab
+index|[
+name|i
+index|]
+operator|.
+name|mx
+operator|==
+literal|0
 condition|)
 continue|continue;
 name|tcnt
