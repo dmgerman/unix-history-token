@@ -1148,13 +1148,6 @@ argument_list|(
 literal|"/"
 argument_list|)
 expr_stmt|;
-name|setuid
-argument_list|(
-name|nobody
-operator|->
-name|pw_uid
-argument_list|)
-expr_stmt|;
 name|setgroups
 argument_list|(
 literal|1
@@ -1163,6 +1156,13 @@ operator|&
 name|nobody
 operator|->
 name|pw_gid
+argument_list|)
+expr_stmt|;
+name|setuid
+argument_list|(
+name|nobody
+operator|->
+name|pw_uid
 argument_list|)
 expr_stmt|;
 block|}
