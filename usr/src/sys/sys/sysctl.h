@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -593,11 +593,145 @@ name|CTL_HW_NAMES
 value|{ \ 	{ 0, 0 }, \ 	{ "machine", CTLTYPE_STRING }, \ 	{ "model", CTLTYPE_STRING }, \ 	{ "ncpu", CTLTYPE_INT }, \ 	{ "cpuspeed", CTLTYPE_INT }, \ 	{ "physmem", CTLTYPE_INT }, \ 	{ "usermem", CTLTYPE_INT }, \ 	{ "pagesize", CTLTYPE_INT }, \ 	{ "disknames", CTLTYPE_STRUCT }, \ 	{ "diskstats", CTLTYPE_STRUCT }, \ }
 end_define
 
+begin_comment
+comment|/*  * CTL_DEBUG definitions  *  * Second level identifier specifies which debug variable.  * Third level identifier specifies which stucture component.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_DEBUG_NAME
+value|0
+end_define
+
+begin_comment
+comment|/* string: variable name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_DEBUG_VALUE
+value|1
+end_define
+
+begin_comment
+comment|/* int: variable value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_DEBUG_MAXID
+value|20
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_comment
+comment|/*  * CTL_DEBUG variables.  *  * These are declared as separate variables so that they can be  * individually initialized at the location of their associated  * variable. The loader prevents multiple use by issuing errors  * if a variable is initialized in more than one place. They are  * aggregated into an array in debug_sysctl(), so that it can  * conveniently locate them when querried. If more debugging  * variables are added, they must also be declared here and also  * entered into the array.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ctldebug
+block|{
+name|char
+modifier|*
+name|debugname
+decl_stmt|;
+comment|/* name of debugging variable */
+name|int
+modifier|*
+name|debugvar
+decl_stmt|;
+comment|/* pointer to debugging variable */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ctldebug
+name|debug0
+decl_stmt|,
+name|debug1
+decl_stmt|,
+name|debug2
+decl_stmt|,
+name|debug3
+decl_stmt|,
+name|debug4
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ctldebug
+name|debug5
+decl_stmt|,
+name|debug6
+decl_stmt|,
+name|debug7
+decl_stmt|,
+name|debug8
+decl_stmt|,
+name|debug9
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ctldebug
+name|debug10
+decl_stmt|,
+name|debug11
+decl_stmt|,
+name|debug12
+decl_stmt|,
+name|debug13
+decl_stmt|,
+name|debug14
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ctldebug
+name|debug15
+decl_stmt|,
+name|debug16
+decl_stmt|,
+name|debug17
+decl_stmt|,
+name|debug18
+decl_stmt|,
+name|debug19
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEBUG */
+end_comment
 
 begin_comment
 comment|/*  * Internal sysctl function calling convention:  *  *	(*sysctlfn)(name, namelen, oldval, oldlenp, newval, newlen);  *  * The name parameter points at the next component of the name to be  * interpreted.  The namelen parameter is the number of integers in  * the name.  */
