@@ -434,7 +434,9 @@ name|sigreturn
 name|__P
 argument_list|(
 operator|(
-name|ucontext_t
+specifier|const
+expr|struct
+name|__ucontext
 operator|*
 operator|)
 argument_list|)
