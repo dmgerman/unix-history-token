@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.4 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,7 +223,7 @@ index|]
 decl_stmt|;
 comment|/* translated return path */
 specifier|extern
-name|bool
+name|int
 name|checkcompat
 parameter_list|()
 function_decl|;
@@ -991,20 +991,31 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
-operator|!
+name|rcode
+operator|=
 name|checkcompat
 argument_list|(
 name|to
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|<=
+literal|0
 condition|)
 block|{
 name|giveresponse
 argument_list|(
+name|rcode
+operator|==
+literal|0
+condition|?
 name|EX_UNAVAILABLE
+else|:
+name|EX_TEMPFAIL
 argument_list|,
 name|m
 argument_list|,
