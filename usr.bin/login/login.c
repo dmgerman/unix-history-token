@@ -228,6 +228,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"login.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 
@@ -254,6 +260,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|void
 name|badlogin
 name|__P
@@ -267,6 +274,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|dolastlog
 name|__P
@@ -279,6 +287,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|getloginname
 name|__P
@@ -291,11 +300,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|motd
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -304,6 +315,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rootterm
 name|__P
@@ -317,6 +329,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|sigint
 name|__P
@@ -329,6 +342,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|sleepexit
 name|__P
@@ -341,14 +355,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|refused
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -359,6 +376,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|stypeof
@@ -373,6 +392,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|timedout
 name|__P
@@ -384,38 +404,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|login_access
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|login_fbtab
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|uid_t
-operator|,
-name|gid_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_PAM
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -484,6 +477,15 @@ name|PAM_END
 value|{ \ 	if ((e = pam_setcred(pamh, PAM_DELETE_CRED)) != PAM_SUCCESS) \ 		syslog(LOG_ERR, "pam_setcred: %s", pam_strerror(pamh, e)); \ 	if ((e = pam_close_session(pamh,0)) != PAM_SUCCESS) \ 		syslog(LOG_ERR, "pam_close_session: %s", pam_strerror(pamh, e)); \ 	if ((e = pam_end(pamh, e)) != PAM_SUCCESS) \ 		syslog(LOG_ERR, "pam_end: %s", pam_strerror(pamh, e)); \ }
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NO_PAM */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -492,21 +494,6 @@ name|__P
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|login
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|utmp
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -533,7 +520,7 @@ value|"tty"
 end_define
 
 begin_comment
-comment|/* name of group to own ttys */
+comment|/* group to own ttys */
 end_comment
 
 begin_define
@@ -562,6 +549,38 @@ define|#
 directive|define
 name|DEFAULT_PASSWD_PROMPT
 value|"Password:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|INVALID_HOST
+value|"invalid hostname"
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNKNOWN
+value|"su"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_WARN
+value|(2L * 7L * 86400L)
+end_define
+
+begin_comment
+comment|/* Two weeks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NBUFSIZ
+value|UT_NAMESIZE + 64
 end_define
 
 begin_comment
@@ -654,12 +673,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
 name|struct
 name|group
 modifier|*
@@ -746,18 +759,45 @@ name|shell
 init|=
 name|NULL
 decl_stmt|;
+specifier|static
+name|char
+name|default_prompt
+index|[]
+init|=
+name|DEFAULT_PROMPT
+decl_stmt|;
+specifier|static
+name|char
+name|default_passwd_prompt
+index|[]
+init|=
+name|DEFAULT_PASSWD_PROMPT
+decl_stmt|;
+specifier|static
+name|char
+name|invalid_host
+index|[]
+init|=
+name|INVALID_HOST
+decl_stmt|;
 name|login_cap_t
 modifier|*
 name|lc
 init|=
 name|NULL
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_PAM
 name|pid_t
 name|pid
 decl_stmt|;
 name|int
 name|e
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* NO_PAM */
 operator|(
 name|void
 operator|)
@@ -1109,7 +1149,7 @@ block|}
 else|else
 name|optarg
 operator|=
-literal|"invalid hostname"
+name|invalid_host
 expr_stmt|;
 if|if
 condition|(
@@ -1289,9 +1329,9 @@ name|lc
 argument_list|,
 literal|"prompt"
 argument_list|,
-name|DEFAULT_PROMPT
+name|default_prompt
 argument_list|,
-name|DEFAULT_PROMPT
+name|default_prompt
 argument_list|)
 expr_stmt|;
 name|passwd_prompt
@@ -1302,9 +1342,9 @@ name|lc
 argument_list|,
 literal|"passwd_prompt"
 argument_list|,
-name|DEFAULT_PASSWD_PROMPT
+name|default_passwd_prompt
 argument_list|,
-name|DEFAULT_PASSWD_PROMPT
+name|default_passwd_prompt
 argument_list|)
 expr_stmt|;
 name|retries
@@ -1543,6 +1583,9 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_PAM
 comment|/* 		 * Try to authenticate using PAM.  If a PAM system error 		 * occurs, perhaps because of a botched configuration, 		 * then fall back to using traditional Unix authentication. 		 */
 if|if
 condition|(
@@ -1556,6 +1599,9 @@ operator|==
 operator|-
 literal|1
 condition|)
+endif|#
+directive|endif
+comment|/* NO_PAM */
 name|rval
 operator|=
 name|auth_traditional
@@ -1821,8 +1867,33 @@ name|pwd
 operator|->
 name|pw_dir
 operator|=
+name|strdup
+argument_list|(
 literal|"/"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pwd
+operator|->
+name|pw_dir
+operator|==
+name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"strdup(): %m"
+argument_list|)
+expr_stmt|;
+name|sleepexit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 operator|(
 name|void
@@ -1882,11 +1953,6 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|DEFAULT_WARN
-value|(2L * 7L * 86400L)
-comment|/* Two weeks */
 name|warntime
 operator|=
 name|login_getcaptime
@@ -2194,8 +2260,33 @@ name|pwd
 operator|->
 name|pw_shell
 operator|=
+name|strdup
+argument_list|(
 name|_PATH_BSHELL
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pwd
+operator|->
+name|pw_shell
+operator|==
+name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"strdup(): %m"
+argument_list|)
+expr_stmt|;
+name|sleepexit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
@@ -2633,6 +2724,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|NO_PAM
 if|if
 condition|(
 name|pamh
@@ -2803,6 +2897,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* NO_PAM */
 comment|/* 	 * We don't need to be root anymore, so 	 * set the user and session context 	 */
 if|if
 condition|(
@@ -2984,6 +3081,7 @@ operator|!
 name|quietlog
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|cw
@@ -3230,6 +3328,9 @@ expr_stmt|;
 comment|/* 	 * Login shells have a leading '-' in front of argv[0] 	 */
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|snprintf
 argument_list|(
 name|tbuf
@@ -3315,7 +3416,9 @@ begin_function
 specifier|static
 name|int
 name|auth_traditional
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|rval
@@ -3324,10 +3427,12 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ep
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|salt
@@ -3425,6 +3530,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_PAM
+end_ifndef
+
 begin_comment
 comment|/*  * Attempt to authenticate the user using PAM.  Returns 0 if the user is  * authenticated, or 1 if not authenticated.  If some sort of PAM system  * error occurs (e.g., the "/etc/pam.conf" file is missing) then this  * function returns -1.  This can be used as an indication that we should  * fall back to a different authentication mechanism.  */
 end_comment
@@ -3433,7 +3544,9 @@ begin_function
 specifier|static
 name|int
 name|auth_pam
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -3828,7 +3941,9 @@ begin_function
 specifier|static
 name|int
 name|export_pam_environment
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4022,11 +4137,22 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NO_PAM */
+end_comment
+
 begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -4050,17 +4176,12 @@ begin_comment
 comment|/*  * Allow for authentication style and/or kerberos instance  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NBUFSIZ
-value|UT_NAMESIZE + 64
-end_define
-
 begin_function
 name|void
 name|getloginname
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|ch
@@ -4258,6 +4379,7 @@ name|motd
 parameter_list|(
 name|motdfile
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|motdfile
@@ -4819,20 +4941,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_undef
-undef|#
-directive|undef
-name|UNKNOWN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|UNKNOWN
-value|"su"
-end_define
-
 begin_function
+specifier|const
 name|char
 modifier|*
 name|stypeof
@@ -4906,10 +5016,12 @@ name|rtype
 parameter_list|,
 name|lout
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|msg
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|rtype
