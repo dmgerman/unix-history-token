@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,17 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "from: @(#)main.c	8.1 (Berkeley) 6/20/93";*/
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)from: main.c	8.1 (Berkeley) 6/20/93";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.10.2.4 1997/06/03 13:01:44 davidn Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,37 +106,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_include
@@ -138,7 +136,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
+file|<signal.h>
 end_include
 
 begin_include
@@ -999,7 +997,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"getty exiting due to excessive running time\n"
+literal|"getty exiting due to excessive running time"
 argument_list|)
 expr_stmt|;
 name|exit

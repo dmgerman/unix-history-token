@@ -9,17 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "from: @(#)subr.c	8.1 (Berkeley) 6/4/93";*/
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)from: subr.c	8.1 (Berkeley) 6/4/93";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: subr.c,v 1.6.2.3 1997/09/01 10:08:48 davidn Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,16 +51,27 @@ directive|define
 name|COMPAT_43
 end_define
 
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<stdio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -69,6 +89,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ioctl.h>
 end_include
 
@@ -81,25 +107,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<syslog.h>
+file|<sys/time.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<syslog.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -3822,12 +3837,6 @@ end_function
 begin_comment
 comment|/*  * This auto-baud speed select mechanism is written for the Micom 600  * portselector. Selection is done by looking at how the character '\r'  * is garbled at the different speeds.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
 
 begin_function
 specifier|const

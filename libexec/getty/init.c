@@ -9,17 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "from: @(#)init.c	8.1 (Berkeley) 6/4/93";*/
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)from: init.c	8.1 (Berkeley) 6/4/93";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: init.c,v 1.3.2.2 1996/12/31 05:50:28 msmith Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997  *	David L Nugent<davidn@blaze.net.au>.  *	All rights reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Modem chat module - send/expect style functions for getty  * For semi-intelligent modem handling.  *  *	$Id: chat.c,v 1.3 1997/02/22 14:21:36 peter Exp $  */
+comment|/*-  * Copyright (c) 1997  *	David L Nugent<davidn@blaze.net.au>.  *	All rights reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Modem chat module - send/expect style functions for getty  * For semi-intelligent modem handling.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -42,31 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -120,13 +128,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<termios.h>
+file|<time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<termios.h>
 end_include
 
 begin_include
@@ -753,9 +761,6 @@ operator|++
 name|q
 control|)
 block|{
-name|int
-name|val
-decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -1959,10 +1964,6 @@ literal|0
 decl_stmt|;
 name|sig_t
 name|old_alarm
-decl_stmt|;
-name|struct
-name|termios
-name|tneed
 decl_stmt|;
 comment|/* 			 * We need to be in raw mode for all this 			 * Rely on caller...                          */
 name|old_alarm
