@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1982198519861988  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1985, 1986, 1988, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -337,12 +337,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AF_UNIX
+name|AF_LOCAL
 value|1
 end_define
 
 begin_comment
 comment|/* local to host (pipes, portals) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_UNIX
+value|AF_LOCAL
+end_define
+
+begin_comment
+comment|/* backward compatibility */
 end_comment
 
 begin_define
@@ -684,9 +695,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|PF_UNIX
-value|AF_UNIX
+name|PF_LOCAL
+value|AF_LOCAL
 end_define
+
+begin_define
+define|#
+directive|define
+name|PF_UNIX
+value|PF_LOCAL
+end_define
+
+begin_comment
+comment|/* backward compatibility */
+end_comment
 
 begin_define
 define|#
