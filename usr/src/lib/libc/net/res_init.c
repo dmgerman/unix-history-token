@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	5.8 (Berkeley) %G%"
+literal|"@(#)res_init.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,20 +103,45 @@ begin_comment
 comment|/*  * Resolver state default settings  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RES_TIMEOUT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RES_TIMEOUT
+value|10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|state
 name|_res
 init|=
 block|{
-literal|10
+name|RES_TIMEOUT
 block|,
+comment|/* retransmition time interval */
 literal|4
 block|,
+comment|/* number of times to retransmit */
 name|RES_RECURSE
 operator||
 name|RES_DEFNAMES
-block|, }
+block|,
+comment|/* options flags */
+literal|1
+block|,
+comment|/* number of name servers */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -131,6 +156,7 @@ end_macro
 
 begin_block
 block|{
+specifier|register
 name|FILE
 modifier|*
 name|fp
@@ -176,14 +202,13 @@ parameter_list|()
 function_decl|;
 endif|#
 directive|endif
-name|_res
-operator|.
-name|nsaddr
-operator|.
-name|sin_family
-operator|=
-name|AF_INET
-expr_stmt|;
+endif|DEBUG
+name|int
+name|n
+init|=
+literal|0
+decl_stmt|;
+comment|/* number of nameserver records read from file */
 name|_res
 operator|.
 name|nsaddr
@@ -196,12 +221,11 @@ name|INADDR_ANY
 expr_stmt|;
 name|_res
 operator|.
-name|defdname
-index|[
-literal|0
-index|]
+name|nsaddr
+operator|.
+name|sin_family
 operator|=
-literal|'\0'
+name|AF_INET
 expr_stmt|;
 name|_res
 operator|.
@@ -213,6 +237,21 @@ name|htons
 argument_list|(
 name|NAMESERVER_PORT
 argument_list|)
+expr_stmt|;
+name|_res
+operator|.
+name|nscount
+operator|=
+literal|1
+expr_stmt|;
+name|_res
+operator|.
+name|defdname
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -230,6 +269,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* read the config file */
 while|while
 condition|(
 name|fgets
@@ -247,6 +287,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* read default domain name */
 if|if
 condition|(
 operator|!
@@ -358,6 +399,7 @@ literal|'\0'
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* read nameservers to query */
 if|if
 condition|(
 operator|!
@@ -365,15 +407,21 @@ name|strncmp
 argument_list|(
 name|buf
 argument_list|,
-literal|"resolver"
+literal|"nameserver"
 argument_list|,
 sizeof|sizeof
 argument_list|(
-literal|"resolver"
+literal|"nameserver"
 argument_list|)
 operator|-
 literal|1
 argument_list|)
+operator|&&
+operator|(
+name|n
+operator|<
+name|MAXNS
+operator|)
 condition|)
 block|{
 name|cp
@@ -382,7 +430,7 @@ name|buf
 operator|+
 sizeof|sizeof
 argument_list|(
-literal|"resolver"
+literal|"nameserver"
 argument_list|)
 operator|-
 literal|1
@@ -412,7 +460,10 @@ condition|)
 continue|continue;
 name|_res
 operator|.
-name|nsaddr
+name|nsaddr_list
+index|[
+name|n
+index|]
 operator|.
 name|sin_addr
 operator|.
@@ -427,7 +478,10 @@ if|if
 condition|(
 name|_res
 operator|.
-name|nsaddr
+name|nsaddr_list
+index|[
+name|n
+index|]
 operator|.
 name|sin_addr
 operator|.
@@ -441,7 +495,10 @@ literal|1
 condition|)
 name|_res
 operator|.
-name|nsaddr
+name|nsaddr_list
+index|[
+name|n
+index|]
 operator|.
 name|sin_addr
 operator|.
@@ -449,9 +506,115 @@ name|s_addr
 operator|=
 name|INADDR_ANY
 expr_stmt|;
+name|_res
+operator|.
+name|nsaddr_list
+index|[
+name|n
+index|]
+operator|.
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|_res
+operator|.
+name|nsaddr_list
+index|[
+name|n
+index|]
+operator|.
+name|sin_port
+operator|=
+name|htons
+argument_list|(
+name|NAMESERVER_PORT
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|_res
+operator|.
+name|options
+operator|&&
+name|RES_DEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"Server #%d address = %s\n"
+argument_list|,
+name|n
+operator|+
+literal|1
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|_res
+operator|.
+name|nsaddr_list
+index|[
+name|n
+index|]
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
+if|if
+condition|(
+operator|++
+name|n
+operator|>=
+name|MAXNS
+condition|)
+block|{
+name|n
+operator|=
+name|MAXNS
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|_res
+operator|.
+name|options
+operator|&&
+name|RES_DEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"MAXNS reached\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
+block|}
 continue|continue;
 block|}
 block|}
+if|if
+condition|(
+name|n
+operator|>
+literal|1
+condition|)
+name|_res
+operator|.
+name|nscount
+operator|=
+name|n
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -553,6 +716,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|DEBUG
 name|_res
 operator|.
 name|options
