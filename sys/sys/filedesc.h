@@ -665,17 +665,14 @@ argument_list|,
 argument|int fd
 argument_list|)
 block|{
-comment|/* u_int cast checks for negative descriptors. */
 return|return
 operator|(
-operator|(
-name|u_int
-operator|)
+name|fd
+operator|<
+literal|0
+operator|||
 name|fd
 operator|>=
-operator|(
-name|u_int
-operator|)
 name|fdp
 operator|->
 name|fd_nfiles
