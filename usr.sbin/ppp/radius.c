@@ -3996,7 +3996,7 @@ name|ac
 operator|->
 name|session_id
 argument_list|,
-literal|"%s%d-%s%lu"
+literal|"%s%ld-%s%lu"
 argument_list|,
 name|dl
 operator|->
@@ -4009,7 +4009,7 @@ operator|.
 name|name
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getpid
 argument_list|()
