@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.36 1997/12/03 10:23:51 brian Exp $  *  */
+comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.37 1997/12/13 02:37:27 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -402,11 +402,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|ifra
 operator|.
 name|ifra_addr
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -419,11 +417,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|ifra
 operator|.
-name|ifra_addr
-argument_list|)
+name|ifra_broadaddr
 argument_list|)
 expr_stmt|;
 name|memset
@@ -436,11 +432,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|ifra
 operator|.
-name|ifra_addr
-argument_list|)
+name|ifra_mask
 argument_list|)
 expr_stmt|;
 if|if
@@ -548,11 +542,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|ifra
 operator|.
 name|ifra_addr
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -565,11 +557,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|ifra
 operator|.
-name|ifra_addr
-argument_list|)
+name|ifra_broadaddr
 argument_list|)
 expr_stmt|;
 name|memset
@@ -582,11 +572,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|ifra
 operator|.
-name|ifra_addr
-argument_list|)
+name|ifra_mask
 argument_list|)
 expr_stmt|;
 if|if
@@ -661,10 +649,8 @@ operator|->
 name|sin_len
 operator|=
 sizeof|sizeof
-argument_list|(
-operator|*
+expr|*
 name|sock_in
-argument_list|)
 expr_stmt|;
 comment|/* Set destination address */
 name|sock_in
@@ -698,10 +684,8 @@ operator|->
 name|sin_len
 operator|=
 sizeof|sizeof
-argument_list|(
-operator|*
+expr|*
 name|sock_in
-argument_list|)
 expr_stmt|;
 name|addr
 operator|=
@@ -805,10 +789,8 @@ operator|->
 name|sin_len
 operator|=
 sizeof|sizeof
-argument_list|(
-operator|*
+expr|*
 name|sock_in
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1518,9 +1500,7 @@ argument_list|(
 name|devname
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|devname
-argument_list|)
 argument_list|,
 literal|"/dev/tun%d"
 argument_list|,
@@ -1647,9 +1627,7 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|ifra
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -1660,9 +1638,7 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|ifrq
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|strncpy

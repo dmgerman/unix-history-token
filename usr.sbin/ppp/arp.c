@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sys-bsd.c - System-dependent procedures for setting up  * PPP interfaces on bsd-4.4-ish systems (including 386BSD, NetBSD, etc.)  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: arp.c,v 1.18 1997/11/22 03:37:22 brian Exp $  *  */
+comment|/*  * sys-bsd.c - System-dependent procedures for setting up  * PPP interfaces on bsd-4.4-ish systems (including 386BSD, NetBSD, etc.)  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: arp.c,v 1.19 1997/12/23 22:38:51 brian Exp $  *  */
 end_comment
 
 begin_comment
@@ -265,9 +265,7 @@ argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|arpmsg
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -690,9 +688,7 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|arpreq
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*    * Get the hardware address of an interface on the same subnet as our local    * address.    */
@@ -868,9 +864,7 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|arpreq
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|SET_SA_FAMILY
@@ -1018,9 +1012,7 @@ operator|.
 name|ifc_len
 operator|=
 sizeof|sizeof
-argument_list|(
 name|ifs
-argument_list|)
 expr_stmt|;
 name|ifc
 operator|.
@@ -1131,11 +1123,9 @@ operator|->
 name|ifr_name
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|ifreq
 operator|.
 name|ifr_name
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -1145,11 +1135,9 @@ operator|.
 name|ifr_name
 index|[
 sizeof|sizeof
-argument_list|(
 name|ifreq
 operator|.
 name|ifr_name
-argument_list|)
 operator|-
 literal|1
 index|]

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.116 1997/12/21 03:16:09 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.117 1997/12/23 22:38:52 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -4216,9 +4216,7 @@ argument_list|,
 name|label
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|buf
-argument_list|)
 operator|-
 literal|3
 argument_list|)
@@ -4226,9 +4224,7 @@ expr_stmt|;
 name|buf
 index|[
 sizeof|sizeof
-argument_list|(
 name|buf
-argument_list|)
 operator|-
 literal|3
 index|]
@@ -4269,9 +4265,7 @@ condition|(
 name|n
 operator|<
 sizeof|sizeof
-argument_list|(
 name|buf
-argument_list|)
 operator|-
 literal|1
 operator|&&
@@ -4305,9 +4299,7 @@ argument_list|,
 name|HIDDEN
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|buf
-argument_list|)
 operator|-
 name|n
 operator|-
@@ -4327,9 +4319,7 @@ name|f
 index|]
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|buf
-argument_list|)
 operator|-
 name|n
 operator|-
@@ -5457,9 +5447,7 @@ argument_list|,
 name|passwd
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|VarLocalAuthKey
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -7187,9 +7175,7 @@ argument_list|,
 name|argp
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|VarAuthKey
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -7197,9 +7183,7 @@ expr_stmt|;
 name|VarAuthKey
 index|[
 sizeof|sizeof
-argument_list|(
 name|VarAuthKey
-argument_list|)
 operator|-
 literal|1
 index|]
@@ -7217,9 +7201,7 @@ argument_list|,
 name|argp
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|VarAuthName
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -7227,9 +7209,7 @@ expr_stmt|;
 name|VarAuthName
 index|[
 sizeof|sizeof
-argument_list|(
 name|VarAuthName
-argument_list|)
 operator|-
 literal|1
 index|]
@@ -7247,9 +7227,7 @@ argument_list|,
 name|argp
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|VarDialScript
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -7257,9 +7235,7 @@ expr_stmt|;
 name|VarDialScript
 index|[
 sizeof|sizeof
-argument_list|(
 name|VarDialScript
-argument_list|)
 operator|-
 literal|1
 index|]
@@ -7277,9 +7253,7 @@ argument_list|,
 name|argp
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|VarLoginScript
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -7287,9 +7261,7 @@ expr_stmt|;
 name|VarLoginScript
 index|[
 sizeof|sizeof
-argument_list|(
 name|VarLoginScript
-argument_list|)
 operator|-
 literal|1
 index|]
@@ -7327,9 +7299,7 @@ argument_list|,
 name|argp
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|VarDeviceList
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -7337,9 +7307,7 @@ expr_stmt|;
 name|VarDeviceList
 index|[
 sizeof|sizeof
-argument_list|(
 name|VarDeviceList
-argument_list|)
 operator|-
 literal|1
 index|]
@@ -7376,9 +7344,7 @@ argument_list|,
 name|argp
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|VarPhoneList
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -7386,9 +7352,7 @@ expr_stmt|;
 name|VarPhoneList
 index|[
 sizeof|sizeof
-argument_list|(
 name|VarPhoneList
-argument_list|)
 operator|-
 literal|1
 index|]
@@ -7402,9 +7366,7 @@ argument_list|,
 name|VarPhoneList
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|VarPhoneCopy
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -7412,9 +7374,7 @@ expr_stmt|;
 name|VarPhoneCopy
 index|[
 sizeof|sizeof
-argument_list|(
 name|VarPhoneCopy
-argument_list|)
 operator|-
 literal|1
 index|]
@@ -7440,9 +7400,7 @@ argument_list|,
 name|argp
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|VarHangupScript
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -7450,9 +7408,7 @@ expr_stmt|;
 name|VarHangupScript
 index|[
 sizeof|sizeof
-argument_list|(
 name|VarHangupScript
-argument_list|)
 operator|-
 literal|1
 index|]

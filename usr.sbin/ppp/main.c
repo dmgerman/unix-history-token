@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.109 1997/12/17 21:21:56 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.110 1997/12/22 02:28:18 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -1278,15 +1278,11 @@ operator|&&
 name|ex
 operator|<
 sizeof|sizeof
-argument_list|(
 name|desc
-argument_list|)
 operator|/
 sizeof|sizeof
-argument_list|(
-operator|*
+expr|*
 name|desc
-argument_list|)
 condition|)
 return|return
 name|desc
@@ -2548,9 +2544,7 @@ argument_list|(
 name|pid_filename
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|pid_filename
-argument_list|)
 argument_list|,
 literal|"%stun%d.pid"
 argument_list|,
@@ -2839,9 +2833,7 @@ argument_list|,
 name|linebuff
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|linebuff
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -2871,6 +2863,14 @@ condition|)
 name|linebuff
 index|[
 operator|--
+name|n
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+else|else
+name|linebuff
+index|[
 name|n
 index|]
 operator|=
@@ -4633,9 +4633,7 @@ argument_list|,
 name|rbuff
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|rbuff
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4792,9 +4790,7 @@ operator|&
 name|tun
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|tun
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4821,16 +4817,12 @@ block|}
 name|n
 operator|-=
 sizeof|sizeof
-argument_list|(
 name|tun
-argument_list|)
 operator|-
 sizeof|sizeof
-argument_list|(
 name|tun
 operator|.
 name|data
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

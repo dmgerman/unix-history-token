@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.69 1997/12/21 03:16:12 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.70 1997/12/23 22:38:55 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -1587,9 +1587,7 @@ operator|&
 name|dest
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|dest
-argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -1930,9 +1928,7 @@ name|char
 name|tmpDeviceList
 index|[
 sizeof|sizeof
-argument_list|(
 name|VarDeviceList
-argument_list|)
 index|]
 decl_stmt|;
 name|char
@@ -2104,9 +2100,7 @@ argument_list|,
 name|VarDeviceList
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|tmpDeviceList
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -2114,9 +2108,7 @@ expr_stmt|;
 name|tmpDeviceList
 index|[
 sizeof|sizeof
-argument_list|(
 name|tmpDeviceList
-argument_list|)
 operator|-
 literal|1
 index|]
@@ -2159,9 +2151,7 @@ argument_list|,
 name|tmpDevice
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|VarDevice
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -2169,9 +2159,7 @@ expr_stmt|;
 name|VarDevice
 index|[
 sizeof|sizeof
-argument_list|(
 name|VarDevice
-argument_list|)
 operator|-
 literal|1
 index|]
@@ -3263,9 +3251,7 @@ argument_list|,
 name|VarHangupScript
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|ScriptBuffer
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -3273,9 +3259,7 @@ expr_stmt|;
 name|ScriptBuffer
 index|[
 sizeof|sizeof
-argument_list|(
 name|ScriptBuffer
-argument_list|)
 operator|-
 literal|1
 index|]
@@ -3392,11 +3376,9 @@ argument_list|,
 name|VarBaseDevice
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|ut
 operator|.
 name|ut_line
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -3406,11 +3388,9 @@ operator|.
 name|ut_line
 index|[
 sizeof|sizeof
-argument_list|(
 name|ut
 operator|.
 name|ut_line
-argument_list|)
 operator|-
 literal|1
 index|]
@@ -3951,9 +3931,7 @@ argument_list|,
 name|VarDialScript
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|ScriptBuffer
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -3961,9 +3939,7 @@ expr_stmt|;
 name|ScriptBuffer
 index|[
 sizeof|sizeof
-argument_list|(
 name|ScriptBuffer
-argument_list|)
 operator|-
 literal|1
 index|]
@@ -4002,9 +3978,7 @@ argument_list|,
 name|VarLoginScript
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|ScriptBuffer
-argument_list|)
 operator|-
 literal|1
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.40 1997/12/18 01:10:12 brian Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.41 1997/12/23 22:38:51 brian Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
 end_comment
 
 begin_include
@@ -704,9 +704,7 @@ argument_list|,
 name|VarPhoneList
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|VarPhoneCopy
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -714,9 +712,7 @@ expr_stmt|;
 name|VarPhoneCopy
 index|[
 sizeof|sizeof
-argument_list|(
 name|VarPhoneCopy
-argument_list|)
 operator|-
 literal|1
 index|]
@@ -1177,9 +1173,7 @@ argument_list|,
 name|buff
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|buff
-argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -2275,9 +2269,7 @@ argument_list|,
 name|buff
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|buff
-argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -2343,9 +2335,7 @@ operator|+
 literal|2
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|buff
-argument_list|)
 operator|-
 literal|2
 argument_list|,
@@ -2375,9 +2365,7 @@ operator|+
 literal|2
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|buff
-argument_list|)
 operator|-
 literal|2
 argument_list|,
@@ -2892,9 +2880,7 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|vector
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|argc

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.43 1997/12/19 04:49:53 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.44 1997/12/24 09:28:11 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
 end_comment
 
 begin_include
@@ -477,7 +477,7 @@ begin_define
 define|#
 directive|define
 name|NCFTYPES
-value|(sizeof(cftypes)/sizeof(char *))
+value|(sizeof cftypes/sizeof cftypes[0])
 end_define
 
 begin_decl_stmt
@@ -512,7 +512,7 @@ begin_define
 define|#
 directive|define
 name|NCFTYPES128
-value|(sizeof(cftypes128)/sizeof(char *))
+value|(sizeof cftypes128/sizeof cftypes128[0])
 end_define
 
 begin_decl_stmt
@@ -759,9 +759,7 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|DefMyAddress
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -772,9 +770,7 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|DefHisAddress
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|TriggerAddress
@@ -794,9 +790,7 @@ argument_list|(
 name|name
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|name
-argument_list|)
 argument_list|)
 operator|==
 literal|0
@@ -876,10 +870,7 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-argument_list|(
-expr|struct
-name|ipcpstate
-argument_list|)
+name|IpcpInfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -1472,9 +1463,7 @@ argument_list|(
 name|tbuff
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|tbuff
-argument_list|)
 argument_list|,
 literal|"myaddr = %s "
 argument_list|,
@@ -1859,9 +1848,7 @@ argument_list|(
 name|tbuff
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|tbuff
-argument_list|)
 argument_list|,
 literal|" %s[%d] "
 argument_list|,
@@ -1891,9 +1878,7 @@ argument_list|(
 name|tbuff
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|tbuff
-argument_list|)
 argument_list|,
 literal|" %s[%d] "
 argument_list|,
@@ -1913,9 +1898,7 @@ argument_list|(
 name|tbuff
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|tbuff
-argument_list|)
 argument_list|,
 literal|"<%d>[%d] "
 argument_list|,
@@ -2185,9 +2168,7 @@ argument_list|(
 name|tbuff2
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|tbuff2
-argument_list|)
 argument_list|,
 literal|"%s changing address: %s "
 argument_list|,
@@ -2533,9 +2514,7 @@ operator|&
 name|pcomp
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|pcomp
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|nakp
@@ -2650,9 +2629,7 @@ argument_list|(
 name|tbuff2
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|tbuff2
-argument_list|)
 argument_list|,
 literal|"%s %s,"
 argument_list|,
@@ -2720,9 +2697,7 @@ argument_list|(
 name|tbuff2
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|tbuff2
-argument_list|)
 argument_list|,
 literal|"%s changing address: %s"
 argument_list|,
