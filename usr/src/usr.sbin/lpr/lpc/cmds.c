@@ -1969,7 +1969,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: disable {all | printer} [message ...]\n"
+literal|"Usage: down {all | printer} [message ...]\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2342,13 +2342,6 @@ literal|"\tcannot stat lock file\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Write the message into the status file. 	 */
-if|if
-condition|(
-name|argc
-operator|<=
-literal|0
-condition|)
-return|return;
 operator|(
 name|void
 operator|)
@@ -2409,6 +2402,35 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|write
+argument_list|(
+name|fd
+argument_list|,
+literal|"\n"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|cp1
 operator|=
 name|buf
