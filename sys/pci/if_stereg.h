@@ -299,7 +299,21 @@ begin_define
 define|#
 directive|define
 name|STE_MAR1
+value|0x62
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_MAR2
 value|0x64
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_MAR3
+value|0x66
 end_define
 
 begin_define
