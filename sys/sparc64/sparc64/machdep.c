@@ -1561,9 +1561,13 @@ argument_list|,
 literal|"sendsig: no sigtramp"
 argument_list|)
 expr_stmt|;
-name|PROC_LOCK
+name|printf
 argument_list|(
+literal|"sendsig: %s is too old, rebuild it\n"
+argument_list|,
 name|p
+operator|->
+name|p_comm
 argument_list|)
 expr_stmt|;
 name|sigexit
