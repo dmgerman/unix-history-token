@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	5.17 (Berkeley) %G%"
+literal|"@(#)sys_term.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -787,6 +787,12 @@ begin_comment
 comment|/* pty control structure */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STREAMSPTY
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|ttyfd
@@ -795,6 +801,11 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -900,6 +911,9 @@ endif|#
 directive|endif
 else|#
 directive|else
+ifdef|#
+directive|ifdef
+name|STREAMSPTY
 operator|(
 name|void
 operator|)
@@ -911,6 +925,21 @@ operator|&
 name|termbuf
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|tcgetattr
+argument_list|(
+name|pty
+argument_list|,
+operator|&
+name|termbuf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|termbuf2
@@ -1208,6 +1237,9 @@ name|termbuf
 argument_list|)
 argument_list|)
 condition|)
+ifdef|#
+directive|ifdef
+name|STREAMSPTY
 operator|(
 name|void
 operator|)
@@ -1221,6 +1253,23 @@ operator|&
 name|termbuf
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|tcsetattr
+argument_list|(
+name|pty
+argument_list|,
+name|TCSANOW
+argument_list|,
+operator|&
+name|termbuf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -4591,6 +4640,9 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|STREAMSPTY
+ifdef|#
+directive|ifdef
 name|USE_TERMIO
 name|ttyfd
 operator|=
@@ -4598,9 +4650,6 @@ name|t
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|STREAMSPTY
 if|if
 condition|(
 name|ioctl
