@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_vfsops.c	8.8 (Berkeley) 4/18/94  * $Id: ffs_vfsops.c,v 1.23 1995/07/13 08:48:05 davidg Exp $  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_vfsops.c	8.8 (Berkeley) 4/18/94  * $Id: ffs_vfsops.c,v 1.24 1995/07/21 03:52:40 davidg Exp $  */
 end_comment
 
 begin_include
@@ -3867,8 +3867,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|ffs_inode_hash_lock
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -3945,6 +3943,8 @@ name|ump
 operator|->
 name|um_dev
 expr_stmt|;
+name|restart
+label|:
 if|if
 condition|(
 operator|(
@@ -3966,7 +3966,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Lockout the creation of new entries in the FFS hash table 	 * in case getnewvnode/MALLOC blocks, otherwise a duplicate 	 * may occur! 	 */
+comment|/* 	 * Lock out the creation of new entries in the FFS hash table in 	 * case getnewvnode() or MALLOC() blocks, otherwise a duplicate 	 * may occur! 	 */
 if|if
 condition|(
 name|ffs_inode_hash_lock
@@ -3995,27 +3995,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-operator|*
-name|vpp
-operator|=
-name|ufs_ihashget
-argument_list|(
-name|dev
-argument_list|,
-name|ino
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|restart
+goto|;
 block|}
 name|ffs_inode_hash_lock
 operator|=
@@ -4047,14 +4029,12 @@ name|ffs_inode_hash_lock
 operator|<
 literal|0
 condition|)
-block|{
 name|wakeup
 argument_list|(
 operator|&
 name|ffs_inode_hash_lock
 argument_list|)
 expr_stmt|;
-block|}
 name|ffs_inode_hash_lock
 operator|=
 literal|0
@@ -4190,21 +4170,18 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wakeup anybody blocked on our lock 	 */
 if|if
 condition|(
 name|ffs_inode_hash_lock
 operator|<
 literal|0
 condition|)
-block|{
 name|wakeup
 argument_list|(
 operator|&
 name|ffs_inode_hash_lock
 argument_list|)
 expr_stmt|;
-block|}
 name|ffs_inode_hash_lock
 operator|=
 literal|0
