@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.22 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1260,6 +1260,27 @@ operator|(
 name|NULL
 operator|)
 return|;
+if|if
+condition|(
+name|isdigit
+argument_list|(
+name|name
+index|[
+literal|0
+index|]
+argument_list|)
+condition|)
+block|{
+name|h_errno
+operator|=
+name|HOST_NOT_FOUND
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|errno
 operator|=
 literal|0
@@ -2073,7 +2094,7 @@ break|break;
 if|if
 condition|(
 operator|!
-name|strcasencmp
+name|strncasecmp
 argument_list|(
 name|buf
 argument_list|,
