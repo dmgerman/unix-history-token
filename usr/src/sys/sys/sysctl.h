@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -603,30 +603,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KERN_MAXUPROC
-value|31
-end_define
-
-begin_comment
-comment|/* int: max processes per uid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_MAXUFILES
-value|32
-end_define
-
-begin_comment
-comment|/* int: max open files per uid */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|KERN_MAXID
-value|33
+value|31
 end_define
 
 begin_comment
@@ -637,7 +615,7 @@ begin_define
 define|#
 directive|define
 name|CTL_KERN_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "ostype", CTLTYPE_STRING }, \ 	{ "osrelease", CTLTYPE_STRING }, \ 	{ "osrevision", CTLTYPE_INT }, \ 	{ "version", CTLTYPE_STRING }, \ 	{ "maxvnodes", CTLTYPE_INT }, \ 	{ "maxproc", CTLTYPE_INT }, \ 	{ "maxfiles", CTLTYPE_INT }, \ 	{ "argmax", CTLTYPE_INT }, \ 	{ "securelevel", CTLTYPE_INT }, \ 	{ "hostname", CTLTYPE_STRING }, \ 	{ "hostid", CTLTYPE_INT }, \ 	{ "clockrate", CTLTYPE_STRUCT }, \ 	{ "vnode", CTLTYPE_STRUCT }, \ 	{ "proc", CTLTYPE_STRUCT }, \ 	{ "file", CTLTYPE_STRUCT }, \ 	{ "profiling", CTLTYPE_NODE }, \ 	{ "posix1version", CTLTYPE_INT }, \ 	{ "ngroups", CTLTYPE_INT }, \ 	{ "job_control", CTLTYPE_INT }, \ 	{ "saved_ids", CTLTYPE_INT }, \ 	{ "link_max", CTLTYPE_INT }, \ 	{ "max_canon", CTLTYPE_INT }, \ 	{ "max_input", CTLTYPE_INT }, \ 	{ "name_max", CTLTYPE_INT }, \ 	{ "path_max", CTLTYPE_INT }, \ 	{ "pipe_buf", CTLTYPE_INT }, \ 	{ "chown_restricted", CTLTYPE_INT }, \ 	{ "no_trunc", CTLTYPE_INT }, \ 	{ "vdisable", CTLTYPE_INT }, \ 	{ "boottime", CTLTYPE_STRUCT }, \ 	{ "maxuproc", CTLTYPE_INT }, \ 	{ "maxufiles", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "ostype", CTLTYPE_STRING }, \ 	{ "osrelease", CTLTYPE_STRING }, \ 	{ "osrevision", CTLTYPE_INT }, \ 	{ "version", CTLTYPE_STRING }, \ 	{ "maxvnodes", CTLTYPE_INT }, \ 	{ "maxproc", CTLTYPE_INT }, \ 	{ "maxfiles", CTLTYPE_INT }, \ 	{ "argmax", CTLTYPE_INT }, \ 	{ "securelevel", CTLTYPE_INT }, \ 	{ "hostname", CTLTYPE_STRING }, \ 	{ "hostid", CTLTYPE_INT }, \ 	{ "clockrate", CTLTYPE_STRUCT }, \ 	{ "vnode", CTLTYPE_STRUCT }, \ 	{ "proc", CTLTYPE_STRUCT }, \ 	{ "file", CTLTYPE_STRUCT }, \ 	{ "profiling", CTLTYPE_NODE }, \ 	{ "posix1version", CTLTYPE_INT }, \ 	{ "ngroups", CTLTYPE_INT }, \ 	{ "job_control", CTLTYPE_INT }, \ 	{ "saved_ids", CTLTYPE_INT }, \ 	{ "link_max", CTLTYPE_INT }, \ 	{ "max_canon", CTLTYPE_INT }, \ 	{ "max_input", CTLTYPE_INT }, \ 	{ "name_max", CTLTYPE_INT }, \ 	{ "path_max", CTLTYPE_INT }, \ 	{ "pipe_buf", CTLTYPE_INT }, \ 	{ "chown_restricted", CTLTYPE_INT }, \ 	{ "no_trunc", CTLTYPE_INT }, \ 	{ "vdisable", CTLTYPE_INT }, \ 	{ "boottime", CTLTYPE_STRUCT }, \ }
 end_define
 
 begin_comment
