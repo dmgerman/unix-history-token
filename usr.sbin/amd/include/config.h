@@ -3956,6 +3956,36 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if `fhs_fh' is member of `struct fhstatus'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_FHSTATUS_FHS_FH */
+end_comment
+
+begin_comment
+comment|/* Define if `ifa_next' is member of `struct ifaddrs'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_IFADDRS_IFA_NEXT
+value|1
+end_define
+
+begin_comment
+comment|/* Define if `ifr_addr' is member of `struct ifreq'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_IFREQ_IFR_ADDR
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the svc_getreq function.  */
 end_comment
 
