@@ -247,28 +247,43 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|addcmd
+parameter_list|(
+name|struct
+name|cmd
+modifier|*
+modifier|*
+name|cp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|parse_card
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Read a file and parse the pcmcia configuration data.  * After parsing, verify the links.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|readfile
-argument_list|(
-argument|char *name
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|)
 block|{
 name|struct
 name|card
 modifier|*
 name|cp
-decl_stmt|;
-name|struct
-name|driver
-modifier|*
-name|drvp
 decl_stmt|;
 name|in
 operator|=
@@ -340,7 +355,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -349,10 +364,6 @@ parameter_list|()
 block|{
 name|int
 name|i
-decl_stmt|;
-name|char
-modifier|*
-name|s
 decl_stmt|;
 name|struct
 name|allocblk
@@ -402,12 +413,16 @@ literal|1
 case|:
 while|while
 condition|(
+operator|(
 name|bp
 operator|=
 name|ioblk_tok
 argument_list|(
 literal|0
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -502,12 +517,16 @@ literal|3
 case|:
 while|while
 condition|(
+operator|(
 name|bp
 operator|=
 name|memblk_tok
 argument_list|(
 literal|0
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -596,12 +615,10 @@ begin_comment
 comment|/*  *	Parse a card definition.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|parse_card
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 modifier|*
@@ -963,7 +980,7 @@ break|break;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	Generate a new driver structure. If one exists, use  *	that one after confirming the correct class.  */
@@ -1764,14 +1781,16 @@ begin_comment
 comment|/*  *	addcmd - Append the command line to the list of  *	commands.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|addcmd
-argument_list|(
-argument|struct cmd **cp
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|cmd
+modifier|*
+modifier|*
+name|cp
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1830,7 +1849,7 @@ name|ncp
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -2022,10 +2041,6 @@ init|=
 literal|0
 decl_stmt|,
 name|base
-decl_stmt|,
-name|term
-init|=
-literal|0
 decl_stmt|;
 name|base
 operator|=
@@ -2280,11 +2295,15 @@ block|}
 block|}
 do|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|s
 operator|++
+operator|)
+operator|!=
+literal|0
 condition|)
 do|;
 return|return

@@ -74,6 +74,91 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|dump_device_desc
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|char
+modifier|*
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dump_info_v1
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dump_config_map
+parameter_list|(
+name|struct
+name|tuple
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dump_cis_config
+parameter_list|(
+name|struct
+name|tuple
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dump_other_cond
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dump_func_ext
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|dumpcis
@@ -758,14 +843,15 @@ begin_comment
 comment|/*  *	Dump configuration map tuple.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dump_config_map
-argument_list|(
-argument|struct tuple *tp
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|tuple
+modifier|*
+name|tp
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -872,7 +958,7 @@ operator|++
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tReg len = %d, config register addr = 0x%x, last config = 0x%x\n"
+literal|"\tReg len = %d, config register addr = 0x%lx, last config = 0x%x\n"
 argument_list|,
 name|rlen
 argument_list|,
@@ -952,20 +1038,21 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	Dump a config entry.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dump_cis_config
-argument_list|(
-argument|struct tuple *tp
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|tuple
+modifier|*
+name|tp
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -982,22 +1069,6 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-union|union
-block|{
-name|unsigned
-name|long
-name|l
-decl_stmt|;
-name|unsigned
-name|char
-name|b
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-name|u
-union|;
 name|p
 operator|=
 name|tp
@@ -2444,20 +2515,21 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	dump_other_cond - Dump other conditions.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dump_other_cond
-argument_list|(
-argument|unsigned char *p
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|p
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2521,7 +2593,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	Dump power descriptor.  */
@@ -2787,18 +2859,22 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|dump_device_desc
-argument_list|(
-argument|unsigned char *p
-argument_list|,
-argument|int len
-argument_list|,
-argument|char *type
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|char
+modifier|*
+name|type
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -3048,22 +3124,24 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	Print version info  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dump_info_v1
-argument_list|(
-argument|unsigned char *p
-argument_list|,
-argument|int len
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|len
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -3134,22 +3212,24 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	dump functional extension tuple.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dump_func_ext
-argument_list|(
-argument|unsigned char *p
-argument_list|,
-argument|int len
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|len
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3349,7 +3429,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	print_ext_speed - Print extended speed.  */

@@ -24,6 +24,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -428,15 +440,6 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|struct
-name|card
-modifier|*
-name|cp
-init|=
-name|sp
-operator|->
-name|card
-decl_stmt|;
 name|char
 name|c
 decl_stmt|;
@@ -717,6 +720,7 @@ condition|)
 continue|continue;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|strchr
@@ -725,6 +729,9 @@ name|lp
 argument_list|,
 literal|'$'
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/*  *	copy over preceding string.  */
@@ -884,6 +891,7 @@ block|}
 comment|/*  *	No more replacements. Copy rest of string.  */
 while|while
 condition|(
+operator|(
 operator|*
 name|cp
 operator|++
@@ -891,6 +899,9 @@ operator|=
 operator|*
 name|lp
 operator|++
+operator|)
+operator|!=
+literal|0
 condition|)
 empty_stmt|;
 ifdef|#

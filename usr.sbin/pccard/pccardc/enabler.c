@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ioctl.h>
 end_include
 
@@ -83,8 +89,6 @@ name|io
 decl_stmt|;
 name|int
 name|fd
-decl_stmt|,
-name|err
 decl_stmt|,
 name|slot
 decl_stmt|,
@@ -286,7 +290,7 @@ index|[
 literal|2
 index|]
 argument_list|,
-literal|"%x"
+literal|"%lx"
 argument_list|,
 operator|&
 name|drv
@@ -497,7 +501,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"drv %s%d, mem 0x%x, size %d, io %d, irq 0x%x, flags 0x%x\n"
+literal|"drv %s%d, mem 0x%lx, size %d, io %d, irq 0x%x, flags 0x%x\n"
 argument_list|,
 name|drv
 operator|.
@@ -719,6 +723,9 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
