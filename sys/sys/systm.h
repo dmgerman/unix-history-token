@@ -263,6 +263,20 @@ parameter_list|)
 value|do {						\ 	if (__predict_false(!(exp)))					\ 		panic msg;						\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VNASSERT
+parameter_list|(
+name|exp
+parameter_list|,
+name|vp
+parameter_list|,
+name|msg
+parameter_list|)
+value|do {					\ 	if (__predict_false(!(exp))) {					\ 		vn_printf(vp, "VNASSERT failed\n");		\ 		panic msg;						\ 	}								\ } while (0)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -274,6 +288,19 @@ directive|define
 name|KASSERT
 parameter_list|(
 name|exp
+parameter_list|,
+name|msg
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNASSERT
+parameter_list|(
+name|exp
+parameter_list|,
+name|vp
 parameter_list|,
 name|msg
 parameter_list|)
