@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vipw.c	4.1 (Berkeley) %G%"
+literal|"@(#)vipw.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,6 +163,11 @@ argument_list|(
 name|stderr
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|umask
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 name|fd
