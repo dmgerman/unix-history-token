@@ -754,7 +754,7 @@ comment|/* make addresses canonical "u@dom" */
 end_comment
 
 begin_comment
-comment|/*	'D'	/* CF: include Date: */
+comment|/*	'D'	   CF: include Date: */
 end_comment
 
 begin_define
@@ -791,7 +791,7 @@ comment|/* mailer takes picky -f flag */
 end_comment
 
 begin_comment
-comment|/*	'F'	/* CF: include From: or Resent-From: */
+comment|/*	'F'	   CF: include From: or Resent-From: */
 end_comment
 
 begin_define
@@ -872,7 +872,7 @@ comment|/* can handle multiple users at once */
 end_comment
 
 begin_comment
-comment|/*	'M'	/* CF: include Message-Id: */
+comment|/*	'M'	   CF: include Message-Id: */
 end_comment
 
 begin_define
@@ -909,7 +909,7 @@ comment|/* use reverse-path in MAIL FROM: */
 end_comment
 
 begin_comment
-comment|/*	'P'	/* CF: include Return-Path: */
+comment|/*	'P'	   CF: include Return-Path: */
 end_comment
 
 begin_define
@@ -979,11 +979,11 @@ comment|/* this wants an ugly UUCP from line */
 end_comment
 
 begin_comment
-comment|/*	'V'	/* UIUC: !-relativize all addresses */
+comment|/*	'V'	   UIUC: !-relativize all addresses */
 end_comment
 
 begin_comment
-comment|/*	'x'	/* CF: include Full-Name: */
+comment|/*	'x'	   CF: include Full-Name: */
 end_comment
 
 begin_define
