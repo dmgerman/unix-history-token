@@ -5228,12 +5228,8 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"en_rxctl: left over mbufs on enable slot=%ld"
+literal|"en_rxctl: left over mbufs on enable slot=%tu"
 operator|,
-call|(
-name|long
-call|)
-argument_list|(
 name|vc
 operator|->
 name|rxslot
@@ -5241,7 +5237,6 @@ operator|-
 name|sc
 operator|->
 name|rxslot
-argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
