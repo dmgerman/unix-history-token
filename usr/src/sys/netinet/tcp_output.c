@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_output.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_output.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1459,44 +1459,13 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Time this transmission if not a retransmission and 		 * not currently timing anything. 		 */
-if|if
-condition|(
-name|tp
-operator|->
-name|t_rtt
-operator|==
-literal|0
-operator|&&
+name|tcp_seq
+name|startseq
+init|=
 name|tp
 operator|->
 name|snd_nxt
-operator|==
-name|tp
-operator|->
-name|snd_max
-condition|)
-block|{
-name|tp
-operator|->
-name|t_rtt
-operator|=
-literal|1
-expr_stmt|;
-name|tp
-operator|->
-name|t_rtseq
-operator|=
-name|tp
-operator|->
-name|snd_nxt
-expr_stmt|;
-name|tcpstat
-operator|.
-name|tcps_segstimed
-operator|++
-expr_stmt|;
-block|}
+decl_stmt|;
 comment|/* 		 * Advance snd_nxt over sequence space of this segment. 		 */
 if|if
 condition|(
@@ -1547,6 +1516,7 @@ operator|->
 name|snd_max
 argument_list|)
 condition|)
+block|{
 name|tp
 operator|->
 name|snd_max
@@ -1555,6 +1525,35 @@ name|tp
 operator|->
 name|snd_nxt
 expr_stmt|;
+comment|/* 			 * Time this transmission if not a retransmission and 			 * not currently timing anything. 			 */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_rtt
+operator|==
+literal|0
+condition|)
+block|{
+name|tp
+operator|->
+name|t_rtt
+operator|=
+literal|1
+expr_stmt|;
+name|tp
+operator|->
+name|t_rtseq
+operator|=
+name|startseq
+expr_stmt|;
+name|tcpstat
+operator|.
+name|tcps_segstimed
+operator|++
+expr_stmt|;
+block|}
+block|}
 comment|/* 		 * Set retransmit timer if not currently set, 		 * and not doing an ack or a keep-alive probe. 		 * Initial value for retransmit timer is smoothed 		 * round-trip time + 2 * round-trip time variance. 		 * Initialize shift counter which is used for backoff 		 * of retransmit time. 		 */
 if|if
 condition|(
