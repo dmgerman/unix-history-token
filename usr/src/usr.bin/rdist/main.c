@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.13 (Berkeley) 84/09/21"
+literal|"@(#)main.c	4.13 (Berkeley) 84/12/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -556,6 +556,13 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+name|setreuid
+argument_list|(
+literal|0
+argument_list|,
+name|userid
+argument_list|)
+expr_stmt|;
 name|mktemp
 argument_list|(
 name|tmpfile
@@ -572,6 +579,8 @@ expr_stmt|;
 name|exit
 argument_list|(
 name|nerrs
+operator|!=
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -639,6 +648,8 @@ block|}
 name|exit
 argument_list|(
 name|nerrs
+operator|!=
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)docmd.c	4.21 (Berkeley) 84/06/28"
+literal|"@(#)docmd.c	4.22 (Berkeley) 84/12/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,24 @@ include|#
 directive|include
 file|<setjmp.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RDIST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RDIST
+value|"/usr/local/rdist"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|FILE
@@ -848,6 +866,10 @@ name|char
 name|user
 index|[]
 decl_stmt|;
+specifier|extern
+name|int
+name|userid
+decl_stmt|;
 if|if
 condition|(
 name|debug
@@ -950,7 +972,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"/usr/local/rdist -Server%s"
+literal|"%s -Server%s"
+argument_list|,
+name|RDIST
 argument_list|,
 name|qflag
 condition|?
@@ -990,6 +1014,13 @@ name|cur_host
 operator|=
 name|rhost
 expr_stmt|;
+name|setreuid
+argument_list|(
+name|userid
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|rem
 operator|=
 name|rcmd
@@ -1006,6 +1037,13 @@ argument_list|,
 name|buf
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|setreuid
+argument_list|(
+literal|0
+argument_list|,
+name|userid
 argument_list|)
 expr_stmt|;
 if|if
