@@ -1219,11 +1219,7 @@ argument_list|(
 name|spos
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+continue|continue;
 block|}
 comment|/* Watch for null pointer dereferences, dammit! */
 if|if
