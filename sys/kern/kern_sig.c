@@ -4044,10 +4044,10 @@ name|ps_sig
 operator|=
 name|sig
 expr_stmt|;
-comment|/* 		 * Log signals which would cause core dumps 		 */
+comment|/* 		 * Log signals which would cause core dumps 		 * (Log as LOG_INFO to appease those who don't want  		 * these messages.) 		 * XXX : Todo, as well as euid, write out ruid too 		 */
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 literal|"pid %d : %s : uid %d : exited on signal %d\n"
 argument_list|,
