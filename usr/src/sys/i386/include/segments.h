@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 386 Segmentation Data Structures and definitions  *	William F. Jolitz (william@ernie.berkeley.edu) 6/20/1989  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)segments.h	5.2 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * 386 Segmentation Data Structures and definitions  *	William F. Jolitz (william@ernie.berkeley.edu) 6/20/1989  * Copyright (c) 1989,1990 William F. Jolitz  */
 end_comment
 
 begin_comment
@@ -827,6 +831,57 @@ comment|/* base address  */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Segment Protection Exception code bits  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEGEX_EXT
+value|0x01
+end_define
+
+begin_comment
+comment|/* recursive or externally induced */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEGEX_IDT
+value|0x02
+end_define
+
+begin_comment
+comment|/* interrupt descriptor table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEGEX_TI
+value|0x04
+end_define
+
+begin_comment
+comment|/* local descriptor table */
+end_comment
+
+begin_comment
+comment|/* other bits are affected descriptor index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEGEX_IDX
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)>>3)&0x1fff)
+end_define
 
 end_unit
 
