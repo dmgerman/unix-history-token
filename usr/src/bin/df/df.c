@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.5 (Berkeley) %G%"
+literal|"@(#)df.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fs.h>
+file|<ufs/fs.h>
 end_include
 
 begin_include
@@ -375,7 +375,7 @@ literal|0
 condition|)
 name|perror
 argument_list|(
-name|FSTAB
+name|_PATH_FSTAB
 argument_list|)
 operator|,
 name|exit
