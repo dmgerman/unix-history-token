@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_raw.c,v 1.4 1995/10/27 16:56:48 adam Exp $"
+literal|"$Id: clnt_raw.c,v 1.5 1996/06/08 22:54:50 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,22 +69,6 @@ directive|define
 name|MCALL_MSG_SIZE
 value|24
 end_define
-
-begin_function_decl
-name|bool_t
-name|xdr_opaque_auth
-parameter_list|(
-name|XDR
-modifier|*
-name|xdrs
-parameter_list|,
-name|struct
-name|opaque_auth
-modifier|*
-name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * This is the "network" we will be moving stuff over.  */
