@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.20	82/07/25	*/
+comment|/*	ufs_inode.c	4.21	82/07/30	*/
 end_comment
 
 begin_include
@@ -1033,39 +1033,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MATISSE
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|badinum
-init|=
-literal|3197
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|badinum
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Decrement reference count of  * an inode structure.  * On the last reference,  * write the inode out and if necessary,  * truncate and deallocate the file.  */
 end_comment
@@ -1102,51 +1069,6 @@ argument_list|(
 literal|"iput"
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
-if|if
-condition|(
-name|ip
-operator|->
-name|i_number
-operator|==
-name|badinum
-operator|&&
-operator|(
-name|ip
-operator|->
-name|i_mode
-operator|&
-name|IFMT
-operator|)
-operator|==
-name|IFCHR
-operator|&&
-operator|(
-name|major
-argument_list|(
-name|ip
-operator|->
-name|i_dev
-argument_list|)
-operator|!=
-literal|3
-operator|||
-name|minor
-argument_list|(
-name|ip
-operator|->
-name|i_dev
-argument_list|)
-operator|!=
-literal|2
-operator|)
-condition|)
-name|panic
-argument_list|(
-literal|"/dev/null"
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|iunlock
 argument_list|(
 name|ip
@@ -1655,6 +1577,30 @@ parameter_list|()
 function_decl|;
 endif|#
 directive|endif
+comment|/* 	 * Only plain files, directories and symbolic 	 * links contain blocks. 	 */
+name|i
+operator|=
+name|ip
+operator|->
+name|i_mode
+operator|&
+name|IFMT
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+name|IFREG
+operator|&&
+name|i
+operator|!=
+name|IFDIR
+operator|&&
+name|i
+operator|!=
+name|IFLNK
+condition|)
+return|return;
 comment|/* 	 * Clean inode on disk before freeing blocks 	 * to insure no duplicates if system crashes. 	 */
 name|itmp
 operator|=
@@ -1746,30 +1692,6 @@ operator||
 name|ICHG
 operator|)
 expr_stmt|;
-comment|/* 	 * Only plain files, directories and symbolic 	 * links contain blocks. 	 */
-name|i
-operator|=
-name|ip
-operator|->
-name|i_mode
-operator|&
-name|IFMT
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|!=
-name|IFREG
-operator|&&
-name|i
-operator|!=
-name|IFDIR
-operator|&&
-name|i
-operator|!=
-name|IFLNK
-condition|)
-return|return;
 comment|/* 	 * Now return blocks to free list... if machine 	 * crashes, they will be harmless MISSING blocks. 	 */
 name|dev
 operator|=

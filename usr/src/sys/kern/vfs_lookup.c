@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_lookup.c	4.19	82/07/25	*/
+comment|/*	vfs_lookup.c	4.20	82/07/30	*/
 end_comment
 
 begin_include
@@ -79,7 +79,7 @@ begin_function_decl
 name|struct
 name|buf
 modifier|*
-name|batoffset
+name|blkatoff
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -688,7 +688,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-name|batoffset
+name|blkatoff
 argument_list|(
 name|dp
 argument_list|,
@@ -748,7 +748,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 		 * Get pointer to next entry, and do consistency checking: 		 *	record length must be multiple of 4 		 *	entry must fit in rest of this DIRBLKSIZ block 		 *	record must be large enough to contain name 		 *	name must be as long as advertised, and null terminated 		 * Checking last condition is expensive, it is done only 		 * when dirchk is set. 		 */
+comment|/* 		 * Get pointer to next entry, and do consistency checking: 		 *	record length must be multiple of 4 		 *	record length must not be zero 		 *	entry must fit in rest of this DIRBLKSIZ block 		 *	record must be large enough to contain name 		 * When dirchk is set we also check: 		 *	name is not longer than MAXNAMLEN 		 *	name must be as long as advertised, and null terminated 		 * Checking last two conditions is done only when dirchk is 		 * set, to save time. 		 */
 name|ep
 operator|=
 operator|(
@@ -793,6 +793,12 @@ operator|||
 name|ep
 operator|->
 name|d_reclen
+operator|==
+literal|0
+operator|||
+name|ep
+operator|->
+name|d_reclen
 operator|>
 name|i
 operator|||
@@ -807,10 +813,18 @@ name|d_reclen
 operator|||
 name|dirchk
 operator|&&
+operator|(
+name|ep
+operator|->
+name|d_namlen
+operator|>
+name|MAXNAMLEN
+operator|||
 name|dirbadname
 argument_list|(
 name|ep
 argument_list|)
+operator|)
 condition|)
 block|{
 name|dirbad
@@ -1120,9 +1134,10 @@ if|if
 condition|(
 name|entryoffsetinblock
 operator|+
+name|DIRSIZ
+argument_list|(
 name|ep
-operator|->
-name|d_reclen
+argument_list|)
 operator|>
 name|dp
 operator|->
@@ -1142,9 +1157,10 @@ name|i_size
 operator|=
 name|entryoffsetinblock
 operator|+
+name|DIRSIZ
+argument_list|(
 name|ep
-operator|->
-name|d_reclen
+argument_list|)
 expr_stmt|;
 name|dp
 operator|->
@@ -1561,6 +1577,12 @@ name|dp
 operator|->
 name|i_size
 expr_stmt|;
+name|u
+operator|.
+name|u_offset
+operator|=
+literal|0
+expr_stmt|;
 name|readi
 argument_list|(
 name|dp
@@ -1857,82 +1879,6 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Return the next character from the  * kernel string pointed at by dirp.  */
-end_comment
-
-begin_macro
-name|schar
-argument_list|()
-end_macro
-
-begin_block
-block|{
-return|return
-operator|(
-operator|*
-name|u
-operator|.
-name|u_dirp
-operator|++
-operator|&
-literal|0377
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Return the next character from the  * user string pointed at by dirp.  */
-end_comment
-
-begin_macro
-name|uchar
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|register
-name|c
-expr_stmt|;
-name|c
-operator|=
-name|fubyte
-argument_list|(
-name|u
-operator|.
-name|u_dirp
-operator|++
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|c
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|EFAULT
-expr_stmt|;
-name|c
-operator|=
-literal|0
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|c
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
 comment|/*  * Write a directory entry after a call to namei, using the parameters  * which it left in the u. area.  The argument ip is the inode which  * the new directory entry will refer to.  The u. area field u.u_pdir is  * a pointer to the directory to be written, which was left locked by  * namei.  Remaining parameters (u.u_offset, u.u_count) indicate  * how the space for the new entry is to be gotten.  */
 end_comment
 
@@ -2105,6 +2051,7 @@ operator|->
 name|i_size
 condition|)
 block|{
+comment|/*ZZ*/
 if|if
 condition|(
 operator|(
@@ -2128,6 +2075,7 @@ literal|1
 operator|)
 operator|)
 operator|!=
+comment|/*ZZ*/
 operator|(
 operator|(
 name|u
@@ -2148,44 +2096,13 @@ operator|)
 operator|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"wdir i_size dir %s/%d (of=%d,cnt=%d,psz=%d))\n"
-argument_list|,
-name|u
-operator|.
-name|u_pdir
-operator|->
-name|i_fs
-operator|->
-name|fs_fsmnt
-argument_list|,
-name|u
-operator|.
-name|u_pdir
-operator|->
-name|i_number
-argument_list|,
-name|u
-operator|.
-name|u_offset
-argument_list|,
-name|u
-operator|.
-name|u_count
-argument_list|,
-name|u
-operator|.
-name|u_pdir
-operator|->
-name|i_size
-argument_list|)
-expr_stmt|;
+comment|/*ZZ*/
 name|panic
 argument_list|(
 literal|"wdir: span"
 argument_list|)
 expr_stmt|;
+comment|/*ZZ*/
 block|}
 name|u
 operator|.
@@ -2205,7 +2122,7 @@ block|}
 comment|/* 	 * Get the block containing the space for the new directory 	 * entry. 	 */
 name|bp
 operator|=
-name|batoffset
+name|blkatoff
 argument_list|(
 name|u
 operator|.
@@ -2231,27 +2148,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|printf
-argument_list|(
-literal|"direnter u.u_offset %d u.u_count %d, bpaddr %x, dirbuf %x\n"
-argument_list|,
-name|u
-operator|.
-name|u_offset
-argument_list|,
-name|u
-operator|.
-name|u_count
-argument_list|,
-name|bp
-operator|->
-name|b_un
-operator|.
-name|b_addr
-argument_list|,
-name|dirbuf
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Find space for the new entry.  In the simple case, the 	 * entry at offset base will have the space.  If it does 	 * not, then namei arranged that compacting the region 	 * u.u_offset to u.u_offset+u.u_count would yield the space. 	 */
 name|ep
 operator|=
@@ -2659,19 +2555,6 @@ name|direct
 modifier|*
 name|ep
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"dirremove u.u_offset %d u.u_count %d\n"
-argument_list|,
-name|u
-operator|.
-name|u_offset
-argument_list|,
-name|u
-operator|.
-name|u_count
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|u
@@ -2743,6 +2626,12 @@ argument_list|)
 expr_stmt|;
 name|u
 operator|.
+name|u_segflg
+operator|=
+literal|1
+expr_stmt|;
+name|u
+operator|.
 name|u_dent
 operator|.
 name|d_ino
@@ -2760,7 +2649,7 @@ block|{
 comment|/* 		 * Collapse new free space into previous entry. 		 */
 name|bp
 operator|=
-name|batoffset
+name|blkatoff
 argument_list|(
 name|dp
 argument_list|,
@@ -2859,11 +2748,15 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Return buffer with contents of block "offset"  * from the beginning of directory "ip".  If "res"  * is non-zero, fill it in with a pointer to the  * remaining space in the directory.  */
+end_comment
+
 begin_function
 name|struct
 name|buf
 modifier|*
-name|batoffset
+name|blkatoff
 parameter_list|(
 name|ip
 parameter_list|,
@@ -3012,20 +2905,6 @@ operator|.
 name|b_addr
 operator|+
 name|base
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"b_addr %x res pointer %x\n"
-argument_list|,
-name|bp
-operator|->
-name|b_un
-operator|.
-name|b_addr
-argument_list|,
-operator|*
-name|res
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
