@@ -5121,15 +5121,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|m
-index|[
-name|i
-index|]
-operator|->
-name|act_count
-operator|=
-literal|2
-expr_stmt|;
 comment|/* 					 * just in case someone was asking for this 					 * page we now tell them that it is ok to use 					 */
 name|m
 index|[
