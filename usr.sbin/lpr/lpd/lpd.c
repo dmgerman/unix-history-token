@@ -349,31 +349,18 @@ name|void
 name|fhosterr
 parameter_list|(
 name|int
-name|_dosys
+name|_ch_opts
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|_sysmsg
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|_usermsg
-parameter_list|,
-modifier|...
 parameter_list|)
-function_decl|__printf0like
-parameter_list|(
-function_decl|3
-operator|,
-function_decl|4
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 specifier|static
@@ -460,6 +447,17 @@ end_define
 
 begin_comment
 comment|/* (sys)log connection errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LPD_ADDFROMLINE
+value|0004
+end_define
+
+begin_comment
+comment|/* just used for fhosterr() */
 end_comment
 
 begin_function
@@ -2952,6 +2950,13 @@ index|[
 name|NI_MAXSERV
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|syserr
+decl_stmt|,
+modifier|*
+name|usererr
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -3046,31 +3051,70 @@ if|if
 condition|(
 name|error
 condition|)
-name|fhosterr
+block|{
+name|asprintf
 argument_list|(
-name|wantsl
+operator|&
+name|syserr
 argument_list|,
-literal|"can not determine hostname for remote host (%d)"
+literal|"can not determine hostname for remote host (%d,%d)"
 argument_list|,
-literal|"Host name for your address not known"
+name|errsav
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-else|else
+name|asprintf
+argument_list|(
+operator|&
+name|usererr
+argument_list|,
+literal|"Host name for your address is not known"
+argument_list|)
+expr_stmt|;
 name|fhosterr
 argument_list|(
-name|wantsl
+name|ch_opts
+argument_list|,
+name|syserr
+argument_list|,
+name|usererr
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+name|asprintf
+argument_list|(
+operator|&
+name|syserr
 argument_list|,
 literal|"Host name for remote host (%s) not known (%d)"
-argument_list|,
-literal|"Host name for your address (%s) not known"
 argument_list|,
 name|hostbuf
 argument_list|,
 name|errsav
 argument_list|)
 expr_stmt|;
+name|asprintf
+argument_list|(
+operator|&
+name|usererr
+argument_list|,
+literal|"Host name for your address (%s) is not known"
+argument_list|,
+name|hostbuf
+argument_list|)
+expr_stmt|;
+name|fhosterr
+argument_list|(
+name|ch_opts
+argument_list|,
+name|syserr
+argument_list|,
+name|usererr
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 name|strlcpy
 argument_list|(
@@ -3087,6 +3131,10 @@ expr_stmt|;
 name|from_host
 operator|=
 name|frombuf
+expr_stmt|;
+name|ch_opts
+operator||=
+name|LPD_ADDFROMLINE
 expr_stmt|;
 comment|/* Need address in stringform for comparison (no DNS lookup here) */
 name|error
@@ -3119,17 +3167,36 @@ if|if
 condition|(
 name|error
 condition|)
-name|fhosterr
+block|{
+name|asprintf
 argument_list|(
-name|wantsl
+operator|&
+name|syserr
 argument_list|,
 literal|"Cannot print IP address (error %d)"
-argument_list|,
-literal|"Cannot print IP address"
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+name|asprintf
+argument_list|(
+operator|&
+name|usererr
+argument_list|,
+literal|"Cannot print IP address for your host"
+argument_list|)
+expr_stmt|;
+name|fhosterr
+argument_list|(
+name|ch_opts
+argument_list|,
+name|syserr
+argument_list|,
+name|usererr
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 name|from_ip
 operator|=
 name|strdup
@@ -3195,17 +3262,33 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
-name|fhosterr
+comment|/* This syslog message already includes from_host */
+name|ch_opts
+operator|&=
+operator|~
+name|LPD_ADDFROMLINE
+expr_stmt|;
+name|asprintf
 argument_list|(
-name|wantsl
-argument_list|,
-name|NULL
+operator|&
+name|syserr
 argument_list|,
 literal|"reverse lookup results in non-FQDN %s"
 argument_list|,
 name|from_host
 argument_list|)
 expr_stmt|;
+comment|/* same message to both syslog and remote user */
+name|fhosterr
+argument_list|(
+name|ch_opts
+argument_list|,
+name|syserr
+argument_list|,
+name|syserr
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 comment|/* Check for spoof, ala rlogind */
 name|memset
@@ -3254,11 +3337,25 @@ condition|(
 name|error
 condition|)
 block|{
-name|fhosterr
+name|asprintf
 argument_list|(
-name|wantsl
+operator|&
+name|syserr
 argument_list|,
 literal|"dns lookup for address %s failed: %s"
+argument_list|,
+name|from_ip
+argument_list|,
+name|gai_strerror
+argument_list|(
+name|error
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|asprintf
+argument_list|(
+operator|&
+name|usererr
 argument_list|,
 literal|"hostname for your address (%s) unknown: %s"
 argument_list|,
@@ -3270,6 +3367,16 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|fhosterr
+argument_list|(
+name|ch_opts
+argument_list|,
+name|syserr
+argument_list|,
+name|usererr
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 name|good
 operator|=
@@ -3355,17 +3462,38 @@ name|good
 operator|==
 literal|0
 condition|)
-name|fhosterr
+block|{
+name|asprintf
 argument_list|(
-name|wantsl
+operator|&
+name|syserr
 argument_list|,
 literal|"address for remote host (%s) not matched"
+argument_list|,
+name|from_ip
+argument_list|)
+expr_stmt|;
+name|asprintf
+argument_list|(
+operator|&
+name|usererr
 argument_list|,
 literal|"address for your hostname (%s) not matched"
 argument_list|,
 name|from_ip
 argument_list|)
 expr_stmt|;
+name|fhosterr
+argument_list|(
+name|ch_opts
+argument_list|,
+name|syserr
+argument_list|,
+name|usererr
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 name|fpass
 operator|=
 literal|1
@@ -3451,20 +3579,44 @@ goto|goto
 name|again
 goto|;
 block|}
-name|fhosterr
+comment|/* This syslog message already includes from_host */
+name|ch_opts
+operator|&=
+operator|~
+name|LPD_ADDFROMLINE
+expr_stmt|;
+name|asprintf
 argument_list|(
-name|wantsl
+operator|&
+name|syserr
 argument_list|,
 literal|"refused connection from %s, sip=%s"
-argument_list|,
-literal|"Print-services are not available to your host (%s)."
 argument_list|,
 name|from_host
 argument_list|,
 name|from_ip
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
+name|asprintf
+argument_list|(
+operator|&
+name|usererr
+argument_list|,
+literal|"Print-services are not available to your host (%s)."
+argument_list|,
+name|from_host
+argument_list|)
+expr_stmt|;
+name|fhosterr
+argument_list|(
+name|ch_opts
+argument_list|,
+name|syserr
+argument_list|,
+name|usererr
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 name|foundhost
 label|:
 if|if
@@ -3503,17 +3655,29 @@ if|if
 condition|(
 name|error
 condition|)
-name|fhosterr
+block|{
+comment|/* same message to both syslog and remote user */
+name|asprintf
 argument_list|(
-name|wantsl
-argument_list|,
-name|NULL
+operator|&
+name|syserr
 argument_list|,
 literal|"malformed from-address (%d)"
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+name|fhosterr
+argument_list|(
+name|ch_opts
+argument_list|,
+name|syserr
+argument_list|,
+name|syserr
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 if|if
 condition|(
 name|atoi
@@ -3523,151 +3687,66 @@ argument_list|)
 operator|>=
 name|IPPORT_RESERVED
 condition|)
-name|fhosterr
+block|{
+comment|/* same message to both syslog and remote user */
+name|asprintf
 argument_list|(
-name|wantsl
-argument_list|,
-name|NULL
+operator|&
+name|syserr
 argument_list|,
 literal|"connected from invalid port (%s)"
 argument_list|,
 name|serv
 argument_list|)
 expr_stmt|;
+name|fhosterr
+argument_list|(
+name|ch_opts
+argument_list|,
+name|syserr
+argument_list|,
+name|syserr
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 block|}
 end_function
 
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
 begin_comment
-comment|/*  * Handle fatal errors in chkhost.  The first message will optionally be sent  * to syslog, the second one is sent to the connecting host.  If the first  * message is NULL, then the same message is used for both.  Note that the  * argument list for both messages are assumed to be the same (or at least  * the initial arguments for one must be EXACTLY the same as the complete  * argument list for the other message).  *  * The idea is that the syslog message is meant for an administrator of a  * print server (the host receiving connections), while the usermsg is meant  * for a remote user who may or may not be clueful, and may or may not be  * doing something nefarious.  Some remote users (eg, MS-Windows...) may not  * even see whatever message is sent, which is why there's the option to  * start 'lpd' with the connection-errors also sent to syslog.  *  * Given that hostnames can theoretically be fairly long (well, over 250  * bytes), it would probably be helpful to have the 'from_host' field at  * the end of any error messages which include that info.  */
+comment|/*  * Handle fatal errors in chkhost.  The first message will optionally be  * sent to syslog, the second one is sent to the connecting host.  *  * The idea is that the syslog message is meant for an administrator of a  * print server (the host receiving connections), while the usermsg is meant  * for a remote user who may or may not be clueful, and may or may not be  * doing something nefarious.  Some remote users (eg, MS-Windows...) may not  * even see whatever message is sent, which is why there's the option to  * start 'lpd' with the connection-errors also sent to syslog.  *  * Given that hostnames can theoretically be fairly long (well, over 250  * bytes), it would probably be helpful to have the 'from_host' field at  * the end of any error messages which include that info.  *  * These are Fatal host-connection errors, so this routine does not return.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|fhosterr
 parameter_list|(
 name|int
-name|dosys
+name|ch_opts
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|sysmsg
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|usermsg
-parameter_list|,
-modifier|...
 parameter_list|)
 block|{
-name|va_list
-name|ap
-decl_stmt|;
-name|char
-modifier|*
-name|sbuf
-decl_stmt|,
-modifier|*
-name|ubuf
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|testone
-decl_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|usermsg
-argument_list|)
-expr_stmt|;
-name|vasprintf
-argument_list|(
-operator|&
-name|ubuf
-argument_list|,
-name|usermsg
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
+comment|/* 	 * If lpd was started up to print connection errors, then write 	 * the syslog message before the user message. 	 * And for many of the syslog messages, it is helpful to first 	 * write the from_host (if it is known) as a separate syslog 	 * message, since the hostname may be so long. 	 */
 if|if
 condition|(
-name|dosys
+name|ch_opts
+operator|&
+name|LPD_LOGCONNERR
 condition|)
 block|{
-name|sbuf
-operator|=
-name|ubuf
-expr_stmt|;
-comment|/* assume sysmsg == NULL */
 if|if
 condition|(
-name|sysmsg
-operator|!=
-name|NULL
-condition|)
-block|{
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|usermsg
-argument_list|)
-expr_stmt|;
-name|vasprintf
-argument_list|(
+name|ch_opts
 operator|&
-name|sbuf
-argument_list|,
-name|sysmsg
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 		 * If the first variable-parameter is not the 'from_host', 		 * then first write THAT information as a line to syslog. 		 */
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|usermsg
-argument_list|)
-expr_stmt|;
-name|testone
-operator|=
-name|va_arg
-argument_list|(
-name|ap
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|testone
-operator|!=
-name|from_host
+name|LPD_ADDFROMLINE
 condition|)
 block|{
 name|syslog
@@ -3680,22 +3759,17 @@ name|from_host
 argument_list|)
 expr_stmt|;
 block|}
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-comment|/* now write the syslog message */
 name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
 literal|"%s"
 argument_list|,
-name|sbuf
+name|sysmsg
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Now send the error message to the remote host which is trying 	 * to make the connection. 	 */
 name|printf
 argument_list|(
 literal|"%s [@%s]: %s\n"
@@ -3704,7 +3778,7 @@ name|progname
 argument_list|,
 name|local_host
 argument_list|,
-name|ubuf
+name|usermsg
 argument_list|)
 expr_stmt|;
 name|fflush
