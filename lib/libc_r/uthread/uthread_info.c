@@ -881,7 +881,7 @@ argument_list|(
 name|s
 argument_list|)
 argument_list|,
-literal|"--------------------\nThread %p (%s) prio %3d state %s [%s:%d]\n"
+literal|"--------------------\nThread %p (%s) prio %3d state %s"
 argument_list|,
 name|pthread
 argument_list|,
@@ -909,6 +909,40 @@ name|i
 index|]
 operator|.
 name|name
+argument_list|)
+expr_stmt|;
+name|__sys_write
+argument_list|(
+name|fd
+argument_list|,
+name|s
+argument_list|,
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* And now where it is. */
+if|if
+condition|(
+name|pthread
+operator|->
+name|fname
+operator|!=
+name|NULL
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|s
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s
+argument_list|)
+argument_list|,
+literal|" [%s:%d]"
 argument_list|,
 name|pthread
 operator|->
@@ -929,6 +963,16 @@ name|strlen
 argument_list|(
 name|s
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|__sys_write
+argument_list|(
+name|fd
+argument_list|,
+literal|"\n"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
