@@ -235,6 +235,8 @@ operator||
 name|TH_ACK
 block|,
 comment|/* 6, FIN_WAIT_1 */
+name|TH_FIN
+operator||
 name|TH_ACK
 block|,
 comment|/* 7, CLOSING */
