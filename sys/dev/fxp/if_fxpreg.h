@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * Copyright (c) 2001 Jonathan Lemon<jlemon@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2001 Jonathan Lemon<jlemon@freebsd.org>  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -127,17 +127,6 @@ begin_comment
 comment|/* mdi control (4 bytes) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|FXP_CSR_FLOWCONTROL
-value|0x19
-end_define
-
-begin_comment
-comment|/* flow control (2 bytes) */
-end_comment
-
 begin_comment
 comment|/*  * FOR REFERENCE ONLY, the old definition of FXP_CSR_SCB_RUSCUS:  *  *	volatile u_int8_t	:2,  *				scb_rus:4,  *				scb_cus:2;  */
 end_comment
@@ -239,92 +228,6 @@ directive|define
 name|FXP_SCB_CUS_ACTIVE
 value|2
 end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_SCB_INTR_DISABLE
-value|0x01
-end_define
-
-begin_comment
-comment|/* Disable all interrupts */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FXP_SCB_INTR_SWI
-value|0x02
-end_define
-
-begin_comment
-comment|/* Generate SWI */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FXP_SCB_INTMASK_FCP
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_SCB_INTMASK_ER
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_SCB_INTMASK_RNR
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_SCB_INTMASK_CNA
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_SCB_INTMASK_FR
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_SCB_INTMASK_CXTNO
-value|0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_SCB_STATACK_FCP
-value|0x01
-end_define
-
-begin_comment
-comment|/* Flow Control Pause */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FXP_SCB_STATACK_ER
-value|0x02
-end_define
-
-begin_comment
-comment|/* Early Receive */
-end_comment
 
 begin_define
 define|#
@@ -1082,7 +985,7 @@ specifier|volatile
 name|u_int8_t
 name|tbd_number
 decl_stmt|;
-comment|/* 	 * The following structure isn't actually part of the TxCB, 	 * unless the extended TxCB feature is being used.  In this 	 * case, the first two elements of the structure below are  	 * fetched along with the TxCB. 	 */
+comment|/* 	 * The following isn't actually part of the TxCB. 	 */
 specifier|volatile
 name|struct
 name|fxp_tbd
