@@ -7508,6 +7508,19 @@ decl_stmt|;
 name|int
 name|prop
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|_SIG_VALID
+argument_list|(
+name|sig
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"psignal(): invalid signal"
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
@@ -7588,18 +7601,17 @@ name|sigacts
 modifier|*
 name|ps
 decl_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
+operator|!
 name|_SIG_VALID
 argument_list|(
 name|sig
 argument_list|)
-argument_list|,
-operator|(
-literal|"tdsignal(): invalid signal %d\n"
-operator|,
-name|sig
-operator|)
+condition|)
+name|panic
+argument_list|(
+literal|"do_tdsignal(): invalid signal"
 argument_list|)
 expr_stmt|;
 name|p
