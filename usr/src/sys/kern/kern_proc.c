@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.22	%G%	*/
+comment|/*	kern_proc.c	3.23	%G%	*/
 end_comment
 
 begin_include
@@ -2381,15 +2381,15 @@ name|multprog
 operator|--
 expr_stmt|;
 comment|/*	spl7();			/* clock will get mad because of overlaying */
-name|noproc
-operator|=
-literal|1
-expr_stmt|;
 name|p
 operator|->
 name|p_stat
 operator|=
 name|SZOMB
+expr_stmt|;
+name|noproc
+operator|=
+literal|1
 expr_stmt|;
 name|i
 operator|=
