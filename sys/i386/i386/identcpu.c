@@ -2503,7 +2503,8 @@ literal|"\036TM"
 comment|/* Thermal Monitor clock slowdown */
 literal|"\037IA64"
 comment|/* CPU can execute IA64 instructions */
-literal|"\040<b31>"
+literal|"\040PBE"
+comment|/* Pending Break Enable */
 argument_list|)
 expr_stmt|;
 block|}
