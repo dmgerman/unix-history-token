@@ -10487,8 +10487,6 @@ name|m2
 decl_stmt|,
 modifier|*
 name|recm
-init|=
-name|NULL
 decl_stmt|;
 name|u_int32_t
 name|recmark
@@ -10739,7 +10737,11 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	     * Now get the record part. 	     */
+comment|/* 	     * Now get the record part. 	     * 	     * Note that slp->ns_reclen may be 0.  Linux sometimes 	     * generates 0-length RPCs 	     */
+name|recm
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|slp
