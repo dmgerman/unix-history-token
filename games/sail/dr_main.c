@@ -99,7 +99,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|setruid
+name|setuid
 argument_list|(
 name|geteuid
 argument_list|()
