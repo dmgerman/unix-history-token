@@ -894,7 +894,7 @@ block|{
 case|case
 literal|0
 case|:
-continue|continue;
+break|break;
 case|case
 literal|'\177'
 case|:
@@ -917,7 +917,7 @@ literal|"\b \b"
 argument_list|)
 expr_stmt|;
 block|}
-continue|continue;
+break|break;
 case|case
 literal|'\n'
 case|:
@@ -950,12 +950,12 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
-block|}
 name|putchar
 argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -2253,7 +2253,17 @@ argument_list|)
 operator|&
 literal|0x10
 expr_stmt|;
-comment|/* printf("Keyboard: %s\n", i ? "yes" : "no"); */
+name|printf
+argument_list|(
+literal|"Keyboard: %s\n"
+argument_list|,
+name|i
+condition|?
+literal|"yes"
+else|:
+literal|"no"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
