@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* "superscsi" pseudo device.  * "superscsi" supports general SCSI utilities that can iterate  * over all SCSI targets, including those without device entry  * points.  *  * "superscsi" supports the SCIOCADDR ioctl to change the BUS, ID, LUN  * of the target so that you can get to all devices.  The only thing  * you can do to "superscsi" is open it, set the target, perform ioctl  * calls, and close it.  *  * Keep "superscsi" protected: you can drive a truck through the  * security hole if you don't.  *  *Begin copyright  *  * Copyright (C) 1993, 1994, 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *End copyright  * $Id: ssc.c,v 1.15 1997/08/02 14:33:16 bde Exp $  */
+comment|/* "superscsi" pseudo device.  * "superscsi" supports general SCSI utilities that can iterate  * over all SCSI targets, including those without device entry  * points.  *  * "superscsi" supports the SCIOCADDR ioctl to change the BUS, ID, LUN  * of the target so that you can get to all devices.  The only thing  * you can do to "superscsi" is open it, set the target, perform ioctl  * calls, and close it.  *  * Keep "superscsi" protected: you can drive a truck through the  * security hole if you don't.  *  *Begin copyright  *  * Copyright (C) 1993, 1994, 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *End copyright  * $Id: ssc.c,v 1.16 1997/09/14 03:19:39 peter Exp $  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/disklabel.h>
 end_include
 
 begin_include
@@ -286,17 +292,24 @@ name|struct
 name|scsi_addr
 modifier|*
 name|sca
-init|=
+decl_stmt|;
+name|dev_t
+name|newdev
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+name|sca
+operator|=
 operator|(
 expr|struct
 name|scsi_addr
 operator|*
 operator|)
 name|data
-decl_stmt|;
-name|dev_t
+expr_stmt|;
 name|newdev
-init|=
+operator|=
 name|SCSI_MKFIXED
 argument_list|(
 name|sca
@@ -310,11 +323,10 @@ argument_list|,
 name|sca
 operator|->
 name|lun
+argument_list|,
+name|RAW_PART
 argument_list|)
-decl_stmt|;
-name|int
-name|ret
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|sscdev
