@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.12 1995/10/28 15:38:43 phk Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.13 1995/11/04 17:07:05 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -3390,6 +3390,7 @@ value|0x20
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aic_debug
 init|=
@@ -3538,6 +3539,7 @@ name|__FreeBSD__
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aicprobe
 name|__P
@@ -3552,6 +3554,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aicattach
 name|__P
@@ -3571,6 +3574,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aicprobe
 name|__P
@@ -3592,6 +3596,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|aicattach
 name|__P
@@ -3618,6 +3623,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|void
 name|aic_minphys
 name|__P
@@ -3638,6 +3644,7 @@ name|__FreeBSD__
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|u_int32
 name|aic_adapter_info
 name|__P
@@ -3650,6 +3657,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|aic_init
 name|__P
@@ -3664,6 +3672,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aic_find
 name|__P
@@ -3683,6 +3692,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|aic_adapter_info
 name|__P
@@ -3711,6 +3721,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|aic_init
 name|__P
@@ -3730,6 +3741,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|void
 name|aic_done
 name|__P
@@ -3750,6 +3762,7 @@ name|__FreeBSD__
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int32
 name|aic_scsi_cmd
 name|__P
@@ -3764,6 +3777,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aic_poll
 name|__P
@@ -3785,6 +3799,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aic_scsi_cmd
 name|__P
@@ -3799,6 +3814,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aic_poll
 name|__P
@@ -3858,12 +3874,14 @@ name|__FreeBSD__
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|timeout_t
 name|aic_timeout
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|aic_sched
 name|__P
@@ -3878,6 +3896,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|aic_scsi_reset
 name|__P
@@ -3897,6 +3916,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|void
 name|aic_timeout
 name|__P
@@ -3911,6 +3931,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aic_find
 name|__P
@@ -3925,6 +3946,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|aic_sched
 name|__P
@@ -3939,6 +3961,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|aic_scsi_reset
 name|__P
@@ -4051,6 +4074,7 @@ name|aic_softc
 operator|)
 endif|#
 directive|endif
+specifier|static
 expr|struct
 name|scsi_adapter
 name|aic_switch
@@ -4077,7 +4101,9 @@ literal|0
 endif|#
 directive|endif
 block|}
-block|;  struct
+block|;
+specifier|static
+expr|struct
 name|scsi_device
 name|aic_dev
 operator|=
@@ -4216,6 +4242,7 @@ argument_list|)
 block|; }
 comment|/*  * INITIALIZATION ROUTINES (probe, attach ++)  */
 comment|/*  * aicprobe: probe for AIC6360 SCSI-controller  * returns non-zero value if a controller is found.  */
+specifier|static
 name|int
 ifdef|#
 directive|ifdef
@@ -4640,47 +4667,30 @@ unit|}
 comment|/* Do the real search-for-device.  * Prerequisite: aic->iobase should be set to the proper value  */
 end_comment
 
-begin_macro
-unit|int
+begin_function
+unit|static
+name|int
 name|aic_find
-argument_list|(
-argument|aic
-argument_list|)
-end_macro
-
-begin_ifdef
+parameter_list|(
+name|aic
+parameter_list|)
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-end_ifdef
-
-begin_decl_stmt
 name|struct
 name|aic_data
 modifier|*
 name|aic
 decl_stmt|;
-end_decl_stmt
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_decl_stmt
 name|struct
 name|aic_softc
 modifier|*
 name|aic
 decl_stmt|;
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 name|u_short
 name|iobase
@@ -4873,7 +4883,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_ifndef
 ifndef|#
@@ -4904,6 +4914,7 @@ name|__FreeBSD__
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aicattach
 argument_list|(
@@ -5366,6 +5377,7 @@ comment|/* Pull the SCSI RST line for 500 us */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|aic_scsi_reset
 parameter_list|(
@@ -5452,6 +5464,7 @@ comment|/*  * Initialize aic SCSI driver, also (conditonally) reset the SCSI bus
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|aic_init
 parameter_list|(
@@ -5825,9 +5838,11 @@ name|__FreeBSD__
 end_ifdef
 
 begin_function
+specifier|static
 name|int32
 else|#
 directive|else
+specifier|static
 name|int
 endif|#
 directive|endif
@@ -6223,6 +6238,7 @@ comment|/*  * Adjust transfer size in buffer structure  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|aic_minphys
 parameter_list|(
@@ -6273,6 +6289,7 @@ name|__FreeBSD__
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|u_int32
 name|aic_adapter_info
 argument_list|(
@@ -6289,6 +6306,7 @@ directive|else
 end_else
 
 begin_function
+specifier|static
 name|u_int
 name|aic_adapter_info
 parameter_list|(
@@ -6323,6 +6341,7 @@ comment|/*  * Used when interrupt driven I/O isn't allowed, e.g. during boot.  *
 end_comment
 
 begin_function
+specifier|static
 name|int
 ifdef|#
 directive|ifdef
@@ -6632,6 +6651,7 @@ comment|/* Schedule a scsi operation.  This has now been pulled out of the inter
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|aic_sched
 parameter_list|(
@@ -6922,6 +6942,7 @@ comment|/*  * POST PROCESSING OF SCSI_CMD (usually current)  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|aic_done
 parameter_list|(
@@ -9410,6 +9431,7 @@ comment|/* aic_dataout: perform a data transfer using the FIFO datapath in the a
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|aic_dataout
 parameter_list|(
@@ -9912,6 +9934,7 @@ comment|/* aic_datain: perform data transfers using the FIFO datapath in the aic
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|aic_datain
 parameter_list|(
@@ -12084,6 +12107,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|void
 name|aic_timeout
 parameter_list|(
