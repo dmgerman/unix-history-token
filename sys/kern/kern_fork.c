@@ -1711,7 +1711,7 @@ name|pages
 operator|!=
 literal|0
 condition|)
-name|pmap_new_altkstack
+name|vm_thread_new_altkstack
 argument_list|(
 name|td2
 argument_list|,

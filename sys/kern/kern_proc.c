@@ -840,7 +840,7 @@ operator|!=
 literal|0
 operator|)
 condition|)
-name|pmap_dispose_altkstack
+name|vm_thread_dispose_altkstack
 argument_list|(
 name|td
 argument_list|)
