@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.17.2.6 2000/07/15 14:50:06 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1995-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.17.2.6 2000/07/15 14:50:06 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -51,56 +51,28 @@ begin_define
 define|#
 directive|define
 name|SIOCADNAT
-value|_IOW('r', 80, struct ipnat)
+value|_IOW('r', 60, struct ipnat *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCRMNAT
-value|_IOW('r', 81, struct ipnat)
+value|_IOW('r', 61, struct ipnat *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCGNATS
-value|_IOR('r', 82, struct natstat)
+value|_IOWR('r', 62, struct natstat *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCGNATL
-value|_IOWR('r', 83, struct natlookup)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIOCGFRST
-value|_IOR('r', 84, struct ipfrstat)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIOCGIPST
-value|_IOR('r', 85, struct ips_stat)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIOCFLNAT
-value|_IOWR('r', 86, int)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIOCCNATL
-value|_IOWR('r', 87, int)
+value|_IOWR('r', 63, struct natlookup *)
 end_define
 
 begin_else
@@ -112,56 +84,28 @@ begin_define
 define|#
 directive|define
 name|SIOCADNAT
-value|_IOW(r, 80, struct ipnat)
+value|_IOW(r, 60, struct ipnat *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCRMNAT
-value|_IOW(r, 81, struct ipnat)
+value|_IOW(r, 61, struct ipnat *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCGNATS
-value|_IOR(r, 82, struct natstat)
+value|_IOWR(r, 62, struct natstat *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCGNATL
-value|_IOWR(r, 83, struct natlookup)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIOCGFRST
-value|_IOR(r, 84, struct ipfrstat)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIOCGIPST
-value|_IOR(r, 85, struct ips_stat)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIOCFLNAT
-value|_IOWR(r, 86, int)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIOCCNATL
-value|_IOWR(r, 87, int)
+value|_IOWR(r, 63, struct natlookup *)
 end_define
 
 begin_endif
@@ -196,6 +140,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HOSTMAP_SIZE
+value|127
+end_define
+
+begin_define
+define|#
+directive|define
 name|NAT_TABLE_SZ
 value|127
 end_define
@@ -224,6 +175,13 @@ directive|undef
 name|NAT_TABLE_SZ
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|HOSTMAP_SIZE
+name|127
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -243,6 +201,13 @@ define|#
 directive|define
 name|NAT_TABLE_SZ
 value|16383
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTMAP_SIZE
+value|8191
 end_define
 
 begin_endif
@@ -286,6 +251,12 @@ begin_comment
 comment|/* 10 minutes (600 seconds) */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|ap_session
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -310,12 +281,14 @@ name|void
 modifier|*
 name|nat_data
 decl_stmt|;
-name|void
+name|struct
+name|ap_session
 modifier|*
 name|nat_aps
 decl_stmt|;
 comment|/* proxy session */
-name|frentry_t
+name|struct
+name|frentry
 modifier|*
 name|nat_fr
 decl_stmt|;
@@ -369,6 +342,11 @@ name|nat_ptr
 decl_stmt|;
 comment|/* pointer back to the rule */
 name|struct
+name|hostmap
+modifier|*
+name|nat_hm
+decl_stmt|;
+name|struct
 name|nat
 modifier|*
 name|nat_next
@@ -397,6 +375,25 @@ decl_stmt|;
 name|int
 name|nat_dir
 decl_stmt|;
+name|char
+name|nat_ifname
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+if|#
+directive|if
+name|SOLARIS
+operator|||
+name|defined
+argument_list|(
+name|_sgi
+argument_list|)
+name|kmutex_t
+name|nat_lock
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|nat_t
 typedef|;
@@ -420,7 +417,19 @@ decl_stmt|;
 name|struct
 name|ipnat
 modifier|*
+modifier|*
+name|in_prnext
+decl_stmt|;
+name|struct
+name|ipnat
+modifier|*
 name|in_mnext
+decl_stmt|;
+name|struct
+name|ipnat
+modifier|*
+modifier|*
+name|in_pmnext
 decl_stmt|;
 name|void
 modifier|*
@@ -489,6 +498,10 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|struct
+name|frtuc
+name|in_tuc
+decl_stmt|;
 name|int
 name|in_redir
 decl_stmt|;
@@ -510,9 +523,6 @@ name|char
 name|in_p
 decl_stmt|;
 comment|/* protocol */
-name|u_short
-name|in_dport
-decl_stmt|;
 block|}
 name|ipnat_t
 typedef|;
@@ -583,6 +593,48 @@ define|#
 directive|define
 name|in_srcmsk
 value|in_src[1].s_addr
+end_define
+
+begin_define
+define|#
+directive|define
+name|in_scmp
+value|in_tuc.ftu_scmp
+end_define
+
+begin_define
+define|#
+directive|define
+name|in_dcmp
+value|in_tuc.ftu_dcmp
+end_define
+
+begin_define
+define|#
+directive|define
+name|in_stop
+value|in_tuc.ftu_stop
+end_define
+
+begin_define
+define|#
+directive|define
+name|in_dtop
+value|in_tuc.ftu_dtop
+end_define
+
+begin_define
+define|#
+directive|define
+name|in_sport
+value|in_tuc.ftu_sport
+end_define
+
+begin_define
+define|#
+directive|define
+name|in_dport
+value|in_tuc.ftu_dport
 end_define
 
 begin_define
@@ -689,6 +741,102 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
+name|nat_save
+block|{
+name|void
+modifier|*
+name|ipn_next
+decl_stmt|;
+name|struct
+name|nat
+name|ipn_nat
+decl_stmt|;
+name|struct
+name|ipnat
+name|ipn_ipnat
+decl_stmt|;
+name|struct
+name|frentry
+name|ipn_fr
+decl_stmt|;
+name|int
+name|ipn_dsize
+decl_stmt|;
+name|char
+name|ipn_data
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+name|nat_save_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ipn_rule
+value|ipn_nat.nat_fr
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|natget
+block|{
+name|void
+modifier|*
+name|ng_ptr
+decl_stmt|;
+name|int
+name|ng_sz
+decl_stmt|;
+block|}
+name|natget_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|hostmap
+block|{
+name|struct
+name|hostmap
+modifier|*
+name|hm_next
+decl_stmt|;
+name|struct
+name|hostmap
+modifier|*
+modifier|*
+name|hm_pnext
+decl_stmt|;
+name|struct
+name|ipnat
+modifier|*
+name|hm_ipnat
+decl_stmt|;
+name|struct
+name|in_addr
+name|hm_realip
+decl_stmt|;
+name|struct
+name|in_addr
+name|hm_mapip
+decl_stmt|;
+name|int
+name|hm_ref
+decl_stmt|;
+block|}
+name|hostmap_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
 name|natstat
 block|{
 name|u_long
@@ -714,6 +862,12 @@ name|ns_logged
 decl_stmt|;
 name|u_long
 name|ns_logfail
+decl_stmt|;
+name|u_long
+name|ns_memfail
+decl_stmt|;
+name|u_long
+name|ns_badnat
 decl_stmt|;
 name|nat_t
 modifier|*
@@ -753,21 +907,21 @@ begin_define
 define|#
 directive|define
 name|IPN_ANY
-value|0x00
+value|0x000
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPN_TCP
-value|0x01
+value|0x001
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPN_UDP
-value|0x02
+value|0x002
 end_define
 
 begin_define
@@ -781,14 +935,14 @@ begin_define
 define|#
 directive|define
 name|IPN_DELETE
-value|0x04
+value|0x004
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPN_ICMPERR
-value|0x08
+value|0x008
 end_define
 
 begin_define
@@ -942,9 +1096,11 @@ name|NAT_HASH_FN
 parameter_list|(
 name|k
 parameter_list|,
+name|l
+parameter_list|,
 name|m
 parameter_list|)
-value|(((k) + ((k)>> 12)) % (m))
+value|(((k) + ((k)>> 12) + l) % (m))
 end_define
 
 begin_define
@@ -993,6 +1149,13 @@ begin_decl_stmt
 specifier|extern
 name|u_int
 name|ipf_rdrrules_sz
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_nat_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -1081,6 +1244,12 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|300003
+operator|)
 end_if
 
 begin_decl_stmt
@@ -1261,7 +1430,7 @@ begin_decl_stmt
 specifier|extern
 name|nat_t
 modifier|*
-name|nat_icmpinlookup
+name|nat_icmplookup
 name|__P
 argument_list|(
 operator|(
@@ -1270,6 +1439,8 @@ operator|*
 operator|,
 name|fr_info_t
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1279,7 +1450,7 @@ begin_decl_stmt
 specifier|extern
 name|nat_t
 modifier|*
-name|nat_icmpin
+name|nat_icmp
 name|__P
 argument_list|(
 operator|(
@@ -1290,6 +1461,22 @@ name|fr_info_t
 operator|*
 operator|,
 name|u_int
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|nat_insert
+name|__P
+argument_list|(
+operator|(
+name|nat_t
 operator|*
 operator|)
 argument_list|)
