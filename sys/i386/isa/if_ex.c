@@ -3830,6 +3830,7 @@ argument_list|)
 expr_stmt|;
 name|rx_another
 label|:
+empty_stmt|;
 block|}
 if|if
 condition|(

@@ -3923,6 +3923,7 @@ expr_stmt|;
 block|}
 name|done1
 label|:
+empty_stmt|;
 block|}
 if|if
 condition|(
