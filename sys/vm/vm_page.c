@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -1415,7 +1415,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_lookup:  *  *	Returns the page associated with the object/offset  *	pair specified; if none is found, NULL is returned.  *  *	NOTE: the code below does not lock.  It will operate properly if  *	an interrupt makes a change, but the generation algorithm will not   *	operate properly in an SMP environment where both cpu's are able to run  *	kernel code simultaniously.  *  *	The object must be locked.  No side effects.  *	This routine may not block.  *	This is a critical path routine  */
+comment|/*  *	vm_page_lookup:  *  *	Returns the page associated with the object/offset  *	pair specified; if none is found, NULL is returned.  *  *	NOTE: the code below does not lock.  It will operate properly if  *	an interrupt makes a change, but the generation algorithm will not   *	operate properly in an SMP environment where both cpu's are able to run  *	kernel code simultaneously.  *  *	The object must be locked.  No side effects.  *	This routine may not block.  *	This is a critical path routine  */
 end_comment
 
 begin_function
@@ -1800,7 +1800,7 @@ literal|1
 end_if
 
 begin_comment
-comment|/*  *	vm_page_list_find:  *  *	Find a page on the specified queue with color optimization.  *  *	The page coloring optimization attempts to locate a page  *	that does not overload other nearby pages in the object in  *	the cpu's L1 or L2 caches.  We need this optmization because   *	cpu caches tend to be physical caches, while object spaces tend   *	to be virtual.  *  *	This routine must be called at splvm().  *	This routine may not block.  *  *	This routine may only be called from the vm_page_list_find() macro  *	in vm_page.h  */
+comment|/*  *	vm_page_list_find:  *  *	Find a page on the specified queue with color optimization.  *  *	The page coloring optimization attempts to locate a page  *	that does not overload other nearby pages in the object in  *	the cpu's L1 or L2 caches.  We need this optimization because   *	cpu caches tend to be physical caches, while object spaces tend   *	to be virtual.  *  *	This routine must be called at splvm().  *	This routine may not block.  *  *	This routine may only be called from the vm_page_list_find() macro  *	in vm_page.h  */
 end_comment
 
 begin_function
@@ -2234,7 +2234,7 @@ operator|!=
 name|VM_ALLOC_INTERRUPT
 condition|)
 block|{
-comment|/* 		 * Allocateable from cache (non-interrupt only).  On success, 		 * we must free the page and try again, thus ensuring that 		 * cnt.v_*_free_min counters are replenished. 		 */
+comment|/* 		 * Allocatable from cache (non-interrupt only).  On success, 		 * we must free the page and try again, thus ensuring that 		 * cnt.v_*_free_min counters are replenished. 		 */
 name|m
 operator|=
 name|vm_page_select_cache
@@ -2331,7 +2331,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 		 * Not allocateable from cache from interrupt, give up. 		 */
+comment|/* 		 * Not allocatable from cache from interrupt, give up. 		 */
 name|splx
 argument_list|(
 name|s
@@ -3327,7 +3327,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_unwire:  *  *	Release one wiring of this page, potentially  *	enabling it to be paged again.  *  *	Many pages placed on the inactive queue should actually go  *	into the cache, but it is difficult to figure out which.  What  *	we do instead, if the inactive target is well met, is to put  *	clean pages at the head of the inactive queue instead of the tail.  *	This will cause them to be moved to the cache more quickly and  *	if not actively re-referenced, freed more quickly.  If we just  *	stick these pages at the end of the inactive queue, heavy filesystem  *	meta-data accesses can cause an unnecessary paging load on memory bound   *	processes.  This optimization causes one-time-use metadata to be  *	reused more quickly.  *  *	A number of routines use vm_page_unwire() to guarentee that the page  *	will go into either the inactive or active queues, and will NEVER  *	be placed in the cache - for example, just after dirtying a page.  *	dirty pages in the cache are not allowed.  *  *	The page queues must be locked.  *	This routine may not block.  */
+comment|/*  *	vm_page_unwire:  *  *	Release one wiring of this page, potentially  *	enabling it to be paged again.  *  *	Many pages placed on the inactive queue should actually go  *	into the cache, but it is difficult to figure out which.  What  *	we do instead, if the inactive target is well met, is to put  *	clean pages at the head of the inactive queue instead of the tail.  *	This will cause them to be moved to the cache more quickly and  *	if not actively re-referenced, freed more quickly.  If we just  *	stick these pages at the end of the inactive queue, heavy filesystem  *	meta-data accesses can cause an unnecessary paging load on memory bound   *	processes.  This optimization causes one-time-use metadata to be  *	reused more quickly.  *  *	A number of routines use vm_page_unwire() to guarantee that the page  *	will go into either the inactive or active queues, and will NEVER  *	be placed in the cache - for example, just after dirtying a page.  *	dirty pages in the cache are not allowed.  *  *	The page queues must be locked.  *	This routine may not block.  */
 end_comment
 
 begin_function
