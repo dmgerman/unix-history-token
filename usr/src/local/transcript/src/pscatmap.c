@@ -1239,7 +1239,7 @@ name|strcmp
 argument_list|(
 name|afmbuf
 argument_list|,
-literal|"StartFontMetrics 1.0"
+literal|"StartFontMetrics 2.0"
 argument_list|)
 operator|==
 literal|0
