@@ -173,15 +173,40 @@ modifier|*
 name|fts_link
 decl_stmt|;
 comment|/* next file in directory */
+union|union
+block|{
+struct|struct
+block|{
 name|long
-name|fts_number
+name|__fts_number
 decl_stmt|;
 comment|/* local numeric value */
 name|void
 modifier|*
-name|fts_pointer
+name|__fts_pointer
 decl_stmt|;
 comment|/* local address value */
+block|}
+name|__struct_ftsent
+struct|;
+name|int64_t
+name|__fts_bignum
+decl_stmt|;
+block|}
+name|__union_ftsent
+union|;
+define|#
+directive|define
+name|fts_number
+value|__union_ftsent.__struct_ftsent.__fts_number
+define|#
+directive|define
+name|fts_pointer
+value|__union_ftsent.__struct_ftsent.__fts_pointer
+define|#
+directive|define
+name|fts_bignum
+value|__union_ftsent.__fts_bignum
 name|char
 modifier|*
 name|fts_accpath
