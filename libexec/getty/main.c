@@ -76,19 +76,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -131,12 +137,6 @@ begin_include
 include|#
 directive|include
 file|<libutil.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -190,6 +190,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"extern.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"gettytab.h"
 end_include
 
@@ -197,12 +203,6 @@ begin_include
 include|#
 directive|include
 file|"pathnames.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"extern.h"
 end_include
 
 begin_comment
