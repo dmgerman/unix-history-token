@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)od.c	5.2 (Berkeley) %G%"
+literal|"@(#)od.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1892,8 +1892,6 @@ argument_list|,
 name|underline
 argument_list|(
 name|s
-argument_list|,
-literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1940,8 +1938,6 @@ name|asc_name
 index|[
 name|c
 index|]
-argument_list|,
-literal|3
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2036,15 +2032,10 @@ modifier|*
 name|underline
 parameter_list|(
 name|s
-parameter_list|,
-name|n
 parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
-name|int
-name|n
 decl_stmt|;
 block|{
 specifier|static
@@ -2063,15 +2054,12 @@ name|ulbuf
 decl_stmt|;
 while|while
 condition|(
-name|n
-operator|--
+operator|*
+name|s
 condition|)
 block|{
 if|if
 condition|(
-operator|*
-name|s
-operator|&&
 operator|*
 name|s
 operator|!=
