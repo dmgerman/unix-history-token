@@ -2909,6 +2909,17 @@ operator|(
 literal|0
 operator|)
 return|;
+name|osocket
+operator|=
+name|ntohs
+argument_list|(
+name|tr
+operator|->
+name|udp
+operator|.
+name|src
+argument_list|)
+expr_stmt|;
 name|tp
 operator|.
 name|opcode
