@@ -6025,6 +6025,17 @@ operator|->
 name|pcn_stat_ch
 argument_list|)
 expr_stmt|;
+comment|/* Turn off interrupts */
+name|PCN_CSR_CLRBIT
+argument_list|(
+name|sc
+argument_list|,
+name|PCN_CSR_CSR
+argument_list|,
+name|PCN_CSR_INTEN
+argument_list|)
+expr_stmt|;
+comment|/* Stop adapter */
 name|PCN_CSR_SETBIT
 argument_list|(
 name|sc
