@@ -3521,6 +3521,8 @@ name|Port
 block|,
 name|AliasAddress
 block|,
+name|TargetAddress
+block|,
 name|InterfaceName
 block|,
 name|RedirectPort
@@ -3824,6 +3826,22 @@ block|,
 literal|"alias_address"
 block|,
 literal|"a"
+block|}
+block|,
+block|{
+name|TargetAddress
+block|,
+literal|0
+block|,
+name|Address
+block|,
+literal|"x.x.x.x"
+block|,
+literal|"address to use for incoming sessions"
+block|,
+literal|"target_address"
+block|,
+literal|"t"
 block|}
 block|,
 block|{
@@ -4418,6 +4436,15 @@ argument_list|(
 expr|struct
 name|in_addr
 argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TargetAddress
+case|:
+name|PacketAliasSetTarget
+argument_list|(
+name|addrValue
 argument_list|)
 expr_stmt|;
 break|break;
