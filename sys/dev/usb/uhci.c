@@ -4,7 +4,7 @@ comment|/*	$NetBSD: uhci.c,v 1.170 2003/02/19 01:35:04 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	Also already incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.172 2003/02/23 04:19:26 simonb Exp $  *	$NetBSD: uhci.c,v 1.173 2003/05/13 04:41:59 gson Exp $  *	$NetBSD: uhci.c,v 1.175 2003/09/12 16:18:08 mycroft Exp $  */
+comment|/*	Also already incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.172 2003/02/23 04:19:26 simonb Exp $  *	$NetBSD: uhci.c,v 1.173 2003/05/13 04:41:59 gson Exp $  *	$NetBSD: uhci.c,v 1.175 2003/09/12 16:18:08 mycroft Exp $  *	$NetBSD: uhci.c,v 1.176 2003/11/04 19:11:21 mycroft Exp $  */
 end_comment
 
 begin_include
@@ -7139,6 +7139,25 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+comment|/* 			 * UHCI will report CRCTO in addition to a STALL or NAK 			 * for a SETUP transaction.  See section 3.2.2, "TD 			 * CONTROL AND STATUS". 			 */
+if|if
+condition|(
+name|status
+operator|&
+operator|(
+name|UHCI_TD_STALLED
+operator||
+name|UHCI_TD_NAK
+operator|)
+condition|)
+name|status
+operator|&=
+operator|~
+name|UHCI_TD_CRCTO
+expr_stmt|;
+block|}
 block|}
 comment|/* If there are left over TDs we need to update the toggle. */
 if|if
