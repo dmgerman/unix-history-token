@@ -27,6 +27,22 @@ directive|include
 file|<sys/eventhandler.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct_decl
 struct_decl|struct
 name|tty
@@ -325,6 +341,12 @@ directive|define
 name|si_copyonwrite
 value|__si_u.__si_disk.__sid_copyonwrite
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_comment
 comment|/*  * Definitions of device driver entry switches  */
