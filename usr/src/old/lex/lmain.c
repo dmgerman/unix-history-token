@@ -271,9 +271,6 @@ comment|/* open argv[1] */
 name|sargc
 operator|--
 expr_stmt|;
-name|sargv
-operator|++
-expr_stmt|;
 block|}
 else|else
 name|fin
@@ -1646,7 +1643,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n"
+literal|"\"%s\", line %d: %s\n"
+argument_list|,
+name|fptr
+operator|>
+literal|0
+condition|?
+name|sargv
+index|[
+name|fptr
+index|]
+else|:
+literal|"<stdin>"
+argument_list|,
+name|yyline
 argument_list|,
 name|s
 argument_list|)

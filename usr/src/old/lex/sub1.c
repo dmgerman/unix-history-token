@@ -190,25 +190,24 @@ end_macro
 
 begin_block
 block|{
-if|if
-condition|(
-operator|!
-name|eof
-condition|)
 name|fprintf
 argument_list|(
 name|errorf
 argument_list|,
-literal|"%d: "
+literal|"\"%s\", line %d: (Error) "
+argument_list|,
+name|fptr
+operator|>
+literal|0
+condition|?
+name|sargv
+index|[
+name|fptr
+index|]
+else|:
+literal|"<stdin>"
 argument_list|,
 name|yyline
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|errorf
-argument_list|,
-literal|"(Error) "
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -288,25 +287,24 @@ end_macro
 
 begin_block
 block|{
-if|if
-condition|(
-operator|!
-name|eof
-condition|)
 name|fprintf
 argument_list|(
 name|errorf
 argument_list|,
-literal|"%d: "
+literal|"\"%s\", line %d: (Warning) "
+argument_list|,
+name|fptr
+operator|>
+literal|0
+condition|?
+name|sargv
+index|[
+name|fptr
+index|]
+else|:
+literal|"<stdin>"
 argument_list|,
 name|yyline
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|errorf
-argument_list|,
-literal|"(Warning) "
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2061,6 +2059,24 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
+specifier|static
+name|int
+name|hadeof
+decl_stmt|;
+if|if
+condition|(
+name|hadeof
+condition|)
+block|{
+name|hadeof
+operator|=
+literal|0
+expr_stmt|;
+name|yyline
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|prev
 operator|=
 name|pres
@@ -2097,6 +2113,10 @@ operator|>
 literal|1
 condition|)
 block|{
+name|hadeof
+operator|=
+literal|1
+expr_stmt|;
 name|fclose
 argument_list|(
 name|fin
@@ -2121,6 +2141,11 @@ name|fin
 operator|==
 name|NULL
 condition|)
+block|{
+name|yyline
+operator|=
+literal|0
+expr_stmt|;
 name|error
 argument_list|(
 literal|"Cannot open file %s"
@@ -2131,6 +2156,7 @@ name|fptr
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|peek
 operator|=
 name|getc
@@ -2140,9 +2166,6 @@ argument_list|)
 expr_stmt|;
 name|sargc
 operator|--
-expr_stmt|;
-name|sargv
-operator|++
 expr_stmt|;
 block|}
 if|if
