@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.4 (Berkeley) %G%"
+literal|"@(#)tty.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2280,20 +2280,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|private
-name|void
-name|tty_bind_char
-name|__P
-argument_list|(
-operator|(
-name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -4182,15 +4168,20 @@ comment|/* tty_bind_char():  *	Rebind the editline functions  */
 end_comment
 
 begin_function
-name|private
+name|protected
 name|void
 name|tty_bind_char
 parameter_list|(
 name|el
+parameter_list|,
+name|force
 parameter_list|)
 name|EditLine
 modifier|*
 name|el
+decl_stmt|;
+name|int
+name|force
 decl_stmt|;
 block|{
 name|unsigned
@@ -4220,7 +4211,6 @@ name|t_ed
 operator|.
 name|c_cc
 decl_stmt|;
-name|unsigned
 name|char
 name|new
 index|[
@@ -4372,6 +4362,9 @@ name|old
 index|[
 literal|0
 index|]
+operator|&&
+operator|!
+name|force
 condition|)
 continue|continue;
 comment|/* Put the old default binding back, and set the new binding */
@@ -4381,10 +4374,6 @@ name|el
 argument_list|,
 name|map
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|old
 argument_list|)
 expr_stmt|;
@@ -4410,10 +4399,6 @@ name|el
 argument_list|,
 name|map
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|new
 argument_list|)
 expr_stmt|;
@@ -4448,10 +4433,6 @@ name|el
 argument_list|,
 name|alt
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|old
 argument_list|)
 expr_stmt|;
@@ -4477,10 +4458,6 @@ name|el
 argument_list|,
 name|alt
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|new
 argument_list|)
 expr_stmt|;
@@ -5615,6 +5592,8 @@ block|}
 name|tty_bind_char
 argument_list|(
 name|el
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|tty__setchar

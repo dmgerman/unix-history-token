@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)search.c	5.4 (Berkeley) %G%"
+literal|"@(#)search.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -346,7 +346,7 @@ argument_list|(
 name|pat
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|NULL
 condition|)
 block|{

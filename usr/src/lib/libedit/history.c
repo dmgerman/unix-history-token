@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)history.c	5.3 (Berkeley) %G%"
+literal|"@(#)history.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2302,6 +2302,8 @@ specifier|const
 name|HistEvent
 modifier|*
 name|ev
+init|=
+name|NULL
 decl_stmt|;
 specifier|const
 name|char
@@ -2572,11 +2574,6 @@ operator|=
 operator|&
 name|sev
 expr_stmt|;
-else|else
-name|ev
-operator|=
-name|NULL
-expr_stmt|;
 break|break;
 case|case
 name|H_FUNC
@@ -2691,11 +2688,6 @@ name|ev
 operator|=
 operator|&
 name|sev
-expr_stmt|;
-else|else
-name|ev
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 break|break;

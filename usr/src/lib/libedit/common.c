@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)common.c	5.2 (Berkeley) %G%"
+literal|"@(#)common.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3038,8 +3038,6 @@ argument_list|,
 literal|"Comparing with \"%s\"\n"
 argument_list|,
 name|hp
-operator|->
-name|event
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3302,8 +3300,6 @@ argument_list|,
 literal|"Comparing with \"%s\"\n"
 argument_list|,
 name|hp
-operator|->
-name|event
 argument_list|)
 expr_stmt|;
 endif|#
