@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ut.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ut.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -103,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_include
@@ -690,6 +684,8 @@ name|int
 name|olddens
 decl_stmt|,
 name|dens
+decl_stmt|,
+name|error
 decl_stmt|;
 specifier|register
 name|int
@@ -808,6 +804,10 @@ operator|&
 name|UTDS_PIP
 condition|)
 block|{
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -816,15 +816,24 @@ operator|)
 operator|&
 name|lbolt
 argument_list|,
+operator|(
 name|PZERO
 operator|+
 literal|1
+operator|)
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_UT_OPN
+name|devopn
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 goto|goto
 name|get
 goto|;
@@ -1235,6 +1244,11 @@ name|sc_openf
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

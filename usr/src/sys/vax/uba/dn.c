@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dn.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dn.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -67,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|"uio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_include
@@ -671,6 +665,11 @@ index|]
 operator|=
 name|MENABLE
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -816,6 +815,10 @@ operator|&&
 name|cc
 operator|>=
 literal|0
+operator|&&
+name|error
+operator|==
+literal|0
 condition|)
 block|{
 operator|(
@@ -839,6 +842,8 @@ name|cc
 operator|==
 literal|0
 condition|)
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -847,8 +852,10 @@ operator|)
 name|dnreg
 argument_list|,
 name|DNPRI
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_DN_REG
+name|devout
 argument_list|,
 literal|0
 argument_list|)
@@ -863,6 +870,8 @@ block|{
 case|case
 literal|'-'
 case|:
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -872,12 +881,22 @@ operator|&
 name|lbolt
 argument_list|,
 name|DNPRI
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_DN_PAUSE
+name|devout
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -887,8 +906,10 @@ operator|&
 name|lbolt
 argument_list|,
 name|DNPRI
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_DN_PAUSE
+name|devout
 argument_list|,
 literal|0
 argument_list|)
@@ -903,6 +924,8 @@ operator|&=
 operator|~
 name|CRQ
 expr_stmt|;
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -912,8 +935,10 @@ operator|&
 name|lbolt
 argument_list|,
 name|DNPRI
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_DN_PAUSE
+name|devout
 argument_list|,
 literal|0
 argument_list|)
@@ -1016,6 +1041,8 @@ operator||
 name|CRQ
 operator|)
 expr_stmt|;
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -1024,8 +1051,10 @@ operator|)
 name|dnreg
 argument_list|,
 name|DNPRI
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_DN_REG
+name|devout
 argument_list|,
 literal|0
 argument_list|)
@@ -1041,6 +1070,15 @@ name|spl0
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 operator|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dhu.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dhu.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -101,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_include
@@ -795,6 +789,10 @@ name|ui
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|error
+init|=
+literal|0
 decl_stmt|;
 extern|extern dhuparam(
 block|)
@@ -1224,14 +1222,14 @@ end_if
 begin_while
 while|while
 condition|(
-operator|!
 operator|(
 name|flag
 operator|&
 name|O_NONBLOCK
 operator|)
+operator|==
+literal|0
 operator|&&
-operator|!
 operator|(
 name|tp
 operator|->
@@ -1239,6 +1237,8 @@ name|t_cflag
 operator|&
 name|CLOCAL
 operator|)
+operator|==
+literal|0
 operator|&&
 operator|(
 name|tp
@@ -1257,6 +1257,10 @@ name|t_state
 operator||=
 name|TS_WOPEN
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -1268,12 +1272,15 @@ operator|->
 name|t_rawq
 argument_list|,
 name|TTIPRI
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_DHU_OPN
+name|ttopen
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 block|}
 end_while
 
@@ -1287,6 +1294,18 @@ name|s
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+end_if
 
 begin_return
 return|return
@@ -1419,15 +1438,10 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|PORTSELECTOR
-block|{
-specifier|extern
-name|int
-name|wakeup
-parameter_list|()
-function_decl|;
 operator|(
 name|void
 operator|)
@@ -1441,24 +1455,10 @@ name|DMSET
 argument_list|)
 expr_stmt|;
 comment|/* Hold DTR low for 0.5 seconds */
-name|timeout
-argument_list|(
-name|wakeup
-argument_list|,
 operator|(
-name|caddr_t
+name|void
 operator|)
-operator|&
-name|tp
-operator|->
-name|t_dev
-argument_list|,
-name|hz
-operator|/
-literal|2
-argument_list|)
-expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -1469,9 +1469,14 @@ operator|->
 name|t_dev
 argument_list|,
 name|PZERO
+argument_list|,
+name|ttclos
+argument_list|,
+name|hz
+operator|/
+literal|2
 argument_list|)
 expr_stmt|;
-block|}
 else|#
 directive|else
 operator|(
@@ -1489,11 +1494,15 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|PORTSELECTOR
+block|}
+return|return
+operator|(
 name|ttyclose
 argument_list|(
 name|tp
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

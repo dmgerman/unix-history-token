@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ct.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ct.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -79,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"kernel.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_include
@@ -639,6 +633,8 @@ name|c
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|error
 decl_stmt|;
 while|while
 condition|(
@@ -669,6 +665,10 @@ name|c_cc
 operator|>
 name|CATHIWAT
 condition|)
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -680,12 +680,17 @@ operator|->
 name|sc_oq
 argument_list|,
 name|PCAT
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_PCAT_OUT
+name|devout
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|out
+goto|;
 while|while
 condition|(
 name|putc
@@ -700,6 +705,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -709,12 +718,17 @@ operator|&
 name|lbolt
 argument_list|,
 name|PCAT
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_PCAT_CLIST
+name|ttybuf
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 operator|!
@@ -740,6 +754,18 @@ block|}
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+name|out
+label|:
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ik.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ik.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -67,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|"ioctl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_include
@@ -550,6 +544,11 @@ operator|->
 name|ui_addr
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -812,7 +811,10 @@ name|ik_state
 operator|&
 name|IKBUSY
 condition|)
-name|sleep
+operator|(
+name|void
+operator|)
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -822,6 +824,10 @@ argument_list|,
 name|IKDMAPRI
 operator|+
 literal|1
+argument_list|,
+name|devout
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ikp
@@ -889,7 +895,10 @@ name|ik_state
 operator|&
 name|IKBUSY
 condition|)
-name|sleep
+operator|(
+name|void
+operator|)
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -897,6 +906,10 @@ operator|)
 name|ikp
 argument_list|,
 name|IKDMAPRI
+argument_list|,
+name|devout
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ikp
@@ -1134,6 +1147,11 @@ name|ik_softc
 modifier|*
 name|ikp
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -1181,7 +1199,13 @@ operator|->
 name|ik_state
 operator|&
 name|IKBUSY
+operator|&&
+name|error
+operator|==
+literal|0
 condition|)
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -1190,8 +1214,10 @@ operator|)
 name|ikp
 argument_list|,
 name|IKWAITPRI
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_IK_BUSY
+name|devwait
 argument_list|,
 literal|0
 argument_list|)
@@ -1206,7 +1232,7 @@ return|;
 block|}
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}

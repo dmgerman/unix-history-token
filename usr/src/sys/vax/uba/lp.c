@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)lp.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)lp.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -79,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"kernel.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_include
@@ -752,6 +746,11 @@ operator|&=
 operator|~
 name|OPEN
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1289,6 +1288,10 @@ index|]
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|error
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1324,6 +1327,10 @@ operator|.
 name|c_cc
 operator|>=
 name|LPHWAT
+operator|&&
+name|error
+operator|==
+literal|0
 condition|)
 block|{
 name|sc
@@ -1333,6 +1340,8 @@ operator||=
 name|ASLP
 expr_stmt|;
 comment|/* must be ERROR */
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -1341,8 +1350,10 @@ operator|)
 name|sc
 argument_list|,
 name|LPPRI
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_LP_OUT
+name|devout
 argument_list|,
 literal|0
 argument_list|)
@@ -1356,6 +1367,10 @@ expr_stmt|;
 block|}
 while|while
 condition|(
+name|error
+operator|==
+literal|0
+operator|&&
 name|putc
 argument_list|(
 name|c
@@ -1366,6 +1381,8 @@ operator|->
 name|sc_outq
 argument_list|)
 condition|)
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -1375,12 +1392,19 @@ operator|&
 name|lbolt
 argument_list|,
 name|LPPRI
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_LP_CLIST
+name|ttybuf
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmf.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmf.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -146,12 +146,6 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_include
@@ -1349,6 +1343,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+return|return
+operator|(
 name|dmxclose
 argument_list|(
 operator|&
@@ -1357,7 +1353,8 @@ index|[
 name|unit
 index|]
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -2807,6 +2804,8 @@ name|d
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|error
 decl_stmt|;
 name|dmf
 operator|=
@@ -2965,6 +2964,10 @@ name|dmfl_state
 operator||=
 name|ASLP
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|s
 operator|=
 name|spltty
@@ -2987,21 +2990,30 @@ operator|&
 name|ASLP
 condition|)
 block|{
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 name|sc
 operator|->
 name|dmfl_buf
 argument_list|,
+operator|(
 name|PZERO
 operator|+
 literal|8
+operator|)
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_DMFL_ASLP
+name|ttyout
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 while|while
 condition|(
 name|sc
@@ -3025,6 +3037,10 @@ operator|*
 name|hz
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -3035,17 +3051,26 @@ name|sc
 operator|->
 name|dmfl_state
 argument_list|,
+operator|(
 name|PZERO
 operator|+
 literal|8
+operator|)
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_DMFL_ERROR
+name|ttyout
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|out
+goto|;
 block|}
 block|}
+name|out
+label|:
 name|splx
 argument_list|(
 name|s

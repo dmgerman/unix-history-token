@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dz.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dz.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -109,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_include
@@ -851,9 +845,11 @@ name|int
 name|unit
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|dzparam
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|;
 name|unit
 operator|=
 name|minor
@@ -1056,14 +1052,14 @@ argument_list|()
 expr_stmt|;
 while|while
 condition|(
-operator|!
 operator|(
 name|flag
 operator|&
 name|O_NONBLOCK
 operator|)
+operator|==
+literal|0
 operator|&&
-operator|!
 operator|(
 name|tp
 operator|->
@@ -1071,6 +1067,8 @@ name|t_cflag
 operator|&
 name|CLOCAL
 operator|)
+operator|==
+literal|0
 operator|&&
 operator|(
 name|tp
@@ -1089,6 +1087,10 @@ name|t_state
 operator||=
 name|TS_WOPEN
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -1100,12 +1102,15 @@ operator|->
 name|t_rawq
 argument_list|,
 name|TTIPRI
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_DZ_OPN
+name|ttopen
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 block|}
 operator|(
 name|void
@@ -1113,6 +1118,15 @@ operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 return|return
 operator|(
 operator|(
@@ -1300,11 +1314,14 @@ argument_list|,
 name|DMSET
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|ttyclose
 argument_list|(
 name|tp
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

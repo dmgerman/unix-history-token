@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dh.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dh.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -103,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_include
@@ -1032,6 +1026,8 @@ name|ui
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|error
 decl_stmt|;
 name|int
 name|dhparam
@@ -1376,13 +1372,22 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Wait for carrier, then process line discipline specific open. 	 */
+if|if
+condition|(
+name|error
+operator|=
 name|dmopen
 argument_list|(
 name|dev
 argument_list|,
 name|flag
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 return|return
 operator|(
 operator|(
@@ -1529,11 +1534,14 @@ argument_list|,
 name|DMSET
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|ttyclose
 argument_list|(
 name|tp
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -3812,6 +3820,10 @@ name|dm
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|error
+init|=
+literal|0
 decl_stmt|;
 name|unit
 operator|=
@@ -3868,7 +3880,11 @@ name|t_state
 operator||=
 name|TS_CARR_ON
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|addr
 operator|=
@@ -3976,6 +3992,10 @@ operator|&
 name|CLOCAL
 condition|)
 break|break;
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -3987,18 +4007,26 @@ operator|->
 name|t_rawq
 argument_list|,
 name|TTIPRI
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_DH_OPN
+name|ttopen
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 block|}
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_block
 

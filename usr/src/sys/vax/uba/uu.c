@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uu.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uu.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -73,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|"file.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_include
@@ -694,6 +688,8 @@ name|dev
 argument_list|)
 decl_stmt|,
 name|s
+decl_stmt|,
+name|error
 decl_stmt|;
 name|ctlr
 operator|=
@@ -846,6 +842,10 @@ argument_list|(
 name|ctlr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -853,15 +853,31 @@ name|caddr_t
 operator|)
 name|uuc
 argument_list|,
+operator|(
 name|PZERO
 operator|+
 literal|1
+operator|)
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_UU_OPN
+name|devopn
 argument_list|,
 literal|0
 argument_list|)
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 name|uitab
 index|[
 name|ctlr
@@ -1162,6 +1178,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

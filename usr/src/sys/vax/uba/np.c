@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 MICOM-Interlan, Inc., Boxborough Mass  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)np.c	7.5 (Berkeley) %G%  *  * From:  *	np.c version 1.5  *  *	This version retrieved: 8/18/86 @ 18:58:54  *	    This delta created: 8/18/86 @ 18:19:24  *  *	static		char	*SCCSID = "@(#)np.c	1.5";  *  */
+comment|/*  * Copyright (c) 1986 MICOM-Interlan, Inc., Boxborough Mass  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)np.c	7.6 (Berkeley) %G%  *  * From:  *	np.c version 1.5  *  *	This version retrieved: 8/18/86 @ 18:58:54  *	    This delta created: 8/18/86 @ 18:19:24  *  *	static		char	*SCCSID = "@(#)np.c	1.5";  *  */
 end_comment
 
 begin_comment
@@ -85,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|"errno.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_include
@@ -3179,6 +3173,10 @@ name|NpState
 operator||=
 name|ICPAVAIL
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -3187,15 +3185,24 @@ operator|)
 operator|&
 name|NpState
 argument_list|,
+operator|(
 name|PZERO
 operator|+
 literal|1
+operator|)
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_NP_SLP
+name|devio
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 name|NpDebug
@@ -7921,6 +7928,10 @@ name|reqtab
 operator|->
 name|reqcnt
 condition|)
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 call|(
@@ -7933,15 +7944,24 @@ operator|->
 name|reqtab
 argument_list|)
 argument_list|,
+operator|(
 name|PZERO
 operator|+
 literal|1
+operator|)
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_NP_SLP
+name|devio
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 name|NpDebug
@@ -7995,6 +8015,10 @@ name|reqcnt
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 call|(
@@ -8007,15 +8031,24 @@ operator|->
 name|reqtab
 argument_list|)
 argument_list|,
+operator|(
 name|PZERO
 operator|+
 literal|1
+operator|)
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_NP_SLP
+name|devio
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 comment|/* Free up I/O Map registers if any allocated */
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ps.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ps.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -83,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|"uio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_include
@@ -968,6 +962,11 @@ operator|)
 name|psaddr
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1103,6 +1102,10 @@ decl_stmt|,
 name|arg
 decl_stmt|,
 name|i
+decl_stmt|,
+name|error
+init|=
+literal|0
 decl_stmt|;
 switch|switch
 condition|(
@@ -1700,6 +1703,10 @@ name|ps_refresh
 operator|.
 name|waiting
 condition|)
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|&
@@ -1710,18 +1717,30 @@ operator|.
 name|waiting
 argument_list|,
 name|PSPRI
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_PS_REFRESH
+name|devwait
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 operator|(
 name|void
 operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 name|cmd
@@ -1815,6 +1834,10 @@ name|ps_map
 operator|.
 name|waiting
 condition|)
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|&
@@ -1825,12 +1848,15 @@ operator|.
 name|waiting
 argument_list|,
 name|PSPRI
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_PS_MAP
+name|devwait
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 operator|(
 name|void
 operator|)
@@ -1848,7 +1874,7 @@ break|break;
 block|}
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ad.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ad.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -79,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"adreg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_define
@@ -453,6 +447,11 @@ name|ad_state
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -649,6 +648,10 @@ name|AD_IENABLE
 operator||
 name|AD_START
 expr_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|adp
@@ -657,23 +660,33 @@ name|ad_state
 operator|&
 name|ADBUSY
 condition|)
+if|if
+condition|(
+name|i
+operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|adp
+argument|(caddr_t)adp
 argument_list|,
-name|ADWAITPRI
+argument|ADWAITPRI | PCATCH
 argument_list|,
-name|SLP_AD_GETW
-argument_list|)
-operator|,
+argument|devio
+argument_list|,
 literal|0
-expr_stmt|;
+argument_list|)
+break|break;
 name|spl0
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|i
+condition|)
+return|return
+operator|(
+name|i
+operator|)
+return|;
 operator|*
 operator|(
 name|int
