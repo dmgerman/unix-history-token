@@ -5,7 +5,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)SendMail version 3.47 of %G%"
+literal|"@(#)SendMail version 3.48 of %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -14,7 +14,7 @@ name|char
 name|Version
 index|[]
 init|=
-literal|"3.47 [%G%]"
+literal|"3.48 [%G%]"
 decl_stmt|;
 end_decl_stmt
 
