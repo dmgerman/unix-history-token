@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)startup.c	3.7 83/12/06"
+literal|"@(#)startup.c	3.8 84/01/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -229,17 +229,7 @@ end_macro
 
 begin_block
 block|{
-comment|/* use a good ordering to balance the tree */
-operator|(
-name|void
-operator|)
-name|var_setnum
-argument_list|(
-literal|"ncol"
-argument_list|,
-name|wwncol
-argument_list|)
-expr_stmt|;
+comment|/* try to use a good ordering to balance the tree */
 operator|(
 name|void
 operator|)
@@ -248,6 +238,16 @@ argument_list|(
 literal|"nrow"
 argument_list|,
 name|wwnrow
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|var_setnum
+argument_list|(
+literal|"ncol"
+argument_list|,
+name|wwncol
 argument_list|)
 expr_stmt|;
 operator|(
@@ -298,6 +298,16 @@ argument_list|(
 literal|"m_ul"
 argument_list|,
 name|WWM_UL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|var_setnum
+argument_list|(
+literal|"m_grp"
+argument_list|,
+name|WWM_GRP
 argument_list|)
 expr_stmt|;
 operator|(

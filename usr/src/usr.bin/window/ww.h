@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.23 83/12/17	  */
+comment|/*  *	@(#)ww.h	3.24 84/01/11	  */
 end_comment
 
 begin_include
@@ -1024,6 +1024,13 @@ define|#
 directive|define
 name|WWT_UL
 value|"ue=\\Es:us=\\Er:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWT_GRP
+value|"ae=\\EG:as=\\EF:"
 end_define
 
 begin_comment
