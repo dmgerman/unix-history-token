@@ -783,7 +783,7 @@ name|loop
 argument_list|,
 name|loop_mod
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_PROTO_IFATTACHDOMAIN
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|)
