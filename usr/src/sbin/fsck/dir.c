@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.18 (Berkeley) %G%"
+literal|"@(#)dir.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3398,6 +3398,13 @@ name|dp
 operator|->
 name|di_nlink
 expr_stmt|;
+name|cacheino
+argument_list|(
+name|dp
+argument_list|,
+name|ino
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ino
@@ -3432,6 +3439,13 @@ literal|0
 operator|)
 return|;
 block|}
+name|cacheino
+argument_list|(
+name|dp
+argument_list|,
+name|ino
+argument_list|)
+expr_stmt|;
 name|statemap
 index|[
 name|ino
