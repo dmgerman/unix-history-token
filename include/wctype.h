@@ -432,7 +432,7 @@ name|iswdigit
 parameter_list|(
 name|wc
 parameter_list|)
-value|__istype((wc), _CTYPE_D)
+value|__isctype((wc), _CTYPE_D)
 end_define
 
 begin_define
@@ -502,7 +502,7 @@ name|iswxdigit
 parameter_list|(
 name|wc
 parameter_list|)
-value|__istype((wc), _CTYPE_X)
+value|__isctype((wc), _CTYPE_X)
 end_define
 
 begin_define
