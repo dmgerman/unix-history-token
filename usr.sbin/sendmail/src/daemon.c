@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.118 (Berkeley) 10/8/95 (with daemon mode)"
+literal|"@(#)daemon.c	8.119 (Berkeley) 11/29/95 (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.118 (Berkeley) 10/8/95 (without daemon mode)"
+literal|"@(#)daemon.c	8.119 (Berkeley) 11/29/95 (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3660,7 +3660,7 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"My unqualifed host name (%s) unknown; sleeping for retry"
+literal|"My unqualified host name (%s) unknown; sleeping for retry"
 argument_list|,
 name|hostbuf
 argument_list|)
@@ -3669,7 +3669,7 @@ endif|#
 directive|endif
 name|message
 argument_list|(
-literal|"My unqualifed host name (%s) unknown; sleeping for retry"
+literal|"My unqualified host name (%s) unknown; sleeping for retry"
 argument_list|,
 name|hostbuf
 argument_list|)

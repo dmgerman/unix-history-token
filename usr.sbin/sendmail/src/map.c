@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.107 (Berkeley) 11/20/95"
+literal|"@(#)map.c	8.108 (Berkeley) 11/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -8025,7 +8025,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"nisplus_getcanoname(%s), got %d entries, addtional entries ignores\n"
+literal|"nisplus_getcanoname(%s), got %d entries, all but first ignored\n"
 argument_list|,
 name|name
 argument_list|)

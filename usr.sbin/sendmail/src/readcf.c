@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.138 (Berkeley) 11/20/95"
+literal|"@(#)readcf.c	8.139 (Berkeley) 11/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -3516,6 +3516,20 @@ name|atoi
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_linelimit
+operator|<
+literal|0
+condition|)
+name|m
+operator|->
+name|m_linelimit
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
