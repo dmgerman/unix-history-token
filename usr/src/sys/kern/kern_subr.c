@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_subr.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_subr.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -33,38 +33,30 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_expr_stmt
+begin_function
+name|int
 name|uiomove
-argument_list|(
+parameter_list|(
 name|cp
-argument_list|,
+parameter_list|,
 name|n
-argument_list|,
+parameter_list|,
 name|uio
-argument_list|)
+parameter_list|)
 specifier|register
 name|caddr_t
 name|cp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|uio
 modifier|*
 name|uio
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -314,35 +306,30 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Give next character to user as result of read.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ureadc
-argument_list|(
+parameter_list|(
 name|c
-argument_list|,
+parameter_list|,
 name|uio
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|c
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|uio
 modifier|*
 name|uio
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -350,6 +337,19 @@ name|iovec
 modifier|*
 name|iov
 decl_stmt|;
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_resid
+operator|<=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"ureadc: non-positive resid"
+argument_list|)
+expr_stmt|;
 name|again
 label|:
 if|if
@@ -357,18 +357,12 @@ condition|(
 name|uio
 operator|->
 name|uio_iovcnt
-operator|==
-literal|0
-operator|||
-name|uio
-operator|->
-name|uio_resid
-operator|==
+operator|<=
 literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ureadc"
+literal|"ureadc: non-positive iovcnt"
 argument_list|)
 expr_stmt|;
 name|iov
@@ -382,7 +376,7 @@ condition|(
 name|iov
 operator|->
 name|iov_len
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{
@@ -489,7 +483,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -505,22 +499,17 @@ begin_comment
 comment|/*  * Get next character written in by user from uio.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|uwritec
-argument_list|(
-argument|uio
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|uio
+parameter_list|)
 name|struct
 name|uio
 modifier|*
 name|uio
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -558,7 +547,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"uwritec"
+literal|"uwritec: non-positive iovcnt"
 argument_list|)
 expr_stmt|;
 name|iov
@@ -687,7 +676,7 @@ name|c
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

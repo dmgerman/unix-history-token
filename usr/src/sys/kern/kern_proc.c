@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -650,36 +650,28 @@ begin_comment
 comment|/*  * Move p to a new or existing process group (and session)  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|enterpgrp
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|pgid
-argument_list|,
+parameter_list|,
 name|mksess
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|pid_t
 name|pgid
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|mksess
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -691,9 +683,6 @@ name|pgfind
 argument_list|(
 name|pgid
 argument_list|)
-decl_stmt|;
-name|int
-name|n
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1046,26 +1035,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * remove process from process group  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|leavepgrp
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|LIST_REMOVE
 argument_list|(
@@ -1105,7 +1092,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * delete a process group  */
