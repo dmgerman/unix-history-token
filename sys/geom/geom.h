@@ -619,6 +619,32 @@ begin_comment
 comment|/* geom_event.c */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|void
+name|g_call_me_t
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_function_decl
+name|int
+name|g_call_me
+parameter_list|(
+name|g_call_me_t
+modifier|*
+name|func
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|void
 name|g_orphan_provider
@@ -636,7 +662,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|g_waitidle
+name|g_silence
 parameter_list|(
 name|void
 parameter_list|)
@@ -645,7 +671,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|g_silence
+name|g_waitidle
 parameter_list|(
 name|void
 parameter_list|)

@@ -73,6 +73,9 @@ comment|/* provider */
 name|EV_SPOILED
 block|,
 comment|/* provider, consumer */
+name|EV_CALL_ME
+block|,
+comment|/* func, arg */
 name|EV_LAST
 block|}
 enum|;
@@ -111,6 +114,14 @@ name|struct
 name|g_consumer
 modifier|*
 name|consumer
+decl_stmt|;
+name|void
+modifier|*
+name|arg
+decl_stmt|;
+name|g_call_me_t
+modifier|*
+name|func
 decl_stmt|;
 block|}
 struct|;
