@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	3.4	%H%	*/
+comment|/*	kern_physio.c	3.5	%H%	*/
 end_comment
 
 begin_include
@@ -3117,7 +3117,7 @@ name|psignal
 argument_list|(
 name|p
 argument_list|,
-name|SIGKIL
+name|SIGKILL
 argument_list|)
 expr_stmt|;
 name|p
