@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setvbuf.c	5.4 (Berkeley) %G%"
+literal|"@(#)setvbuf.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,7 +106,19 @@ name|ret
 decl_stmt|,
 name|flags
 decl_stmt|;
-comment|/* 	 * Verify arguments.  The `int' limit on `size' is due to this 	 * particular implementation. 	 */
+name|size_t
+name|iosize
+decl_stmt|;
+name|int
+name|ttyflag
+decl_stmt|;
+comment|/* 	 * Verify arguments.  The `int' limit on `size' is due to this 	 * particular implementation.  Note, buf and size are ignored 	 * when setting _IONBF. 	 */
+if|if
+condition|(
+name|mode
+operator|!=
+name|_IONBF
+condition|)
 if|if
 condition|(
 operator|(
@@ -117,10 +129,6 @@ operator|&&
 name|mode
 operator|!=
 name|_IOLBF
-operator|&&
-name|mode
-operator|!=
-name|_IONBF
 operator|)
 operator|||
 operator|(
@@ -135,7 +143,7 @@ operator|(
 name|EOF
 operator|)
 return|;
-comment|/* 	 * OK so far.  Write current buffer, if any; drop read count, if 	 * any.  Make sure putc() will not think fp is line buffered.  Free 	 * old buffer if it was from malloc().  Clear line and non-buffer 	 * flags, and clear malloc flag. 	 */
+comment|/* 	 * Write current buffer, if any.  Discard unread input, cancel 	 * line buffering, and free old buffer if malloc()ed. 	 */
 name|ret
 operator|=
 literal|0
@@ -152,8 +160,6 @@ name|fp
 operator|->
 name|_r
 operator|=
-literal|0
-expr_stmt|;
 name|fp
 operator|->
 name|_lbfsize
@@ -194,7 +200,35 @@ operator||
 name|__SNBF
 operator||
 name|__SMBF
+operator||
+name|__SOPT
+operator||
+name|__SNPT
 operator|)
+expr_stmt|;
+comment|/* If setting unbuffered mode, skip all the hard work. */
+if|if
+condition|(
+name|mode
+operator|==
+name|_IONBF
+condition|)
+goto|goto
+name|nbf
+goto|;
+comment|/* 	 * Find optimal I/O size for seek optimization.  This also returns 	 * a `tty flag' to suggest that we check isatty(fd), but we do not 	 * care since our caller told us how to buffer. 	 */
+name|flags
+operator||=
+name|__swhatbuf
+argument_list|(
+name|fp
+argument_list|,
+operator|&
+name|iosize
+argument_list|,
+operator|&
+name|ttyflag
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -202,12 +236,18 @@ name|size
 operator|==
 literal|0
 condition|)
+block|{
 name|buf
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* we will make a real one later */
-elseif|else
+comment|/* force local allocation */
+name|size
+operator|=
+name|iosize
+expr_stmt|;
+block|}
+comment|/* Allocate buffer if needed. */
 if|if
 condition|(
 name|buf
@@ -215,7 +255,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Caller wants specific buffering mode and size but did 		 * not provide a buffer.  Produce one of the given size. 		 * If that fails, set the size to 0 and continue, so that 		 * we will try again later with a system-supplied size 		 * (failure here is probably from someone with the bogus 		 * idea that larger is always better, asking for many MB), 		 * but return EOF to indicate failure. 		 */
 if|if
 condition|(
 operator|(
@@ -230,33 +269,54 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* 			 * Unable to honor user's request.  We will return 			 * failure, but try again with file system size. 			 */
 name|ret
 operator|=
 name|EOF
 expr_stmt|;
-name|size
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-name|flags
-operator||=
-name|__SMBF
-expr_stmt|;
-block|}
-comment|/* 	 * Now put back whichever flag is needed, and fix _lbfsize if line 	 * buffered.  Ensure output flush on exit if the stream will be 	 * buffered at all. 	 */
-switch|switch
+if|if
 condition|(
-name|mode
+name|size
+operator|!=
+name|iosize
 condition|)
 block|{
-case|case
-name|_IONBF
-case|:
+name|size
+operator|=
+name|iosize
+expr_stmt|;
+name|buf
+operator|=
+name|malloc
+argument_list|(
+name|size
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* No luck; switch to unbuffered I/O. */
+name|nbf
+label|:
+name|fp
+operator|->
+name|_flags
+operator|=
 name|flags
-operator||=
+operator||
 name|__SNBF
+expr_stmt|;
+name|fp
+operator|->
+name|_w
+operator|=
+literal|0
 expr_stmt|;
 name|fp
 operator|->
@@ -280,10 +340,36 @@ name|_size
 operator|=
 literal|1
 expr_stmt|;
-break|break;
-case|case
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+name|flags
+operator||=
+name|__SMBF
+expr_stmt|;
+block|}
+comment|/* 	 * Kill any seek optimization if the buffer is not the 	 * right size. 	 * 	 * SHOULD WE ALLOW MULTIPLES HERE (i.e., ok iff (size % iosize) == 0)? 	 */
+if|if
+condition|(
+name|size
+operator|!=
+name|iosize
+condition|)
+name|flags
+operator||=
+name|__SNPT
+expr_stmt|;
+comment|/* 	 * Fix up the FILE fields, and set __cleanup for output flush on 	 * exit (since we are buffered in some way).  Note that _w can 	 * always be set to 0 safely here---it should be 0 in read mode 	 * or the `indeterminate' state, and 0 for line buffered---so 	 * using the new buffer size for fully-buffered streams in write 	 * mode is merely a tiny optimization. 	 */
+if|if
+condition|(
+name|mode
+operator|==
 name|_IOLBF
-case|:
+condition|)
+block|{
 name|flags
 operator||=
 name|__SLBF
@@ -295,14 +381,31 @@ operator|=
 operator|-
 name|size
 expr_stmt|;
-comment|/* FALLTHROUGH */
-case|case
-name|_IOFBF
-case|:
-comment|/* no flag */
-name|__cleanup
+name|fp
+operator|->
+name|_w
 operator|=
-name|_cleanup
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|fp
+operator|->
+name|_w
+operator|=
+name|flags
+operator|&
+name|__SWR
+condition|?
+name|size
+else|:
+literal|0
+expr_stmt|;
+name|fp
+operator|->
+name|_flags
+operator|=
+name|flags
 expr_stmt|;
 name|fp
 operator|->
@@ -329,36 +432,9 @@ name|_size
 operator|=
 name|size
 expr_stmt|;
-break|break;
-block|}
-comment|/* 	 * Patch up write count if necessary. 	 */
-if|if
-condition|(
-name|flags
-operator|&
-name|__SWR
-condition|)
-name|fp
-operator|->
-name|_w
+name|__cleanup
 operator|=
-name|flags
-operator|&
-operator|(
-name|__SLBF
-operator||
-name|__SNBF
-operator|)
-condition|?
-literal|0
-else|:
-name|size
-expr_stmt|;
-name|fp
-operator|->
-name|_flags
-operator|=
-name|flags
+name|_cleanup
 expr_stmt|;
 return|return
 operator|(
