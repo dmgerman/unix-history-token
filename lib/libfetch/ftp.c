@@ -1074,7 +1074,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"size: [\033[1m%lld\033[m]\n"
+literal|"size: [%lld]\n"
 argument_list|,
 operator|(
 name|long
@@ -1295,8 +1295,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"last modified: [\033[1m%04d-%02d-%02d "
-literal|"%02d:%02d:%02d\033[m]\n"
+literal|"last modified: [%04d-%02d-%02d %02d:%02d:%02d]\n"
 argument_list|,
 name|tm
 operator|.
