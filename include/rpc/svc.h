@@ -354,20 +354,6 @@ value|(&(x)->xp_rtaddr)
 end_define
 
 begin_comment
-comment|/*  * FreeBSD-only definition to get the creds of the caller (AF_LOCAL).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__svc_getcallercreds
-parameter_list|(
-name|x
-parameter_list|)
-value|((struct cmsgcred *)(x)->xp_p2)
-end_define
-
-begin_comment
 comment|/*  * Operations defined on an SVCXPRT handle  *  * SVCXPRT		*xprt;  * struct rpc_msg	*msg;  * xdrproc_t		 xargs;  * void *		 argsp;  */
 end_comment
 
