@@ -1350,12 +1350,7 @@ operator|!=
 name|DITEM_SUCCESS
 operator|||
 operator|!
-name|mediaDevice
-operator|||
-operator|!
-name|mediaDevice
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|mediaDevice
 argument_list|)
@@ -1369,7 +1364,7 @@ if|if
 condition|(
 name|msgYesNo
 argument_list|(
-literal|"Unable to mount the CDROM - do you want to try again?"
+literal|"Unable to mount the disc - do you want to try again?"
 argument_list|)
 operator|!=
 literal|0
@@ -2163,6 +2158,10 @@ literal|"sh"
 argument_list|,
 literal|"-sh"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2641,7 +2640,7 @@ condition|(
 operator|!
 name|msgNoYes
 argument_list|(
-literal|"Do you want to configure inetd and simple internet services?"
+literal|"Do you want to configure inetd and the network services that it provides?"
 argument_list|)
 condition|)
 name|configInetd
@@ -4810,7 +4809,7 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|sz
 init|=
 operator|(
