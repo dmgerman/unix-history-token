@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	4.1 (Berkeley) %G%"
+literal|"@(#)inetd.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,6 +94,12 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_decl_stmt
@@ -465,6 +471,15 @@ block|}
 block|}
 endif|#
 directive|endif
+name|openlog
+argument_list|(
+literal|"inetd"
+argument_list|,
+name|LOG_PID
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|config
 argument_list|()
 expr_stmt|;
@@ -639,9 +654,11 @@ operator|==
 name|EINTR
 condition|)
 continue|continue;
-name|perror
+name|syslog
 argument_list|(
-literal|"inetd: accept"
+name|LOG_WARNING
+argument_list|,
+literal|"accept: %m"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -862,17 +879,19 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|debug
-condition|)
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"execl failed\n"
+literal|"execv %s: %m"
+argument_list|,
+name|sep
+operator|->
+name|se_server
 argument_list|)
 expr_stmt|;
 name|_exit
@@ -985,11 +1004,11 @@ name|status
 operator|.
 name|w_status
 condition|)
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_WARNING
 argument_list|,
-literal|"inetd: %s: exit status %d\n"
+literal|"%s: exit status 0x%x"
 argument_list|,
 name|sep
 operator|->
@@ -1076,15 +1095,12 @@ name|setconfig
 argument_list|()
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"inetd: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"%s: %m"
+argument_list|,
 name|CONFIG
 argument_list|)
 expr_stmt|;
@@ -1300,11 +1316,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"inetd: %s/%s: unknown service\n"
+literal|"%s/%s: unknown service"
 argument_list|,
 name|sep
 operator|->
@@ -1349,11 +1365,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"inetd: %s/%s: "
+literal|"%s/%s: socket: %m"
 argument_list|,
 name|sep
 operator|->
@@ -1362,11 +1378,6 @@ argument_list|,
 name|sep
 operator|->
 name|se_proto
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"socket"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1407,9 +1418,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|syslog
 argument_list|(
-literal|"inetd: setsockopt (SO_DEBUG)"
+name|LOG_ERR
+argument_list|,
+literal|"setsockopt (SO_DEBUG): %m"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1431,9 +1444,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|syslog
 argument_list|(
-literal|"inetd: setsockopt (SO_REUSEADDR)"
+name|LOG_ERR
+argument_list|,
+literal|"setsockopt (SO_REUSEADDR): %m"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1462,11 +1477,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"inetd: %s/%s: "
+literal|"%s/%s: bind: %m"
 argument_list|,
 name|sep
 operator|->
@@ -1475,11 +1490,6 @@ argument_list|,
 name|sep
 operator|->
 name|se_proto
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"bind"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1676,11 +1686,11 @@ operator|)
 literal|0
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"Out of memory.\n"
+literal|"Out of memory."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2502,11 +2512,11 @@ operator|)
 literal|0
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"Out of memory.\n"
+literal|"Out of memory."
 argument_list|)
 expr_stmt|;
 name|exit
