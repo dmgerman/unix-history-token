@@ -3979,11 +3979,16 @@ condition|(
 name|error
 operator|==
 literal|0
-operator|&&
-name|ia
 condition|)
 block|{
 comment|/* Record statistics for this interface address. */
+if|if
+condition|(
+name|ia
+operator|!=
+name|NULL
+condition|)
+block|{
 name|ia
 operator|->
 name|ia_ifa
@@ -4003,6 +4008,7 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
+block|}
 name|error
 operator|=
 call|(
