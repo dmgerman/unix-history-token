@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.89.2.34 1997/03/27 00:41:02 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.89.2.35 1997/04/06 17:59:58 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -67,6 +67,12 @@ name|DITEM_REDRAW
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_XIG_ENVIRONMENT
+end_ifndef
 
 begin_function
 specifier|static
@@ -199,12 +205,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USE_XIG_SERVER
-end_ifndef
-
 begin_function
 specifier|static
 name|int
@@ -258,15 +258,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !USE_XIG_SERVER */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -319,6 +310,15 @@ name|DITEM_REDRAW
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !USE_XIG_ENVIRONMENT */
+end_comment
 
 begin_define
 define|#
@@ -501,6 +501,22 @@ modifier|*
 name|self
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_XIG_ENVIRONMENT
+return|return
+operator|(
+name|Dists
+operator|==
+name|DIST_ALL
+operator|&&
+name|SrcDists
+operator|==
+name|DIST_SRC_ALL
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 name|Dists
@@ -524,6 +540,8 @@ operator|==
 name|DIST_XF86_FONTS_ALL
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -559,6 +577,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_XIG_ENVIRONMENT
+end_ifndef
+
 begin_function
 specifier|static
 name|int
@@ -574,6 +598,11 @@ name|XF86Dists
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -822,21 +851,9 @@ block|,
 name|distExtractAll
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|USE_XIG_SERVER
-block|{
-literal|"Distributions, XFree86 + XiG"
-block|,
-literal|"XFree86 distribution menu."
-block|,
-name|NULL
-block|,
-name|distSetXF86
-block|}
-block|,
-else|#
-directive|else
+ifndef|#
+directive|ifndef
+name|USE_XIG_ENVIRONMENT
 block|{
 literal|"Distributions, XFree86"
 block|,
@@ -1497,6 +1514,9 @@ block|,
 literal|"apache_httpd"
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|USE_XIG_ENVIRONMENT
 block|{
 literal|"XFree86, Fonts"
 block|,
@@ -1512,9 +1532,6 @@ operator|&
 name|MenuXF86SelectFonts
 block|}
 block|,
-ifndef|#
-directive|ifndef
-name|USE_XIG_SERVER
 block|{
 literal|"XFree86, Server"
 block|,
@@ -2103,7 +2120,7 @@ block|,
 literal|"There are many different types of mice currently on the market,\n"
 literal|"but this configuration menu should at least narrow down the choices\n"
 literal|"somewhat.  Once you've selected one of the below, you can specify\n"
-literal|"/dev/mouse as your mouse device when running the XFree86 configuration\n"
+literal|"/dev/mouse as your mouse device when running the X configuration\n"
 literal|"utility (see Configuration menu).  Please note that for PS/2 mice,\n"
 literal|"you need to enable the psm driver in the kernel configuration menu\n"
 literal|"when installing for the first time."
@@ -2256,7 +2273,7 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|USE_XIG_SERVER
+name|USE_XIG_ENVIRONMENT
 end_ifndef
 
 begin_decl_stmt
@@ -4125,28 +4142,21 @@ block|,
 name|DIST_PORTS
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|USE_XIG_SERVER
-block|{
-literal|"XFree86"
-block|,
-literal|"The XFree86 3.2 + AcceleratedX distribution"
-block|,
-else|#
-directive|else
+ifndef|#
+directive|ifndef
+name|USE_XIG_ENVIRONMENT
 block|{
 literal|"XFree86"
 block|,
 literal|"The XFree86 3.2 distribution"
 block|,
-endif|#
-directive|endif
 name|x11FlagCheck
 block|,
 name|distSetXF86
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"All"
 block|,
@@ -4212,10 +4222,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuDESDistributions
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -4350,10 +4363,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuSrcDistributions
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -4825,24 +4841,24 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_XIG_ENVIRONMENT
+end_ifndef
+
+begin_decl_stmt
 name|DMenu
 name|MenuXF86Select
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
-ifdef|#
-directive|ifdef
-name|USE_XIG_SERVER
-literal|"XFree86 3.2 + AcceleratedX 3.1 Distribution"
-block|,
-else|#
-directive|else
 literal|"XFree86 3.2 Distribution"
 block|,
-endif|#
-directive|endif
 literal|"Please select the components you need from the XFree86 3.2\n"
 literal|"distribution sets."
 block|,
@@ -4866,9 +4882,6 @@ operator|&
 name|MenuXF86SelectCore
 block|}
 block|,
-ifndef|#
-directive|ifndef
-name|USE_XIG_SERVER
 block|{
 literal|"Server"
 block|,
@@ -4884,8 +4897,6 @@ operator|&
 name|MenuXF86SelectServer
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|"Fonts"
 block|,
@@ -4946,10 +4957,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuXF86SelectCore
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -5082,7 +5096,7 @@ block|}
 block|,
 ifndef|#
 directive|ifndef
-name|USE_XIG_SERVER
+name|USE_XIG_ENVIRONMENT
 block|{
 literal|"lk98"
 block|,
@@ -5202,7 +5216,7 @@ block|}
 block|,
 ifndef|#
 directive|ifndef
-name|USE_XIG_SERVER
+name|USE_XIG_ENVIRONMENT
 block|{
 literal|"set"
 block|,
@@ -5339,10 +5353,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuXF86SelectFonts
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -5560,13 +5577,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
-ifndef|#
-directive|ifndef
-name|USE_XIG_SERVER
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuXF86SelectServer
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -6017,10 +6034,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuXF86SelectPC98Server
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -6336,13 +6356,22 @@ name|NULL
 block|}
 block|}
 block|}
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
-comment|/* !USE_XIG_SERVER */
+end_endif
+
+begin_comment
+comment|/* !USE_XIG_ENVIRONMENT */
+end_comment
+
+begin_decl_stmt
 name|DMenu
 name|MenuDiskDevices
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -6368,10 +6397,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuHTMLDoc
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -6431,11 +6463,17 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* The main installation menu */
+end_comment
+
+begin_decl_stmt
 name|DMenu
 name|MenuInstallCustom
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -6535,11 +6573,17 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* MBR type menu */
+end_comment
+
+begin_decl_stmt
 name|DMenu
 name|MenuMBRType
-operator|=
+init|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -6629,11 +6673,17 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Final configuration menu */
+end_comment
+
+begin_decl_stmt
 name|DMenu
 name|MenuConfigure
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -6785,11 +6835,23 @@ block|,
 name|docBrowser
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|USE_XIG_ENVIRONMENT
+block|{
+literal|"X X + CDE"
+block|,
+literal|"Configure X Window system& CDE environment"
+block|,
+else|#
+directive|else
 block|{
 literal|"X XFree86"
 block|,
 literal|"Configure XFree86"
 block|,
+endif|#
+directive|endif
 name|NULL
 block|,
 name|configXFree86

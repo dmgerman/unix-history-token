@@ -123,7 +123,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USE_XIG_SERVER
+name|USE_XIG_ENVIRONMENT
 end_ifdef
 
 begin_define
@@ -342,6 +342,12 @@ end_define
 begin_comment
 comment|/* no SMAILCF, it's part of USBIN */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_XIG_ENVIRONMENT
+end_ifndef
 
 begin_comment
 comment|/* Subtypes for XFree86 distribution */
@@ -710,6 +716,15 @@ directive|define
 name|DIST_XF86_ALL
 value|0x1FFFF
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !USE_XIG_ENVIRONMENT */
+end_comment
 
 begin_endif
 endif|#

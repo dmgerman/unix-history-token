@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.73.2.24 1997/03/28 09:30:14 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.73.2.25 1997/04/06 17:59:53 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -42,6 +42,12 @@ name|SrcDists
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_XIG_ENVIRONMENT
+end_ifndef
+
 begin_decl_stmt
 name|unsigned
 name|int
@@ -62,6 +68,11 @@ name|int
 name|XF86FontDists
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -119,6 +130,12 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_XIG_ENVIRONMENT
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|Distribution
@@ -142,6 +159,11 @@ name|XF86ServerDistTable
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The top-level distribution categories */
@@ -338,7 +360,7 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|USE_XIG_SERVER
+name|USE_XIG_ENVIRONMENT
 block|{
 literal|"accelx"
 block|,
@@ -352,8 +374,8 @@ block|,
 name|NULL
 block|}
 block|,
-endif|#
-directive|endif
+else|#
+directive|else
 block|{
 literal|"XF8632"
 block|,
@@ -367,6 +389,8 @@ block|,
 name|XF86DistTable
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|}
@@ -682,6 +706,12 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_XIG_ENVIRONMENT
+end_ifndef
 
 begin_comment
 comment|/* The XFree86 distribution */
@@ -1361,6 +1391,15 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !USE_XIG_ENVIRONMENT */
+end_comment
+
 begin_function_decl
 specifier|static
 name|int
@@ -1406,6 +1445,9 @@ name|SrcDists
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|USE_XIG_ENVIRONMENT
 name|XF86Dists
 operator|=
 literal|0
@@ -1418,6 +1460,8 @@ name|XF86FontDists
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|DITEM_SUCCESS
 operator||
@@ -1484,6 +1528,15 @@ name|SrcDists
 operator|=
 name|DIST_SRC_ALL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_XIG_ENVIRONMENT
+name|Dists
+operator||=
+name|DIST_XIG_SERVER
+expr_stmt|;
+else|#
+directive|else
 name|XF86Dists
 operator|=
 name|DIST_XF86_BIN
@@ -1504,27 +1557,18 @@ name|DIST_XF86_SERVER
 operator||
 name|DIST_XF86_FONTS
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_XIG_SERVER
-name|Dists
-operator||=
-name|DIST_XIG_SERVER
-expr_stmt|;
-else|#
-directive|else
 name|XF86ServerDists
 operator|=
 name|DIST_XF86_SERVER_SVGA
 operator||
 name|DIST_XF86_SERVER_VGA16
 expr_stmt|;
-endif|#
-directive|endif
 name|XF86FontDists
 operator|=
 name|DIST_XF86_FONTS_MISC
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|distSetXF86
 argument_list|(
@@ -1630,6 +1674,21 @@ name|Dists
 operator|=
 name|_DIST_USER
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_XIG_ENVIRONMENT
+name|Dists
+operator||=
+name|DIST_XIG_SERVER
+expr_stmt|;
+else|#
+directive|else
+name|XF86ServerDists
+operator|=
+name|DIST_XF86_SERVER_SVGA
+operator||
+name|DIST_XF86_SERVER_VGA16
+expr_stmt|;
 name|XF86Dists
 operator|=
 name|DIST_XF86_BIN
@@ -1648,27 +1707,12 @@ name|DIST_XF86_SERVER
 operator||
 name|DIST_XF86_FONTS
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_XIG_SERVER
-name|Dists
-operator||=
-name|DIST_XIG_SERVER
-expr_stmt|;
-else|#
-directive|else
-name|XF86ServerDists
-operator|=
-name|DIST_XF86_SERVER_SVGA
-operator||
-name|DIST_XF86_SERVER_VGA16
-expr_stmt|;
-endif|#
-directive|endif
 name|XF86FontDists
 operator|=
 name|DIST_XF86_FONTS_MISC
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|distSetXF86
 argument_list|(
@@ -1731,29 +1775,29 @@ name|SrcDists
 operator|=
 name|DIST_SRC_ALL
 expr_stmt|;
-name|XF86Dists
-operator|=
-name|DIST_XF86_ALL
-expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USE_XIG_SERVER
+name|USE_XIG_ENVIRONMENT
 name|Dists
 operator||=
 name|DIST_XIG_SERVER
 expr_stmt|;
 else|#
 directive|else
+name|XF86Dists
+operator|=
+name|DIST_XF86_ALL
+expr_stmt|;
 name|XF86ServerDists
 operator|=
 name|DIST_XF86_SERVER_ALL
 expr_stmt|;
-endif|#
-directive|endif
 name|XF86FontDists
 operator|=
 name|DIST_XF86_FONTS_ALL
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|distMaybeSetDES
 argument_list|(
@@ -2048,6 +2092,15 @@ name|i
 init|=
 name|DITEM_SUCCESS
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_XIG_ENVIRONMENT
+name|Dists
+operator||=
+name|DIST_XIG_SERVER
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|dmenuOpenSimple
@@ -2059,15 +2112,6 @@ name|FALSE
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|USE_XIG_SERVER
-name|Dists
-operator||=
-name|DIST_XIG_SERVER
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 name|XF86ServerDists
@@ -2076,8 +2120,6 @@ name|XF86Dists
 operator||=
 name|DIST_XF86_SERVER
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|XF86FontDists
@@ -2122,6 +2164,8 @@ name|i
 operator|=
 name|DITEM_FAILURE
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|i
 operator||
