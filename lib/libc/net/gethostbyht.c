@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostbyht.c,v 1.9 1997/02/22 15:00:07 peter Exp $"
+literal|"$Id: gethostbyht.c,v 1.10 1997/06/27 08:22:01 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,10 +171,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_char
+name|u_int32_t
 name|host_addr
 index|[
-literal|16
+literal|4
 index|]
 decl_stmt|;
 end_decl_stmt
