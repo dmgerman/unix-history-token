@@ -1968,11 +1968,9 @@ if|if
 condition|(
 name|ctd
 operator|->
-name|td_kse
-operator|->
-name|ke_flags
+name|td_flags
 operator|&
-name|KEF_IDLEKSE
+name|TDF_IDLETD
 condition|)
 name|ctd
 operator|->

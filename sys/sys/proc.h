@@ -859,6 +859,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_IDLETD
+value|0x000020
+end_define
+
+begin_comment
+comment|/* This is one of the per-CPU idle threads */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_SELECT
 value|0x000040
 end_define
@@ -1443,17 +1454,6 @@ end_struct
 
 begin_comment
 comment|/* flags kept in ke_flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_IDLEKSE
-value|0x00004
-end_define
-
-begin_comment
-comment|/* A 'Per CPU idle process'.. has one thread */
 end_comment
 
 begin_define

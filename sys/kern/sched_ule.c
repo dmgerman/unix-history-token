@@ -3798,11 +3798,9 @@ if|if
 condition|(
 name|td
 operator|->
-name|td_kse
-operator|->
-name|ke_flags
+name|td_flags
 operator|&
-name|KEF_IDLEKSE
+name|TD_IDLETD
 condition|)
 return|return;
 name|CTR4
