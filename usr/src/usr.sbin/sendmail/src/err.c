@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.20 (Berkeley) %G%"
+literal|"@(#)err.c	8.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -759,6 +759,10 @@ operator|||
 name|OpMode
 operator|==
 name|MD_DAEMON
+operator|||
+name|OpMode
+operator|==
+name|MD_ARPAFTP
 condition|)
 name|fprintf
 argument_list|(

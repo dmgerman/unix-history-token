@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.47 (Berkeley) %G%"
+literal|"@(#)main.c	8.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2207,6 +2207,14 @@ case|:
 case|case
 name|MD_PRINT
 case|:
+ifdef|#
+directive|ifdef
+name|MAYBE_NEXT_RELEASE
+case|case
+name|MD_ARPAFTP
+case|:
+endif|#
+directive|endif
 name|OpMode
 operator|=
 name|j
