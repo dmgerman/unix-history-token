@@ -2531,7 +2531,7 @@ name|size
 operator|>
 name|dt
 operator|->
-name|maxsize
+name|dt_maxsize
 condition|)
 return|return
 operator|(
@@ -2680,7 +2680,7 @@ name|mapp
 argument_list|,
 name|dt
 operator|->
-name|maxsize
+name|dt_maxsize
 argument_list|)
 operator|)
 return|;
@@ -2774,7 +2774,7 @@ name|map
 argument_list|,
 name|dt
 operator|->
-name|maxsize
+name|dt_maxsize
 argument_list|)
 expr_stmt|;
 block|}

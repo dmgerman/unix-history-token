@@ -5330,7 +5330,7 @@ operator|*
 operator|)
 name|pdmat
 operator|->
-name|cookie
+name|dt_cookie
 decl_stmt|;
 return|return
 operator|(
@@ -5454,7 +5454,7 @@ operator|*
 operator|)
 name|pdmat
 operator|->
-name|cookie
+name|dt_cookie
 decl_stmt|;
 name|iommu_dvmamem_free_size
 argument_list|(

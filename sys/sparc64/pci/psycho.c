@@ -6406,7 +6406,7 @@ operator|*
 operator|)
 name|pdmat
 operator|->
-name|cookie
+name|dt_cookie
 expr_stmt|;
 return|return
 operator|(
@@ -6532,7 +6532,7 @@ operator|*
 operator|)
 name|pdmat
 operator|->
-name|cookie
+name|dt_cookie
 expr_stmt|;
 name|iommu_dvmamem_free_size
 argument_list|(

@@ -5909,7 +5909,7 @@ name|pt
 init|;
 name|lt
 operator|->
-name|dmamem_alloc
+name|dt_dmamem_alloc
 operator|==
 name|NULL
 condition|;
@@ -5917,7 +5917,7 @@ name|lt
 operator|=
 name|lt
 operator|->
-name|parent
+name|dt_parent
 control|)
 empty_stmt|;
 return|return
@@ -5926,7 +5926,7 @@ call|(
 modifier|*
 name|lt
 operator|->
-name|dmamem_alloc_size
+name|dt_dmamem_alloc_size
 call|)
 argument_list|(
 name|lt
@@ -6087,7 +6087,7 @@ name|pt
 init|;
 name|lt
 operator|->
-name|dmamem_free
+name|dt_dmamem_free
 operator|==
 name|NULL
 condition|;
@@ -6095,14 +6095,14 @@ name|lt
 operator|=
 name|lt
 operator|->
-name|parent
+name|dt_parent
 control|)
 empty_stmt|;
 call|(
 modifier|*
 name|lt
 operator|->
-name|dmamem_free_size
+name|dt_dmamem_free_size
 call|)
 argument_list|(
 name|lt
