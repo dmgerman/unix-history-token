@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -178,11 +178,11 @@ struct|struct
 name|fs
 block|{
 name|int32_t
-name|unused_1
+name|fs_firstfield
 decl_stmt|;
 comment|/* historic file system linked list, */
 name|int32_t
-name|unused_2
+name|fs_unused_1
 decl_stmt|;
 comment|/*     used for incore super blocks */
 name|daddr_t
@@ -706,7 +706,7 @@ struct|struct
 name|cg
 block|{
 name|int32_t
-name|unused_1
+name|cg_firstfield
 decl_stmt|;
 comment|/* historic cyl groups linked list */
 name|int32_t
@@ -902,11 +902,11 @@ struct|struct
 name|ocg
 block|{
 name|int32_t
-name|unused_1
+name|cg_firstfield
 decl_stmt|;
 comment|/* historic linked list of cyl groups */
 name|int32_t
-name|unused_2
+name|unused_1
 decl_stmt|;
 comment|/*     used for incore cyl groups */
 name|time_t
