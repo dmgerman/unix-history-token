@@ -47,17 +47,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -66,6 +55,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -470,7 +473,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mkstr [ - ] mesgfile prefix file ...\n"
+literal|"usage: mkstr [-] mesgfile prefix file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1170,6 +1173,19 @@ argument_list|,
 sizeof|sizeof
 expr|*
 name|hp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hp
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|hp
