@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.136 1998/06/24 19:33:32 brian Exp $  *  *	TODO:  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.137 1998/06/27 12:03:37 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -768,6 +768,10 @@ parameter_list|,
 name|int
 modifier|*
 name|mode
+parameter_list|,
+name|int
+modifier|*
+name|alias
 parameter_list|)
 block|{
 name|int
@@ -791,6 +795,11 @@ operator|*
 name|mode
 operator|=
 name|PHYS_INTERACTIVE
+expr_stmt|;
+operator|*
+name|alias
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -839,18 +848,9 @@ operator|==
 literal|0
 condition|)
 block|{
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|NOALIAS
-if|if
-condition|(
-name|alias_Load
-argument_list|()
-operator|!=
-literal|0
-condition|)
-endif|#
-directive|endif
 name|log_Printf
 argument_list|(
 name|LogWARN
@@ -858,6 +858,15 @@ argument_list|,
 literal|"Cannot load alias library\n"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+operator|*
+name|alias
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 name|optc
 operator|--
 expr_stmt|;
@@ -1007,6 +1016,8 @@ name|int
 name|nfds
 decl_stmt|,
 name|mode
+decl_stmt|,
+name|alias
 decl_stmt|;
 name|struct
 name|bundle
@@ -1082,6 +1093,9 @@ literal|1
 argument_list|,
 operator|&
 name|mode
+argument_list|,
+operator|&
+name|alias
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1391,6 +1405,12 @@ block|}
 name|SignalBundle
 operator|=
 name|bundle
+expr_stmt|;
+name|bundle
+operator|->
+name|AliasEnabled
+operator|=
+name|alias
 expr_stmt|;
 if|if
 condition|(
