@@ -9545,7 +9545,7 @@ argument|] =
 literal|0
 argument|; 	} 	splx(s);  	return prev; }  static struct sbp_ocb * sbp_get_ocb(struct sbp_dev *sdev) { 	struct sbp_ocb *ocb; 	int s = splfw(); 	ocb = STAILQ_FIRST(&sdev->free_ocbs); 	if (ocb == NULL) { 		sdev->flags |= ORB_SHORTAGE; 		printf(
 literal|"ocb shortage!!!\n"
-argument|); 		return NULL; 	} 	STAILQ_REMOVE_HEAD(&sdev->free_ocbs, ocb); 	splx(s); 	ocb->ccb = NULL; 	return (ocb); }  static void sbp_free_ocb(struct sbp_dev *sdev, struct sbp_ocb *ocb) { 	ocb->flags =
+argument|); 		splx(s); 		return NULL; 	} 	STAILQ_REMOVE_HEAD(&sdev->free_ocbs, ocb); 	splx(s); 	ocb->ccb = NULL; 	return (ocb); }  static void sbp_free_ocb(struct sbp_dev *sdev, struct sbp_ocb *ocb) { 	ocb->flags =
 literal|0
 argument|; 	ocb->ccb = NULL; 	STAILQ_INSERT_TAIL(&sdev->free_ocbs, ocb, ocb); 	if ((sdev->flags& ORB_SHORTAGE) !=
 literal|0
