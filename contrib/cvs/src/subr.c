@@ -820,7 +820,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the caller's login from his uid. If the real uid is "root" try LOGNAME  * USER or getlogin(). If getlogin() and getpwuid() both fail, return  * the uid as a string.  */
+comment|/* Return the username by which the caller should be identified in    CVS, in contexts such as the author field of RCS files, various    logs, etc.     Returns a pointer to storage that we manage; it is good until the    next call to getcaller () (provided that the caller doesn't call    getlogin () or some such themself).  */
 end_comment
 
 begin_function
@@ -848,6 +848,22 @@ decl_stmt|;
 name|uid_t
 name|uid
 decl_stmt|;
+comment|/* If there is a CVS username, return it.  */
+ifdef|#
+directive|ifdef
+name|AUTH_SERVER_SUPPORT
+if|if
+condition|(
+name|CVS_Username
+operator|!=
+name|NULL
+condition|)
+return|return
+name|CVS_Username
+return|;
+endif|#
+directive|endif
+comment|/* Get the caller's login from his uid.  If the real uid is "root"        try LOGNAME USER or getlogin(). If getlogin() and getpwuid()        both fail, return the uid as a string.  */
 name|uid
 operator|=
 name|getuid

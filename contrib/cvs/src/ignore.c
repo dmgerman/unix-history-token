@@ -980,7 +980,7 @@ condition|(
 name|ign_case
 condition|)
 block|{
-comment|/* We do a case-insensitive match by calling fnmatch on copies of 	   the pattern and the name which have been converted to 	   lowercase.  */
+comment|/* We do a case-insensitive match by calling fnmatch on copies of 	   the pattern and the name which have been converted to 	   lowercase.  FIXME: would be much cleaner to just unify this 	   with the other case-insensitive fnmatch stuff (FOLD_FN_CHAR 	   in lib/fnmatch.c; os2_fnmatch in emx/system.c).  */
 name|char
 modifier|*
 name|name_lower
@@ -1063,7 +1063,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fnmatch
+name|CVS_FNMATCH
 argument_list|(
 name|pat_lower
 argument_list|,
@@ -1116,7 +1116,7 @@ name|cpp
 condition|)
 if|if
 condition|(
-name|fnmatch
+name|CVS_FNMATCH
 argument_list|(
 operator|*
 name|cpp

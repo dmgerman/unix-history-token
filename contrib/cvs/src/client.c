@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* CVS client-related stuff.  */
+comment|/* CVS client-related stuff.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
 end_comment
 
 begin_ifdef
@@ -5706,6 +5706,118 @@ expr_stmt|;
 block|}
 end_function
 
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Nonzero if time was specified in Mod-time.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|stored_modtime_valid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Time specified in Mod-time.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|time_t
+name|stored_modtime
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|handle_mod_time
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|handle_mod_time
+parameter_list|(
+name|args
+parameter_list|,
+name|len
+parameter_list|)
+name|char
+modifier|*
+name|args
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|stored_modtime_valid
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"protocol error: duplicate Mod-time"
+argument_list|)
+expr_stmt|;
+name|stored_modtime
+operator|=
+name|get_date
+argument_list|(
+name|args
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stored_modtime
+operator|==
+operator|(
+name|time_t
+operator|)
+operator|-
+literal|1
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"protocol error: cannot parse date %s"
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+else|else
+name|stored_modtime_valid
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
 begin_comment
 comment|/*  * If we receive a patch, but the patch program fails to apply it, we  * want to request the original file.  We keep a list of files whose  * patches have failed.  */
 end_comment
@@ -7382,6 +7494,11 @@ argument_list|(
 operator|&
 name|context
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|patchedbuf
 argument_list|,
 name|patchedlen
@@ -7822,6 +7939,67 @@ name|stored_mode_valid
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|stored_modtime_valid
+condition|)
+block|{
+name|struct
+name|utimbuf
+name|t
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|t
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* There is probably little point in trying to preserved the 	   actime (or is there? What about Checked-in?).  */
+name|t
+operator|.
+name|modtime
+operator|=
+name|t
+operator|.
+name|actime
+operator|=
+name|stored_modtime
+expr_stmt|;
+if|if
+condition|(
+name|utime
+argument_list|(
+name|filename
+argument_list|,
+operator|&
+name|t
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot set time on %s"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|stored_modtime_valid
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/*      * Process the entries line.  Do this after we've written the file,      * since we need the timestamp.      */
 if|if
 condition|(
@@ -12187,6 +12365,17 @@ argument_list|)
 block|,
 name|RSP_LINE
 argument_list|(
+literal|"Mod-time"
+argument_list|,
+name|handle_mod_time
+argument_list|,
+name|response_type_normal
+argument_list|,
+name|rs_optional
+argument_list|)
+block|,
+name|RSP_LINE
+argument_list|(
 literal|"Removed"
 argument_list|,
 name|handle_removed
@@ -14956,6 +15145,32 @@ directive|endif
 case|case
 name|ext_method
 case|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NO_EXT_METHOD
+argument_list|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|":ext: method not supported by this port of CVS"
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"try :server: instead"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|start_rsh_server
 argument_list|(
 operator|&
@@ -14965,6 +15180,8 @@ operator|&
 name|fromfd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|server_method
@@ -15996,6 +16213,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_EXT_METHOD
+end_ifndef
+
 begin_comment
 comment|/* Contact the server by starting it with rsh.  */
 end_comment
@@ -16488,6 +16711,15 @@ end_endif
 
 begin_comment
 comment|/* START_RSH_WITH_POPEN_RW */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NO_EXT_METHOD */
 end_comment
 
 begin_escape

@@ -649,33 +649,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAVE_MKFIFO
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|mkfifo
-parameter_list|(
-name|path
-parameter_list|,
-name|mode
-parameter_list|)
-value|(mknod ((path), (mode) | S_IFIFO, 0))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2337,6 +2310,28 @@ define|#
 directive|define
 name|CVS_UNLINK
 value|unlink
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Wildcard matcher.  Should be case-insensitive if the system is.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CVS_FNMATCH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CVS_FNMATCH
+value|fnmatch
 end_define
 
 begin_endif

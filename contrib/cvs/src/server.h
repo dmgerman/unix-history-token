@@ -155,6 +155,30 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Set the modification time of the next file sent.  This must be    followed by a call to server_updated on the same file.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|server_modtime
+name|PROTO
+argument_list|(
+operator|(
+expr|struct
+name|file_info
+operator|*
+name|finfo
+operator|,
+name|Vers_TS
+operator|*
+name|vers_ts
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * We want to nuke the Entries line for a file, and (unless  * server_scratch_entry_only is subsequently called) the file itself.  */
 end_comment
 
@@ -528,6 +552,29 @@ end_endif
 
 begin_comment
 comment|/* SERVER_FLOWCONTROL */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AUTH_SERVER_SUPPORT
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|CVS_Username
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AUTH_SERVER_SUPPORT */
 end_comment
 
 begin_endif

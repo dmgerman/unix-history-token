@@ -527,11 +527,14 @@ expr_stmt|;
 block|}
 name|run_setup
 argument_list|(
-literal|"%s%s -x,v/ -f %s%s"
+literal|"%s%s -x,v/ -w%s -f %s%s"
 argument_list|,
 name|Rcsbin
 argument_list|,
 name|RCS_CI
+argument_list|,
+name|getcaller
+argument_list|()
 argument_list|,
 name|rev
 condition|?
