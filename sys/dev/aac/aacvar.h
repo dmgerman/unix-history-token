@@ -91,7 +91,7 @@ begin_define
 define|#
 directive|define
 name|AAC_MAX_FIBS
-value|512
+value|(512 - AAC_FIB_COUNT)
 end_define
 
 begin_comment
