@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.6 (Berkeley) %G%"
+literal|"@(#)main.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -257,6 +257,13 @@ literal|"Alternate super block location: %d\n"
 argument_list|,
 name|bflag
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+name|cvtflag
+operator|++
 expr_stmt|;
 break|break;
 case|case
