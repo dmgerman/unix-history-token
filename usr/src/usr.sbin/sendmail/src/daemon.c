@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.48.1.3 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.71 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.48.1.3 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.71 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1994,6 +1994,14 @@ name|ev
 decl_stmt|;
 name|int
 name|nleft
+decl_stmt|;
+name|char
+name|ibuf
+index|[
+name|MAXNAME
+operator|+
+literal|1
+index|]
 decl_stmt|;
 name|int
 name|ibuf
