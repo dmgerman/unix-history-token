@@ -4527,7 +4527,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
-name|drop
+name|drop2
 goto|;
 block|}
 if|if
