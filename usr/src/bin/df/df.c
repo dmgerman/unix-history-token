@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.15 (Berkeley) %G%"
+literal|"@(#)df.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,6 +167,10 @@ decl_stmt|,
 name|i
 decl_stmt|;
 name|long
+name|width
+decl_stmt|,
+name|maxwidth
+decl_stmt|,
 name|mntsize
 decl_stmt|,
 name|getmntinfo
@@ -280,31 +284,57 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-name|printf
+name|mntsize
+operator|=
+name|getmntinfo
 argument_list|(
-literal|"Filesystem  %s    used   avail capacity"
+operator|&
+name|mntbuf
 argument_list|,
-name|kflag
-condition|?
-literal|"  kbytes"
-else|:
-literal|"512-blks"
+name|MNT_NOWAIT
+argument_list|)
+expr_stmt|;
+name|maxwidth
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|mntsize
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|width
+operator|=
+name|strlen
+argument_list|(
+name|mntbuf
+index|[
+name|i
+index|]
+operator|.
+name|f_mntfromname
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|iflag
+name|width
+operator|>
+name|maxwidth
 condition|)
-name|printf
-argument_list|(
-literal|" iused   ifree  %%iused"
-argument_list|)
+name|maxwidth
+operator|=
+name|width
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"  Mounted on\n"
-argument_list|)
-expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|COMPAT_43
@@ -316,6 +346,8 @@ block|{
 name|olddf
 argument_list|(
 name|argv
+argument_list|,
+name|maxwidth
 argument_list|)
 expr_stmt|;
 name|exit
@@ -370,6 +402,8 @@ name|mntbuf
 index|[
 name|i
 index|]
+argument_list|,
+name|maxwidth
 argument_list|)
 expr_stmt|;
 name|exit
@@ -525,6 +559,8 @@ name|prtstat
 argument_list|(
 operator|&
 name|statfsbuf
+argument_list|,
+name|maxwidth
 argument_list|)
 expr_stmt|;
 block|}
@@ -600,10 +636,29 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|argc
+operator|==
+literal|1
+condition|)
+name|maxwidth
+operator|=
+name|strlen
+argument_list|(
+name|statfsbuf
+operator|.
+name|f_mntfromname
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
 name|prtstat
 argument_list|(
 operator|&
 name|statfsbuf
+argument_list|,
+name|maxwidth
 argument_list|)
 expr_stmt|;
 block|}
@@ -709,6 +764,8 @@ begin_expr_stmt
 name|prtstat
 argument_list|(
 name|sfsp
+argument_list|,
+name|maxwidth
 argument_list|)
 specifier|register
 expr|struct
@@ -717,6 +774,12 @@ operator|*
 name|sfsp
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|long
+name|maxwidth
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -727,9 +790,67 @@ name|availblks
 decl_stmt|,
 name|inodes
 decl_stmt|;
+specifier|static
+name|int
+name|timesthrough
+decl_stmt|;
+if|if
+condition|(
+name|maxwidth
+operator|<
+literal|11
+condition|)
+name|maxwidth
+operator|=
+literal|11
+expr_stmt|;
+if|if
+condition|(
+operator|++
+name|timesthrough
+operator|==
+literal|1
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"%-12.12s"
+literal|"%-*.*s%s    used   avail capacity"
+argument_list|,
+name|maxwidth
+argument_list|,
+name|maxwidth
+argument_list|,
+literal|"Filesystem"
+argument_list|,
+name|kflag
+condition|?
+literal|"  kbytes"
+else|:
+literal|"512-blks"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|iflag
+condition|)
+name|printf
+argument_list|(
+literal|" iused   ifree  %%iused"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  Mounted on\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"%-*.*s"
+argument_list|,
+name|maxwidth
+argument_list|,
+name|maxwidth
 argument_list|,
 name|sfsp
 operator|->
@@ -975,6 +1096,8 @@ begin_macro
 name|olddf
 argument_list|(
 argument|argv
+argument_list|,
+argument|maxwidth
 argument_list|)
 end_macro
 
@@ -983,6 +1106,12 @@ name|char
 modifier|*
 name|argv
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|maxwidth
 decl_stmt|;
 end_decl_stmt
 
@@ -1086,6 +1215,8 @@ operator|->
 name|fs_spec
 argument_list|,
 literal|1
+argument_list|,
+name|maxwidth
 argument_list|)
 expr_stmt|;
 block|}
@@ -1113,6 +1244,8 @@ name|argv
 operator|++
 argument_list|,
 literal|0
+argument_list|,
+name|maxwidth
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1129,6 +1262,8 @@ argument_list|(
 argument|file
 argument_list|,
 argument|infsent
+argument_list|,
+argument|maxwidth
 argument_list|)
 end_macro
 
@@ -1142,6 +1277,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|infsent
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|maxwidth
 decl_stmt|;
 end_decl_stmt
 
@@ -1575,6 +1716,8 @@ expr_stmt|;
 name|prtstat
 argument_list|(
 name|sfsp
+argument_list|,
+name|maxwidth
 argument_list|)
 expr_stmt|;
 operator|(
