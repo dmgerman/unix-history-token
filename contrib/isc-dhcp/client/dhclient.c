@@ -1450,7 +1450,7 @@ argument_list|,
 name|IFNAMSIZ
 argument_list|)
 expr_stmt|;
-name|set_ieee802
+name|set_ieee80211
 argument_list|(
 name|tmp
 argument_list|)
@@ -2104,7 +2104,7 @@ name|INTERFACE_REQUESTED
 operator|)
 condition|)
 continue|continue;
-name|set_ieee802
+name|set_ieee80211
 argument_list|(
 name|ip
 argument_list|)
@@ -15812,7 +15812,7 @@ if|if
 condition|(
 name|ip
 operator|->
-name|ieee802
+name|ieee80211
 condition|)
 block|{
 if|if
@@ -15885,7 +15885,7 @@ name|__FreeBSD__
 end_ifdef
 
 begin_macro
-name|set_ieee802
+name|set_ieee80211
 argument_list|(
 argument|struct interface_info *ip
 argument_list|)
@@ -16021,7 +16021,7 @@ literal|0
 condition|)
 name|ip
 operator|->
-name|ieee802
+name|ieee80211
 operator|=
 literal|0
 expr_stmt|;
@@ -16041,7 +16041,7 @@ endif|#
 directive|endif
 name|ip
 operator|->
-name|ieee802
+name|ieee80211
 operator|=
 literal|1
 expr_stmt|;

@@ -2832,9 +2832,9 @@ name|linkstatus
 decl_stmt|;
 comment|/* Link status */
 name|int
-name|ieee802
+name|ieee80211
 decl_stmt|;
-comment|/* True if media is ieee802 */
+comment|/* True if media is ieee80211 */
 name|int
 name|index
 decl_stmt|;
