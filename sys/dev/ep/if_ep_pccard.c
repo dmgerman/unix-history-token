@@ -738,23 +738,11 @@ literal|0xc000
 argument_list|)
 expr_stmt|;
 comment|/* Fake IRQ must be 3 */
-name|CSR_WRITE_2
+name|SET_IRQ
 argument_list|(
 name|sc
 argument_list|,
-name|EP_W0_RESOURCE_CFG
-argument_list|,
-operator|(
-name|sc
-operator|->
-name|epb
-operator|.
-name|res_cfg
-operator|&
-literal|0x0fff
-operator|)
-operator||
-literal|0x3000
+literal|3
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_2
@@ -782,6 +770,8 @@ block|{
 comment|/* 		 * turn on the MII transciever 		 */
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;

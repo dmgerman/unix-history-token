@@ -544,6 +544,8 @@ name|addr
 expr_stmt|;
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -788,6 +790,8 @@ literal|0
 expr_stmt|;
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -878,6 +882,8 @@ name|config
 decl_stmt|;
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1152,6 +1158,8 @@ name|ac_enaddr
 expr_stmt|;
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
@@ -1726,6 +1734,8 @@ argument_list|)
 expr_stmt|;
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1740,6 +1750,8 @@ argument_list|)
 expr_stmt|;
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
@@ -1754,6 +1766,8 @@ argument_list|)
 expr_stmt|;
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1779,6 +1793,8 @@ argument_list|)
 expr_stmt|;
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
@@ -1840,6 +1856,8 @@ expr_stmt|;
 comment|/* Window 1 is operating window */
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -2068,6 +2086,8 @@ expr_stmt|;
 comment|/* 	 * Store up a bunch of mbuf's for use later. (MAX_MBS). 	 * First we free up any that we had in case we're being 	 * called from intr or somewhere else. 	 */
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -2786,6 +2806,8 @@ name|IFF_OACTIVE
 expr_stmt|;
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -2831,6 +2853,8 @@ argument_list|)
 expr_stmt|;
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
@@ -3083,6 +3107,8 @@ name|IFF_OACTIVE
 expr_stmt|;
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -3904,6 +3930,8 @@ name|j
 decl_stmt|;
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -3918,6 +3946,8 @@ argument_list|)
 expr_stmt|;
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
@@ -3932,6 +3962,8 @@ argument_list|)
 expr_stmt|;
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -3965,6 +3997,8 @@ name|ACF_CONNECTOR_UTP
 expr_stmt|;
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
@@ -4048,6 +4082,8 @@ expr_stmt|;
 block|}
 name|GO_WINDOW
 argument_list|(
+name|sc
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;

@@ -184,6 +184,8 @@ define|#
 directive|define
 name|GO_WINDOW
 parameter_list|(
+name|sc
+parameter_list|,
 name|x
 parameter_list|)
 value|CSR_WRITE_2(sc, EP_COMMAND, WINDOW_SELECT|(x))
