@@ -74,7 +74,7 @@ name|usec2ticks
 parameter_list|(
 name|u
 parameter_list|)
-value|((u) * 19549)>>14
+value|(((u) * 19549)>>14)
 end_define
 
 begin_define
@@ -84,7 +84,7 @@ name|ticks2usec
 parameter_list|(
 name|u
 parameter_list|)
-value|((u) * 3433)>>12
+value|(((u) * 3433)>>12)
 end_define
 
 begin_define
