@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: msg.h,v 1.4 1995/07/29 11:42:48 bde Exp $ */
+comment|/* $Id: msg.h,v 1.5 1995/08/30 00:33:33 bde Exp $ */
 end_comment
 
 begin_comment
@@ -255,16 +255,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_undef
-undef|#
-directive|undef
-name|MSGMAX
-end_undef
-
-begin_comment
-comment|/* ALWAYS compute MGSMAX! */
-end_comment
 
 begin_define
 define|#
