@@ -394,12 +394,42 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PCI_IRQ_OVERRIDE_MASK
+value|0x3e68
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PCI_IRQ_OVERRIDE_MASK
+value|0xdef4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|uint32_t
 name|pci_irq_override_mask
 init|=
-literal|0xdef4
+name|PCI_IRQ_OVERRIDE_MASK
 decl_stmt|;
 end_decl_stmt
 
@@ -428,7 +458,7 @@ argument_list|,
 operator|&
 name|pci_irq_override_mask
 argument_list|,
-literal|0xdef4
+name|PCI_IRQ_OVERRIDE_MASK
 argument_list|,
 literal|"Mask of allowed irqs to try to route when it has no good clue about\n"
 literal|"which irqs it should use."
