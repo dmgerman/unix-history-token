@@ -3837,7 +3837,7 @@ literal|0x01
 case|:
 return|return
 operator|(
-literal|"REWIND"
+literal|"REZERO"
 operator|)
 return|;
 case|case

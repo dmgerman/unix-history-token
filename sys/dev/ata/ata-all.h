@@ -461,6 +461,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_C_SLEEP
+value|0xe6
+end_define
+
+begin_comment
+comment|/* sleep command */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_C_FLUSHCACHE
 value|0xe7
 end_define

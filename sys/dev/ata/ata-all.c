@@ -1604,8 +1604,6 @@ name|device
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1661,17 +1659,17 @@ name|ATAATTACH
 case|:
 block|{
 comment|/* should enable channel HW on controller that can SOS XXX */
-if|if
-condition|(
-operator|!
-operator|(
 name|error
 operator|=
 name|ata_probe
 argument_list|(
 name|device
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
 condition|)
 name|error
 operator|=
@@ -1680,7 +1678,9 @@ argument_list|(
 name|device
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|error
+return|;
 block|}
 case|case
 name|ATADETACH
@@ -1694,7 +1694,9 @@ name|device
 argument_list|)
 expr_stmt|;
 comment|/* should disable channel HW on controller that can SOS XXX */
-break|break;
+return|return
+name|error
+return|;
 block|}
 case|case
 name|ATAREINIT
@@ -1773,7 +1775,9 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|error
+return|;
 block|}
 case|case
 name|ATAGMODE
@@ -1883,7 +1887,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-break|break;
+return|return
+literal|0
+return|;
 block|}
 case|case
 name|ATASMODE
@@ -2059,7 +2065,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-break|break;
+return|return
+literal|0
+return|;
 block|}
 case|case
 name|ATAGPARM
@@ -2261,16 +2269,13 @@ name|ata_params
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+literal|0
+return|;
 block|}
-default|default:
-name|error
-operator|=
-name|ENOTTY
-expr_stmt|;
 block|}
 return|return
-name|error
+name|ENOTTY
 return|;
 block|}
 end_function

@@ -323,7 +323,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATAPI_REWIND
+name|ATAPI_REZERO
 value|0x01
 end_define
 

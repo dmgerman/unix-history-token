@@ -572,6 +572,9 @@ case|:
 case|case
 literal|0x4d68105a
 case|:
+case|case
+literal|0x6268105a
+case|:
 return|return
 literal|"Promise ATA100 controller"
 return|;
@@ -981,6 +984,9 @@ case|:
 case|case
 literal|0x4d68105a
 case|:
+case|case
+literal|0x6268105a
+case|:
 name|ATA_OUTB
 argument_list|(
 name|sc
@@ -1298,7 +1304,6 @@ argument_list|,
 literal|0x12
 argument_list|)
 condition|)
-block|{
 name|pci_write_config
 argument_list|(
 name|dev
@@ -1310,7 +1315,6 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|0x10001042
@@ -1573,6 +1577,10 @@ case|case
 literal|0x4d68105a
 case|:
 comment|/* Promise TX2 ATA100 */
+case|case
+literal|0x6268105a
+case|:
+comment|/* Promise TX2v2 ATA100 */
 if|if
 condition|(
 operator|!
@@ -2244,9 +2252,6 @@ argument_list|,
 literal|1
 argument_list|,
 name|flags
-operator|&
-operator|~
-name|RF_SHAREABLE
 argument_list|)
 return|;
 endif|#
