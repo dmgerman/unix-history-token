@@ -2313,10 +2313,7 @@ name|p
 operator|->
 name|defn
 operator|=
-name|xstrdup
-argument_list|(
 name|null
-argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -2331,10 +2328,7 @@ name|p
 operator|->
 name|defn
 operator|=
-name|xstrdup
-argument_list|(
 name|null
-argument_list|)
 expr_stmt|;
 else|else
 name|p
@@ -2523,10 +2517,7 @@ name|p
 operator|->
 name|defn
 operator|=
-name|xstrdup
-argument_list|(
 name|null
-argument_list|)
 expr_stmt|;
 else|else
 name|p
