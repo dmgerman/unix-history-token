@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: des_enc.c,v 1.1 2001/09/10 04:03:58 itojun Exp $	*/
+comment|/*	$KAME: kame/kame/sys/crypto/des/des_enc.c,v 1.1 2001/09/10 04:03:58 itojun Exp $	*/
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: bf_locl.h,v 1.5 2000/08/31 06:03:48 itojun Exp $	*/
+comment|/*	$KAME: bf_locl.h,v 1.6 2001/09/10 04:03:56 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -206,12 +206,6 @@ end_undef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__NetBSD__
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|__i386__
 end_ifdef
 
@@ -247,15 +241,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*NetBSD*/
-end_comment
 
 begin_define
 define|#
