@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	5.3 (Berkeley) %G%"
+literal|"@(#)inet.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1620,9 +1620,14 @@ name|line
 argument_list|,
 literal|"%.*s."
 argument_list|,
+operator|(
 name|Aflag
+operator|&&
+operator|!
+name|nflag
+operator|)
 condition|?
-literal|10
+literal|12
 else|:
 literal|16
 argument_list|,
