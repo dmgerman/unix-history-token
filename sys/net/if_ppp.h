@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * if_ppp.h - Point-to-Point Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Modified by Paul Mackerras (paulus@cs.anu.edu.au)  * PPP_MRU added, PPP_MTU changed to 296 (default only), added sc_outm.  *  *	$Id$  *	From: if_ppp.h,v 1.3 1993/08/09 02:37:32 paulus Exp  */
+comment|/*  * if_ppp.h - Point-to-Point Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Modified by Paul Mackerras (paulus@cs.anu.edu.au)  * Added PPP_MRU, sc_outm, sc_fastq, sc_bpf.  *  *	$Id$  *	From: if_ppp.h,v 1.4 1993/08/29 11:22:37 paulus Exp $  */
 end_comment
 
 begin_comment
@@ -26,6 +26,28 @@ comment|/* Protocol Field */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|PPP_HEADER_LEN
+value|4
+end_define
+
+begin_comment
+comment|/* octets, must == sizeof(struct ppp_header) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_FCS_LEN
+value|2
+end_define
+
+begin_comment
+comment|/* octets for FCS */
+end_comment
 
 begin_define
 define|#
@@ -183,7 +205,7 @@ begin_define
 define|#
 directive|define
 name|PPP_MTU
-value|296
+value|1500
 end_define
 
 begin_comment
@@ -199,6 +221,17 @@ end_define
 
 begin_comment
 comment|/* Default MRU (max receive unit) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_MAXMRU
+value|65000
+end_define
+
+begin_comment
+comment|/* Largest MRU we allow */
 end_comment
 
 begin_define
@@ -261,16 +294,33 @@ comment|/* length of input-packet-so-far */
 name|u_short
 name|sc_fcs
 decl_stmt|;
-comment|/* FCS so far */
+comment|/* FCS so far (input) */
+name|u_short
+name|sc_outfcs
+decl_stmt|;
+comment|/* FCS so far for output packet */
+name|short
+name|sc_mru
+decl_stmt|;
+comment|/* max receive unit */
 name|u_long
 name|sc_asyncmap
 decl_stmt|;
 comment|/* async control character map */
+name|u_long
+name|sc_rasyncmap
+decl_stmt|;
+comment|/* receive async control char map */
 name|struct
 name|ifqueue
 name|sc_inq
 decl_stmt|;
 comment|/* TTY side input queue */
+name|struct
+name|ifqueue
+name|sc_fastq
+decl_stmt|;
+comment|/* IP interactive output packet queue */
 ifdef|#
 directive|ifdef
 name|VJC
@@ -287,12 +337,96 @@ decl_stmt|;
 name|u_int
 name|sc_bytesrcvd
 decl_stmt|;
+name|caddr_t
+name|sc_bpf
+decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
 comment|/* flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_COMP_PROT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* protocol compression (output) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_COMP_AC
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* header compression (output) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_COMP_TCP
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* TCP (VJ) compression (output) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_NO_TCP_CCID
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* disable VJ connection-id comp. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_REJ_COMP_AC
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* reject adrs/ctrl comp. on input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_REJ_COMP_TCP
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* reject TCP (VJ) comp. on input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_MASK
+value|0x0000ffff
+end_define
+
+begin_comment
+comment|/* bits that user can change */
+end_comment
+
+begin_comment
+comment|/* state bits */
 end_comment
 
 begin_define
@@ -315,39 +449,6 @@ end_define
 
 begin_comment
 comment|/* flush input until next PPP_FLAG */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SC_COMP_PROT
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* protocol compression */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SC_COMP_AC
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* header compression */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SC_COMP_TCP
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* TCP traffic (VJ) compression */
 end_comment
 
 begin_define
@@ -414,6 +515,50 @@ end_define
 
 begin_comment
 comment|/* get ppp unit number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPPIOCGRASYNCMAP
+value|_IOR('t', 85, int)
+end_define
+
+begin_comment
+comment|/* get receive async map */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPPIOCSRASYNCMAP
+value|_IOW('t', 84, int)
+end_define
+
+begin_comment
+comment|/* set receive async map */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPPIOCGMRU
+value|_IOR('t', 83, int)
+end_define
+
+begin_comment
+comment|/* get max receive unit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPPIOCSMRU
+value|_IOW('t', 82, int)
+end_define
+
+begin_comment
+comment|/* set max receive unit */
 end_comment
 
 begin_comment
