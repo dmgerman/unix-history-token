@@ -393,7 +393,7 @@ block|{
 name|beep
 argument_list|()
 expr_stmt|;
-name|dialog_notify
+name|msgConfirm
 argument_list|(
 name|msg
 argument_list|)
