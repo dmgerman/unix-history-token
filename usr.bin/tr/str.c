@@ -740,6 +740,41 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+specifier|static
+name|int
+name|isblank
+parameter_list|(
+name|x
+parameter_list|)
+comment|/* until 4.4 */
+name|int
+name|x
+decl_stmt|;
+block|{
+if|if
+condition|(
+operator|(
+name|x
+operator|==
+literal|' '
+operator|)
+operator|||
+operator|(
+name|x
+operator|==
+literal|'\t'
+operator|)
+condition|)
+return|return
+literal|1
+return|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 begin_typedef
 typedef|typedef
 struct|struct
