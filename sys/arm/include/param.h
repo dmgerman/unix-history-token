@@ -282,7 +282,7 @@ begin_define
 define|#
 directive|define
 name|KSTACK_PAGES
-value|4
+value|2
 end_define
 
 begin_endif
@@ -304,7 +304,7 @@ begin_define
 define|#
 directive|define
 name|UAREA_PAGES
-value|2
+value|1
 end_define
 
 begin_endif
