@@ -409,6 +409,7 @@ begin_function_decl
 name|int
 name|modfind
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
