@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	5.5 (Berkeley) %G%"
+literal|"@(#)rwhod.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -355,11 +355,6 @@ decl_stmt|,
 name|on
 init|=
 literal|1
-decl_stmt|;
-name|struct
-name|hostent
-modifier|*
-name|hp
 decl_stmt|;
 name|char
 modifier|*
@@ -746,43 +741,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|hp
-operator|=
-name|gethostbyname
-argument_list|(
-name|myname
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|hp
-operator|==
-name|NULL
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"%s: don't know my own name"
-argument_list|,
-name|myname
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|sin
-operator|.
-name|sin_family
-operator|=
-name|hp
-operator|->
-name|h_addrtype
-expr_stmt|;
 name|sin
 operator|.
 name|sin_port
