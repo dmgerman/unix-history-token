@@ -1131,7 +1131,7 @@ decl_stmt|;
 name|char
 name|fname
 index|[
-literal|32
+literal|80
 index|]
 decl_stmt|;
 name|int
@@ -1162,8 +1162,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|snprintf
 argument_list|(
+name|fname
+argument_list|,
+sizeof|sizeof
 name|fname
 argument_list|,
 literal|"../../conf/files"
@@ -1255,8 +1258,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|fname
+argument_list|,
+sizeof|sizeof
 name|fname
 argument_list|,
 literal|"files.%s"
@@ -1281,8 +1287,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|fname
+argument_list|,
+sizeof|sizeof
 name|fname
 argument_list|,
 literal|"files.%s"
