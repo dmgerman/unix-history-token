@@ -4057,6 +4057,36 @@ condition|)
 return|return
 name|pathname
 return|;
+if|if
+condition|(
+name|refobj
+operator|!=
+name|NULL
+operator|&&
+name|refobj
+operator|->
+name|path
+operator|!=
+name|NULL
+condition|)
+block|{
+name|_rtld_error
+argument_list|(
+literal|"Shared object \"%s\" not found, required by \"%s\""
+argument_list|,
+name|name
+argument_list|,
+name|basename
+argument_list|(
+name|refobj
+operator|->
+name|path
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|_rtld_error
 argument_list|(
 literal|"Shared object \"%s\" not found"
@@ -4064,6 +4094,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|NULL
 return|;
