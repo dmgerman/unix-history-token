@@ -472,18 +472,6 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|char
-modifier|*
-name|tmp
-decl_stmt|;
-comment|/* 	 * XXX make a temporary copy of the name because Var_Subst insists 	 * on writing into the string. 	 */
-name|tmp
-operator|=
-name|estrdup
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|strchr
@@ -502,7 +490,7 @@ name|Var_Subst
 argument_list|(
 name|NULL
 argument_list|,
-name|tmp
+name|name
 argument_list|,
 name|ctxt
 argument_list|,
@@ -525,11 +513,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|tmp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|str
@@ -539,9 +522,10 @@ block|}
 else|else
 block|{
 return|return
-operator|(
-name|tmp
-operator|)
+name|estrdup
+argument_list|(
+name|name
+argument_list|)
 return|;
 block|}
 block|}
@@ -2993,7 +2977,7 @@ operator|->
 name|ptr
 operator|++
 expr_stmt|;
-comment|/* skip over backslash */
+comment|/* consume backslash */
 block|}
 operator|*
 name|ptr
@@ -5515,66 +5499,6 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 		 * Still need to get to the end of the variable 		 * specification, so kludge up a Var structure for the 		 * modifications 		 */
-name|v
-operator|=
-name|VarCreate
-argument_list|(
-name|vname
-argument_list|,
-name|NULL
-argument_list|,
-name|VAR_JUNK
-argument_list|)
-expr_stmt|;
-name|value
-operator|=
-name|ParseModifier
-argument_list|(
-name|vp
-argument_list|,
-name|startc
-argument_list|,
-name|v
-argument_list|,
-name|freeResult
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|freeResult
-condition|)
-block|{
-name|free
-argument_list|(
-name|value
-argument_list|)
-expr_stmt|;
-block|}
-name|VarDestroy
-argument_list|(
-name|v
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-operator|*
-name|freeResult
-operator|=
-name|FALSE
-expr_stmt|;
-return|return
-operator|(
-name|vp
-operator|->
-name|err
-condition|?
-name|var_Error
-else|:
-name|varNoError
-operator|)
-return|;
 block|}
 else|else
 block|{
@@ -5681,7 +5605,8 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 		 * Still need to get to the end of the variable 		 * specification, so kludge up a Var structure for the 		 * modifications 		 */
+block|}
+comment|/* 	 * Still need to get to the end of the variable 	 * specification, so kludge up a Var structure for the 	 * modifications 	 */
 name|v
 operator|=
 name|VarCreate
@@ -5741,7 +5666,6 @@ else|:
 name|varNoError
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -6105,22 +6029,6 @@ operator|)
 return|;
 block|}
 block|}
-operator|*
-name|freeResult
-operator|=
-name|FALSE
-expr_stmt|;
-return|return
-operator|(
-name|vp
-operator|->
-name|err
-condition|?
-name|var_Error
-else|:
-name|varNoError
-operator|)
-return|;
 block|}
 else|else
 block|{
@@ -6275,6 +6183,7 @@ operator|)
 return|;
 block|}
 block|}
+block|}
 operator|*
 name|freeResult
 operator|=
@@ -6291,7 +6200,6 @@ else|:
 name|varNoError
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -6335,7 +6243,6 @@ argument_list|(
 name|MAKE_BSIZE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Process characters until we reach an end character or a 	 * colon, replacing embedded variables as we go. 	 */
 name|startc
 operator|=
 name|vp
@@ -6363,6 +6270,7 @@ name|CLOSE_PAREN
 else|:
 name|CLOSE_BRACE
 expr_stmt|;
+comment|/* 	 * Process characters until we reach an end character or a colon, 	 * replacing embedded variables as we go. 	 */
 while|while
 condition|(
 operator|*
@@ -6849,13 +6757,12 @@ modifier|*
 name|freeResult
 parameter_list|)
 block|{
-comment|/* assert(vp->ptr[0] == '$'); */
 name|vp
 operator|->
 name|ptr
 operator|++
 expr_stmt|;
-comment|/* consume '$' */
+comment|/* consume '$' or last letter of conditional */
 if|if
 condition|(
 name|vp
@@ -6938,7 +6845,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Parse --  *	Given the start of a variable invocation, extract the variable  *	name and find its value, then modify it according to the  *	specification.  *  * Results:  *	The value of the variable or var_Error if the specification  *	is invalid.  The number of characters in the specification  *	is placed in the variable pointed to by consumed.  (for  *	invalid specifications, this is just 2 to skip the '$' and  *	the following letter, or 1 if '$' was the last character  *	in the string).  A Boolean in *freeResult telling whether the  *	returned string should be freed by the caller.  *  * Side Effects:  *	None.  *  * Assumption:  *	It is assumed that Var_Parse() is called with input[0] == '$'.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Var_Parse --  *	Given the start of a variable invocation, extract the variable  *	name and find its value, then modify it according to the  *	specification.  *  * Results:  *	The value of the variable or var_Error if the specification  *	is invalid.  The number of characters in the specification  *	is placed in the variable pointed to by consumed.  (for  *	invalid specifications, this is just 2 to skip the '$' and  *	the following letter, or 1 if '$' was the last character  *	in the string).  A Boolean in *freeResult telling whether the  *	returned string should be freed by the caller.  *  * Side Effects:  *	None.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
