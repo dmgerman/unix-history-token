@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.85 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.86 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4608,7 +4608,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SELF_REFERENCE -- check to see if an address references itself ** **	The check is done through a chain of aliases.  If it is part of **	a loop, break the loop at the "best" address, that is, the one **	that exists as a real user. ** **	This is to handle the case of: **		Andrew.Chang:	awc **		awc:		Andrew.Chang@mail.server. **	which is a problem only on mail.server. ** **	Parameters: **		a -- the address to check. **		e -- the current envelope. ** **	Returns: **		The address that should be retained. */
+comment|/* **  SELF_REFERENCE -- check to see if an address references itself ** **	The check is done through a chain of aliases.  If it is part of **	a loop, break the loop at the "best" address, that is, the one **	that exists as a real user. ** **	This is to handle the case of: **		awc:		Andrew.Chang **		Andrew.Chang:	awc@mail.server **	which is a problem only on mail.server. ** **	Parameters: **		a -- the address to check. **		e -- the current envelope. ** **	Returns: **		The address that should be retained. */
 end_comment
 
 begin_function
