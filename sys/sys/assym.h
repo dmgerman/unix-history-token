@@ -18,13 +18,36 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ASSYM
+name|offsetof
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ASSYM
+name|offsetof
+parameter_list|(
+name|s
+parameter_list|,
+name|m
+parameter_list|)
+value|(&((struct s*)0)->m)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__assym
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__assym
 parameter_list|(
 name|sym
 parameter_list|,
@@ -41,23 +64,23 @@ end_endif
 begin_define
 define|#
 directive|define
-name|ASSYM_SELF
-parameter_list|(
-name|sym
-parameter_list|)
-value|ASSYM(assym_##sym, sym)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASSYM_CONST
+name|ASSYM
 parameter_list|(
 name|sym
 parameter_list|,
 name|v
 parameter_list|)
-value|ASSYM(assym_##sym, v)
+value|__assym(assym_##sym, v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSYM_SELF
+parameter_list|(
+name|sym
+parameter_list|)
+value|ASSYM(sym, sym)
 end_define
 
 begin_define
@@ -71,7 +94,7 @@ name|s
 parameter_list|,
 name|m
 parameter_list|)
-value|ASSYM(assym_##sym, (&((struct s*)0)->m))
+value|ASSYM(sym, offsetof(s, m))
 end_define
 
 begin_endif
