@@ -2100,7 +2100,7 @@ condition|(
 name|sb16_dsp_ok
 condition|)
 return|return
-literal|1
+literal|0
 return|;
 comment|/* Can't drive two cards */
 if|if
@@ -2153,6 +2153,14 @@ operator|=
 name|sb_config
 operator|->
 name|io_base
+expr_stmt|;
+name|hw_config
+operator|->
+name|irq
+operator|=
+name|sb_config
+operator|->
+name|irq
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2289,7 +2297,7 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
-literal|1
+literal|0x10
 return|;
 block|}
 end_function
