@@ -362,17 +362,7 @@ name|psd
 operator|.
 name|psd_flags
 expr_stmt|;
-comment|/* Check the threads previous state: */
-if|if
-condition|(
-name|psd
-operator|.
-name|psd_state
-operator|!=
-name|PS_RUNNING
-condition|)
-block|{
-comment|/* 		 * Do a little cleanup handling for those threads in 		 * queues before calling the signal handler.  Signals 		 * for these threads are temporarily blocked until 		 * after cleanup handling. 		 */
+comment|/* 	 * Do a little cleanup handling for those threads in 	 * queues before calling the signal handler.  Signals 	 * for these threads are temporarily blocked until 	 * after cleanup handling. 	 */
 switch|switch
 condition|(
 name|psd
@@ -408,7 +398,6 @@ expr_stmt|;
 break|break;
 default|default:
 break|break;
-block|}
 block|}
 if|if
 condition|(

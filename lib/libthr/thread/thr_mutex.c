@@ -1719,7 +1719,7 @@ operator|!=
 name|NULL
 operator|)
 argument_list|,
-literal|"Uninitialized mutex in pthread_mutex_trylock_basic"
+literal|"Uninitialized mutex in mutex_lock_common"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Enter a loop waiting to become the mutex owner.  We need a 	 * loop in case the waiting thread is interrupted by a signal 	 * to execute a signal handler.  It is not (currently) possible 	 * to remain in the waiting queue while running a handler. 	 * Instead, the thread is interrupted and backed out of the 	 * waiting queue prior to executing the signal handler. 	 */
