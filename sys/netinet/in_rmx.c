@@ -1439,7 +1439,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * This zaps old routes when the interface goes down.  * Currently it doesn't delete static routes; there are  * arguments one could make for both behaviors.  For the moment,  * we will adopt the Principle of Least Surprise and leave them  * alone (with the knowledge that this will not be enough for some  * people).  The ones we really want to get rid of are things like ARP  * entries, since the user might down the interface, walk over to a completely  * different network, and plug back in.  */
+comment|/*  * This zaps old routes when the interface goes down or interface  * address is deleted.  In the latter case, it deletes static routes  * that point to this address.  If we don't do this, we may end up  * using the old address in the future.  The ones we always want to  * get rid of are things like ARP entries, since the user might down  * the interface, walk over to a completely different network, and  * plug back in.  */
 end_comment
 
 begin_struct
@@ -1455,6 +1455,9 @@ name|struct
 name|ifaddr
 modifier|*
 name|ifa
+decl_stmt|;
+name|int
+name|del
 decl_stmt|;
 block|}
 struct|;
@@ -1507,6 +1510,11 @@ name|ap
 operator|->
 name|ifa
 operator|&&
+operator|(
+name|ap
+operator|->
+name|del
+operator|||
 operator|!
 operator|(
 name|rt
@@ -1514,6 +1522,7 @@ operator|->
 name|rt_flags
 operator|&
 name|RTF_STATIC
+operator|)
 operator|)
 condition|)
 block|{
@@ -1523,7 +1532,11 @@ operator|->
 name|rt_flags
 operator|&=
 operator|~
+operator|(
+name|RTF_CLONING
+operator||
 name|RTF_PRCLONING
+operator|)
 expr_stmt|;
 name|err
 operator|=
@@ -1587,6 +1600,9 @@ name|struct
 name|ifaddr
 modifier|*
 name|ifa
+parameter_list|,
+name|int
+name|delete
 parameter_list|)
 block|{
 name|struct
@@ -1627,6 +1643,12 @@ operator|.
 name|ifa
 operator|=
 name|ifa
+expr_stmt|;
+name|arg
+operator|.
+name|del
+operator|=
+name|delete
 expr_stmt|;
 name|rnh
 operator|->

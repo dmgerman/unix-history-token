@@ -1572,6 +1572,8 @@ operator|&
 name|ia
 operator|->
 name|ia_ifa
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
