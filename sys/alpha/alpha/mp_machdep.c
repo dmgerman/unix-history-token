@@ -114,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/globaldata.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pmap.h>
 end_include
 
@@ -440,13 +434,13 @@ name|aps_ready
 condition|)
 comment|/*spin*/
 empty_stmt|;
-comment|/* 	 * Record the globaldata pointer in the per-cpu system value. 	 */
+comment|/* 	 * Record the pcpu pointer in the per-cpu system value. 	 */
 name|alpha_pal_wrval
 argument_list|(
 operator|(
 name|u_int64_t
 operator|)
-name|globalp
+name|pcpup
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Point interrupt/exception vectors to our own. 	 */
@@ -520,7 +514,7 @@ name|mc_expected
 operator|=
 literal|0
 expr_stmt|;
-comment|/*          * Set curproc to our per-cpu idleproc so that mutexes have          * something unique to lock with.          */
+comment|/*          * Set curproc to our per-cpu idleproc so that mutexes have          * something unique to lock with. 	 * 	 * XXX: shouldn't this already be set for us?          */
 name|PCPU_SET
 argument_list|(
 name|curthread
@@ -529,13 +523,6 @@ name|PCPU_GET
 argument_list|(
 name|idlethread
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|spinlocks
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set flags in our per-CPU slot in the HWRPB. 	 */
@@ -594,10 +581,11 @@ expr|struct
 name|trapframe
 operator|*
 operator|)
-name|globalp
+name|PCPU_PTR
+argument_list|(
+name|idlepcb
+argument_list|)
 operator|->
-name|gd_idlepcb
-operator|.
 name|apcb_ksp
 expr_stmt|;
 name|mtx_lock_spin
@@ -766,9 +754,9 @@ operator|->
 name|pcs_hwpcb
 decl_stmt|;
 name|struct
-name|globaldata
+name|pcpu
 modifier|*
-name|globaldata
+name|pcpu
 decl_stmt|;
 name|int
 name|i
@@ -824,7 +812,7 @@ operator|*
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|globaldata
+name|pcpu
 operator|=
 name|malloc
 argument_list|(
@@ -838,7 +826,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|globaldata
+name|pcpu
 condition|)
 block|{
 name|printf
@@ -850,22 +838,22 @@ return|return
 literal|0
 return|;
 block|}
-name|globaldata_init
+name|pcpu_init
 argument_list|(
-name|globaldata
+name|pcpu
 argument_list|,
 name|cpuid
 argument_list|,
 name|sz
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Copy the idle pcb and setup the address to start executing. 	 * Use the pcb unique value to point the secondary at its globaldata 	 * structure. 	 */
+comment|/* 	 * Copy the idle pcb and setup the address to start executing. 	 * Use the pcb unique value to point the secondary at its pcpu 	 * structure. 	 */
 operator|*
 name|pcb
 operator|=
-name|globaldata
+name|pcpu
 operator|->
-name|gd_idlepcb
+name|pc_idlepcb
 expr_stmt|;
 name|pcb
 operator|->
@@ -874,7 +862,7 @@ operator|=
 operator|(
 name|u_int64_t
 operator|)
-name|globaldata
+name|pcpu
 expr_stmt|;
 name|hwrpb
 operator|->
@@ -956,9 +944,14 @@ argument_list|(
 literal|"smp_start_secondary: can't send START command\n"
 argument_list|)
 expr_stmt|;
+name|pcpu_destroy
+argument_list|(
+name|pcpu
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
-name|globaldata
+name|pcpu
 argument_list|,
 name|M_TEMP
 argument_list|)
@@ -1014,13 +1007,21 @@ argument_list|(
 literal|"smp_start_secondary: secondary did not respond\n"
 argument_list|)
 expr_stmt|;
+name|pcpu_destroy
+argument_list|(
+name|pcpu
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
-name|globaldata
+name|pcpu
 argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 comment|/* 	 * It worked (I think). 	 */
 if|if
@@ -1542,9 +1543,9 @@ name|ipi
 parameter_list|)
 block|{
 name|struct
-name|globaldata
+name|pcpu
 modifier|*
-name|globaldata
+name|pcpu
 decl_stmt|;
 name|CTR2
 argument_list|(
@@ -1584,24 +1585,24 @@ operator|<<
 name|cpuid
 operator|)
 expr_stmt|;
-name|globaldata
+name|pcpu
 operator|=
-name|globaldata_find
+name|pcpu_find
 argument_list|(
 name|cpuid
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|globaldata
+name|pcpu
 condition|)
 block|{
 name|atomic_set_64
 argument_list|(
 operator|&
-name|globaldata
+name|pcpu
 operator|->
-name|gd_pending_ipis
+name|pc_pending_ipis
 argument_list|,
 name|ipi
 argument_list|)

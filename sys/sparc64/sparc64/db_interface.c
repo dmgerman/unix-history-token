@@ -348,6 +348,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|db_show_mdpcpu
+parameter_list|(
+name|struct
+name|pcpu
+modifier|*
+name|pc
+parameter_list|)
+block|{ }
+end_function
+
 begin_macro
 name|DB_COMMAND
 argument_list|(

@@ -15,12 +15,6 @@ directive|define
 name|_MACHINE_PROC_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/globals.h>
-end_include
-
 begin_comment
 comment|/*  * Machine-dependent part of the proc structure  */
 end_comment

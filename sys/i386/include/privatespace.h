@@ -25,8 +25,8 @@ name|privatespace
 block|{
 comment|/* page 0 - data page */
 name|struct
-name|globaldata
-name|globaldata
+name|pcpu
+name|pcpu
 decl_stmt|;
 name|char
 name|__filler0
@@ -36,7 +36,7 @@ operator|-
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|globaldata
+name|pcpu
 argument_list|)
 index|]
 decl_stmt|;

@@ -91,6 +91,17 @@ begin_comment
 comment|/* For structs itimerval, timeval. */
 end_comment
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/pcpu.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif

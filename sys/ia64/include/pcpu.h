@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_GLOBALDATA_H_
+name|_MACHINE_PCPU_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_GLOBALDATA_H_
+name|_MACHINE_PCPU_H_
 end_define
 
 begin_ifdef
@@ -21,128 +21,74 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
+begin_define
+define|#
+directive|define
+name|PCPU_MD_FIELDS
+define|\
+value|u_int64_t	pc_pending_ipis;
+comment|/* pending IPIs */
+value|\ 	struct pmap	*pc_current_pmap;
+comment|/* active pmap */
+value|\ 	u_int32_t	pc_next_asn;
+comment|/* next ASN to alloc */
+value|\ 	u_int32_t	pc_current_asngen
+end_define
 
 begin_comment
-comment|/*  * This structure maps out the global data that needs to be kept on a  * per-cpu basis.  genassym uses this to generate offsets for the assembler  * code, which also provides external symbols so that C can get at them as  * though they were really globals. This structure is pointed to by  * the per-cpu system value (see alpha_pal_rdval() and alpha_pal_wrval()).  * Inside the kernel, the globally reserved register t7 is used to  * point at the globaldata structure.  */
+comment|/* ASN rollover check */
 end_comment
 
-begin_struct
-struct|struct
-name|globaldata
-block|{
-name|struct
-name|thread
-modifier|*
-name|gd_curthread
-decl_stmt|;
-comment|/* current thread */
-name|struct
-name|thread
-modifier|*
-name|gd_idlethread
-decl_stmt|;
-comment|/* idle thread */
-name|struct
-name|thread
-modifier|*
-name|gd_fpcurthread
-decl_stmt|;
-comment|/* fp state owner */
-name|struct
-name|pcb
-modifier|*
-name|gd_curpcb
-decl_stmt|;
-comment|/* current pcb */
-name|struct
-name|timeval
-name|gd_switchtime
-decl_stmt|;
-name|int
-name|gd_switchticks
-decl_stmt|;
-name|u_int
-name|gd_cpuid
-decl_stmt|;
-comment|/* this cpu number */
-name|u_int
-name|gd_other_cpus
-decl_stmt|;
-comment|/* all other cpus */
-name|u_int64_t
-name|gd_pending_ipis
-decl_stmt|;
-comment|/* pending IPI events */
-name|struct
-name|pmap
-modifier|*
-name|gd_current_pmap
-decl_stmt|;
-comment|/* which pmap is active */
-name|u_int32_t
-name|gd_next_asn
-decl_stmt|;
-comment|/* next ASN to allocate */
-name|u_int32_t
-name|gd_current_asngen
-decl_stmt|;
-comment|/* ASN rollover check */
-name|SLIST_ENTRY
-argument_list|(
-argument|globaldata
-argument_list|)
-name|gd_allcpu
-expr_stmt|;
-name|struct
-name|lock_list_entry
-modifier|*
-name|gd_spinlocks
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KTR_PERCPU
-name|int
-name|gd_ktr_idx
-decl_stmt|;
-comment|/* Index into trace table */
-name|char
-modifier|*
-name|gd_ktr_buf
-decl_stmt|;
-name|char
-name|gd_ktr_buf_data
-index|[
-literal|0
-index|]
-decl_stmt|;
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
-
-begin_function_decl
-name|void
-name|globaldata_init
-parameter_list|(
-name|struct
-name|globaldata
-modifier|*
+begin_struct_decl
+struct_decl|struct
 name|pcpu
-parameter_list|,
-name|int
-name|cpuid
-parameter_list|,
-name|size_t
-name|sz
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|pcpu
+modifier|*
+name|pcpup
+name|__asm__
+argument_list|(
+literal|"r13"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PCPU_GET
+parameter_list|(
+name|member
 parameter_list|)
-function_decl|;
-end_function_decl
+value|(pcpup->pc_ ## member)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_PTR
+parameter_list|(
+name|member
+parameter_list|)
+value|(&pcpup->pc_ ## member)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_SET
+parameter_list|(
+name|member
+parameter_list|,
+name|value
+parameter_list|)
+value|(pcpup->pc_ ## member = (value))
+end_define
 
 begin_endif
 endif|#
@@ -159,7 +105,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_GLOBALDATA_H_ */
+comment|/* !_MACHINE_PCPU_H_ */
 end_comment
 
 end_unit

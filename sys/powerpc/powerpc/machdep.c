@@ -282,12 +282,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/globaldata.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -1442,9 +1436,9 @@ modifier|*
 name|mp
 decl_stmt|;
 name|struct
-name|globaldata
+name|pcpu
 modifier|*
-name|globalp
+name|pcpup
 decl_stmt|;
 comment|/* 	 * Set up BAT0 to only map the lowest 256 MB area 	 */
 name|battable
@@ -1890,7 +1884,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|globalp
+name|pcpup
 operator|=
 name|pmap_steal_memory
 argument_list|(
@@ -1899,7 +1893,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|globaldata
+name|pcpu
 argument_list|)
 argument_list|)
 argument_list|)
@@ -1911,23 +1905,23 @@ comment|/* 	 * XXX: Pass 0 as CPU id.  This is bad.  We need to work out 	 * XXX
 end_comment
 
 begin_expr_stmt
-name|globaldata_init
+name|pcpu_init
 argument_list|(
-name|globalp
+name|pcpup
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|globaldata
+name|pcpu
 argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_asm
-asm|__asm ("mtsprg 0, %0" :: "r"(globalp));
+asm|__asm ("mtsprg 0, %0" :: "r"(pcpup));
 end_asm
 
 begin_comment
@@ -1958,16 +1952,6 @@ argument_list|(
 name|curthread
 argument_list|,
 name|thread0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PCPU_SET
-argument_list|(
-name|spinlocks
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2048,6 +2032,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* 	 * Initialise console. 	 */
 end_comment
@@ -2055,15 +2048,6 @@ end_comment
 begin_expr_stmt
 name|cninit
 argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -3783,17 +3767,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialise a struct globaldata.  */
+comment|/*  * Initialise a struct pcpu.  */
 end_comment
 
 begin_function
 name|void
-name|globaldata_init
+name|cpu_pcpu_init
 parameter_list|(
 name|struct
-name|globaldata
+name|pcpu
 modifier|*
-name|globaldata
+name|pcpu
 parameter_list|,
 name|int
 name|cpuid
@@ -3802,28 +3786,9 @@ name|size_t
 name|sz
 parameter_list|)
 block|{
-name|bzero
-argument_list|(
-name|globaldata
-argument_list|,
-name|sz
-argument_list|)
-expr_stmt|;
-name|globaldata
+name|pcpu
 operator|->
-name|gd_cpuid
-operator|=
-name|cpuid
-expr_stmt|;
-name|globaldata
-operator|->
-name|gd_next_asn
-operator|=
-literal|0
-expr_stmt|;
-name|globaldata
-operator|->
-name|gd_current_asngen
+name|pc_current_asngen
 operator|=
 literal|1
 expr_stmt|;

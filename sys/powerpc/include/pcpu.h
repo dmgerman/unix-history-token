@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_GLOBALDATA_H_
+name|_MACHINE_PCPU_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_GLOBALDATA_H_
+name|_MACHINE_PCPU_H_
 end_define
 
 begin_ifdef
@@ -24,118 +24,61 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<machine/cpufunc.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|PCPU_MD_FIELDS
+define|\
+value|int		pc_inside_intr;					\ 	u_int32_t	pc_next_asn;
+comment|/* next ASN to alloc */
+value|\ 	u_int32_t	pc_current_asngen
+end_define
+
 begin_comment
-comment|/*  * This structure maps out the global data that needs to be kept on a  * per-cpu basis.  genassym uses this to generate offsets for the assembler  * code, which also provides external symbols so that C can get at them as  * though they were really globals. This structure is pointed to by  * the per-cpu system value (see alpha_pal_rdval() and alpha_pal_wrval()).  * Inside the kernel, the globally reserved register t7 is used to  * point at the globaldata structure.  */
+comment|/* ASN rollover check */
 end_comment
 
-begin_struct
-struct|struct
-name|globaldata
-block|{
-name|struct
-name|thread
-modifier|*
-name|gd_curthread
-decl_stmt|;
-comment|/* current thread */
-name|struct
-name|thread
-modifier|*
-name|gd_idlethread
-decl_stmt|;
-comment|/* idle thread */
-name|struct
-name|thread
-modifier|*
-name|gd_fpcurthread
-decl_stmt|;
-comment|/* fp state owner */
-name|struct
-name|pcb
-modifier|*
-name|gd_curpcb
-decl_stmt|;
-comment|/* current pcb */
-name|struct
-name|timeval
-name|gd_switchtime
-decl_stmt|;
-name|int
-name|gd_switchticks
-decl_stmt|;
-name|u_int
-name|gd_cpuid
-decl_stmt|;
-comment|/* this cpu number */
-name|u_int
-name|gd_other_cpus
-decl_stmt|;
-comment|/* all other cpus */
-name|int
-name|gd_inside_intr
-decl_stmt|;
-name|u_int32_t
-name|gd_next_asn
-decl_stmt|;
-comment|/* next ASN to allocate */
-name|u_int32_t
-name|gd_current_asngen
-decl_stmt|;
-comment|/* ASN rollover check */
-name|SLIST_ENTRY
-argument_list|(
-argument|globaldata
-argument_list|)
-name|gd_allcpu
-expr_stmt|;
-name|struct
-name|lock_list_entry
-modifier|*
-name|gd_spinlocks
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KTR_PERCPU
-name|int
-name|gd_ktr_idx
-decl_stmt|;
-comment|/* Index into trace table */
-name|char
-modifier|*
-name|gd_ktr_buf
-decl_stmt|;
-name|char
-name|gd_ktr_buf_data
-index|[
-name|KTR_SIZE
-index|]
-decl_stmt|;
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
+begin_define
+define|#
+directive|define
+name|PCPUP
+value|((struct pcpu *) powerpc_get_pcpup())
+end_define
 
-begin_function_decl
-name|void
-name|globaldata_init
+begin_define
+define|#
+directive|define
+name|PCPU_GET
 parameter_list|(
-name|struct
-name|globaldata
-modifier|*
-name|pcpu
-parameter_list|,
-name|int
-name|cpuid
-parameter_list|,
-name|size_t
-name|sz
+name|member
 parameter_list|)
-function_decl|;
-end_function_decl
+value|(PCPUP->pc_ ## member)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_PTR
+parameter_list|(
+name|member
+parameter_list|)
+value|(&PCPUP->pc_ ## member)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_SET
+parameter_list|(
+name|member
+parameter_list|,
+name|value
+parameter_list|)
+value|(PCPUP->pc_ ## member = (value))
+end_define
 
 begin_endif
 endif|#
@@ -152,7 +95,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_GLOBALDATA_H_ */
+comment|/* !_MACHINE_PCPU_H_ */
 end_comment
 
 end_unit

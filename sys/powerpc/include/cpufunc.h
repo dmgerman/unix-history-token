@@ -305,14 +305,14 @@ begin_expr_stmt
 specifier|static
 name|__inline
 expr|struct
-name|globaldata
+name|pcpu
 operator|*
-name|powerpc_get_globalp
+name|powerpc_get_pcpup
 argument_list|(
 argument|void
 argument_list|)
 block|{ 	struct
-name|globaldata
+name|pcpu
 operator|*
 name|ret
 block|;

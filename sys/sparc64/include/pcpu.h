@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_GLOBALDATA_H_
+name|_MACHINE_PCPU_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_GLOBALDATA_H_
+name|_MACHINE_PCPU_H_
 end_define
 
 begin_ifdef
@@ -20,12 +20,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
 
 begin_include
 include|#
@@ -47,104 +41,73 @@ value|128
 end_define
 
 begin_comment
-comment|/*  * This structure maps out the global data that needs to be kept on a  * per-cpu basis.  genassym uses this to generate offsets for the assembler  * code, which also provides external symbols so that C can get at them as  * though they were really globals. This structure is pointed to by  * the per-cpu system value.  * Inside the kernel, the globally reserved register g7 is used to  * point at the globaldata structure.  */
+comment|/*  * Inside the kernel, the globally reserved register g7 is used to  * point at the globaldata structure.  */
 end_comment
 
-begin_struct
-struct|struct
-name|globaldata
-block|{
-name|struct
-name|thread
-modifier|*
-name|gd_curthread
-decl_stmt|;
-comment|/* current thread */
-name|struct
-name|thread
-modifier|*
-name|gd_idlethread
-decl_stmt|;
-comment|/* idle thread */
-name|struct
-name|pcb
-modifier|*
-name|gd_curpcb
-decl_stmt|;
-comment|/* current pcb */
-name|struct
-name|timeval
-name|gd_switchtime
-decl_stmt|;
-name|int
-name|gd_switchticks
-decl_stmt|;
-name|u_int
-name|gd_cpuid
-decl_stmt|;
-comment|/* this cpu number */
-name|u_int
-name|gd_other_cpus
-decl_stmt|;
-comment|/* all other cpus */
-name|SLIST_ENTRY
-argument_list|(
-argument|globaldata
-argument_list|)
-name|gd_allcpu
-expr_stmt|;
-name|struct
-name|lock_list_entry
-modifier|*
-name|gd_spinlocks
-decl_stmt|;
-name|struct
-name|intr_queue
-name|gd_iq
-decl_stmt|;
+begin_define
+define|#
+directive|define
+name|PCPU_MD_FIELDS
+define|\
+value|struct	intr_queue pc_iq;
 comment|/* interrupt queuq */
-name|u_long
-name|gd_alt_stack
-index|[
-name|ALT_STACK_SIZE
-index|]
-decl_stmt|;
-comment|/* alternate global stack */
-name|u_int
-name|gd_wp_insn
-decl_stmt|;
+value|\ 	u_long	pc_alt_stack[ALT_STACK_SIZE];
+comment|/* alt global stack */
+value|\ 	u_int	pc_wp_insn;
 comment|/* watch point support */
-name|u_long
-name|gd_wp_pstate
-decl_stmt|;
-name|u_long
-name|gd_wp_va
-decl_stmt|;
-name|int
-name|gd_wp_mask
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KTR_PERCPU
-name|int
-name|gd_ktr_idx
-decl_stmt|;
-comment|/* index into trace table */
-name|char
+value|\ 	u_long	pc_wp_pstate;						\ 	u_long	pc_wp_va;						\ 	int	pc_wp_mask
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|pcpu
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|pcpu
 modifier|*
-name|gd_ktr_buf
+name|pcpup
+name|__asm__
+argument_list|(
+literal|"%g7"
+argument_list|)
 decl_stmt|;
-name|char
-name|gd_ktr_buf_data
-index|[
-literal|0
-index|]
-decl_stmt|;
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PCPU_GET
+parameter_list|(
+name|member
+parameter_list|)
+value|(pcpup->pc_ ## member)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_PTR
+parameter_list|(
+name|member
+parameter_list|)
+value|(&pcpup->pc_ ## member)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_SET
+parameter_list|(
+name|member
+parameter_list|,
+name|value
+parameter_list|)
+value|(pcpup->pc_ ## member = (value))
+end_define
 
 begin_endif
 endif|#
@@ -161,7 +124,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_GLOBALDATA_H_ */
+comment|/* !_MACHINE_PCPU_H_ */
 end_comment
 
 end_unit

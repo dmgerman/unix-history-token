@@ -59,7 +59,7 @@ name|PCPU
 parameter_list|(
 name|member
 parameter_list|)
-value|%g7 + GD_ ## member
+value|%g7 + PC_ ## member
 end_define
 
 begin_define
@@ -71,7 +71,7 @@ name|member
 parameter_list|,
 name|reg
 parameter_list|)
-value|add %g7, GD_ ## member, reg
+value|add %g7, PC_ ## member, reg
 end_define
 
 begin_define

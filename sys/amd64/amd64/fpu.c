@@ -1064,12 +1064,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * npxthread is normally non-null here.  In that case, schedule an 	 * AST to finish the exception handling in the correct context 	 * (this interrupt may occur after the thread has entered the 	 * kernel via a syscall or an interrupt).  Otherwise, the npx 	 * state of the thread that caused this interrupt must have been 	 * pushed to the thread's pcb, and clearing of the busy latch 	 * above has finished the (essentially null) handling of this 	 * interrupt.  Control will eventually return to the instruction 	 * that caused it and it will repeat.  We will eventually (usually 	 * soon) win the race to handle the interrupt properly. 	 */
+comment|/* 	 * fpcurthread is normally non-null here.  In that case, schedule an 	 * AST to finish the exception handling in the correct context 	 * (this interrupt may occur after the thread has entered the 	 * kernel via a syscall or an interrupt).  Otherwise, the npx 	 * state of the thread that caused this interrupt must have been 	 * pushed to the thread's pcb, and clearing of the busy latch 	 * above has finished the (essentially null) handling of this 	 * interrupt.  Control will eventually return to the instruction 	 * that caused it and it will repeat.  We will eventually (usually 	 * soon) win the race to handle the interrupt properly. 	 */
 name|td
 operator|=
 name|PCPU_GET
 argument_list|(
-name|npxthread
+name|fpcurthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -1963,7 +1963,7 @@ operator|!
 name|npx_exists
 condition|)
 return|return;
-comment|/* 	 * fninit has the same h/w bugs as fnsave.  Use the detoxified 	 * fnsave to throw away any junk in the fpu.  npxsave() initializes 	 * the fpu and sets npxthread = NULL as important side effects. 	 */
+comment|/* 	 * fninit has the same h/w bugs as fnsave.  Use the detoxified 	 * fnsave to throw away any junk in the fpu.  npxsave() initializes 	 * the fpu and sets fpcurthread = NULL as important side effects. 	 */
 name|savecrit
 operator|=
 name|critical_enter
@@ -2058,7 +2058,7 @@ name|td
 operator|==
 name|PCPU_GET
 argument_list|(
-name|npxthread
+name|fpcurthread
 argument_list|)
 condition|)
 name|npxsave
@@ -2581,11 +2581,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"npxtrap: npxthread = %p, curthread = %p, npx_exists = %d\n"
+literal|"npxtrap: fpcurthread = %p, curthread = %p, npx_exists = %d\n"
 argument_list|,
 name|PCPU_GET
 argument_list|(
-name|npxthread
+name|fpcurthread
 argument_list|)
 argument_list|,
 name|curthread
@@ -2609,7 +2609,7 @@ if|if
 condition|(
 name|PCPU_GET
 argument_list|(
-name|npxthread
+name|fpcurthread
 argument_list|)
 operator|!=
 name|curthread
@@ -2663,7 +2663,7 @@ if|if
 condition|(
 name|PCPU_GET
 argument_list|(
-name|npxthread
+name|fpcurthread
 argument_list|)
 operator|!=
 name|curthread
@@ -2708,7 +2708,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implement device not available (DNA) exception  *  * It would be better to switch FP context here (if curthread != npxthread)  * and not necessarily for every context switch, but it is too hard to  * access foreign pcb's.  */
+comment|/*  * Implement device not available (DNA) exception  *  * It would be better to switch FP context here (if curthread != fpcurthread)  * and not necessarily for every context switch, but it is too hard to  * access foreign pcb's.  */
 end_comment
 
 begin_function
@@ -2737,7 +2737,7 @@ if|if
 condition|(
 name|PCPU_GET
 argument_list|(
-name|npxthread
+name|fpcurthread
 argument_list|)
 operator|!=
 name|NULL
@@ -2745,11 +2745,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"npxdna: npxthread = %p, curthread = %p\n"
+literal|"npxdna: fpcurthread = %p, curthread = %p\n"
 argument_list|,
 name|PCPU_GET
 argument_list|(
-name|npxthread
+name|fpcurthread
 argument_list|)
 argument_list|,
 name|curthread
@@ -2772,7 +2772,7 @@ expr_stmt|;
 comment|/* 	 * Record new context early in case frstor causes an IRQ13. 	 */
 name|PCPU_SET
 argument_list|(
-name|npxthread
+name|fpcurthread
 argument_list|,
 name|curthread
 argument_list|)
@@ -2818,7 +2818,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wrapper for fnsave instruction, partly to handle hardware bugs.  When npx  * exceptions are reported via IRQ13, spurious IRQ13's may be triggered by  * no-wait npx instructions.  See the Intel application note AP-578 for  * details.  This doesn't cause any additional complications here.  IRQ13's  * are inherently asynchronous unless the CPU is frozen to deliver them --  * one that started in userland may be delivered many instructions later,  * after the process has entered the kernel.  It may even be delivered after  * the fnsave here completes.  A spurious IRQ13 for the fnsave is handled in  * the same way as a very-late-arriving non-spurious IRQ13 from user mode:  * it is normally ignored at first because we set npxthread to NULL; it is  * normally retriggered in npxdna() after return to user mode.  *  * npxsave() must be called with interrupts disabled, so that it clears  * npxthread atomically with saving the state.  We require callers to do the  * disabling, since most callers need to disable interrupts anyway to call  * npxsave() atomically with checking npxthread.  *  * A previous version of npxsave() went to great lengths to excecute fnsave  * with interrupts enabled in case executing it froze the CPU.  This case  * can't happen, at least for Intel CPU/NPX's.  Spurious IRQ13's don't imply  * spurious freezes.  */
+comment|/*  * Wrapper for fnsave instruction, partly to handle hardware bugs.  When npx  * exceptions are reported via IRQ13, spurious IRQ13's may be triggered by  * no-wait npx instructions.  See the Intel application note AP-578 for  * details.  This doesn't cause any additional complications here.  IRQ13's  * are inherently asynchronous unless the CPU is frozen to deliver them --  * one that started in userland may be delivered many instructions later,  * after the process has entered the kernel.  It may even be delivered after  * the fnsave here completes.  A spurious IRQ13 for the fnsave is handled in  * the same way as a very-late-arriving non-spurious IRQ13 from user mode:  * it is normally ignored at first because we set fpcurthread to NULL; it is  * normally retriggered in npxdna() after return to user mode.  *  * npxsave() must be called with interrupts disabled, so that it clears  * fpcurthread atomically with saving the state.  We require callers to do the  * disabling, since most callers need to disable interrupts anyway to call  * npxsave() atomically with checking fpcurthread.  *  * A previous version of npxsave() went to great lengths to excecute fnsave  * with interrupts enabled in case executing it froze the CPU.  This case  * can't happen, at least for Intel CPU/NPX's.  Spurious IRQ13's don't imply  * spurious freezes.  */
 end_comment
 
 begin_function
@@ -2846,7 +2846,7 @@ argument_list|()
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
-name|npxthread
+name|fpcurthread
 argument_list|,
 name|NULL
 argument_list|)

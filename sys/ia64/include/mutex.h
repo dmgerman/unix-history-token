@@ -81,7 +81,7 @@ parameter_list|,
 name|rLCK
 parameter_list|)
 define|\
-value|mov	rPSR=psr ;				\ 	mov	rNEW=globalp ;				\ 	addl	rLCK=@ltoff(lck),gp ;;			\ 	ld8	rLCK=[rLCK] ;;				\ 	add	rLCK=MTX_LOCK,rLCK ;;			\ 	rsm	psr.i ;					\ 	mov	ar.ccv=MTX_UNOWNED ;			\ 	add	rNEW=PC_CURTHREAD,rNEW ;;		\ 	ld8	rNEW=[rNEW] ;;				\ 1:	cmpxchg8.acq rOLD=[rLCK],rNEW,ar.ccv ;;		\ 	cmp.eq	p1,p0=MTX_UNOWNED,rOLD ;;		\ (p1)	br.cond.spnt.few 1b ;;				\ 	addl	rLCK=@ltoff(lck),gp ;;			\ 	ld8	rLCK=[rLCK] ;;				\ 	add	rLCK=MTX_SAVEINTR,rLCK ;;		\ 	st4	[rLCK]=rPSR
+value|mov	rPSR=psr ;				\ 	mov	rNEW=pcpup ;				\ 	addl	rLCK=@ltoff(lck),gp ;;			\ 	ld8	rLCK=[rLCK] ;;				\ 	add	rLCK=MTX_LOCK,rLCK ;;			\ 	rsm	psr.i ;					\ 	mov	ar.ccv=MTX_UNOWNED ;			\ 	add	rNEW=PC_CURTHREAD,rNEW ;;		\ 	ld8	rNEW=[rNEW] ;;				\ 1:	cmpxchg8.acq rOLD=[rLCK],rNEW,ar.ccv ;;		\ 	cmp.eq	p1,p0=MTX_UNOWNED,rOLD ;;		\ (p1)	br.cond.spnt.few 1b ;;				\ 	addl	rLCK=@ltoff(lck),gp ;;			\ 	ld8	rLCK=[rLCK] ;;				\ 	add	rLCK=MTX_SAVEINTR,rLCK ;;		\ 	st4	[rLCK]=rPSR
 end_define
 
 begin_define

@@ -3320,5 +3320,17 @@ block|}
 block|}
 end_function
 
+begin_function
+name|void
+name|db_show_mdpcpu
+parameter_list|(
+name|struct
+name|pcpu
+modifier|*
+name|pc
+parameter_list|)
+block|{ }
+end_function
+
 end_unit
 

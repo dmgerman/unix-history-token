@@ -548,7 +548,7 @@ if|if
 condition|(
 name|PCPU_GET
 argument_list|(
-name|npxthread
+name|fpcurthread
 argument_list|)
 operator|==
 name|td1

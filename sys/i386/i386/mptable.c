@@ -262,12 +262,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/globaldata.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/privatespace.h>
 end_include
 
@@ -1980,18 +1974,18 @@ index|[
 name|myid
 index|]
 operator|.
-name|globaldata
+name|pcpu
 operator|.
-name|gd_common_tss
+name|pc_common_tss
 expr_stmt|;
 name|SMP_prvspace
 index|[
 name|myid
 index|]
 operator|.
-name|globaldata
+name|pcpu
 operator|.
-name|gd_prvspace
+name|pc_prvspace
 operator|=
 operator|&
 name|SMP_prvspace
@@ -1999,7 +1993,7 @@ index|[
 name|myid
 index|]
 operator|.
-name|globaldata
+name|pcpu
 expr_stmt|;
 for|for
 control|(
@@ -8283,9 +8277,9 @@ name|u_long
 name|mpbioswarmvec
 decl_stmt|;
 name|struct
-name|globaldata
+name|pcpu
 modifier|*
-name|gd
+name|pc
 decl_stmt|;
 name|char
 modifier|*
@@ -8440,11 +8434,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* allocate a new private data page */
-name|gd
+name|pc
 operator|=
 operator|(
 expr|struct
-name|globaldata
+name|pcpu
 operator|*
 operator|)
 name|kmem_alloc
@@ -8470,7 +8464,7 @@ name|PG_RW
 operator||
 name|vtophys
 argument_list|(
-name|gd
+name|pc
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8532,15 +8526,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* prime data page for it to use */
-name|gd
-operator|->
-name|gd_cpuid
-operator|=
-name|x
-expr_stmt|;
-name|globaldata_register
+name|pcpu_init
 argument_list|(
-name|gd
+name|pc
+argument_list|,
+name|x
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcpu
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* setup a vector to our boot code */

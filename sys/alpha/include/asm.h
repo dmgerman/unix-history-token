@@ -292,7 +292,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|globalp
+name|pcpup
 value|$8
 end_define
 

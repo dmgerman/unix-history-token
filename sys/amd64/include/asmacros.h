@@ -153,7 +153,7 @@ name|PCPU
 parameter_list|(
 name|member
 parameter_list|)
-value|%fs:GD_ ## member
+value|%fs:PC_ ## member
 end_define
 
 begin_define
@@ -165,7 +165,7 @@ name|member
 parameter_list|,
 name|reg
 parameter_list|)
-value|movl %fs:GD_PRVSPACE,reg; \ 			addl $GD_ ## member,reg
+value|movl %fs:PC_PRVSPACE,reg; \ 			addl $PC_ ## member,reg
 end_define
 
 begin_endif

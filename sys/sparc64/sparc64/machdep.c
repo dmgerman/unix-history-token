@@ -393,8 +393,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|globaldata
-name|__globaldata
+name|pcpu
+name|__pcpu
 decl_stmt|;
 end_decl_stmt
 
@@ -719,11 +719,6 @@ expr_stmt|;
 name|vm_pager_bufferinit
 argument_list|()
 expr_stmt|;
-name|globaldata_register
-argument_list|(
-name|globalp
-argument_list|)
-expr_stmt|;
 name|intr_init
 argument_list|()
 expr_stmt|;
@@ -746,6 +741,24 @@ name|SHUTDOWN_PRI_LAST
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
+name|void
+name|cpu_pcpu_init
+parameter_list|(
+name|struct
+name|pcpu
+modifier|*
+name|pcpu
+parameter_list|,
+name|int
+name|cpuid
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+block|{ }
 end_function
 
 begin_function
@@ -1119,12 +1132,12 @@ name|td_contested
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the per-cpu pointer so we can set curproc. 	 */
-name|globalp
+name|pcpup
 operator|=
 operator|&
-name|__globaldata
+name|__pcpu
 expr_stmt|;
-comment|/* 	 * Put the globaldata pointer in the alternate and interrupt %g7 also. 	 * globaldata is tied to %g7. We could therefore also use assignments to 	 * globaldata here. 	 * The alternate %g6 additionally points to a small per-cpu stack that 	 * is used to temporarily store global registers in special spill 	 * handlers. 	 */
+comment|/* 	 * Put the pcpu pointer in the alternate and interrupt %g7 also. 	 * pcpu is tied to %g7. We could therefore also use assignments to 	 * pcpu here. 	 * The alternate %g6 additionally points to a small per-cpu stack that 	 * is used to temporarily store global registers in special spill 	 * handlers. 	 */
 name|ps
 operator|=
 name|rdpr
@@ -1144,9 +1157,9 @@ expr_stmt|;
 asm|__asm __volatile("mov %0, %%g6" : : "r"
 operator|(
 operator|&
-name|__globaldata
+name|__pcpu
 operator|.
-name|gd_alt_stack
+name|pc_alt_stack
 index|[
 name|ALT_STACK_SIZE
 operator|-
@@ -1158,7 +1171,7 @@ function|;
 end_function
 
 begin_asm
-asm|__asm __volatile("mov %0, %%g7" : : "r" (&__globaldata));
+asm|__asm __volatile("mov %0, %%g7" : : "r" (&__pcpu));
 end_asm
 
 begin_expr_stmt
@@ -1174,7 +1187,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_asm
-asm|__asm __volatile("mov %0, %%g6" : : "r" (&__globaldata.gd_iq));
+asm|__asm __volatile("mov %0, %%g6" : : "r" (&__pcpu.pc_iq));
 end_asm
 
 begin_asm
@@ -1198,6 +1211,22 @@ comment|/* 	 * Initialize curproc so that mutexes work. 	 */
 end_comment
 
 begin_expr_stmt
+name|pcpu_init
+argument_list|(
+name|pcpup
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcpu
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|PCPU_SET
 argument_list|(
 name|curthread
@@ -1215,16 +1244,6 @@ argument_list|,
 name|thread0
 operator|->
 name|td_pcb
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PCPU_SET
-argument_list|(
-name|spinlocks
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

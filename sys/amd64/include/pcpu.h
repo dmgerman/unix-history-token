@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_GLOBALDATA_H_
+name|_MACHINE_PCPU_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_GLOBALDATA_H_
+name|_MACHINE_PCPU_H_
 end_define
 
 begin_ifdef
@@ -20,6 +20,23 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__GNUC__
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|gcc is required to use this file
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -34,122 +51,124 @@ file|<machine/tss.h>
 end_include
 
 begin_comment
-comment|/* XXX */
+comment|/*  * The SMP parts are setup in pmap.c and locore.s for the BSP, and  * mp_machdep.c sets up the data for the AP's to "see" when they awake.  * The reason for doing it via a struct is so that an array of pointers  * to each CPU's data can be set up for things like "check curproc on all  * other processors"  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KTR_PERCPU
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/ktr.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|PCPU_MD_FIELDS
+define|\
+value|struct	pcpu *pc_prvspace;
+comment|/* Self-reference */
+value|\ 	struct	i386tss pc_common_tss;					\ 	struct	segment_descriptor pc_common_tssd;			\ 	struct	segment_descriptor *pc_tss_gdt;				\ 	int	pc_currentldt
+end_define
 
 begin_comment
-comment|/*  * This structure maps out the global data that needs to be kept on a  * per-cpu basis.  genassym uses this to generate offsets for the assembler  * code, which also provides external symbols so that C can get at them as  * though they were really globals.  *  * The SMP parts are setup in pmap.c and locore.s for the BSP, and  * mp_machdep.c sets up the data for the AP's to "see" when they awake.  * The reason for doing it via a struct is so that an array of pointers  * to each CPU's data can be set up for things like "check curproc on all  * other processors"  */
+comment|/*  * Evaluates to the byte offset of the per-cpu variable name.  */
 end_comment
 
-begin_struct
-struct|struct
-name|globaldata
-block|{
-name|struct
-name|globaldata
-modifier|*
-name|gd_prvspace
-decl_stmt|;
-comment|/* Self-reference */
-name|struct
-name|thread
-modifier|*
-name|gd_curthread
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|gd_npxthread
-decl_stmt|;
-name|struct
-name|pcb
-modifier|*
-name|gd_curpcb
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|gd_idlethread
-decl_stmt|;
-name|struct
-name|timeval
-name|gd_switchtime
-decl_stmt|;
-name|struct
-name|i386tss
-name|gd_common_tss
-decl_stmt|;
-name|int
-name|gd_switchticks
-decl_stmt|;
-name|struct
-name|segment_descriptor
-name|gd_common_tssd
-decl_stmt|;
-name|struct
-name|segment_descriptor
-modifier|*
-name|gd_tss_gdt
-decl_stmt|;
-name|int
-name|gd_currentldt
-decl_stmt|;
-name|u_int
-name|gd_cpuid
-decl_stmt|;
-name|u_int
-name|gd_other_cpus
-decl_stmt|;
-name|SLIST_ENTRY
-argument_list|(
-argument|globaldata
-argument_list|)
-name|gd_allcpu
-expr_stmt|;
-name|struct
-name|lock_list_entry
-modifier|*
-name|gd_spinlocks
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KTR_PERCPU
-name|int
-name|gd_ktr_idx
-decl_stmt|;
-comment|/* Index into trace table */
-name|char
-modifier|*
-name|gd_ktr_buf
-decl_stmt|;
-name|char
-name|gd_ktr_buf_data
-index|[
-name|KTR_SIZE
-index|]
-decl_stmt|;
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
+begin_define
+define|#
+directive|define
+name|__pcpu_offset
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|__offsetof(struct pcpu, name)
+end_define
+
+begin_comment
+comment|/*  * Evaluates to the type of the per-cpu variable name.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__pcpu_type
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|__typeof(((struct pcpu *)0)->name)
+end_define
+
+begin_comment
+comment|/*  * Evaluates to the address of the per-cpu variable name.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__PCPU_PTR
+parameter_list|(
+name|name
+parameter_list|)
+value|({						\ 	__pcpu_type(name) *__p;						\ 									\ 	__asm __volatile("movl %%fs:%1,%0; addl %2,%0"			\ 	    : "=r" (__p)						\ 	    : "m" (*(struct pcpu *)(__pcpu_offset(pc_prvspace))),	\ 	      "i" (__pcpu_offset(name)));				\ 									\ 	__p;								\ })
+end_define
+
+begin_comment
+comment|/*  * Evaluates to the value of the per-cpu variable name.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__PCPU_GET
+parameter_list|(
+name|name
+parameter_list|)
+value|({						\ 	__pcpu_type(name) __result;					\ 									\ 	if (sizeof(__result) == 1) {					\ 		u_char __b;						\ 		__asm __volatile("movb %%fs:%1,%0"			\ 		    : "=r" (__b)					\ 		    : "m" (*(u_char *)(__pcpu_offset(name))));		\ 		__result = *(__pcpu_type(name) *)&__b;			\ 	} else if (sizeof(__result) == 2) {				\ 		u_short __w;						\ 		__asm __volatile("movw %%fs:%1,%0"			\ 		    : "=r" (__w)					\ 		    : "m" (*(u_short *)(__pcpu_offset(name))));		\ 		__result = *(__pcpu_type(name) *)&__w;			\ 	} else if (sizeof(__result) == 4) {				\ 		u_int __i;						\ 		__asm __volatile("movl %%fs:%1,%0"			\ 		    : "=r" (__i)					\ 		    : "m" (*(u_int *)(__pcpu_offset(name))));		\ 		__result = *(__pcpu_type(name) *)&__i;			\ 	} else {							\ 		__result = *__PCPU_PTR(name);				\ 	}								\ 									\ 	__result;							\ })
+end_define
+
+begin_comment
+comment|/*  * Sets the value of the per-cpu variable name to value val.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__PCPU_SET
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|({					\ 	__pcpu_type(name) __val = (val);				\ 									\ 	if (sizeof(__val) == 1) {					\ 		u_char __b;						\ 		__b = *(u_char *)&__val;				\ 		__asm __volatile("movb %1,%%fs:%0"			\ 		    : "=m" (*(u_char *)(__pcpu_offset(name)))		\ 		    : "r" (__b));					\ 	} else if (sizeof(__val) == 2) {				\ 		u_short __w;						\ 		__w = *(u_short *)&__val;				\ 		__asm __volatile("movw %1,%%fs:%0"			\ 		    : "=m" (*(u_short *)(__pcpu_offset(name)))		\ 		    : "r" (__w));					\ 	} else if (sizeof(__val) == 4) {				\ 		u_int __i;						\ 		__i = *(u_int *)&__val;					\ 		__asm __volatile("movl %1,%%fs:%0"			\ 		    : "=m" (*(u_int *)(__pcpu_offset(name)))		\ 		    : "r" (__i));					\ 	} else {							\ 		*__PCPU_PTR(name) = __val;				\ 	}								\ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_GET
+parameter_list|(
+name|member
+parameter_list|)
+value|__PCPU_GET(pc_ ## member)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_PTR
+parameter_list|(
+name|member
+parameter_list|)
+value|__PCPU_PTR(pc_ ## member)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_SET
+parameter_list|(
+name|member
+parameter_list|,
+name|val
+parameter_list|)
+value|__PCPU_SET(pc_ ## member, val)
+end_define
 
 begin_endif
 endif|#
@@ -166,7 +185,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! _MACHINE_GLOBALDATA_H_ */
+comment|/* ! _MACHINE_PCPU_H_ */
 end_comment
 
 end_unit

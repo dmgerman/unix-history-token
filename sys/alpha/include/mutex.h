@@ -79,7 +79,7 @@ parameter_list|(
 name|lck
 parameter_list|)
 define|\
-value|ldiq	a0, ALPHA_PSL_IPL_HIGH;		\ 	call_pal PAL_OSF1_swpipl;		\ 1:	ldq_l	a0, lck+MTX_LOCK;		\ 	cmpeq	a0, MTX_UNOWNED, a1;		\ 	beq	a1, 1b;				\ 	ldq	a0, PC_CURTHREAD(globalp);	\ 	stq_c	a0, lck+MTX_LOCK;		\ 	beq	a0, 1b;				\ 	mb;					\ 	stl	v0, lck+MTX_SAVEINTR
+value|ldiq	a0, ALPHA_PSL_IPL_HIGH;		\ 	call_pal PAL_OSF1_swpipl;		\ 1:	ldq_l	a0, lck+MTX_LOCK;		\ 	cmpeq	a0, MTX_UNOWNED, a1;		\ 	beq	a1, 1b;				\ 	ldq	a0, PC_CURTHREAD(pcpup);	\ 	stq_c	a0, lck+MTX_LOCK;		\ 	beq	a0, 1b;				\ 	mb;					\ 	stl	v0, lck+MTX_SAVEINTR
 end_define
 
 begin_define

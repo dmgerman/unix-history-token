@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/globals.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/segments.h>
 end_include
 

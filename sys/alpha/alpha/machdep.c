@@ -3619,7 +3619,7 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * Setup the global data for the bootstrap cpu. 	 */
+comment|/* 	 * Setup the per-CPU data for the bootstrap cpu. 	 */
 block|{
 comment|/* This is not a 'struct user' */
 name|size_t
@@ -3632,11 +3632,11 @@ operator|*
 name|PAGE_SIZE
 argument_list|)
 decl_stmt|;
-name|globalp
+name|pcpup
 operator|=
 operator|(
 expr|struct
-name|globaldata
+name|pcpu
 operator|*
 operator|)
 name|pmap_steal_memory
@@ -3644,9 +3644,9 @@ argument_list|(
 name|sz
 argument_list|)
 expr_stmt|;
-name|globaldata_init
+name|pcpu_init
 argument_list|(
-name|globalp
+name|pcpup
 argument_list|,
 name|alpha_pal_whami
 argument_list|()
@@ -3659,7 +3659,7 @@ argument_list|(
 operator|(
 name|u_int64_t
 operator|)
-name|globalp
+name|pcpup
 argument_list|)
 expr_stmt|;
 name|PCPU_GET
@@ -3766,34 +3766,12 @@ name|thread0
 operator|->
 name|td_frame
 expr_stmt|;
-comment|/* 	 * Get the right value for the boot cpu's idle ptbr. 	 */
-name|globalp
-operator|->
-name|gd_idlepcb
-operator|.
-name|apcb_ptbr
-operator|=
-name|thread0
-operator|->
-name|td_pcb
-operator|->
-name|pcb_hw
-operator|.
-name|apcb_ptbr
-expr_stmt|;
 comment|/* Setup curthread so that mutexes work */
 name|PCPU_SET
 argument_list|(
 name|curthread
 argument_list|,
 name|thread0
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|spinlocks
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|LIST_INIT
@@ -9537,17 +9515,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialise a struct globaldata.  */
+comment|/*  * Initialise a struct pcpu.  */
 end_comment
 
 begin_function
 name|void
-name|globaldata_init
+name|cpu_pcpu_init
 parameter_list|(
 name|struct
-name|globaldata
+name|pcpu
 modifier|*
-name|globaldata
+name|pcpu
 parameter_list|,
 name|int
 name|cpuid
@@ -9556,16 +9534,9 @@ name|size_t
 name|sz
 parameter_list|)
 block|{
-name|bzero
-argument_list|(
-name|globaldata
-argument_list|,
-name|sz
-argument_list|)
-expr_stmt|;
-name|globaldata
+name|pcpu
 operator|->
-name|gd_idlepcbphys
+name|pc_idlepcbphys
 operator|=
 name|vtophys
 argument_list|(
@@ -9573,14 +9544,14 @@ operator|(
 name|vm_offset_t
 operator|)
 operator|&
-name|globaldata
+name|pcpu
 operator|->
-name|gd_idlepcb
+name|pc_idlepcb
 argument_list|)
 expr_stmt|;
-name|globaldata
+name|pcpu
 operator|->
-name|gd_idlepcb
+name|pc_idlepcb
 operator|.
 name|apcb_ksp
 operator|=
@@ -9591,7 +9562,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|globaldata
+name|pcpu
 operator|+
 name|sz
 operator|-
@@ -9602,9 +9573,9 @@ name|trapframe
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|globaldata
+name|pcpu
 operator|->
-name|gd_idlepcb
+name|pc_idlepcb
 operator|.
 name|apcb_ptbr
 operator|=
@@ -9616,28 +9587,11 @@ name|pcb_hw
 operator|.
 name|apcb_ptbr
 expr_stmt|;
-name|globaldata
+name|pcpu
 operator|->
-name|gd_cpuid
-operator|=
-name|cpuid
-expr_stmt|;
-name|globaldata
-operator|->
-name|gd_next_asn
-operator|=
-literal|0
-expr_stmt|;
-name|globaldata
-operator|->
-name|gd_current_asngen
+name|pc_current_asngen
 operator|=
 literal|1
-expr_stmt|;
-name|globaldata_register
-argument_list|(
-name|globaldata
-argument_list|)
 expr_stmt|;
 block|}
 end_function

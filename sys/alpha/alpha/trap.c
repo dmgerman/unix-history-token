@@ -1210,11 +1210,11 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|globalp
+name|pcpup
 operator|=
 operator|(
 expr|struct
-name|globaldata
+name|pcpu
 operator|*
 operator|)
 name|alpha_pal_rdval
@@ -2548,11 +2548,11 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|globalp
+name|pcpup
 operator|=
 operator|(
 expr|struct
-name|globaldata
+name|pcpu
 operator|*
 operator|)
 name|alpha_pal_rdval

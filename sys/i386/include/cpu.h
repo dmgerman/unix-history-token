@@ -37,12 +37,6 @@ directive|include
 file|<machine/segments.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/globals.h>
-end_include
-
 begin_comment
 comment|/*  * definitions of cpu-dependent requirements  * referenced in generic code  */
 end_comment

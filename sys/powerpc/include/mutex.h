@@ -154,7 +154,7 @@ name|r0
 operator|,
 name|PC_CURPROC
 argument_list|(
-name|globalp
+name|pcpup
 argument_list|)
 expr_stmt|;
 end_expr_stmt
