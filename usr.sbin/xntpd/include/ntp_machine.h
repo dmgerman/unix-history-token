@@ -1248,6 +1248,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|MCAST
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
