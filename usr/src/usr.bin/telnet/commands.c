@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	1.27 (Berkeley) %G%"
+literal|"@(#)commands.c	1.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2644,6 +2644,24 @@ block|,
 literal|"recognize certain control characters"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|KERBEROS
+block|{
+literal|"kerberos"
+block|,
+literal|"toggle use of Kerberos authentication"
+block|,
+literal|0
+block|,
+operator|&
+name|kerberized
+block|,
+literal|"use Kerberos authentication"
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|" "
 block|,
@@ -8637,7 +8655,7 @@ literal|"suspend telnet"
 decl_stmt|,
 endif|#
 directive|endif
-comment|/* defined(unix */
+comment|/* defined(unix) */
 name|shellhelp
 index|[]
 init|=
