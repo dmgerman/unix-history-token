@@ -81,29 +81,6 @@ directive|include
 file|<sys/unistd.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_extern.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -399,12 +376,6 @@ literal|"idle_proc: timed out waiting"
 literal|" for a process"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|if (vm_page_zero_idle() != 0) 				continue;
 endif|#
 directive|endif
 ifdef|#
