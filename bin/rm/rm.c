@@ -210,7 +210,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|rm_overwrite
 parameter_list|(
 name|char
@@ -482,7 +482,9 @@ condition|(
 name|fflag
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|usage
 argument_list|()
@@ -1073,6 +1075,9 @@ if|if
 condition|(
 name|Pflag
 condition|)
+if|if
+condition|(
+operator|!
 name|rm_overwrite
 argument_list|(
 name|p
@@ -1081,7 +1086,8 @@ name|fts_accpath
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+condition|)
+continue|continue;
 name|rval
 operator|=
 name|unlink
@@ -1423,6 +1429,9 @@ if|if
 condition|(
 name|Pflag
 condition|)
+if|if
+condition|(
+operator|!
 name|rm_overwrite
 argument_list|(
 name|f
@@ -1430,7 +1439,8 @@ argument_list|,
 operator|&
 name|sb
 argument_list|)
-expr_stmt|;
+condition|)
+continue|continue;
 name|rval
 operator|=
 name|unlink
@@ -1493,7 +1503,7 @@ comment|/*  * rm_overwrite --  *	Overwrite the file 3 times with varying bit pat
 end_comment
 
 begin_function
-name|void
+name|int
 name|rm_overwrite
 parameter_list|(
 name|char
@@ -1571,7 +1581,11 @@ operator|->
 name|st_mode
 argument_list|)
 condition|)
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 operator|(
@@ -1728,7 +1742,11 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 name|err
 label|:
@@ -1764,6 +1782,11 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1818,7 +1841,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* 		 * If it's not a symbolic link and it's unwritable and we're 		 * talking to a terminal, ask.  Symbolic links are excluded 		 * because their permissions are meaningless.  Check stdin_ok 		 * first because we may not have stat'ed the file. 		 */
+comment|/* 		 * If it's not a symbolic link and it's unwritable and we're 		 * talking to a terminal, ask.  Symbolic links are excluded 		 * because their permissions are meaningless.  Check stdin_ok 		 * first because we may not have stat'ed the file. 		 * Also skip this check if the -P option was specified because 		 * we will not be able to overwrite file contents and will 		 * barf later. 		 */
 if|if
 condition|(
 operator|!
@@ -1830,6 +1853,8 @@ name|sp
 operator|->
 name|st_mode
 argument_list|)
+operator|||
+name|Pflag
 operator|||
 operator|(
 operator|!
