@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.15 (Berkeley) %G%"
+literal|"@(#)util.c	8.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1685,7 +1685,9 @@ name|st_uid
 operator|==
 name|uid
 operator|||
-name|uid
+name|stbuf
+operator|.
+name|st_uid
 operator|==
 literal|0
 operator|||
