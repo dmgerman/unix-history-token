@@ -997,6 +997,10 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|&&
+name|type
+operator|==
+name|MOUNT_NFS
 condition|)
 block|{
 name|hostp
@@ -1038,6 +1042,10 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|&&
+name|type
+operator|==
+name|MOUNT_NFS
 condition|)
 block|{
 operator|*
