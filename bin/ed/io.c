@@ -13,33 +13,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|static char * const rcsid = "@(#)io.c,v 1.1 1994/02/01 00:34:41 alm Exp";
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
 specifier|const
+name|char
 name|rcsid
+index|[]
 init|=
 literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -139,12 +122,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"cannot open input file"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -208,12 +188,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"cannot close input file"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -564,11 +541,9 @@ modifier|*
 name|fp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|i
 init|=
@@ -694,12 +669,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"cannot read input file"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -768,6 +740,7 @@ name|char
 modifier|*
 name|fn
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|mode
@@ -835,12 +808,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"cannot open output file"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -906,12 +876,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"cannot close output file"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -1126,6 +1093,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s
@@ -1178,12 +1146,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"cannot write file"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -1369,12 +1334,9 @@ operator|!=
 literal|'\n'
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected end-of-file"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -1489,13 +1451,11 @@ name|int
 name|get_tty_line
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|oi
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|i
 init|=
@@ -1599,12 +1559,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"cannot read stdin"
-argument_list|)
 expr_stmt|;
 name|clearerr
 argument_list|(
@@ -1707,6 +1664,7 @@ name|n
 parameter_list|,
 name|gflag
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s

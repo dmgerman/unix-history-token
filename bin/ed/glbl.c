@@ -13,33 +13,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|static char * const rcsid = "@(#)glob.c,v 1.1 1994/02/01 00:34:40 alm Exp";
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
 specifier|const
+name|char
 name|rcsid
+index|[]
 init|=
 literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -122,12 +105,9 @@ operator|==
 literal|'\n'
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid pattern delimiter"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -467,12 +447,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected end-of-file"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -517,12 +494,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"no previous command"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -801,12 +775,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"out of memory"
-argument_list|)
 expr_stmt|;
 name|SPL0
 argument_list|()
@@ -871,12 +842,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"out of memory"
-argument_list|)
 expr_stmt|;
 name|SPL0
 argument_list|()

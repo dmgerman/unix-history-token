@@ -13,33 +13,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|static char * const rcsid = "@(#)buf.c,v 1.4 1994/02/01 00:34:35 alm Exp";
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
 specifier|const
+name|char
 name|rcsid
+index|[]
 init|=
 literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -202,12 +185,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"cannot seek temp file"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -272,12 +252,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"cannot read temp file"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -306,12 +283,14 @@ comment|/* put_sbuf_line: write a line of text to the scratch file and add a lin
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|put_sbuf_line
 parameter_list|(
 name|cs
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cs
@@ -326,6 +305,7 @@ name|len
 decl_stmt|,
 name|ct
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s
@@ -363,12 +343,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"out of memory"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -399,12 +376,9 @@ operator|>=
 name|LINECHARS
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"line too long"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -448,12 +422,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"cannot seek temp file"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -516,12 +487,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"cannot write temp file"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -656,12 +624,9 @@ operator|&
 name|buffer_head
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid address"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -933,12 +898,9 @@ argument_list|(
 name|sfn
 argument_list|)
 expr_stmt|;
-name|strcpy
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"cannot open temp file"
-argument_list|)
 expr_stmt|;
 name|umask
 argument_list|(
@@ -998,12 +960,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"cannot close temp file"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR

@@ -15,10 +15,10 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
 specifier|const
+name|char
 name|copyright
+index|[]
 init|=
 literal|"@(#) Copyright (c) 1993 Andrew Moore, Talke Studio. \n\  All rights reserved.\n"
 decl_stmt|;
@@ -39,33 +39,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|static char * const rcsid = "@(#)main.c,v 1.1 1994/02/01 00:34:42 alm Exp";
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
 specifier|const
+name|char
 name|rcsid
+index|[]
 init|=
 literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -400,6 +383,7 @@ comment|/* script line number */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|prompt
@@ -411,6 +395,7 @@ comment|/* command-line prompt */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|dps
@@ -736,12 +721,9 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"interrupt"
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -848,12 +830,9 @@ name|argv
 operator|==
 literal|'\0'
 condition|)
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid filename"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -952,12 +931,9 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"warning: file modified"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1025,12 +1001,9 @@ literal|'\n'
 condition|)
 block|{
 comment|/* discard line */
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected end-of-file"
-argument_list|)
 expr_stmt|;
 name|clearerr
 argument_list|(
@@ -1116,12 +1089,9 @@ name|stderr
 argument_list|)
 expr_stmt|;
 comment|/* give warning */
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"warning: file modified"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1376,8 +1346,7 @@ define|#
 directive|define
 name|MUST_BE_FIRST
 parameter_list|()
-define|\
-value|if (!first) { sprintf(errmsg, "invalid address"); return ERR; }
+value|do {					\ 	if (!first) {						\ 		errmsg = "invalid address";			\ 		return ERR;					\ 	}							\ } while (0);
 end_define
 
 begin_comment
@@ -1389,6 +1358,7 @@ name|long
 name|next_addr
 parameter_list|()
 block|{
+specifier|const
 name|char
 modifier|*
 name|hd
@@ -1718,12 +1688,9 @@ operator|<
 name|addr
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid address"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -1756,7 +1723,7 @@ parameter_list|(
 name|addr
 parameter_list|)
 define|\
-value|{ \ 	long ol1, ol2; \ \ 	ol1 = first_addr, ol2 = second_addr; \ 	if (extract_addr_range()< 0) \ 		return ERR; \ 	else if (addr_cnt == 0) { \ 		sprintf(errmsg, "destination expected"); \ 		return ERR; \ 	} else if (second_addr< 0 || addr_last< second_addr) { \ 		sprintf(errmsg, "invalid address"); \ 		return ERR; \ 	} \ 	addr = second_addr; \ 	first_addr = ol1, second_addr = ol2; \ }
+value|{ \ 	long ol1, ol2; \ \ 	ol1 = first_addr, ol2 = second_addr; \ 	if (extract_addr_range()< 0) \ 		return ERR; \ 	else if (addr_cnt == 0) { \ 		errmsg = "destination expected"; \ 		return ERR; \ 	} else if (second_addr< 0 || addr_last< second_addr) { \ 		errmsg = "invalid address"; \ 		return ERR; \ 	} \ 	addr = second_addr; \ 	first_addr = ol1, second_addr = ol2; \ }
 end_define
 
 begin_else
@@ -1780,7 +1747,7 @@ parameter_list|(
 name|addr
 parameter_list|)
 define|\
-value|{ \ 	long ol1, ol2; \ \ 	ol1 = first_addr, ol2 = second_addr; \ 	if (extract_addr_range()< 0) \ 		return ERR; \ 	if (second_addr< 0 || addr_last< second_addr) { \ 		sprintf(errmsg, "invalid address"); \ 		return ERR; \ 	} \ 	addr = second_addr; \ 	first_addr = ol1, second_addr = ol2; \ }
+value|{ \ 	long ol1, ol2; \ \ 	ol1 = first_addr, ol2 = second_addr; \ 	if (extract_addr_range()< 0) \ 		return ERR; \ 	if (second_addr< 0 || addr_last< second_addr) { \ 		errmsg = "invalid address"; \ 		return ERR; \ 	} \ 	addr = second_addr; \ 	first_addr = ol1, second_addr = ol2; \ }
 end_define
 
 begin_endif
@@ -1797,7 +1764,7 @@ define|#
 directive|define
 name|GET_COMMAND_SUFFIX
 parameter_list|()
-value|{ \ 	int done = 0; \ 	do { \ 		switch(*ibufp) { \ 		case 'p': \ 			gflag |= GPR, ibufp++; \ 			break; \ 		case 'l': \ 			gflag |= GLS, ibufp++; \ 			break; \ 		case 'n': \ 			gflag |= GNP, ibufp++; \ 			break; \ 		default: \ 			done++; \ 		} \ 	} while (!done); \ 	if (*ibufp++ != '\n') { \ 		sprintf(errmsg, "invalid command suffix"); \ 		return ERR; \ 	} \ }
+value|{ \ 	int done = 0; \ 	do { \ 		switch(*ibufp) { \ 		case 'p': \ 			gflag |= GPR, ibufp++; \ 			break; \ 		case 'l': \ 			gflag |= GLS, ibufp++; \ 			break; \ 		case 'n': \ 			gflag |= GNP, ibufp++; \ 			break; \ 		default: \ 			done++; \ 		} \ 	} while (!done); \ 	if (*ibufp++ != '\n') { \ 		errmsg = "invalid command suffix"; \ 		return ERR; \ 	} \ }
 end_define
 
 begin_comment
@@ -2115,12 +2082,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected address"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -2141,12 +2105,9 @@ name|ibufp
 argument_list|)
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected command suffix"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -2241,12 +2202,9 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"no current filename"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -2298,12 +2256,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected address"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -2324,12 +2279,9 @@ name|ibufp
 argument_list|)
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected command suffix"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -2359,12 +2311,9 @@ operator|==
 literal|'!'
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid redirection"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -2413,12 +2362,9 @@ condition|(
 name|isglobal
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"cannot nest global commands"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -2506,12 +2452,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected address"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -2545,12 +2488,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected address"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -2592,12 +2532,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid address"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -2694,12 +2631,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid address"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -2802,12 +2736,9 @@ operator|<
 name|second_addr
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid destination"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -2933,12 +2864,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected address"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -2973,12 +2901,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected address"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -3022,12 +2947,9 @@ name|ibufp
 argument_list|)
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected command suffix"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -3104,12 +3026,9 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"no current filename"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -3260,12 +3179,9 @@ condition|(
 name|sflags
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid command suffix"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -3291,12 +3207,9 @@ operator|!
 name|pat
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"no previous substitution"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -3331,12 +3244,9 @@ operator|==
 literal|'\n'
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid pattern delimiter"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -3630,12 +3540,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected address"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -3699,12 +3606,9 @@ name|ibufp
 argument_list|)
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected command suffix"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -3793,12 +3697,9 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"no current filename"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -3879,12 +3780,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected address"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -3903,12 +3801,9 @@ argument_list|()
 expr_stmt|;
 else|#
 directive|else
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"crypt unavailable"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -4039,12 +3934,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unexpected address"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -4155,12 +4047,9 @@ name|ERR
 return|;
 break|break;
 default|default:
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unknown command"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -4221,12 +4110,9 @@ operator|>
 name|addr_last
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid address"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -4368,12 +4254,9 @@ operator|!=
 name|current_addr
 condition|)
 do|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"no match"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -4426,12 +4309,9 @@ operator|==
 literal|'\n'
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid filename"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -4510,12 +4390,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"filename too long"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -4534,12 +4411,9 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"no current filename"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -4642,12 +4516,9 @@ condition|(
 name|red
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"shell access restricted"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -4817,12 +4688,9 @@ condition|)
 endif|#
 directive|endif
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"no previous command"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -4886,12 +4754,9 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"no current filename"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -5006,12 +4871,14 @@ block|{
 name|int
 name|l
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|lp
 init|=
 name|ibuf
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|eot
@@ -6060,12 +5927,9 @@ operator|!
 name|from
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid address"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -6218,12 +6082,9 @@ name|n
 argument_list|)
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid mark character"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -6286,12 +6147,9 @@ name|n
 argument_list|)
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid mark character"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -6421,12 +6279,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"out of memory"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -6682,6 +6537,12 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|char
+name|ed_hup
+index|[]
+init|=
+literal|"ed.hup"
+decl_stmt|;
 name|int
 name|n
 decl_stmt|;
@@ -6714,7 +6575,7 @@ name|addr_last
 operator|&&
 name|write_file
 argument_list|(
-literal|"ed.hup"
+name|ed_hup
 argument_list|,
 literal|"w"
 argument_list|,
@@ -7034,12 +6895,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"shell access restricted"
-argument_list|)
 expr_stmt|;
 return|return
 literal|0

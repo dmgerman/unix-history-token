@@ -13,33 +13,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|static char * const rcsid = "@(#)undo.c,v 1.1 1994/02/01 00:34:44 alm Exp";
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
 specifier|const
+name|char
 name|rcsid
+index|[]
 init|=
 literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -187,12 +170,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"out of memory"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -294,12 +274,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"out of memory"
-argument_list|)
 expr_stmt|;
 name|clear_undo_stack
 argument_list|()
@@ -400,12 +377,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"nothing to undo"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR

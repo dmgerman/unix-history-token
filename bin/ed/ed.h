@@ -389,7 +389,7 @@ name|i
 parameter_list|,
 name|p
 parameter_list|)
-value|{ \ 	if (((i = strtol(p,&p, 10)) == LONG_MIN || i == LONG_MAX)&& \ 	    errno == ERANGE) { \ 		sprintf(errmsg, "number out of range"); \ 	    	i = 0; \ 		return ERR; \ 	} \ }
+value|{ \ 	if (((i = strtol(p,&p, 10)) == LONG_MIN || i == LONG_MAX)&& \ 	    errno == ERANGE) { \ 		errmsg = "number out of range"; \ 	    	i = 0; \ 		return ERR; \ 	} \ }
 end_define
 
 begin_if
@@ -424,7 +424,7 @@ parameter_list|,
 name|err
 parameter_list|)
 define|\
-value|if ((i)> (n)) { \ 	int ti = (n); \ 	char *ts; \ 	SPL1(); \ 	if ((b) != NULL) { \ 		if ((ts = (char *) realloc((b), ti += max((i), MINBUFSZ))) == NULL) { \ 			fprintf(stderr, "%s\n", strerror(errno)); \ 			sprintf(errmsg, "out of memory"); \ 			SPL0(); \ 			return err; \ 		} \ 	} else { \ 		if ((ts = (char *) malloc(ti += max((i), MINBUFSZ))) == NULL) { \ 			fprintf(stderr, "%s\n", strerror(errno)); \ 			sprintf(errmsg, "out of memory"); \ 			SPL0(); \ 			return err; \ 		} \ 	} \ 	(n) = ti; \ 	(b) = ts; \ 	SPL0(); \ }
+value|if ((i)> (n)) { \ 	int ti = (n); \ 	char *ts; \ 	SPL1(); \ 	if ((b) != NULL) { \ 		if ((ts = (char *) realloc((b), ti += max((i), MINBUFSZ))) == NULL) { \ 			fprintf(stderr, "%s\n", strerror(errno)); \ 			errmsg = "out of memory"; \ 			SPL0(); \ 			return err; \ 		} \ 	} else { \ 		if ((ts = (char *) malloc(ti += max((i), MINBUFSZ))) == NULL) { \ 			fprintf(stderr, "%s\n", strerror(errno)); \ 			errmsg = "out of memory"; \ 			SPL0(); \ 			return err; \ 		} \ 	} \ 	(n) = ti; \ 	(b) = ts; \ 	SPL0(); \ }
 end_define
 
 begin_else
@@ -454,7 +454,7 @@ parameter_list|,
 name|err
 parameter_list|)
 define|\
-value|if ((i)> (n)) { \ 	int ti = (n); \ 	char *ts; \ 	SPL1(); \ 	if ((ts = (char *) realloc((b), ti += max((i), MINBUFSZ))) == NULL) { \ 		fprintf(stderr, "%s\n", strerror(errno)); \ 		sprintf(errmsg, "out of memory"); \ 		SPL0(); \ 		return err; \ 	} \ 	(n) = ti; \ 	(b) = ts; \ 	SPL0(); \ }
+value|if ((i)> (n)) { \ 	int ti = (n); \ 	char *ts; \ 	SPL1(); \ 	if ((ts = (char *) realloc((b), ti += max((i), MINBUFSZ))) == NULL) { \ 		fprintf(stderr, "%s\n", strerror(errno)); \ 		errmsg = "out of memory"; \ 		SPL0(); \ 		return err; \ 	} \ 	(n) = ti; \ 	(b) = ts; \ 	SPL0(); \ }
 end_define
 
 begin_endif
@@ -648,6 +648,7 @@ name|apply_subst_template
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -790,6 +791,7 @@ name|des_error
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1275,6 +1277,7 @@ name|next_active_node
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1363,12 +1366,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|put_sbuf_line
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1385,6 +1390,7 @@ operator|(
 name|FILE
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1400,6 +1406,7 @@ name|put_tty_line
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1614,6 +1621,7 @@ operator|(
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1736,9 +1744,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
+modifier|*
 name|errmsg
-index|[]
 decl_stmt|;
 end_decl_stmt
 

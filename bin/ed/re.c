@@ -13,33 +13,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|static char * const rcsid = "@(#)re.c,v 1.6 1994/02/01 00:34:43 alm Exp";
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
 specifier|const
+name|char
 name|rcsid
+index|[]
 init|=
 literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -64,13 +47,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
+modifier|*
 name|errmsg
-index|[
-name|PATH_MAX
-operator|+
-literal|40
-index|]
 init|=
 literal|""
 decl_stmt|;
@@ -92,6 +72,13 @@ modifier|*
 name|exp
 init|=
 name|NULL
+decl_stmt|;
+specifier|static
+name|char
+name|error
+index|[
+literal|1024
+index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -115,12 +102,9 @@ operator|==
 literal|' '
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"invalid pattern delimiter"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -150,12 +134,9 @@ condition|(
 operator|!
 name|exp
 condition|)
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"no previous pattern"
-argument_list|)
 expr_stmt|;
 return|return
 name|exp
@@ -225,12 +206,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"out of memory"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -262,11 +240,15 @@ name|n
 argument_list|,
 name|exp
 argument_list|,
-name|errmsg
+name|error
 argument_list|,
 sizeof|sizeof
-name|errmsg
+name|error
 argument_list|)
+expr_stmt|;
+name|errmsg
+operator|=
+name|error
 expr_stmt|;
 name|free
 argument_list|(
@@ -367,12 +349,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"unbalanced brackets ([])"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -391,12 +370,9 @@ operator|==
 literal|'\n'
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"trailing backslash (\\)"
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL

@@ -4,7 +4,7 @@ comment|/* cbc.c: This file contains the encryption routines for the ed line edi
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Copyright (c) 1993 Andrew Moore, Talke Studio.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)bdes.c	5.5 (Berkeley) 6/27/91  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Copyright (c) 1993 Andrew Moore, Talke Studio.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -13,33 +13,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|static char * const rcsid = "@(#)cbc.c,v 1.2 1994/02/01 00:34:36 alm Exp";
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
 specifier|const
+name|char
 name|rcsid
+index|[]
 init|=
 literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -662,7 +645,6 @@ name|int
 name|get_keyword
 parameter_list|()
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -737,21 +719,15 @@ name|des_error
 parameter_list|(
 name|s
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
 decl_stmt|;
 comment|/* the message */
 block|{
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
-literal|"%s"
-argument_list|,
+operator|=
 name|s
 condition|?
 name|s
@@ -759,7 +735,6 @@ else|:
 name|strerror
 argument_list|(
 name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1056,7 +1031,7 @@ name|expand_des_key
 parameter_list|(
 name|obuf
 parameter_list|,
-name|ibuf
+name|kbuf
 parameter_list|)
 name|char
 modifier|*
@@ -1065,11 +1040,10 @@ decl_stmt|;
 comment|/* bit pattern */
 name|char
 modifier|*
-name|ibuf
+name|kbuf
 decl_stmt|;
 comment|/* the key itself */
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1086,7 +1060,7 @@ comment|/* used for hex/key translation */
 comment|/* 	 * leading '0x' or '0X' == hex key 	 */
 if|if
 condition|(
-name|ibuf
+name|kbuf
 index|[
 literal|0
 index|]
@@ -1094,14 +1068,14 @@ operator|==
 literal|'0'
 operator|&&
 operator|(
-name|ibuf
+name|kbuf
 index|[
 literal|1
 index|]
 operator|==
 literal|'x'
 operator|||
-name|ibuf
+name|kbuf
 index|[
 literal|1
 index|]
@@ -1110,10 +1084,10 @@ literal|'X'
 operator|)
 condition|)
 block|{
-name|ibuf
+name|kbuf
 operator|=
 operator|&
-name|ibuf
+name|kbuf
 index|[
 literal|2
 index|]
@@ -1125,7 +1099,7 @@ name|i
 operator|=
 literal|0
 init|;
-name|ibuf
+name|kbuf
 index|[
 name|i
 index|]
@@ -1150,7 +1124,7 @@ argument_list|(
 operator|(
 name|int
 operator|)
-name|ibuf
+name|kbuf
 index|[
 name|i
 index|]
@@ -1237,7 +1211,7 @@ block|}
 comment|/* 	 * leading '0b' or '0B' == binary key 	 */
 if|if
 condition|(
-name|ibuf
+name|kbuf
 index|[
 literal|0
 index|]
@@ -1245,14 +1219,14 @@ operator|==
 literal|'0'
 operator|&&
 operator|(
-name|ibuf
+name|kbuf
 index|[
 literal|1
 index|]
 operator|==
 literal|'b'
 operator|||
-name|ibuf
+name|kbuf
 index|[
 literal|1
 index|]
@@ -1261,10 +1235,10 @@ literal|'B'
 operator|)
 condition|)
 block|{
-name|ibuf
+name|kbuf
 operator|=
 operator|&
-name|ibuf
+name|kbuf
 index|[
 literal|2
 index|]
@@ -1276,7 +1250,7 @@ name|i
 operator|=
 literal|0
 init|;
-name|ibuf
+name|kbuf
 index|[
 name|i
 index|]
@@ -1301,7 +1275,7 @@ argument_list|(
 operator|(
 name|int
 operator|)
-name|ibuf
+name|kbuf
 index|[
 name|i
 index|]
@@ -1396,7 +1370,7 @@ name|strncpy
 argument_list|(
 name|obuf
 argument_list|,
-name|ibuf
+name|kbuf
 argument_list|,
 literal|8
 argument_list|)
@@ -1423,14 +1397,12 @@ name|buf
 decl_stmt|;
 comment|/* key block */
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
 comment|/* counter in a for loop */
-specifier|register
 name|int
 name|par
 decl_stmt|;
@@ -1767,15 +1739,13 @@ decl_stmt|;
 comment|/* input file descriptor */
 block|{
 name|Desbuf
-name|ibuf
+name|tbuf
 decl_stmt|;
 comment|/* temp buffer for initialization vector */
-specifier|register
 name|int
 name|n
 decl_stmt|;
 comment|/* number of bytes actually read */
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -1812,7 +1782,7 @@ name|MEMCPY
 argument_list|(
 name|BUFFER
 argument_list|(
-name|ibuf
+name|tbuf
 argument_list|)
 argument_list|,
 name|BUFFER
@@ -1867,7 +1837,7 @@ argument_list|)
 argument_list|,
 name|BUFFER
 argument_list|(
-name|ibuf
+name|tbuf
 argument_list|)
 argument_list|,
 literal|8

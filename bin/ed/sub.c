@@ -13,33 +13,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|static char * const rcsid = "@(#)sub.c,v 1.1 1994/02/01 00:34:44 alm Exp";
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
 specifier|const
+name|char
 name|rcsid
+index|[]
 init|=
 literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -291,12 +274,9 @@ condition|(
 operator|!
 name|rhbuf
 condition|)
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"no previous substitution"
-argument_list|)
 expr_stmt|;
 return|return
 name|rhbuf
@@ -508,10 +488,12 @@ name|undo_t
 modifier|*
 name|up
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|txt
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|eot
@@ -726,12 +708,9 @@ name|GLB
 operator|)
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"no match"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -1128,12 +1107,9 @@ name|GSG
 operator|)
 condition|)
 block|{
-name|sprintf
-argument_list|(
 name|errmsg
-argument_list|,
+operator|=
 literal|"infinite substitution loop"
-argument_list|)
 expr_stmt|;
 return|return
 name|ERR
@@ -1205,6 +1181,7 @@ name|off
 parameter_list|,
 name|re_nsub
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|boln
