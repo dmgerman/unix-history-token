@@ -3171,9 +3171,9 @@ name|secmask
 init|=
 name|dp
 operator|->
-name|v_rdev
-operator|->
-name|si_bsize_phys
+name|v_bufobj
+operator|.
+name|bo_bsize
 operator|-
 literal|1
 decl_stmt|;

@@ -3787,6 +3787,16 @@ name|si_bsize_phys
 operator|=
 name|DEV_BSIZE
 expr_stmt|;
+name|vp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_bsize
+operator|=
+name|dev
+operator|->
+name|si_bsize_phys
+expr_stmt|;
 block|}
 return|return
 operator|(

@@ -177,7 +177,11 @@ name|buf_ops
 modifier|*
 name|bo_ops
 decl_stmt|;
-comment|/* - buffer operatoins */
+comment|/* - Buffer operations */
+name|int
+name|bo_bsize
+decl_stmt|;
+comment|/* - Block size for i/o */
 name|struct
 name|vm_object
 modifier|*

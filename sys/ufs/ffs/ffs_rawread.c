@@ -2074,9 +2074,9 @@ name|ip
 operator|->
 name|i_devvp
 operator|->
-name|v_rdev
-operator|->
-name|si_bsize_phys
+name|v_bufobj
+operator|.
+name|bo_bsize
 expr_stmt|;
 if|if
 condition|(

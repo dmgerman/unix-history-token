@@ -5091,9 +5091,9 @@ name|aio_nbytes
 operator|%
 name|vp
 operator|->
-name|v_rdev
-operator|->
-name|si_bsize_phys
+name|v_bufobj
+operator|.
+name|bo_bsize
 condition|)
 return|return
 operator|(
