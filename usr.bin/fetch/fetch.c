@@ -750,6 +750,12 @@ condition|(
 name|elapsed
 operator|>
 literal|30
+operator|&&
+name|xs
+operator|->
+name|rcvd
+operator|>
+literal|0
 condition|)
 block|{
 name|long
