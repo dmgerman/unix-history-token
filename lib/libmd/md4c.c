@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MD4C.C - RSA Data Security, Inc., MD4 message-digest algorithm  * $Id$  */
+comment|/* MD4C.C - RSA Data Security, Inc., MD4 message-digest algorithm  * $Id: md4c.c,v 1.5 1997/02/22 15:07:19 peter Exp $  */
 end_comment
 
 begin_comment
@@ -788,25 +788,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* MD4 finalization. Ends an MD4 message-digest operation, writing the      the message digest and zeroizing the context.  */
+comment|/* MD4 padding. */
 end_comment
 
 begin_function
 name|void
-name|MD4Final
+name|MD4Pad
 parameter_list|(
-name|digest
-parameter_list|,
 name|context
 parameter_list|)
-name|unsigned
-name|char
-name|digest
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* message digest */
 name|MD4_CTX
 modifier|*
 name|context
@@ -897,6 +887,41 @@ argument_list|,
 name|bits
 argument_list|,
 literal|8
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* MD4 finalization. Ends an MD4 message-digest operation, writing the      the message digest and zeroizing the context.  */
+end_comment
+
+begin_function
+name|void
+name|MD4Final
+parameter_list|(
+name|digest
+parameter_list|,
+name|context
+parameter_list|)
+name|unsigned
+name|char
+name|digest
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* message digest */
+name|MD4_CTX
+modifier|*
+name|context
+decl_stmt|;
+comment|/* context */
+block|{
+comment|/* Do padding */
+name|MD4Pad
+argument_list|(
+name|context
 argument_list|)
 expr_stmt|;
 comment|/* Store state in digest */

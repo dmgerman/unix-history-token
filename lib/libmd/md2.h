@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MD2.H - header file for MD2C.C  * $Id: md2.h,v 1.5 1997/02/22 15:07:12 peter Exp $  */
+comment|/* MD2.H - header file for MD2C.C  * $Id: md2.h,v 1.6 1997/08/25 05:24:24 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -89,6 +89,16 @@ modifier|*
 parameter_list|,
 name|unsigned
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|MD2Pad
+parameter_list|(
+name|MD2_CTX
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

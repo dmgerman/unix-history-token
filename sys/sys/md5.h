@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MD5.H - header file for MD5C.C  * $Id: md5.h,v 1.8 1997/02/22 09:45:33 peter Exp $  */
+comment|/* MD5.H - header file for MD5C.C  * $Id: md5.h,v 1.9 1997/08/25 05:24:31 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -86,6 +86,16 @@ modifier|*
 parameter_list|,
 name|unsigned
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|MD5Pad
+parameter_list|(
+name|MD5_CTX
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
