@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)ww.h	1.6 83/07/27		*/
+comment|/*	@(#)ww.h	1.7 83/07/28		*/
 end_comment
 
 begin_include
@@ -214,11 +214,11 @@ begin_comment
 comment|/* has nothing */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_undef
+undef|#
+directive|undef
 name|CTRL
-end_ifndef
+end_undef
 
 begin_define
 define|#
@@ -230,10 +230,22 @@ parameter_list|)
 value|('c'&0x1f)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|DEL
+value|0x7f
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISCTRL
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)< ' ' || (c)>= DEL)
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -345,6 +357,14 @@ end_function_decl
 begin_function_decl
 name|int
 name|wwchild
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|unctrl
 parameter_list|()
 function_decl|;
 end_function_decl
