@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c	4.3	(Berkeley)	%G%"
+literal|"@(#)tree.c	4.4	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,15 +38,6 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 name|struct
