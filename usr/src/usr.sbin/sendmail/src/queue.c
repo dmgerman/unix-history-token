@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.4 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.5 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.4 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.5 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1612,6 +1612,12 @@ name|a
 operator|==
 name|NULL
 operator|||
+name|a
+operator|->
+name|q_alias
+operator|==
+name|NULL
+operator|||
 name|tfp
 operator|==
 name|NULL
@@ -1669,15 +1675,6 @@ name|q
 operator|->
 name|q_uid
 expr_stmt|;
-comment|/* if a is an alias, use that for printing */
-if|if
-condition|(
-name|a
-operator|->
-name|q_alias
-operator|!=
-name|NULL
-condition|)
 name|a
 operator|=
 name|a
@@ -3420,6 +3417,9 @@ operator|!
 name|readqf
 argument_list|(
 name|e
+argument_list|,
+operator|!
+name|requeueflag
 argument_list|)
 condition|)
 block|{
@@ -3530,7 +3530,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  READQF -- read queue file and set up environment. ** **	Parameters: **		e -- the envelope of the job to run. ** **	Returns: **		TRUE if it successfully read the queue file. **		FALSE otherwise. ** **	Side Effects: **		The queue file is returned locked. */
+comment|/* **  READQF -- read queue file and set up environment. ** **	Parameters: **		e -- the envelope of the job to run. **		announcefile -- if set, announce the name of the queue **			file in error messages. ** **	Returns: **		TRUE if it successfully read the queue file. **		FALSE otherwise. ** **	Side Effects: **		The queue file is returned locked. */
 end_comment
 
 begin_function
@@ -3538,11 +3538,16 @@ name|bool
 name|readqf
 parameter_list|(
 name|e
+parameter_list|,
+name|announcefile
 parameter_list|)
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
+decl_stmt|;
+name|bool
+name|announcefile
 decl_stmt|;
 block|{
 specifier|register
@@ -3919,6 +3924,10 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|announcefile
+condition|)
 name|FileName
 operator|=
 name|qf
@@ -3926,6 +3935,16 @@ expr_stmt|;
 name|LineNumber
 operator|=
 literal|0
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_GLOBALERRS
+expr_stmt|;
+name|OpMode
+operator|=
+name|MD_DELIVER
 expr_stmt|;
 if|if
 condition|(
@@ -5813,11 +5832,15 @@ condition|(
 name|user
 operator|==
 name|NULL
-condition|)
+operator|||
+operator|*
 name|user
-operator|=
-literal|""
-expr_stmt|;
+operator|==
+literal|'\0'
+condition|)
+return|return
+name|NULL
+return|;
 comment|/* 	**  Set up addr fields for controlling user. 	*/
 name|a
 operator|=
