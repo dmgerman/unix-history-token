@@ -8,8 +8,22 @@ comment|/* Credits:  Based on and part of the DPT driver for FreeBSD written and
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: dpt_eisa.c,v 1.1 1998/03/11 00:30:12 julian Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"eisa.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NEISA
+operator|>
+literal|0
+end_if
 
 begin_include
 include|#
@@ -1950,6 +1964,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NEISA> 0 */
+end_comment
 
 end_unit
 
