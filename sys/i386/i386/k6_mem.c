@@ -391,7 +391,20 @@ argument_list|)
 argument_list|,
 name|M_MEMDESC
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|mr_desc
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"k6_mrinit: malloc returns NULL"
 argument_list|)
 expr_stmt|;
 name|bzero
