@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_socket.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_socket.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -601,6 +601,44 @@ operator|&
 name|so
 operator|->
 name|so_snd
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0
+case|:
+if|if
+condition|(
+name|so
+operator|->
+name|so_oobmark
+operator|||
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_RCVATMARK
+operator|)
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+name|sbselqueue
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
 argument_list|)
 expr_stmt|;
 break|break;
