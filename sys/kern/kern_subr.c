@@ -230,7 +230,6 @@ name|kaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX The vm object containing kern_pg needs locking. 	 */
 if|if
 condition|(
 operator|(
@@ -424,13 +423,18 @@ literal|"vm_pgmoveco: renaming busy page"
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_rename
+name|vm_page_insert
 argument_list|(
 name|kern_pg
 argument_list|,
 name|uobject
 argument_list|,
 name|upindex
+argument_list|)
+expr_stmt|;
+name|vm_page_dirty
+argument_list|(
+name|kern_pg
 argument_list|)
 expr_stmt|;
 name|kern_pg
@@ -985,7 +989,7 @@ operator|)
 operator|&&
 operator|(
 name|obj
-operator|!=
+operator|==
 name|NULL
 operator|)
 operator|&&
@@ -1041,14 +1045,6 @@ name|PAGE_MASK
 operator|)
 operator|==
 literal|0
-operator|)
-operator|&&
-operator|(
-name|obj
-operator|->
-name|type
-operator|==
-name|OBJT_DEFAULT
 operator|)
 operator|&&
 operator|(
