@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opset.c 4.2 %G%"
+literal|"@(#)opset.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2052,7 +2052,12 @@ if|if
 condition|(
 name|mode
 operator|==
+name|OC_CONS
+argument_list|(
 name|OC_DAIREG
+argument_list|,
+name|R_PC
+argument_list|)
 condition|)
 block|{
 comment|/* PC absolute, always 4 bytes*/
