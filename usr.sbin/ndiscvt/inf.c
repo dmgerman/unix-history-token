@@ -1581,9 +1581,12 @@ name|NULL
 condition|?
 literal|""
 else|:
+name|stringcvt
+argument_list|(
 name|reg
 operator|->
 name|value
+argument_list|)
 argument_list|,
 name|devidx
 argument_list|)
