@@ -4485,6 +4485,30 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Claim another reference to a ucred structure  */
+end_comment
+
+begin_function
+name|void
+name|crhold
+parameter_list|(
+name|cr
+parameter_list|)
+name|struct
+name|ucred
+modifier|*
+name|cr
+decl_stmt|;
+block|{
+name|cr
+operator|->
+name|cr_ref
+operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Free a cred structure.  * Throws away space when ref count gets to 0.  */
 end_comment
 
@@ -4500,6 +4524,21 @@ modifier|*
 name|cr
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|cr
+operator|->
+name|cr_ref
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"Freeing already free credential! %p"
+argument_list|,
+name|cr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|--

@@ -23,7 +23,7 @@ begin_struct
 struct|struct
 name|ucred
 block|{
-name|u_short
+name|u_int
 name|cr_ref
 decl_stmt|;
 comment|/* reference count */
@@ -86,16 +86,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|crhold
-parameter_list|(
-name|cr
-parameter_list|)
-value|(cr)->cr_ref++
-end_define
 
 begin_struct_decl
 struct_decl|struct
@@ -197,6 +187,21 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|crhold
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ucred
+operator|*
+name|cr
 operator|)
 argument_list|)
 decl_stmt|;
