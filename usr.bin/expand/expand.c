@@ -580,10 +580,6 @@ condition|(
 name|i
 operator|<=
 literal|0
-operator|||
-name|i
-operator|>
-literal|256
 condition|)
 name|errx
 argument_list|(
