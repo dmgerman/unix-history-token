@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine changes the Kerberos encryption keys for principals,  * i.e., users or services.  *  *	from: kdb_edit.c,v 4.2 90/01/09 16:05:09 raeburn Exp $  *	$Id: kdb_edit.c,v 1.1.1.1 1994/09/30 14:49:56 csgr Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine changes the Kerberos encryption keys for principals,  * i.e., users or services.  *  *	from: kdb_edit.c,v 4.2 90/01/09 16:05:09 raeburn Exp $  *	$Id: kdb_edit.c,v 1.2 1995/05/30 06:40:41 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kdb_edit.c,v 1.1.1.1 1994/09/30 14:49:56 csgr Exp $"
+literal|"$Id: kdb_edit.c,v 1.2 1995/05/30 06:40:41 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1328,6 +1328,13 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|pw_str
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+operator|||
 operator|!
 name|strcmp
 argument_list|(
