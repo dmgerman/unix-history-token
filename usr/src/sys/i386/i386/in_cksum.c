@@ -1,34 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_cksum.c	1.2	86/01/05	*/
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from tahoe:	in_cksum.c	1.2	86/01/05  *	@(#)in_cksum.c	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../h/types.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"sys/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in.h"
+file|"netinet/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in_systm.h"
+file|"netinet/in_systm.h"
 end_include
 
 begin_comment
-comment|/*  * Checksum routine for Internet Protocol family headers.  *  * This routine is very heavily used in the network  * code and should be modified for each CPU to be as fast as possible.  *   * This implementation is TAHOE version.  */
+comment|/*  * Checksum routine for Internet Protocol family headers.  *  * This routine is very heavily used in the network  * code and should be modified for each CPU to be as fast as possible.  *   * This implementation is 386 version.  */
 end_comment
 
 begin_undef
