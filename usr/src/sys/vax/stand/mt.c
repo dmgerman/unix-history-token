@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mt.c	4.4	82/12/17	*/
+comment|/*	mt.c	4.5	83/02/08	*/
 end_comment
 
 begin_comment
-comment|/*  * TM78/TU78 tape driver  */
+comment|/*  * TM78/TU78 tape driver  * Made to work reliably by by Jeffrey R. Schwab (Purdue)  */
 end_comment
 
 begin_include
@@ -191,6 +191,21 @@ operator|==
 literal|0
 condition|)
 empty_stmt|;
+comment|/* clear any attention bits present on open */
+name|i
+operator|=
+name|mtaddr
+operator|->
+name|mtner
+expr_stmt|;
+name|mtaddr
+operator|->
+name|mtas
+operator|=
+name|mtaddr
+operator|->
+name|mtas
+expr_stmt|;
 name|mtstrategy
 argument_list|(
 name|io
@@ -302,12 +317,59 @@ operator|->
 name|i_unit
 argument_list|)
 decl_stmt|;
+name|struct
+name|mba_regs
+modifier|*
+name|mba
+init|=
+name|mbamba
+argument_list|(
+name|io
+operator|->
+name|i_unit
+argument_list|)
+decl_stmt|;
 name|errcnt
 operator|=
 literal|0
 expr_stmt|;
 name|retry
 label|:
+comment|/* code to trap for attention up prior to start of command */
+if|if
+condition|(
+operator|(
+name|mtaddr
+operator|->
+name|mtas
+operator|&
+literal|0xffff
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"mt unexpected attention er=%x - continuing\n"
+argument_list|,
+name|MASKREG
+argument_list|(
+name|mtaddr
+operator|->
+name|mtner
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|mtaddr
+operator|->
+name|mtas
+operator|=
+name|mtaddr
+operator|->
+name|mtas
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|func
@@ -336,12 +398,6 @@ name|io
 operator|->
 name|i_cc
 expr_stmt|;
-name|mtaddr
-operator|->
-name|mter
-operator|=
-literal|0
-expr_stmt|;
 name|mbastart
 argument_list|(
 name|io
@@ -349,8 +405,21 @@ argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
-do|do
-name|s
+comment|/* wait for mba to go idle and read result status */
+while|while
+condition|(
+operator|(
+name|mba
+operator|->
+name|mba_sr
+operator|&
+name|MBSR_DTBUSY
+operator|)
+operator|!=
+literal|0
+condition|)
+empty_stmt|;
+name|ic
 operator|=
 name|mtaddr
 operator|->
@@ -358,32 +427,9 @@ name|mter
 operator|&
 name|MTER_INTCODE
 expr_stmt|;
-do|while
-condition|(
-name|s
-operator|==
-literal|0
-condition|)
-do|;
-name|ic
-operator|=
-name|s
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|2000
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
-name|mtaddr
-operator|->
-name|mtas
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|mtaddr
 operator|->
 name|mtncs
@@ -422,6 +468,14 @@ operator|==
 literal|0
 condition|)
 do|;
+name|ic
+operator|=
+name|mtaddr
+operator|->
+name|mtner
+operator|&
+name|MTER_INTCODE
+expr_stmt|;
 name|mtaddr
 operator|->
 name|mtas
@@ -431,14 +485,6 @@ operator|->
 name|mtas
 expr_stmt|;
 comment|/* clear attention */
-name|ic
-operator|=
-name|mtaddr
-operator|->
-name|mtner
-operator|&
-name|MTER_INTCODE
-expr_stmt|;
 block|}
 switch|switch
 condition|(
@@ -462,6 +508,33 @@ return|;
 case|case
 name|MTER_DONE
 case|:
+comment|/* make sure a record was read */
+if|if
+condition|(
+operator|(
+name|mtaddr
+operator|->
+name|mtca
+operator|&
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"mt record count not decremented - retrying\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
 break|break;
 case|case
 name|MTER_RWDING
@@ -472,7 +545,7 @@ goto|;
 default|default:
 name|printf
 argument_list|(
-literal|"mt hard error: er=%b\n"
+literal|"mt hard error: er=%x\n"
 argument_list|,
 name|MASKREG
 argument_list|(
@@ -517,7 +590,7 @@ name|MTER_RETRY
 case|:
 name|printf
 argument_list|(
-literal|"mt error: er=%b\n"
+literal|"mt error: er=%x\n"
 argument_list|,
 name|MASKREG
 argument_list|(
