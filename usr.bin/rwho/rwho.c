@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rwho.c,v 1.7.2.1 1997/08/11 07:14:28 charnier Exp $"
+literal|"$Id: rwho.c,v 1.7.2.2 1997/08/29 05:29:52 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,6 +133,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utmp.h>
+end_include
+
 begin_decl_stmt
 name|DIR
 modifier|*
@@ -168,7 +174,12 @@ block|{
 name|char
 name|myhost
 index|[
-name|MAXHOSTNAMELEN
+sizeof|sizeof
+argument_list|(
+name|wd
+operator|.
+name|wd_hostname
+argument_list|)
 index|]
 decl_stmt|;
 name|int
@@ -316,10 +327,6 @@ name|n
 decl_stmt|,
 name|i
 decl_stmt|;
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
 operator|(
 name|void
 operator|)
@@ -685,7 +692,14 @@ argument_list|)
 operator|+
 literal|1
 operator|+
-literal|8
+sizeof|sizeof
+argument_list|(
+name|mp
+operator|->
+name|myutmp
+operator|.
+name|out_line
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -763,11 +777,20 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s:%-.8s"
+literal|"%s:%-.*s"
 argument_list|,
 name|mp
 operator|->
 name|myhost
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mp
+operator|->
+name|myutmp
+operator|.
+name|out_line
+argument_list|)
 argument_list|,
 name|mp
 operator|->
@@ -778,7 +801,18 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-8.8s %-*s %.12s"
+literal|"%-*.*s %-*s %.12s"
+argument_list|,
+name|UT_NAMESIZE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mp
+operator|->
+name|myutmp
+operator|.
+name|out_name
+argument_list|)
 argument_list|,
 name|mp
 operator|->
@@ -954,7 +988,14 @@ name|myutmp
 operator|.
 name|out_name
 argument_list|,
-literal|8
+sizeof|sizeof
+argument_list|(
+name|u2
+operator|->
+name|myutmp
+operator|.
+name|out_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -968,7 +1009,7 @@ operator|)
 return|;
 name|rc
 operator|=
-name|strncmp
+name|strcmp
 argument_list|(
 name|u1
 operator|->
@@ -977,8 +1018,6 @@ argument_list|,
 name|u2
 operator|->
 name|myhost
-argument_list|,
-literal|8
 argument_list|)
 expr_stmt|;
 if|if
@@ -1006,7 +1045,14 @@ name|myutmp
 operator|.
 name|out_line
 argument_list|,
-literal|8
+sizeof|sizeof
+argument_list|(
+name|u2
+operator|->
+name|myutmp
+operator|.
+name|out_line
+argument_list|)
 argument_list|)
 operator|)
 return|;
