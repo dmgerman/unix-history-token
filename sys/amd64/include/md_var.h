@@ -248,7 +248,7 @@ specifier|extern
 name|int
 name|szsigcode
 decl_stmt|,
-name|oszsigcode
+name|szosigcode
 decl_stmt|;
 end_decl_stmt
 

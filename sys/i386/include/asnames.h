@@ -1484,8 +1484,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|_oszsigcode
-value|oszsigcode
+name|_szosigcode
+value|szosigcode
 end_define
 
 begin_define

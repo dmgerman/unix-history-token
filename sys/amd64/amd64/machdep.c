@@ -2993,7 +2993,7 @@ name|tf_eip
 operator|=
 name|PS_STRINGS
 operator|-
-name|oszsigcode
+name|szosigcode
 expr_stmt|;
 name|regs
 operator|->
