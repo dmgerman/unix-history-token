@@ -63,17 +63,36 @@ directive|ifndef
 name|HZ
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__amd64__
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
 name|HZ
 value|1024
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|HZ
+value|1000
 end_define
 
 begin_else
