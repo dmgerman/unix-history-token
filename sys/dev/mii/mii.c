@@ -762,8 +762,10 @@ name|buf
 argument_list|,
 name|buflen
 argument_list|,
-literal|"id1=0x%x id2=0x%x"
+literal|"oui=0x%x model=0x%x rev=0x%x"
 argument_list|,
+name|MII_OUI
+argument_list|(
 name|maa
 operator|->
 name|mii_id1
@@ -771,6 +773,21 @@ argument_list|,
 name|maa
 operator|->
 name|mii_id2
+argument_list|)
+argument_list|,
+name|MII_MODEL
+argument_list|(
+name|maa
+operator|->
+name|mii_id2
+argument_list|)
+argument_list|,
+name|MII_REV
+argument_list|(
+name|maa
+operator|->
+name|mii_id2
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
