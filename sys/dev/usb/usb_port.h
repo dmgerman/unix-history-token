@@ -343,7 +343,7 @@ parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|static int \ __CONCAT(dname,_match)(device_t device)
+value|static int \ __CONCAT(dname,_match)(device_t self)
 end_define
 
 begin_define
@@ -356,7 +356,7 @@ parameter_list|,
 name|uaa
 parameter_list|)
 define|\
-value|struct usb_attach_arg *uaa = device_get_ivars(device)
+value|struct usb_attach_arg *uaa = device_get_ivars(self)
 end_define
 
 begin_define

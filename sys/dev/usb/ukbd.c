@@ -602,7 +602,7 @@ name|unit
 init|=
 name|device_get_unit
 argument_list|(
-name|device
+name|self
 argument_list|)
 decl_stmt|;
 name|sw
@@ -665,7 +665,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|device
+name|self
 expr_stmt|;
 if|if
 condition|(
