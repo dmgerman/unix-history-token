@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)cfb.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)cfb.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2700,6 +2700,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|s
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2721,6 +2724,49 @@ name|isMono
 condition|)
 name|InitColorMap
 argument_list|()
+expr_stmt|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+name|dcDivertXInput
+operator|=
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+literal|0
+expr_stmt|;
+name|dcMouseEvent
+operator|=
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+literal|0
+expr_stmt|;
+name|dcMouseButtons
+operator|=
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+literal|0
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|ScreenInit
 argument_list|()
@@ -2795,6 +2841,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|s
+decl_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -3207,6 +3256,11 @@ break|break;
 case|case
 name|QIOKERNLOOP
 case|:
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|dcDivertXInput
 operator|=
 name|cfbKbdEvent
@@ -3219,10 +3273,20 @@ name|dcMouseButtons
 operator|=
 name|cfbMouseButtons
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|QIOKERNUNLOOP
 case|:
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|dcDivertXInput
 operator|=
 operator|(
@@ -3255,6 +3319,11 @@ argument_list|)
 argument_list|()
 operator|)
 literal|0
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
