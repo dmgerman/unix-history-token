@@ -138,17 +138,6 @@ begin_comment
 comment|/* Match at end of word */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VAR_NOSUBST
-value|0x20
-end_define
-
-begin_comment
-comment|/* don't expand vars in VarGetPattern */
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct
