@@ -524,7 +524,7 @@ name|UHCI_TD_IOS
 value|0x02000000
 define|#
 directive|define
-name|UHCI_TD_LS
+name|UHCI_TD_LOWSPEED
 value|0x04000000
 define|#
 directive|define
