@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.26	83/05/27	*/
+comment|/*	raw_usrreq.c	4.27	83/06/12	*/
 end_comment
 
 begin_include
@@ -1054,15 +1054,20 @@ name|so
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|PRU_CONTROL
+case|:
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 comment|/* 	 * Not supported. 	 */
 case|case
 name|PRU_ACCEPT
 case|:
 case|case
 name|PRU_RCVD
-case|:
-case|case
-name|PRU_CONTROL
 case|:
 case|case
 name|PRU_SENSE

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	4.17	83/03/15	*/
+comment|/*	if.h	4.18	83/06/12	*/
 end_comment
 
 begin_comment
@@ -121,6 +121,14 @@ comment|/* output routine */
 name|int
 function_decl|(
 modifier|*
+name|if_ioctl
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* ioctl routine */
+name|int
+function_decl|(
+modifier|*
 name|if_reset
 function_decl|)
 parameter_list|()
@@ -220,6 +228,17 @@ begin_comment
 comment|/* interface is point-to-point link */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFF_NOTRAILERS
+value|0x20
+end_define
+
+begin_comment
+comment|/* avoid use of trailers */
+end_comment
+
 begin_comment
 comment|/*  * Output queues (ifp->if_snd) and internetwork datagram level (pup level 1)  * input routines have queues of messages stored on ifqueue structures  * (defined above).  Entries are added to and deleted from these structures  * by these macros, which should be called with ipl raised to splimp().  */
 end_comment
@@ -299,20 +318,24 @@ comment|/* granularity is 1 second */
 end_comment
 
 begin_comment
-comment|/*  * Interface request structure used by socket  * ioctl's SIOCSIFxxxx (set interface parameter)  * and SIOCGIFxxxx (get parameter).  */
+comment|/*  * Interface request structure used for socket  * ioctl's.  All interface ioctl's must have parameter  * definitions which begin with ifr_name.  The  * remainder may be interface specific.  */
 end_comment
 
 begin_struct
 struct|struct
 name|ifreq
 block|{
+define|#
+directive|define
+name|IFNAMSIZ
+value|16
 name|char
 name|ifr_name
 index|[
-literal|16
+name|IFNAMSIZ
 index|]
 decl_stmt|;
-comment|/* name of interface (e.g. "ec0") */
+comment|/* if name, e.g. "en0" */
 union|union
 block|{
 name|struct
@@ -325,6 +348,9 @@ name|ifru_dstaddr
 decl_stmt|;
 name|short
 name|ifru_flags
+decl_stmt|;
+name|caddr_t
+name|ifru_data
 decl_stmt|;
 block|}
 name|ifr_ifru
@@ -344,6 +370,11 @@ directive|define
 name|ifr_flags
 value|ifr_ifru.ifru_flags
 comment|/* flags */
+define|#
+directive|define
+name|ifr_data
+value|ifr_ifru.ifru_data
+comment|/* for use by interface */
 block|}
 struct|;
 end_struct
