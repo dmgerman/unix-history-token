@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rain.c	5.6 (Berkeley) %G%"
+literal|"@(#)rain.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1479,18 +1479,15 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_function
+name|int
 name|fputchar
-argument_list|(
-argument|c
-argument_list|)
-name|char
+parameter_list|(
 name|c
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|int
+name|c
+decl_stmt|;
 block|{
 name|putchar
 argument_list|(
@@ -1498,7 +1495,7 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
