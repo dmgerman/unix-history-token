@@ -10384,8 +10384,6 @@ argument_list|,
 literal|"%s FTP server status:"
 argument_list|,
 name|hostname
-argument_list|,
-name|version
 argument_list|)
 expr_stmt|;
 name|printf
