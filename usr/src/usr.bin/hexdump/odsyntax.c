@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)odsyntax.c	5.1 (Berkeley) %G%"
+literal|"@(#)odsyntax.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,6 +101,8 @@ name|optind
 decl_stmt|;
 name|int
 name|ch
+decl_stmt|,
+name|first
 decl_stmt|;
 name|char
 modifier|*
@@ -110,6 +112,10 @@ decl_stmt|;
 name|deprecated
 operator|=
 literal|1
+expr_stmt|;
+name|first
+operator|=
+literal|0
 expr_stmt|;
 name|argv
 operator|=
@@ -141,6 +147,13 @@ block|{
 case|case
 literal|'a'
 case|:
+if|if
+condition|(
+operator|!
+name|first
+operator|++
+condition|)
+block|{
 name|add
 argument_list|(
 literal|"\"%07.7_Ao\n\""
@@ -148,7 +161,19 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ao  \" 16/1 \"%3_u \" \"\\n\""
+literal|"\"%07.7_ao  \""
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|add
+argument_list|(
+literal|"\"         \""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"16/1 \"%3_u \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
@@ -158,6 +183,13 @@ case|:
 case|case
 literal|'o'
 case|:
+if|if
+condition|(
+operator|!
+name|first
+operator|++
+condition|)
+block|{
 name|add
 argument_list|(
 literal|"\"%07.7_Ao\n\""
@@ -165,13 +197,32 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ao  \" 8/2 \"%06o \" \"\\n\""
+literal|"\"%07.7_ao  \""
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|add
+argument_list|(
+literal|"\"         \""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"8/2 \" %06o \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'b'
 case|:
+if|if
+condition|(
+operator|!
+name|first
+operator|++
+condition|)
+block|{
 name|add
 argument_list|(
 literal|"\"%07.7_Ao\n\""
@@ -179,13 +230,32 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ao  \" 16/1 \"%03o \" \"\\n\""
+literal|"\"%07.7_ao  \""
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|add
+argument_list|(
+literal|"\"         \""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"16/1 \"%03o \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'c'
 case|:
+if|if
+condition|(
+operator|!
+name|first
+operator|++
+condition|)
+block|{
 name|add
 argument_list|(
 literal|"\"%07.7_Ao\n\""
@@ -193,13 +263,32 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ao  \" 16/1 \"%3_c \" \"\\n\""
+literal|"\"%07.7_ao  \""
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|add
+argument_list|(
+literal|"\"         \""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"16/1 \"%3_c \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'d'
 case|:
+if|if
+condition|(
+operator|!
+name|first
+operator|++
+condition|)
+block|{
 name|add
 argument_list|(
 literal|"\"%07.7_Ao\n\""
@@ -207,13 +296,32 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ao  \" 8/2 \"%05u \" \"\\n\""
+literal|"\"%07.7_ao  \""
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|add
+argument_list|(
+literal|"\"         \""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"8/2 \"  %05u \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'D'
 case|:
+if|if
+condition|(
+operator|!
+name|first
+operator|++
+condition|)
+block|{
 name|add
 argument_list|(
 literal|"\"%07.7_Ao\n\""
@@ -221,7 +329,19 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ao  \" 4/4 \"%010u \" \"\\n\""
+literal|"\"%07.7_ao  \""
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|add
+argument_list|(
+literal|"\"         \""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"4/4 \"     %010u \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
@@ -232,6 +352,13 @@ comment|/* undocumented in od */
 case|case
 literal|'F'
 case|:
+if|if
+condition|(
+operator|!
+name|first
+operator|++
+condition|)
+block|{
 name|add
 argument_list|(
 literal|"\"%07.7_Ao\n\""
@@ -239,13 +366,32 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ao  \" 2/8 \"%21.14e \" \"\\n\""
+literal|"\"%07.7_ao  \""
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|add
+argument_list|(
+literal|"\"         \""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"2/8 \"          %21.14e \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'f'
 case|:
+if|if
+condition|(
+operator|!
+name|first
+operator|++
+condition|)
+block|{
 name|add
 argument_list|(
 literal|"\"%07.7_Ao\n\""
@@ -253,7 +399,19 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ao  \" 4/4 \"%14.7e \" \"\\n\""
+literal|"\"%07.7_ao  \""
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|add
+argument_list|(
+literal|"\"         \""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"4/4 \" %14.7e \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
@@ -263,6 +421,13 @@ case|:
 case|case
 literal|'X'
 case|:
+if|if
+condition|(
+operator|!
+name|first
+operator|++
+condition|)
+block|{
 name|add
 argument_list|(
 literal|"\"%07.7_Ao\n\""
@@ -270,7 +435,19 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ao  \" 4/4 \"%08x \" \"\\n\""
+literal|"\"%07.7_ao  \""
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|add
+argument_list|(
+literal|"\"         \""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"4/4 \"       %08x \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
@@ -280,6 +457,13 @@ case|:
 case|case
 literal|'x'
 case|:
+if|if
+condition|(
+operator|!
+name|first
+operator|++
+condition|)
+block|{
 name|add
 argument_list|(
 literal|"\"%07.7_Ao\n\""
@@ -287,7 +471,19 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ao  \" 8/2 \"%04x \" \"\\n\""
+literal|"\"%07.7_ao  \""
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|add
+argument_list|(
+literal|"\"         \""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"8/2 \"   %04x \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
@@ -300,6 +496,13 @@ case|:
 case|case
 literal|'l'
 case|:
+if|if
+condition|(
+operator|!
+name|first
+operator|++
+condition|)
+block|{
 name|add
 argument_list|(
 literal|"\"%07.7_Ao\n\""
@@ -307,13 +510,32 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ao  \" 4/4 \"%11d \" \"\\n\""
+literal|"\"%07.7_ao  \""
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|add
+argument_list|(
+literal|"\"         \""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"4/4 \"    %11d \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'i'
 case|:
+if|if
+condition|(
+operator|!
+name|first
+operator|++
+condition|)
+block|{
 name|add
 argument_list|(
 literal|"\"%07.7_Ao\n\""
@@ -321,13 +543,32 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ao  \" 8/2 \"%6d \" \"\\n\""
+literal|"\"%07.7_ao  \""
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|add
+argument_list|(
+literal|"\"         \""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"8/2 \" %6d \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'O'
 case|:
+if|if
+condition|(
+operator|!
+name|first
+operator|++
+condition|)
+block|{
 name|add
 argument_list|(
 literal|"\"%07.7_Ao\n\""
@@ -335,7 +576,19 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ao  \" 4/4 \"%011o \" \"\\n\""
+literal|"\"%07.7_ao  \""
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|add
+argument_list|(
+literal|"\"         \""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"4/4 \"    %011o \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
