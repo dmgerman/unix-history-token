@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw.c,v 1.11 1999/01/08 10:52:38 davidn Exp $"
+literal|"$Id: pw.c,v 1.12 1999/02/23 07:15:10 davidn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -332,28 +332,28 @@ init|=
 block|{
 block|{
 comment|/* user */
-literal|"VC:qn:u:c:d:e:p:g:G:mk:s:oL:i:w:h:Db:NPy:Y"
+literal|"V:C:qn:u:c:d:e:p:g:G:mk:s:oL:i:w:h:Db:NPy:Y"
 block|,
-literal|"VC:qn:u:rY"
+literal|"V:C:qn:u:rY"
 block|,
-literal|"VC:qn:u:c:d:e:p:g:G:ml:k:s:w:L:h:FNPY"
+literal|"V:C:qn:u:c:d:e:p:g:G:ml:k:s:w:L:h:FNPY"
 block|,
-literal|"VC:qn:u:FPa"
+literal|"V:C:qn:u:FPa"
 block|,
-literal|"VC:q"
+literal|"V:C:q"
 block|}
 block|,
 block|{
 comment|/* grp  */
-literal|"VC:qn:g:h:M:pNPY"
+literal|"V:C:qn:g:h:M:pNPY"
 block|,
-literal|"VC:qn:g:Y"
+literal|"V:C:qn:g:Y"
 block|,
-literal|"VC:qn:g:l:h:FM:m:NPY"
+literal|"V:C:qn:g:l:h:FM:m:NPY"
 block|,
-literal|"VC:qn:g:FPa"
+literal|"V:C:qn:g:FPa"
 block|,
-literal|"VC:q"
+literal|"V:C:q"
 block|}
 block|}
 decl_stmt|;
@@ -498,6 +498,7 @@ name|optarg
 argument_list|)
 expr_stmt|;
 block|}
+else|else
 break|break;
 block|}
 elseif|else
