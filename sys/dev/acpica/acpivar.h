@@ -104,6 +104,9 @@ decl_stmt|;
 name|int
 name|acpi_suspend_sx
 decl_stmt|;
+name|int
+name|acpi_verbose
+decl_stmt|;
 name|bus_dma_tag_t
 name|acpi_waketag
 decl_stmt|;
@@ -1515,8 +1518,39 @@ operator|)
 return|;
 end_return
 
+begin_function
+unit|}  static
+name|__inline
+name|int
+name|acpi_get_verbose
+parameter_list|(
+name|struct
+name|acpi_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+if|if
+condition|(
+name|sc
+condition|)
+return|return
+operator|(
+name|sc
+operator|->
+name|acpi_verbose
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_function_decl
-unit|}  extern
+specifier|extern
 name|char
 modifier|*
 name|acpi_name
