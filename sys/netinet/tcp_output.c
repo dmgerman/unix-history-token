@@ -2037,7 +2037,7 @@ name|u_char
 modifier|*
 name|bp
 decl_stmt|;
-comment|/* 		 * Initialize TCP-MD5 option (RFC2385) 		 */
+comment|/* Initialize TCP-MD5 option (RFC2385) */
 name|bp
 operator|=
 operator|(
@@ -2089,7 +2089,7 @@ name|optlen
 operator|+=
 name|TCPOLEN_SIGNATURE
 expr_stmt|;
-comment|/* 		 * Terminate options list and maintain 32-bit alignment. 		 */
+comment|/* Terminate options list and maintain 32-bit alignment. */
 operator|*
 name|bp
 operator|++

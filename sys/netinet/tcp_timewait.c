@@ -8983,7 +8983,7 @@ name|TCP_SIGNATURE
 end_ifdef
 
 begin_comment
-comment|/*  * Compute TCP-MD5 hash of a TCPv4 segment. (RFC2385)  *  * We do this over ip, tcphdr, segment data, and the key in the SADB.  * When called from tcp_input(), we can be sure that th_sum has been  * zeroed out and verified already.  *  * This function is for IPv4 use only. Calling this function with an  * IPv6 packet in the mbuf chain will yield undefined results.  *  * Return 0 if successful, otherwise return -1.  *  * XXX The key is retrieved from the system's PF_KEY SADB, by keying a  * search with the destination IP address, and a 'magic SPI' to be  * determined by the application. This is hardcoded elsewhere to 1179  * right now. Another branch of this code exists which uses the SPD to  * specify per-application flows but it is unstable.  */
+comment|/*  * Compute TCP-MD5 hash of a TCPv4 segment. (RFC2385)  *  * Parameters:  * m		pointer to head of mbuf chain  * off0		offset to TCP header within the mbuf chain  * len		length of TCP segment data, excluding options  * optlen	length of TCP segment options  * buf		pointer to storage for computed MD5 digest  * direction	direction of flow (IPSEC_DIR_INBOUND or OUTBOUND)  *  * We do this over ip, tcphdr, segment data, and the key in the SADB.  * When called from tcp_input(), we can be sure that th_sum has been  * zeroed out and verified already.  *  * This function is for IPv4 use only. Calling this function with an  * IPv6 packet in the mbuf chain will yield undefined results.  *  * Return 0 if successful, otherwise return -1.  *  * XXX The key is retrieved from the system's PF_KEY SADB, by keying a  * search with the destination IP address, and a 'magic SPI' to be  * determined by the application. This is hardcoded elsewhere to 1179  * right now. Another branch of this code exists which uses the SPD to  * specify per-application flows but it is unstable.  */
 end_comment
 
 begin_function
@@ -8995,28 +8995,22 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
-comment|/* mbuf chain */
 name|int
 name|off0
 parameter_list|,
-comment|/* offset to TCP header */
 name|int
 name|len
 parameter_list|,
-comment|/* length of TCP data */
 name|int
 name|optlen
 parameter_list|,
-comment|/* length of TCP options */
 name|u_char
 modifier|*
 name|buf
 parameter_list|,
-comment|/* storage for MD5 digest */
 name|u_int
 name|direction
 parameter_list|)
-comment|/* direction of flow */
 block|{
 name|union
 name|sockaddr_union
@@ -9062,7 +9056,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"passed NULL mbuf. Game over."
+literal|"NULL mbuf chain"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9073,11 +9067,11 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"passed NULL storage pointer for MD5 signature"
+literal|"NULL signature pointer"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Extract the destination from the IP header in the mbuf. 	 */
+comment|/* Extract the destination from the IP header in the mbuf. */
 name|ip
 operator|=
 name|mtod
@@ -9141,7 +9135,7 @@ name|ip
 operator|->
 name|ip_dst
 expr_stmt|;
-comment|/* 	 * Look up an SADB entry which matches the address found in 	 * the segment. 	 */
+comment|/* Look up an SADB entry which matches the address of the peer. */
 name|sav
 operator|=
 name|KEY_ALLOCSA
