@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_usrreq.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_usrreq.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -174,7 +174,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netiso/tuba_addr.h>
+file|<netiso/tuba_table.h>
 end_include
 
 begin_comment
@@ -445,19 +445,21 @@ expr|struct
 name|isopcb
 operator|*
 operator|)
-name|tp
-operator|->
-name|t_tuba_pcb
-operator|=
 name|so
 operator|->
 name|so_pcb
+expr_stmt|;
+name|so
+operator|->
+name|so_pcb
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
 name|error
 operator|=
-name|tcp_userreq
+name|tcp_usrreq
 argument_list|(
 name|so
 argument_list|,
@@ -477,10 +479,47 @@ name|isop_socket
 operator|=
 literal|0
 expr_stmt|;
-name|isop_detach
+name|iso_pcbdetach
 argument_list|(
 name|isop
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|inp
+operator|=
+name|sotoinpcb
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+name|tp
+operator|=
+name|intotcpcb
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"tuba_usrreq 3"
+argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|t_tuba_pcb
+operator|=
+operator|(
+name|caddr_t
+operator|)
+name|isop
 expr_stmt|;
 block|}
 goto|goto
@@ -618,6 +657,8 @@ operator|&
 name|siso
 operator|->
 name|siso_addr
+argument_list|,
+name|M_WAITOK
 argument_list|)
 operator|)
 condition|)
@@ -732,6 +773,8 @@ operator|&
 name|siso
 operator|->
 name|siso_addr
+argument_list|,
+name|M_WAITOK
 argument_list|)
 operator|)
 condition|)
@@ -791,6 +834,8 @@ operator|->
 name|isop_laddr
 operator|->
 name|siso_addr
+argument_list|,
+name|M_WAITOK
 argument_list|)
 operator|)
 operator|==

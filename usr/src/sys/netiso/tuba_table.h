@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.h	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -51,13 +51,23 @@ end_struct
 begin_define
 define|#
 directive|define
-name|ICKSUM
+name|ADDCARRY
+parameter_list|(
+name|x
+parameter_list|)
+value|(x>= 65535 ? x -= 65535 : x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|REDUCE
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((a = (b) % 0xffff), (a == 0 ? a = 0xffff : a))
+value|{ union { u_short s[2]; long l;} l_util; long x; \ 	l_util.l = (b); x = l_util.s[0] + l_util.s[1]; ADDCARRY(x); a = x;}
 end_define
 
 begin_ifdef
