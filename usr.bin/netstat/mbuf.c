@@ -271,13 +271,9 @@ operator|!=
 literal|256
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: unexpected change to mbstat; check source\n"
-argument_list|,
-name|prog
+literal|"unexpected change to mbstat; check source"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -289,13 +285,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: mbstat: symbol not in namelist\n"
-argument_list|,
-name|prog
+literal|"mbstat: symbol not in namelist"
 argument_list|)
 expr_stmt|;
 return|return;

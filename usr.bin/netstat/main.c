@@ -151,6 +151,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"netstat.h"
 end_include
 
@@ -854,6 +860,12 @@ index|[
 name|_POSIX2_LINE_MAX
 index|]
 decl_stmt|;
+name|char
+name|buf2
+index|[
+name|_POSIX2_LINE_MAX
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|cp
@@ -1008,23 +1020,13 @@ name|AF_ISO
 expr_stmt|;
 else|else
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: unknown address family\n"
-argument_list|,
-name|prog
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s: unknown address family"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 block|}
@@ -1138,23 +1140,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: unknown or uninstrumented protocol\n"
-argument_list|,
-name|prog
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s: unknown or uninstrumented protocol"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 block|}
@@ -1315,12 +1307,9 @@ name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|kvmd
 operator|=
-name|kvm_open
+name|kvm_openfiles
 argument_list|(
 name|nlistf
 argument_list|,
@@ -1330,27 +1319,23 @@ name|NULL
 argument_list|,
 name|O_RDONLY
 argument_list|,
-name|prog
+name|buf
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|kvmd
 operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: kvm_open: %s\n"
-argument_list|,
-name|prog
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"kvm_open: %s"
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
@@ -1364,7 +1349,42 @@ name|nl
 argument_list|)
 operator|<
 literal|0
-operator|||
+condition|)
+block|{
+if|if
+condition|(
+name|nlistf
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: kvm_nlist: %s"
+argument_list|,
+name|nlistf
+argument_list|,
+name|kvm_geterr
+argument_list|(
+name|kvmd
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"kvm_nlist: %s"
+argument_list|,
+name|kvm_geterr
+argument_list|(
+name|kvmd
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|nl
 index|[
 literal|0
@@ -1379,30 +1399,21 @@ if|if
 condition|(
 name|nlistf
 condition|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: %s: no namelist\n"
-argument_list|,
-name|prog
+literal|"%s: no namelist"
 argument_list|,
 name|nlistf
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: no namelist\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"no namelist"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1932,17 +1943,9 @@ operator|!=
 name|size
 condition|)
 block|{
-comment|/* XXX this duplicates kvm_read's error printout */
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: kvm_read %s\n"
-argument_list|,
-name|prog
+literal|"kvm_read: %s"
 argument_list|,
 name|kvm_geterr
 argument_list|(

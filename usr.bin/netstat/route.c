@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "From: @(#)route.c	8.3 (Berkeley) 3/9/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)route.c	8.3 (Berkeley) 3/9/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,6 +147,18 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -758,7 +783,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-*.*s %-*.*s %-6.6s  %6.6s%8.8s  %s\n"
+literal|"%-*.*s %-*.*s %-6.6s  %6.6s%8.8s  %8.8s %6s\n"
 argument_list|,
 name|WID_DST
 argument_list|,
@@ -778,7 +803,9 @@ literal|"Refs"
 argument_list|,
 literal|"Use"
 argument_list|,
-literal|"Interface"
+literal|"Netif"
+argument_list|,
+literal|"Expire"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1324,14 +1351,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"route-sysctl-estimate"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"sysctl: net.route.0.0.dump estimate"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1349,14 +1373,17 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|err
 argument_list|(
-literal|"out of space\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
+literal|2
+argument_list|,
+literal|"malloc(%lu)"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|needed
 argument_list|)
 expr_stmt|;
 block|}
@@ -1381,14 +1408,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"sysctl of routing table"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"sysctl: net.route.0.0.dump"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2178,6 +2202,24 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+specifier|static
+name|char
+name|prettyname
+index|[
+literal|9
+index|]
+decl_stmt|;
+comment|/* 	 * Don't print protocol-cloned routes unless -a. 	 */
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_parent
+operator|&&
+operator|!
+name|aflag
+condition|)
+return|return;
 name|p_sockaddr
 argument_list|(
 name|kgetsa
@@ -2276,16 +2318,57 @@ name|rt
 operator|->
 name|rt_ifp
 expr_stmt|;
-block|}
-name|printf
+name|snprintf
 argument_list|(
-literal|" %.15s%d%s"
+name|prettyname
+argument_list|,
+sizeof|sizeof
+name|prettyname
+argument_list|,
+literal|"%.6s%d"
 argument_list|,
 name|name
 argument_list|,
 name|ifnet
 operator|.
 name|if_unit
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_expire
+condition|)
+block|{
+name|time_t
+name|now
+init|=
+name|time
+argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
+literal|0
+argument_list|)
+decl_stmt|;
+name|printf
+argument_list|(
+literal|" %8.8s %6d%s"
+argument_list|,
+name|prettyname
+argument_list|,
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_expire
+operator|-
+name|now
 argument_list|,
 name|rt
 operator|->
@@ -2301,6 +2384,30 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|" %8.8s%s"
+argument_list|,
+name|prettyname
+argument_list|,
+name|rt
+operator|->
+name|rt_nodes
+index|[
+literal|0
+index|]
+operator|.
+name|rn_dupedkey
+condition|?
+literal|" =>"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|putchar
 argument_list|(
