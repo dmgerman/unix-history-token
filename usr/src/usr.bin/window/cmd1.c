@@ -426,8 +426,6 @@ block|{
 specifier|static
 name|int
 name|scount
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|count
