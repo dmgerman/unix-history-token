@@ -1232,6 +1232,56 @@ argument_list|(
 name|mtx
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ident
+operator|==
+operator|&
+name|proc0
+operator|||
+comment|/* XXX: swapper */
+name|timo
+operator|!=
+literal|0
+operator|||
+comment|/* XXX: we might still miss a wakeup */
+name|mtx_owned
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+operator|||
+name|mtx
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"indefinite sleep without mutex, wmesg: \"%s\" ident: %p"
+operator|,
+name|wmesg
+operator|,
+name|ident
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+operator|&&
+name|mtx
+operator|!=
+operator|&
+name|vm_mtx
+condition|)
+name|panic
+argument_list|(
+literal|"sleeping with vm_mtx held."
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KTRACE

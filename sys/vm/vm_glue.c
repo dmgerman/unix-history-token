@@ -437,6 +437,12 @@ name|FALSE
 operator|)
 return|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|map
 operator|=
 operator|&
@@ -496,6 +502,12 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rv
@@ -521,6 +533,12 @@ name|u_int
 name|len
 decl_stmt|;
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|vm_map_pageable
 argument_list|(
 operator|&
@@ -551,6 +569,12 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -569,6 +593,12 @@ name|u_int
 name|len
 decl_stmt|;
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|vm_map_pageable
 argument_list|(
 operator|&
@@ -599,11 +629,17 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Implement fork's actions on an address space.  * Here we arrange for the address space to be copied or referenced,  * allocate a user struct (pcb and kernel stack), then call the  * machine-dependent layer to fill those in and make the new process  * ready to run.  The new process is set up so that it returns directly  * to user mode to avoid stack copying and relocation problems.  */
+comment|/*  * Implement fork's actions on an address space.  * Here we arrange for the address space to be copied or referenced,  * allocate a user struct (pcb and kernel stack), then call the  * machine-dependent layer to fill those in and make the new process  * ready to run.  The new process is set up so that it returns directly  * to user mode to avoid stack copying and relocation problems.  *  * Called without vm_mtx.  */
 end_comment
 
 begin_function
@@ -641,6 +677,12 @@ name|user
 modifier|*
 name|up
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -689,6 +731,12 @@ argument_list|,
 name|p2
 argument_list|,
 name|flags
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 return|return;
@@ -923,6 +971,12 @@ argument_list|,
 name|p2
 argument_list|,
 name|flags
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -1209,6 +1263,12 @@ argument_list|)
 expr_stmt|;
 name|loop
 label|:
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vm_page_count_min
@@ -1217,10 +1277,22 @@ condition|)
 block|{
 name|VM_WAIT
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 goto|goto
 name|loop
 goto|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1520,7 +1592,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Swapout is driven by the pageout daemon.  Very simple, we find eligible  * procs and unwire their u-areas.  We try to always "swap" at least one  * process in case we need the room for a swapin.  * If any procs have been sleeping/stopped for at least maxslp seconds,  * they are swapped.  Else, we swap the longest-sleeping or stopped process,  * if any, otherwise the longest-resident process.  */
+comment|/*  * Swapout is driven by the pageout daemon.  Very simple, we find eligible  * procs and unwire their u-areas.  We try to always "swap" at least one  * process in case we need the room for a swapin.  * If any procs have been sleeping/stopped for at least maxslp seconds,  * they are swapped.  Else, we swap the longest-sleeping or stopped process,  * if any, otherwise the longest-resident process.  *  * Can block  * must be called with vm_mtx  */
 end_comment
 
 begin_function
@@ -1557,6 +1629,20 @@ name|didswap
 init|=
 literal|0
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|outp
 operator|=
 name|outp2
@@ -1628,6 +1714,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * only aiod changes vmspace, however it will be 		 * skipped because of the if statement above checking  		 * for P_SYSTEM 		 */
 name|vm
 operator|=
 name|p
@@ -1812,13 +1899,19 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
 comment|/* 			 * XXX: This is broken.  We release the lock we 			 * acquire before calling swapout, so we could 			 * still deadlock if another CPU locks this process' 			 * VM data structures after we release the lock but 			 * before we call swapout(). 			 */
 block|++vm->vm_refcnt;
 comment|/* 			 * do not swapout a process that is waiting for VM 			 * data structures there is a possible deadlock. 			 */
-block|if (lockmgr(&vm->vm_map.lock, 					LK_EXCLUSIVE | LK_NOWAIT, 					(void *)0, curproc)) { 				vmspace_free(vm); 				PROC_UNLOCK(p); 				continue; 			} 			vm_map_unlock(&vm->vm_map);
+block|if (lockmgr(&vm->vm_map.lock, 					LK_EXCLUSIVE | LK_NOWAIT, 					NULL, curproc)) { 				vmspace_free(vm); 				PROC_UNLOCK(p); 				continue; 			} 			vm_map_unlock(&vm->vm_map);
 endif|#
 directive|endif
 comment|/* 			 * If the process has been asleep for awhile and had 			 * most of its pages taken away already, swap it out. 			 */
@@ -1860,10 +1953,22 @@ expr_stmt|;
 name|didswap
 operator|++
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 goto|goto
 name|retry
 goto|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -1878,6 +1983,12 @@ name|allproc_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we swapped something out, and another process needed memory, 	 * then wakeup the sched process. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|didswap

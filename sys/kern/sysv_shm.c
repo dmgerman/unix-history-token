@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mman.h>
 end_include
 
@@ -1750,6 +1756,12 @@ name|shmseg
 operator|->
 name|shm_internal
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|vm_object_reference
 argument_list|(
 name|shm_handle
@@ -1803,6 +1815,12 @@ operator|!=
 name|KERN_SUCCESS
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
@@ -1823,6 +1841,12 @@ operator|+
 name|size
 argument_list|,
 name|VM_INHERIT_SHARE
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|shmmap_s
@@ -2974,6 +2998,12 @@ name|shm_perm
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We make sure that we have allocated a pager before we need 	 * to. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|shm_use_phys
@@ -3033,6 +3063,12 @@ operator|->
 name|shm_object
 argument_list|,
 name|OBJ_NOSPLIT
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|shmseg

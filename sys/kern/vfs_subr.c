@@ -3322,6 +3322,14 @@ decl_stmt|;
 name|vm_object_t
 name|object
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -3756,6 +3764,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|vm_object_page_remove
 argument_list|(
 name|object
@@ -3773,6 +3787,12 @@ condition|?
 name|TRUE
 else|:
 name|FALSE
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -5143,7 +5163,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Associate a p-buffer with a vnode.  *  * Also sets B_PAGING flag to indicate that vnode is not fully associated  * with the buffer.  i.e. the bp has not been linked into the vnode or  * ref-counted.  */
+comment|/*  * Associate a p-buffer with a vnode.  *  * Also sets B_PAGING flag to indicate that vnode is not fully associated  * with the buffer.  i.e. the bp has not been linked into the vnode or  * ref-counted.  *  * Doesn't block, only vnode seems to need a lock.  */
 end_comment
 
 begin_function
@@ -6814,6 +6834,14 @@ init|=
 name|curproc
 decl_stmt|;
 comment|/* XXX */
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|vp
@@ -10315,6 +10343,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|vm_object_page_clean
 argument_list|(
 name|obj
@@ -10330,6 +10364,12 @@ condition|?
 name|OBJPC_SYNC
 else|:
 name|OBJPC_NOSYNC
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|anyio
@@ -10403,6 +10443,14 @@ modifier|*
 name|cred
 decl_stmt|;
 block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|VOP_CREATEVOBJECT

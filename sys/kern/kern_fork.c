@@ -862,6 +862,14 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Close all file descriptors. 		 */
 if|if
 condition|(
@@ -2295,6 +2303,14 @@ argument_list|,
 name|p2
 argument_list|,
 name|flags
+argument_list|)
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 if|if

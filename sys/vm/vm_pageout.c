@@ -1621,7 +1621,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  *	vm_pageout_object_deactivate_pages  *  *	deactivate enough pages to satisfy the inactive target  *	requirements or if vm_page_proc_limit is set, then  *	deactivate all of the pages in the object and its  *	backing_objects.  *  *	The object and map must be locked.  */
+comment|/*  *	vm_pageout_object_deactivate_pages  *  *	deactivate enough pages to satisfy the inactive target  *	requirements or if vm_page_proc_limit is set, then  *	deactivate all of the pages in the object and its  *	backing_objects.  *  *	The object and map must be locked.  *  *	Requires the vm_mtx  */
 end_comment
 
 begin_function
@@ -1665,6 +1665,14 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|object
@@ -4941,7 +4949,7 @@ decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|Giant
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize some paging parameters. 	 */
@@ -5231,10 +5239,13 @@ name|pass
 operator|>
 literal|1
 condition|)
-name|tsleep
+name|msleep
 argument_list|(
 operator|&
 name|vm_pages_needed
+argument_list|,
+operator|&
+name|vm_mtx
 argument_list|,
 name|PVM
 argument_list|,
@@ -5266,10 +5277,13 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
-name|tsleep
+name|msleep
 argument_list|(
 operator|&
 name|vm_pages_needed
+argument_list|,
+operator|&
+name|vm_mtx
 argument_list|,
 name|PVM
 argument_list|,
@@ -5427,7 +5441,7 @@ decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|Giant
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 while|while
@@ -5435,10 +5449,13 @@ condition|(
 name|TRUE
 condition|)
 block|{
-name|tsleep
+name|msleep
 argument_list|(
 operator|&
 name|vm_daemon_needed
+argument_list|,
+operator|&
+name|vm_mtx
 argument_list|,
 name|PPAUSE
 argument_list|,
@@ -5457,12 +5474,26 @@ argument_list|(
 name|vm_pageout_req_swapout
 argument_list|)
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|vm_pageout_req_swapout
 operator|=
 literal|0
 expr_stmt|;
 block|}
 comment|/* 		 * scan the processes for exceeding their rlimits or if 		 * process is swapped out -- deactivate pages 		 */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|sx_slock
 argument_list|(
 operator|&
@@ -5580,6 +5611,12 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|size
 operator|=
 name|vmspace_resident_count
@@ -5613,11 +5650,23 @@ name|limit
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 block|}
 name|sx_sunlock
 argument_list|(
 operator|&
 name|allproc_lock
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 block|}

@@ -177,6 +177,25 @@ name|vm_object_t
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|vm_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef

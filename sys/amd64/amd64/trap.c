@@ -1228,12 +1228,6 @@ expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|i
 operator|=
 name|trap_pfault
@@ -1244,12 +1238,6 @@ argument_list|,
 name|TRUE
 argument_list|,
 name|eva
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 if|#
@@ -1602,12 +1590,6 @@ expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1619,12 +1601,6 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|eva
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3026,11 +3002,23 @@ literal|0
 operator|)
 return|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|trap_fatal
 argument_list|(
 name|frame
 argument_list|,
 name|eva
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -4149,7 +4137,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * Try to run the syscall without the MP lock if the syscall 	 * is MP safe.  We have to obtain the MP lock no matter what if  	 * we are ktracing 	 */
+comment|/* 	 * Try to run the syscall without the MP lock if the syscall 	 * is MP safe. 	 */
 if|if
 condition|(
 operator|(
@@ -4173,6 +4161,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|KTRACE
+comment|/* 	 * We have to obtain the MP lock no matter what if  	 * we are ktracing 	 */
 if|if
 condition|(
 name|KTRPOINT

@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ttycom.h>
 end_include
 
@@ -1159,6 +1165,12 @@ operator|/
 name|PAGE_SIZE
 expr_stmt|;
 comment|/* 	 * Create an object, I don't like the idea of paging to/from 	 * kernel_object. 	 * XXX -- minor change needed here for NetBSD/OpenBSD VM systems. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|object
 operator|=
 name|vm_object_allocate
@@ -1205,6 +1217,12 @@ argument_list|,
 name|VM_PROT_ALL
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -2427,6 +2445,12 @@ operator|+
 name|size
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|addr
 operator|=
 name|trunc_page
@@ -2516,6 +2540,12 @@ name|j
 index|]
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -2646,6 +2676,12 @@ operator|->
 name|pipe_map
 operator|.
 name|npages
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 comment|/*  * and update the uio data  */
@@ -2795,6 +2831,12 @@ name|PAGE_SIZE
 expr_stmt|;
 block|}
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2824,6 +2866,12 @@ name|i
 index|]
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -5276,6 +5324,12 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* 		 * free resources 		 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|pipe_free_kmem
 argument_list|(
 name|cpipe
@@ -5286,6 +5340,12 @@ argument_list|(
 name|pipe_zone
 argument_list|,
 name|cpipe
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 block|}

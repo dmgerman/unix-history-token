@@ -592,6 +592,14 @@ modifier|*
 name|vm
 decl_stmt|;
 block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vm
@@ -1099,7 +1107,7 @@ value|(map)->hint = (value);
 end_define
 
 begin_comment
-comment|/*  *	vm_map_lookup_entry:	[ internal use only ]  *  *	Finds the map entry containing (or  *	immediately preceding) the specified address  *	in the given map; the entry is returned  *	in the "entry" parameter.  The boolean  *	result indicates whether the address is  *	actually contained in the map.  */
+comment|/*  *	vm_map_lookup_entry:	[ internal use only ]  *  *	Finds the map entry containing (or  *	immediately preceding) the specified address  *	in the given map; the entry is returned  *	in the "entry" parameter.  The boolean  *	result indicates whether the address is  *	actually contained in the map.  *  *	Doesn't block.  */
 end_comment
 
 begin_function
@@ -1338,6 +1346,14 @@ decl_stmt|;
 name|vm_eflags_t
 name|protoeflags
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check that the start and end points are not bogus. 	 */
 if|if
 condition|(
@@ -5885,6 +5901,12 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|vn_lock
 argument_list|(
 name|object
@@ -5896,6 +5918,12 @@ operator||
 name|LK_RETRY
 argument_list|,
 name|curproc
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|flags
@@ -8103,7 +8131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Attempts to grow a vm stack entry.  Returns KERN_SUCCESS if the  * desired address is already mapped, or if we successfully grow  * the stack.  Also returns KERN_SUCCESS if addr is outside the  * stack range (this is strange, but preserves compatibility with  * the grow function in vm_machdep.c).  */
+comment|/* Attempts to grow a vm stack entry.  Returns KERN_SUCCESS if the  * desired address is already mapped, or if we successfully grow  * the stack.  Also returns KERN_SUCCESS if addr is outside the  * stack range (this is strange, but preserves compatibility with  * the grow function in vm_machdep.c).  *  * Will grab vm_mtx if needed  */
 end_comment
 
 begin_function
@@ -8157,6 +8185,35 @@ decl_stmt|;
 name|int
 name|is_procstack
 decl_stmt|;
+name|int
+name|hadvmlock
+decl_stmt|;
+name|hadvmlock
+operator|=
+name|mtx_owned
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hadvmlock
+condition|)
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
+define|#
+directive|define
+name|myreturn
+parameter_list|(
+name|rval
+parameter_list|)
+value|do { \ 	if (!hadvmlock) \ 		mtx_unlock(&vm_mtx); \ 	return (rval); \ } while (0)
 name|Retry
 label|:
 name|vm_map_lock_read
@@ -8183,11 +8240,11 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|myreturn
+argument_list|(
 name|KERN_SUCCESS
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -8210,11 +8267,11 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|myreturn
+argument_list|(
 name|KERN_SUCCESS
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -8273,11 +8330,11 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|myreturn
+argument_list|(
 name|KERN_SUCCESS
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Find the minimum grow amount */
 name|grow_amount
@@ -8307,11 +8364,11 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|myreturn
+argument_list|(
 name|KERN_NO_SPACE
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* If there is no longer enough space between the entries 	 * nogo, and adjust the available space.  Note: this  	 * should only happen if the user has mapped into the 	 * stack area after the stack was created, and is 	 * probably an error. 	 * 	 * This also effectively destroys any guard page the user 	 * might have intended by limiting the stack size. 	 */
 if|if
@@ -8350,11 +8407,11 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|myreturn
+argument_list|(
 name|KERN_NO_SPACE
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|is_procstack
 operator|=
@@ -8398,11 +8455,11 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|myreturn
+argument_list|(
 name|KERN_NO_SPACE
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Round up the grow amount modulo SGROWSIZ */
 name|grow_amount
@@ -8638,11 +8695,14 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|myreturn
+argument_list|(
 name|rv
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
+undef|#
+directive|undef
+name|myreturn
 block|}
 end_function
 
@@ -8839,7 +8899,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_map_lookup:  *  *	Finds the VM object, offset, and  *	protection for a given virtual address in the  *	specified map, assuming a page fault of the  *	type specified.  *  *	Leaves the map in question locked for read; return  *	values are guaranteed until a vm_map_lookup_done  *	call is performed.  Note that the map argument  *	is in/out; the returned map must be used in  *	the call to vm_map_lookup_done.  *  *	A handle (out_entry) is returned for use in  *	vm_map_lookup_done, to make that fast.  *  *	If a lookup is requested with "write protection"  *	specified, the map may be changed to perform virtual  *	copying operations, although the data referenced will  *	remain the same.  */
+comment|/*  *	vm_map_lookup:  *  *	Finds the VM object, offset, and  *	protection for a given virtual address in the  *	specified map, assuming a page fault of the  *	type specified.  *  *	Leaves the map in question locked for read; return  *	values are guaranteed until a vm_map_lookup_done  *	call is performed.  Note that the map argument  *	is in/out; the returned map must be used in  *	the call to vm_map_lookup_done.  *  *	A handle (out_entry) is returned for use in  *	vm_map_lookup_done, to make that fast.  *  *	If a lookup is requested with "write protection"  *	specified, the map may be changed to perform virtual  *	copying operations, although the data referenced will  *	remain the same.  *  *	Can block locking maps and while calling vm_object_shadow().  *	Will drop/reaquire the vm_mtx.  */
 end_comment
 
 begin_function
@@ -10221,7 +10281,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Performs the copy_on_write operations necessary to allow the virtual copies  * into user space to work.  This has to be called for write(2) system calls  * from other processes, file unlinking, and file size shrinkage.  */
+comment|/*  * Performs the copy_on_write operations necessary to allow the virtual copies  * into user space to work.  This has to be called for write(2) system calls  * from other processes, file unlinking, and file size shrinkage.  *  * Requires that the vm_mtx is held  */
 end_comment
 
 begin_function
@@ -10252,6 +10312,14 @@ decl_stmt|;
 name|vm_pindex_t
 name|idx
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(

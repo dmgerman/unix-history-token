@@ -2332,6 +2332,12 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2353,6 +2359,12 @@ argument_list|,
 name|prot
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 block|}

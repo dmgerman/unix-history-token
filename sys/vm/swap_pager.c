@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sx.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/vmmeter.h>
 end_include
 
@@ -304,6 +298,17 @@ comment|/* maximum VOP I/O allowed		*/
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|int
+name|sw_alloc_interlock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* swap pager allocation interlock	*/
+end_comment
+
+begin_decl_stmt
 name|struct
 name|blist
 modifier|*
@@ -422,18 +427,6 @@ parameter_list|)
 define|\
 value|(&swap_pager_object_list[((int)(intptr_t)handle>> 4)& (NOBJLISTS-1)])
 end_define
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|sx
-name|sw_alloc_sx
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* prevent concurrant creation */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -888,6 +881,14 @@ name|void
 name|swp_sizecheck
 parameter_list|()
 block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vm_swap_size
@@ -973,14 +974,6 @@ name|TAILQ_INIT
 argument_list|(
 operator|&
 name|swap_pager_un_object_list
-argument_list|)
-expr_stmt|;
-name|sx_init
-argument_list|(
-operator|&
-name|sw_alloc_sx
-argument_list|,
-literal|"swap_pager create"
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -1234,12 +1227,32 @@ name|handle
 condition|)
 block|{
 comment|/* 		 * Reference existing named region or allocate new one.  There 		 * should not be a race here against swp_pager_meta_build() 		 * as called from vm_page_remove() in regards to the lookup 		 * of the handle. 		 */
-name|sx_xlock
+while|while
+condition|(
+name|sw_alloc_interlock
+condition|)
+block|{
+name|sw_alloc_interlock
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|msleep
 argument_list|(
 operator|&
-name|sw_alloc_sx
+name|sw_alloc_interlock
+argument_list|,
+operator|&
+name|vm_mtx
+argument_list|,
+name|PVM
+argument_list|,
+literal|"swpalc"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|object
 operator|=
 name|vm_pager_object_lookup
@@ -1299,11 +1312,21 @@ name|SWAPBLK_NONE
 argument_list|)
 expr_stmt|;
 block|}
-name|sx_xunlock
+if|if
+condition|(
+name|sw_alloc_interlock
+operator|<
+literal|0
+condition|)
+name|wakeup
 argument_list|(
 operator|&
-name|sw_alloc_sx
+name|sw_alloc_interlock
 argument_list|)
+expr_stmt|;
+name|sw_alloc_interlock
+operator|=
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -1441,7 +1464,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * SWP_PAGER_GETSWAPSPACE() -	allocate raw swap space  *  *	Allocate swap for the requested number of pages.  The starting  *	swap block number (a page index) is returned or SWAPBLK_NONE  *	if the allocation failed.  *  *	Also has the side effect of advising that somebody made a mistake  *	when they configured swap and didn't configure enough.  *  *	Must be called at splvm() to avoid races with bitmap frees from  *	vm_page_remove() aka swap_pager_page_removed().  *  *	This routine may not block  *	This routine must be called at splvm().  */
+comment|/*  * SWP_PAGER_GETSWAPSPACE() -	allocate raw swap space  *  *	Allocate swap for the requested number of pages.  The starting  *	swap block number (a page index) is returned or SWAPBLK_NONE  *	if the allocation failed.  *  *	Also has the side effect of advising that somebody made a mistake  *	when they configured swap and didn't configure enough.  *  *	Must be called at splvm() to avoid races with bitmap frees from  *	vm_page_remove() aka swap_pager_page_removed().  *  *	This routine may not block  *	This routine must be called at splvm().  *	vm_mtx should be held  */
 end_comment
 
 begin_function
@@ -1459,6 +1482,14 @@ block|{
 name|daddr_t
 name|blk
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1529,7 +1560,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_FREESWAPSPACE() -	free raw swap space   *  *	This routine returns the specified swap blocks back to the bitmap.  *  *	Note:  This routine may not block (it could in the old swap code),  *	and through the use of the new blist routines it does not block.  *  *	We must be called at splvm() to avoid races with bitmap frees from  *	vm_page_remove() aka swap_pager_page_removed().  *  *	This routine may not block  *	This routine must be called at splvm().  */
+comment|/*  * SWP_PAGER_FREESWAPSPACE() -	free raw swap space   *  *	This routine returns the specified swap blocks back to the bitmap.  *  *	Note:  This routine may not block (it could in the old swap code),  *	and through the use of the new blist routines it does not block.  *  *	We must be called at splvm() to avoid races with bitmap frees from  *	vm_page_remove() aka swap_pager_page_removed().  *  *	This routine may not block  *	This routine must be called at splvm().  *	vm_mtx should be held  */
 end_comment
 
 begin_function
@@ -1549,6 +1580,14 @@ name|int
 name|npages
 decl_stmt|;
 block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|blist_free
 argument_list|(
 name|swapblist
@@ -1611,6 +1650,14 @@ init|=
 name|splvm
 argument_list|()
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|swp_pager_meta_free
 argument_list|(
 name|object
@@ -1819,6 +1866,14 @@ name|s
 operator|=
 name|splvm
 argument_list|()
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If destroysource is set, we remove the source object from the  	 * swap_pager internal queue now.  	 */
 if|if
@@ -2403,6 +2458,12 @@ name|BIO_DELETE
 condition|)
 block|{
 comment|/* 		 * FREE PAGE(s) - destroy underlying swap that is no longer 		 *		  needed. 		 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|swp_pager_meta_free
 argument_list|(
 name|object
@@ -2410,6 +2471,12 @@ argument_list|,
 name|start
 argument_list|,
 name|count
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2431,6 +2498,12 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Execute read or write 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|count
@@ -2646,6 +2719,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|nbp
 operator|=
 name|getchainbuf
@@ -2655,6 +2734,12 @@ argument_list|,
 name|swapdev_vp
 argument_list|,
 name|B_ASYNC
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|nbp
@@ -2765,6 +2850,12 @@ argument_list|)
 expr_stmt|;
 comment|/* nbp = NULL; */
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Wait for completion. 	 */
 name|waitchainbuf
 argument_list|(
@@ -3574,6 +3665,12 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3612,6 +3709,12 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|pbuf_mtx
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|splx
@@ -4016,6 +4119,18 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 		 * asynchronous 		 * 		 * NOTE: b_blkno is destroyed by the call to VOP_STRATEGY 		 */
 if|if
 condition|(
@@ -4040,6 +4155,18 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -4062,6 +4189,7 @@ index|]
 operator|=
 name|VM_PAGER_PEND
 expr_stmt|;
+comment|/* restart outter loop */
 continue|continue;
 block|}
 comment|/* 		 * synchronous 		 * 		 * NOTE: b_blkno is destroyed by the call to VOP_STRATEGY 		 */
@@ -4130,6 +4258,18 @@ operator|=
 name|VM_PAGER_PEND
 expr_stmt|;
 comment|/* 		 * Now that we are through with the bp, we can call the 		 * normal async completion, which frees everything up. 		 */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|swp_pager_async_iodone
 argument_list|(
 name|bp
@@ -4680,7 +4820,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/*  * SWP_PAGER_META_BUILD() -	add swap block to swap meta data for object  *  *	We first convert the object to a swap object if it is a default  *	object.  *  *	The specified swapblk is added to the object's swap metadata.  If  *	the swapblk is not valid, it is freed instead.  Any previously  *	assigned swapblk is freed.  *  *	This routine must be called at splvm(), except when used to convert  *	an OBJT_DEFAULT object into an OBJT_SWAP object.   */
+comment|/*  * SWP_PAGER_META_BUILD() -	add swap block to swap meta data for object  *  *	We first convert the object to a swap object if it is a default  *	object.  *  *	The specified swapblk is added to the object's swap metadata.  If  *	the swapblk is not valid, it is freed instead.  Any previously  *	assigned swapblk is freed.  *  *	This routine must be called at splvm(), except when used to convert  *	an OBJT_DEFAULT object into an OBJT_SWAP object.  *  *	Requires vm_mtx.  */
 end_comment
 
 begin_function
@@ -4709,6 +4849,14 @@ modifier|*
 modifier|*
 name|pswap
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Convert default object to swap object if necessary 	 */
 if|if
 condition|(
@@ -4961,7 +5109,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_META_FREE() - free a range of blocks in the object's swap metadata  *  *	The requested range of blocks is freed, with any associated swap   *	returned to the swap bitmap.  *  *	This routine will free swap metadata structures as they are cleaned   *	out.  This routine does *NOT* operate on swap metadata associated  *	with resident pages.  *  *	This routine must be called at splvm()  */
+comment|/*  * SWP_PAGER_META_FREE() - free a range of blocks in the object's swap metadata  *  *	The requested range of blocks is freed, with any associated swap   *	returned to the swap bitmap.  *  *	This routine will free swap metadata structures as they are cleaned   *	out.  This routine does *NOT* operate on swap metadata associated  *	with resident pages.  *  * 	mv_mtx must be held  *	This routine must be called at splvm()  */
 end_comment
 
 begin_function
@@ -4979,6 +5127,14 @@ name|daddr_t
 name|count
 parameter_list|)
 block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|object
@@ -5133,7 +5289,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_META_FREE_ALL() - destroy all swap metadata associated with object  *  *	This routine locates and destroys all swap metadata associated with  *	an object.  *  *	This routine must be called at splvm()  */
+comment|/*  * SWP_PAGER_META_FREE_ALL() - destroy all swap metadata associated with object  *  *	This routine locates and destroys all swap metadata associated with  *	an object.  *  *	This routine must be called at splvm()  *	Requires vm_mtx.  */
 end_comment
 
 begin_function
@@ -5150,6 +5306,14 @@ name|index
 init|=
 literal|0
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|object
@@ -5307,7 +5471,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_METACTL() -  misc control of swap and vm_page_t meta data.  *  *	This routine is capable of looking up, popping, or freeing  *	swapblk assignments in the swap meta data or in the vm_page_t.  *	The routine typically returns the swapblk being looked-up, or popped,  *	or SWAPBLK_NONE if the block was freed, or SWAPBLK_NONE if the block  *	was invalid.  This routine will automatically free any invalid   *	meta-data swapblks.  *  *	It is not possible to store invalid swapblks in the swap meta data  *	(other then a literal 'SWAPBLK_NONE'), so we don't bother checking.  *  *	When acting on a busy resident page and paging is in progress, we   *	have to wait until paging is complete but otherwise can act on the   *	busy page.  *  *	This routine must be called at splvm().  *  *	SWM_FREE	remove and free swap block from metadata  *	SWM_POP		remove from meta data but do not free.. pop it out  */
+comment|/*  * SWP_PAGER_METACTL() -  misc control of swap and vm_page_t meta data.  *  *	This routine is capable of looking up, popping, or freeing  *	swapblk assignments in the swap meta data or in the vm_page_t.  *	The routine typically returns the swapblk being looked-up, or popped,  *	or SWAPBLK_NONE if the block was freed, or SWAPBLK_NONE if the block  *	was invalid.  This routine will automatically free any invalid   *	meta-data swapblks.  *  *	It is not possible to store invalid swapblks in the swap meta data  *	(other then a literal 'SWAPBLK_NONE'), so we don't bother checking.  *  *	When acting on a busy resident page and paging is in progress, we   *	have to wait until paging is complete but otherwise can act on the   *	busy page.  *  *	This routine must be called at splvm().  *	Requires vm_mtx.  *  *	SWM_FREE	remove and free swap block from metadata  *	SWM_POP		remove from meta data but do not free.. pop it out  */
 end_comment
 
 begin_function
@@ -5653,7 +5817,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	getchainbuf:  *  *	Obtain a physical buffer and chain it to its parent buffer.  When  *	I/O completes, the parent buffer will be B_SIGNAL'd.  Errors are  *	automatically propagated to the parent  */
+comment|/*  *	getchainbuf:  *  *	Obtain a physical buffer and chain it to its parent buffer.  When  *	I/O completes, the parent buffer will be B_SIGNAL'd.  Errors are  *	automatically propagated to the parent  *  *	vm_mtx can't be held  */
 end_comment
 
 begin_function
@@ -5680,16 +5844,28 @@ name|struct
 name|buf
 modifier|*
 name|nbp
-init|=
-name|getpbuf
-argument_list|(
-name|NULL
-argument_list|)
 decl_stmt|;
 name|u_int
 modifier|*
 name|count
-init|=
+decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
+name|nbp
+operator|=
+name|getpbuf
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|count
+operator|=
 operator|(
 name|u_int
 operator|*
@@ -5700,7 +5876,7 @@ name|bp
 operator|->
 name|bio_caller1
 operator|)
-decl_stmt|;
+expr_stmt|;
 name|nbp
 operator|->
 name|b_caller1
@@ -5814,6 +5990,18 @@ modifier|*
 name|nbp
 parameter_list|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nbp
@@ -5864,10 +6052,23 @@ name|nbp
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|waitchainbuf
 parameter_list|(
@@ -5889,7 +6090,23 @@ decl_stmt|;
 name|u_int
 modifier|*
 name|count
-init|=
+decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|count
+operator|=
 operator|(
 name|u_int
 operator|*
@@ -5900,7 +6117,7 @@ name|bp
 operator|->
 name|bio_caller1
 operator|)
-decl_stmt|;
+expr_stmt|;
 name|s
 operator|=
 name|splbio
@@ -5976,6 +6193,12 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s

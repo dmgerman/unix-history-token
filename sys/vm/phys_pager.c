@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sx.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -99,9 +93,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|sx
-name|phys_pager_sx
+name|int
+name|phys_pager_alloc_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -141,14 +134,6 @@ name|TAILQ_INIT
 argument_list|(
 operator|&
 name|phys_pager_object_list
-argument_list|)
-expr_stmt|;
-name|sx_init
-argument_list|(
-operator|&
-name|phys_pager_sx
-argument_list|,
-literal|"phys_pager create"
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -213,12 +198,32 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Lock to prevent object creation race condition. 		 */
-name|sx_xlock
+while|while
+condition|(
+name|phys_pager_alloc_lock
+condition|)
+block|{
+name|phys_pager_alloc_lock
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|msleep
 argument_list|(
 operator|&
-name|phys_pager_sx
+name|phys_pager_alloc_lock
+argument_list|,
+operator|&
+name|vm_mtx
+argument_list|,
+name|PVM
+argument_list|,
+literal|"swpalc"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * Look up pager, creating as necessary. 		 */
 name|object
 operator|=
@@ -314,11 +319,19 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-name|sx_xunlock
+if|if
+condition|(
+name|phys_pager_alloc_lock
+condition|)
+name|wakeup
 argument_list|(
 operator|&
-name|phys_pager_sx
+name|phys_pager_alloc_lock
 argument_list|)
+expr_stmt|;
+name|phys_pager_alloc_lock
+operator|=
+literal|0
 expr_stmt|;
 block|}
 else|else

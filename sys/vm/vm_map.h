@@ -429,6 +429,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  *	Macros:		vm_map_lock, etc.  *	Function:  *		Perform locking on the data portion of a map.  Note that  *		these macros mimic procedure calls returning void.  The  *		semicolon is supplied by the user of these macros, not  *		by the macros themselves.  The macros can safely be used  *		as unbraced elements in a higher level statement.  */
 end_comment
@@ -445,7 +451,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		lockmgr(&(map)->lock, LK_DRAIN|LK_INTERLOCK, \&(map)->ref_lock, curproc); \ 		(map)->timestamp++; \ 	} while(0)
+value|do { \ 		lockmgr(&(map)->lock, LK_DRAIN|LK_INTERLOCK, \&(map)->ref_lock, curproc); \ 		mtx_lock(&vm_mtx); \ 		(map)->timestamp++; \ 	} while(0)
 end_define
 
 begin_comment
@@ -505,7 +511,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		vm_map_printf("locking map LK_EXCLUSIVE: %p\n", map); \ 		if (lockmgr(&(map)->lock, LK_EXCLUSIVE, (void *)0, curproc) != 0) \ 			panic("vm_map_lock: failed to get lock"); \ 		(map)->timestamp++; \ 	} while(0)
+value|do { \ 		vm_map_printf("locking map LK_EXCLUSIVE: %p\n", map); \ 		mtx_assert(&vm_mtx, MA_OWNED); \ 		if (lockmgr(&(map)->lock, LK_EXCLUSIVE | LK_INTERLOCK, \&vm_mtx, curproc) != 0) \ 			panic("vm_map_lock: failed to get lock"); \ 		mtx_lock(&vm_mtx); \ 		(map)->timestamp++; \ 	} while(0)
 end_define
 
 begin_define
@@ -516,7 +522,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		vm_map_printf("locking map LK_RELEASE: %p\n", map); \ 		lockmgr(&(map)->lock, LK_RELEASE, (void *)0, curproc); \ 	} while (0)
+value|do { \ 		vm_map_printf("locking map LK_RELEASE: %p\n", map); \ 		lockmgr(&(map)->lock, LK_RELEASE, NULL, curproc); \ 	} while (0)
 end_define
 
 begin_define
@@ -527,7 +533,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		vm_map_printf("locking map LK_SHARED: %p\n", map); \ 		lockmgr(&(map)->lock, LK_SHARED, (void *)0, curproc); \ 	} while (0)
+value|do { \ 		vm_map_printf("locking map LK_SHARED: %p\n", map); \ 		mtx_assert(&vm_mtx, MA_OWNED); \ 		lockmgr(&(map)->lock, LK_SHARED | LK_INTERLOCK, \&vm_mtx, curproc); \ 		mtx_lock(&vm_mtx); \ 	} while (0)
 end_define
 
 begin_define
@@ -538,7 +544,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		vm_map_printf("locking map LK_RELEASE: %p\n", map); \ 		lockmgr(&(map)->lock, LK_RELEASE, (void *)0, curproc); \ 	} while (0)
+value|do { \ 		vm_map_printf("locking map LK_RELEASE: %p\n", map); \ 		lockmgr(&(map)->lock, LK_RELEASE, NULL, curproc); \ 	} while (0)
 end_define
 
 begin_function
@@ -576,14 +582,19 @@ operator|->
 name|lock
 argument_list|,
 name|LK_EXCLUPGRADE
+operator||
+name|LK_INTERLOCK
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|0
+operator|&
+name|vm_mtx
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -621,7 +632,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		vm_map_printf("locking map LK_DOWNGRADE: %p\n", map); \ 		lockmgr(&(map)->lock, LK_DOWNGRADE, (void *)0, curproc); \ 	} while (0)
+value|do { \ 		vm_map_printf("locking map LK_DOWNGRADE: %p\n", map); \ 		lockmgr(&(map)->lock, LK_DOWNGRADE, NULL, curproc); \ 	} while (0)
 end_define
 
 begin_define
@@ -679,6 +690,15 @@ name|map
 parameter_list|)
 value|((map)->pmap)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_expr_stmt
 specifier|static

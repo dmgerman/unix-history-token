@@ -3249,6 +3249,18 @@ name|v_vnodepgsin
 operator|+=
 name|pcount
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* Do the input. */
 name|BUF_STRATEGY
 argument_list|(
@@ -3287,6 +3299,18 @@ expr_stmt|;
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 if|if
