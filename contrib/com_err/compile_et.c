@@ -21,19 +21,17 @@ directive|include
 file|<getarg.h>
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: compile_et.c,v 1.12 1999/04/01 09:13:52 joda Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_include
-include|#
-directive|include
-file|<roken.h>
-end_include
+begin_endif
+unit|RCSID("$Id: compile_et.c,v 1.12 1999/04/01 09:13:52 joda Exp $");
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -774,12 +772,6 @@ end_function
 
 begin_decl_stmt
 name|int
-name|version_flag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|help_flag
 decl_stmt|;
 end_decl_stmt
@@ -791,17 +783,6 @@ name|args
 index|[]
 init|=
 block|{
-block|{
-literal|"version"
-block|,
-literal|0
-block|,
-name|arg_flag
-block|,
-operator|&
-name|version_flag
-block|}
-block|,
 block|{
 literal|"help"
 block|,
@@ -885,14 +866,6 @@ name|optind
 init|=
 literal|0
 decl_stmt|;
-name|set_progname
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|getarg
@@ -923,22 +896,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|version_flag
-condition|)
-block|{
-name|print_version
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|optind
