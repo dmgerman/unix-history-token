@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timed.c	2.18 (Berkeley) %G%"
+literal|"@(#)timed.c	2.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1128,9 +1128,6 @@ name|ntp
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RTM_ADD
 define|#
 directive|define
 name|max
@@ -1147,17 +1144,6 @@ parameter_list|(
 name|p
 parameter_list|)
 value|max((p).sa_len, sizeof(p))
-else|#
-directive|else
-define|#
-directive|define
-name|size
-parameter_list|(
-name|p
-parameter_list|)
-value|(sizeof (p))
-endif|#
-directive|endif
 name|cplim
 operator|=
 name|buf
