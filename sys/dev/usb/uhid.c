@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhid.c,v 1.40 2000/10/10 12:37:01 augustss Exp $	*/
+comment|/*	$NetBSD: uhid.c,v 1.43 2001/08/15 00:06:49 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -208,6 +208,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb/usbdevs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usbdi.h>
 end_include
 
@@ -221,6 +227,16 @@ begin_include
 include|#
 directive|include
 file|<dev/usb/hid.h>
+end_include
+
+begin_comment
+comment|/* Report descriptor for broken Wacom Graphire */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/ugraphire_rdesc.h>
 end_include
 
 begin_ifdef
@@ -713,6 +729,19 @@ operator|(
 name|UMATCH_NONE
 operator|)
 return|;
+if|if
+condition|(
+name|uaa
+operator|->
+name|matchlvl
+condition|)
+return|return
+operator|(
+name|uaa
+operator|->
+name|matchlvl
+operator|)
+return|;
 return|return
 operator|(
 name|UMATCH_IFACECLASS_GENERIC
@@ -969,6 +998,69 @@ name|ed
 operator|->
 name|bEndpointAddress
 expr_stmt|;
+if|if
+condition|(
+name|uaa
+operator|->
+name|vendor
+operator|==
+name|USB_VENDOR_WACOM
+operator|&&
+name|uaa
+operator|->
+name|product
+operator|==
+name|USB_PRODUCT_WACOM_GRAPHIRE
+comment|/*&& 	    uaa->revision == 0x???? */
+condition|)
+block|{
+comment|/* XXX should use revision */
+comment|/* The report descriptor for the Wacom Graphire is broken. */
+name|size
+operator|=
+sizeof|sizeof
+name|uhid_graphire_report_descr
+expr_stmt|;
+name|desc
+operator|=
+name|malloc
+argument_list|(
+name|size
+argument_list|,
+name|M_USBDEV
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|desc
+operator|==
+name|NULL
+condition|)
+name|err
+operator|=
+name|USBD_NOMEM
+expr_stmt|;
+else|else
+block|{
+name|err
+operator|=
+name|USBD_NORMAL_COMPLETION
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|desc
+argument_list|,
+name|uhid_graphire_report_descr
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 name|desc
 operator|=
 name|NULL
@@ -990,6 +1082,7 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|err
