@@ -726,6 +726,7 @@ name|dcol
 operator|=
 literal|0
 expr_stmt|;
+continue|continue;
 block|}
 elseif|else
 if|if
