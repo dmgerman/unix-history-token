@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.60 1996/01/18 19:59:23 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.61 1996/01/23 21:47:12 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -119,13 +119,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SCSI_NCR_MAX_TAGS
+name|SCSI_NCR_DFLT_TAGS
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SCSI_NCR_MAX_TAGS
+name|SCSI_NCR_DFLT_TAGS
 value|(4)
 end_define
 
@@ -135,7 +135,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SCSI_NCR_MAX_TAGS */
+comment|/* SCSI_NCR_DFLT_TAGS */
 end_comment
 
 begin_comment
@@ -172,7 +172,7 @@ begin_define
 define|#
 directive|define
 name|MAX_START
-value|(MAX_TARGET + 7 * SCSI_NCR_MAX_TAGS)
+value|(MAX_TARGET + 7 * SCSI_NCR_DFLT_TAGS)
 end_define
 
 begin_comment
@@ -3123,7 +3123,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.60 1996/01/18 19:59:23 se Exp $\n"
+literal|"\n$Id: ncr.c,v 1.61 1996/01/23 21:47:12 se Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -11074,7 +11074,6 @@ operator|->
 name|sval
 expr_stmt|;
 comment|/* 	**	message 	*/
-comment|/*	cp->phys.smsg.addr		= cp->p_scsi_smsg;*/
 name|cp
 operator|->
 name|phys
@@ -11100,7 +11099,6 @@ name|size
 operator|=
 name|msglen
 expr_stmt|;
-comment|/*	cp->phys.smsg2.addr		= cp->p_scsi_smsg2;*/
 name|cp
 operator|->
 name|phys
@@ -11153,7 +11151,6 @@ operator|->
 name|cmdlen
 expr_stmt|;
 comment|/* 	**	sense command 	*/
-comment|/*	cp->phys.scmd.addr		= cp->p_sensecmd;*/
 name|cp
 operator|->
 name|phys
@@ -13933,6 +13930,22 @@ index|]
 operator|&
 name|INQ7_QUEUE
 operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|tp
+operator|->
+name|usrtags
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tp
+operator|->
+name|usrtags
 operator|&&
 operator|(
 operator|(
@@ -13948,10 +13961,6 @@ operator|)
 operator|==
 literal|0x00
 operator|)
-operator|&&
-name|tp
-operator|->
-name|usrtags
 condition|)
 block|{
 name|reqtags
@@ -16506,7 +16515,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: SCSI phase error fixup: CCB address mismatch (0x%08lx != 0x%08lx)\n"
+literal|"%s: SCSI phase error fixup: CCB address mismatch (0x%08lx != 0x%08lx) np.ccb = 0x%08lx\n"
 argument_list|,
 name|ncr_name
 argument_list|(
@@ -16526,9 +16535,14 @@ operator|->
 name|header
 operator|.
 name|cp
+argument_list|,
+operator|&
+name|np
+operator|->
+name|ccb
 argument_list|)
 expr_stmt|;
-return|return;
+comment|/*	    return;*/
 block|}
 comment|/* 	**	find the interrupted script command, 	**	and the address at which to continue. 	*/
 if|if
@@ -18193,7 +18207,7 @@ name|ncr_show_msg
 argument_list|(
 name|np
 operator|->
-name|msgin
+name|msgout
 argument_list|)
 expr_stmt|;
 name|printf
@@ -18532,7 +18546,7 @@ name|ncr_show_msg
 argument_list|(
 name|np
 operator|->
-name|msgin
+name|msgout
 argument_list|)
 expr_stmt|;
 name|printf
@@ -19340,7 +19354,7 @@ name|ncr_setmaxtags
 argument_list|(
 name|tp
 argument_list|,
-name|SCSI_NCR_MAX_TAGS
+name|SCSI_NCR_DFLT_TAGS
 argument_list|)
 expr_stmt|;
 block|}
