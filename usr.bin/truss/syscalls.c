@@ -249,7 +249,7 @@ literal|0
 block|}
 block|,
 block|{
-name|Int
+name|Hex
 block|,
 literal|1
 block|}
@@ -277,7 +277,7 @@ literal|0
 block|}
 block|,
 block|{
-name|Int
+name|Hex
 block|,
 literal|1
 block|}
