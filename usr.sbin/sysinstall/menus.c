@@ -663,6 +663,9 @@ block|,
 name|installCustomCommit
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|WITH_SYSCONS
 block|{
 literal|" Console settings"
 block|,
@@ -678,6 +681,8 @@ operator|&
 name|MenuSyscons
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|" Configure"
 block|,
@@ -703,6 +708,9 @@ block|,
 name|dispatch_load_floppy
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|WITH_MICE
 block|{
 literal|" Device, Mouse"
 block|,
@@ -718,6 +726,8 @@ operator|&
 name|MenuMouse
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|" Disklabel"
 block|,
@@ -991,17 +1001,9 @@ block|,
 name|installFixitHoloShell
 block|}
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
+ifdef|#
+directive|ifdef
+name|WITH_SLICES
 block|{
 literal|" Fdisk"
 block|,
@@ -1320,6 +1322,9 @@ block|,
 name|configPackages
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|WITH_SLICES
 block|{
 literal|" Partition"
 block|,
@@ -1330,6 +1335,8 @@ block|,
 name|diskPartitionEditor
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|" PCNFSD"
 block|,
@@ -1387,6 +1394,9 @@ operator|&
 name|MenuSecurity
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|WITH_SYSCONS
 block|{
 literal|" Syscons"
 block|,
@@ -1502,6 +1512,9 @@ block|}
 block|,
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* WITH_SYSCONS */
 block|{
 literal|" Time Zone"
 block|,
@@ -1760,6 +1773,9 @@ operator|&
 name|MenuDocumentation
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|WITH_SYSCONS
 block|{
 literal|"Keymap"
 block|,
@@ -1775,6 +1791,8 @@ operator|&
 name|MenuSysconsKeymap
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"Options"
 block|,
@@ -2006,6 +2024,12 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_MICE
+end_ifdef
 
 begin_decl_stmt
 name|DMenu
@@ -2532,6 +2556,9 @@ block|}
 block|}
 block|, }
 block|;
+endif|#
+directive|endif
+comment|/* WITH_MICE */
 name|DMenu
 name|MenuMediaCDROM
 operator|=
@@ -8172,17 +8199,9 @@ block|,
 name|optionsEditor
 block|}
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
+ifndef|#
+directive|ifndef
+name|WITH_SLICES
 block|{
 literal|"3 Label"
 block|,
@@ -8563,17 +8582,9 @@ block|,
 literal|"passwd root"
 block|}
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
+ifdef|#
+directive|ifdef
+name|WITH_SLICES
 block|{
 literal|" Fdisk"
 block|,
@@ -8611,6 +8622,9 @@ operator|&
 name|MenuUsermgmt
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|WITH_SYSCONS
 block|{
 literal|" Console"
 block|,
@@ -8626,6 +8640,8 @@ operator|&
 name|MenuSyscons
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|" Time Zone"
 block|,
@@ -8655,6 +8671,9 @@ operator|&
 name|MenuMedia
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|WITH_MICE
 block|{
 literal|" Mouse"
 block|,
@@ -8672,6 +8691,8 @@ block|,
 name|NULL
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|" Networking"
 block|,
@@ -9075,6 +9096,9 @@ block|,
 literal|"lpd_enable=YES"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|WITH_LINUX
 block|{
 literal|" linux"
 block|,
@@ -9090,6 +9114,8 @@ name|VAR_LINUX_ENABLE
 literal|"=YES"
 block|}
 block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__i386__
@@ -9107,19 +9133,6 @@ block|,
 literal|"ibcs2_enable=YES"
 block|}
 block|,
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
 block|{
 literal|" SVR4"
 block|,
@@ -9146,11 +9159,12 @@ literal|"This host wants to be able to run DEC OSF/1 binaries."
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuToggleVariable
+name|configOSF1
 block|,
 name|NULL
 block|,
-literal|"osf1_enable=YES"
+name|VAR_OSF1_ENABLE
+literal|"=YES"
 block|}
 block|,
 endif|#
@@ -11574,6 +11588,12 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SYSCONS
+end_ifdef
+
 begin_decl_stmt
 name|DMenu
 name|MenuSyscons
@@ -13391,6 +13411,15 @@ end_endif
 
 begin_comment
 comment|/* PC98 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_SYSCONS */
 end_comment
 
 begin_decl_stmt
