@@ -334,7 +334,7 @@ name|NULL
 operator|)
 operator|&&
 operator|(
-name|curthread
+name|pthread
 operator|->
 name|kseg
 operator|==
