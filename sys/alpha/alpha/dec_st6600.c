@@ -250,7 +250,7 @@ name|platform
 operator|.
 name|family
 operator|=
-literal|"Compaq Professional Workstation (Monet)"
+literal|"ST6600"
 expr_stmt|;
 if|if
 condition|(
