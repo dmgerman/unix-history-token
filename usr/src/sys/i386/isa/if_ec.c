@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ec.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ec.c	7.4 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/* WARNING -- THIS DRIVER DOES NOT WORK YET -- It is merely a sketch */
 end_comment
 
 begin_include
@@ -220,7 +224,7 @@ begin_decl_stmt
 name|int
 name|ecdebug
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -554,7 +558,7 @@ name|caddr_t
 operator|)
 name|data
 argument_list|,
-literal|"*3com*"
+literal|"*3COM*"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -569,11 +573,20 @@ if|if
 condition|(
 name|ecdebug
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"ecprobe: ec%d not matched\n"
+literal|"ecprobe: ec%d not matched: %s\n"
+argument_list|,
+name|unit
+argument_list|,
+name|ether_sprintf
+argument_list|(
+name|data
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -651,7 +664,7 @@ name|reg
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ec%d: hardware address %s, rev info %4.4x%4.4x%4.4x\n"
+literal|"ec%d: hardware address %s, rev info %s\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -662,32 +675,10 @@ operator|->
 name|sc_addr
 argument_list|)
 argument_list|,
-literal|0
-index|[
-operator|(
-name|u_short
-operator|*
-operator|)
+name|ether_sprintf
+argument_list|(
 name|data
-index|]
-argument_list|,
-literal|1
-index|[
-operator|(
-name|u_short
-operator|*
-operator|)
-name|data
-index|]
-argument_list|,
-literal|2
-index|[
-operator|(
-name|u_short
-operator|*
-operator|)
-name|data
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -995,6 +986,17 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|ecdebug
+condition|)
+name|printf
+argument_list|(
+literal|"ec%dreset\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 name|ec_meminit
 argument_list|(
 name|ec
@@ -1014,6 +1016,14 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
+name|hmem
+operator|->
+name|iscp
+operator|.
+name|busy
+operator|=
+literal|1
+expr_stmt|;
 name|ECWR
 argument_list|(
 name|p
@@ -1027,14 +1037,6 @@ name|DELAY
 argument_list|(
 literal|10
 argument_list|)
-expr_stmt|;
-name|hmem
-operator|->
-name|iscp
-operator|.
-name|busy
-operator|=
-literal|1
 expr_stmt|;
 for|for
 control|(
@@ -1120,32 +1122,30 @@ name|timo
 operator|==
 literal|0
 operator|||
+operator|(
 name|hmem
 operator|->
 name|scb
 operator|.
 name|status
-operator|==
+operator|&
+name|CU_STATE
+operator|)
+operator|!=
 name|CUS_IDLE
 condition|)
 block|{
 name|printf
 argument_list|(
 literal|"ec(%d)reset: setup failed\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
-name|hmem
-operator|->
-name|scb
-operator|.
-name|command
-operator|=
-name|RU_START
-expr_stmt|;
 name|ECWR
 argument_list|(
 name|p
@@ -1170,6 +1170,24 @@ name|R_NORST
 operator||
 name|R_IEN
 argument_list|)
+expr_stmt|;
+name|hmem
+operator|->
+name|scb
+operator|.
+name|command
+operator|=
+name|RU_START
+operator||
+operator|(
+name|hmem
+operator|->
+name|scb
+operator|.
+name|status
+operator|&
+literal|0xf000
+operator|)
 expr_stmt|;
 name|ECWR
 argument_list|(
@@ -2417,6 +2435,18 @@ goto|;
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|ECC_intr
+decl_stmt|,
+name|ECC_rint
+decl_stmt|,
+name|ECC_xint
+decl_stmt|,
+name|ECC_unready
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|ecintr
 argument_list|(
@@ -2495,6 +2525,22 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
+name|ECC_intr
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|stat
+operator|&
+name|RU_STATE
+operator|)
+operator|!=
+name|RUS_READY
+condition|)
+name|ECC_unready
+operator|++
+expr_stmt|;
 name|UNLATCH_INT
 expr_stmt|;
 block|}
@@ -2538,6 +2584,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|ECC_rint
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|ec
@@ -2826,6 +2875,9 @@ operator|+
 name|bix
 decl_stmt|;
 comment|/* 	 * Out of sync with hardware, should never happen? 	 */
+name|ECC_xint
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|(
