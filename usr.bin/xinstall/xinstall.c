@@ -2414,6 +2414,10 @@ decl_stmt|;
 name|int
 name|done_compare
 decl_stmt|;
+name|rv
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|from_sb

@@ -1997,6 +1997,7 @@ name|keys
 operator|&
 name|F_UNAME
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -2034,6 +2035,7 @@ argument_list|,
 name|saveuid
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|keys
@@ -2059,6 +2061,7 @@ name|keys
 operator|&
 name|F_GNAME
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -2096,6 +2099,7 @@ argument_list|,
 name|savegid
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|keys

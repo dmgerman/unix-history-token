@@ -935,6 +935,7 @@ name|flags
 operator|&
 name|F_CKSUM
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1072,6 +1073,7 @@ name|tab
 operator|=
 literal|"\t"
 expr_stmt|;
+block|}
 block|}
 ifdef|#
 directive|ifdef
