@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.16 1994/10/06 09:41:03 rgrimes Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.17 1994/10/26 13:18:49 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -707,86 +707,6 @@ argument_list|,
 name|total
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we are booting from floppy prompt for a filesystem floppy 	 * before we call the kernel 	 */
-switch|switch
-condition|(
-name|maj
-condition|)
-block|{
-case|case
-literal|2
-case|:
-name|printf
-argument_list|(
-literal|"\n\nInsert file system floppy in drive A or B\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Press 'A', 'B' or any other key for the default "
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%c: "
-argument_list|,
-name|unit
-operator|+
-literal|'A'
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|getchar
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-literal|'0'
-operator|||
-name|i
-operator|==
-literal|'A'
-operator|||
-name|i
-operator|==
-literal|'a'
-condition|)
-name|unit
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-literal|'1'
-operator|||
-name|i
-operator|==
-literal|'B'
-operator|||
-name|i
-operator|==
-literal|'b'
-condition|)
-name|unit
-operator|=
-literal|1
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|4
-case|:
-break|break;
-block|}
 name|bootdev
 operator|=
 operator|(
@@ -938,7 +858,7 @@ name|namebuf
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Boot: [[[%s(%d,%c)]%s][-s][-a][-d]] :- "
+literal|"Boot: [[[%s(%d,%c)]%s][-s][-a][-c][-d][-f]] :- "
 argument_list|,
 name|devs
 index|[
