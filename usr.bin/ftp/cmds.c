@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: cmds.c,v 1.7 1997/06/25 08:56:34 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: cmds.c,v 1.7 1997/06/25 08:56:34 msmith Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1387,6 +1387,10 @@ operator|&&
 operator|!
 name|islower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|tp
 argument_list|)
@@ -1428,6 +1432,10 @@ if|if
 condition|(
 name|isupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|tp2
 argument_list|)
@@ -2198,6 +2206,10 @@ operator|&&
 operator|!
 name|islower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|tp
 argument_list|)
@@ -2242,6 +2254,10 @@ if|if
 condition|(
 name|isupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|tp2
 argument_list|)
@@ -2751,6 +2767,10 @@ init|;
 operator|(
 name|ch
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|tp
 operator|++
@@ -8359,6 +8379,10 @@ literal|'$'
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|(
 name|cp2
@@ -8491,6 +8515,10 @@ literal|'$'
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|(
 name|cp2
@@ -8708,6 +8736,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|(
 name|cp2

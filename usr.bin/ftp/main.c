@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: main.c,v 1.13 1997/06/25 08:56:42 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.13 1997/06/25 08:56:42 msmith Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,6 +98,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_include
@@ -192,6 +198,16 @@ decl_stmt|;
 name|int
 name|dumbterm
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|sp
 operator|=
 name|getservbyname

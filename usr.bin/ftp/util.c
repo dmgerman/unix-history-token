@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: util.c,v 1.1 1997/06/25 08:56:46 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: util.c,v 1.1 1997/06/25 08:56:46 msmith Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1792,6 +1792,10 @@ switch|switch
 condition|(
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|line
 argument_list|)
