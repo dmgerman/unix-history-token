@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI tty.c,v 2.4 1996/04/08 22:03:27 prb Exp  *  * $Id: tty.c,v 1.4 1996/09/22 15:43:00 miff Exp $  */
+comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI tty.c,v 2.4 1996/04/08 22:03:27 prb Exp  *  * $Id: tty.c,v 1.1 1997/08/09 01:43:03 dyson Exp $  */
 end_comment
 
 begin_ifndef
@@ -3791,7 +3791,7 @@ block|}
 block|,
 comment|/* key 73 - page up */
 block|{
-literal|0x2d00
+literal|0x4a2d
 block|,
 literal|0x4a2d
 block|,
@@ -3835,7 +3835,7 @@ block|}
 block|,
 comment|/* key 77 - cursor right */
 block|{
-literal|0x2b00
+literal|0x4e2b
 block|,
 literal|0x4e2b
 block|,
@@ -7129,6 +7129,9 @@ break|break;
 case|case
 name|XK_Insert
 case|:
+case|case
+name|XK_KP_Insert
+case|:
 name|K1_STATUS
 operator|^=
 name|K1_INSERT
@@ -7238,6 +7241,9 @@ expr_stmt|;
 case|case
 name|XK_Home
 case|:
+case|case
+name|XK_KP_Home
+case|:
 name|scan
 operator|=
 literal|71
@@ -7255,6 +7261,9 @@ expr_stmt|;
 case|case
 name|XK_Up
 case|:
+case|case
+name|XK_KP_Up
+case|:
 name|scan
 operator|=
 literal|72
@@ -7271,6 +7280,9 @@ literal|1
 expr_stmt|;
 case|case
 name|XK_Prior
+case|:
+case|case
+name|XK_KP_Prior
 case|:
 name|scan
 operator|=
@@ -7299,6 +7311,9 @@ expr_stmt|;
 case|case
 name|XK_Left
 case|:
+case|case
+name|XK_KP_Left
+case|:
 name|scan
 operator|=
 literal|75
@@ -7316,6 +7331,9 @@ expr_stmt|;
 case|case
 name|XK_Begin
 case|:
+case|case
+name|XK_KP_Begin
+case|:
 name|scan
 operator|=
 literal|76
@@ -7332,6 +7350,9 @@ literal|1
 expr_stmt|;
 case|case
 name|XK_Right
+case|:
+case|case
+name|XK_KP_Right
 case|:
 name|scan
 operator|=
@@ -7360,6 +7381,9 @@ expr_stmt|;
 case|case
 name|XK_End
 case|:
+case|case
+name|XK_KP_End
+case|:
 name|scan
 operator|=
 literal|79
@@ -7377,6 +7401,9 @@ expr_stmt|;
 case|case
 name|XK_Down
 case|:
+case|case
+name|XK_KP_Down
+case|:
 name|scan
 operator|=
 literal|80
@@ -7393,6 +7420,9 @@ literal|1
 expr_stmt|;
 case|case
 name|XK_Next
+case|:
+case|case
+name|XK_KP_Next
 case|:
 name|scan
 operator|=
@@ -7432,6 +7462,9 @@ name|docode
 goto|;
 case|case
 name|XK_Delete
+case|:
+case|case
+name|XK_KP_Delete
 case|:
 name|scan
 operator|=
