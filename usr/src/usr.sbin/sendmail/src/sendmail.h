@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.110		%G%"
+literal|"@(#)sendmail.h	3.111		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,6 +318,11 @@ name|short
 name|m_r_rwset
 decl_stmt|;
 comment|/* rewriting set for recipient addresses */
+name|char
+modifier|*
+name|m_eol
+decl_stmt|;
+comment|/* end of line string */
 block|}
 struct|;
 end_struct
@@ -541,17 +546,6 @@ end_define
 
 begin_comment
 comment|/* SMTP to another sendmail site */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_CRLF
-value|002000000L
-end_define
-
-begin_comment
-comment|/* use CRLF instead of NL as EOLine */
 end_comment
 
 begin_define
@@ -2409,20 +2403,6 @@ parameter_list|(
 name|s
 parameter_list|)
 value|{ if (ExitStat == EX_OK) ExitStat = s; }
-end_define
-
-begin_comment
-comment|/* line terminator appropriate for a given mailer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|crlf
-parameter_list|(
-name|m
-parameter_list|)
-value|(bitset(M_CRLF, (m)->m_flags) ? "\r\n" : "\n")
 end_define
 
 begin_comment

@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.150
+literal|3.151
 operator|%
 name|G
 operator|%
@@ -1607,7 +1607,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"mailer %d: %s %s %lo %d %d\n"
+literal|"mailer %d (%s): P=%s F=%lo S=%d R=%d E="
 argument_list|,
 name|i
 argument_list|,
@@ -1630,6 +1630,18 @@ argument_list|,
 name|m
 operator|->
 name|m_r_rwset
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
+name|m
+operator|->
+name|m_eol
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
