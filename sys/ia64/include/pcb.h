@@ -95,6 +95,10 @@ name|pcb_pr
 decl_stmt|;
 comment|/* predicates */
 name|u_int64_t
+name|pcb_pmap
+decl_stmt|;
+comment|/* current pmap */
+name|u_int64_t
 name|pcb_onfault
 decl_stmt|;
 comment|/* for copy faults */
