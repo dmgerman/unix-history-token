@@ -1630,7 +1630,7 @@ if|if
 condition|(
 operator|(
 name|packetAliasMode
-operator|&&
+operator|&
 name|PKT_ALIAS_USE_SOCKETS
 operator|)
 operator|&&
