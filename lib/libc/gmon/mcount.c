@@ -51,6 +51,23 @@ directive|include
 file|<sys/gmon.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<i386/include/cpufunc.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * mcount is called on entry to each function compiled with the profiling  * switch set.  _mcount(), which is declared in a machine-dependent way  * with _MCOUNT_DECL, does the actual work and is either inlined into a  * C routine or called by an assembly stub.  In any case, this magic is  * taken care of by the MCOUNT definition in<machine/profile.h>.  *  * _mcount updates data structures that represent traversals of the  * program's call graph edges.  frompc and selfpc are the return  * address and function address that represents the given call graph edge.  *   * Note: the original BSD code used the same variable (frompcindex) for  * both frompcindex and frompc.  Any reasonable, modern compiler will  * perform this optimization.  */
 end_comment
@@ -103,6 +120,9 @@ name|KERNEL
 specifier|register
 name|int
 name|s
+decl_stmt|;
+name|u_long
+name|save_eflags
 decl_stmt|;
 endif|#
 directive|endif
