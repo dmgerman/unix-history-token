@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.c,v 1.56 2001/11/13 07:55:30 augustss Exp $	*/
+comment|/*	$NetBSD: usb.c,v 1.57 2001/11/20 13:48:04 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -882,6 +882,9 @@ decl_stmt|;
 name|int
 name|usbrev
 decl_stmt|;
+name|int
+name|speed
+decl_stmt|;
 name|struct
 name|usb_event
 name|ue
@@ -982,21 +985,41 @@ name|usbrev
 index|]
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|usbrev
-operator|!=
-name|USBREV_1_0
-operator|&&
-name|usbrev
-operator|!=
-name|USBREV_1_1
 condition|)
 block|{
+case|case
+name|USBREV_1_0
+case|:
+case|case
+name|USBREV_1_1
+case|:
+name|speed
+operator|=
+name|USB_SPEED_FULL
+expr_stmt|;
+break|break;
+case|case
+name|USBREV_2_0
+case|:
+name|speed
+operator|=
+name|USB_SPEED_HIGH
+expr_stmt|;
+break|break;
+default|default:
 name|printf
 argument_list|(
 literal|", not supported\n"
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_dying
+operator|=
+literal|1
 expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
 expr_stmt|;
@@ -1100,6 +1123,8 @@ name|sc_dying
 operator|=
 literal|1
 expr_stmt|;
+name|USB_ATTACH_ERROR_RETURN
+expr_stmt|;
 block|}
 else|#
 directive|else
@@ -1134,7 +1159,7 @@ name|sc_bus
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|speed
 argument_list|,
 literal|0
 argument_list|,

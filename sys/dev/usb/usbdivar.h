@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdivar.h,v 1.64 2001/11/10 16:54:56 augustss Exp $	*/
+comment|/*	$NetBSD: usbdivar.h,v 1.66 2001/11/20 13:48:04 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -247,6 +247,7 @@ name|usbd_device
 modifier|*
 name|device
 decl_stmt|;
+comment|/* Connected device */
 name|struct
 name|usbd_device
 modifier|*
@@ -479,6 +480,18 @@ modifier|*
 name|powersrc
 decl_stmt|;
 comment|/* upstream hub port, or 0 */
+name|struct
+name|usbd_device
+modifier|*
+name|myhub
+decl_stmt|;
+comment|/* upstream hub */
+name|struct
+name|usbd_device
+modifier|*
+name|myhighhub
+decl_stmt|;
+comment|/* closest high speed hub */
 name|struct
 name|usbd_endpoint
 name|def_ep

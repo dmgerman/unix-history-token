@@ -486,7 +486,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" address=%d config=%d depth=%d lowspeed=%d self_powered=%d power=%d langid=%d\n"
+literal|" address=%d config=%d depth=%d speed=%d self_powered=%d "
+literal|"power=%d langid=%d\n"
 argument_list|,
 name|dev
 operator|->
@@ -502,7 +503,7 @@ name|depth
 argument_list|,
 name|dev
 operator|->
-name|lowspeed
+name|speed
 argument_list|,
 name|dev
 operator|->

@@ -10889,7 +10889,7 @@ comment|/* class */
 name|UDSUBCLASS_HUB
 block|,
 comment|/* subclass */
-literal|0
+name|UDPROTO_FSHUB
 block|,
 comment|/* protocol */
 literal|64
@@ -10975,7 +10975,7 @@ name|UICLASS_HUB
 block|,
 name|UISUBCLASS_HUB
 block|,
-literal|0
+name|UIPROTO_FSHUB
 block|,
 literal|0
 block|}
