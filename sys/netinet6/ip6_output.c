@@ -2007,15 +2007,6 @@ name|ro_rt
 operator|==
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|ro
-operator|==
-operator|&
-name|ip6route
-condition|)
-comment|/* xxx kazu */
 name|rtalloc
 argument_list|(
 operator|(
@@ -2026,18 +2017,6 @@ operator|)
 name|ro
 argument_list|)
 expr_stmt|;
-else|else
-name|rtcalloc
-argument_list|(
-operator|(
-expr|struct
-name|route
-operator|*
-operator|)
-name|ro
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ro
@@ -2726,7 +2705,7 @@ name|sin6_addr
 operator|=
 name|finaldst
 expr_stmt|;
-name|rtcalloc
+name|rtalloc
 argument_list|(
 operator|(
 expr|struct

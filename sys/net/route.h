@@ -1367,24 +1367,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|rtcalloc
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|route
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* for INET6 */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|rtentry
 modifier|*

@@ -370,66 +370,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* for INET6 */
-end_comment
-
-begin_function
-name|void
-name|rtcalloc
-parameter_list|(
-name|ro
-parameter_list|)
-specifier|register
-name|struct
-name|route
-modifier|*
-name|ro
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|ro
-operator|->
-name|ro_rt
-operator|&&
-name|ro
-operator|->
-name|ro_rt
-operator|->
-name|rt_ifp
-operator|&&
-operator|(
-name|ro
-operator|->
-name|ro_rt
-operator|->
-name|rt_flags
-operator|&
-name|RTF_UP
-operator|)
-condition|)
-return|return;
-comment|/* XXX */
-name|ro
-operator|->
-name|ro_rt
-operator|=
-name|rtalloc1
-argument_list|(
-operator|&
-name|ro
-operator|->
-name|ro_dst
-argument_list|,
-name|RTF_CLONING
-argument_list|,
-literal|0UL
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Look up the route that matches the address given  * Or, at least try.. Create a cloned route if needed.  */
 end_comment
 

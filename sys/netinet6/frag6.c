@@ -567,7 +567,7 @@ operator|->
 name|ip6_dst
 expr_stmt|;
 block|}
-name|rtcalloc
+name|rtalloc
 argument_list|(
 operator|(
 expr|struct

@@ -2488,7 +2488,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|rtcalloc
+name|rtalloc
 argument_list|(
 operator|(
 expr|struct
