@@ -995,7 +995,7 @@ name|OID_AUTO
 argument_list|,
 name|witness_skipspin
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|witness_skipspin

@@ -874,7 +874,7 @@ name|OID_AUTO
 argument_list|,
 name|nmbclusters
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|nmbclusters
@@ -895,7 +895,7 @@ name|OID_AUTO
 argument_list|,
 name|nmbufs
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|nmbufs
@@ -916,7 +916,7 @@ name|OID_AUTO
 argument_list|,
 name|nmbcnt
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|nmbcnt
@@ -937,7 +937,7 @@ name|OID_AUTO
 argument_list|,
 name|nsfbufs
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|nsfbufs

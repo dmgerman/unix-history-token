@@ -916,7 +916,7 @@ name|OID_AUTO
 argument_list|,
 name|semmni
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|seminfo
@@ -939,7 +939,7 @@ name|OID_AUTO
 argument_list|,
 name|semmns
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|seminfo
@@ -962,7 +962,7 @@ name|OID_AUTO
 argument_list|,
 name|semmnu
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|seminfo
@@ -1008,7 +1008,7 @@ name|OID_AUTO
 argument_list|,
 name|semopm
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|seminfo
@@ -1031,7 +1031,7 @@ name|OID_AUTO
 argument_list|,
 name|semume
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|seminfo
@@ -1054,7 +1054,7 @@ name|OID_AUTO
 argument_list|,
 name|semusz
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|seminfo

@@ -187,7 +187,7 @@ name|OID_AUTO
 argument_list|,
 name|ignore_function_1
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pcic_ignore_function_1
@@ -235,7 +235,7 @@ name|OID_AUTO
 argument_list|,
 name|intr_path
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pcic_intr_path
@@ -276,7 +276,7 @@ name|OID_AUTO
 argument_list|,
 name|init_routing
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pcic_init_routing
@@ -317,7 +317,7 @@ name|OID_AUTO
 argument_list|,
 name|ignore_pci
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pcic_ignore_pci
@@ -361,7 +361,7 @@ name|OID_AUTO
 argument_list|,
 name|pd6729_intr_path
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pcic_pd6729_intr_path
@@ -402,7 +402,7 @@ name|OID_AUTO
 argument_list|,
 name|ti12xx_enable_pci_clock
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pcic_ti12xx_enable_pci_clock

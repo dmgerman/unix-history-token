@@ -311,7 +311,7 @@ name|OID_AUTO
 argument_list|,
 name|irq
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pcic_override_irq
@@ -351,7 +351,7 @@ name|OID_AUTO
 argument_list|,
 name|boot_deactivated
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pcic_boot_deactivated
@@ -395,7 +395,7 @@ name|OID_AUTO
 argument_list|,
 name|pd6722_vsense
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pcic_pd6722_vsense

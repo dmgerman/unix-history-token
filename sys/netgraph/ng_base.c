@@ -11254,7 +11254,7 @@ name|OID_AUTO
 argument_list|,
 name|maxalloc
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|maxalloc
@@ -11286,7 +11286,7 @@ name|OID_AUTO
 argument_list|,
 name|ngqfreemax
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|ngqfreemax

@@ -1214,6 +1214,8 @@ operator|(
 name|SS_ISCONNECTED
 operator||
 name|SS_ISCONNECTING
+operator||
+name|SS_ISDISCONNECTING
 operator|)
 condition|)
 block|{

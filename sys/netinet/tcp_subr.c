@@ -560,7 +560,7 @@ name|OID_AUTO
 argument_list|,
 name|tcbhashsize
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|tcp_tcbhashsize

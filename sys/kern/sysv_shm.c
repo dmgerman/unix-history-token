@@ -734,7 +734,7 @@ name|OID_AUTO
 argument_list|,
 name|shmmni
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|shminfo
@@ -757,7 +757,7 @@ name|OID_AUTO
 argument_list|,
 name|shmseg
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|shminfo

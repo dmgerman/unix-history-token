@@ -710,7 +710,7 @@ name|OID_AUTO
 argument_list|,
 name|bucketlimit
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|tcp_syncache
@@ -733,7 +733,7 @@ name|OID_AUTO
 argument_list|,
 name|cachelimit
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|tcp_syncache
@@ -779,7 +779,7 @@ name|OID_AUTO
 argument_list|,
 name|hashsize
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|tcp_syncache

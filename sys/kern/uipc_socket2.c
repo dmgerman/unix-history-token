@@ -4321,7 +4321,7 @@ name|OID_AUTO
 argument_list|,
 name|maxsockets
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|maxsockets

@@ -123,7 +123,7 @@ name|OID_AUTO
 argument_list|,
 name|smp_tsc
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|smp_tsc

@@ -210,7 +210,7 @@ name|OID_AUTO
 argument_list|,
 name|disabled
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|smp_disabled

@@ -461,7 +461,7 @@ name|KERN_MAXPROC
 argument_list|,
 name|maxproc
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|maxproc
@@ -503,7 +503,7 @@ name|OID_AUTO
 argument_list|,
 name|maxusers
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|maxusers

@@ -5202,7 +5202,7 @@ name|OID_AUTO
 argument_list|,
 name|msgmni
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|msginfo
@@ -5271,7 +5271,7 @@ name|OID_AUTO
 argument_list|,
 name|msgssz
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|msginfo
@@ -5294,7 +5294,7 @@ name|OID_AUTO
 argument_list|,
 name|msgseg
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|msginfo

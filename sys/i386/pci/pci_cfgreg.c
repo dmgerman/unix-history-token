@@ -453,7 +453,7 @@ name|OID_AUTO
 argument_list|,
 name|irq_override_mask
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pci_irq_override_mask

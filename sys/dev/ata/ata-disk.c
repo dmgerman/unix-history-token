@@ -284,7 +284,7 @@ name|OID_AUTO
 argument_list|,
 name|ata_dma
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|ata_dma
@@ -305,7 +305,7 @@ name|OID_AUTO
 argument_list|,
 name|wc
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|ata_wc

@@ -316,7 +316,7 @@ name|OID_AUTO
 argument_list|,
 name|iosize_max
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|aac_iosize_max

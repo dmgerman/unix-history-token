@@ -180,7 +180,7 @@ name|OID_AUTO
 argument_list|,
 name|disable_mtrrs
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|mtrrs_disabled
