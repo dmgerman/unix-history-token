@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.19 1996/08/23 06:21:17 jkh Exp $ */
+comment|/* $Id: main.c,v 1.20 1996/08/31 22:03:05 jkh Exp $ */
 end_comment
 
 begin_include
@@ -1434,10 +1434,6 @@ operator|&&
 name|size0
 operator|<
 name|size
-operator|&&
-name|modtime
-operator|==
-name|t
 condition|)
 name|seekloc
 operator|=
