@@ -1196,8 +1196,9 @@ name|pcb
 argument_list|)
 argument_list|,
 operator|(
+literal|"%s: too small an allocation for pcpu"
+operator|,
 name|__func__
-literal|": too small an allocation for pcpu"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2262,8 +2263,9 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
+literal|"%s: no I/O memory region"
+operator|,
 name|__func__
-literal|": no I/O memory region"
 operator|)
 argument_list|)
 expr_stmt|;
