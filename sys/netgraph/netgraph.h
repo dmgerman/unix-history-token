@@ -5322,6 +5322,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|ng_type
+modifier|*
+name|ng_findtype
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ng_make_node_common
 parameter_list|(
