@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mount_std.c,v 1.1 1996/05/13 17:43:16 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,6 +175,7 @@ name|vfsconf
 modifier|*
 name|vfc
 decl_stmt|;
+comment|/* 	 * XXX 	 * mount(8) calls the mount programs with an argv[0] which is 	 * /just/ the filesystem name.  So, if there is no underscore 	 * in argv[0], we assume that we are being called from mount(8) 	 * and that argv[0] is thus the name of the filesystem type. 	 */
 name|fsname
 operator|=
 name|strrchr
@@ -189,9 +190,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|fsname
-operator|||
+condition|)
+block|{
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|fsname
@@ -211,6 +214,17 @@ expr_stmt|;
 name|fsname
 operator|++
 expr_stmt|;
+block|}
+else|else
+block|{
+name|fsname
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+block|}
 name|mntflags
 operator|=
 literal|0
