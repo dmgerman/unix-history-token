@@ -206,6 +206,63 @@ begin_comment
 comment|/* process [group] */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+name|__GNUC__
+end_if
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__GNUC__
+operator|>
+literal|2
+operator|||
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|>
+literal|95
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_BSD_VA_LIST_
+value|__builtin_va_list
+end_define
+
+begin_comment
+comment|/* internally known to gcc */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+name|_BSD_VA_LIST_
+name|__gnuc_va_list
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* compatibility w/GNU headers*/
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -215,6 +272,15 @@ end_define
 
 begin_comment
 comment|/* va_list */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*__GNUC__*/
 end_comment
 
 begin_comment
