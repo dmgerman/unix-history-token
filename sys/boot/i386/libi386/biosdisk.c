@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: biosdisk.c,v 1.9 1998/10/02 16:32:45 msmith Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: biosdisk.c,v 1.10 1998/10/04 09:12:15 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -1242,51 +1242,45 @@ operator|.
 name|biosdisk
 operator|.
 name|slice
-operator|<=
-literal|0
-condition|)
-block|{
-comment|/* 	 * Search for the first FreeBSD slice; this also works on "unsliced" 	 * disks, as they contain a "historically bogus" MBR. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
 operator|<
-name|NDOSPART
-condition|;
-name|i
-operator|++
-operator|,
-name|dptr
-operator|++
-control|)
-if|if
-condition|(
-name|dptr
-operator|->
-name|dp_typ
-operator|==
-name|DOSPTYP_386BSD
+literal|1
 condition|)
 block|{
-name|sector
-operator|=
-name|dptr
-operator|->
-name|dp_start
-expr_stmt|;
-break|break;
-block|}
-comment|/* Did we find something? */
+comment|/* 	 * Looking for an unsliced disk, check for the historically 	 * bogus MBR. 	 */
 if|if
 condition|(
-name|sector
-operator|==
-operator|-
-literal|1
+operator|(
+name|dptr
+index|[
+literal|3
+index|]
+operator|.
+name|dp_typ
+operator|!=
+name|DOSPTYP_386BSD
+operator|)
+operator|||
+operator|(
+name|dptr
+index|[
+literal|3
+index|]
+operator|.
+name|dp_start
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
+name|dptr
+index|[
+literal|3
+index|]
+operator|.
+name|dp_size
+operator|!=
+literal|50000
+operator|)
 condition|)
 block|{
 name|error
@@ -1297,15 +1291,13 @@ goto|goto
 name|out
 goto|;
 block|}
+name|sector
+operator|=
+literal|0
+expr_stmt|;
 name|DEBUG
 argument_list|(
-literal|"found slice at %d, %d sectors"
-argument_list|,
-name|sector
-argument_list|,
-name|dptr
-operator|->
-name|dp_size
+literal|"disk is dedicated"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1314,7 +1306,6 @@ block|{
 comment|/* 	 * Accept the supplied slice number unequivocally (we may be looking 	 * for a DOS partition) if we can handle it. 	 */
 if|if
 condition|(
-operator|(
 name|dev
 operator|->
 name|d_kind
@@ -1324,19 +1315,6 @@ operator|.
 name|slice
 operator|>
 name|NDOSPART
-operator|)
-operator|||
-operator|(
-name|dev
-operator|->
-name|d_kind
-operator|.
-name|biosdisk
-operator|.
-name|slice
-operator|<
-literal|1
-operator|)
 condition|)
 block|{
 name|error
@@ -1392,7 +1370,7 @@ expr_stmt|;
 block|}
 name|unsliced
 label|:
-comment|/*       * Now we have the slice, look for the partition in the disklabel if we have      * a partition to start with.      *      * XXX we might want to check the label checksum.      */
+comment|/*       * Now we have the slice offset, look for the partition in the disklabel if we have      * a partition to start with.      *      * XXX we might want to check the label checksum.      */
 if|if
 condition|(
 name|dev
