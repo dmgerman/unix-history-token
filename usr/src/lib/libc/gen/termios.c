@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termios.c	5.4 (Berkeley) %G%"
+literal|"@(#)termios.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -270,8 +270,8 @@ parameter_list|(
 name|fd
 parameter_list|)
 block|{
-name|pid_t
-name|pgrp
+name|int
+name|s
 decl_stmt|;
 if|if
 condition|(
@@ -282,20 +282,26 @@ argument_list|,
 name|TIOCGPGRP
 argument_list|,
 operator|&
-name|pgrp
+name|s
 argument_list|)
 operator|<
 literal|0
 condition|)
 return|return
 operator|(
+operator|(
+name|pid_t
+operator|)
 operator|-
 literal|1
 operator|)
 return|;
 return|return
 operator|(
-name|pgrp
+operator|(
+name|pid_t
+operator|)
+name|s
 operator|)
 return|;
 block|}
