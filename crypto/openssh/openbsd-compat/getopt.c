@@ -79,20 +79,20 @@ end_include
 
 begin_decl_stmt
 name|int
-name|opterr
+name|BSDopterr
 init|=
 literal|1
 decl_stmt|,
 comment|/* if error message should be printed */
-name|optind
+name|BSDoptind
 init|=
 literal|1
 decl_stmt|,
 comment|/* index into parent argv vector */
-name|optopt
+name|BSDoptopt
 decl_stmt|,
 comment|/* character checked for validity */
-name|optreset
+name|BSDoptreset
 decl_stmt|;
 end_decl_stmt
 
@@ -103,7 +103,7 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|optarg
+name|BSDoptarg
 decl_stmt|;
 end_decl_stmt
 
@@ -181,7 +181,7 @@ decl_stmt|;
 comment|/* option letter list index */
 if|if
 condition|(
-name|optreset
+name|BSDoptreset
 operator|||
 operator|!
 operator|*
@@ -189,13 +189,13 @@ name|place
 condition|)
 block|{
 comment|/* update scanning pointer */
-name|optreset
+name|BSDoptreset
 operator|=
 literal|0
 expr_stmt|;
 if|if
 condition|(
-name|optind
+name|BSDoptind
 operator|>=
 name|nargc
 operator|||
@@ -205,7 +205,7 @@ name|place
 operator|=
 name|nargv
 index|[
-name|optind
+name|BSDoptind
 index|]
 operator|)
 operator|!=
@@ -239,7 +239,7 @@ condition|)
 block|{
 comment|/* found "--" */
 operator|++
-name|optind
+name|BSDoptind
 expr_stmt|;
 name|place
 operator|=
@@ -257,7 +257,7 @@ comment|/* option letter okay? */
 if|if
 condition|(
 operator|(
-name|optopt
+name|BSDoptopt
 operator|=
 operator|(
 name|int
@@ -280,7 +280,7 @@ name|strchr
 argument_list|(
 name|ostr
 argument_list|,
-name|optopt
+name|BSDoptopt
 argument_list|)
 operator|)
 condition|)
@@ -288,7 +288,7 @@ block|{
 comment|/* 		 * if the user didn't specify '-' as an option, 		 * assume it means -1. 		 */
 if|if
 condition|(
-name|optopt
+name|BSDoptopt
 operator|==
 operator|(
 name|int
@@ -308,11 +308,11 @@ operator|*
 name|place
 condition|)
 operator|++
-name|optind
+name|BSDoptind
 expr_stmt|;
 if|if
 condition|(
-name|opterr
+name|BSDopterr
 operator|&&
 operator|*
 name|ostr
@@ -330,7 +330,7 @@ literal|"%s: illegal option -- %c\n"
 argument_list|,
 name|__progname
 argument_list|,
-name|optopt
+name|BSDoptopt
 argument_list|)
 expr_stmt|;
 return|return
@@ -349,7 +349,7 @@ literal|':'
 condition|)
 block|{
 comment|/* don't need argument */
-name|optarg
+name|BSDoptarg
 operator|=
 name|NULL
 expr_stmt|;
@@ -360,7 +360,7 @@ operator|*
 name|place
 condition|)
 operator|++
-name|optind
+name|BSDoptind
 expr_stmt|;
 block|}
 else|else
@@ -372,7 +372,7 @@ operator|*
 name|place
 condition|)
 comment|/* no white space */
-name|optarg
+name|BSDoptarg
 operator|=
 name|place
 expr_stmt|;
@@ -382,7 +382,7 @@ condition|(
 name|nargc
 operator|<=
 operator|++
-name|optind
+name|BSDoptind
 condition|)
 block|{
 comment|/* no arg */
@@ -404,7 +404,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|opterr
+name|BSDopterr
 condition|)
 operator|(
 name|void
@@ -417,7 +417,7 @@ literal|"%s: option requires an argument -- %c\n"
 argument_list|,
 name|__progname
 argument_list|,
-name|optopt
+name|BSDoptopt
 argument_list|)
 expr_stmt|;
 return|return
@@ -428,11 +428,11 @@ return|;
 block|}
 else|else
 comment|/* white space */
-name|optarg
+name|BSDoptarg
 operator|=
 name|nargv
 index|[
-name|optind
+name|BSDoptind
 index|]
 expr_stmt|;
 name|place
@@ -440,12 +440,12 @@ operator|=
 name|EMSG
 expr_stmt|;
 operator|++
-name|optind
+name|BSDoptind
 expr_stmt|;
 block|}
 return|return
 operator|(
-name|optopt
+name|BSDoptopt
 operator|)
 return|;
 comment|/* dump back option letter */

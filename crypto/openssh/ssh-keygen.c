@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keygen.c,v 1.100 2002/06/19 00:27:55 deraadt Exp $"
+literal|"$OpenBSD: ssh-keygen.c,v 1.101 2002/06/23 09:39:55 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -770,7 +770,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Comment: \"%d-bit %s, converted from OpenSSH by %s@%s\"\n"
+literal|"Comment: \"%u-bit %s, converted from OpenSSH by %s@%s\"\n"
 argument_list|,
 name|key_size
 argument_list|(
@@ -2509,7 +2509,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d %s %s\n"
+literal|"%u %s %s\n"
 argument_list|,
 name|key_size
 argument_list|(
@@ -2874,7 +2874,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d %s %s\n"
+literal|"%u %s %s\n"
 argument_list|,
 name|key_size
 argument_list|(

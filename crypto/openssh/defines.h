@@ -12,7 +12,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.90 2002/06/07 03:19:36 mouring Exp $ */
+comment|/* $Id: defines.h,v 1.92 2002/06/24 16:26:49 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -1841,59 +1841,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PATH_RSH
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RSH_PATH
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_PATH_RSH
-value|RSH_PATH
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* RSH_PATH */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PATH_RSH
-value|"/usr/bin/rsh"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* RSH_PATH */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _PATH_RSH */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|_PATH_NOLOGIN
 end_ifndef
 
@@ -2366,6 +2313,42 @@ directive|ifndef
 name|HAVE_GETOPT_OPTRESET
 end_ifndef
 
+begin_undef
+undef|#
+directive|undef
+name|getopt
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|opterr
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|optind
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|optopt
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|optreset
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|optarg
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -2378,6 +2361,41 @@ parameter_list|,
 name|o
 parameter_list|)
 value|BSDgetopt(ac, av, o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|opterr
+value|BSDopterr
+end_define
+
+begin_define
+define|#
+directive|define
+name|optind
+value|BSDoptind
+end_define
+
+begin_define
+define|#
+directive|define
+name|optopt
+value|BSDoptopt
+end_define
+
+begin_define
+define|#
+directive|define
+name|optreset
+value|BSDoptreset
+end_define
+
+begin_define
+define|#
+directive|define
+name|optarg
+value|BSDoptarg
 end_define
 
 begin_endif

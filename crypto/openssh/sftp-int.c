@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-int.c,v 1.46 2002/03/30 18:51:15 markus Exp $"
+literal|"$OpenBSD: sftp-int.c,v 1.47 2002/06/23 09:30:14 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4356,7 +4356,7 @@ name|I_VERSION
 case|:
 name|printf
 argument_list|(
-literal|"SFTP protocol version %d\n"
+literal|"SFTP protocol version %u\n"
 argument_list|,
 name|sftp_proto_version
 argument_list|(

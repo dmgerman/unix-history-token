@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: msg.c,v 1.2 2002/06/19 00:27:55 deraadt Exp $"
+literal|"$OpenBSD: msg.c,v 1.3 2002/06/24 15:49:22 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -78,9 +78,15 @@ argument_list|)
 decl_stmt|;
 name|debug3
 argument_list|(
-literal|"msg_send: type %d"
+literal|"msg_send: type %u"
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|type
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 name|PUT_32BIT
@@ -219,8 +225,11 @@ literal|1
 return|;
 name|fatal
 argument_list|(
-literal|"msg_recv: read: header %d"
+literal|"msg_recv: read: header %ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|res
 argument_list|)
 expr_stmt|;

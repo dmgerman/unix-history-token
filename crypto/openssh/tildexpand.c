@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: tildexpand.c,v 1.12 2001/08/11 22:51:27 jakob Exp $"
+literal|"$OpenBSD: tildexpand.c,v 1.13 2002/06/23 03:25:50 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

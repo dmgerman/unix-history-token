@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: buffer.c,v 1.15 2002/01/18 18:14:17 stevesk Exp $"
+literal|"$OpenBSD: buffer.c,v 1.16 2002/06/26 08:54:18 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -211,6 +211,19 @@ name|void
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+literal|0x100000
+condition|)
+name|fatal
+argument_list|(
+literal|"buffer_append_space: len %u not supported"
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 comment|/* If the buffer is empty, start using it from the beginning. */
 if|if
 condition|(
@@ -335,6 +348,23 @@ operator|+=
 name|len
 operator|+
 literal|32768
+expr_stmt|;
+if|if
+condition|(
+name|buffer
+operator|->
+name|alloc
+operator|>
+literal|0xa00000
+condition|)
+name|fatal
+argument_list|(
+literal|"buffer_append_space: alloc %u not supported"
+argument_list|,
+name|buffer
+operator|->
+name|alloc
+argument_list|)
 expr_stmt|;
 name|buffer
 operator|->
