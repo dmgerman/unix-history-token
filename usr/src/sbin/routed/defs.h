@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.5	82/05/31	*/
+comment|/*	defs.h	4.6	82/06/05	*/
 end_comment
 
 begin_comment
@@ -330,7 +330,15 @@ name|af_portmatch
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* interprets address on receipt */
+comment|/* packet from some other router? */
+name|int
+function_decl|(
+modifier|*
+name|af_portcheck
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* packet from priviledged peer? */
 name|int
 function_decl|(
 modifier|*
@@ -346,7 +354,7 @@ name|af_canon
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* purges extraneous part of address */
+comment|/* canonicalize address for compares */
 block|}
 struct|;
 end_struct
