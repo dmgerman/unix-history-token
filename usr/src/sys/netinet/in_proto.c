@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_proto.c	5.3	82/11/03	*/
+comment|/*	in_proto.c	5.4	83/01/17	*/
 end_comment
 
 begin_include
@@ -184,6 +184,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Network disk protocol: runs on top of IP  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"nd.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NND
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|int
+name|nd_input
+argument_list|()
+decl_stmt|,
+name|nd_slowtimo
+argument_list|()
+decl_stmt|,
+name|nd_init
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|protosw
@@ -336,7 +372,43 @@ literal|0
 block|,
 literal|0
 block|, }
+block|,
+if|#
+directive|if
+name|NND
+operator|>
+literal|0
+block|{
+literal|0
+block|,
+name|PF_INET
+block|,
+name|IPPROTO_ND
+block|,
+literal|0
+block|,
+name|nd_input
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|nd_init
+block|,
+literal|0
+block|,
+name|nd_slowtimo
+block|,
+literal|0
 block|, }
+block|,
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 
