@@ -420,11 +420,10 @@ struct|struct
 name|devfs_mount
 block|{
 name|struct
-name|vnode
+name|mount
 modifier|*
-name|dm_root
+name|dm_mount
 decl_stmt|;
-comment|/* Root node */
 name|struct
 name|devfs_dirent
 modifier|*

@@ -4223,6 +4223,11 @@ name|void
 name|mac_update_devfsdirent
 parameter_list|(
 name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
+name|struct
 name|devfs_dirent
 modifier|*
 name|de
@@ -4236,6 +4241,8 @@ block|{
 name|MAC_PERFORM
 argument_list|(
 name|update_devfsdirent
+argument_list|,
+name|mp
 argument_list|,
 name|de
 argument_list|,
@@ -11084,6 +11091,11 @@ begin_function
 name|void
 name|mac_create_devfs_device
 parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
 name|dev_t
 name|dev
 parameter_list|,
@@ -11096,6 +11108,8 @@ block|{
 name|MAC_PERFORM
 argument_list|(
 name|create_devfs_device
+argument_list|,
+name|mp
 argument_list|,
 name|dev
 argument_list|,
@@ -11120,6 +11134,11 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
+name|struct
 name|devfs_dirent
 modifier|*
 name|dd
@@ -11135,6 +11154,8 @@ argument_list|(
 name|create_devfs_symlink
 argument_list|,
 name|cred
+argument_list|,
+name|mp
 argument_list|,
 name|dd
 argument_list|,
@@ -11158,6 +11179,11 @@ begin_function
 name|void
 name|mac_create_devfs_directory
 parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
 name|char
 modifier|*
 name|dirname
@@ -11174,6 +11200,8 @@ block|{
 name|MAC_PERFORM
 argument_list|(
 name|create_devfs_directory
+argument_list|,
+name|mp
 argument_list|,
 name|dirname
 argument_list|,

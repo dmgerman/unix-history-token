@@ -4346,6 +4346,11 @@ specifier|static
 name|void
 name|mac_lomac_create_devfs_device
 parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
 name|dev_t
 name|dev
 parameter_list|,
@@ -4511,6 +4516,11 @@ specifier|static
 name|void
 name|mac_lomac_create_devfs_directory
 parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
 name|char
 modifier|*
 name|dirname
@@ -4562,6 +4572,11 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
 parameter_list|,
 name|struct
 name|devfs_dirent
@@ -4824,6 +4839,11 @@ specifier|static
 name|void
 name|mac_lomac_update_devfsdirent
 parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
 name|struct
 name|devfs_dirent
 modifier|*

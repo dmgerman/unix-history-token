@@ -1735,6 +1735,10 @@ directive|ifdef
 name|MAC
 name|mac_create_devfs_directory
 argument_list|(
+name|dm
+operator|->
+name|dm_mount
+argument_list|,
 name|s
 argument_list|,
 name|q
@@ -1932,6 +1936,10 @@ directive|ifdef
 name|MAC
 name|mac_create_devfs_device
 argument_list|(
+name|dm
+operator|->
+name|dm_mount
+argument_list|,
 name|dev
 argument_list|,
 name|de

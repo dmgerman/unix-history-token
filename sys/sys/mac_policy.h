@@ -838,6 +838,11 @@ modifier|*
 name|mpo_create_devfs_device
 function_decl|)
 parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
 name|dev_t
 name|dev
 parameter_list|,
@@ -858,6 +863,11 @@ modifier|*
 name|mpo_create_devfs_directory
 function_decl|)
 parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
 name|char
 modifier|*
 name|dirname
@@ -886,6 +896,11 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
 parameter_list|,
 name|struct
 name|devfs_dirent
@@ -1069,6 +1084,11 @@ modifier|*
 name|mpo_update_devfsdirent
 function_decl|)
 parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
 name|struct
 name|devfs_dirent
 modifier|*

@@ -264,6 +264,12 @@ name|MNT_MULTILABEL
 expr_stmt|;
 endif|#
 directive|endif
+name|fmp
+operator|->
+name|dm_mount
+operator|=
+name|mp
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_data
@@ -310,6 +316,8 @@ directive|ifdef
 name|MAC
 name|mac_create_devfs_directory
 argument_list|(
+name|mp
+argument_list|,
 literal|""
 argument_list|,
 literal|0

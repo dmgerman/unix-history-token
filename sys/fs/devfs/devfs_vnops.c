@@ -4115,6 +4115,10 @@ argument_list|)
 expr_stmt|;
 name|mac_update_devfsdirent
 argument_list|(
+name|vp
+operator|->
+name|v_mount
+argument_list|,
 name|de
 argument_list|,
 name|vp
@@ -4322,6 +4326,10 @@ operator|->
 name|a_cnp
 operator|->
 name|cn_cred
+argument_list|,
+name|dmp
+operator|->
+name|dm_mount
 argument_list|,
 name|dd
 argument_list|,
