@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmdtab.c	1.2 %G%"
+literal|"@(#)cmdtab.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,8 +220,6 @@ literal|"visual"
 block|,
 name|visual
 block|,
-name|W
-operator||
 name|I
 operator||
 name|MSGLIST
@@ -598,8 +596,6 @@ literal|"edit"
 block|,
 name|editor
 block|,
-name|W
-operator||
 name|I
 operator||
 name|MSGLIST
