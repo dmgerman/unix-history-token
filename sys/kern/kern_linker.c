@@ -4978,11 +4978,17 @@ name|verinfo
 operator|->
 name|md_ver_maximum
 operator|&&
+operator|(
+name|bestmod
+operator|==
+name|NULL
+operator|||
 name|ver
 operator|>
 name|bestmod
 operator|->
 name|version
+operator|)
 condition|)
 name|bestmod
 operator|=
