@@ -365,7 +365,6 @@ do|do
 block|{
 if|if
 condition|(
-operator|!
 name|freopen
 argument_list|(
 name|filename
@@ -377,6 +376,8 @@ literal|"r"
 argument_list|,
 name|stdin
 argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|warn
@@ -1055,7 +1056,6 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
 name|fgets
 argument_list|(
 name|p
@@ -1069,6 +1069,8 @@ argument_list|)
 argument_list|,
 name|stdin
 argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|warnx
