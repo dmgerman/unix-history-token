@@ -163,6 +163,14 @@ parameter_list|)
 value|MPASS2((mpp)->mtx_saveintr& PSL_I, STR_SIEN)
 end_define
 
+begin_define
+define|#
+directive|define
+name|mtx_legal2block
+parameter_list|()
+value|(read_eflags()& PSL_I)
+end_define
+
 begin_comment
 comment|/*  * Assembly macros (for internal use only)  *------------------------------------------------------------------------------  */
 end_comment

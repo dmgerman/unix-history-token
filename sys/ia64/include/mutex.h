@@ -151,6 +151,14 @@ parameter_list|)
 value|MPASS2((mpp)->mtx_saveintr& IA64_PSR_I), STR_SIEN)
 end_define
 
+begin_define
+define|#
+directive|define
+name|mtx_legal2block
+parameter_list|()
+value|((save_intr()& IA64_PSL_I)
+end_define
+
 begin_endif
 endif|#
 directive|endif
