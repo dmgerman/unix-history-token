@@ -118,6 +118,25 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|PFS_FSNAMELEN
+operator|!=
+name|MFSNAMELEN
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"PFS_FSNAMELEN is not equal to MFSNAMELEN"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Add a node to a directory  */
 end_comment

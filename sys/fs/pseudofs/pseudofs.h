@@ -16,6 +16,64 @@ name|_PSEUDOFS_H_INCLUDED
 end_define
 
 begin_comment
+comment|/*  * Opaque structures  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|mount
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|nameidata
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sbuf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|statfs
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|uio
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|vfsconf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|vnode
+struct_decl|;
+end_struct_decl
+
+begin_comment
 comment|/*  * Limits and constants  */
 end_comment
 
@@ -25,6 +83,17 @@ directive|define
 name|PFS_NAMELEN
 value|24
 end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_FSNAMELEN
+value|16
+end_define
+
+begin_comment
+comment|/* equal to MFSNAMELEN */
+end_comment
 
 begin_define
 define|#
@@ -372,7 +441,7 @@ block|{
 name|char
 name|pi_name
 index|[
-name|MFSNAMELEN
+name|PFS_FSNAMELEN
 index|]
 decl_stmt|;
 name|pfs_init_t
