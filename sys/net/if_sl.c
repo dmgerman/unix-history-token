@@ -8,7 +8,7 @@ comment|/*  * Serial Line interface  *  * Rick Adams  * Center for Seismic Studi
 end_comment
 
 begin_comment
-comment|/* $Header: /usr/bill/working/sys/net/RCS/if_sl.c,v 1.2 92/01/15 17:36:38 william Exp $ */
+comment|/* $Header: /a/cvs/386BSD/src/sys/net/if_sl.c,v 1.1.1.1 1993/06/12 14:57:51 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -1230,7 +1230,11 @@ name|sc_ttyp
 operator|->
 name|t_state
 operator|&
+operator|(
 name|TS_CARR_ON
+operator||
+name|CLOCAL
+operator|)
 operator|)
 operator|==
 literal|0
@@ -1545,20 +1549,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * If there is more in the output queue, just send it now. 		 * We are being called in lieu of ttstart and must do what 		 * it would. 		 */
-if|if
-condition|(
-name|RB_LEN
-argument_list|(
-operator|&
-name|tp
-operator|->
-name|t_out
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
+comment|/* 		 * Call output process whether or not there is any output. 		 * We are being called in lieu of ttstart and must do what 		 * it would. 		 */
 call|(
 modifier|*
 name|tp
@@ -1582,7 +1573,6 @@ operator|>
 name|SLIP_HIWAT
 condition|)
 return|return;
-block|}
 comment|/* 		 * This happens briefly when the line shuts down. 		 */
 if|if
 condition|(
@@ -2420,14 +2410,19 @@ name|c
 operator|&
 name|TTY_ERRORMASK
 operator|||
-operator|!
 operator|(
 name|tp
 operator|->
 name|t_state
 operator|&
+operator|(
 name|TS_CARR_ON
+operator||
+name|CLOCAL
 operator|)
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* XXX */
