@@ -78,6 +78,9 @@ name|__register_t
 name|mc_addr
 decl_stmt|;
 name|__register_t
+name|mc_flags
+decl_stmt|;
+name|__register_t
 name|mc_err
 decl_stmt|;
 name|__register_t
@@ -129,13 +132,6 @@ comment|/* FP state came from PCB */
 name|long
 name|mc_ownedfp
 decl_stmt|;
-name|long
-name|mc_spare1
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* align mc_fpstate to 16 bytes */
 comment|/* 	 * See<machine/npx.h> for the internals of mc_fpstate[]. 	 */
 name|long
 name|mc_fpstate
@@ -146,7 +142,7 @@ name|__aligned
 decl|(16
 decl_stmt|);
 name|long
-name|mc_spare2
+name|mc_spare
 index|[
 literal|8
 index|]

@@ -154,6 +154,9 @@ name|long
 name|sc_addr
 decl_stmt|;
 name|long
+name|sc_flags
+decl_stmt|;
+name|long
 name|sc_err
 decl_stmt|;
 name|long
@@ -183,12 +186,6 @@ name|long
 name|sc_ownedfp
 decl_stmt|;
 name|long
-name|sc_spare1
-index|[
-literal|1
-index|]
-decl_stmt|;
-name|long
 name|sc_fpstate
 index|[
 literal|64
@@ -199,7 +196,7 @@ literal|16
 argument_list|)
 decl_stmt|;
 name|long
-name|sc_spare2
+name|sc_spare
 index|[
 literal|8
 index|]

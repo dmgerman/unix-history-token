@@ -79,6 +79,9 @@ decl_stmt|;
 name|register_t
 name|tf_addr
 decl_stmt|;
+name|register_t
+name|tf_flags
+decl_stmt|;
 comment|/* below portion defined in hardware */
 name|register_t
 name|tf_err
@@ -169,6 +172,11 @@ name|register_t
 label|:
 literal|64
 expr_stmt|;
+comment|/* compat with trap frame - flags */
+name|register_t
+label|:
+literal|64
+expr_stmt|;
 comment|/* compat with trap frame - err */
 comment|/* below portion defined in hardware */
 name|register_t
@@ -253,6 +261,11 @@ label|:
 literal|64
 expr_stmt|;
 comment|/* compat with trap frame - addr */
+name|register_t
+label|:
+literal|64
+expr_stmt|;
+comment|/* compat with trap frame - flags */
 name|register_t
 label|:
 literal|64
