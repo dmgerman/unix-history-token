@@ -992,6 +992,17 @@ begin_comment
 comment|/* create pair "kw_foo", vinum_foo */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|vinum_move
+value|vinum_mv
+end_define
+
+begin_comment
+comment|/* synonym for 'mv' */
+end_comment
+
 begin_struct
 struct|struct
 name|funkey
@@ -1103,6 +1114,16 @@ block|,
 name|FUNKEY
 argument_list|(
 name|rm
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|mv
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|move
 argument_list|)
 block|,
 name|FUNKEY
@@ -2253,8 +2274,6 @@ name|system
 argument_list|(
 literal|"rm -rf "
 name|VINUM_DIR
-literal|" "
-name|VINUM_RDIR
 argument_list|)
 expr_stmt|;
 comment|/* remove the old directories */
@@ -2267,16 +2286,9 @@ comment|/* and make them again */
 name|VINUM_DIR
 literal|"/plex "
 name|VINUM_DIR
-literal|"/rplex "
-name|VINUM_DIR
 literal|"/sd "
 name|VINUM_DIR
-literal|"/rsd "
-name|VINUM_DIR
 literal|"/vol "
-name|VINUM_DIR
-literal|"/rvol "
-name|VINUM_RDIR
 argument_list|)
 expr_stmt|;
 if|if
@@ -2287,12 +2299,12 @@ name|VINUM_SUPERDEV_NAME
 argument_list|,
 name|S_IRWXU
 operator||
-name|S_IFBLK
+name|S_IFCHR
 argument_list|,
-comment|/* block device, user only */
+comment|/* user only */
 name|makedev
 argument_list|(
-name|BDEV_MAJOR
+name|CDEV_MAJOR
 argument_list|,
 name|VINUM_SUPERDEV
 argument_list|)
@@ -2322,12 +2334,12 @@ name|VINUM_WRONGSUPERDEV_NAME
 argument_list|,
 name|S_IRWXU
 operator||
-name|S_IFBLK
+name|S_IFCHR
 argument_list|,
-comment|/* block device, user only */
+comment|/* user only */
 name|makedev
 argument_list|(
-name|BDEV_MAJOR
+name|CDEV_MAJOR
 argument_list|,
 name|VINUM_WRONGSUPERDEV
 argument_list|)
@@ -2368,12 +2380,12 @@ argument_list|,
 comment|/* daemon super device */
 name|S_IRWXU
 operator||
-name|S_IFBLK
+name|S_IFCHR
 argument_list|,
-comment|/* block device, user only */
+comment|/* user only */
 name|makedev
 argument_list|(
-name|BDEV_MAJOR
+name|CDEV_MAJOR
 argument_list|,
 name|VINUM_DAEMON_DEV
 argument_list|)
@@ -2518,8 +2530,8 @@ condition|(
 name|drive
 operator|.
 name|state
-operator|!=
-name|drive_unallocated
+operator|>
+name|drive_referenced
 condition|)
 block|{
 name|sprintf
@@ -2569,9 +2581,6 @@ block|{
 name|dev_t
 name|voldev
 decl_stmt|;
-name|dev_t
-name|rvoldev
-decl_stmt|;
 name|char
 name|filename
 index|[
@@ -2602,7 +2611,7 @@ block|{
 comment|/* we could have holes in our lists */
 name|voldev
 operator|=
-name|VINUMBDEV
+name|VINUMDEV
 argument_list|(
 name|volno
 argument_list|,
@@ -2613,21 +2622,7 @@ argument_list|,
 name|VINUM_VOLUME_TYPE
 argument_list|)
 expr_stmt|;
-comment|/* create a block device number */
-name|rvoldev
-operator|=
-name|VINUMCDEV
-argument_list|(
-name|volno
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|VINUM_VOLUME_TYPE
-argument_list|)
-expr_stmt|;
-comment|/* and a character device */
+comment|/* create a device number */
 comment|/* Create /dev/vinum/<myvol> */
 name|sprintf
 argument_list|(
@@ -2651,109 +2646,9 @@ name|S_IRWXU
 operator||
 name|S_IRGRP
 operator||
-name|S_IXGRP
-operator||
-name|S_IROTH
-operator||
-name|S_IFBLK
+name|S_IFCHR
 argument_list|,
 name|voldev
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't create %s: %s\n"
-argument_list|,
-name|filename
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Create /dev/rvinum/<myvol> */
-name|sprintf
-argument_list|(
-name|filename
-argument_list|,
-name|VINUM_RDIR
-literal|"/%s"
-argument_list|,
-name|vol
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mknod
-argument_list|(
-name|filename
-argument_list|,
-name|S_IRWXU
-operator||
-name|S_IRGRP
-operator||
-name|S_IXGRP
-operator||
-name|S_IROTH
-operator||
-name|S_IFCHR
-argument_list|,
-name|rvoldev
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't create %s: %s\n"
-argument_list|,
-name|filename
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Create /dev/vinum/r<myvol> XXX until we fix fsck and friends */
-name|sprintf
-argument_list|(
-name|filename
-argument_list|,
-name|VINUM_DIR
-literal|"/r%s"
-argument_list|,
-name|vol
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mknod
-argument_list|(
-name|filename
-argument_list|,
-name|S_IRWXU
-operator||
-name|S_IRGRP
-operator||
-name|S_IXGRP
-operator||
-name|S_IROTH
-operator||
-name|S_IFCHR
-argument_list|,
-name|rvoldev
 argument_list|)
 operator|<
 literal|0
@@ -2795,61 +2690,9 @@ name|S_IRWXU
 operator||
 name|S_IRGRP
 operator||
-name|S_IXGRP
-operator||
-name|S_IROTH
-operator||
-name|S_IFBLK
-argument_list|,
-name|voldev
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't create %s: %s\n"
-argument_list|,
-name|filename
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Create /dev/vinum/rvol/<myvol> */
-name|sprintf
-argument_list|(
-name|filename
-argument_list|,
-name|VINUM_DIR
-literal|"/rvol/%s"
-argument_list|,
-name|vol
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mknod
-argument_list|(
-name|filename
-argument_list|,
-name|S_IRWXU
-operator||
-name|S_IRGRP
-operator||
-name|S_IXGRP
-operator||
-name|S_IROTH
-operator||
 name|S_IFCHR
 argument_list|,
-name|rvoldev
+name|voldev
 argument_list|)
 operator|<
 literal|0
@@ -2899,10 +2742,6 @@ argument_list|,
 name|S_IRWXU
 operator||
 name|S_IRGRP
-operator||
-name|S_IXGRP
-operator||
-name|S_IROTH
 operator||
 name|S_IXOTH
 argument_list|)
@@ -2974,11 +2813,7 @@ block|{
 name|dev_t
 name|plexdev
 decl_stmt|;
-comment|/* block device */
-name|dev_t
-name|plexcdev
-decl_stmt|;
-comment|/* and character device device */
+comment|/* device */
 name|char
 name|filename
 index|[
@@ -3008,14 +2843,7 @@ condition|)
 block|{
 name|plexdev
 operator|=
-name|VINUM_BLOCK_PLEX
-argument_list|(
-name|plexno
-argument_list|)
-expr_stmt|;
-name|plexcdev
-operator|=
-name|VINUM_CHAR_PLEX
+name|VINUM_PLEX
 argument_list|(
 name|plexno
 argument_list|)
@@ -3043,61 +2871,9 @@ name|S_IRWXU
 operator||
 name|S_IRGRP
 operator||
-name|S_IXGRP
-operator||
-name|S_IROTH
-operator||
-name|S_IFBLK
-argument_list|,
-name|plexdev
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't create %s: %s\n"
-argument_list|,
-name|filename
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* /dev/vinum/rplex/<plex> */
-name|sprintf
-argument_list|(
-name|filename
-argument_list|,
-name|VINUM_DIR
-literal|"/rplex/%s"
-argument_list|,
-name|plex
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mknod
-argument_list|(
-name|filename
-argument_list|,
-name|S_IRWXU
-operator||
-name|S_IRGRP
-operator||
-name|S_IXGRP
-operator||
-name|S_IROTH
-operator||
 name|S_IFCHR
 argument_list|,
-name|plexcdev
+name|plexdev
 argument_list|)
 operator|<
 literal|0
@@ -3137,7 +2913,7 @@ argument_list|)
 expr_stmt|;
 name|plexdev
 operator|=
-name|VINUMBDEV
+name|VINUMDEV
 argument_list|(
 name|plex
 operator|.
@@ -3177,11 +2953,7 @@ name|S_IRWXU
 operator||
 name|S_IRGRP
 operator||
-name|S_IXGRP
-operator||
-name|S_IROTH
-operator||
-name|S_IFBLK
+name|S_IFCHR
 argument_list|,
 name|plexdev
 argument_list|)
@@ -3228,10 +3000,6 @@ argument_list|,
 name|S_IRWXU
 operator||
 name|S_IRGRP
-operator||
-name|S_IXGRP
-operator||
-name|S_IROTH
 operator||
 name|S_IXOTH
 argument_list|)
@@ -3314,11 +3082,7 @@ block|{
 name|dev_t
 name|sddev
 decl_stmt|;
-comment|/* block device */
-name|dev_t
-name|sdcdev
-decl_stmt|;
-comment|/* and character device */
+comment|/* device */
 name|char
 name|filename
 index|[
@@ -3345,14 +3109,7 @@ condition|)
 block|{
 name|sddev
 operator|=
-name|VINUM_BLOCK_SD
-argument_list|(
-name|sdno
-argument_list|)
-expr_stmt|;
-name|sdcdev
-operator|=
-name|VINUM_CHAR_SD
+name|VINUM_SD
 argument_list|(
 name|sdno
 argument_list|)
@@ -3380,61 +3137,9 @@ name|S_IRWXU
 operator||
 name|S_IRGRP
 operator||
-name|S_IXGRP
-operator||
-name|S_IROTH
-operator||
-name|S_IFBLK
-argument_list|,
-name|sddev
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't create %s: %s\n"
-argument_list|,
-name|filename
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* And /dev/vinum/rsd/<sd> */
-name|sprintf
-argument_list|(
-name|filename
-argument_list|,
-name|VINUM_DIR
-literal|"/rsd/%s"
-argument_list|,
-name|sd
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mknod
-argument_list|(
-name|filename
-argument_list|,
-name|S_IRWXU
-operator||
-name|S_IRGRP
-operator||
-name|S_IXGRP
-operator||
-name|S_IROTH
-operator||
 name|S_IFCHR
 argument_list|,
-name|sdcdev
+name|sddev
 argument_list|)
 operator|<
 literal|0
