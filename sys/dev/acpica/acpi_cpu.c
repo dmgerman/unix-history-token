@@ -273,7 +273,7 @@ value|(bus_space_write_ ## width(rman_get_bustag((reg)), 			\ 		       rman_get_
 end_define
 
 begin_comment
-comment|/*  * Speeds are stored in counts, from 1 - CPU_MAX_SPEED, and  * reported to the user in tenths of a percent.  */
+comment|/*  * Speeds are stored in counts, from 1 to CPU_MAX_SPEED, and  * reported to the user in tenths of a percent.  */
 end_comment
 
 begin_decl_stmt
@@ -3621,7 +3621,11 @@ block|{
 comment|/* Mask the old CLK_VAL off and or-in the new value */
 name|clk_val
 operator|=
+operator|(
 name|CPU_MAX_SPEED
+operator|-
+literal|1
+operator|)
 operator|<<
 name|cpu_duty_offset
 expr_stmt|;
