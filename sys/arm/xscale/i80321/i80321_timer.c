@@ -249,6 +249,13 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"i80321 timer"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
