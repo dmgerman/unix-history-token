@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.20 %G%"
+literal|"@(#)c21.c 4.21 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,7 +103,10 @@ block|,
 comment|/* 3	LONG */
 literal|32
 block|,
-comment|/* 4	FFLOAT / 	64,		/* 5	DFLOAT */
+comment|/* 4	FFLOAT */
+literal|64
+block|,
+comment|/* 5	DFLOAT */
 literal|64
 block|,
 comment|/* 6	QUAD */
@@ -4456,6 +4459,81 @@ operator|->
 name|forw
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|op
+operator|==
+name|CVT
+operator|||
+name|p
+operator|->
+name|op
+operator|==
+name|MOVZ
+operator|)
+operator|&&
+operator|(
+name|p
+operator|->
+name|forw
+operator|->
+name|op
+operator|==
+name|CVT
+operator|||
+name|p
+operator|->
+name|forw
+operator|->
+name|op
+operator|==
+name|MOVZ
+operator|)
+operator|&&
+name|p
+operator|->
+name|forw
+operator|->
+name|subop
+operator|&
+literal|0xf
+operator|&&
+name|compat
+argument_list|(
+name|p
+operator|->
+name|subop
+argument_list|,
+name|p
+operator|->
+name|forw
+operator|->
+name|subop
+argument_list|)
+operator|&&
+operator|!
+name|source
+argument_list|(
+name|cp1
+operator|=
+name|regs
+index|[
+name|RT1
+index|]
+argument_list|)
+operator|&&
+operator|!
+name|indexa
+argument_list|(
+name|cp1
+argument_list|)
+condition|)
+goto|goto
+name|movit
+goto|;
 if|if
 condition|(
 name|equtype
