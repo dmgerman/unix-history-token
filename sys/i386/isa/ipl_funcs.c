@@ -39,32 +39,5 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_decl_stmt
-name|swihand_t
-modifier|*
-name|shandlers
-index|[
-name|NSWI
-index|]
-init|=
-block|{
-comment|/* software interrupts */
-name|swi_null
-block|,
-name|swi_net
-block|,
-name|swi_null
-block|,
-name|swi_null
-block|,
-name|swi_vm
-block|,
-name|swi_null
-block|,
-name|softclock
-block|}
-decl_stmt|;
-end_decl_stmt
-
 end_unit
 

@@ -896,7 +896,7 @@ end_comment
 
 begin_function_decl
 name|struct
-name|intrec
+name|intrhand
 modifier|*
 name|inthand_add
 parameter_list|(
@@ -929,7 +929,7 @@ name|int
 name|inthand_remove
 parameter_list|(
 name|struct
-name|intrec
+name|intrhand
 modifier|*
 name|idesc
 parameter_list|)

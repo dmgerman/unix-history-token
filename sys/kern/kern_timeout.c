@@ -102,7 +102,11 @@ end_comment
 begin_function
 name|void
 name|softclock
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+parameter_list|)
 block|{
 specifier|register
 name|struct

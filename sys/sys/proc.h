@@ -1346,7 +1346,7 @@ name|irq
 decl_stmt|;
 comment|/* irq */
 name|struct
-name|intrec
+name|intrhand
 modifier|*
 name|it_ih
 decl_stmt|;

@@ -16,24 +16,6 @@ name|_MACHINE_IPL_H_
 end_define
 
 begin_comment
-comment|/*  * Software interrupt bit numbers  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NSWI
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|NHWI
-value|0
-end_define
-
-begin_comment
 comment|/*  * Interprocessor interrupts for SMP.  */
 end_comment
 
@@ -133,7 +115,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_MD_VAR_H_ */
+comment|/* !_MACHINE_IPL_H_ */
 end_comment
 
 end_unit

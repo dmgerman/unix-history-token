@@ -25,20 +25,6 @@ begin_comment
 comment|/* for pal inlines */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NSWI
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|HWHI
-value|0
-end_define
-
 begin_comment
 comment|/*  * Interprocessor interrupts for SMP.  */
 end_comment

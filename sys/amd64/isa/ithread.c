@@ -589,7 +589,7 @@ name|me
 decl_stmt|;
 comment|/* our thread context */
 name|struct
-name|intrec
+name|intrhand
 modifier|*
 name|ih
 decl_stmt|;
@@ -724,7 +724,7 @@ name|ih
 operator|=
 name|ih
 operator|->
-name|next
+name|ih_next
 control|)
 block|{
 name|CTR5
@@ -751,15 +751,15 @@ operator|*
 operator|)
 name|ih
 operator|->
-name|handler
+name|ih_handler
 argument_list|,
 name|ih
 operator|->
-name|argument
+name|ih_argument
 argument_list|,
 name|ih
 operator|->
-name|flags
+name|ih_flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -767,7 +767,7 @@ condition|(
 operator|(
 name|ih
 operator|->
-name|flags
+name|ih_flags
 operator|&
 name|INTR_MPSAFE
 operator|)
@@ -784,11 +784,11 @@ argument_list|)
 expr_stmt|;
 name|ih
 operator|->
-name|handler
+name|ih_handler
 argument_list|(
 name|ih
 operator|->
-name|argument
+name|ih_argument
 argument_list|)
 expr_stmt|;
 if|if
@@ -796,7 +796,7 @@ condition|(
 operator|(
 name|ih
 operator|->
-name|flags
+name|ih_flags
 operator|&
 name|INTR_MPSAFE
 operator|)

@@ -1264,8 +1264,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|swihand_t
+name|void
 name|siopoll
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1930,8 +1937,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|bool_t
-name|sio_registered
+name|struct
+name|intrhand
+modifier|*
+name|sio_slow_ih
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|intrhand
+modifier|*
+name|sio_fast_ih
 decl_stmt|;
 end_decl_stmt
 
@@ -6120,20 +6138,46 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|sio_registered
+name|sio_fast_ih
+operator|==
+name|NULL
 condition|)
 block|{
-name|register_swi
+name|sio_fast_ih
+operator|=
+name|sinthand_add
 argument_list|(
-name|SWI_TTY
+literal|"tty:sio"
+argument_list|,
+operator|&
+name|tty_ithd
 argument_list|,
 name|siopoll
+argument_list|,
+name|NULL
+argument_list|,
+name|SWI_TTY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|sio_registered
+name|sio_slow_ih
 operator|=
-name|TRUE
+name|sinthand_add
+argument_list|(
+literal|"tty:sio"
+argument_list|,
+operator|&
+name|clk_ithd
+argument_list|,
+name|siopoll
+argument_list|,
+name|NULL
+argument_list|,
+name|SWI_TTY
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 name|com
@@ -9158,8 +9202,12 @@ name|com
 operator|->
 name|hotchar
 condition|)
-name|setsofttty
-argument_list|()
+name|sched_swi
+argument_list|(
+name|sio_fast_ih
+argument_list|,
+name|SWI_NOSWITCH
+argument_list|)
 expr_stmt|;
 name|ioptr
 operator|=
@@ -9201,14 +9249,18 @@ expr_stmt|;
 operator|++
 name|com_events
 expr_stmt|;
-name|schedsofttty
-argument_list|()
+name|sched_swi
+argument_list|(
+name|sio_slow_ih
+argument_list|,
+name|SWI_DELAY
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
 literal|0
 comment|/* for testing input latency vs efficiency */
-block|if (com->iptr - com->ibuf == 8) 	setsofttty();
+block|if (com->iptr - com->ibuf == 8) 	sched_swi(sio_fast_ih, SWI_NOSWITCH);
 endif|#
 directive|endif
 name|ioptr
@@ -9366,8 +9418,12 @@ name|state
 operator||=
 name|CS_CHECKMSR
 expr_stmt|;
-name|setsofttty
-argument_list|()
+name|sched_swi
+argument_list|(
+name|sio_fast_ih
+argument_list|,
+name|SWI_NOSWITCH
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* handle CTS change immediately for crisp flow ctl */
@@ -9660,10 +9716,14 @@ name|state
 operator||=
 name|CS_ODONE
 expr_stmt|;
-name|setsofttty
-argument_list|()
-expr_stmt|;
 comment|/* handle at high level ASAP */
+name|sched_swi
+argument_list|(
+name|sio_fast_ih
+argument_list|,
+name|SWI_NOSWITCH
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -10690,7 +10750,11 @@ begin_function
 specifier|static
 name|void
 name|siopoll
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+parameter_list|)
 block|{
 name|int
 name|unit

@@ -5256,7 +5256,7 @@ name|int
 name|apic_8254_trial
 decl_stmt|;
 name|struct
-name|intrec
+name|intrhand
 modifier|*
 name|clkdesc
 decl_stmt|;

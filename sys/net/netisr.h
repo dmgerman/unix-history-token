@@ -157,6 +157,18 @@ name|_KERNEL
 end_ifdef
 
 begin_decl_stmt
+name|void
+name|legacy_setsoftnet
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 specifier|volatile
 name|unsigned
@@ -176,7 +188,7 @@ name|schednetisr
 parameter_list|(
 name|anisr
 parameter_list|)
-value|{ netisr |= 1<< (anisr); setsoftnet(); }
+value|{ netisr |= 1<< (anisr); legacy_setsoftnet(); }
 end_define
 
 begin_typedef

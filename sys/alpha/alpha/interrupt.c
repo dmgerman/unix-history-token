@@ -1402,7 +1402,7 @@ modifier|*
 name|i
 decl_stmt|;
 name|struct
-name|intrec
+name|intrhand
 modifier|*
 name|head
 decl_stmt|,
@@ -1806,7 +1806,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|intrec
+name|intrhand
 argument_list|)
 argument_list|,
 name|M_DEVBUF
@@ -1830,25 +1830,25 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|intrec
+name|intrhand
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|idesc
 operator|->
-name|handler
+name|ih_handler
 operator|=
 name|handler
 expr_stmt|;
 name|idesc
 operator|->
-name|argument
+name|ih_argument
 operator|=
 name|arg
 expr_stmt|;
 name|idesc
 operator|->
-name|name
+name|ih_name
 operator|=
 name|malloc
 argument_list|(
@@ -1868,7 +1868,7 @@ if|if
 condition|(
 name|idesc
 operator|->
-name|name
+name|ih_name
 operator|==
 name|NULL
 condition|)
@@ -1890,7 +1890,7 @@ name|strcpy
 argument_list|(
 name|idesc
 operator|->
-name|name
+name|ih_name
 argument_list|,
 name|name
 argument_list|)
@@ -1911,7 +1911,7 @@ while|while
 condition|(
 name|head
 operator|->
-name|next
+name|ih_next
 operator|!=
 name|NULL
 condition|)
@@ -1919,11 +1919,11 @@ name|head
 operator|=
 name|head
 operator|->
-name|next
+name|ih_next
 expr_stmt|;
 name|head
 operator|->
-name|next
+name|ih_next
 operator|=
 name|idesc
 expr_stmt|;
@@ -1956,7 +1956,7 @@ name|cookie
 parameter_list|)
 block|{
 name|struct
-name|intrec
+name|intrhand
 modifier|*
 name|idesc
 init|=
@@ -1968,7 +1968,7 @@ modifier|*
 name|ithd
 decl_stmt|;
 name|struct
-name|intrec
+name|intrhand
 modifier|*
 name|head
 decl_stmt|;
@@ -1983,7 +1983,7 @@ name|ithd
 operator|=
 name|idesc
 operator|->
-name|ithd
+name|ih_ithd
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -2014,7 +2014,7 @@ name|it_ih
 operator|=
 name|idesc
 operator|->
-name|next
+name|ih_next
 expr_stmt|;
 else|else
 block|{
@@ -2026,7 +2026,7 @@ name|NULL
 operator|&&
 name|head
 operator|->
-name|next
+name|ih_next
 operator|!=
 name|idesc
 condition|)
@@ -2034,7 +2034,7 @@ name|head
 operator|=
 name|head
 operator|->
-name|next
+name|ih_next
 expr_stmt|;
 if|if
 condition|(
@@ -2051,11 +2051,11 @@ return|;
 comment|/* couldn't find ourself */
 name|head
 operator|->
-name|next
+name|ih_next
 operator|=
 name|idesc
 operator|->
-name|next
+name|ih_next
 expr_stmt|;
 block|}
 name|free
@@ -2344,7 +2344,7 @@ name|ithd
 decl_stmt|;
 comment|/* our thread context */
 name|struct
-name|intrec
+name|intrhand
 modifier|*
 name|ih
 decl_stmt|;
@@ -2431,7 +2431,7 @@ name|ih
 operator|=
 name|ih
 operator|->
-name|next
+name|ih_next
 control|)
 block|{
 name|CTR5
@@ -2458,15 +2458,15 @@ operator|*
 operator|)
 name|ih
 operator|->
-name|handler
+name|ih_handler
 argument_list|,
 name|ih
 operator|->
-name|argument
+name|ih_argument
 argument_list|,
 name|ih
 operator|->
-name|flags
+name|ih_flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -2474,7 +2474,7 @@ condition|(
 operator|(
 name|ih
 operator|->
-name|flags
+name|ih_flags
 operator|&
 name|INTR_MPSAFE
 operator|)
@@ -2491,11 +2491,11 @@ argument_list|)
 expr_stmt|;
 name|ih
 operator|->
-name|handler
+name|ih_handler
 argument_list|(
 name|ih
 operator|->
-name|argument
+name|ih_argument
 argument_list|)
 expr_stmt|;
 if|if
@@ -2503,7 +2503,7 @@ condition|(
 operator|(
 name|ih
 operator|->
-name|flags
+name|ih_flags
 operator|&
 name|INTR_MPSAFE
 operator|)

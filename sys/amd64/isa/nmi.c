@@ -2463,7 +2463,7 @@ end_function
 
 begin_function
 name|struct
-name|intrec
+name|intrhand
 modifier|*
 name|inthand_add
 parameter_list|(
@@ -2501,13 +2501,13 @@ index|]
 decl_stmt|;
 comment|/* descriptor for the IRQ */
 name|struct
-name|intrec
+name|intrhand
 modifier|*
 name|head
 decl_stmt|;
 comment|/* chain of handlers for IRQ */
 name|struct
-name|intrec
+name|intrhand
 modifier|*
 name|idesc
 decl_stmt|;
@@ -2756,7 +2756,7 @@ name|ithd
 operator|->
 name|it_ih
 operator|->
-name|flags
+name|ih_flags
 operator|&
 name|INTR_EXCL
 operator|)
@@ -2778,7 +2778,7 @@ name|ithd
 operator|->
 name|it_ih
 operator|->
-name|name
+name|ih_name
 argument_list|,
 name|name
 argument_list|,
@@ -2815,7 +2815,7 @@ name|ithd
 operator|->
 name|it_ih
 operator|->
-name|name
+name|ih_name
 argument_list|,
 name|irq
 argument_list|)
@@ -2912,7 +2912,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|intrec
+name|intrhand
 argument_list|)
 argument_list|,
 name|M_DEVBUF
@@ -2938,37 +2938,37 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|intrec
+name|intrhand
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|idesc
 operator|->
-name|handler
+name|ih_handler
 operator|=
 name|handler
 expr_stmt|;
 name|idesc
 operator|->
-name|argument
+name|ih_argument
 operator|=
 name|arg
 expr_stmt|;
 name|idesc
 operator|->
-name|flags
+name|ih_flags
 operator|=
 name|flags
 expr_stmt|;
 name|idesc
 operator|->
-name|ithd
+name|ih_ithd
 operator|=
 name|ithd
 expr_stmt|;
 name|idesc
 operator|->
-name|name
+name|ih_name
 operator|=
 name|malloc
 argument_list|(
@@ -2988,7 +2988,7 @@ if|if
 condition|(
 name|idesc
 operator|->
-name|name
+name|ih_name
 operator|==
 name|NULL
 condition|)
@@ -3010,7 +3010,7 @@ name|strcpy
 argument_list|(
 name|idesc
 operator|->
-name|name
+name|ih_name
 argument_list|,
 name|name
 argument_list|)
@@ -3031,15 +3031,15 @@ name|irq
 argument_list|,
 name|idesc
 operator|->
-name|handler
+name|ih_handler
 argument_list|,
 name|idesc
 operator|->
-name|argument
+name|ih_argument
 argument_list|,
 name|idesc
 operator|->
-name|flags
+name|ih_flags
 argument_list|)
 operator|!=
 literal|0
@@ -3063,7 +3063,7 @@ name|free
 argument_list|(
 name|idesc
 operator|->
-name|name
+name|ih_name
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -3095,7 +3095,7 @@ while|while
 condition|(
 name|head
 operator|->
-name|next
+name|ih_next
 operator|!=
 name|NULL
 condition|)
@@ -3103,12 +3103,12 @@ name|head
 operator|=
 name|head
 operator|->
-name|next
+name|ih_next
 expr_stmt|;
 comment|/* find the end */
 name|head
 operator|->
-name|next
+name|ih_next
 operator|=
 name|idesc
 expr_stmt|;
@@ -3128,7 +3128,7 @@ name|irq
 argument_list|,
 name|idesc
 operator|->
-name|name
+name|ih_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -3148,7 +3148,7 @@ name|int
 name|inthand_remove
 parameter_list|(
 name|struct
-name|intrec
+name|intrhand
 modifier|*
 name|idesc
 parameter_list|)
@@ -3160,7 +3160,7 @@ name|ithd
 decl_stmt|;
 comment|/* descriptor for the IRQ */
 name|struct
-name|intrec
+name|intrhand
 modifier|*
 name|ih
 decl_stmt|;
@@ -3181,7 +3181,7 @@ name|ithd
 operator|=
 name|idesc
 operator|->
-name|ithd
+name|ih_ithd
 expr_stmt|;
 name|ih
 operator|=
@@ -3202,7 +3202,7 @@ name|it_ih
 operator|=
 name|idesc
 operator|->
-name|next
+name|ih_next
 expr_stmt|;
 comment|/* unhook it */
 else|else
@@ -3218,7 +3218,7 @@ operator|&&
 operator|(
 name|ih
 operator|->
-name|next
+name|ih_next
 operator|!=
 name|idesc
 operator|)
@@ -3227,13 +3227,13 @@ name|ih
 operator|=
 name|ih
 operator|->
-name|next
+name|ih_next
 expr_stmt|;
 if|if
 condition|(
 name|ih
 operator|->
-name|next
+name|ih_next
 operator|!=
 name|idesc
 condition|)
@@ -3245,13 +3245,13 @@ operator|)
 return|;
 name|ih
 operator|->
-name|next
+name|ih_next
 operator|=
 name|ih
 operator|->
-name|next
+name|ih_next
 operator|->
-name|next
+name|ih_next
 expr_stmt|;
 block|}
 if|if
@@ -3272,7 +3272,7 @@ name|irq
 argument_list|,
 name|idesc
 operator|->
-name|handler
+name|ih_handler
 argument_list|)
 expr_stmt|;
 name|ithds

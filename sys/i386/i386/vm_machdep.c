@@ -2247,7 +2247,11 @@ end_comment
 begin_function
 name|void
 name|swi_vm
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+parameter_list|)
 block|{
 if|if
 condition|(

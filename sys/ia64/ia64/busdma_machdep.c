@@ -2859,8 +2859,12 @@ name|busdma_swi_pending
 operator|=
 literal|1
 expr_stmt|;
-name|setsoftvm
-argument_list|()
+name|sched_swi
+argument_list|(
+name|vm_ih
+argument_list|,
+name|SWI_NOSWITCH
+argument_list|)
 expr_stmt|;
 block|}
 block|}

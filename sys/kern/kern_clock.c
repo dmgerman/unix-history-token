@@ -114,6 +114,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/interrupt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -515,8 +527,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|setsoftclock
-argument_list|()
+name|sched_swi
+argument_list|(
+name|softclock_ih
+argument_list|,
+name|SWI_NOSWITCH
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else

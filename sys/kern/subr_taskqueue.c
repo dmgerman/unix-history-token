@@ -81,6 +81,15 @@ name|taskqueue_queues
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|intrhand
+modifier|*
+name|taskqueue_ih
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|taskqueue
@@ -710,8 +719,12 @@ modifier|*
 name|context
 parameter_list|)
 block|{
-name|setsofttq
-argument_list|()
+name|sched_swi
+argument_list|(
+name|taskqueue_ih
+argument_list|,
+name|SWI_NOSWITCH
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -722,6 +735,8 @@ name|void
 name|taskqueue_swi_run
 parameter_list|(
 name|void
+modifier|*
+name|dummy
 parameter_list|)
 block|{
 name|taskqueue_run
@@ -741,11 +756,21 @@ name|taskqueue_swi_enqueue
 argument_list|,
 literal|0
 argument_list|,
-name|register_swi
+name|taskqueue_ih
+operator|=
+name|sinthand_add
 argument_list|(
-name|SWI_TQ
+literal|"task queue"
+argument_list|,
+name|NULL
 argument_list|,
 name|taskqueue_swi_run
+argument_list|,
+name|NULL
+argument_list|,
+name|SWI_TQ
+argument_list|,
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
