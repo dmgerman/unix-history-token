@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nm.c	5.6 (Berkeley) %G%"
+literal|"@(#)nm.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -809,6 +809,37 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* remember start position of current archive object */
+name|last_ar_off
+operator|=
+name|ftell
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+comment|/* skip ranlib entries */
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|ar_head
+operator|.
+name|ar_name
+argument_list|,
+name|RANLIBMAG
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|RANLIBMAG
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+condition|)
+goto|goto
+name|skip
+goto|;
 comment|/* 		 * construct a name of the form "archive.a:obj.o:" for the 		 * current archive entry if the object name is to be printed 		 * on each output line 		 */
 name|p
 operator|=
@@ -882,14 +913,6 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* remember start position of current archive object */
-name|last_ar_off
-operator|=
-name|ftell
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 comment|/* get and check current object's header */
 if|if
 condition|(
@@ -944,15 +967,6 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|name
-argument_list|,
-name|RANLIBMAG
-argument_list|)
-condition|)
 if|if
 condition|(
 name|N_BADMAG
@@ -1039,6 +1053,8 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x) + 1)& ~1)
+name|skip
+label|:
 if|if
 condition|(
 name|fseek
