@@ -500,7 +500,7 @@ condition|)
 return|return;
 break|break;
 block|}
-comment|/* 	 * We pause for one second after displaying any data that has 	 * accumulated since we read the file. 	 */
+comment|/* 	 * We pause for 1/4 second after displaying any data that has 	 * accumulated since we read the file. 	 */
 for|for
 control|(
 init|;
