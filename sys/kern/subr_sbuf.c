@@ -1260,7 +1260,7 @@ parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|data
+name|buf
 parameter_list|,
 name|size_t
 name|len
@@ -1271,7 +1271,7 @@ name|char
 modifier|*
 name|str
 init|=
-name|data
+name|buf
 decl_stmt|;
 name|assert_sbuf_integrity
 argument_list|(
@@ -1526,7 +1526,7 @@ parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|data
+name|buf
 parameter_list|,
 name|size_t
 name|len
@@ -1555,7 +1555,7 @@ name|sbuf_bcat
 argument_list|(
 name|s
 argument_list|,
-name|data
+name|buf
 argument_list|,
 name|len
 argument_list|)
