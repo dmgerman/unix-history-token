@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet_addr.c	5.11 (Berkeley) %G%"
+literal|"@(#)inet_addr.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,8 +112,7 @@ comment|/*   * Check whether "cp" is a valid ascii representation  * of an Inter
 end_comment
 
 begin_function
-name|unsigned
-name|long
+name|int
 name|inet_aton
 parameter_list|(
 name|cp
