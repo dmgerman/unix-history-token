@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************** Copyright 1990 - 1995 by AT&T Bell Laboratories and Bellcore.  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the names of AT&T Bell Laboratories or Bellcore or any of their entities not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  AT&T and Bellcore disclaim all warranties with regard to this software, including all implied warranties of merchantability and fitness.  In no event shall AT&T or Bellcore be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software. ****************************************************************/
+comment|/**************************************************************** Copyright 1990 - 1996 by AT&T, Lucent Technologies and Bellcore.  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the names of AT&T, Bell Laboratories, Lucent or Bellcore or any of their entities not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  AT&T, Lucent and Bellcore disclaim all warranties with regard to this software, including all implied warranties of merchantability and fitness.  In no event shall AT&T, Lucent or Bellcore be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software. ****************************************************************/
 end_comment
 
 begin_comment
@@ -2039,7 +2039,7 @@ parameter_list|)
 endif|#
 directive|endif
 block|{
-name|int
+name|long
 name|memno
 init|=
 name|addrp
@@ -6343,6 +6343,13 @@ decl_stmt|;
 name|Namep
 name|np
 decl_stmt|;
+name|char
+modifier|*
+name|comma
+decl_stmt|,
+modifier|*
+name|type
+decl_stmt|;
 name|int
 name|did_one
 init|=
@@ -6361,7 +6368,7 @@ name|nice_printf
 argument_list|(
 name|outfile
 argument_list|,
-literal|"/* Assigned format variables */\nchar "
+literal|"/* Assigned format variables */\n"
 argument_list|)
 expr_stmt|;
 do|do
@@ -6378,23 +6385,59 @@ expr_stmt|;
 if|if
 condition|(
 name|did_one
+operator|==
+name|np
+operator|->
+name|vstg
 condition|)
-name|nice_printf
-argument_list|(
-name|outfile
-argument_list|,
+block|{
+name|comma
+operator|=
 literal|", "
-argument_list|)
+expr_stmt|;
+name|type
+operator|=
+literal|""
+expr_stmt|;
+block|}
+else|else
+block|{
+name|comma
+operator|=
+name|did_one
+condition|?
+literal|";\n"
+else|:
+literal|""
+expr_stmt|;
+name|type
+operator|=
+name|np
+operator|->
+name|vstg
+operator|==
+name|STGAUTO
+condition|?
+literal|"char "
+else|:
+literal|"static char "
 expr_stmt|;
 name|did_one
 operator|=
-literal|1
+name|np
+operator|->
+name|vstg
 expr_stmt|;
+block|}
 name|nice_printf
 argument_list|(
 name|outfile
 argument_list|,
-literal|"*%s_fmt"
+literal|"%s%s*%s_fmt"
+argument_list|,
+name|comma
+argument_list|,
+name|type
 argument_list|,
 name|np
 operator|->
@@ -8778,7 +8821,8 @@ name|fvarname
 argument_list|)
 expr_stmt|;
 comment|/* to retain names declared EXTERNAL */
-comment|/* but not referenced, change 					/* "continue" to "stg = STGEXT" */
+comment|/* but not referenced, change	*/
+comment|/* "continue" to "stg = STGEXT" */
 continue|continue;
 block|}
 else|else
@@ -11983,8 +12027,13 @@ parameter_list|)
 endif|#
 directive|endif
 block|{
+comment|/* with sufficiently illegal input, ei_next == ei_last == 0 is possible */
 if|if
 condition|(
+name|ei_next
+operator|<
+name|ei_last
+operator|&&
 operator|*
 name|ei_next
 operator|++

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************** Copyright 1990, 1994, 1995 by AT&T Bell Laboratories and Bellcore.  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the names of AT&T Bell Laboratories or Bellcore or any of their entities not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  AT&T and Bellcore disclaim all warranties with regard to this software, including all implied warranties of merchantability and fitness.  In no event shall AT&T or Bellcore be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software. ****************************************************************/
+comment|/**************************************************************** Copyright 1990, 1994-6 by AT&T, Lucent Technologies and Bellcore.  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the names of AT&T, Bell Laboratories, Lucent or Bellcore or any of their entities not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  AT&T, Lucent and Bellcore disclaim all warranties with regard to this software, including all implied warranties of merchantability and fitness.  In no event shall AT&T, Lucent or Bellcore be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software. ****************************************************************/
 end_comment
 
 begin_include
@@ -700,7 +700,9 @@ block|{
 name|char
 name|base
 index|[
-name|IDENT_LEN
+name|MAXNAMELEN
+operator|+
+literal|4
 index|]
 decl_stmt|;
 name|struct
@@ -1327,11 +1329,12 @@ name|nice_printf
 argument_list|(
 name|outfile
 argument_list|,
-literal|", %s_len"
+literal|", %s"
 argument_list|,
+name|new_arg_length
+argument_list|(
 name|np
-operator|->
-name|fvarname
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -2111,6 +2114,42 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|progname
+condition|)
+block|{
+comment|/* Construct an empty subroutine with this name */
+comment|/* in case the name is needed to force loading */
+comment|/* of this block-data subprogram: the name can */
+comment|/* appear elsewhere in an external statement. */
+name|entrypt
+argument_list|(
+name|CLPROC
+argument_list|,
+name|TYSUBR
+argument_list|,
+operator|(
+name|ftnint
+operator|)
+literal|0
+argument_list|,
+name|progname
+argument_list|,
+operator|(
+name|chainp
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+name|endproc
+argument_list|()
+expr_stmt|;
+name|newproc
+argument_list|()
+expr_stmt|;
+block|}
 name|puthead
 argument_list|(
 name|CNULL
@@ -2118,6 +2157,7 @@ argument_list|,
 name|CLBLOCK
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|class
@@ -3488,6 +3528,9 @@ index|[
 name|type
 index|]
 operator|=
+operator|(
+name|int
+operator|)
 name|newlabel
 argument_list|()
 expr_stmt|;
@@ -5037,6 +5080,12 @@ name|type
 operator|==
 name|TYCHAR
 condition|)
+if|if
+condition|(
+name|comvar
+operator|->
+name|vleng
+condition|)
 name|size
 operator|=
 name|comvar
@@ -5049,6 +5098,20 @@ name|Const
 operator|.
 name|ci
 expr_stmt|;
+else|else
+block|{
+name|dclerr
+argument_list|(
+literal|"character*(*) in common"
+argument_list|,
+name|comvar
+argument_list|)
+expr_stmt|;
+name|size
+operator|=
+literal|1
+expr_stmt|;
+block|}
 else|else
 name|size
 operator|=
@@ -6907,13 +6970,23 @@ name|TYUNKNOWN
 operator|||
 name|v
 operator|->
-name|vimpltype
-operator|&&
-name|v
-operator|->
 name|vtype
 operator|!=
 name|type
+operator|&&
+operator|(
+name|v
+operator|->
+name|vimpltype
+operator|||
+name|v
+operator|->
+name|vinftype
+operator|||
+name|v
+operator|->
+name|vinfproc
+operator|)
 condition|)
 block|{
 if|if
@@ -6971,6 +7044,20 @@ name|vimpltype
 operator|=
 literal|0
 expr_stmt|;
+name|v
+operator|->
+name|vinftype
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 19960709 */
+name|v
+operator|->
+name|vinfproc
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 19960709 */
 if|if
 condition|(
 name|v
@@ -7098,6 +7185,17 @@ operator|->
 name|vtype
 operator|!=
 name|type
+operator|&&
+name|v
+operator|->
+name|vtype
+operator|!=
+name|lengtype
+argument_list|(
+name|type
+argument_list|,
+name|length
+argument_list|)
 condition|)
 block|{
 name|incompat
@@ -7342,13 +7440,6 @@ goto|goto
 name|ret
 goto|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/*!!??!!*/
-block|if(length == typesize[TYLOGICAL]) 			goto ret;
-endif|#
-directive|endif
 break|break;
 case|case
 name|TYLONG

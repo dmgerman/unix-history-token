@@ -29,6 +29,14 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|unsigned
+name|long
+name|uinteger
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|char
 modifier|*
 name|address
@@ -115,13 +123,54 @@ name|integer1
 typedef|;
 end_typedef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
-comment|/* typedef long long longint; */
+comment|/* Adjust for integer*8. */
 end_comment
 
 begin_comment
+unit|typedef long long longint;
 comment|/* system-dependent */
 end_comment
+
+begin_comment
+unit|typedef unsigned long long ulongint;
+comment|/* system-dependent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|qbit_clear
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)& ~((ulongint)1<< (b)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|qbit_set
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a) |  ((ulongint)1<< (b)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -664,6 +713,42 @@ parameter_list|,
 name|b
 parameter_list|)
 value|(doublereal)max(a,b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bit_test
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)>> (b)& 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bit_clear
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)& ~((uinteger)1<< (b)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bit_set
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a) |  ((uinteger)1<< (b)))
 end_define
 
 begin_comment
