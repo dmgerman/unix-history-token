@@ -429,6 +429,10 @@ return|;
 if|if
 condition|(
 name|ngrp
+operator|<
+literal|0
+operator|||
+name|ngrp
 operator|>=
 name|NGROUPS
 condition|)
