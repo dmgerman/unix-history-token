@@ -52,10 +52,22 @@ begin_struct
 struct|struct
 name|bio
 block|{
-name|u_int
+name|uint8_t
 name|bio_cmd
 decl_stmt|;
 comment|/* I/O operation. */
+name|uint8_t
+name|bio_flags
+decl_stmt|;
+comment|/* General flags. */
+name|uint8_t
+name|bio_cflags
+decl_stmt|;
+comment|/* Private use by the consumer. */
+name|uint8_t
+name|bio_pflags
+decl_stmt|;
+comment|/* Private use by the provider. */
 name|struct
 name|cdev
 modifier|*
@@ -80,10 +92,6 @@ name|caddr_t
 name|bio_data
 decl_stmt|;
 comment|/* Memory, superblocks, indirect etc. */
-name|u_int
-name|bio_flags
-decl_stmt|;
-comment|/* BIO_ flags. */
 name|int
 name|bio_error
 decl_stmt|;
@@ -107,22 +115,22 @@ name|void
 modifier|*
 name|bio_driver1
 decl_stmt|;
-comment|/* Private use by the callee. */
+comment|/* Private use by the provider. */
 name|void
 modifier|*
 name|bio_driver2
 decl_stmt|;
-comment|/* Private use by the callee. */
+comment|/* Private use by the provider. */
 name|void
 modifier|*
 name|bio_caller1
 decl_stmt|;
-comment|/* Private use by the caller. */
+comment|/* Private use by the consumer. */
 name|void
 modifier|*
 name|bio_caller2
 decl_stmt|;
-comment|/* Private use by the caller. */
+comment|/* Private use by the consumer. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|bio
@@ -202,35 +210,35 @@ begin_define
 define|#
 directive|define
 name|BIO_READ
-value|0x00000001
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIO_WRITE
-value|0x00000002
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIO_DELETE
-value|0x00000004
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIO_GETATTR
-value|0x00000008
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIO_CMD1
-value|0x40000000
+value|0x40
 end_define
 
 begin_comment
@@ -241,7 +249,7 @@ begin_define
 define|#
 directive|define
 name|BIO_CMD2
-value|0x80000000
+value|0x80
 end_define
 
 begin_comment
@@ -256,37 +264,15 @@ begin_define
 define|#
 directive|define
 name|BIO_ERROR
-value|0x00000001
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIO_DONE
-value|0x00000004
+value|0x02
 end_define
-
-begin_define
-define|#
-directive|define
-name|BIO_FLAG2
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* Available for local hacks */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BIO_FLAG1
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* Available for local hacks */
-end_comment
 
 begin_ifdef
 ifdef|#

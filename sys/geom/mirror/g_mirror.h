@@ -185,6 +185,20 @@ parameter_list|)
 value|do {				\ 	if (g_mirror_debug>= (lvl)) {					\ 		printf("GEOM_MIRROR");					\ 		if (g_mirror_debug> 0)					\ 			printf("[%u]", lvl);				\ 		printf(": ");						\ 		printf(__VA_ARGS__);					\ 		printf(" ");						\ 		g_print_bio(bp);					\ 		printf("\n");						\ 	}								\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|G_MIRROR_BIO_FLAG_REGULAR
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_MIRROR_BIO_FLAG_SYNC
+value|0x02
+end_define
+
 begin_comment
 comment|/*  * Informations needed for synchronization.  */
 end_comment

@@ -3924,9 +3924,9 @@ name|softc
 expr_stmt|;
 name|bp
 operator|->
-name|bio_flags
-operator|=
-name|BIO_FLAG1
+name|bio_cflags
+operator||=
+name|G_MIRROR_BIO_FLAG_REGULAR
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -4437,9 +4437,9 @@ name|softc
 expr_stmt|;
 name|bp
 operator|->
-name|bio_flags
-operator|=
-name|BIO_FLAG2
+name|bio_cflags
+operator||=
+name|G_MIRROR_BIO_FLAG_SYNC
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -4721,7 +4721,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|bio_flags
+name|bio_cflags
 operator|=
 literal|0
 expr_stmt|;
@@ -4953,7 +4953,7 @@ name|BIO_WRITE
 expr_stmt|;
 name|bp
 operator|->
-name|bio_flags
+name|bio_cflags
 operator|=
 literal|0
 expr_stmt|;
@@ -7262,9 +7262,9 @@ condition|(
 operator|(
 name|bp
 operator|->
-name|bio_flags
+name|bio_cflags
 operator|&
-name|BIO_FLAG1
+name|G_MIRROR_BIO_FLAG_REGULAR
 operator|)
 operator|!=
 literal|0
@@ -7282,9 +7282,9 @@ condition|(
 operator|(
 name|bp
 operator|->
-name|bio_flags
+name|bio_cflags
 operator|&
-name|BIO_FLAG2
+name|G_MIRROR_BIO_FLAG_SYNC
 operator|)
 operator|!=
 literal|0
