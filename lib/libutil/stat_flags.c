@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: stat_flags.c,v 1.8 1997/08/07 22:28:25 steve Exp $"
+literal|"$Id: stat_flags.c,v 1.9 1998/01/09 06:14:59 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -304,10 +304,6 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-name|clear
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|setp
@@ -348,6 +344,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|clear
+operator|=
+literal|0
+expr_stmt|;
 operator|*
 name|stringp
 operator|=
