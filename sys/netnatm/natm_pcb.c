@@ -90,25 +90,19 @@ name|natmpcb
 modifier|*
 name|npcb_alloc
 parameter_list|(
-name|wait
-parameter_list|)
 name|int
 name|wait
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|natmpcb
 modifier|*
 name|npcb
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|npcb
-argument_list|,
-expr|struct
-name|natmpcb
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -145,6 +139,8 @@ directive|endif
 if|if
 condition|(
 name|npcb
+operator|!=
+name|NULL
 condition|)
 name|npcb
 operator|->
@@ -168,18 +164,14 @@ begin_function
 name|void
 name|npcb_free
 parameter_list|(
-name|npcb
-parameter_list|,
-name|op
-parameter_list|)
 name|struct
 name|natmpcb
 modifier|*
 name|npcb
-decl_stmt|;
+parameter_list|,
 name|int
 name|op
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|s
@@ -234,7 +226,7 @@ name|npcb_flags
 operator|=
 name|NPCB_DRAIN
 expr_stmt|;
-comment|/* flag for distruction */
+comment|/* flag for distruct. */
 block|}
 else|else
 block|{
@@ -266,30 +258,22 @@ name|natmpcb
 modifier|*
 name|npcb_add
 parameter_list|(
-name|npcb
-parameter_list|,
-name|ifp
-parameter_list|,
-name|vci
-parameter_list|,
-name|vpi
-parameter_list|)
 name|struct
 name|natmpcb
 modifier|*
 name|npcb
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|u_int16_t
 name|vci
-decl_stmt|;
+parameter_list|,
 name|u_int8_t
 name|vpi
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|natmpcb
@@ -305,31 +289,15 @@ init|=
 name|splimp
 argument_list|()
 decl_stmt|;
-comment|/*    * lookup required    */
-for|for
-control|(
-name|cpcb
-operator|=
-name|LIST_FIRST
+comment|/* 	 * lookup required 	 */
+name|LIST_FOREACH
 argument_list|(
-operator|&
-name|natm_pcbs
-argument_list|)
-init|;
-name|cpcb
-operator|!=
-name|NULL
-condition|;
-name|cpcb
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|cpcb
+argument|cpcb
 argument_list|,
-name|pcblist
+argument|&natm_pcbs
+argument_list|,
+argument|pcblist
 argument_list|)
-control|)
-block|{
 if|if
 condition|(
 name|ifp
@@ -351,8 +319,7 @@ operator|->
 name|npcb_vpi
 condition|)
 break|break;
-block|}
-comment|/*    * add& something already there?    */
+comment|/* 	 * add& something already there? 	 */
 if|if
 condition|(
 name|cpcb
@@ -367,7 +334,7 @@ name|done
 goto|;
 comment|/* fail */
 block|}
-comment|/*    * need to allocate a pcb?    */
+comment|/* 	 * need to allocate a pcb? 	 */
 if|if
 condition|(
 name|npcb
@@ -375,6 +342,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* could be called from lower half */
 name|cpcb
 operator|=
 name|npcb_alloc
@@ -382,7 +350,6 @@ argument_list|(
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
-comment|/* could be called from lower half */
 if|if
 condition|(
 name|cpcb
@@ -464,19 +431,12 @@ directive|ifdef
 name|DDB
 end_ifdef
 
-begin_function_decl
+begin_function
 name|int
 name|npcb_dump
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-name|int
-name|npcb_dump
-parameter_list|()
 block|{
 name|struct
 name|natmpcb
@@ -488,33 +448,19 @@ argument_list|(
 literal|"npcb dump:\n"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|cpcb
-operator|=
-name|LIST_FIRST
+name|LIST_FOREACH
 argument_list|(
-operator|&
-name|natm_pcbs
-argument_list|)
-init|;
-name|cpcb
-operator|!=
-name|NULL
-condition|;
-name|cpcb
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|cpcb
+argument|cpcb
 argument_list|,
-name|pcblist
+argument|&natm_pcbs
+argument_list|,
+argument|pcblist
 argument_list|)
-control|)
 block|{
 name|printf
 argument_list|(
-literal|"if=%s, vci=%d, vpi=%d, IP=0x%x, sock=%p, flags=0x%x, inq=%d\n"
+literal|"if=%s, vci=%d, vpi=%d, IP=0x%x, sock=%p, flags=0x%x, "
+literal|"inq=%d\n"
 argument_list|,
 name|cpcb
 operator|->

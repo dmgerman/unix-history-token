@@ -351,7 +351,8 @@ specifier|static
 name|int
 name|natmqmaxlen
 init|=
-name|IFQ_MAXLEN
+literal|1000
+comment|/* IFQ_MAXLEN */
 decl_stmt|;
 end_decl_stmt
 
@@ -376,8 +377,6 @@ end_ifdef
 begin_decl_stmt
 name|u_int
 name|natm_sodropcnt
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -388,8 +387,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|natm_sodropbytes
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -400,8 +397,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|natm_sookcnt
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -412,8 +407,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|natm_sookbytes
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -430,7 +423,9 @@ begin_function
 specifier|static
 name|void
 name|natm_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|LIST_INIT
 argument_list|(
