@@ -346,11 +346,11 @@ name|PAGE_SIZE
 block|,
 literal|0
 block|,
-name|USRSTACK
+name|IA32_USRSTACK
 block|,
-name|USRSTACK
+name|IA32_USRSTACK
 block|,
-name|PS_STRINGS
+name|IA32_PS_STRINGS
 block|,
 name|VM_PROT_ALL
 block|,
@@ -460,7 +460,7 @@ expr|struct
 name|ia32_ps_strings
 operator|*
 operator|)
-name|PS_STRINGS
+name|IA32_PS_STRINGS
 expr_stmt|;
 name|szsigcode
 operator|=

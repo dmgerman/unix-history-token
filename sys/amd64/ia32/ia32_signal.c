@@ -1379,7 +1379,7 @@ name|regs
 operator|->
 name|tf_rip
 operator|=
-name|PS_STRINGS
+name|IA32_PS_STRINGS
 operator|-
 name|sz_freebsd4_ia32_sigcode
 expr_stmt|;
@@ -2127,7 +2127,7 @@ name|sf_addr
 operator|=
 name|regs
 operator|->
-name|tf_err
+name|tf_addr
 expr_stmt|;
 name|sf
 operator|.
@@ -2210,7 +2210,7 @@ name|regs
 operator|->
 name|tf_rip
 operator|=
-name|PS_STRINGS
+name|IA32_PS_STRINGS
 operator|-
 operator|*
 operator|(

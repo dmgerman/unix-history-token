@@ -67,7 +67,7 @@ begin_define
 define|#
 directive|define
 name|IA32_USRSTACK
-value|USRSTACK
+value|((1ul<< 32) - PAGE_SIZE)
 end_define
 
 begin_define
