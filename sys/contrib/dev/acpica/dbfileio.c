@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 69 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 72 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2003, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
@@ -87,100 +87,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbMatchArgument  *  * PARAMETERS:  UserArgument            - User command line  *              Arguments               - Array of commands to match against  *  * RETURN:      Index into command array or ACPI_TYPE_NOT_FOUND if not found  *  * DESCRIPTION: Search command array for a command match  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|ACPI_OBJECT_TYPE
-name|AcpiDbMatchArgument
-parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|UserArgument
-parameter_list|,
-name|ARGUMENT_INFO
-modifier|*
-name|Arguments
-parameter_list|)
-block|{
-name|UINT32
-name|i
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|UserArgument
-operator|||
-name|UserArgument
-index|[
-literal|0
-index|]
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-operator|(
-name|ACPI_TYPE_NOT_FOUND
-operator|)
-return|;
-block|}
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|Arguments
-index|[
-name|i
-index|]
-operator|.
-name|Name
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|ACPI_STRSTR
-argument_list|(
-name|Arguments
-index|[
-name|i
-index|]
-operator|.
-name|Name
-argument_list|,
-name|UserArgument
-argument_list|)
-operator|==
-name|Arguments
-index|[
-name|i
-index|]
-operator|.
-name|Name
-condition|)
-block|{
-return|return
-operator|(
-name|i
-operator|)
-return|;
-block|}
-block|}
-comment|/* Argument not recognized */
-return|return
-operator|(
-name|ACPI_TYPE_NOT_FOUND
-operator|)
-return|;
-block|}
-end_function
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -240,7 +146,7 @@ begin_function
 name|void
 name|AcpiDbOpenDebugFile
 parameter_list|(
-name|NATIVE_CHAR
+name|char
 modifier|*
 name|Name
 parameter_list|)
@@ -311,13 +217,13 @@ name|ACPI_APPLICATION
 end_ifdef
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbLoadTable  *  * PARAMETERS:  fp              - File that contains table  *              TablePtr        - Return value, buffer with table  *              TableLenght     - Return value, length of table  *  * RETURN:      Status  *  * DESCRIPTION: Load the DSDT from the file pointer  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbReadTable  *  * PARAMETERS:  fp              - File that contains table  *              Table           - Return value, buffer with table  *              TableLength     - Return value, length of table  *  * RETURN:      Status  *  * DESCRIPTION: Load the DSDT from the file pointer  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|ACPI_STATUS
-name|AcpiDbLoadTable
+name|AcpiDbReadTable
 parameter_list|(
 name|FILE
 modifier|*
@@ -326,7 +232,7 @@ parameter_list|,
 name|ACPI_TABLE_HEADER
 modifier|*
 modifier|*
-name|TablePtr
+name|Table
 parameter_list|,
 name|UINT32
 modifier|*
@@ -503,7 +409,7 @@ operator|.
 name|Length
 expr_stmt|;
 operator|*
-name|TablePtr
+name|Table
 operator|=
 name|AcpiOsAllocate
 argument_list|(
@@ -518,7 +424,7 @@ if|if
 condition|(
 operator|!
 operator|*
-name|TablePtr
+name|Table
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -547,7 +453,7 @@ name|UINT8
 operator|*
 operator|)
 operator|*
-name|TablePtr
+name|Table
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -568,7 +474,7 @@ comment|/* Copy the header to the buffer */
 name|ACPI_MEMCPY
 argument_list|(
 operator|*
-name|TablePtr
+name|Table
 argument_list|,
 operator|&
 name|TableHeader
@@ -609,7 +515,7 @@ operator|=
 name|AcpiTbVerifyTableChecksum
 argument_list|(
 operator|*
-name|TablePtr
+name|Table
 argument_list|)
 expr_stmt|;
 return|return
@@ -648,11 +554,11 @@ expr_stmt|;
 name|AcpiOsFree
 argument_list|(
 operator|*
-name|TablePtr
+name|Table
 argument_list|)
 expr_stmt|;
 operator|*
-name|TablePtr
+name|Table
 operator|=
 name|NULL
 expr_stmt|;
@@ -675,7 +581,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AeLocalLoadTable  *  * PARAMETERS:  TablePtr        - pointer to a buffer containing the entire  *                                table to be loaded  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to load a table from the caller's  *              buffer.  The buffer must contain an entire ACPI Table including  *              a valid header.  The header fields will be verified, and if it  *              is determined that the table is invalid, the call will fail.  *  *              If the call fails an appropriate status will be returned.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AeLocalLoadTable  *  * PARAMETERS:  Table           - pointer to a buffer containing the entire  *                                table to be loaded  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to load a table from the caller's  *              buffer.  The buffer must contain an entire ACPI Table including  *              a valid header.  The header fields will be verified, and if it  *              is determined that the table is invalid, the call will fail.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -684,7 +590,7 @@ name|AeLocalLoadTable
 parameter_list|(
 name|ACPI_TABLE_HEADER
 modifier|*
-name|TablePtr
+name|Table
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -701,7 +607,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|TablePtr
+name|Table
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -714,7 +620,7 @@ name|TableInfo
 operator|.
 name|Pointer
 operator|=
-name|TablePtr
+name|Table
 expr_stmt|;
 name|Status
 operator|=
@@ -723,7 +629,7 @@ argument_list|(
 operator|&
 name|TableInfo
 argument_list|,
-name|ACPI_TABLE_SECONDARY
+name|ACPI_TABLE_ALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -833,16 +739,21 @@ name|ACPI_APPLICATION
 end_ifdef
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGetAcpiTable  *  * PARAMETERS:  Filname         - File where table is located  *  * RETURN:      Status  *  * DESCRIPTION: Get an ACPI table from a file  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbReadTableFromFile  *  * PARAMETERS:  Filename         - File where table is located  *              Table            - Where a pointer to the table is returned  *  * RETURN:      Status  *  * DESCRIPTION: Get an ACPI table from a file  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiDbGetAcpiTable
+name|AcpiDbReadTableFromFile
 parameter_list|(
-name|NATIVE_CHAR
+name|char
 modifier|*
 name|Filename
+parameter_list|,
+name|ACPI_TABLE_HEADER
+modifier|*
+modifier|*
+name|Table
 parameter_list|)
 block|{
 name|FILE
@@ -873,7 +784,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Could not open file %s\n"
+literal|"Could not open input file %s\n"
 argument_list|,
 name|Filename
 argument_list|)
@@ -896,12 +807,11 @@ argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiDbLoadTable
+name|AcpiDbReadTable
 argument_list|(
 name|fp
 argument_list|,
-operator|&
-name|AcpiGbl_DbTablePtr
+name|Table
 argument_list|,
 operator|&
 name|TableLength
@@ -945,16 +855,21 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbLoadAcpiTable  *  * PARAMETERS:  Filname         - File where table is located  *  * RETURN:      Status  *  * DESCRIPTION: Load an ACPI table from a file  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGetTableFromFile  *  * PARAMETERS:  Filename         - File where table is located  *              Table            - Where a pointer to the table is returned  *  * RETURN:      Status  *  * DESCRIPTION: Load an ACPI table from a file  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiDbLoadAcpiTable
+name|AcpiDbGetTableFromFile
 parameter_list|(
-name|NATIVE_CHAR
+name|char
 modifier|*
 name|Filename
+parameter_list|,
+name|ACPI_TABLE_HEADER
+modifier|*
+modifier|*
+name|ReturnTable
 parameter_list|)
 block|{
 ifdef|#
@@ -963,11 +878,18 @@ name|ACPI_APPLICATION
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+decl_stmt|;
 name|Status
 operator|=
-name|AcpiDbGetAcpiTable
+name|AcpiDbReadTableFromFile
 argument_list|(
 name|Filename
+argument_list|,
+operator|&
+name|Table
 argument_list|)
 expr_stmt|;
 if|if
@@ -989,7 +911,7 @@ name|Status
 operator|=
 name|AeLocalLoadTable
 argument_list|(
-name|AcpiGbl_DbTablePtr
+name|Table
 argument_list|)
 expr_stmt|;
 if|if
@@ -1011,7 +933,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Table %4.4s is already installed\n"
 argument_list|,
-name|AcpiGbl_DbTablePtr
+name|Table
 operator|->
 name|Signature
 argument_list|)
@@ -1042,7 +964,7 @@ name|stderr
 argument_list|,
 literal|"Acpi table [%4.4s] successfully installed and loaded\n"
 argument_list|,
-name|AcpiGbl_DbTablePtr
+name|Table
 operator|->
 name|Signature
 argument_list|)
@@ -1051,6 +973,17 @@ name|AcpiGbl_AcpiHardwarePresent
 operator|=
 name|FALSE
 expr_stmt|;
+if|if
+condition|(
+name|ReturnTable
+condition|)
+block|{
+operator|*
+name|ReturnTable
+operator|=
+name|Table
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* ACPI_APPLICATION */
