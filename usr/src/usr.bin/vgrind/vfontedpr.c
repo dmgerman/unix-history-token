@@ -1418,6 +1418,16 @@ operator|+
 literal|20
 argument_list|)
 expr_stmt|;
+name|ps
+argument_list|(
+literal|"'wh 0 he"
+argument_list|)
+expr_stmt|;
+name|ps
+argument_list|(
+literal|"'wh -1i fo"
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
