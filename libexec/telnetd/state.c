@@ -1173,11 +1173,11 @@ name|opfrontp
 decl_stmt|,
 name|oc
 decl_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|opfrontp
-argument_list|,
 name|xptyobuf
+argument_list|,
+name|opfrontp
 argument_list|,
 name|n
 argument_list|)
