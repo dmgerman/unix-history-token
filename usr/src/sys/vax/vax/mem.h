@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.h	4.9	81/04/03	*/
+comment|/*	mem.h	4.10	82/05/26	*/
 end_comment
 
 begin_comment
@@ -200,7 +200,7 @@ begin_define
 define|#
 directive|define
 name|M750_CORERR
-value|0x40000000
+value|0x20000000
 end_define
 
 begin_comment
@@ -244,7 +244,7 @@ name|M750_SYN
 parameter_list|(
 name|mcr
 parameter_list|)
-value|((mcr)->mc_reg[0]& 0x3f)
+value|((mcr)->mc_reg[0]& 0x7f)
 end_define
 
 begin_define
@@ -254,7 +254,7 @@ name|M750_ADDR
 parameter_list|(
 name|mcr
 parameter_list|)
-value|(((mcr)->mc_reg[0]>> 8)& 0x7fff)
+value|(((mcr)->mc_reg[0]>> 9)& 0x7fff)
 end_define
 
 begin_endif
