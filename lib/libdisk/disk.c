@@ -1934,6 +1934,12 @@ return|return
 literal|"bsd/os swap"
 return|;
 case|case
+literal|191
+case|:
+return|return
+literal|"Solaris (new)"
+return|;
+case|case
 literal|238
 case|:
 return|return
