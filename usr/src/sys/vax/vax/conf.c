@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.6	%G%	*/
+comment|/*	conf.c	4.7	%G%	*/
 end_comment
 
 begin_include
@@ -855,6 +855,64 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
+file|"../conf/ct.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NCT
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|int
+name|ctopen
+argument_list|()
+decl_stmt|,
+name|ctclose
+argument_list|()
+decl_stmt|,
+name|ctwrite
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ctopen
+value|nulldev
+end_define
+
+begin_define
+define|#
+directive|define
+name|ctclose
+value|nulldev
+end_define
+
+begin_define
+define|#
+directive|define
+name|ctwrite
+value|nulldev
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|"../conf/dh.h"
 end_include
 
@@ -1055,6 +1113,13 @@ define|#
 directive|define
 name|dkreset
 value|nulldev
+end_define
+
+begin_define
+define|#
+directive|define
+name|dkchans
+value|0
 end_define
 
 begin_else
@@ -1286,7 +1351,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|pkmoden
+name|pkmodem
 value|nodev
 end_define
 
@@ -2157,14 +2222,13 @@ name|dkreset
 block|,
 name|dkchans
 block|,
-comment|/* 18 reserved for cat */
-name|nodev
+name|ctopen
+block|,
+name|ctclose
 block|,
 name|nodev
 block|,
-name|nodev
-block|,
-name|nodev
+name|ctwrite
 block|,
 comment|/*18*/
 name|nodev
