@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	5.1 (Berkeley) %G%"
+literal|"@(#)eval.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -419,11 +419,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|unix
-operator|||
-name|vms
 case|case
 name|SYSCTYPE
 case|:
@@ -455,8 +450,6 @@ name|sysval
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|INCLTYPE
 case|:

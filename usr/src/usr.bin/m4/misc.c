@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.3 (Berkeley) %G%"
+literal|"@(#)misc.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -510,18 +510,6 @@ argument_list|(
 name|dfil
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|vms
-if|if
-condition|(
-name|remove
-argument_list|(
-name|m4temp
-argument_list|)
-condition|)
-else|#
-directive|else
 if|if
 condition|(
 name|unlink
@@ -532,8 +520,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-endif|#
-directive|endif
 name|error
 argument_list|(
 literal|"m4: cannot unlink."
@@ -669,19 +655,6 @@ name|n
 operator|+
 literal|'0'
 expr_stmt|;
-if|#
-directive|if
-name|vms
-operator|(
-name|void
-operator|)
-name|remove
-argument_list|(
-name|m4temp
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 operator|(
 name|void
 operator|)
@@ -690,8 +663,6 @@ argument_list|(
 name|m4temp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 end_block
