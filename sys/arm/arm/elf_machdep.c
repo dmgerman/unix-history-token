@@ -142,9 +142,10 @@ argument_list|)
 block|,
 name|sendsig
 block|,
-name|NULL
+name|sigcode
 block|,
-name|NULL
+operator|&
+name|szsigcode
 block|,
 name|NULL
 block|,
