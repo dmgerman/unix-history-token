@@ -1085,8 +1085,8 @@ argument_list|)
 condition|)
 name|line
 index|[
-operator|--
 name|i
+operator|--
 index|]
 operator|=
 literal|'\0'
