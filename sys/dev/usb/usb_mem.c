@@ -571,6 +571,14 @@ name|size
 operator|&&
 name|p
 operator|->
+name|size
+operator|<
+name|size
+operator|*
+literal|2
+operator|&&
+name|p
+operator|->
 name|align
 operator|>=
 name|align
