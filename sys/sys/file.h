@@ -1135,7 +1135,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-comment|/* select(2) and poll(2) hold file descriptors. */
 return|return
 operator|(
 call|(
