@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)libcpats.c	1.3 (Berkeley) %G%"
+literal|"@(#)libcpats.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,19 +46,25 @@ ifdef|#
 directive|ifdef
 name|vax
 block|{
-literal|"1,_fgetc\n"
+literal|1
+block|,
+literal|"_fgetc\n"
 block|,
 literal|"	sobgeq	*(sp),1f\n\ 	calls	$1,__filbuf\n\ 	jbr     2f\n\ 1:\n\ 	addl3	$4,(sp)+,r1\n\ 	movzbl	*(r1),r0\n\ 	incl	(r1)\n\ 2:\n"
 block|}
 block|,
 block|{
-literal|"2,_fputc\n"
+literal|2
+block|,
+literal|"_fputc\n"
 block|,
 literal|"	sobgeq	*4(sp),1f\n\ 	calls	$2,__flsbuf\n\ 	jbr	2f\n\ 1:\n\ 	movq	(sp)+,r0\n\ 	movb	r0,*4(r1)\n\ 	incl	4(r1)\n\ 2:\n"
 block|}
 block|,
 block|{
-literal|"1,_strlen\n"
+literal|1
+block|,
+literal|"_strlen\n"
 block|,
 literal|"	movl	(sp)+,r5\n\ 	movl	r5,r1\n\ 1:\n\ 	locc	$0,$65535,(r1)\n\ 	jeql	1b\n\ 	subl3	r5,r1,r0\n"
 block|}
@@ -74,6 +80,8 @@ endif|#
 directive|endif
 endif|mc68000
 block|{
+literal|0
+block|,
 literal|""
 block|,
 literal|""
