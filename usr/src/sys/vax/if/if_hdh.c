@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	@(#)if_hdh.c	6.2 (Berkeley) %G% */
+end_comment
+
+begin_comment
 comment|/************************************************************************\       ________________________________________________________     /                                                        \    |          AAA          CCCCCCCCCCCCCC    CCCCCCCCCCCCCC   |    |         AAAAA        CCCCCCCCCCCCCCCC  CCCCCCCCCCCCCCCC  |    |        AAAAAAA       CCCCCCCCCCCCCCCCC CCCCCCCCCCCCCCCCC |    |       AAAA AAAA      CCCC              CCCC              |    |      AAAA   AAAA     CCCC              CCCC              |    |     AAAA     AAAA    CCCC              CCCC              |    |    AAAA       AAAA   CCCC              CCCC              |    |   AAAA  AAAAAAAAAAA  CCCCCCCCCCCCCCCCC CCCCCCCCCCCCCCCCC |    |  AAAA    AAAAAAAAAAA CCCCCCCCCCCCCCCC  CCCCCCCCCCCCCCCC  |    | AAAA      AAAAAAAAA   CCCCCCCCCCCCCC    CCCCCCCCCCCCCC   |     \________________________________________________________/  	Copyright (c) 1984 by Advanced Computer Communications 	720 Santa Barbara Street, Santa Barbara, California  93101 	(805) 963-9431  	This software may be duplicated and used on systems 	which are licensed to run U.C. Berkeley versions of 	the UNIX operating system.  Any duplication of any 	part of this software must include a copy of ACC's 	copyright notice.   File: 		if_hdh.c  Author: 		Art Berggreen  Project: 		4.2BSD HDH  Function: 		Device specific driver for IF-11/HDH under 4.2BSD     		networking code.  Revision History: 		31-Aug-1984: V1.0 - First Implementation. A.B. 		 6-Nov-1984: V1.1 - Supress extra "LINE DOWN" msgs. A.B. 		13-Jan-1984: V1.2 - Add conditionals for TWG. A.B.  \************************************************************************/
 end_comment
 
@@ -34,43 +38,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/protosw.h"
+file|"protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socket.h"
+file|"socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vmmac.h"
+file|"vmmac.h"
 end_include
 
 begin_include
@@ -100,18 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vaxif/if_hdhreg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vaxif/if_uba.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../vaxuba/ubareg.h"
 end_include
 
@@ -119,6 +111,18 @@ begin_include
 include|#
 directive|include
 file|"../vaxuba/ubavar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"if_hdhreg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"if_uba.h"
 end_include
 
 begin_decl_stmt
@@ -697,11 +701,8 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|panic
-argument_list|(
-literal|"hdhattach"
-argument_list|)
-expr_stmt|;
+return|return;
+empty_stmt|;
 name|sc
 operator|->
 name|hdh_if
@@ -846,6 +847,21 @@ literal|" hdh%d"
 argument_list|,
 name|unit
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|hdh_if
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_RUNNING
+expr_stmt|;
+name|sc
+operator|->
+name|hdh_flags
+operator|=
+literal|0
 expr_stmt|;
 call|(
 modifier|*
@@ -1059,20 +1075,11 @@ name|hdh_flags
 operator|&
 name|HDH_STARTED
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"hdh%d: re-init\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 comment|/* 	 * Alloc uba resources 	 */
 for|for
 control|(
@@ -1140,6 +1147,14 @@ operator|)
 return|;
 block|}
 block|}
+name|sc
+operator|->
+name|hdh_if
+operator|->
+name|if_flags
+operator||=
+name|IFF_RUNNING
+expr_stmt|;
 name|sc
 operator|->
 name|hdh_flags
@@ -2277,6 +2292,10 @@ argument_list|,
 name|rcnt
 argument_list|,
 literal|0
+argument_list|,
+name|sc
+operator|->
+name|hdh_if
 argument_list|)
 expr_stmt|;
 name|impinput
