@@ -351,27 +351,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|sp_info
-name|atm_stackq_pool
-init|=
-block|{
-literal|"Service stack queue pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|stackq_entry
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|10
-block|,
-comment|/* si_blkcnt */
-literal|10
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|atm_stackq_zone
 decl_stmt|;
 end_decl_stmt
 
@@ -462,6 +443,53 @@ argument_list|(
 name|atm_attributes_zone
 argument_list|,
 literal|100
+argument_list|)
+expr_stmt|;
+name|atm_stackq_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"atm stackq"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|stackq_entry
+argument_list|)
+argument_list|,
+operator|(
+name|uma_ctor
+operator|)
+operator|&
+name|atm_uma_ctor
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|atm_stackq_zone
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"atm_initialize: unable to allocate stackq pool"
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|atm_stackq_zone
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 name|register_netisr
@@ -2145,15 +2173,11 @@ decl_stmt|;
 comment|/* 	 * Get a new queue entry for this call 	 */
 name|sqp
 operator|=
-operator|(
-expr|struct
-name|stackq_entry
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|atm_stackq_pool
+name|atm_stackq_zone
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2479,11 +2503,10 @@ name|atm_stackq_tail
 operator|=
 name|qprev
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|atm_stackq_zone
+argument_list|,
 name|sqp
 argument_list|)
 expr_stmt|;
