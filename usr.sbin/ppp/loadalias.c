@@ -239,7 +239,7 @@ name|LogPrintf
 argument_list|(
 name|LogALERT
 argument_list|,
-literal|"Ignoring environment _PATH_ALIAS value (%s)"
+literal|"Ignoring environment _PATH_ALIAS value (%s)\n"
 argument_list|,
 name|env
 argument_list|)

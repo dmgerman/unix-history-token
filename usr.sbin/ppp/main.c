@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.74 1997/08/27 20:11:16 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.75 1997/08/31 20:07:02 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -1976,7 +1976,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"pipe: %s"
+literal|"pipe: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2043,7 +2043,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"fork: %s"
+literal|"fork: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2759,7 +2759,7 @@ name|LogPrintf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"Got %d bytes (reading from the terminal)"
+literal|"Got %d bytes (reading from the terminal)\n"
 argument_list|,
 name|n
 argument_list|)
@@ -4059,7 +4059,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"select: %s"
+literal|"DoLoop: select(): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -4160,7 +4160,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"accept: %s"
+literal|"DoLoop: accept(): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -4547,7 +4547,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"read from tun: %s"
+literal|"read from tun: %s\n"
 argument_list|,
 name|strerror
 argument_list|(

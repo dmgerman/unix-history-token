@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.17 1997/07/28 01:02:27 brian Exp $  *  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.18 1997/08/25 00:29:26 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -220,7 +220,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"OsSetRoute: socket: %s"
+literal|"OsSetRoute: socket(): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -953,7 +953,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"sysctl: estimate: %s"
+literal|"ShowRoute: sysctl: estimate: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1021,7 +1021,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"sysctl: getroute: %s"
+literal|"ShowRoute: sysctl: getroute: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1208,7 +1208,7 @@ name|LogPrintf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|" flag = %x, rest = %d"
+literal|" flag = %x, rest = %d\n"
 argument_list|,
 name|rtm
 operator|->
@@ -1477,7 +1477,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"sysctl: estimate: %s"
+literal|"DeleteIfRoutes: sysctl: estimate: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1533,7 +1533,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"sysctl: getroute: %s"
+literal|"DeleteIfRoutes: sysctl: getroute: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1781,7 +1781,7 @@ name|LogPrintf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"DeleteIfRoutes: flag = %x, rest = %d"
+literal|"DeleteIfRoutes: flag = %x, rest = %d\n"
 argument_list|,
 name|rtm
 operator|->
@@ -1996,7 +1996,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"GetIfIndex: socket: %s"
+literal|"GetIfIndex: socket(): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2099,7 +2099,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ioctl(SIOCGIFCONF): %s"
+literal|"GetIfIndex: ioctl(SIOCGIFCONF): %s\n"
 argument_list|,
 name|strerror
 argument_list|(

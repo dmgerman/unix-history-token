@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sys-bsd.c - System-dependent procedures for setting up  * PPP interfaces on bsd-4.4-ish systems (including 386BSD, NetBSD, etc.)  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: arp.c,v 1.12 1997/06/09 03:27:11 brian Exp $  *  */
+comment|/*  * sys-bsd.c - System-dependent procedures for setting up  * PPP interfaces on bsd-4.4-ish systems (including 386BSD, NetBSD, etc.)  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: arp.c,v 1.13 1997/08/25 00:29:03 brian Exp $  *  */
 end_comment
 
 begin_comment
@@ -317,8 +317,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Cannot determine ethernet address"
-literal|" for proxy ARP\n"
+literal|"Cannot determine ethernet address for proxy ARP\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -849,7 +848,12 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"sifproxyarp: ioctl(SIOCSARP): \n"
+literal|"sifproxyarp: ioctl(SIOCSARP): %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -941,7 +945,12 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"cifproxyarp: ioctl(SIOCDARP): \n"
+literal|"cifproxyarp: ioctl(SIOCDARP): %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1060,7 +1069,12 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"get_ether_addr: ioctl(SIOCGIFCONF): \n"
+literal|"get_ether_addr: ioctl(SIOCGIFCONF): %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

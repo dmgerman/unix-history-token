@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.25 1997/08/20 23:47:44 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.26 1997/08/25 00:29:14 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
 end_comment
 
 begin_include
@@ -1433,7 +1433,7 @@ name|LogPrintf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"requested = %x "
+literal|"requested = %x\n"
 argument_list|,
 name|htonl
 argument_list|(
@@ -1447,7 +1447,7 @@ name|LogPrintf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"range = %x"
+literal|"range = %x\n"
 argument_list|,
 name|htonl
 argument_list|(
@@ -1621,13 +1621,6 @@ name|fsmconfig
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|plen
-operator|<
-literal|0
-condition|)
-break|break;
 name|type
 operator|=
 operator|*
@@ -2248,11 +2241,16 @@ operator|=
 operator|*
 name|lp
 expr_stmt|;
-name|LogPrintf
+name|snprintf
 argument_list|(
-name|LogIPCP
+name|tbuff2
 argument_list|,
-literal|"%s %s, "
+sizeof|sizeof
+argument_list|(
+name|tbuff2
+argument_list|)
+argument_list|,
+literal|"%s %s,"
 argument_list|,
 name|tbuff
 argument_list|,
@@ -2266,7 +2264,9 @@ name|LogPrintf
 argument_list|(
 name|LogIPCP
 argument_list|,
-literal|"%s\n"
+literal|"%s %s\n"
+argument_list|,
+name|tbuff2
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -2311,11 +2311,16 @@ break|break;
 case|case
 name|MODE_NAK
 case|:
-name|LogPrintf
+name|snprintf
 argument_list|(
-name|LogIPCP
+name|tbuff2
 argument_list|,
-literal|"%s changing address: %s "
+sizeof|sizeof
+argument_list|(
+name|tbuff2
+argument_list|)
+argument_list|,
+literal|"%s changing address: %s"
 argument_list|,
 name|tbuff
 argument_list|,
@@ -2331,7 +2336,9 @@ name|LogPrintf
 argument_list|(
 name|LogIPCP
 argument_list|,
-literal|"--> %s\n"
+literal|"%s --> %s\n"
+argument_list|,
+name|tbuff2
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -2479,7 +2486,7 @@ operator|.
 name|s_addr
 condition|)
 block|{
-comment|/* 	   * So the client has got the DNS stuff wrong (first request) so 	   * well tell 'em how it is 	   */
+comment|/* 	   * So the client has got the DNS stuff wrong (first request) so 	   * we'll tell 'em how it is 	   */
 name|bcopy
 argument_list|(
 name|cp
