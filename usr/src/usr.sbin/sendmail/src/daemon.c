@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.29 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.30 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.29 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.30 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -660,6 +660,10 @@ argument_list|,
 sizeof|sizeof
 name|CurHostAddr
 argument_list|)
+expr_stmt|;
+name|CurHostName
+operator|=
+name|host
 expr_stmt|;
 if|if
 condition|(
