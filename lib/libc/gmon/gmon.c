@@ -144,50 +144,24 @@ name|__amd64__
 argument_list|)
 end_if
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|minbrk
-name|asm
-argument_list|(
-literal|".minbrk"
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
+begin_extern
+extern|extern char *minbrk
+asm|__asm (".minbrk");
 else|#
 directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|minbrk
-name|asm
-argument_list|(
-literal|"minbrk"
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
+extern|extern char *minbrk
+asm|__asm ("minbrk");
 endif|#
 directive|endif
-end_endif
-
-begin_decl_stmt
-name|struct
-name|gmonparam
-name|_gmonparam
-init|=
+extern|struct gmonparam _gmonparam =
 block|{
 name|GMON_PROF_OFF
 block|}
-decl_stmt|;
-end_decl_stmt
+end_extern
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
 specifier|static
