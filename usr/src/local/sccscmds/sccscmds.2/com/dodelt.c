@@ -35,7 +35,7 @@ begin_decl_stmt
 name|char
 name|Pgmr
 index|[
-literal|8
+name|SZLNAM
 index|]
 decl_stmt|;
 end_decl_stmt
