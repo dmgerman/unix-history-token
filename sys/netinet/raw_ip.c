@@ -817,7 +817,9 @@ name|ip
 operator|->
 name|ip_tos
 operator|=
-literal|0
+name|inp
+operator|->
+name|inp_ip_tos
 expr_stmt|;
 name|ip
 operator|->
@@ -863,7 +865,9 @@ name|ip
 operator|->
 name|ip_ttl
 operator|=
-name|MAXTTL
+name|inp
+operator|->
+name|inp_ip_ttl
 expr_stmt|;
 block|}
 else|else
@@ -1878,6 +1882,12 @@ operator|->
 name|inp_ip_p
 operator|=
 name|proto
+expr_stmt|;
+name|inp
+operator|->
+name|inp_ip_ttl
+operator|=
+name|ip_defttl
 expr_stmt|;
 ifdef|#
 directive|ifdef
