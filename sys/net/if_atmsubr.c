@@ -4,12 +4,22 @@ comment|/*      $NetBSD: if_atmsubr.c,v 1.10 1997/03/11 23:19:51 chuck Exp $    
 end_comment
 
 begin_comment
-comment|/*  *  * Copyright (c) 1996 Charles D. Cranor and Washington University.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Charles D. Cranor and   *	Washington University.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  *  * Copyright (c) 1996 Charles D. Cranor and Washington University.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Charles D. Cranor and   *	Washington University.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * if_atmsubr.c  */
 end_comment
 
-begin_comment
-comment|/*  * if_atmsubr.c  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -238,7 +248,7 @@ name|senderr
 parameter_list|(
 name|e
 parameter_list|)
-value|do { error = (e); goto bad;} while (0)
+value|do { error = (e); goto bad; } while (0)
 end_define
 
 begin_comment
@@ -249,34 +259,26 @@ begin_function
 name|int
 name|atm_output
 parameter_list|(
-name|ifp
-parameter_list|,
-name|m0
-parameter_list|,
-name|dst
-parameter_list|,
-name|rt0
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m0
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
 name|dst
-decl_stmt|;
+parameter_list|,
 name|struct
 name|rtentry
 modifier|*
 name|rt0
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_int16_t
 name|etype
@@ -679,6 +681,7 @@ name|llchdr
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* note: in host order */
 name|ATM_LLC_SETTYPE
 argument_list|(
 name|atmllc
@@ -686,7 +689,6 @@ argument_list|,
 name|etype
 argument_list|)
 expr_stmt|;
-comment|/* note: in host order */
 block|}
 else|else
 name|bcopy
@@ -757,33 +759,25 @@ begin_function
 name|void
 name|atm_input
 parameter_list|(
-name|ifp
-parameter_list|,
-name|ah
-parameter_list|,
-name|m
-parameter_list|,
-name|rxhand
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|atm_pseudohdr
 modifier|*
 name|ah
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|rxhand
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|isr
@@ -888,7 +882,8 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"atm_input: NATM detected but not configured in kernel\n"
+literal|"atm_input: NATM detected but not "
+literal|"configured in kernel\n"
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -985,7 +980,8 @@ name|__OpenBSD__
 argument_list|)
 name|printf
 argument_list|(
-literal|"%s: recv'd invalid LLC/SNAP frame [vp=%d,vc=%d]\n"
+literal|"%s: recv'd invalid LLC/SNAP frame "
+literal|"[vp=%d,vc=%d]\n"
 argument_list|,
 name|ifp
 operator|->
@@ -1015,7 +1011,8 @@ name|__bsdi__
 argument_list|)
 name|printf
 argument_list|(
-literal|"%s%d: recv'd invalid LLC/SNAP frame [vp=%d,vc=%d]\n"
+literal|"%s%d: recv'd invalid LLC/SNAP frame "
+literal|"[vp=%d,vc=%d]\n"
 argument_list|,
 name|ifp
 operator|->
@@ -1122,13 +1119,11 @@ begin_function
 name|void
 name|atm_ifattach
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifaddr
