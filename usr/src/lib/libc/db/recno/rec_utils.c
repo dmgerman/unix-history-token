@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_utils.c	5.1 (Berkeley) %G%"
+literal|"@(#)rec_utils.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../btree/btree.h"
+file|"recno.h"
 end_include
 
 begin_comment
@@ -104,6 +104,11 @@ specifier|register
 name|RLEAF
 modifier|*
 name|rl
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
 decl_stmt|;
 name|rl
 operator|=
@@ -175,9 +180,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|t
-operator|->
-name|bt_dbuf
+name|p
 operator|=
 name|realloc
 argument_list|(
@@ -198,6 +201,12 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
+name|t
+operator|->
+name|bt_dbuf
+operator|=
+name|p
+expr_stmt|;
 name|t
 operator|->
 name|bt_dbufsz
