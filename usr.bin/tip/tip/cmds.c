@@ -2639,6 +2639,8 @@ name|pc
 operator|=
 name|eofchars
 init|;
+name|pc
+operator|&&
 operator|*
 name|pc
 condition|;
