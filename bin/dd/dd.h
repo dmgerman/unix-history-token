@@ -316,6 +316,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|C_FILL
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|C_PARITY
 value|(C_PAREVEN | C_PARODD | C_PARNONE | C_PARSET)
 end_define

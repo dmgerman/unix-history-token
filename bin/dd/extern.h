@@ -232,5 +232,12 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|fill_char
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
