@@ -306,7 +306,7 @@ specifier|static
 name|int
 name|g_stripe_fast
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -412,7 +412,7 @@ name|g_stripe_maxmem
 init|=
 name|MAX_IO_SIZE
 operator|*
-literal|50
+literal|100
 decl_stmt|;
 end_decl_stmt
 
