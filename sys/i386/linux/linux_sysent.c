@@ -1601,7 +1601,10 @@ block|}
 block|,
 comment|/* 115 = linux_swapoff */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|linux_sysinfo_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t

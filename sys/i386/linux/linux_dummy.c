@@ -248,14 +248,6 @@ end_expr_stmt
 begin_expr_stmt
 name|DUMMY
 argument_list|(
-name|sysinfo
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DUMMY
-argument_list|(
 name|adjtimex
 argument_list|)
 expr_stmt|;
