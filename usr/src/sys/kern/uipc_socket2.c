@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	4.22	82/03/19	*/
+comment|/*	uipc_socket2.c	4.23	82/06/14	*/
 end_comment
 
 begin_include
@@ -732,26 +732,7 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
-name|m_reserve
-argument_list|(
-operator|(
-name|cc
-operator|*
-literal|2
-operator|)
-operator|/
-name|MSIZE
-argument_list|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+comment|/* someday maybe this routine will fail... */
 name|sb
 operator|->
 name|sb_hiwat
@@ -798,15 +779,6 @@ block|{
 name|sbflush
 argument_list|(
 name|sb
-argument_list|)
-expr_stmt|;
-name|m_release
-argument_list|(
-name|sb
-operator|->
-name|sb_mbmax
-operator|/
-name|MSIZE
 argument_list|)
 expr_stmt|;
 name|sb

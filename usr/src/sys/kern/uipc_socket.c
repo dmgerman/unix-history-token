@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.40	82/05/20	*/
+comment|/*	uipc_socket.c	4.41	82/06/14	*/
 end_comment
 
 begin_include
@@ -350,15 +350,34 @@ condition|(
 name|error
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|m_free
+if|if
+condition|(
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_mbmax
+operator|||
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_mbmax
+condition|)
+name|panic
 argument_list|(
-name|dtom
+literal|"socreate"
+argument_list|)
+expr_stmt|;
+name|so
+operator|->
+name|so_state
+operator||=
+name|SS_USERGONE
+expr_stmt|;
+name|sofree
 argument_list|(
 name|so
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
