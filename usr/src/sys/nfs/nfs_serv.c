@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.45 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.46 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -52,8 +52,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"dirent.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ufs/ufs/quota.h"
 end_include
+
+begin_comment
+comment|/* XXX - for ufid */
+end_comment
 
 begin_include
 include|#
@@ -61,11 +71,9 @@ directive|include
 file|"ufs/ufs/inode.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"ufs/ufs/dir.h"
-end_include
+begin_comment
+comment|/* XXX - for ufid */
+end_comment
 
 begin_include
 include|#
@@ -7566,7 +7574,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * nfs readdir service  * - mallocs what it thinks is enough to read  *	count rounded up to a multiple of NFS_DIRBLKSIZ<= NFS_MAXREADDIR  * - calls VOP_READDIR()  * - loops around building the reply  *	if the output generated exceeds count break out of loop  *	The nfsm_clget macro is used here so that the reply will be packed  *	tightly in mbuf clusters.  * - it only knows that it has encountered eof when the VOP_READDIR()  *	reads nothing  * - as such one readdir rpc will return eof false although you are there  *	and then the next will return eof  * - it trims out records with d_ino == 0  *	this doesn't matter for Unix clients, but they might confuse clients  *	for other os'.  * NB: It is tempting to set eof to true if the VOP_READDIR() reads less  *	than requested, but this may not apply to all filesystems. For  *	example, client NFS does not { although it is never remote mounted  *	anyhow }  *     The alternate call nqnfsrv_readdirlook() does lookups as well.  * PS: The NFS protocol spec. does not clarify what the "count" byte  *	argument is a count of.. just name strings and file id's or the  *	entire reply rpc or ...  *	I tried just file name and id sizes and it confused the Sun client,  *	so I am using the full rpc size now. The "paranoia.." comment refers  *	to including the status longwords that are not a part of the dir.  *	"entry" structures, but are in the rpc.  */
+comment|/*  * nfs readdir service  * - mallocs what it thinks is enough to read  *	count rounded up to a multiple of NFS_DIRBLKSIZ<= NFS_MAXREADDIR  * - calls VOP_READDIR()  * - loops around building the reply  *	if the output generated exceeds count break out of loop  *	The nfsm_clget macro is used here so that the reply will be packed  *	tightly in mbuf clusters.  * - it only knows that it has encountered eof when the VOP_READDIR()  *	reads nothing  * - as such one readdir rpc will return eof false although you are there  *	and then the next will return eof  * - it trims out records with d_fileno == 0  *	this doesn't matter for Unix clients, but they might confuse clients  *	for other os'.  * NB: It is tempting to set eof to true if the VOP_READDIR() reads less  *	than requested, but this may not apply to all filesystems. For  *	example, client NFS does not { although it is never remote mounted  *	anyhow }  *     The alternate call nqnfsrv_readdirlook() does lookups as well.  * PS: The NFS protocol spec. does not clarify what the "count" byte  *	argument is a count of.. just name strings and file id's or the  *	entire reply rpc or ...  *	I tried just file name and id sizes and it confused the Sun client,  *	so I am using the full rpc size now. The "paranoia.." comment refers  *	to including the status longwords that are not a part of the dir.  *	"entry" structures, but are in the rpc.  */
 end_comment
 
 begin_struct
@@ -7675,7 +7683,7 @@ name|mp
 decl_stmt|;
 specifier|register
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;
@@ -8175,7 +8183,7 @@ name|dp
 operator|=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|)
 name|cpos
@@ -8188,7 +8196,7 @@ name|cend
 operator|&&
 name|dp
 operator|->
-name|d_ino
+name|d_fileno
 operator|==
 literal|0
 condition|)
@@ -8203,7 +8211,7 @@ name|dp
 operator|=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|)
 name|cpos
@@ -8248,7 +8256,7 @@ name|dp
 operator|=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|)
 name|cpos
@@ -8296,7 +8304,7 @@ if|if
 condition|(
 name|dp
 operator|->
-name|d_ino
+name|d_fileno
 operator|!=
 literal|0
 condition|)
@@ -8341,7 +8349,7 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-comment|/* Build the directory record xdr from the direct entry */
+comment|/* 			 * Build the directory record xdr from 			 * the dirent entry. 			 */
 name|nfsm_clget
 expr_stmt|;
 operator|*
@@ -8362,7 +8370,7 @@ name|txdr_unsigned
 argument_list|(
 name|dp
 operator|->
-name|d_ino
+name|d_fileno
 argument_list|)
 expr_stmt|;
 name|bp
@@ -8511,7 +8519,7 @@ name|dp
 operator|=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|)
 name|cpos
@@ -8684,7 +8692,7 @@ name|mp
 decl_stmt|;
 specifier|register
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;
@@ -9243,7 +9251,7 @@ name|dp
 operator|=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|)
 name|cpos
@@ -9256,7 +9264,7 @@ name|cend
 operator|&&
 name|dp
 operator|->
-name|d_ino
+name|d_fileno
 operator|==
 literal|0
 condition|)
@@ -9271,7 +9279,7 @@ name|dp
 operator|=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|)
 name|cpos
@@ -9316,7 +9324,7 @@ name|dp
 operator|=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|)
 name|cpos
@@ -9370,7 +9378,7 @@ if|if
 condition|(
 name|dp
 operator|->
-name|d_ino
+name|d_fileno
 operator|!=
 literal|0
 condition|)
@@ -9423,7 +9431,7 @@ name|ufid_ino
 operator|=
 name|dp
 operator|->
-name|d_ino
+name|d_fileno
 expr_stmt|;
 name|fl
 operator|.
@@ -9583,7 +9591,7 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-comment|/* Build the directory record xdr from the direct entry */
+comment|/* 			 * Build the directory record xdr from 			 * the dirent entry. 			 */
 name|nfsm_clget
 expr_stmt|;
 operator|*
@@ -9679,7 +9687,7 @@ name|txdr_unsigned
 argument_list|(
 name|dp
 operator|->
-name|d_ino
+name|d_fileno
 argument_list|)
 expr_stmt|;
 name|bp
@@ -9830,7 +9838,7 @@ name|dp
 operator|=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|)
 name|cpos
