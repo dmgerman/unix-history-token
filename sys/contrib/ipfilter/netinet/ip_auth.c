@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_auth.c,v 1.1.1.1 1997/11/16 05:55:52 peter Exp $"
+literal|"@(#)$Id: ip_auth.c,v 1.2 1998/03/21 11:33:59 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -372,6 +372,33 @@ begin_include
 include|#
 directive|include
 file|<net/af.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|300000
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_endif

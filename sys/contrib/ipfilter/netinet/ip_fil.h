@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.0.2.39.2.10 1997/12/03 10:02:30 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 1.1.1.5 1998/03/21 10:11:12 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -1831,6 +1831,12 @@ ifndef|#
 directive|ifndef
 name|_KERNEL
 end_ifndef
+
+begin_struct_decl
+struct_decl|struct
+name|ifnet
+struct_decl|;
+end_struct_decl
 
 begin_decl_stmt
 specifier|extern
