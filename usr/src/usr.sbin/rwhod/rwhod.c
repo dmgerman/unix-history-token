@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	5.8 (Berkeley) %G%"
+literal|"@(#)rwhod.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -354,8 +354,6 @@ literal|64
 index|]
 decl_stmt|;
 name|int
-name|addr
-decl_stmt|,
 name|on
 init|=
 literal|1
@@ -1717,6 +1715,30 @@ operator|.
 name|wd_we
 expr_stmt|;
 block|}
+comment|/* 	 * The test on utmpent looks silly---after all, if no one is 	 * logged on, why worry about efficiency?---but is useful on 	 * (e.g.) compute servers. 	 */
+if|if
+condition|(
+name|utmpent
+operator|&&
+name|chdir
+argument_list|(
+literal|"/dev"
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"chdir(/dev): %m"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|we
 operator|=
 name|mywd
@@ -1737,33 +1759,15 @@ name|i
 operator|++
 control|)
 block|{
-name|char
-name|path
-index|[
-literal|64
-index|]
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
+if|if
+condition|(
+name|stat
 argument_list|(
-name|path
-argument_list|,
-literal|"/dev/%s"
-argument_list|,
 name|we
 operator|->
 name|we_utmp
 operator|.
 name|out_line
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|stat
-argument_list|(
-name|path
 argument_list|,
 operator|&
 name|stb
@@ -1944,6 +1948,31 @@ operator|->
 name|n_addrlen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|utmpent
+operator|&&
+name|chdir
+argument_list|(
+name|RWHODIR
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"chdir(%s): %m"
+argument_list|,
+name|RWHODIR
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|done
 label|:
 operator|(
@@ -1964,11 +1993,6 @@ end_macro
 
 begin_block
 block|{
-name|struct
-name|nlist
-modifier|*
-name|nlp
-decl_stmt|;
 specifier|static
 name|ino_t
 name|vmunixino
