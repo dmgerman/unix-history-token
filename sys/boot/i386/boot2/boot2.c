@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.18 1999/01/11 11:36:03 rnordier Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.18.2.1 1999/01/24 00:15:39 msmith Exp $  */
 end_comment
 
 begin_include
@@ -3711,6 +3711,18 @@ operator|>=
 name|d
 operator|->
 name|d_npartitions
+operator|||
+operator|!
+name|d
+operator|->
+name|d_partitions
+index|[
+name|dsk
+operator|.
+name|part
+index|]
+operator|.
+name|p_size
 condition|)
 block|{
 name|printf
