@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.77 (Berkeley) %G%"
+literal|"@(#)util.c	8.78 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6670,6 +6670,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* run as default user */
+name|endpwent
+argument_list|()
+expr_stmt|;
 name|setgid
 argument_list|(
 name|DefGid

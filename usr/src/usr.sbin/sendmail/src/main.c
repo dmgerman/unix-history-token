@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.136 (Berkeley) %G%"
+literal|"@(#)main.c	8.137 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2323,6 +2323,9 @@ name|ConfFile
 operator|=
 name|optarg
 expr_stmt|;
+name|endpwent
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2726,6 +2729,9 @@ case|case
 literal|'X'
 case|:
 comment|/* traffic log file */
+name|endpwent
+argument_list|()
+expr_stmt|;
 name|setgid
 argument_list|(
 name|RealGid
@@ -3802,6 +3808,9 @@ operator|!=
 name|MD_TEST
 condition|)
 block|{
+name|endpwent
+argument_list|()
+expr_stmt|;
 name|setuid
 argument_list|(
 name|RealUid
@@ -3844,6 +3853,9 @@ expr_stmt|;
 name|printqueue
 argument_list|()
 expr_stmt|;
+name|endpwent
+argument_list|()
+expr_stmt|;
 name|setuid
 argument_list|(
 name|RealUid
@@ -3878,6 +3890,9 @@ name|TRUE
 argument_list|,
 name|CurEnv
 argument_list|)
+expr_stmt|;
+name|endpwent
+argument_list|()
 expr_stmt|;
 name|setuid
 argument_list|(
@@ -4805,6 +4820,9 @@ operator|=
 name|EX_OK
 expr_stmt|;
 comment|/* reset uid for process accounting */
+name|endpwent
+argument_list|()
+expr_stmt|;
 name|setuid
 argument_list|(
 name|RealUid
@@ -4848,6 +4866,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* reset uid for process accounting */
+name|endpwent
+argument_list|()
+expr_stmt|;
 name|setuid
 argument_list|(
 name|RealUid

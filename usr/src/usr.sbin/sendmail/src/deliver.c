@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.159 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.160 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5138,6 +5138,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* reset user id */
+name|endpwent
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|bitnset
@@ -11081,6 +11084,9 @@ name|DefGid
 expr_stmt|;
 block|}
 comment|/* now set the group and user ids */
+name|endpwent
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|RealUserName
