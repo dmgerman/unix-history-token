@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: whois.c,v 1.6 1998/06/12 12:55:46 peter Exp $"
+literal|"$Id: whois.c,v 1.7 1999/02/01 19:22:27 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,6 +172,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RUNICHOST
+value|"whois.ripn.net"
+end_define
+
+begin_define
+define|#
+directive|define
 name|WHOIS_PORT
 value|43
 end_define
@@ -267,7 +274,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adgh:pr"
+literal|"adgh:prR"
 argument_list|)
 operator|)
 operator|!=
@@ -328,6 +335,14 @@ case|:
 name|host
 operator|=
 name|RNICHOST
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|host
+operator|=
+name|RUNICHOST
 expr_stmt|;
 break|break;
 case|case
@@ -645,7 +660,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: whois [-adgpr] [-h hostname] name ...\n"
+literal|"usage: whois [-adgprR] [-h hostname] name ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
