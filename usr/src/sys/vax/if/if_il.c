@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_il.c	4.15	82/12/14	*/
+comment|/*	if_il.c	4.16	82/12/16	*/
 end_comment
 
 begin_include
@@ -130,13 +130,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vaxif/if_ilreg.h"
+file|"../vaxif/if_ether.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"../vaxif/if_il.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxif/if_ilreg.h"
 end_include
 
 begin_include
@@ -156,20 +162,6 @@ include|#
 directive|include
 file|"../vaxuba/ubavar.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|ILMTU
-value|1500
-end_define
-
-begin_define
-define|#
-directive|define
-name|ILMIN
-value|(60-14)
-end_define
 
 begin_decl_stmt
 name|int
@@ -569,7 +561,7 @@ name|ifp
 operator|->
 name|if_mtu
 operator|=
-name|ILMTU
+name|ETHERMTU
 expr_stmt|;
 name|ifp
 operator|->
@@ -1167,7 +1159,7 @@ name|int
 operator|)
 name|btoc
 argument_list|(
-name|ILMTU
+name|ETHERMTU
 argument_list|)
 argument_list|)
 operator|==
@@ -1323,7 +1315,7 @@ expr|struct
 name|il_rheader
 argument_list|)
 operator|+
-name|ILMTU
+name|ETHERMTU
 operator|+
 literal|6
 expr_stmt|;
@@ -1586,19 +1578,19 @@ operator|-
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|il_xheader
+name|ether_header
 argument_list|)
 operator|<
-name|ILMIN
+name|ETHERMIN
 condition|)
 name|len
 operator|=
-name|ILMIN
+name|ETHERMIN
 operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|il_xheader
+name|ether_header
 argument_list|)
 expr_stmt|;
 if|if
@@ -1824,7 +1816,7 @@ expr|struct
 name|il_rheader
 argument_list|)
 operator|+
-name|ILMTU
+name|ETHERMTU
 operator|+
 literal|6
 expr_stmt|;
@@ -2121,7 +2113,7 @@ literal|46
 operator|||
 name|len
 operator|>
-name|ILMTU
+name|ETHERMTU
 condition|)
 block|{
 name|is
@@ -2160,6 +2152,20 @@ name|setup
 goto|;
 block|}
 comment|/* 	 * Deal with trailer protocol: if type is PUP trailer 	 * get true type from first 16-bit word past data. 	 * Remember that type was trailer by setting off. 	 */
+name|il
+operator|->
+name|ilr_type
+operator|=
+name|ntohs
+argument_list|(
+operator|(
+name|u_short
+operator|)
+name|il
+operator|->
+name|ilr_type
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|ildataaddr
@@ -2177,15 +2183,15 @@ name|il
 operator|->
 name|ilr_type
 operator|>=
-name|ILPUP_TRAIL
+name|ETHERPUP_TRAIL
 operator|&&
 name|il
 operator|->
 name|ilr_type
 operator|<
-name|ILPUP_TRAIL
+name|ETHERPUP_TRAIL
 operator|+
-name|ILPUP_NTRAILER
+name|ETHERPUP_NTRAILER
 condition|)
 block|{
 name|off
@@ -2195,7 +2201,7 @@ name|il
 operator|->
 name|ilr_type
 operator|-
-name|ILPUP_TRAIL
+name|ETHERPUP_TRAIL
 operator|)
 operator|*
 literal|512
@@ -2204,7 +2210,7 @@ if|if
 condition|(
 name|off
 operator|>=
-name|ILMTU
+name|ETHERMTU
 condition|)
 goto|goto
 name|setup
@@ -2214,6 +2220,8 @@ name|il
 operator|->
 name|ilr_type
 operator|=
+name|ntohs
+argument_list|(
 operator|*
 name|ildataaddr
 argument_list|(
@@ -2224,9 +2232,12 @@ argument_list|,
 name|u_short
 operator|*
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|resid
 operator|=
+name|ntohs
+argument_list|(
 operator|*
 operator|(
 name|ildataaddr
@@ -2241,6 +2252,7 @@ name|u_short
 operator|*
 argument_list|)
 operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2338,7 +2350,7 @@ ifdef|#
 directive|ifdef
 name|INET
 case|case
-name|ILPUP_IPTYPE
+name|ETHERPUP_IPTYPE
 case|:
 name|schednetisr
 argument_list|(
@@ -2436,7 +2448,7 @@ expr|struct
 name|il_rheader
 argument_list|)
 operator|+
-name|ILMTU
+name|ETHERMTU
 operator|+
 literal|6
 expr_stmt|;
@@ -2554,7 +2566,7 @@ name|m0
 decl_stmt|;
 specifier|register
 name|struct
-name|il_xheader
+name|ether_header
 modifier|*
 name|il
 decl_stmt|;
@@ -2643,7 +2655,7 @@ condition|)
 block|{
 name|type
 operator|=
-name|ILPUP_TRAIL
+name|ETHERPUP_TRAIL
 operator|+
 operator|(
 name|off
@@ -2682,7 +2694,13 @@ name|u_short
 operator|*
 argument_list|)
 operator|=
-name|ILPUP_IPTYPE
+name|htons
+argument_list|(
+operator|(
+name|u_short
+operator|)
+name|ETHERPUP_IPTYPE
+argument_list|)
 expr_stmt|;
 operator|*
 operator|(
@@ -2697,9 +2715,15 @@ operator|+
 literal|1
 operator|)
 operator|=
+name|htons
+argument_list|(
+operator|(
+name|u_short
+operator|)
 name|m
 operator|->
 name|m_len
+argument_list|)
 expr_stmt|;
 goto|goto
 name|gottrailertype
@@ -2707,7 +2731,7 @@ goto|;
 block|}
 name|type
 operator|=
-name|ILPUP_IPTYPE
+name|ETHERPUP_IPTYPE
 expr_stmt|;
 name|off
 operator|=
@@ -2793,7 +2817,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|il_xheader
+name|ether_header
 argument_list|)
 operator|>
 name|m
@@ -2844,7 +2868,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|il_xheader
+name|ether_header
 argument_list|)
 expr_stmt|;
 block|}
@@ -2857,7 +2881,7 @@ operator|-=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|il_xheader
+name|ether_header
 argument_list|)
 expr_stmt|;
 name|m
@@ -2867,7 +2891,7 @@ operator|+=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|il_xheader
+name|ether_header
 argument_list|)
 expr_stmt|;
 block|}
@@ -2878,7 +2902,7 @@ argument_list|(
 name|m
 argument_list|,
 expr|struct
-name|il_xheader
+name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
@@ -2905,7 +2929,7 @@ name|caddr_t
 operator|)
 name|il
 operator|->
-name|ilx_dhost
+name|ether_dhost
 argument_list|,
 literal|6
 argument_list|)
@@ -2940,14 +2964,14 @@ name|caddr_t
 operator|)
 name|il
 operator|->
-name|ilx_dhost
+name|ether_dhost
 argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
 name|il
 operator|->
-name|ilx_dhost
+name|ether_dhost
 index|[
 literal|3
 index|]
@@ -2962,7 +2986,7 @@ literal|0x7f
 expr_stmt|;
 name|il
 operator|->
-name|ilx_dhost
+name|ether_dhost
 index|[
 literal|4
 index|]
@@ -2977,7 +3001,7 @@ literal|0xff
 expr_stmt|;
 name|il
 operator|->
-name|ilx_dhost
+name|ether_dhost
 index|[
 literal|5
 index|]
@@ -3007,16 +3031,22 @@ name|caddr_t
 operator|)
 name|il
 operator|->
-name|ilx_shost
+name|ether_shost
 argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
 name|il
 operator|->
-name|ilx_type
+name|ether_type
 operator|=
+name|htons
+argument_list|(
+operator|(
+name|u_short
+operator|)
 name|type
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Queue message on interface, and start output if interface 	 * not yet active. 	 */
 name|s

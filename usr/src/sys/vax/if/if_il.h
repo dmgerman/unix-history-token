@@ -1,37 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_il.h	4.3	82/11/13	*/
+comment|/*	if_il.h	4.4	82/12/16	*/
 end_comment
-
-begin_comment
-comment|/*  * Structure of an Ethernet header -- transmit format  *	(source address insertion disabled)  */
-end_comment
-
-begin_struct
-struct|struct
-name|il_xheader
-block|{
-name|u_char
-name|ilx_dhost
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* Destination Host */
-name|u_char
-name|ilx_shost
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* Source Host */
-name|u_short
-name|ilx_type
-decl_stmt|;
-comment|/* Type of packet */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Structure of an Ethernet header -- receive format  */
@@ -73,50 +43,6 @@ comment|/* Type of packet */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|ILPUP_PUPTYPE
-value|0x0400
-end_define
-
-begin_comment
-comment|/* PUP protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ILPUP_IPTYPE
-value|0x0800
-end_define
-
-begin_comment
-comment|/* IP protocol */
-end_comment
-
-begin_comment
-comment|/*  * The ILPUP_NTRAILER packet types starting at ILPUP_TRAIL have  * (type-ILPUP_TRAIL)*512 bytes of data followed  * by a PUP type (as given above) and then the (variable-length) header.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ILPUP_TRAIL
-value|0x1000
-end_define
-
-begin_comment
-comment|/* Trailer PUP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ILPUP_NTRAILER
-value|16
-end_define
 
 begin_comment
 comment|/*  * Structure of statistics record  */
