@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcfunc.c 1.9.1.1 %G%"
+literal|"@(#)pcfunc.c 1.9.1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|"tree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"objfmt.h"
 end_include
 
 begin_include
