@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.96 1996/05/31 00:37:48 dyson Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.97 1996/06/01 19:19:21 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -1594,6 +1594,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * This routine unholds page table pages, and if the hold count  * drops to zero, then it decrements the wire count.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -2452,22 +2456,6 @@ return|return
 literal|0
 return|;
 block|}
-if|if
-condition|(
-name|p
-operator|->
-name|flags
-operator|&
-name|PG_MAPPED
-condition|)
-block|{
-name|p
-operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_MAPPED
-expr_stmt|;
 name|pmap_remove_pte_mapping
 argument_list|(
 name|VM_PAGE_TO_PHYS
@@ -2476,19 +2464,19 @@ name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PMAP_DIAGNOSTIC
-argument_list|)
 if|if
 condition|(
 name|p
 operator|->
 name|hold_count
 condition|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PMAP_DIAGNOSTIC
+argument_list|)
 name|panic
 argument_list|(
 literal|"pmap_release: freeing held page table page"
@@ -2496,6 +2484,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 		 * If this failure happens, we must clear the page, because 		 * there is likely a mapping still valid.  This condition 		 * is an error, but at least this zero operation will mitigate 		 * some Sig-11's or crashes, because this page is thought 		 * to be zero.  This is a robustness fix, and not meant to 		 * be a long term work-around. 		 */
+name|pmap_zero_page
+argument_list|(
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|p
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Page directory pages need to have the kernel 	 * stuff cleared, so they can go into the zero queue also. 	 */
 if|if
 condition|(
@@ -5110,6 +5108,45 @@ operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
 block|}
+else|else
+block|{
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_BUSY
+operator|)
+operator|||
+name|m
+operator|->
+name|busy
+condition|)
+block|{
+name|m
+operator|->
+name|flags
+operator||=
+name|PG_WANTED
+expr_stmt|;
+name|tsleep
+argument_list|(
+name|m
+argument_list|,
+name|PVM
+argument_list|,
+literal|"ptewai"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
+block|}
 comment|/* 	 * mark the object writeable 	 */
 name|pmap
 operator|->
@@ -5305,12 +5342,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|m
-operator|->
-name|flags
-operator||=
-name|PG_MAPPED
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -5362,10 +5393,9 @@ operator||
 name|PG_MANAGED
 argument_list|)
 expr_stmt|;
-name|pmap_update_1pg
-argument_list|(
-name|pteva
-argument_list|)
+block|}
+name|pmap_update
+argument_list|()
 expr_stmt|;
 name|m
 operator|->
@@ -5373,7 +5403,6 @@ name|flags
 operator||=
 name|PG_MAPPED
 expr_stmt|;
-block|}
 return|return
 name|m
 return|;
@@ -7242,10 +7271,18 @@ operator|*
 name|src_pte
 condition|)
 block|{
+comment|/* 					 * Simply clear the modified and accessed (referenced) 					 * bits. 					 */
 operator|*
 name|dst_pte
 operator|=
 name|ptetemp
+operator|&
+operator|~
+operator|(
+name|PG_M
+operator||
+name|PG_A
+operator|)
 expr_stmt|;
 name|dst_pmap
 operator|->
