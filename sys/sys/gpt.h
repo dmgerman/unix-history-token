@@ -74,6 +74,12 @@ name|uint32_t
 name|hdr_crc_table
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
 struct|;
 end_struct
 
