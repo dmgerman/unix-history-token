@@ -36,7 +36,7 @@ name|NO_VERSION_CONTROL
 end_ifndef
 
 begin_empty
-empty|#ident "@(#)$RCSfile: if_em_hw.h,v $$Revision: 1.37 $$Date: 2003/12/20 00:14:51 $"
+empty|#ident "@(#)$RCSfile: if_em_hw.h,v $$Revision: 1.41 $$Date: 2004/05/17 15:18:53 $"
 end_empty
 
 begin_endif
@@ -1795,6 +1795,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_82541GI_LF
+value|0x107C
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_DEV_ID_82546GB_COPPER
 value|0x1079
 end_define
@@ -1857,6 +1864,27 @@ define|#
 directive|define
 name|E1000_82542_2_1_REV_ID
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_REVISION_0
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_REVISION_1
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_REVISION_2
+value|2
 end_define
 
 begin_define
@@ -4409,6 +4437,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_HOST_IF
+value|0x08800
+end_define
+
+begin_comment
+comment|/* Host Interface */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_FFMT
 value|0x09000
 end_define
@@ -5319,6 +5358,13 @@ define|#
 directive|define
 name|E1000_82542_FFVT
 value|E1000_FFVT
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_HOST_IF
+value|E1000_HOST_IF
 end_define
 
 begin_comment
@@ -9295,6 +9341,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_MANC_EN_MAC_ADDR_FILTER
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Enable MAC address                                                     * filtering */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_EN_MNG2HOST
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* Enable MNG packets to host                                              * memory */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_MANC_SMB_REQ
 value|0x01000000
 end_define
@@ -9645,6 +9713,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EEPROM_PHY_CLASS_WORD
+value|0x0007
+end_define
+
+begin_define
+define|#
+directive|define
 name|EEPROM_INIT_CONTROL1_REG
 value|0x000A
 end_define
@@ -9812,6 +9887,17 @@ value|0x000F
 end_define
 
 begin_comment
+comment|/* Mask bit for PHY class in Word 7 of the EEPROM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_PHY_CLASS_A
+value|0x8000
+end_define
+
+begin_comment
 comment|/* Mask bits for fields in Word 0x0a of the EEPROM */
 end_comment
 
@@ -9944,7 +10030,7 @@ begin_define
 define|#
 directive|define
 name|E1000_COLLISION_THRESHOLD
-value|16
+value|15
 end_define
 
 begin_define
@@ -12782,7 +12868,7 @@ begin_define
 define|#
 directive|define
 name|IGP01E1000_PSCR_TP_LOOPBACK
-value|0x0001
+value|0x0010
 end_define
 
 begin_define
@@ -12845,6 +12931,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|IGP01E1000_PLHR_MASTER_FAULT
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PLHR_MASTER_RESOLUTION
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
 name|IGP01E1000_PLHR_GIG_REM_RCVR_NOK
 value|0x0800
 end_define
@@ -12886,42 +12986,42 @@ begin_define
 define|#
 directive|define
 name|IGP01E1000_PLHR_AUTONEG_FAULT
-value|0x0010
+value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
 name|IGP01E1000_PLHR_AUTONEG_ACTIVE
-value|0x0008
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|IGP01E1000_PLHR_VALID_CHANNEL_D
-value|0x0004
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|IGP01E1000_PLHR_VALID_CHANNEL_C
-value|0x0002
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|IGP01E1000_PLHR_VALID_CHANNEL_B
-value|0x0001
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|IGP01E1000_PLHR_VALID_CHANNEL_A
-value|0x0000
+value|0x0001
 end_define
 
 begin_comment
