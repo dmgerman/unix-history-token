@@ -3151,7 +3151,7 @@ name|strcmp
 argument_list|(
 name|desk
 argument_list|,
-literal|"fvwm2"
+literal|"fvwm"
 argument_list|)
 condition|)
 block|{
@@ -3173,12 +3173,12 @@ name|DITEM_FAILURE
 operator|&&
 name|gotit
 argument_list|(
-literal|"fvwm2"
+literal|"fvwm"
 argument_list|)
 condition|)
 name|write_root_xprofile
 argument_list|(
-literal|"xterm&\nexec fvwm2\n"
+literal|"xterm&\nexec fvwm\n"
 argument_list|)
 expr_stmt|;
 block|}
