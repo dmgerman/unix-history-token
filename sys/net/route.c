@@ -2358,6 +2358,18 @@ operator|*
 operator|)
 name|rn
 expr_stmt|;
+name|rt
+operator|->
+name|rt_refcnt
+operator|++
+expr_stmt|;
+name|rt
+operator|->
+name|rt_flags
+operator|&=
+operator|~
+name|RTF_UP
+expr_stmt|;
 comment|/* 		 * Now search what's left of the subtree for any cloned 		 * routes which might have been formed from this node. 		 */
 if|if
 condition|(
@@ -2433,14 +2445,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 		 * NB: RTF_UP must be set during the search above, 		 * because we might delete the last ref, causing 		 * rt to get freed prematurely. 		 *  eh? then why not just add a reference? 		 * I'm not sure how RTF_UP helps matters. (JRE) 		 */
-name|rt
-operator|->
-name|rt_flags
-operator|&=
-operator|~
-name|RTF_UP
-expr_stmt|;
 comment|/* 		 * give the protocol a chance to keep things in sync. 		 */
 if|if
 condition|(
@@ -2481,28 +2485,12 @@ name|ret_nrt
 operator|=
 name|rt
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|rt
-operator|->
-name|rt_refcnt
-operator|<=
-literal|0
-condition|)
-block|{
-name|rt
-operator|->
-name|rt_refcnt
-operator|++
-expr_stmt|;
-comment|/* make a 1->0 transition */
-name|rtfree
+else|else
+name|RTFREE
 argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|RTM_RESOLVE
@@ -4798,27 +4786,11 @@ name|RTM_DELETE
 condition|)
 block|{
 comment|/* 			 * If we are deleting, and we found an entry, then 			 * it's been removed from the tree.. now throw it away. 			 */
-if|if
-condition|(
-name|rt
-operator|->
-name|rt_refcnt
-operator|<=
-literal|0
-condition|)
-block|{
-name|rt
-operator|->
-name|rt_refcnt
-operator|++
-expr_stmt|;
-comment|/* make a 1->0 transition */
-name|rtfree
+name|RTFREE
 argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
