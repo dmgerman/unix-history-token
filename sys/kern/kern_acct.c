@@ -149,7 +149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Accounting vnode pointer, and saved vnode pointer.  */
+comment|/*  * Accounting vnode pointer, saved vnode pointer, and flags for each.  */
 end_comment
 
 begin_decl_stmt
@@ -163,10 +163,24 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|acctflags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|vnode
 modifier|*
 name|savacctp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|savacctflags
 decl_stmt|;
 end_decl_stmt
 
@@ -428,9 +442,7 @@ name|nd
 operator|.
 name|ni_vp
 argument_list|,
-name|FWRITE
-operator||
-name|O_APPEND
+name|flags
 argument_list|,
 name|td
 operator|->
@@ -480,9 +492,15 @@ else|:
 name|savacctp
 operator|)
 argument_list|,
-name|FWRITE
-operator||
-name|O_APPEND
+operator|(
+name|acctp
+operator|!=
+name|NULLVP
+condition|?
+name|acctflags
+else|:
+name|savacctflags
+operator|)
 argument_list|,
 name|td
 operator|->
@@ -518,6 +536,10 @@ operator|=
 name|nd
 operator|.
 name|ni_vp
+expr_stmt|;
+name|acctflags
+operator|=
+name|flags
 expr_stmt|;
 name|callout_init
 argument_list|(
@@ -1231,9 +1253,7 @@ name|vn_close
 argument_list|(
 name|savacctp
 argument_list|,
-name|FWRITE
-operator||
-name|O_APPEND
+name|savacctflags
 argument_list|,
 name|NOCRED
 argument_list|,
@@ -1285,6 +1305,10 @@ name|acctp
 operator|=
 name|savacctp
 expr_stmt|;
+name|acctflags
+operator|=
+name|savacctflags
+expr_stmt|;
 name|savacctp
 operator|=
 name|NULLVP
@@ -1323,9 +1347,7 @@ name|vn_close
 argument_list|(
 name|acctp
 argument_list|,
-name|FWRITE
-operator||
-name|O_APPEND
+name|acctflags
 argument_list|,
 name|NOCRED
 argument_list|,
@@ -1376,6 +1398,10 @@ block|{
 name|savacctp
 operator|=
 name|acctp
+expr_stmt|;
+name|savacctflags
+operator|=
+name|acctflags
 expr_stmt|;
 name|acctp
 operator|=
