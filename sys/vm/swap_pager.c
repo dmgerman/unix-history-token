@@ -2842,9 +2842,6 @@ decl_stmt|;
 name|daddr_t
 name|blk
 decl_stmt|;
-name|vm_offset_t
-name|kva
-decl_stmt|;
 name|vm_pindex_t
 name|lastpindex
 decl_stmt|;
@@ -3112,19 +3109,15 @@ operator|&
 name|nsw_rcount
 argument_list|)
 expr_stmt|;
-name|kva
-operator|=
+comment|/* 	 * map our page(s) into kva for input 	 * 	 * NOTE: B_PAGING is set by pbgetvp() 	 */
+name|pmap_qenter
+argument_list|(
 operator|(
 name|vm_offset_t
 operator|)
 name|bp
 operator|->
 name|b_data
-expr_stmt|;
-comment|/* 	 * map our page(s) into kva for input 	 * 	 * NOTE: B_PAGING is set by pbgetvp() 	 */
-name|pmap_qenter
-argument_list|(
-name|kva
 argument_list|,
 name|m
 operator|+
@@ -3168,15 +3161,6 @@ name|thread0
 operator|.
 name|td_ucred
 argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_data
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|kva
 expr_stmt|;
 name|bp
 operator|->
@@ -3303,6 +3287,13 @@ operator|->
 name|b_npages
 expr_stmt|;
 comment|/* 	 * We still hold the lock on mreq, and our automatic completion routine 	 * does not remove it. 	 */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|mreq
+operator|->
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_object_pip_add
 argument_list|(
 name|mreq
@@ -3312,6 +3303,13 @@ argument_list|,
 name|bp
 operator|->
 name|b_npages
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|mreq
+operator|->
+name|object
 argument_list|)
 expr_stmt|;
 name|lastpindex
