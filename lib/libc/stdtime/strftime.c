@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strftime.c,v 1.9 1996/07/12 18:55:32 jkh Exp $"
+literal|"$Id: strftime.c,v 1.11 1996/07/19 15:17:44 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,25 +138,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rune.h>
-end_include
-
-begin_comment
-comment|/* for _PATH_LOCALE */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|LOCALE_HOME
-value|_PATH_LOCALE
-end_define
 
 begin_struct
 struct|struct
@@ -1951,14 +1934,6 @@ name|name
 parameter_list|)
 block|{
 specifier|static
-specifier|const
-name|char
-name|lc_time
-index|[]
-init|=
-literal|"LC_TIME"
-decl_stmt|;
-specifier|static
 name|char
 modifier|*
 name|locale_buf
@@ -1995,7 +1970,7 @@ decl_stmt|;
 name|char
 name|filename
 index|[
-name|FILENAME_MAX
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|struct
@@ -2030,10 +2005,6 @@ name|no_locale
 goto|;
 if|if
 condition|(
-operator|!
-operator|*
-name|name
-operator|||
 operator|!
 name|strcmp
 argument_list|(
@@ -2139,20 +2110,40 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-name|snprintf
+if|if
+condition|(
+operator|!
+name|_PathLocale
+condition|)
+goto|goto
+name|no_locale
+goto|;
+name|strcpy
 argument_list|(
 name|filename
 argument_list|,
-sizeof|sizeof
+name|_PathLocale
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
 name|filename
 argument_list|,
-literal|"%s/%s/%s"
-argument_list|,
-name|_PathLocale
+literal|"/"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|filename
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|filename
 argument_list|,
-name|lc_time
+literal|"/LC_TIME"
 argument_list|)
 expr_stmt|;
 name|fd
