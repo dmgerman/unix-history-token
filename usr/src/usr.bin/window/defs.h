@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)defs.h	3.5 83/11/02	  */
+comment|/*  *	@(#)defs.h	3.6 83/11/22	  */
 end_comment
 
 begin_include
@@ -298,7 +298,7 @@ begin_function_decl
 name|struct
 name|ww
 modifier|*
-name|idtowin
+name|vtowin
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -311,46 +311,6 @@ name|openiwin
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* stuff for long commands */
-end_comment
-
-begin_decl_stmt
-name|int
-name|argc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|argv
-index|[
-literal|100
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|lineno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* line number in the source file */
-end_comment
-
-begin_decl_stmt
-name|char
-name|insource
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* we're in a source */
-end_comment
 
 end_unit
 
