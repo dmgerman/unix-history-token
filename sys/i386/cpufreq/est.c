@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
 end_include
 
@@ -124,6 +130,9 @@ decl_stmt|;
 name|uint16_t
 name|id16
 decl_stmt|;
+name|int
+name|power
+decl_stmt|;
 block|}
 name|freq_info
 typedef|;
@@ -148,7 +157,6 @@ decl_stmt|;
 name|uint32_t
 name|bus_clk
 decl_stmt|;
-specifier|const
 name|freq_info
 modifier|*
 name|freqtab
@@ -165,7 +173,9 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
-specifier|const
+name|int
+name|acpi_settings
+decl_stmt|;
 name|freq_info
 modifier|*
 name|freq_list
@@ -228,7 +238,7 @@ parameter_list|,
 name|bus_clk
 parameter_list|)
 define|\
-value|{ MHz, mV, ID16(MHz, mV, bus_clk) }
+value|{ MHz, mV, ID16(MHz, mV, bus_clk), CPUFREQ_VAL_UNKNOWN }
 end_define
 
 begin_define
@@ -306,11 +316,11 @@ value|10
 end_define
 
 begin_comment
-comment|/*  * Frequency (MHz) and voltage (mV) settings.  Data from the  * Intel Pentium M Processor Datasheet (Order Number 252612), Table 5.  *  * XXX New Dothan processors have multiple VID# with different  * settings for each VID#.  Since we can't uniquely identify this info  * without undisclosed methods from Intel, we can't support newer  * processors with this table method.  If ACPI Px states are supported,  * we can get info from them.  */
+comment|/*  * Frequency (MHz) and voltage (mV) settings.  Data from the  * Intel Pentium M Processor Datasheet (Order Number 252612), Table 5.  *  * Dothan processors have multiple VID#s with different settings for  * each VID#.  Since we can't uniquely identify this info  * without undisclosed methods from Intel, we can't support newer  * processors with this table method.  If ACPI Px states are supported,  * we get info from them.  */
 end_comment
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM17_130
 index|[]
@@ -384,7 +394,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM16_130
 index|[]
@@ -458,7 +468,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM15_130
 index|[]
@@ -532,7 +542,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM14_130
 index|[]
@@ -597,7 +607,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM13_130
 index|[]
@@ -662,7 +672,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM13_LV_130
 index|[]
@@ -745,7 +755,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM12_LV_130
 index|[]
@@ -819,7 +829,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM11_LV_130
 index|[]
@@ -884,7 +894,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM11_ULV_130
 index|[]
@@ -949,7 +959,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM10_ULV_130
 index|[]
@@ -1009,7 +1019,7 @@ comment|/*  * Data from "Intel Pentium M Processor on 90nm Process with  * 2-MB 
 end_comment
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_765A_90
 index|[]
@@ -1101,7 +1111,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_765B_90
 index|[]
@@ -1193,7 +1203,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_765C_90
 index|[]
@@ -1285,7 +1295,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_765E_90
 index|[]
@@ -1377,7 +1387,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_755A_90
 index|[]
@@ -1469,7 +1479,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_755B_90
 index|[]
@@ -1561,7 +1571,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_755C_90
 index|[]
@@ -1653,7 +1663,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_755D_90
 index|[]
@@ -1745,7 +1755,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_745A_90
 index|[]
@@ -1828,7 +1838,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_745B_90
 index|[]
@@ -1911,7 +1921,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_745C_90
 index|[]
@@ -1994,7 +2004,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_745D_90
 index|[]
@@ -2077,7 +2087,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_735A_90
 index|[]
@@ -2151,7 +2161,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_735B_90
 index|[]
@@ -2225,7 +2235,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_735C_90
 index|[]
@@ -2299,7 +2309,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_735D_90
 index|[]
@@ -2373,7 +2383,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_725A_90
 index|[]
@@ -2447,7 +2457,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_725B_90
 index|[]
@@ -2521,7 +2531,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_725C_90
 index|[]
@@ -2595,7 +2605,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_725D_90
 index|[]
@@ -2669,7 +2679,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_715A_90
 index|[]
@@ -2734,7 +2744,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_715B_90
 index|[]
@@ -2799,7 +2809,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_715C_90
 index|[]
@@ -2864,7 +2874,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_715D_90
 index|[]
@@ -2929,7 +2939,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_738_90
 index|[]
@@ -3021,7 +3031,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_733_90
 index|[]
@@ -3086,7 +3096,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|freq_info
 name|PM_723_90
 index|[]
@@ -3142,7 +3152,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|cpu_info
 name|ESTprocs
 index|[]
@@ -3767,20 +3777,22 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|est_find_cpu
+name|est_get_info
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|vendor
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|est_acpi_info
+parameter_list|(
+name|device_t
+name|dev
 parameter_list|,
-name|uint64_t
-name|msr
-parameter_list|,
-name|uint32_t
-name|bus_clk
-parameter_list|,
-specifier|const
 name|freq_info
 modifier|*
 modifier|*
@@ -3791,12 +3803,32 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|const
+name|int
+name|est_table_info
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|uint64_t
+name|msr
+parameter_list|,
+name|uint32_t
+name|bus_clk
+parameter_list|,
+name|freq_info
+modifier|*
+modifier|*
+name|freqs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|freq_info
 modifier|*
 name|est_get_current
 parameter_list|(
-specifier|const
 name|freq_info
 modifier|*
 name|freq_list
@@ -4100,11 +4132,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-specifier|const
-name|freq_info
-modifier|*
-name|f
-decl_stmt|;
 name|device_t
 name|perf_dev
 decl_stmt|;
@@ -4214,6 +4241,17 @@ operator||
 name|MSR_SS_ENABLE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"enabling SpeedStep\n"
+argument_list|)
+expr_stmt|;
 comment|/* Check if the enable failed. */
 name|msr
 operator|=
@@ -4247,50 +4285,6 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* Identify the exact CPU model */
-name|msr
-operator|=
-name|rdmsr
-argument_list|(
-name|MSR_PERF_STATUS
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|est_find_cpu
-argument_list|(
-name|cpu_vendor
-argument_list|,
-name|msr
-argument_list|,
-name|INTEL_BUS_CLK
-argument_list|,
-operator|&
-name|f
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"CPU claims to support Enhanced Speedstep, but is not recognized.\n"
-literal|"Please update driver or contact the maintainer.\n"
-literal|"cpu_vendor = %s msr = %0jx, bus_clk = %x\n"
-argument_list|,
-name|cpu_vendor
-argument_list|,
-name|msr
-argument_list|,
-name|INTEL_BUS_CLK
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 name|device_set_desc
 argument_list|(
 name|dev
@@ -4320,9 +4314,6 @@ name|est_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|uint64_t
-name|msr
-decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -4336,27 +4327,19 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
-name|msr
-operator|=
-name|rdmsr
+comment|/* Check CPU for supported settings. */
+if|if
+condition|(
+name|est_get_info
 argument_list|(
-name|MSR_PERF_STATUS
+name|dev
 argument_list|)
-expr_stmt|;
-name|est_find_cpu
-argument_list|(
-name|cpu_vendor
-argument_list|,
-name|msr
-argument_list|,
-name|INTEL_BUS_CLK
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|freq_list
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|cpufreq_register
 argument_list|(
 name|dev
@@ -4379,6 +4362,33 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|struct
+name|est_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|acpi_settings
+condition|)
+name|free
+argument_list|(
+name|sc
+operator|->
+name|freq_list
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -4387,15 +4397,400 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Probe for supported CPU settings.  First, check our static table of  * settings.  If no match, try using the ones offered by acpi_perf  * (i.e., _PSS).  We use ACPI second because some systems (IBM R/T40  * series) export both legacy SMM IO-based access and direct MSR access  * but the direct access specifies invalid values for _PSS.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
-name|est_find_cpu
+name|est_get_info
 parameter_list|(
-specifier|const
-name|char
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|est_softc
 modifier|*
-name|vendor
+name|sc
+decl_stmt|;
+name|uint64_t
+name|msr
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|msr
+operator|=
+name|rdmsr
+argument_list|(
+name|MSR_PERF_STATUS
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|est_table_info
+argument_list|(
+name|dev
+argument_list|,
+name|msr
+argument_list|,
+name|INTEL_BUS_CLK
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|freq_list
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|error
+operator|=
+name|est_acpi_info
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|freq_list
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"est: CPU supports Enhanced Speedstep, but is not recognized.\n"
+literal|"est: Please update driver or contact the maintainer.\n"
+literal|"est: cpu_vendor %s, msr %0jx, bus_clk, %x\n"
+argument_list|,
+name|cpu_vendor
+argument_list|,
+name|msr
+argument_list|,
+name|INTEL_BUS_CLK
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|est_acpi_info
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|freq_info
+modifier|*
+modifier|*
+name|freqs
+parameter_list|)
+block|{
+name|struct
+name|est_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|struct
+name|cf_setting
+modifier|*
+name|sets
+decl_stmt|;
+name|freq_info
+modifier|*
+name|table
+decl_stmt|;
+name|device_t
+name|perf_dev
+decl_stmt|;
+name|int
+name|count
+decl_stmt|,
+name|error
+decl_stmt|,
+name|i
+decl_stmt|;
+name|perf_dev
+operator|=
+name|device_find_child
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"acpi_perf"
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|perf_dev
+operator|==
+name|NULL
+operator|||
+operator|!
+name|device_is_attached
+argument_list|(
+name|perf_dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* Fetch settings from acpi_perf. */
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|table
+operator|=
+name|NULL
+expr_stmt|;
+name|sets
+operator|=
+name|malloc
+argument_list|(
+name|MAX_SETTINGS
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sets
+argument_list|)
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sets
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+name|error
+operator|=
+name|CPUFREQ_DRV_SETTINGS
+argument_list|(
+name|perf_dev
+argument_list|,
+name|sets
+argument_list|,
+operator|&
+name|count
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|out
+goto|;
+comment|/* Parse settings into our local table format. */
+name|table
+operator|=
+name|malloc
+argument_list|(
+name|count
+operator|*
+sizeof|sizeof
+argument_list|(
+name|freq_info
+argument_list|)
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|table
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|count
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/* 		 * XXX Figure out validity checks for id16.  At least some 		 * systems support both SMM access via SystemIO and the 		 * direct MSR access but only report the SystemIO values 		 * via _PSS.  However, since we don't know what should be 		 * valid for this processor, it's hard to know what to check. 		 */
+name|table
+index|[
+name|i
+index|]
+operator|.
+name|freq
+operator|=
+name|sets
+index|[
+name|i
+index|]
+operator|.
+name|freq
+expr_stmt|;
+name|table
+index|[
+name|i
+index|]
+operator|.
+name|volts
+operator|=
+name|sets
+index|[
+name|i
+index|]
+operator|.
+name|volts
+expr_stmt|;
+name|table
+index|[
+name|i
+index|]
+operator|.
+name|id16
+operator|=
+name|sets
+index|[
+name|i
+index|]
+operator|.
+name|spec
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|table
+index|[
+name|i
+index|]
+operator|.
+name|power
+operator|=
+name|sets
+index|[
+name|i
+index|]
+operator|.
+name|power
+expr_stmt|;
+block|}
+name|sc
+operator|->
+name|acpi_settings
+operator|=
+name|TRUE
+expr_stmt|;
+operator|*
+name|freqs
+operator|=
+name|table
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|out
+label|:
+if|if
+condition|(
+name|sets
+condition|)
+name|free
+argument_list|(
+name|sets
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|&&
+name|table
+condition|)
+name|free
+argument_list|(
+name|table
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|est_table_info
+parameter_list|(
+name|device_t
+name|dev
 parameter_list|,
 name|uint64_t
 name|msr
@@ -4403,14 +4798,12 @@ parameter_list|,
 name|uint32_t
 name|bus_clk
 parameter_list|,
-specifier|const
 name|freq_info
 modifier|*
 modifier|*
 name|freqs
 parameter_list|)
 block|{
-specifier|const
 name|cpu_info
 modifier|*
 name|p
@@ -4449,7 +4842,7 @@ name|p
 operator|->
 name|vendor
 argument_list|,
-name|vendor
+name|cpu_vendor
 argument_list|)
 operator|==
 literal|0
@@ -4493,11 +4886,20 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"current setting not found in table\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
+block|}
 operator|*
 name|freqs
 operator|=
@@ -4515,18 +4917,15 @@ end_function
 
 begin_function
 specifier|static
-specifier|const
 name|freq_info
 modifier|*
 name|est_get_current
 parameter_list|(
-specifier|const
 name|freq_info
 modifier|*
 name|freq_list
 parameter_list|)
 block|{
-specifier|const
 name|freq_info
 modifier|*
 name|f
@@ -4628,7 +5027,6 @@ name|est_softc
 modifier|*
 name|sc
 decl_stmt|;
-specifier|const
 name|freq_info
 modifier|*
 name|f
@@ -4709,7 +5107,9 @@ index|]
 operator|.
 name|power
 operator|=
-name|CPUFREQ_VAL_UNKNOWN
+name|f
+operator|->
+name|power
 expr_stmt|;
 name|sets
 index|[
@@ -4763,7 +5163,6 @@ name|est_softc
 modifier|*
 name|sc
 decl_stmt|;
-specifier|const
 name|freq_info
 modifier|*
 name|f
@@ -4883,7 +5282,6 @@ name|est_softc
 modifier|*
 name|sc
 decl_stmt|;
-specifier|const
 name|freq_info
 modifier|*
 name|f
@@ -4935,7 +5333,9 @@ name|set
 operator|->
 name|power
 operator|=
-name|CPUFREQ_VAL_UNKNOWN
+name|f
+operator|->
+name|power
 expr_stmt|;
 name|set
 operator|->
