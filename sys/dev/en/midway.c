@@ -672,13 +672,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bpfilter.h"
+file|"bpf.h"
 end_include
 
 begin_if
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -763,7 +763,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NBPFILTER> 0 */
+comment|/* NBPF> 0 */
 end_comment
 
 begin_comment
@@ -4061,7 +4061,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 name|BPFATTACH
@@ -10661,7 +10661,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -10737,7 +10737,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* NBPFILTER> 0 */
+comment|/* NBPF> 0 */
 comment|/*    * do some housekeeping and get the next packet    */
 name|sc
 operator|->
@@ -13726,7 +13726,7 @@ operator|++
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if

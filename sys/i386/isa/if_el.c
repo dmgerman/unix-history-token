@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.39 1998/12/07 21:58:21 archie Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.40 1999/01/12 01:29:42 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpfilter.h"
+file|"bpf.h"
 end_include
 
 begin_include
@@ -157,7 +157,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -995,7 +995,7 @@ expr_stmt|;
 comment|/* Finally, attach to bpf filter if it is present. */
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 name|dprintf
@@ -1563,7 +1563,7 @@ expr_stmt|;
 comment|/* Give the packet to the bpf, if any */
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -2058,7 +2058,7 @@ name|buf
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/* 	 * Check if there's a bpf filter listening on this interface. 	 * If so, hand off the raw packet to bpf. 	 */

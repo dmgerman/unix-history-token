@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_devar.h,v 1.31 1998/09/29 22:40:52 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_devar.h,v 1.12 1998/11/06 02:13:14 peter Exp $ */
+comment|/*	$Id: if_devar.h,v 1.13 1999/05/26 23:05:23 gallatin Exp $ */
 end_comment
 
 begin_comment
@@ -3811,7 +3811,7 @@ end_define
 begin_if
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -4875,7 +4875,7 @@ argument_list|(
 name|TULIP_BPF_MTAP
 argument_list|)
 operator|&&
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if

@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpfilter.h"
+file|"bpf.h"
 end_include
 
 begin_include
@@ -109,7 +109,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -1599,7 +1599,7 @@ name|ifp
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/* If BPF is in the kernel, call the attach for it. */
@@ -2504,7 +2504,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -4299,7 +4299,7 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/* 	 * Check if there's a BPF listener on this interface. 	 * If so, hand off the raw packet to bpf. 	 */

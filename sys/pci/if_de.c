@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.82 1999/02/28 17:08:51 explorer Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.106 1999/05/10 14:12:26 peter Exp $ */
+comment|/*	$Id: if_de.c,v 1.107 1999/07/03 20:17:02 peter Exp $ */
 end_comment
 
 begin_comment
@@ -343,13 +343,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"bpfilter.h"
+file|"bpf.h"
 end_include
 
 begin_if
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -18907,7 +18907,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -20389,7 +20389,7 @@ directive|endif
 comment|/* TULIP_BUS_DMA */
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -26517,7 +26517,7 @@ directive|endif
 comment|/* __bsdi__ */
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 name|TULIP_BPF_ATTACH

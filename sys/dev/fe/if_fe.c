@@ -4,7 +4,7 @@ comment|/*  * All Rights Reserved, Copyright (C) Fujitsu Limited 1995  *  * This
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_fe.c,v 1.49 1999/03/03 10:40:26 kato Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 3.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments to support RE1000,  * C-NET(98)P2 and so on. These cards are not for AT-compatibles,  * but for NEC PC-98 bus -- a proprietary bus architecture available  * only in Japan. Confusingly, it is different from the Microsoft's  * PC98 architecture. :-{  * Further work for PC-98 version will be available as a part of  * FreeBSD(98) project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
+comment|/*  * $Id: if_fe.c,v 1.50 1999/05/04 12:59:59 kato Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 3.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments to support RE1000,  * C-NET(98)P2 and so on. These cards are not for AT-compatibles,  * but for NEC PC-98 bus -- a proprietary bus architecture available  * only in Japan. Confusingly, it is different from the Microsoft's  * PC98 architecture. :-{  * Further work for PC-98 version will be available as a part of  * FreeBSD(98) project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpfilter.h"
+file|"bpf.h"
 end_include
 
 begin_include
@@ -206,7 +206,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -11342,7 +11342,7 @@ expr_stmt|;
 block|}
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/* If BPF is in the kernel, call the attach for it.  */
@@ -12559,7 +12559,7 @@ block|}
 comment|/* 		 * Tap off here if there is a bpf listener, 		 * and the device is *not* in promiscuous mode. 		 * (86960 receives self-generated packets if  		 * and only if it is in "receive everything" 		 * mode.) 		 */
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -14426,7 +14426,7 @@ parameter_list|)
 value|(*(char *)(A)& 1)
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/* 	 * Check if there's a BPF listener on this interface. 	 * If it is, hand off the raw packet to bpf. 	 */

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997,1998 Maxim Bolotin and Oleg Sharoiko.  * All ri
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_cs.c,v 1.9 1999/01/28 01:59:53 dillon Exp $  *  * Device driver for Crystal Semiconductor CS8920 based ethernet  *   adapters. By Maxim Bolotin and Oleg Sharoiko, 27-April-1997  */
+comment|/*  * $Id: if_cs.c,v 1.10 1999/04/16 21:22:20 peter Exp $  *  * Device driver for Crystal Semiconductor CS8920 based ethernet  *   adapters. By Maxim Bolotin and Oleg Sharoiko, 27-April-1997  */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpfilter.h"
+file|"bpf.h"
 end_include
 
 begin_include
@@ -104,7 +104,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -3045,7 +3045,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 name|bpfattach
@@ -3658,7 +3658,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -4381,7 +4381,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if

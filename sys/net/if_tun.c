@@ -217,13 +217,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"bpfilter.h"
+file|"bpf.h"
 end_include
 
 begin_if
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -704,7 +704,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 name|bpfattach
@@ -1631,7 +1631,7 @@ return|;
 block|}
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/* BPF write needs to be handled specially */
@@ -1742,7 +1742,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* NBPFILTER> 0 */
+comment|/* NBPF> 0 */
 comment|/* prepend sockaddr? this may abort if the mbuf allocation fails */
 if|if
 condition|(
@@ -3094,7 +3094,7 @@ name|ifp
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if

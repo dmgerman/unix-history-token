@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl.c,v 1.20 1999/01/12 00:36:31 eivind Exp $ */
+comment|/* $Id: if_wl.c,v 1.21 1999/04/27 11:15:02 phk Exp $ */
 end_comment
 
 begin_comment
@@ -49,7 +49,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpfilter.h"
+file|"bpf.h"
 end_include
 
 begin_include
@@ -162,7 +162,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -1794,7 +1794,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 name|bpfattach
@@ -3790,7 +3790,7 @@ condition|)
 block|{
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/* let BPF see it before we commit it */
@@ -4682,7 +4682,7 @@ name|clen
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/*      * Check if there's a BPF listener on this interface. If so, hand off      * the raw packet to bpf.      */

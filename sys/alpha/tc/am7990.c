@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: am7990.c,v 1.2 1998/12/04 22:54:42 archie Exp $ */
+comment|/* $Id: am7990.c,v 1.3 1999/05/10 15:48:01 peter Exp $ */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -870,7 +870,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 name|bpfattach
@@ -1273,7 +1273,7 @@ name|myaddr
 decl_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -2586,7 +2586,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/* 	 * Check if there's a BPF listener on this interface. 	 * If so, hand off the raw packet to BPF. 	 */
@@ -4143,7 +4143,7 @@ condition|)
 break|break;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/* 		 * If BPF is listening on this interface, let it see the packet 		 * before we commit it to the wire. 		 */

@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.57 1999/05/06 18:12:27 peter Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.58 1999/05/06 18:43:58 peter Exp $  */
 end_comment
 
 begin_comment
@@ -104,7 +104,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"bpfilter.h"
+file|"bpf.h"
 end_include
 
 begin_include
@@ -233,7 +233,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -2422,7 +2422,7 @@ expr_stmt|;
 comment|/* 	 * If BPF is in the kernel, call the attach for it 	 */
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 name|bpfattach
@@ -3255,7 +3255,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/* 	 * Initialize multicast address hashing registers to accept 	 *	 all multicasts (only used when in promiscuous mode) 	 */
@@ -3739,7 +3739,7 @@ expr_stmt|;
 comment|/* 	 * If there is BPF support in the configuration, tap off here. 	 */
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -4946,7 +4946,7 @@ expr_stmt|;
 block|}
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -5223,7 +5223,7 @@ name|bad
 goto|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/* 	 * Check if there's a BPF listener on this interface. 	 * If so, hand off the raw packet to bpf. 	 */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, University of Vermont and State  *  Agricultural College.  * Copyright (c) 1992, 1993, Garrett A. Wollman.  *  * Portions:  * Copyright (c) 1990, 1991, William F. Jolitz  * Copyright (c) 1990, The Regents of the University of California  *  * 3Com 3C507 support:  * Copyright (c) 1993, 1994, Charles M. Hannum  *  * EtherExpress 16 support:  * Copyright (c) 1993, 1994, 1995, Rodney W. Grimes  * Copyright (c) 1997, Aaron C. Smith  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	Vermont and State Agricultural College and Garrett A. Wollman, by  *	William F. Jolitz, by the University of California, Berkeley,  *	Lawrence Berkeley Laboratory, and their contributors, by  *	Charles M. Hannum, by Rodney W. Grimes, and by Aaron C. Smith.  * 4. Neither the names of the Universities nor the names of the authors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE UNIVERSITY OR AUTHORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ie.c,v 1.59 1999/01/28 01:59:53 dillon Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993, University of Vermont and State  *  Agricultural College.  * Copyright (c) 1992, 1993, Garrett A. Wollman.  *  * Portions:  * Copyright (c) 1990, 1991, William F. Jolitz  * Copyright (c) 1990, The Regents of the University of California  *  * 3Com 3C507 support:  * Copyright (c) 1993, 1994, Charles M. Hannum  *  * EtherExpress 16 support:  * Copyright (c) 1993, 1994, 1995, Rodney W. Grimes  * Copyright (c) 1997, Aaron C. Smith  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	Vermont and State Agricultural College and Garrett A. Wollman, by  *	William F. Jolitz, by the University of California, Berkeley,  *	Lawrence Berkeley Laboratory, and their contributors, by  *	Charles M. Hannum, by Rodney W. Grimes, and by Aaron C. Smith.  * 4. Neither the names of the Universities nor the names of the authors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE UNIVERSITY OR AUTHORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ie.c,v 1.60 1999/05/13 12:21:41 bde Exp $  */
 end_comment
 
 begin_comment
@@ -116,7 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpfilter.h"
+file|"bpf.h"
 end_include
 
 begin_ifdef
@@ -245,7 +245,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -3780,7 +3780,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 name|bpfattach
@@ -5037,7 +5037,7 @@ case|:
 comment|/* 		 * Receiving all multicasts, but no unicasts except those 		 * destined for us. 		 */
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/* BPF gets this packet if anybody cares */
@@ -5107,7 +5107,7 @@ case|:
 comment|/* 		 * Receiving all packets.  These need to be passed on to 		 * BPF. 		 */
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 operator|*
@@ -5150,7 +5150,7 @@ operator|)
 return|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -5227,7 +5227,7 @@ condition|)
 block|{
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -5262,7 +5262,7 @@ case|:
 comment|/* 		 * Acting as a multicast router, and BPF running at the same 		 * time. Whew!	(Hope this is a fast machine...) 		 */
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 operator|*
@@ -5323,7 +5323,7 @@ return|;
 comment|/* Anything else goes to BPF but nothing else. */
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -5347,7 +5347,7 @@ default|default:
 comment|/* 		 * Only accept unicast packets destined for us, or 		 * multicasts for groups that we belong to.  For now, we 		 * assume that the '586 will only return packets that we 		 * asked it for.  This isn't strictly true (it uses hashing 		 * for the multicast filter), but it will do in this case, 		 * and we want to get out of here as quickly as possible. 		 */
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 operator|*
@@ -6296,7 +6296,7 @@ name|eh
 decl_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 name|int
@@ -6410,7 +6410,7 @@ condition|)
 block|{
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -6556,7 +6556,7 @@ expr_stmt|;
 block|}
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/* 	 * Check for a BPF filter; if so, hand it up. Note that we have to 	 * stick an extra mbuf up front, because bpf_mtap expects to have 	 * the ether header at the front. It doesn't matter that this 	 * results in an ill-formatted mbuf chain, since BPF just looks at 	 * the data.  (It doesn't try to free the mbuf, tho' it will make a 	 * copy for tcpdump.) 	 */
@@ -6623,7 +6623,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* NBPFILTER> 0 */
+comment|/* NBPF> 0 */
 comment|/* 	 * In here there used to be code to check destination addresses upon 	 * receipt of a packet.	 We have deleted that code, and replaced it 	 * with code to check the address much earlier in the cycle, before 	 * copying the data in; this saves us valuable cycles when operating 	 * as a multicast router or when using BPF. 	 */
 comment|/* 	 * Finally pass this packet up to higher layers. 	 */
 name|ether_input
@@ -6984,7 +6984,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/* 		 * See if bpf is listening on this interface, let it see the 		 * packet before we commit it to the wire. 		 */

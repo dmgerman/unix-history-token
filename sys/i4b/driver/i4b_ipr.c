@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ipr.c - isdn4bsd IP over raw HDLC ISDN network driver  *	---------------------------------------------------------  *  *	$Id: i4b_ipr.c,v 1.51 1999/05/06 08:24:45 hm Exp $  *  *	last edit-date: [Thu May  6 10:09:20 1999]  *  *---------------------------------------------------------------------------*  *  *	statistics counter usage (interface lifetime):  *	----------------------------------------------  *	sc->sc_if.if_ipackets	# of received packets  *	sc->sc_if.if_ierrors	# of error packets not going to upper layers  *	sc->sc_if.if_opackets	# of transmitted packets  *	sc->sc_if.if_oerrors	# of error packets not being transmitted  *	sc->sc_if.if_collisions	# of invalid ip packets after VJ decompression  *	sc->sc_if.if_ibytes	# of bytes coming in from the line (before VJ)  *	sc->sc_if.if_obytes	# of bytes going out to the line (after VJ)  *	sc->sc_if.if_imcasts	  (currently unused)  *	sc->sc_if.if_omcasts	# of frames sent out of the fastqueue  *	sc->sc_if.if_iqdrops	# of frames dropped on input because queue full  *	sc->sc_if.if_noproto	# of frames dropped on output because !AF_INET  *  *	statistics counter usage (connection lifetime):  *	-----------------------------------------------  *	sc->sc_iinb		# of ISDN incoming bytes from HSCX  *	sc->sc_ioutb		# of ISDN outgoing bytes from HSCX  *	sc->sc_inb		# of incoming bytes after decompression  *	sc->sc_outb		# of outgoing bytes before compression  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ipr.c - isdn4bsd IP over raw HDLC ISDN network driver  *	---------------------------------------------------------  *  *	$Id: i4b_ipr.c,v 1.4 1999/05/20 10:08:58 hm Exp $  *  *	last edit-date: [Thu May  6 10:09:20 1999]  *  *---------------------------------------------------------------------------*  *  *	statistics counter usage (interface lifetime):  *	----------------------------------------------  *	sc->sc_if.if_ipackets	# of received packets  *	sc->sc_if.if_ierrors	# of error packets not going to upper layers  *	sc->sc_if.if_opackets	# of transmitted packets  *	sc->sc_if.if_oerrors	# of error packets not being transmitted  *	sc->sc_if.if_collisions	# of invalid ip packets after VJ decompression  *	sc->sc_if.if_ibytes	# of bytes coming in from the line (before VJ)  *	sc->sc_if.if_obytes	# of bytes going out to the line (after VJ)  *	sc->sc_if.if_imcasts	  (currently unused)  *	sc->sc_if.if_omcasts	# of frames sent out of the fastqueue  *	sc->sc_if.if_iqdrops	# of frames dropped on input because queue full  *	sc->sc_if.if_noproto	# of frames dropped on output because !AF_INET  *  *	statistics counter usage (connection lifetime):  *	-----------------------------------------------  *	sc->sc_iinb		# of ISDN incoming bytes from HSCX  *	sc->sc_ioutb		# of ISDN outgoing bytes from HSCX  *	sc->sc_inb		# of incoming bytes after decompression  *	sc->sc_outb		# of outgoing bytes before compression  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -246,13 +246,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bpfilter.h"
+file|"bpf.h"
 end_include
 
 begin_if
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -1505,7 +1505,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 ifdef|#
@@ -4040,7 +4040,7 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -4118,7 +4118,7 @@ directive|endif
 block|}
 endif|#
 directive|endif
-comment|/* NBPFILTER> 0 */
+comment|/* NBPF> 0 */
 if|if
 condition|(
 name|IF_QFULL
@@ -4298,7 +4298,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -4376,7 +4376,7 @@ directive|endif
 block|}
 endif|#
 directive|endif
-comment|/* NBPFILTER */
+comment|/* NBPF */
 if|#
 directive|if
 name|I4BIPRACCT

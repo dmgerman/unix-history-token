@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.59 1998/06/20 16:28:01 peter Exp $ */
+comment|/* $Id: if_ppp.c,v 1.60 1999/04/27 11:17:00 phk Exp $ */
 end_comment
 
 begin_comment
@@ -209,13 +209,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"bpfilter.h"
+file|"bpf.h"
 end_include
 
 begin_if
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -239,7 +239,7 @@ argument_list|(
 name|PPP_FILTER
 argument_list|)
 operator|&&
-name|NBPFILTER
+name|NBPF
 operator|==
 literal|0
 end_if
@@ -802,7 +802,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 name|bpfattach
@@ -3788,7 +3788,7 @@ comment|/* PPP_FILTER */
 block|}
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/*      * See if bpf wants to look at the packet.      */
@@ -6776,7 +6776,7 @@ comment|/* PPP_FILTER */
 block|}
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 comment|/* See if bpf wants to look at the packet. */

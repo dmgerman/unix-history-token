@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: if_tx.c,v 1.3 1998/10/10 04:30:09 jason Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_tx.c,v 1.27 1999/05/10 00:20:46 peter Exp $ */
+comment|/*	$Id: if_tx.c,v 1.28 1999/07/03 20:17:05 peter Exp $ */
 end_comment
 
 begin_comment
@@ -94,7 +94,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"bpfilter.h"
+file|"bpf.h"
 end_include
 
 begin_include
@@ -285,7 +285,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -1848,7 +1848,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 name|bpfattach
@@ -2796,7 +2796,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 name|bpfattach
@@ -4084,7 +4084,7 @@ literal|8
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -4402,10 +4402,10 @@ name|len
 expr_stmt|;
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
-comment|/* Give mbuf to BPFILTER */
+comment|/* Give mbuf to BPF */
 if|if
 condition|(
 name|sc
@@ -4449,7 +4449,7 @@ directive|endif
 comment|/* __FreeBSD__ */
 endif|#
 directive|endif
-comment|/* NBPFILTER */
+comment|/* NBPF */
 ifdef|#
 directive|ifdef
 name|BRIDGE
@@ -4536,13 +4536,13 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|NBPFILTER
+name|NBPF
 operator|>
 literal|0
 ifdef|#
 directive|ifdef
 name|BRIDGE
-comment|/* 		 * This deserves explanation 		 * If the bridge is _on_, then the following check 		 * must not be done because occasionally the bridge 		 * gets packets that are local but have the ethernet 		 * address of one of the other interfaces. 		 * 		 * But if the bridge is off, then we have to drop 		 * stuff that came in just via bpfilter. 		 */
+comment|/* 		 * This deserves explanation 		 * If the bridge is _on_, then the following check 		 * must not be done because occasionally the bridge 		 * gets packets that are local but have the ethernet 		 * address of one of the other interfaces. 		 * 		 * But if the bridge is off, then we have to drop 		 * stuff that came in just via bpf. 		 */
 if|if
 condition|(
 operator|!
