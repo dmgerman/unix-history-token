@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)kbd.c	8.1 (Berkeley) %G%  *  * from: $Header: kbd.c,v 1.16 92/11/26 01:28:44 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)kbd.c	8.2 (Berkeley) %G%  *  * from: $Header: kbd.c,v 1.18 93/10/31 05:44:01 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -1150,7 +1150,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attach the console keyboard serial (down-link) interface.  * We pick up the initial keyboard clock state here as well.  */
+comment|/*  * Attach the console keyboard serial (down-link) interface.  * We pick up the initial keyboard click state here as well.  */
 end_comment
 
 begin_function
@@ -1241,44 +1241,19 @@ name|kbd_click
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|k
-operator|->
-name|k_cons
-condition|)
-block|{
-comment|/* 		 * We supply keys for /dev/console.  Before we can 		 * do so, we have to ``open'' the line.  We also need 		 * the type, got by sending a RESET down the line ... 		 * but clists are not yet set up, so we use a timeout 		 * to try constantly until we can get the ID.  (gag) 		 */
-call|(
-modifier|*
-name|iopen
-call|)
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-comment|/* never to be closed */
-name|kbd_getid
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * Initial keyboard reset, to obtain ID and thus a translation table.  * We have to try again and again until the tty subsystem works.  */
+comment|/*  * Called from main() during pseudo-device setup.  If this keyboard is  * the console, this is our chance to open the underlying serial port and  * send a RESET, so that we can find out what kind of keyboard it is.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|kbd_getid
+name|kbdattach
 parameter_list|(
-name|void
-modifier|*
-name|arg
+name|int
+name|nkbd
 parameter_list|)
 block|{
 specifier|register
@@ -1293,41 +1268,39 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
-specifier|register
-name|int
-name|retry
-decl_stmt|;
-specifier|extern
-name|int
-name|cold
-decl_stmt|;
-comment|/* XXX */
+if|if
+condition|(
+name|kbd_softc
+operator|.
+name|k_cons
+operator|!=
+name|NULL
+condition|)
+block|{
 name|k
 operator|=
 operator|&
 name|kbd_softc
 expr_stmt|;
-if|if
-condition|(
-name|k
-operator|->
-name|k_state
-operator|.
-name|kbd_cur
-operator|!=
-name|NULL
-condition|)
-return|return;
 name|tp
 operator|=
 name|k
 operator|->
 name|k_kbd
 expr_stmt|;
+call|(
+modifier|*
+name|k
+operator|->
+name|k_open
+call|)
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+comment|/* never to be closed */
 if|if
 condition|(
-name|cold
-operator|||
 name|ttyoutput
 argument_list|(
 name|KBD_CMD_RESET
@@ -1337,12 +1310,11 @@ argument_list|)
 operator|>=
 literal|0
 condition|)
-name|retry
-operator|=
-literal|1
+name|panic
+argument_list|(
+literal|"kbdattach"
+argument_list|)
 expr_stmt|;
-else|else
-block|{
 call|(
 modifier|*
 name|tp
@@ -1353,22 +1325,8 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|retry
-operator|=
-literal|2
-operator|*
-name|hz
-expr_stmt|;
+comment|/* get it going */
 block|}
-name|timeout
-argument_list|(
-name|kbd_getid
-argument_list|,
-name|NULL
-argument_list|,
-name|retry
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
