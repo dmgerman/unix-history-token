@@ -6324,7 +6324,7 @@ operator|==
 name|dev
 condition|)
 block|{
-comment|/* 		 * If device doesn't have an interrupt routed, and is 		 * deserving of  an interrupt, try to assign it one. 		 */
+comment|/* 		 * If the child device doesn't have an interrupt routed 		 * and is deserving of an interrupt, try to assign it one. 		 */
 if|if
 condition|(
 operator|(
