@@ -2515,7 +2515,7 @@ name|PRIBIO
 operator|+
 literal|1
 argument_list|,
-literal|"spfsyn"
+literal|"fsync"
 argument_list|,
 literal|0
 argument_list|)
