@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)toucholap.c	5.5 (Berkeley) %G%"
+literal|"@(#)toucholap.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,8 +60,6 @@ begin_block
 block|{
 specifier|register
 name|int
-name|x
-decl_stmt|,
 name|y
 decl_stmt|,
 name|endy

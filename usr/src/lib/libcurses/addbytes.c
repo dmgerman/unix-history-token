@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addbytes.c	5.6 (Berkeley) %G%"
+literal|"@(#)addbytes.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,38 +52,30 @@ begin_comment
 comment|/*  * waddbytes --  *	Add the character to the current position in the given window.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|waddbytes
-argument_list|(
+parameter_list|(
 name|win
-argument_list|,
+parameter_list|,
 name|bytes
-argument_list|,
+parameter_list|,
 name|count
-argument_list|)
+parameter_list|)
 specifier|register
 name|WINDOW
-operator|*
+modifier|*
 name|win
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
 name|bytes
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|int
 name|count
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|char
@@ -515,7 +507,7 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

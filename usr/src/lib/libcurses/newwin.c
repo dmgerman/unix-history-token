@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newwin.c	5.5 (Berkeley) %G%"
+literal|"@(#)newwin.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -515,8 +515,6 @@ name|by
 decl_stmt|,
 name|bx
 decl_stmt|,
-name|i
-decl_stmt|,
 name|nl
 decl_stmt|,
 name|nc
@@ -700,22 +698,23 @@ begin_comment
 comment|/*  * This code is shared with mvwin().  */
 end_comment
 
-begin_expr_stmt
-name|__set_subwin_
-argument_list|(
+begin_function
+name|void
+name|__set_subwin
+parameter_list|(
 name|orig
-argument_list|,
+parameter_list|,
 name|win
-argument_list|)
+parameter_list|)
 specifier|register
 name|WINDOW
-operator|*
+modifier|*
 name|orig
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|win
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
@@ -868,8 +867,6 @@ name|int
 name|by
 decl_stmt|,
 name|bx
-decl_stmt|,
-name|i
 decl_stmt|,
 name|nl
 decl_stmt|,

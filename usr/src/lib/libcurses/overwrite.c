@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)overwrite.c	5.5 (Berkeley) %G%"
+literal|"@(#)overwrite.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<curses.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -77,14 +83,6 @@ decl_stmt|,
 name|starty
 decl_stmt|,
 name|startx
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|sp
-decl_stmt|,
-modifier|*
-name|end
 decl_stmt|;
 ifdef|#
 directive|ifdef

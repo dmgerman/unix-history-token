@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)id_subwins.c	5.5 (Berkeley) %G%"
+literal|"@(#)id_subwins.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,8 +60,6 @@ name|int
 name|oy
 decl_stmt|,
 name|realy
-decl_stmt|,
-name|x
 decl_stmt|,
 name|y
 decl_stmt|;

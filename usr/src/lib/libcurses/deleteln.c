@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deleteln.c	5.6 (Berkeley) %G%"
+literal|"@(#)deleteln.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<curses.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -52,8 +58,6 @@ decl_stmt|;
 block|{
 specifier|register
 name|int
-name|x
-decl_stmt|,
 name|y
 decl_stmt|;
 specifier|register

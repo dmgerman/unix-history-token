@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)delch.c	5.5 (Berkeley) %G%"
+literal|"@(#)delch.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,10 +50,6 @@ modifier|*
 name|win
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|lch
-decl_stmt|;
 specifier|register
 name|char
 modifier|*

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cr_put.c	5.6 (Berkeley) %G%"
+literal|"@(#)cr_put.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<curses.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_define
@@ -123,20 +129,18 @@ name|_win
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|mvcur
-argument_list|(
-argument|ly
-argument_list|,
-argument|lx
-argument_list|,
-argument|y
-argument_list|,
-argument|x
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ly
+parameter_list|,
+name|lx
+parameter_list|,
+name|y
+parameter_list|,
+name|x
+parameter_list|)
 name|int
 name|ly
 decl_stmt|,
@@ -146,9 +150,6 @@ name|y
 decl_stmt|,
 name|x
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -193,7 +194,7 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -1483,8 +1484,6 @@ decl_stmt|;
 block|{
 name|int
 name|offset
-decl_stmt|,
-name|result
 decl_stmt|;
 if|if
 condition|(
