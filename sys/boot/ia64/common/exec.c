@@ -54,6 +54,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pte.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<efi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<efilib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bootstrap.h"
 end_include
 
@@ -89,111 +107,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|PTE_MA_WB
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_MA_UC
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_MA_UCE
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_MA_WC
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_MA_NATPAGE
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_PL_KERN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_PL_USER
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_AR_R
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_AR_RX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_AR_RW
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_AR_RWX
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_AR_R_RW
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_AR_RX_RWX
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_AR_RWX_RW
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_AR_X_RX
-value|7
-end_define
-
 begin_function
 specifier|static
 name|__inline
@@ -205,7 +118,7 @@ name|u_int64_t
 name|psr
 decl_stmt|;
 asm|__asm __volatile("mov %0=psr;;" : "=r" (psr));
-asm|__asm __volatile("rsm psr.ic;; srlz.i;;");
+asm|__asm __volatile("rsm psr.ic|psr.i;; srlz.i;;");
 return|return
 name|psr
 return|;
@@ -227,113 +140,59 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A short-format VHPT entry. Also matches the TLB insertion format.  */
+comment|/*  * Entered with psr.ic and psr.i both zero.  */
 end_comment
-
-begin_struct
-struct|struct
-name|ia64_pte
-block|{
-name|u_int64_t
-name|pte_p
-range|:
-literal|1
-decl_stmt|;
-comment|/* bits 0..0 */
-name|u_int64_t
-name|pte_rv1
-range|:
-literal|1
-decl_stmt|;
-comment|/* bits 1..1 */
-name|u_int64_t
-name|pte_ma
-range|:
-literal|3
-decl_stmt|;
-comment|/* bits 2..4 */
-name|u_int64_t
-name|pte_a
-range|:
-literal|1
-decl_stmt|;
-comment|/* bits 5..5 */
-name|u_int64_t
-name|pte_d
-range|:
-literal|1
-decl_stmt|;
-comment|/* bits 6..6 */
-name|u_int64_t
-name|pte_pl
-range|:
-literal|2
-decl_stmt|;
-comment|/* bits 7..8 */
-name|u_int64_t
-name|pte_ar
-range|:
-literal|3
-decl_stmt|;
-comment|/* bits 9..11 */
-name|u_int64_t
-name|pte_ppn
-range|:
-literal|38
-decl_stmt|;
-comment|/* bits 12..49 */
-name|u_int64_t
-name|pte_rv2
-range|:
-literal|2
-decl_stmt|;
-comment|/* bits 50..51 */
-name|u_int64_t
-name|pte_ed
-range|:
-literal|1
-decl_stmt|;
-comment|/* bits 52..52 */
-name|u_int64_t
-name|pte_ig
-range|:
-literal|11
-decl_stmt|;
-comment|/* bits 53..63 */
-block|}
-struct|;
-end_struct
 
 begin_function
 name|void
 name|enter_kernel
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|filename
-parameter_list|,
 name|u_int64_t
 name|start
+parameter_list|,
+name|struct
+name|bootinfo
+modifier|*
+name|bi
+parameter_list|,
+name|UINTN
+name|mapkey
 parameter_list|)
 block|{
 name|u_int64_t
 name|psr
 decl_stmt|;
-name|printf
+name|EFI_STATUS
+name|status
+decl_stmt|;
+name|status
+operator|=
+name|BS
+operator|->
+name|ExitBootServices
 argument_list|(
-literal|"Entering %s at 0x%lx...\n"
+name|IH
 argument_list|,
-name|filename
-argument_list|,
-name|start
+name|mapkey
 argument_list|)
 expr_stmt|;
-name|psr
-operator|=
-name|disable_ic
-argument_list|()
+if|if
+condition|(
+name|EFI_ERROR
+argument_list|(
+name|status
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ExitBootServices returned 0x%lx\n"
+argument_list|,
+name|status
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 asm|__asm __volatile("srlz.i;;");
 asm|__asm __volatile("mov cr.ipsr=%0"
 operator|::
@@ -366,21 +225,8 @@ asm|__asm __volatile("mov ar.rsc=0;; flushrs;;");
 end_asm
 
 begin_asm
-asm|__asm __volatile("1: mov r8=ip;; add r8=2f-1b,r8; mov r9=%0; rfi;; 2:"
+asm|__asm __volatile("rfi;;");
 end_asm
-
-begin_expr_stmt
-operator|::
-literal|"r"
-operator|(
-name|psr
-operator|)
-end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 unit|}  static
@@ -413,6 +259,9 @@ name|bi
 decl_stmt|;
 name|u_int64_t
 name|psr
+decl_stmt|;
+name|UINTN
+name|mapkey
 decl_stmt|;
 if|if
 condition|(
@@ -448,6 +297,19 @@ operator|->
 name|md_data
 operator|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Entering %s at 0x%lx...\n"
+argument_list|,
+name|fp
+operator|->
+name|f_name
+argument_list|,
+name|hdr
+operator|->
+name|e_entry
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Ugly hack, similar to linux. Dump the bootinfo into a 	 * special page reserved in the link map. 	 */
 name|bi
 operator|=
@@ -474,6 +336,9 @@ argument_list|(
 name|bi
 argument_list|,
 name|fp
+argument_list|,
+operator|&
+name|mapkey
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Region 6 is direct mapped UC and region 7 is direct mapped 	 * WC. The details of this is controlled by the Alt {I,D}TLB 	 * handlers. Here we just make sure that they have the largest  	 * possible page size to minimise TLB usage. 	 */
@@ -516,6 +381,11 @@ operator|<<
 literal|2
 operator|)
 argument_list|)
+expr_stmt|;
+name|psr
+operator|=
+name|disable_ic
+argument_list|()
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -569,11 +439,6 @@ operator|.
 name|pte_ppn
 operator|=
 literal|0
-expr_stmt|;
-name|psr
-operator|=
-name|disable_ic
-argument_list|()
 expr_stmt|;
 asm|__asm __volatile("mov cr.ifa=%0" :: "r"(IA64_RR_BASE(7)));
 asm|__asm __volatile("mov cr.itir=%0" :: "r"(28<< 2));
@@ -632,14 +497,6 @@ end_empty_stmt
 begin_asm
 asm|__asm __volatile("srlz.i;;");
 end_asm
-
-begin_expr_stmt
-name|restore_ic
-argument_list|(
-name|psr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|bzero
@@ -720,14 +577,6 @@ literal|12
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|psr
-operator|=
-name|disable_ic
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
 begin_asm
 asm|__asm __volatile("mov cr.ifa=%0" :: "r"(IA64_PHYS_TO_RR6(0xffffc000000)));
 end_asm
@@ -736,9 +585,9 @@ begin_asm
 asm|__asm __volatile("mov cr.itir=%0" :: "r"(26<< 2));
 end_asm
 
-begin_asm
-asm|__asm __volatile("ptr.d %0,%1" :: "r"(IA64_PHYS_TO_RR6(0xffffc000000)), "r"(26<<2));
-end_asm
+begin_comment
+comment|//__asm __volatile("ptr.d %0,%1" :: "r"(IA64_PHYS_TO_RR6(0xffffc000000)), "r"(26<<2));
+end_comment
 
 begin_asm
 asm|__asm __volatile("srlz.i;;");
@@ -777,23 +626,23 @@ asm|__asm __volatile("srlz.i;;");
 end_asm
 
 begin_expr_stmt
-name|restore_ic
+name|enter_kernel
 argument_list|(
-name|psr
+name|hdr
+operator|->
+name|e_entry
+argument_list|,
+name|bi
+argument_list|,
+name|mapkey
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|enter_kernel
+name|restore_ic
 argument_list|(
-name|fp
-operator|->
-name|f_name
-argument_list|,
-name|hdr
-operator|->
-name|e_entry
+name|psr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
