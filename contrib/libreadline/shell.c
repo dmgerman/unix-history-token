@@ -42,6 +42,23 @@ name|HAVE_UNISTD_H
 argument_list|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MINIX
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -90,6 +107,41 @@ end_endif
 
 begin_comment
 comment|/* HAVE_STDLIB_H */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STRING_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_STRING_H */
 end_comment
 
 begin_decl_stmt

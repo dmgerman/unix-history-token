@@ -273,6 +273,25 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MINIX
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|_rl_output_character_function
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_function_decl
 specifier|extern
 name|int
@@ -280,6 +299,11 @@ name|_rl_output_character_function
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern

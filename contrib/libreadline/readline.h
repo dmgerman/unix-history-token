@@ -286,6 +286,9 @@ decl_stmt|,
 name|rl_insert_completions
 argument_list|()
 decl_stmt|,
+name|rl_menu_complete
+argument_list|()
+decl_stmt|,
 name|rl_do_lowercase_version
 argument_list|()
 decl_stmt|,
@@ -413,6 +416,29 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Not available unless __CYGWIN32__ is defined. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__CYGWIN32__
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|int
+name|rl_paste_from_clipboard
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* These are *both* defined even when VI_MODE is not. */
 end_comment
 
@@ -431,22 +457,37 @@ begin_comment
 comment|/* Non incremental history searching. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|rl_noninc_forward_search
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|rl_noninc_reverse_search
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|rl_noninc_forward_search_again
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|rl_noninc_reverse_search_again
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Things for vi mode. Not available unless readline is compiled -DVI_MODE. */
@@ -767,6 +808,17 @@ name|rl_unbind_key
 argument_list|()
 decl_stmt|,
 name|rl_unbind_key_in_map
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rl_unbind_function_in_map
+argument_list|()
+decl_stmt|,
+name|rl_unbind_command_in_map
 argument_list|()
 decl_stmt|;
 end_decl_stmt

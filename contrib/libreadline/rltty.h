@@ -125,91 +125,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Stuff for `struct winsize' on various systems. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SYS_STREAM_H
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
-file|<sys/stream.h>
+file|"rlwinsize.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SYS_STREAM_H */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SYS_PTEM_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/ptem.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|_IO_PTEM_H
-end_define
-
-begin_comment
-comment|/* work around SVR4.2 1.1.4 bug */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SYS_PTEM_H */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SYS_PTE_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/pte.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SYS_PTE_H */
-end_comment
 
 begin_comment
 comment|/* Define _POSIX_VDISABLE if we are not using the `new' tty driver and    it is not already defined.  It is used both to determine if a    special character is disabled and to disable certain special    characters.  Posix systems should set to 0, USG systems to -1. */
