@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.17 1996/09/20 04:11:53 davidg Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.18 1996/09/20 11:05:39 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -413,7 +413,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|inline
-name|int
+name|void
 name|fxp_scb_wait
 name|__P
 argument_list|(
@@ -658,7 +658,7 @@ begin_define
 define|#
 directive|define
 name|FXP_NTXCB
-value|64
+value|128
 end_define
 
 begin_comment
@@ -701,7 +701,7 @@ end_comment
 begin_function
 specifier|static
 specifier|inline
-name|int
+name|void
 name|fxp_scb_wait
 parameter_list|(
 name|csr
@@ -731,11 +731,6 @@ operator|--
 name|i
 condition|)
 empty_stmt|;
-return|return
-operator|(
-name|i
-operator|)
-return|;
 block|}
 end_function
 
@@ -1670,7 +1665,7 @@ name|segment
 decl_stmt|;
 name|txloop
 label|:
-comment|/* 	 * See if a TxCB is available. If not, indicate this to the 	 * outside world and exit. 	 */
+comment|/* 	 * See if we're all filled up with buffers to transmit. 	 */
 if|if
 condition|(
 name|sc
@@ -1679,15 +1674,7 @@ name|tx_queued
 operator|>=
 name|FXP_NTXCB
 condition|)
-block|{
-name|ifp
-operator|->
-name|if_flags
-operator||=
-name|IFF_OACTIVE
-expr_stmt|;
 return|return;
-block|}
 comment|/* 	 * Grab a packet to transmit. 	 */
 name|IF_DEQUEUE
 argument_list|(
@@ -1938,6 +1925,12 @@ name|tbd_number
 operator|=
 name|segment
 expr_stmt|;
+name|txp
+operator|->
+name|mb_head
+operator|=
+name|mb_head
+expr_stmt|;
 comment|/* 	 * Finish the initialization of this TxCB. 	 */
 name|txp
 operator|->
@@ -1961,12 +1954,6 @@ name|tx_threshold
 operator|=
 name|tx_threshold
 expr_stmt|;
-name|txp
-operator|->
-name|mb_head
-operator|=
-name|mb_head
-expr_stmt|;
 comment|/* 	 * Advance the end-of-list forward. 	 */
 name|sc
 operator|->
@@ -1983,50 +1970,48 @@ name|cbl_last
 operator|=
 name|txp
 expr_stmt|;
-comment|/* 	 * If no packets were previously queued then advance the first 	 * pointer to this TxCB. 	 */
+comment|/* 	 * Advance the beginning of the list forward if there are 	 * no other packets queued (when nothing is queued, cbl_first 	 * sits on the last TxCB that was sent out).. 	 */
 if|if
 condition|(
 name|sc
 operator|->
 name|tx_queued
-operator|++
 operator|==
 literal|0
 condition|)
-block|{
 name|sc
 operator|->
 name|cbl_first
 operator|=
 name|txp
 expr_stmt|;
-block|}
+name|sc
+operator|->
+name|tx_queued
+operator|++
+expr_stmt|;
 if|if
 condition|(
-operator|!
+name|csr
+operator|->
+name|scb_cus
+operator|==
+name|FXP_SCB_CUS_SUSPENDED
+condition|)
+block|{
 name|fxp_scb_wait
 argument_list|(
 name|csr
 argument_list|)
-condition|)
-block|{
-comment|/* 		 * Hmmm, card has gone out to lunch 		 */
-name|fxp_init
-argument_list|(
-name|ifp
-argument_list|)
 expr_stmt|;
-goto|goto
-name|txloop
-goto|;
-block|}
-comment|/* 	 * Resume transmission if suspended. 	 */
+comment|/* 		 * Resume transmission. 		 */
 name|csr
 operator|->
 name|scb_command
 operator|=
 name|FXP_SCB_COMMAND_CU_RESUME
 expr_stmt|;
+block|}
 if|#
 directive|if
 name|NBPFILTER
@@ -2107,7 +2092,7 @@ name|arpcom
 operator|.
 name|ac_if
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|statack
 decl_stmt|;
 while|while
@@ -2158,12 +2143,8 @@ name|cb_status
 operator|&
 name|FXP_CB_STATUS_C
 operator|)
-operator|&&
-name|txp
-operator|->
-name|mb_head
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|txp
 operator|=
@@ -2171,6 +2152,15 @@ name|txp
 operator|->
 name|next
 control|)
+block|{
+if|if
+condition|(
+name|txp
+operator|->
+name|mb_head
+operator|!=
+name|NULL
+condition|)
 block|{
 name|m_freem
 argument_list|(
@@ -2191,19 +2181,21 @@ name|tx_queued
 operator|--
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|txp
+operator|->
+name|cb_command
+operator|&
+name|FXP_CB_COMMAND_S
+condition|)
+break|break;
+block|}
 name|sc
 operator|->
 name|cbl_first
 operator|=
 name|txp
-expr_stmt|;
-comment|/* 			 * We unconditionally clear IFF_OACTIVE since it 			 * doesn't hurt to do so even if the tx queue is 			 * still full - it will just get set again in 			 * fxp_start(). If we get a CNA interrupt, it is 			 * (almost?) certain that we've freed up space for 			 * at least one more packet. 			 */
-name|ifp
-operator|->
-name|if_flags
-operator|&=
-operator|~
-name|IFF_OACTIVE
 expr_stmt|;
 comment|/* 			 * Clear watchdog timer. It may or may not be set 			 * again in fxp_start(). 			 */
 name|ifp
@@ -2468,9 +2460,6 @@ name|sc
 operator|->
 name|csr
 decl_stmt|;
-operator|(
-name|void
-operator|)
 name|fxp_scb_wait
 argument_list|(
 name|csr
@@ -2646,9 +2635,6 @@ name|scb_command
 operator|=
 name|FXP_SCB_COMMAND_CU_DUMPRESET
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fxp_scb_wait
 argument_list|(
 name|sc
@@ -3075,9 +3061,6 @@ name|scb_command
 operator|=
 name|FXP_SCB_COMMAND_CU_BASE
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fxp_scb_wait
 argument_list|(
 name|csr
@@ -3090,9 +3073,6 @@ operator|=
 name|FXP_SCB_COMMAND_RU_BASE
 expr_stmt|;
 comment|/* 	 * Initialize base of dump-stats buffer. 	 */
-operator|(
-name|void
-operator|)
 name|fxp_scb_wait
 argument_list|(
 name|csr
@@ -3195,14 +3175,14 @@ name|cbp
 operator|->
 name|rx_dma_bytecount
 operator|=
-literal|0
+literal|16
 expr_stmt|;
 comment|/* (no) rx DMA max */
 name|cbp
 operator|->
 name|tx_dma_bytecount
 operator|=
-literal|0
+literal|16
 expr_stmt|;
 comment|/* (no) tx DMA max */
 name|cbp
@@ -3376,9 +3356,6 @@ name|mcast
 expr_stmt|;
 comment|/* accept all multicasts */
 comment|/* 	 * Start the config command/DMA. 	 */
-operator|(
-name|void
-operator|)
 name|fxp_scb_wait
 argument_list|(
 name|csr
@@ -3472,9 +3449,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Start the IAS (Individual Address Setup) command/DMA. 	 */
-operator|(
-name|void
-operator|)
 name|fxp_scb_wait
 argument_list|(
 name|csr
@@ -3641,9 +3615,6 @@ name|tx_queued
 operator|=
 literal|0
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fxp_scb_wait
 argument_list|(
 name|csr
@@ -3656,9 +3627,6 @@ operator|=
 name|FXP_SCB_COMMAND_CU_START
 expr_stmt|;
 comment|/* 	 * Initialize receiver buffer area - RFA. 	 */
-operator|(
-name|void
-operator|)
 name|fxp_scb_wait
 argument_list|(
 name|csr
