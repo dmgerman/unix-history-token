@@ -616,12 +616,6 @@ directive|ifndef
 name|_TR
 end_ifndef
 
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
 begin_define
 define|#
 directive|define
