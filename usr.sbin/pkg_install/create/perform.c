@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.5 1993/09/04 05:06:33 jkh Exp $"
+literal|"$Id: perform.c,v 1.2 1993/09/03 23:00:55 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -623,6 +623,13 @@ index|[
 literal|10
 index|]
 decl_stmt|;
+name|args
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|tball
