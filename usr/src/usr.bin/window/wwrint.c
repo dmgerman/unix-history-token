@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwrint.c	3.10 (Berkeley) %G%"
+literal|"@(#)wwrint.c	3.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,12 +44,10 @@ begin_comment
 comment|/*  * Tty input interrupt handler.  * (1) Read input into buffer (wwib*).  * (2) Set the interrupt flag if anything is read.  * Currently, the last is used to get out of the blocking  * select() in wwiomux().  * To avoid race conditions, we only modify wwibq in here, except  * when the buffer is empty; and everywhere else, we only change wwibp.  * It should be completely safe.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|wwrint
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|n
@@ -146,7 +144,7 @@ name|wwnreade
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwgets.c	3.16 (Berkeley) %G%"
+literal|"@(#)wwgets.c	3.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,11 @@ name|w
 operator|->
 name|ww_unctrl
 decl_stmt|;
+specifier|static
+name|void
+name|rub
+parameter_list|()
+function_decl|;
 name|w
 operator|->
 name|ww_unctrl
@@ -374,22 +379,20 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|rub
-argument_list|(
-argument|c
-argument_list|,
-argument|w
-argument_list|)
-expr|struct
-name|ww
-operator|*
+parameter_list|(
+name|c
+parameter_list|,
 name|w
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|struct
+name|ww
+modifier|*
+name|w
+decl_stmt|;
 block|{
 specifier|register
 name|i
@@ -425,7 +428,7 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

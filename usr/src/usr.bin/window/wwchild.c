@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwchild.c	3.14 (Berkeley) %G%"
+literal|"@(#)wwchild.c	3.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,6 +85,10 @@ name|pid
 operator|=
 name|wait3
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|w
 argument_list|,
