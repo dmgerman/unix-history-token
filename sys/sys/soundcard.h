@@ -16,7 +16,7 @@ name|_SYS_SOUNDCARD_H_
 end_define
 
 begin_comment
-comment|/*    * If you make modifications to this file, please contact me before   * distributing the modified version. There is already enough    * diversity in the world.   *   * Regards,   * Hannu Savolainen   * hannu@voxware.pp.fi   *   **********************************************************************   * PS.	The Hacker's Guide to VoxWare available from    *     nic.funet.fi:pub/OS/Linux/ALPHA/sound. The file is   *	snd-sdk-doc-0.1.ps.gz (gzipped postscript). It contains   *	some useful information about programming with VoxWare.   *	(NOTE! The pub/OS/Linux/ALPHA/ directories are hidden. You have   *	to cd inside them before the files are accessible.)   **********************************************************************   */
+comment|/*   * If you make modifications to this file, please contact me before   * distributing the modified version. There is already enough   * diversity in the world.   *   * Regards,   * Hannu Savolainen   * hannu@voxware.pp.fi   *   **********************************************************************   * PS.	The Hacker's Guide to VoxWare available from   *     nic.funet.fi:pub/OS/Linux/ALPHA/sound. The file is   *	snd-sdk-doc-0.1.ps.gz (gzipped postscript). It contains   *	some useful information about programming with VoxWare.   *	(NOTE! The pub/OS/Linux/ALPHA/ directories are hidden. You have   *	to cd inside them before the files are accessible.)   **********************************************************************   */
 end_comment
 
 begin_comment
@@ -226,6 +226,20 @@ name|SNDCARD_NSS
 value|26
 end_define
 
+begin_define
+define|#
+directive|define
+name|SNDCARD_UART16550
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCARD_OPL
+value|28
+end_define
+
 begin_include
 include|#
 directive|include
@@ -258,7 +272,7 @@ comment|/*  * The first part of this file contains the new FreeBSD sound ioctl  
 end_comment
 
 begin_comment
-comment|/*  * the following three calls extend the generic file descriptor  * interface. AIONWRITE is the dual of FIONREAD, i.e. returns the max  * number of bytes for a write operation to be non-blocking.  *  * AIOGSIZE/AIOSSIZE are used to change the behaviour of the device,  * from a character device (default) to a block device. In block mode,  * (not to be confused with blocking mode) the main difference for the  * application is that select() will return only when a complete  * block can be read/written to the device, whereas in character mode  * select will return true when one byte can be exchanged. For audio  * devices, character mode makes select almost useless since one byte  * will always be ready by the next sample time (which is often only a  * handful of microseconds away).   * Use a size of 0 or 1 to return to character mode.  */
+comment|/*  * the following three calls extend the generic file descriptor  * interface. AIONWRITE is the dual of FIONREAD, i.e. returns the max  * number of bytes for a write operation to be non-blocking.  *  * AIOGSIZE/AIOSSIZE are used to change the behaviour of the device,  * from a character device (default) to a block device. In block mode,  * (not to be confused with blocking mode) the main difference for the  * application is that select() will return only when a complete  * block can be read/written to the device, whereas in character mode  * select will return true when one byte can be exchanged. For audio  * devices, character mode makes select almost useless since one byte  * will always be ready by the next sample time (which is often only a  * handful of microseconds away).  * Use a size of 0 or 1 to return to character mode.  */
 end_comment
 
 begin_define
@@ -411,6 +425,65 @@ end_define
 
 begin_comment
 comment|/* MPEG (2) audio */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_AC3
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Dolby Digital AC3 */
+end_comment
+
+begin_comment
+comment|/*  * may not have all bits significant:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_S32_LE
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Little endian signed 32 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_S32_BE
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* big endian signed 32 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_U32_LE
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* Little endian unsigned 32 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_U32_BE
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* big endian unsigned 32 */
 end_comment
 
 begin_define
@@ -1137,7 +1210,7 @@ decl_stmt|,
 name|loop_end
 decl_stmt|;
 comment|/* Byte offsets from the beginning */
-comment|/*   * The base_freq and base_note fields are used when computing the  * playback speed for a note. The base_note defines the tone frequency  * which is heard if the sample is played using the base_freq as the  * playback speed.  *  * The low_note and high_note fields define the minimum and maximum note  * frequencies for which this sample is valid. It is possible to define  * more than one samples for a instrument number at the same time. The  * low_note and high_note fields are used to select the most suitable one.  *  * The fields base_note, high_note and low_note should contain  * the note frequency multiplied by 1000. For example value for the  * middle A is 440*1000.  */
+comment|/*  * The base_freq and base_note fields are used when computing the  * playback speed for a note. The base_note defines the tone frequency  * which is heard if the sample is played using the base_freq as the  * playback speed.  *  * The low_note and high_note fields define the minimum and maximum note  * frequencies for which this sample is valid. It is possible to define  * more than one samples for a instrument number at the same time. The  * low_note and high_note fields are used to select the most suitable one.  *  * The fields base_note, high_note and low_note should contain  * the note frequency multiplied by 1000. For example value for the  * middle A is 440*1000.  */
 name|u_int
 name|base_freq
 decl_stmt|;
@@ -1173,7 +1246,7 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* 255 == 100% */
-comment|/*  	 * The tremolo, vibrato and scale info are not supported yet. 	 * Enable by setting the mode bits WAVE_TREMOLO, WAVE_VIBRATO or 	 * WAVE_SCALE 	 */
+comment|/* 	 * The tremolo, vibrato and scale info are not supported yet. 	 * Enable by setting the mode bits WAVE_TREMOLO, WAVE_VIBRATO or 	 * WAVE_SCALE 	 */
 name|u_char
 name|tremolo_sweep
 decl_stmt|;
@@ -1310,7 +1383,7 @@ value|_IOWR('P', 1, struct patmgr_info)
 end_define
 
 begin_comment
-comment|/*  * The patmgr_info is a fixed size structure which is used for two  * different purposes. The intended use is for communication between  * the application using /dev/sequencer and the patch manager daemon  * associated with a synthesizer device (ioctl(SNDCTL_PMGR_ACCESS)).  *  * This structure is also used with ioctl(SNDCTL_PGMR_IFACE) which allows  * a patch manager daemon to read and write device parameters. This  * ioctl available through /dev/sequencer also. Avoid using it since it's  * extremely hardware dependent. In addition access trough /dev/sequencer   * may confuse the patch manager daemon.  */
+comment|/*  * The patmgr_info is a fixed size structure which is used for two  * different purposes. The intended use is for communication between  * the application using /dev/sequencer and the patch manager daemon  * associated with a synthesizer device (ioctl(SNDCTL_PMGR_ACCESS)).  *  * This structure is also used with ioctl(SNDCTL_PGMR_IFACE) which allows  * a patch manager daemon to read and write device parameters. This  * ioctl available through /dev/sequencer also. Avoid using it since it's  * extremely hardware dependent. In addition access trough /dev/sequencer  * may confuse the patch manager daemon.  */
 end_comment
 
 begin_struct
@@ -1348,7 +1421,7 @@ decl_stmt|;
 name|int
 name|command
 decl_stmt|;
-comment|/*   * Commands 0x000 to 0xfff reserved for patch manager programs   */
+comment|/*  * Commands 0x000 to 0xfff reserved for patch manager programs  */
 define|#
 directive|define
 name|PM_GET_DEVTYPE
@@ -1409,7 +1482,7 @@ define|#
 directive|define
 name|_PM_LOAD_PATCH
 value|0x100
-comment|/*   * Commands above 0xffff reserved for device specific use  */
+comment|/*  * Commands above 0xffff reserved for device specific use  */
 name|long
 name|parm1
 decl_stmt|;
@@ -1499,7 +1572,7 @@ comment|/* A patch has been loaded by appl */
 end_comment
 
 begin_comment
-comment|/*  * /dev/sequencer input events.  *  * The data written to the /dev/sequencer is a stream of events. Events  * are records of 4 or 8 bytes. The first byte defines the size.   * Any number of events can be written with a write call. There  * is a set of macros for sending these events. Use these macros if you  * want to maximize portability of your program.  *  * Events SEQ_WAIT, SEQ_MIDIPUTC and SEQ_ECHO. Are also input events.  * (All input events are currently 4 bytes long. Be prepared to support  * 8 byte events also. If you receive any event having first byte>= 128,  * it's a 8 byte event.  *  * The events are documented at the end of this file.  *  * Normal events (4 bytes)  * There is also a 8 byte version of most of the 4 byte events. The  * 8 byte one is recommended.  */
+comment|/*  * /dev/sequencer input events.  *  * The data written to the /dev/sequencer is a stream of events. Events  * are records of 4 or 8 bytes. The first byte defines the size.  * Any number of events can be written with a write call. There  * is a set of macros for sending these events. Use these macros if you  * want to maximize portability of your program.  *  * Events SEQ_WAIT, SEQ_MIDIPUTC and SEQ_ECHO. Are also input events.  * (All input events are currently 4 bytes long. Be prepared to support  * 8 byte events also. If you receive any event having first byte>= 128,  * it's a 8 byte event.  *  * The events are documented at the end of this file.  *  * Normal events (4 bytes)  * There is also a 8 byte version of most of the 4 byte events. The  * 8 byte one is recommended.  */
 end_comment
 
 begin_define
@@ -2027,7 +2100,7 @@ comment|/* Long events */
 end_comment
 
 begin_comment
-comment|/*  * SEQ_FULLSIZE events are used for loading patches/samples to the  * synthesizer devices. These events are passed directly to the driver  * of the associated synthesizer device. There is no limit to the size  * of the extended events. These events are not queued but executed  * immediately when the write() is called (execution can take several  * seconds of time).   *  * When a SEQ_FULLSIZE message is written to the device, it must  * be written using exactly one write() call. Other events cannot  * be mixed to the same write.  *   * For FM synths (YM3812/OPL3) use struct sbi_instrument and write  * it to the /dev/sequencer. Don't write other data together with  * the instrument structure Set the key field of the structure to  * FM_PATCH. The device field is used to route the patch to the  * corresponding device.  *  * For Gravis UltraSound use struct patch_info. Initialize the key field  * to GUS_PATCH.  */
+comment|/*  * SEQ_FULLSIZE events are used for loading patches/samples to the  * synthesizer devices. These events are passed directly to the driver  * of the associated synthesizer device. There is no limit to the size  * of the extended events. These events are not queued but executed  * immediately when the write() is called (execution can take several  * seconds of time).  *  * When a SEQ_FULLSIZE message is written to the device, it must  * be written using exactly one write() call. Other events cannot  * be mixed to the same write.  *  * For FM synths (YM3812/OPL3) use struct sbi_instrument and write  * it to the /dev/sequencer. Don't write other data together with  * the instrument structure Set the key field of the structure to  * FM_PATCH. The device field is used to route the patch to the  * corresponding device.  *  * For Gravis UltraSound use struct patch_info. Initialize the key field  * to GUS_PATCH.  */
 end_comment
 
 begin_define
@@ -2303,6 +2376,20 @@ name|SNDCTL_MIDI_MPUCMD
 value|_IOWR('m', 2, mpu_command_rec)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MIOSPASSTHRU
+value|_IOWR('m', 3, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIOGPASSTHRU
+value|_IOWR('m', 4, int)
+end_define
+
 begin_comment
 comment|/*  * IOCTL commands for /dev/dsp and /dev/audio  */
 end_comment
@@ -2369,6 +2456,13 @@ define|#
 directive|define
 name|SOUND_PCM_WRITE_CHANNELS
 value|_IOWR('P', 6, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_CHANNELS
+value|SOUND_PCM_WRITE_CHANNELS
 end_define
 
 begin_define
@@ -2666,6 +2760,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SNDCTL_DSP_SETDUPLEX
+value|_IO  ('P', 22)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SNDCTL_DSP_GETODELAY
 value|_IOR ('P', 23, int)
 end_define
@@ -2872,7 +2973,7 @@ comment|/*  * IOCTL commands for /dev/mixer  */
 end_comment
 
 begin_comment
-comment|/*   * Mixer devices  *  * There can be up to 20 different analog mixer channels. The  * SOUND_MIXER_NRDEVICES gives the currently supported maximum.   * The SOUND_MIXER_READ_DEVMASK returns a bitmask which tells  * the devices supported by the particular mixer.  */
+comment|/*  * Mixer devices  *  * There can be up to 20 different analog mixer channels. The  * SOUND_MIXER_NRDEVICES gives the currently supported maximum.  * The SOUND_MIXER_READ_DEVMASK returns a bitmask which tells  * the devices supported by the particular mixer.  */
 end_comment
 
 begin_define
@@ -2997,7 +3098,7 @@ comment|/* Output gain */
 end_comment
 
 begin_comment
-comment|/*   * The AD1848 codec and compatibles have three line level inputs  * (line, aux1 and aux2). Since each card manufacturer have assigned  * different meanings to these inputs, it's inpractical to assign  * specific meanings (line, cd, synth etc.) to them.  */
+comment|/*  * The AD1848 codec and compatibles have three line level inputs  * (line, aux1 and aux2). Since each card manufacturer have assigned  * different meanings to these inputs, it's inpractical to assign  * specific meanings (line, cd, synth etc.) to them.  */
 end_comment
 
 begin_define
@@ -3832,7 +3933,7 @@ comment|/*  * Level 2 event types for /dev/sequencer  */
 end_comment
 
 begin_comment
-comment|/*  * The 4 most significant bits of byte 0 specify the class of  * the event:   *  *	0x8X = system level events,  *	0x9X = device/port specific events, event[1] = device/port,  *		The last 4 bits give the subtype:  *			0x02	= Channel event (event[3] = chn).  *			0x01	= note event (event[4] = note).  *			(0x01 is not used alone but always with bit 0x02).  *	       event[2] = MIDI message code (0x80=note off etc.)  *  */
+comment|/*  * The 4 most significant bits of byte 0 specify the class of  * the event:  *  *	0x8X = system level events,  *	0x9X = device/port specific events, event[1] = device/port,  *		The last 4 bits give the subtype:  *			0x02	= Channel event (event[3] = chn).  *			0x01	= note event (event[4] = note).  *			(0x01 is not used alone but always with bit 0x02).  *	       event[2] = MIDI message code (0x80=note off etc.)  *  */
 end_comment
 
 begin_define
@@ -4165,7 +4266,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * This variation of the sequencer macros is used just to format one event  * using fixed buffer.  *   * The program using the macro library must define the following macros before  * using this library.  *  * #define _seqbuf 		 name of the buffer (u_char[])   * #define _SEQ_ADVBUF(len)	 If the applic needs to know the exact  *				 size of the event, this macro can be used.  *				 Otherwise this must be defined as empty.  * #define _seqbufptr		 Define the name of index variable or 0 if  *				 not required.   */
+comment|/*  * This variation of the sequencer macros is used just to format one event  * using fixed buffer.  *  * The program using the macro library must define the following macros before  * using this library.  *  * #define _seqbuf 		 name of the buffer (u_char[])  * #define _SEQ_ADVBUF(len)	 If the applic needs to know the exact  *				 size of the event, this macro can be used.  *				 Otherwise this must be defined as empty.  * #define _seqbufptr		 Define the name of index variable or 0 if  *				 not required.  */
 end_comment
 
 begin_define
@@ -4326,7 +4427,7 @@ value|{ \ 	_SEQ_NEEDBUF(8);\ 	_seqbuf[_seqbufptr] = EV_CHN_COMMON;\ 	_seqbuf[_se
 end_define
 
 begin_comment
-comment|/*  * SEQ_SYSEX permits sending of sysex messages. (It may look that it permits  * sending any MIDI bytes but it's absolutely not possible. Trying to do  * so _will_ cause problems with MPU401 intelligent mode).  *  * Sysex messages are sent in blocks of 1 to 6 bytes. Longer messages must be   * sent by calling SEQ_SYSEX() several times (there must be no other events  * between them). First sysex fragment must have 0xf0 in the first byte  * and the last byte (buf[len-1] of the last fragment must be 0xf7. No byte  * between these sysex start and end markers cannot be larger than 0x7f. Also  * lengths of each fragments (except the last one) must be 6.  *  * Breaking the above rules may work with some MIDI ports but is likely to  * cause fatal problems with some other devices (such as MPU401).  */
+comment|/*  * SEQ_SYSEX permits sending of sysex messages. (It may look that it permits  * sending any MIDI bytes but it's absolutely not possible. Trying to do  * so _will_ cause problems with MPU401 intelligent mode).  *  * Sysex messages are sent in blocks of 1 to 6 bytes. Longer messages must be  * sent by calling SEQ_SYSEX() several times (there must be no other events  * between them). First sysex fragment must have 0xf0 in the first byte  * and the last byte (buf[len-1] of the last fragment must be 0xf7. No byte  * between these sysex start and end markers cannot be larger than 0x7f. Also  * lengths of each fragments (except the last one) must be 6.  *  * Breaking the above rules may work with some MIDI ports but is likely to  * cause fatal problems with some other devices (such as MPU401).  */
 end_comment
 
 begin_define
