@@ -11680,7 +11680,7 @@ literal|0
 argument_list|,
 name|sysctl_vnode
 argument_list|,
-literal|"S,vnode"
+literal|"S,xvnode"
 argument_list|,
 literal|""
 argument_list|)
