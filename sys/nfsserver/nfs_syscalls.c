@@ -433,7 +433,7 @@ comment|/*  * NFS server system calls  */
 end_comment
 
 begin_comment
-comment|/*  * Nfs server psuedo system call for the nfsd's  * Based on the flag value it either:  * - adds a socket to the selection list  * - remains in the kernel as an nfsd  * - remains in the kernel as an nfsiod  * For INET6 we suppose that nfsd provides only IN6P_BINDV6ONLY sockets  * and that mountd provides  *  - sockaddr with no IPv4-mapped addresses  *  - mask for both INET and INET6 families if there is IPv4-mapped overlap  */
+comment|/*  * Nfs server psuedo system call for the nfsd's  * Based on the flag value it either:  * - adds a socket to the selection list  * - remains in the kernel as an nfsd  * - remains in the kernel as an nfsiod  * For INET6 we suppose that nfsd provides only IN6P_IPV6_V6ONLY sockets  * and that mountd provides  *  - sockaddr with no IPv4-mapped addresses  *  - mask for both INET and INET6 families if there is IPv4-mapped overlap  */
 end_comment
 
 begin_ifndef
