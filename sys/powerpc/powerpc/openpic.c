@@ -941,8 +941,6 @@ argument_list|,
 name|sc
 operator|->
 name|sc_nirq
-operator|-
-literal|1
 argument_list|)
 operator|!=
 literal|0
