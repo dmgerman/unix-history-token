@@ -97,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|NG_TEE_HOOKSTAT_INFO
-value|{				\ 	{							\ 	  { "inOctets",&ng_parse_int64_type	},	\ 	  { "inFrames",&ng_parse_int64_type	},	\ 	  { "outOctets",&ng_parse_int64_type	},	\ 	  { "outFrames",&ng_parse_int64_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{				\ 	{							\ 	  { "inOctets",&ng_parse_uint64_type	},	\ 	  { "inFrames",&ng_parse_uint64_type	},	\ 	  { "outOctets",&ng_parse_uint64_type	},	\ 	  { "outFrames",&ng_parse_uint64_type	},	\ 	  { NULL },						\ 	}							\ }
 end_define
 
 begin_comment
@@ -157,6 +157,9 @@ comment|/* get stats */
 name|NGM_TEE_CLR_STATS
 block|,
 comment|/* clear stats */
+name|NGM_TEE_GETCLR_STATS
+block|,
+comment|/* atomically get and clear stats */
 block|}
 enum|;
 end_enum
