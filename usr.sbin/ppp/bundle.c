@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.c,v 1.42 1998/12/14 19:24:28 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.c,v 1.43 1999/01/06 00:08:03 brian Exp $  */
 end_comment
 
 begin_include
@@ -288,6 +288,23 @@ directive|include
 file|"mp.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NORADIUS
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"radius.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -559,16 +576,6 @@ break|break;
 case|case
 name|PHASE_NETWORK
 case|:
-name|ipcp_Setup
-argument_list|(
-operator|&
-name|bundle
-operator|->
-name|ncp
-operator|.
-name|ipcp
-argument_list|)
-expr_stmt|;
 name|fsm_Up
 argument_list|(
 operator|&
@@ -4911,6 +4918,19 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NORADIUS
+name|radius_Init
+argument_list|(
+operator|&
+name|bundle
+operator|.
+name|radius
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Clean out any leftover crud */
 name|iface_Clear
 argument_list|(
@@ -5190,6 +5210,20 @@ argument_list|(
 name|bundle
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NORADIUS
+comment|/* Tell the radius server the bad news */
+name|radius_Destroy
+argument_list|(
+operator|&
+name|bundle
+operator|->
+name|radius
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Again, these are all DATALINK_CLOSED unless we're abending */
 name|dl
 operator|=
@@ -7041,6 +7075,25 @@ operator|.
 name|timeout
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NORADIUS
+name|radius_Show
+argument_list|(
+operator|&
+name|arg
+operator|->
+name|bundle
+operator|->
+name|radius
+argument_list|,
+name|arg
+operator|->
+name|prompt
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|prompt_Printf
 argument_list|(
 name|arg

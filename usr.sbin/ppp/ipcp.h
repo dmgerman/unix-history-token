@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.h,v 1.21 1998/10/22 02:32:49 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.h,v 1.22 1998/10/26 19:07:39 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_define
@@ -74,6 +74,16 @@ begin_comment
 comment|/* subtract from NS val for REJECT bit */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|addr2mask
+parameter_list|(
+name|addr
+parameter_list|)
+value|(			\   IN_CLASSA(addr) ?				\     htonl(IN_CLASSA_NET) :			\   IN_CLASSB(addr) ?				\     htonl(IN_CLASSB_NET) : htonl(IN_CLASSC_NET)	\ )
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|sticky_route
@@ -140,7 +150,7 @@ name|struct
 name|in_addr
 name|netmask
 decl_stmt|;
-comment|/* netmask (unused by most OSs) */
+comment|/* Iface netmask (unused by most OSs) */
 name|struct
 name|in_range
 name|peer_range
@@ -242,6 +252,11 @@ decl_stmt|;
 comment|/* VJ params he's willing to use */
 name|struct
 name|in_addr
+name|ifmask
+decl_stmt|;
+comment|/* Interface netmask */
+name|struct
+name|in_addr
 name|my_ip
 decl_stmt|;
 comment|/* IP address I'm willing to use */
@@ -337,6 +352,8 @@ parameter_list|(
 name|struct
 name|ipcp
 modifier|*
+parameter_list|,
+name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -414,6 +431,21 @@ name|ipcp
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ipcp_UseHisIPaddr
+parameter_list|(
+name|struct
+name|bundle
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
 parameter_list|)
 function_decl|;
 end_function_decl

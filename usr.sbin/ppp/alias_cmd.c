@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.17 1998/08/26 17:39:36 brian Exp $  */
+comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.18 1998/09/17 00:45:25 brian Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -222,6 +222,23 @@ include|#
 directive|include
 file|"filter.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NORADIUS
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"radius.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

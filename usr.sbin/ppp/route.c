@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.53 1998/08/17 06:42:40 brian Exp $  *  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.54 1998/10/22 02:32:50 brian Exp $  *  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -212,6 +212,23 @@ include|#
 directive|include
 file|"mp.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NORADIUS
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"radius.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2927,13 +2944,6 @@ name|in_addr
 name|gw
 parameter_list|)
 block|{
-if|if
-condition|(
-name|type
-operator|!=
-name|ROUTE_STATIC
-condition|)
-block|{
 name|struct
 name|sticky_route
 modifier|*
@@ -2994,6 +3004,13 @@ name|s_addr
 operator|)
 condition|)
 block|{
+comment|/* Oops, we already have this route - unlink it */
+name|free
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
+comment|/* impossible really  */
 name|r
 operator|=
 operator|*
@@ -3075,7 +3092,6 @@ name|rp
 operator|=
 name|r
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -3264,16 +3280,64 @@ name|struct
 name|sticky_route
 modifier|*
 name|r
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|tag
+parameter_list|,
+name|int
+name|indent
 parameter_list|)
 block|{
 name|int
 name|def
 decl_stmt|;
+name|int
+name|tlen
+init|=
+name|strlen
+argument_list|(
+name|tag
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|tlen
+operator|+
+literal|2
+operator|>
+name|indent
+condition|)
 name|prompt_Printf
 argument_list|(
 name|p
 argument_list|,
-literal|"Sticky routes:\n"
+literal|"%s:\n%*s"
+argument_list|,
+name|tag
+argument_list|,
+name|indent
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+else|else
+name|prompt_Printf
+argument_list|(
+name|p
+argument_list|,
+literal|"%s:%*s"
+argument_list|,
+name|tag
+argument_list|,
+name|indent
+operator|-
+name|tlen
+operator|-
+literal|1
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 for|for
@@ -3310,8 +3374,20 @@ name|prompt_Printf
 argument_list|(
 name|p
 argument_list|,
-literal|" add "
+literal|"%*sadd "
+argument_list|,
+name|tlen
+condition|?
+literal|0
+else|:
+name|indent
+argument_list|,
+literal|""
 argument_list|)
+expr_stmt|;
+name|tlen
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
