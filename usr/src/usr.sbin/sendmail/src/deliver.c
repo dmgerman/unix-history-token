@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.16 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1283,9 +1283,6 @@ condition|(
 name|clever
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|MXDOMAIN
 name|expand
 argument_list|(
 literal|"\001w"
@@ -1386,28 +1383,6 @@ name|rcode
 operator|=
 name|EX_OK
 expr_stmt|;
-else|#
-directive|else
-else|MXDOMAIN
-name|Nmx
-operator|=
-literal|1
-expr_stmt|;
-name|MxHosts
-index|[
-literal|0
-index|]
-operator|=
-name|q
-operator|->
-name|q_host
-expr_stmt|;
-name|rcode
-operator|=
-name|EX_OK
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* send the initial SMTP protocol */
 if|if
 condition|(

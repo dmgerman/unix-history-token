@@ -15,41 +15,15 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MXDOMAIN
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.10 (Berkeley) %G% (with MXDOMAIN)"
+literal|"@(#)domain.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)domain.c	5.10 (Berkeley) %G% (without MXDOMAIN)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -59,12 +33,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MXDOMAIN
-end_ifdef
 
 begin_include
 include|#
@@ -519,7 +487,6 @@ name|FORMERR
 case|:
 endif|#
 directive|endif
-endif|OLDJEEVES
 case|case
 name|NOERROR
 case|:
@@ -553,7 +520,6 @@ name|FORMERR
 case|:
 endif|#
 directive|endif
-endif|OLDJEEVES
 case|case
 name|NOTIMP
 case|:
@@ -1588,12 +1554,6 @@ block|}
 return|return;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|MXDOMAIN
-end_endif
 
 end_unit
 
