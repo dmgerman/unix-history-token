@@ -377,7 +377,7 @@ parameter_list|(
 name|UINT32
 name|InterruptNumber
 parameter_list|,
-name|OSD_HANDLER
+name|ACPI_OSD_HANDLER
 name|ServiceRoutine
 parameter_list|,
 name|void
@@ -394,7 +394,7 @@ parameter_list|(
 name|UINT32
 name|InterruptNumber
 parameter_list|,
-name|OSD_HANDLER
+name|ACPI_OSD_HANDLER
 name|ServiceRoutine
 parameter_list|)
 function_decl|;
@@ -420,7 +420,7 @@ parameter_list|(
 name|UINT32
 name|Priority
 parameter_list|,
-name|OSD_EXECUTION_CALLBACK
+name|ACPI_OSD_EXEC_CALLBACK
 name|Function
 parameter_list|,
 name|void
@@ -432,12 +432,20 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|AcpiOsWaitEventsComplete
+parameter_list|(
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|AcpiOsSleep
 parameter_list|(
-name|UINT32
-name|Seconds
-parameter_list|,
-name|UINT32
+name|ACPI_INTEGER
 name|Milliseconds
 parameter_list|)
 function_decl|;
@@ -528,7 +536,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Platform and hardware-independent PCI configuration space access  */
+comment|/*  * Platform and hardware-independent PCI configuration space access  * Note: Can't use "Register" as a parameter, changed to "Reg" --  * certain compilers complain.  */
 end_comment
 
 begin_function_decl
@@ -540,7 +548,7 @@ modifier|*
 name|PciId
 parameter_list|,
 name|UINT32
-name|Register
+name|Reg
 parameter_list|,
 name|void
 modifier|*
@@ -561,7 +569,7 @@ modifier|*
 name|PciId
 parameter_list|,
 name|UINT32
-name|Register
+name|Reg
 parameter_list|,
 name|ACPI_INTEGER
 name|Value
@@ -581,10 +589,10 @@ name|void
 name|AcpiOsDerivePciId
 parameter_list|(
 name|ACPI_HANDLE
-name|rhandle
+name|Rhandle
 parameter_list|,
 name|ACPI_HANDLE
-name|chandle
+name|Chandle
 parameter_list|,
 name|ACPI_PCI_ID
 modifier|*
@@ -627,7 +635,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|UINT32
+name|UINT64
 name|AcpiOsGetTimer
 parameter_list|(
 name|void

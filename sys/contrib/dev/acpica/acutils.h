@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 161 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 164 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -384,6 +384,26 @@ specifier|const
 name|char
 modifier|*
 name|SrcString
+parameter_list|,
+name|ACPI_SIZE
+name|Count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|AcpiUtMemcmp
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Buffer1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Buffer2
 parameter_list|,
 name|ACPI_SIZE
 name|Count
@@ -1693,6 +1713,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|AcpiUtCreateStringObject
+parameter_list|(
+name|ACPI_SIZE
+name|StringSize
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * UtRefCnt - Object reference count management  */
 end_comment
@@ -1981,11 +2012,9 @@ name|ACPI_STATUS
 name|AcpiUtDivide
 parameter_list|(
 name|ACPI_INTEGER
-modifier|*
 name|InDividend
 parameter_list|,
 name|ACPI_INTEGER
-modifier|*
 name|InDivisor
 parameter_list|,
 name|ACPI_INTEGER
@@ -2004,7 +2033,6 @@ name|ACPI_STATUS
 name|AcpiUtShortDivide
 parameter_list|(
 name|ACPI_INTEGER
-modifier|*
 name|InDividend
 parameter_list|,
 name|UINT32
@@ -2058,6 +2086,17 @@ name|RetInteger
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Values for Base above (16=Hex, 10=Decimal) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_ANY_BASE
+value|0
+end_define
 
 begin_function_decl
 name|char
