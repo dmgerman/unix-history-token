@@ -1040,21 +1040,16 @@ name|lock_class_mtx_spin
 block|}
 block|,
 comment|/* 	 * leaf locks 	 */
-ifdef|#
-directive|ifdef
-name|SMP
-ifdef|#
-directive|ifdef
-name|__i386__
 block|{
-literal|"imen"
+literal|"icu"
 block|,
 operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
-endif|#
-directive|endif
+ifdef|#
+directive|ifdef
+name|SMP
 block|{
 literal|"smp rendezvous"
 block|,

@@ -28,13 +28,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -1854,6 +1866,12 @@ operator|)
 operator|>>
 literal|4
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|icu_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pci_int_type
@@ -1941,6 +1959,12 @@ name|irq
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|icu_lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1980,6 +2004,12 @@ literal|0x800
 operator|)
 operator|>>
 literal|4
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|icu_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2063,6 +2093,12 @@ name|irq
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|icu_lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2389,6 +2425,12 @@ operator|<<
 name|mask
 operator|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|icu_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mask
@@ -2428,6 +2470,12 @@ operator|>>
 literal|16
 argument_list|)
 expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|icu_lock
+argument_list|)
+expr_stmt|;
 name|alpha_teardown_intr
 argument_list|(
 name|cookie
@@ -2463,9 +2511,21 @@ argument_list|,
 name|vector
 argument_list|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|icu_lock
+argument_list|)
+expr_stmt|;
 name|t2_eoi
 argument_list|(
 name|vector
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|icu_lock
 argument_list|)
 expr_stmt|;
 block|}

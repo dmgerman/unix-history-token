@@ -15,6 +15,14 @@ directive|define
 name|_MACHINE_INTR_H_
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|icu_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|alpha_setup_intr

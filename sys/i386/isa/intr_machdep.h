@@ -254,11 +254,38 @@ begin_comment
 comment|/* SMP || APIC_IO */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|LOCORE
-end_ifndef
+end_ifdef
+
+begin_comment
+comment|/*  * Protects the IO APIC, 8259 PIC, imen, and apic_imen  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICU_LOCK
+value|MTX_LOCK_SPIN(icu_lock, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICU_UNLOCK
+value|MTX_UNLOCK_SPIN(icu_lock)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* LOCORE */
+end_comment
 
 begin_comment
 comment|/*  * Type of the first (asm) part of an interrupt handler.  */
@@ -342,6 +369,14 @@ end_decl_stmt
 begin_comment
 comment|/* cookies to pass to intr handlers */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|icu_lock
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|inthand_t

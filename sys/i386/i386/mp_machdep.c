@@ -1371,17 +1371,6 @@ comment|/*  * initialize all the SMP locks  */
 end_comment
 
 begin_comment
-comment|/* critical region around IO APIC, apic_imen */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|mtx
-name|imen_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* lock region used by kernel profiling */
 end_comment
 

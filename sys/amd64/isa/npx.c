@@ -264,6 +264,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<i386/isa/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isa/isavar.h>
 end_include
 
@@ -1610,11 +1616,23 @@ name|irq_cookie
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX hack around brokenness of bus_teardown_intr().  If we left the 	 * irq active then we would get it instead of exception 16. 	 */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|icu_lock
+argument_list|)
+expr_stmt|;
 name|INTRDIS
 argument_list|(
 literal|1
 operator|<<
 name|irq_num
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|icu_lock
 argument_list|)
 expr_stmt|;
 name|bus_release_resource

@@ -715,7 +715,7 @@ comment|/* IDT vec */
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|imen_mtx
+name|icu_lock
 argument_list|)
 expr_stmt|;
 name|io_apic_write
@@ -747,7 +747,7 @@ expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|imen_mtx
+name|icu_lock
 argument_list|)
 expr_stmt|;
 comment|/* we only deal with vectored INTs here */
@@ -931,7 +931,7 @@ comment|/* IDT vec */
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|imen_mtx
+name|icu_lock
 argument_list|)
 expr_stmt|;
 name|io_apic_write
@@ -959,7 +959,7 @@ expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|imen_mtx
+name|icu_lock
 argument_list|)
 expr_stmt|;
 block|}
