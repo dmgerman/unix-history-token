@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	savecore.c	4.2	81/04/03  * savecore dirname  *	Written by Michael Toy (UCB)  *	Program meant to be called from the /etc/rc file for saving the  * dump of a crashed system.  If the core file has not already been saved  * then save it in dirname (if there is at least minfree blocks on the  * device the directory is on.)  *	1) Make certain "dirname" exists  *	2) Get dumpdev and dumplo from vmunix/kmem  *	3) Find dump device name get time from core image  *	4) Look in "dirname" generate a name se  *		vmunix.n  *		vmcore.n  *	5) Check in "dirname"/minfree to be certain there is space  *	6) Make entry in shutdown log with date and cause of crash  */
+comment|/*  *	savecore.c	4.3	81/04/14  * savecore dirname  *	Written by Michael Toy (UCB)  *	Program meant to be called from the /etc/rc file for saving the  * dump of a crashed system.  If the core file has not already been saved  * then save it in dirname (if there is at least minfree blocks on the  * device the directory is on.)  *	1) Make certain "dirname" exists  *	2) Get dumpdev and dumplo from vmunix/kmem  *	3) Find dump device name get time from core image  *	4) Look in "dirname" generate a name se  *		vmunix.n  *		vmcore.n  *	5) Check in "dirname"/minfree to be certain there is space  *	6) Make entry in shutdown log with date and cause of crash  */
 end_comment
 
 begin_include
@@ -445,6 +445,10 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|dp
+decl_stmt|;
 name|strcpy
 argument_list|(
 name|devname
@@ -541,8 +545,27 @@ argument_list|(
 name|dfd
 argument_list|)
 expr_stmt|;
-return|return
+name|dp
+operator|=
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
 name|devname
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|dp
+argument_list|,
+name|devname
+argument_list|)
+expr_stmt|;
+return|return
+name|dp
 return|;
 block|}
 block|}
@@ -1493,6 +1516,15 @@ argument_list|(
 name|dumpfd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dumptime
+operator|==
+literal|0
+condition|)
+return|return
+name|FALSE
+return|;
 name|printf
 argument_list|(
 literal|"System went down at %s"
@@ -1530,11 +1562,6 @@ return|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"Dump time ok.\n"
-argument_list|)
-expr_stmt|;
 return|return
 name|TRUE
 return|;
@@ -1960,11 +1987,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Vmcore should be %d bytes long\n"
+literal|"Saving %d bytes of image in vmcore.%d\n"
 argument_list|,
 name|NBPG
 operator|*
 name|physmem
+argument_list|,
+name|bounds
 argument_list|)
 expr_stmt|;
 while|while
