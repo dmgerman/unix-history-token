@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.200 (Berkeley) 8/2/97"
+literal|"@(#)readcf.c	8.201 (Berkeley) 10/1/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -6297,6 +6297,23 @@ block|}
 block|,
 endif|#
 directive|endif
+if|#
+directive|if
+name|_FFR_MAXALIASRECURSION_OPTION
+define|#
+directive|define
+name|O_MAXALIASRCSN
+value|0xa6
+block|{
+literal|"MaxAliasRecursion"
+block|,
+name|O_MAXALIASRCSN
+block|,
+name|FALSE
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|,
@@ -9446,6 +9463,22 @@ case|:
 name|DontLockReadFiles
 operator|=
 name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|_FFR_MAXALIASRECURSION_OPTION
+case|case
+name|O_MAXALIASRCSN
+case|:
+name|MaxAliasRecursion
+operator|=
+name|atoi
 argument_list|(
 name|val
 argument_list|)

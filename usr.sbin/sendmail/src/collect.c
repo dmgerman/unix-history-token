@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.71 (Berkeley) 6/30/97"
+literal|"@(#)collect.c	8.72 (Berkeley) 10/6/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -2130,6 +2130,8 @@ operator|->
 name|e_flags
 operator||=
 name|EF_NO_BODY_RETN
+operator||
+name|EF_CLRQUEUE
 expr_stmt|;
 name|e
 operator|->

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.87 (Berkeley) 6/3/97 (with SMTP)"
+literal|"@(#)usersmtp.c	8.88 (Berkeley) 10/20/97 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.87 (Berkeley) 6/3/97 (without SMTP)"
+literal|"@(#)usersmtp.c	8.88 (Berkeley) 10/20/97 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,16 +160,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* save failure error messages */
-end_comment
-
-begin_decl_stmt
-name|int
-name|SmtpPid
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pid of mailer */
 end_comment
 
 begin_decl_stmt

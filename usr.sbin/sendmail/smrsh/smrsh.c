@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)smrsh.c	8.4 (Berkeley) 11/11/95"
+literal|"@(#)smrsh.c	8.5 (Berkeley) 10/19/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_comment
