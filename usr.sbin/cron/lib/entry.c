@@ -2505,6 +2505,10 @@ condition|(
 name|ch
 operator|==
 name|EOF
+operator|||
+name|num3
+operator|==
+literal|0
 condition|)
 return|return
 name|EOF
@@ -2675,6 +2679,17 @@ name|pc
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EOF
+operator|)
+return|;
 comment|/* try to find the name in the name list 	 */
 if|if
 condition|(
