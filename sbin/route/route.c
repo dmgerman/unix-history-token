@@ -42,7 +42,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)route.c	8.3 (Berkeley) 3/19/94";
+unit|static char sccsid[] = "@(#)route.c	8.6 (Berkeley) 4/28/95";
 endif|#
 directive|endif
 end_endif
@@ -1496,7 +1496,7 @@ operator|&&
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|domain
 argument_list|,
@@ -1640,7 +1640,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|hp
 operator|->
@@ -3990,21 +3990,21 @@ operator|->
 name|h_addr_list
 operator|++
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|hp
-operator|->
-name|h_addr_list
-index|[
-literal|0
-index|]
-argument_list|,
 operator|&
 name|so_gate
 operator|.
 name|sin
 operator|.
 name|sin_addr
+argument_list|,
+name|hp
+operator|->
+name|h_addr_list
+index|[
+literal|0
+index|]
 argument_list|,
 name|MIN
 argument_list|(
@@ -5061,13 +5061,11 @@ operator|.
 name|sns
 operator|)
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|sms
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -5484,12 +5482,8 @@ name|hp
 operator|->
 name|h_addrtype
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|hp
-operator|->
-name|h_addr
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -5500,6 +5494,10 @@ operator|->
 name|sin
 operator|.
 name|sin_addr
+argument_list|,
+name|hp
+operator|->
+name|h_addr
 argument_list|,
 name|MIN
 argument_list|(
@@ -5952,18 +5950,10 @@ return|;
 block|}
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ns_bh
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|work
 operator|.
 name|x_host
@@ -5982,18 +5972,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ns_nullh
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|work
 operator|.
 name|x_host
@@ -6500,19 +6482,17 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|if (rtm_addrs& (w)) {\ 	    l = ROUNDUP(u.sa.sa_len); bcopy((char *)&(u), cp, l); cp += l;\ 	    if (verbose) sodump(&(u),"u");\ 	}
+value|if (rtm_addrs& (w)) {\ 	    l = ROUNDUP(u.sa.sa_len); memmove(cp,&(u), l); cp += l;\ 	    if (verbose) sodump(&(u),"u");\ 	}
 name|errno
 operator|=
 literal|0
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|m_rtmsg
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -8701,9 +8681,11 @@ init|=
 literal|0
 comment|/* foil gcc */
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|cp
+argument_list|,
+literal|0
 argument_list|,
 name|size
 argument_list|)
