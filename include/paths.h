@@ -240,6 +240,13 @@ name|_PATH_VI
 value|"/usr/bin/vi"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_WALL
+value|"/usr/bin/wall"
+end_define
+
 begin_comment
 comment|/* Provide trailing slash, since mostly used for building pathnames. */
 end_comment
