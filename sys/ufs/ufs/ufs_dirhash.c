@@ -4162,17 +4162,13 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|i
-operator|!=
+if|#
+directive|if
 literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"ufsdirhash_checkblock: bad dir inode"
-argument_list|)
-expr_stmt|;
+comment|/* 			 * XXX entries with d_ino == 0 should only occur 			 * at the start of a DIRBLKSIZ block. However the 			 * ufs code is tolerant of such entries at other 			 * offsets, and fsck does not fix them. 			 */
+block|if (i != 0) 				panic("ufsdirhash_checkblock: bad dir inode");
+endif|#
+directive|endif
 name|nfree
 operator|+=
 name|dp
