@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dinode.h	4.18	82/10/31	*/
+comment|/*	dinode.h	4.19	82/10/31	*/
 end_comment
 
 begin_comment
@@ -276,7 +276,7 @@ begin_define
 define|#
 directive|define
 name|i_socket
-value|is_socket
+value|i_un.is_socket
 end_define
 
 begin_define
