@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uudecode.c	5.7 (Berkeley) %G%"
+literal|"@(#)uudecode.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -471,6 +471,8 @@ name|stdout
 argument_list|)
 argument_list|,
 name|mode
+operator|&
+literal|0666
 argument_list|)
 condition|)
 block|{
