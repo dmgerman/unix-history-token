@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.65	83/03/28	*/
+comment|/*	conf.c	4.66	83/04/15	*/
 end_comment
 
 begin_include
@@ -1676,7 +1676,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|dmf11
+name|dmf_tty
 value|0
 end_define
 
@@ -3377,7 +3377,7 @@ name|dmfstop
 block|,
 name|dmfreset
 block|,
-literal|0
+name|dmf_tty
 block|,
 name|ttselect
 block|,
