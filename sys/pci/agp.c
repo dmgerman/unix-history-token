@@ -1461,6 +1461,24 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|type
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"agp_generic_alloc_memory: unsupported type %d\n"
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|mem
 operator|=
 name|malloc
@@ -1488,6 +1506,12 @@ operator|->
 name|am_size
 operator|=
 name|size
+expr_stmt|;
+name|mem
+operator|->
+name|am_type
+operator|=
+literal|0
 expr_stmt|;
 name|mem
 operator|->
@@ -2559,6 +2583,11 @@ operator|<<
 name|AGP_PAGE_SHIFT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mem
+condition|)
+block|{
 name|alloc
 operator|->
 name|key
@@ -2578,6 +2607,13 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
+else|else
+block|{
+return|return
+name|ENOMEM
+return|;
+block|}
 block|}
 end_function
 

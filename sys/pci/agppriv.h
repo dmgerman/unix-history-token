@@ -114,6 +114,10 @@ name|vm_size_t
 name|am_size
 decl_stmt|;
 comment|/* number of bytes allocated */
+name|int
+name|am_type
+decl_stmt|;
+comment|/* chipset specific type */
 name|struct
 name|vm_object
 modifier|*
