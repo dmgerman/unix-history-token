@@ -2943,6 +2943,10 @@ decl_stmt|,
 name|data_size
 init|=
 literal|0
+decl_stmt|,
+name|total_size
+init|=
+literal|0
 decl_stmt|;
 name|u_long
 name|text_addr
@@ -3473,7 +3477,7 @@ operator|-
 name|seg_addr
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Check whether the entry point is in this segment 			 * to determine whether to count is as text or data. 			 * XXX: this needs to be done better! 			 */
+comment|/* 			 * Is this .text or .data?  We can't use 			 * VM_PROT_WRITE or VM_PROT_EXEC, it breaks the 			 * alpha terribly and possibly does other bad 			 * things so we stick to the old way of figuring 			 * it out:  If the segment contains the program 			 * entry point, it's a text segment, otherwise it 			 * is a data segment. 			 * 			 * Note that obreak() assumes that data_addr +  			 * data_size == end of data load area, and the ELF 			 * file format expects segments to be sorted by 			 * address.  If multiple data segments exist, the 			 * last one will be used. 			 */
 if|if
 condition|(
 name|hdr
@@ -3529,20 +3533,18 @@ block|}
 else|else
 block|{
 name|data_size
-operator|+=
+operator|=
 name|seg_size
 expr_stmt|;
-if|if
-condition|(
-name|data_addr
-operator|==
-literal|0
-condition|)
 name|data_addr
 operator|=
 name|seg_addr
 expr_stmt|;
 block|}
+name|total_size
+operator|+=
+name|seg_size
+expr_stmt|;
 comment|/* 			 * Check limits.  It should be safe to check the 			 * limits after loading the segment since we do 			 * not actually fault in all the segment's pages. 			 */
 if|if
 condition|(
@@ -3563,9 +3565,7 @@ name|text_size
 operator|>
 name|maxtsiz
 operator|||
-name|data_size
-operator|+
-name|text_size
+name|total_size
 operator|>
 name|imgp
 operator|->
