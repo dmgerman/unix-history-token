@@ -16,7 +16,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: headers.c,v 8.266 2001/10/12 01:50:12 gshapiro Exp $"
+literal|"@(#)$Id: headers.c,v 8.266.4.1 2002/08/16 14:56:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1084,10 +1084,8 @@ name|CHHDR_CHECK
 argument_list|)
 condition|)
 block|{
-name|bool
-name|stripcom
-init|=
-name|false
+name|int
+name|rscheckflags
 decl_stmt|;
 name|char
 modifier|*
@@ -1099,6 +1097,28 @@ operator|=
 name|hi
 operator|->
 name|hi_ruleset
+expr_stmt|;
+name|rscheckflags
+operator|=
+name|RSF_COUNT
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|hi
+operator|->
+name|hi_flags
+argument_list|,
+name|H_FROM
+operator||
+name|H_RCPT
+argument_list|)
+condition|)
+name|rscheckflags
+operator||=
+name|RSF_UNSTRUCTURED
 expr_stmt|;
 if|if
 condition|(
@@ -1136,8 +1156,8 @@ operator|)
 operator|->
 name|hi_ruleset
 expr_stmt|;
-name|stripcom
-operator|=
+if|if
+condition|(
 name|bitset
 argument_list|(
 operator|(
@@ -1151,12 +1171,16 @@ name|hi_flags
 argument_list|,
 name|H_STRIPCOMM
 argument_list|)
+condition|)
+name|rscheckflags
+operator||=
+name|RSF_RMCOMM
 expr_stmt|;
 block|}
 block|}
-else|else
-name|stripcom
-operator|=
+elseif|else
+if|if
+condition|(
 name|bitset
 argument_list|(
 name|hi
@@ -1165,6 +1189,10 @@ name|hi_flags
 argument_list|,
 name|H_STRIPCOMM
 argument_list|)
+condition|)
+name|rscheckflags
+operator||=
+name|RSF_RMCOMM
 expr_stmt|;
 if|if
 condition|(
@@ -1505,9 +1533,7 @@ name|NULL
 argument_list|,
 name|e
 argument_list|,
-name|stripcom
-argument_list|,
-name|true
+name|rscheckflags
 argument_list|,
 literal|3
 argument_list|,

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.972 2002/06/18 16:11:44 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.972.2.5 2002/08/16 14:56:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -9836,6 +9836,13 @@ modifier|*
 name|environ
 decl_stmt|;
 comment|/* 	**  Move the environment so setproctitle can use the space at 	**  the top of memory. 	*/
+if|if
+condition|(
+name|envp
+operator|!=
+name|NULL
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -9911,6 +9918,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 comment|/* 	**  Save start and extent of argv for setproctitle. 	*/
 name|Argv
 operator|=
@@ -10008,6 +10016,10 @@ operator|=
 literal|0
 init|;
 name|LastArgv
+operator|!=
+name|NULL
+operator|&&
+name|envp
 operator|!=
 name|NULL
 operator|&&
@@ -10985,11 +10997,6 @@ name|sig
 decl_stmt|;
 block|{
 name|int
-name|m
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|save_errno
 init|=
 name|errno
@@ -11129,11 +11136,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|CurRunners
-operator|-=
-name|m
-expr_stmt|;
-comment|/* Update */
 block|}
 name|FIX_SYSV_SIGNAL
 argument_list|(
@@ -12190,7 +12192,28 @@ name|sgi
 literal|"/sbin/sh"
 block|,
 comment|/* SGI's shells really live in /sbin */
+literal|"/usr/bin/sh"
+block|,
+literal|"/sbin/bsh"
+block|,
+comment|/* classic borne shell */
+literal|"/bin/bsh"
+block|,
+literal|"/usr/bin/bsh"
+block|,
 literal|"/sbin/csh"
+block|,
+comment|/* standard csh */
+literal|"/bin/csh"
+block|,
+literal|"/usr/bin/csh"
+block|,
+literal|"/sbin/jsh"
+block|,
+comment|/* classic borne shell w/ job control*/
+literal|"/bin/jsh"
+block|,
+literal|"/usr/bin/jsh"
 block|,
 literal|"/bin/ksh"
 block|,
@@ -12199,9 +12222,11 @@ literal|"/sbin/ksh"
 block|,
 literal|"/usr/bin/ksh"
 block|,
-literal|"/bin/tcsh"
+literal|"/sbin/tcsh"
 block|,
 comment|/* Extended csh */
+literal|"/bin/tcsh"
+block|,
 literal|"/usr/bin/tcsh"
 block|,
 endif|#
@@ -14766,9 +14791,9 @@ argument_list|)
 argument_list|,
 name|e
 argument_list|,
-name|true
-argument_list|,
-name|true
+name|RSF_RMCOMM
+operator||
+name|RSF_COUNT
 argument_list|,
 literal|3
 argument_list|,
@@ -22126,6 +22151,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_NODELAYDSN_ON_HOLD */
+if|#
+directive|if
+name|_FFR_NONSTOP_PERSISTENCE
+comment|/* Suggested by Jan Krueger of digitalanswers communications consulting gmbh. */
+literal|"_FFR_NONSTOP_PERSISTENCE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_NONSTOP_PERSISTENCE */
 if|#
 directive|if
 name|_FFR_NO_PIPE
