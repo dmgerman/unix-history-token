@@ -296,6 +296,9 @@ decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
+name|dev_t
+name|devt
+decl_stmt|;
 name|struct
 name|mem_range_desc
 name|mrdesc

@@ -303,6 +303,22 @@ name|TDFX_LINUX
 end_ifdef
 
 begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|tdfx
+argument_list|,
+name|linux
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|LINUX_IOCTL_SET
 argument_list|(
 name|tdfx
@@ -743,6 +759,10 @@ literal|1
 return|;
 block|}
 comment|/*  	 * make_dev registers the cdev to access the 3dfx card from /dev 	 *	use hex here for the dev num, simply to provide better support if> 10 	 * voodoo cards, for the mad. The user must set the link, or use MAKEDEV. 	 * Why would we want that many voodoo cards anyhow?  	 */
+name|tdfx_info
+operator|->
+name|devt
+operator|=
 name|make_dev
 argument_list|(
 operator|&
@@ -833,6 +853,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Remove device entry when it can no longer be accessed */
+name|destroy_dev
+argument_list|(
+name|tdfx_info
+operator|->
+name|devt
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
