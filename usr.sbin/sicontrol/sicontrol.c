@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: sicontrol.c,v 1.7 1997/10/15 06:43:54 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2718,24 +2718,44 @@ expr_stmt|;
 comment|/* int	t_state */
 name|printf
 argument_list|(
-literal|"\tt_hiwat %d.\n"
+literal|"\tt_ihiwat %d.\n"
 argument_list|,
 name|TTY
 operator|.
-name|t_hiwat
+name|t_ihiwat
 argument_list|)
 expr_stmt|;
-comment|/* short t_hiwat */
+comment|/* int	t_ihiwat */
 name|printf
 argument_list|(
-literal|"\tt_lowat %d.\n"
+literal|"\tt_ilowat %d.\n"
 argument_list|,
 name|TTY
 operator|.
-name|t_lowat
+name|t_ilowat
 argument_list|)
 expr_stmt|;
-comment|/* short t_lowat */
+comment|/* int	t_ilowat */
+name|printf
+argument_list|(
+literal|"\tt_ohiwat %d.\n"
+argument_list|,
+name|TTY
+operator|.
+name|t_ohiwat
+argument_list|)
+expr_stmt|;
+comment|/* int	t_ohiwat */
+name|printf
+argument_list|(
+literal|"\tt_olowat %d.\n"
+argument_list|,
+name|TTY
+operator|.
+name|t_olowat
+argument_list|)
+expr_stmt|;
+comment|/* int	t_olowat */
 name|printf
 argument_list|(
 literal|"\tt_iflag 0x%x\n"

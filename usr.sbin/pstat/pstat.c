@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pstat.c,v 1.33 1997/11/12 05:42:33 julian Exp $"
+literal|"$Id: pstat.c,v 1.34 1998/01/06 05:33:28 dyson Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3711,7 +3711,7 @@ name|char
 name|hdr
 index|[]
 init|=
-literal|"  LINE RAW CAN OUT  HWT LWT     COL STATE  SESS      PGID DISC\n"
+literal|"  LINE RAW CAN OUT IHWT LWT OHWT LWT     COL STATE  SESS      PGID DISC\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -4837,7 +4837,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%3d %4d %3d %7d "
+literal|"%3d %4d %3d %4d %3d %7d "
 argument_list|,
 name|tp
 operator|->
@@ -4847,11 +4847,19 @@ name|c_cc
 argument_list|,
 name|tp
 operator|->
-name|t_hiwat
+name|t_ihiwat
 argument_list|,
 name|tp
 operator|->
-name|t_lowat
+name|t_ilowat
+argument_list|,
+name|tp
+operator|->
+name|t_ohiwat
+argument_list|,
+name|tp
+operator|->
+name|t_olowat
 argument_list|,
 name|tp
 operator|->
