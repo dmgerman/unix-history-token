@@ -2384,6 +2384,7 @@ return|;
 case|case
 name|DHCP_NOMSG
 case|:
+break|break;
 block|}
 comment|/* Ignore packet unless it gives us a root tag we didn't have */
 if|if
