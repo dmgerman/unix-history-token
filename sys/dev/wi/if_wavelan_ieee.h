@@ -104,6 +104,31 @@ name|WI_RID_MGMT_XMIT
 value|0x0200
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WICACHE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|WI_RID_ZERO_CACHE
+value|0x0300
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_RID_READ_CACHE
+value|0x0400
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|wi_80211_hdr
@@ -398,6 +423,59 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*   * Lucent/wavelan IEEE signal strength cache  *  * driver keeps cache of last  * MAXWICACHE packets to arrive including signal strength info.  * daemons may read this via ioctl  *  * Each entry in the wi_sigcache has a unique macsrc.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WICACHE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAXWICACHE
+value|10
+end_define
+
+begin_struct
+struct|struct
+name|wi_sigcache
+block|{
+name|char
+name|macsrc
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* unique MAC address for entry */
+name|int
+name|ipsrc
+decl_stmt|;
+comment|/* ip address associated with packet */
+name|int
+name|signal
+decl_stmt|;
+comment|/* signal strength of the packet */
+name|int
+name|noise
+decl_stmt|;
+comment|/* noise value */
+name|int
+name|quality
+decl_stmt|;
+comment|/* quality of the packet */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

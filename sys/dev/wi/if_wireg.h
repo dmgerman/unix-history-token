@@ -86,14 +86,34 @@ name|struct
 name|ifmedia
 name|ifmedia
 decl_stmt|;
+name|device_t
+name|dev
+decl_stmt|;
 name|int
 name|wi_unit
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|iobase
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|irq
 decl_stmt|;
 name|bus_space_handle_t
 name|wi_bhandle
 decl_stmt|;
 name|bus_space_tag_t
 name|wi_btag
+decl_stmt|;
+name|void
+modifier|*
+name|wi_intrhand
+decl_stmt|;
+name|int
+name|wi_io_addr
 decl_stmt|;
 name|int
 name|wi_tx_data_id
@@ -165,6 +185,24 @@ name|struct
 name|wi_counters
 name|wi_stats
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WICACHE
+name|int
+name|wi_sigitems
+decl_stmt|;
+name|struct
+name|wi_sigcache
+name|wi_sigcache
+index|[
+name|MAXWICACHE
+index|]
+decl_stmt|;
+name|int
+name|wi_nextitem
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|callout_handle
 name|wi_stat_ch
@@ -245,14 +283,14 @@ value|3
 end_define
 
 begin_comment
-comment|/* Default network name: ANY */
+comment|/* Default network name: empty string implies any */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|WI_DEFAULT_NETNAME
-value|"ANY"
+value|""
 end_define
 
 begin_define
