@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.8 %G%"
+literal|"@(#)diffreg.c 4.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -287,13 +287,6 @@ name|done
 argument_list|()
 expr_stmt|;
 block|}
-name|dummy
-operator|=
-name|malloc
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(

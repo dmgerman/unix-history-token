@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	diff.h	4.4	83/07/01	*/
+comment|/*	diff.h	4.5	85/06/03	*/
 end_comment
 
 begin_comment
@@ -322,17 +322,6 @@ name|stat
 name|stb1
 decl_stmt|,
 name|stb2
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * This is allocated early, and used  * to reset the free storage pointer to effect space compaction.  */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|dummy
 decl_stmt|;
 end_decl_stmt
 

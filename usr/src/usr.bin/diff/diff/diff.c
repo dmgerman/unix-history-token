@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diff.c 4.2 %G%"
+literal|"@(#)diff.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -723,6 +723,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+operator|(
 name|p
 operator|=
 name|malloc
@@ -732,10 +735,7 @@ name|unsigned
 operator|)
 name|n
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
+operator|)
 operator|!=
 name|NULL
 condition|)
@@ -759,7 +759,6 @@ name|p
 parameter_list|,
 name|n
 parameter_list|)
-comment|/*compacting reallocation */
 name|char
 modifier|*
 name|p
@@ -775,23 +774,9 @@ modifier|*
 name|realloc
 parameter_list|()
 function_decl|;
-name|free
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|dummy
-argument_list|)
-expr_stmt|;
-name|dummy
-operator|=
-name|malloc
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+operator|(
 name|q
 operator|=
 name|realloc
@@ -803,10 +788,7 @@ name|unsigned
 operator|)
 name|n
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|q
+operator|)
 operator|==
 name|NULL
 condition|)
