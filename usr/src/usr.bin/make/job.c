@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)job.c	5.16 (Berkeley) %G%"
+literal|"@(#)job.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,12 +41,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -66,6 +60,12 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
