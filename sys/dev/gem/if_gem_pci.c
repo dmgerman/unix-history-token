@@ -602,10 +602,26 @@ name|gsc
 operator|->
 name|gsc_gem
 decl_stmt|;
-comment|/* 	 * Enable bus master and memory access. The firmware does in some 	 * cases not do this for us on sparc64 machines. 	 */
 name|pci_enable_busmaster
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Some Sun GEMs/ERIs do have their intpin register bogusly set to 0, 	 * although it should be 1. correct that. 	 */
+if|if
+condition|(
+name|pci_get_intpin
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pci_set_intpin
+argument_list|(
+name|dev
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|sc

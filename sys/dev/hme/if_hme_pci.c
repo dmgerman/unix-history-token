@@ -471,10 +471,26 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Enable memory-space and bus master accesses.  This is kinda of 	 * gross; but the hme comes up with neither enabled. 	 */
 name|pci_enable_busmaster
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Some Sun HMEs do have their intpin register bogusly set to 0, 	 * although it should be 1. correct that. 	 */
+if|if
+condition|(
+name|pci_get_intpin
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pci_set_intpin
+argument_list|(
+name|dev
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|sc
@@ -483,7 +499,6 @@ name|sc_pci
 operator|=
 literal|1
 expr_stmt|;
-comment|/* XXXXX should all be done in bus_dma. */
 name|sc
 operator|->
 name|sc_dev
