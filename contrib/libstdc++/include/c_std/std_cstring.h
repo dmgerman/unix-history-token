@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_CSTRING
+name|_GLIBCXX_CSTRING
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_CSTRING
+name|_GLIBCXX_CSTRING
 value|1
 end_define
 

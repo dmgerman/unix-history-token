@@ -48,33 +48,13 @@ name|HAVE_STPCPY
 end_undef
 
 begin_comment
-comment|// Define if GCC supports weak symbols.
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|_GLIBCPP_SUPPORTS_WEAK
-end_undef
-
-begin_comment
 comment|// Include I/O support for 'long long' and 'unsigned long long'.
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|_GLIBCPP_USE_LONG_LONG
-end_undef
-
-begin_comment
-comment|// Define if C99 features such as lldiv_t, llabs, lldiv should be exposed.
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|_GLIBCPP_USE_C99
+name|_GLIBCXX_USE_LONG_LONG
 end_undef
 
 begin_comment
@@ -84,17 +64,27 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|_GLIBCPP_USE_LONG_DOUBLE
+name|_GLIBCXX_USE_LONG_DOUBLE
 end_undef
 
 begin_comment
-comment|// Include support for shadow headers, ie --enable-cshadow-headers.
+comment|// Define if C99 math functions (like fpclassify) should be exposed.
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|_GLIBCPP_USE_SHADOW_HEADERS
+name|_GLIBCXX_USE_C99_MATH
+end_undef
+
+begin_comment
+comment|// Define if C99 features such as lldiv_t, llabs, lldiv should be exposed.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_GLIBCXX_USE_C99
 end_undef
 
 begin_comment
@@ -104,17 +94,17 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|_GLIBCPP_USE_WCHAR_T
+name|_GLIBCXX_USE_WCHAR_T
 end_undef
 
 begin_comment
-comment|// Define if using setrlimit to limit memory usage during 'make check'.
+comment|// Define if using setrlimit to set resource limits during 'make check'.
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|_GLIBCPP_MEM_LIMITS
+name|_GLIBCXX_RES_LIMITS
 end_undef
 
 begin_comment
@@ -124,37 +114,7 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|_GLIBCPP_CONCEPT_CHECKS
-end_undef
-
-begin_comment
-comment|// Define if the atan2f function exists.
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|_GLIBCPP_HAVE_ATAN2F
-end_undef
-
-begin_comment
-comment|// Define if the atan2l function exists.
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|_GLIBCPP_HAVE_ATAN2L
-end_undef
-
-begin_comment
-comment|// Define if the copysignf function exists.
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|_GLIBCPP_HAVE_COPYSIGNF
+name|_GLIBCXX_CONCEPT_CHECKS
 end_undef
 
 begin_comment
@@ -164,7 +124,7 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|_GLIBCPP_SYMVER
+name|_GLIBCXX_SYMVER
 end_undef
 
 begin_comment
@@ -180,19 +140,19 @@ comment|// thing, then use it.
 end_comment
 
 begin_comment
-comment|// NB: _GLIBCPP_AT_AT is a hack to work around quoting issues in m4.
+comment|// NB: _GLIBCXX_AT_AT is a hack to work around quoting issues in m4.
 end_comment
 
 begin_if
 if|#
 directive|if
-name|_GLIBCPP_SYMVER
+name|_GLIBCXX_SYMVER
 end_if
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_ASM_SYMVER
+name|_GLIBCXX_ASM_SYMVER
 parameter_list|(
 name|cur
 parameter_list|,
@@ -201,7 +161,7 @@ parameter_list|,
 name|version
 parameter_list|)
 define|\
-value|asm (".symver " #cur "," #old _GLIBCPP_AT_AT #version);
+value|asm (".symver " #cur "," #old _GLIBCXX_AT_AT #version);
 end_define
 
 begin_else
@@ -212,7 +172,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_ASM_SYMVER
+name|_GLIBCXX_ASM_SYMVER
 parameter_list|(
 name|cur
 parameter_list|,
@@ -228,6 +188,26 @@ directive|endif
 end_endif
 
 begin_comment
+comment|// Define if LFS support is available.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_GLIBCXX_USE_LFS
+end_undef
+
+begin_comment
+comment|// Define if NLS translations are to be used.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_GLIBCXX_USE_NLS
+end_undef
+
+begin_comment
 comment|// Define if gthr-default.h exists (meaning that threading support is enabled).
 end_comment
 
@@ -238,13 +218,43 @@ name|HAVE_GTHR_DEFAULT
 end_undef
 
 begin_comment
-comment|// Define if drand48 exists.
+comment|// Define if the atan2f function exists.
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|HAVE_DRAND48
+name|HAVE_ATAN2F
+end_undef
+
+begin_comment
+comment|// Define if the atan2l function exists.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_ATAN2L
+end_undef
+
+begin_comment
+comment|// Define if the tanl function exists.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_TANL
+end_undef
+
+begin_comment
+comment|// Define if the copysignf function exists.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_COPYSIGNF
 end_undef
 
 begin_comment
@@ -325,6 +335,16 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_EXPL
+end_undef
+
+begin_comment
+comment|// Define if you have the hypot function.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_HYPOT
 end_undef
 
 begin_comment
@@ -515,6 +535,26 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_S_IFREG
+end_undef
+
+begin_comment
+comment|// Define if writev is available in<sys/uio.h>.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_WRITEV
+end_undef
+
+begin_comment
+comment|// Define if int64_t is available in<stdint.h>.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_INT64_T
 end_undef
 
 begin_comment

@@ -12,7 +12,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file is part of GNU CC.
+comment|// This file is part of GCC.
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// GNU CC is free software; you can redistribute it and/or modify
+comment|// GCC is free software; you can redistribute it and/or modify
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// GNU CC is distributed in the hope that it will be useful,
+comment|// GCC is distributed in the hope that it will be useful,
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ comment|// You should have received a copy of the GNU General Public License
 end_comment
 
 begin_comment
-comment|// along with GNU CC; see the file COPYING.  If not, write to
+comment|// along with GCC; see the file COPYING.  If not, write to
 end_comment
 
 begin_comment
@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__UNWIND_CXX_H
+name|_UNWIND_CXX_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__UNWIND_CXX_H
+name|_UNWIND_CXX_H
 value|1
 end_define
 
@@ -688,7 +688,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// __UNWIND_CXX_H
+comment|// _UNWIND_CXX_H
 end_comment
 
 end_unit

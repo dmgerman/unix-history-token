@@ -4,7 +4,7 @@ comment|//<vector> -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_VECTOR
+name|_GLIBCXX_VECTOR
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_VECTOR
+name|_GLIBCXX_VECTOR
 value|1
 end_define
 
@@ -138,7 +138,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<bits/stl_alloc.h>
+file|<bits/allocator.h>
 end_include
 
 begin_include
@@ -165,16 +165,33 @@ directive|include
 file|<bits/stl_bvector.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_NO_TEMPLATE_EXPORT
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GLIBCXX_EXPORT_TEMPLATE
+end_ifndef
 
 begin_include
 include|#
 directive|include
 file|<bits/vector.tcc>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_GLIBCXX_DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<debug/vector>
 end_include
 
 begin_endif
@@ -188,7 +205,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_VECTOR */
+comment|/* _GLIBCXX_VECTOR */
 end_comment
 
 end_unit

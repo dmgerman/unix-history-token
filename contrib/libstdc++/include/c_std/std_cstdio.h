@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_CSTDIO
+name|_GLIBCXX_CSTDIO
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_CSTDIO
+name|_GLIBCXX_CSTDIO
 value|1
 end_define
 
@@ -585,7 +585,7 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-name|_GLIBCPP_USE_C99
+name|_GLIBCXX_USE_C99
 end_if
 
 begin_undef
@@ -624,9 +624,9 @@ name|__gnu_cxx
 block|{
 if|#
 directive|if
-name|_GLIBCPP_USE_C99_CHECK
+name|_GLIBCXX_USE_C99_CHECK
 operator|||
-name|_GLIBCPP_USE_C99_DYNAMIC
+name|_GLIBCXX_USE_C99_DYNAMIC
 extern|extern
 literal|"C"
 name|int
@@ -728,7 +728,7 @@ directive|endif
 if|#
 directive|if
 operator|!
-name|_GLIBCPP_USE_C99_DYNAMIC
+name|_GLIBCXX_USE_C99_DYNAMIC
 name|using
 operator|::
 name|snprintf

@@ -4,7 +4,7 @@ comment|// The template and inlines for the -*- C++ -*- complex number classes.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
 end_comment
 
 begin_comment
@@ -130,13 +130,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_COMPLEX
+name|_GLIBCXX_COMPLEX
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_COMPLEX
+name|_GLIBCXX_COMPLEX
 value|1
 end_define
 
@@ -212,6 +212,7 @@ name|long
 name|double
 operator|>
 expr_stmt|;
+comment|///  Return magnitude of @a z.
 name|template
 operator|<
 name|typename
@@ -228,6 +229,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|///  Return phase angle of @a z.
 name|template
 operator|<
 name|typename
@@ -244,6 +246,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|///  Return @a z magnitude squared.
 name|template
 operator|<
 name|typename
@@ -260,6 +263,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|///  Return complex conjugate of @a z.
 name|template
 operator|<
 name|typename
@@ -279,6 +283,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|///  Return complex with magnitude @a rho and angle @a theta.
 name|template
 operator|<
 name|typename
@@ -302,6 +307,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// Transcendentals:
+comment|/// Return complex cosine of @a z.
 name|template
 operator|<
 name|typename
@@ -321,6 +327,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|/// Return complex hyperbolic cosine of @a z.
 name|template
 operator|<
 name|typename
@@ -340,6 +347,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|/// Return complex base e exponential of @a z.
 name|template
 operator|<
 name|typename
@@ -359,6 +367,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|/// Return complex natural logarithm of @a z.
 name|template
 operator|<
 name|typename
@@ -378,6 +387,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|/// Return complex base 10 logarithm of @a z.
 name|template
 operator|<
 name|typename
@@ -397,6 +407,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|/// Return complex cosine of @a z.
 name|template
 operator|<
 name|typename
@@ -418,6 +429,7 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
+comment|/// Return @a x to the @a y'th power.
 name|template
 operator|<
 name|typename
@@ -441,6 +453,7 @@ name|_Tp
 operator|&
 argument_list|)
 expr_stmt|;
+comment|/// Return @a x to the @a y'th power.
 name|template
 operator|<
 name|typename
@@ -467,6 +480,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|/// Return @a x to the @a y'th power.
 name|template
 operator|<
 name|typename
@@ -490,6 +504,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|/// Return complex sine of @a z.
 name|template
 operator|<
 name|typename
@@ -509,6 +524,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|/// Return complex hyperbolic sine of @a z.
 name|template
 operator|<
 name|typename
@@ -528,6 +544,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|/// Return complex square root of @a z.
 name|template
 operator|<
 name|typename
@@ -547,6 +564,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|/// Return complex tangent of @a z.
 name|template
 operator|<
 name|typename
@@ -566,6 +584,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|/// Return complex hyperbolic tangent of @a z.
 name|template
 operator|<
 name|typename
@@ -585,7 +604,9 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|//@}
 comment|// 26.2.2  Primary template class complex
+comment|/**    *  Template to represent complex numbers.    *    *  Specializations for float, double, and long double are part of the    *  library.  Results with any other type are not guaranteed.    *    *  @param  Tp  Type of real and imaginary values.   */
 name|template
 operator|<
 name|typename
@@ -596,10 +617,13 @@ name|complex
 block|{
 name|public
 operator|:
+comment|/// Value typedef.
 typedef|typedef
 name|_Tp
 name|value_type
 typedef|;
+comment|///  Default constructor.  First parameter is x, second parameter is y.
+comment|///  Unspecified parameters default to 0.
 name|complex
 argument_list|(
 specifier|const
@@ -617,8 +641,9 @@ name|_Tp
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|// Let's the compiler synthetize the copy constructor
+comment|// Lets the compiler synthesize the copy constructor
 comment|// complex (const complex<_Tp>&);
+comment|///  Copy constructor.
 name|template
 operator|<
 name|typename
@@ -634,16 +659,35 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|///  Return real part of complex number.
 name|_Tp
+modifier|&
+name|real
+parameter_list|()
+function_decl|;
+comment|///  Return real part of complex number.
+specifier|const
+name|_Tp
+operator|&
 name|real
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|///  Return imaginary part of complex number.
 name|_Tp
+modifier|&
+name|imag
+parameter_list|()
+function_decl|;
+comment|///  Return imaginary part of complex number.
+specifier|const
+name|_Tp
+operator|&
 name|imag
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Assign this complex number to scalar @a t.
 name|complex
 operator|<
 name|_Tp
@@ -657,6 +701,7 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
+comment|/// Add @a t to this complex number.
 name|complex
 operator|<
 name|_Tp
@@ -670,6 +715,7 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
+comment|/// Subtract @a t from this complex number.
 name|complex
 operator|<
 name|_Tp
@@ -683,6 +729,7 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
+comment|/// Multiply this complex number by @a t.
 name|complex
 operator|<
 name|_Tp
@@ -696,6 +743,7 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
+comment|/// Divide this complex number by @a t.
 name|complex
 operator|<
 name|_Tp
@@ -709,9 +757,10 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
-comment|// Let's the compiler synthetize the
+comment|// Lets the compiler synthesize the
 comment|// copy and assignment operator
 comment|// complex<_Tp>& operator= (const complex<_Tp>&);
+comment|/// Assign this complex number to complex @a z.
 name|template
 operator|<
 name|typename
@@ -733,6 +782,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|/// Add @a z to this complex number.
 name|template
 operator|<
 name|typename
@@ -754,6 +804,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|/// Subtract @a z from this complex number.
 name|template
 operator|<
 name|typename
@@ -775,6 +826,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|/// Multiply this complex number by @a z.
 name|template
 operator|<
 name|typename
@@ -796,6 +848,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|/// Divide this complex number by @a z.
 name|template
 operator|<
 name|typename
@@ -821,7 +874,8 @@ name|private
 label|:
 name|_Tp
 name|_M_real
-decl_stmt|,
+decl_stmt|;
+name|_Tp
 name|_M_imag
 decl_stmt|;
 block|}
@@ -839,6 +893,31 @@ name|_Tp
 operator|>
 specifier|inline
 name|_Tp
+operator|&
+name|complex
+operator|<
+name|_Tp
+operator|>
+operator|::
+name|real
+argument_list|()
+block|{
+return|return
+name|_M_real
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+specifier|inline
+specifier|const
+name|_Tp
+operator|&
 name|complex
 operator|<
 name|_Tp
@@ -862,6 +941,31 @@ name|_Tp
 operator|>
 specifier|inline
 name|_Tp
+operator|&
+name|complex
+operator|<
+name|_Tp
+operator|>
+operator|::
+name|imag
+argument_list|()
+block|{
+return|return
+name|_M_imag
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+specifier|inline
+specifier|const
+name|_Tp
+operator|&
 name|complex
 operator|<
 name|_Tp
@@ -1481,6 +1585,8 @@ specifier|const
 name|_Tp
 name|__n
 operator|=
+name|std
+operator|::
 name|norm
 argument_list|(
 name|__z
@@ -1523,6 +1629,14 @@ begin_comment
 comment|// Operators:
 end_comment
 
+begin_comment
+comment|//@{
+end_comment
+
+begin_comment
+comment|///  Return new complex value @a x plus @a y.
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -1554,16 +1668,20 @@ operator|&
 name|__y
 operator|)
 block|{
-return|return
 name|complex
 operator|<
 name|_Tp
 operator|>
-operator|(
+name|__r
+operator|=
 name|__x
-operator|)
+block|;
+name|__r
 operator|+=
 name|__y
+block|;
+return|return
+name|__r
 return|;
 block|}
 end_expr_stmt
@@ -1596,16 +1714,23 @@ operator|&
 name|__y
 operator|)
 block|{
-return|return
 name|complex
 operator|<
 name|_Tp
 operator|>
-operator|(
+name|__r
+operator|=
 name|__x
-operator|)
+block|;
+name|__r
+operator|.
+name|real
+argument_list|()
 operator|+=
 name|__y
+block|;
+return|return
+name|__r
 return|;
 block|}
 end_expr_stmt
@@ -1638,19 +1763,38 @@ operator|&
 name|__y
 operator|)
 block|{
-return|return
 name|complex
 operator|<
 name|_Tp
 operator|>
-operator|(
+name|__r
+operator|=
 name|__y
-operator|)
+block|;
+name|__r
+operator|.
+name|real
+argument_list|()
 operator|+=
 name|__x
+block|;
+return|return
+name|__r
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|//@}
+end_comment
+
+begin_comment
+comment|//@{
+end_comment
+
+begin_comment
+comment|///  Return new complex value @a x minus @a y.
+end_comment
 
 begin_expr_stmt
 name|template
@@ -1683,16 +1827,20 @@ operator|&
 name|__y
 operator|)
 block|{
-return|return
 name|complex
 operator|<
 name|_Tp
 operator|>
-operator|(
+name|__r
+operator|=
 name|__x
-operator|)
+block|;
+name|__r
 operator|-=
 name|__y
+block|;
+return|return
+name|__r
 return|;
 block|}
 end_expr_stmt
@@ -1725,16 +1873,23 @@ operator|&
 name|__y
 operator|)
 block|{
-return|return
 name|complex
 operator|<
 name|_Tp
 operator|>
-operator|(
+name|__r
+operator|=
 name|__x
-operator|)
+block|;
+name|__r
+operator|.
+name|real
+argument_list|()
 operator|-=
 name|__y
+block|;
+return|return
+name|__r
 return|;
 block|}
 end_expr_stmt
@@ -1767,19 +1922,48 @@ operator|&
 name|__y
 operator|)
 block|{
-return|return
 name|complex
 operator|<
 name|_Tp
 operator|>
-operator|(
+name|__r
+argument_list|(
 name|__x
-operator|)
+argument_list|,
+operator|-
+name|__y
+operator|.
+name|imag
+argument_list|()
+argument_list|)
+block|;
+name|__r
+operator|.
+name|real
+argument_list|()
 operator|-=
 name|__y
+operator|.
+name|real
+argument_list|()
+block|;
+return|return
+name|__r
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|//@}
+end_comment
+
+begin_comment
+comment|//@{
+end_comment
+
+begin_comment
+comment|///  Return new complex value @a x times @a y.
+end_comment
 
 begin_expr_stmt
 name|template
@@ -1812,16 +1996,20 @@ operator|&
 name|__y
 operator|)
 block|{
-return|return
 name|complex
 operator|<
 name|_Tp
 operator|>
-operator|(
+name|__r
+operator|=
 name|__x
-operator|)
+block|;
+name|__r
 operator|*=
 name|__y
+block|;
+return|return
+name|__r
 return|;
 block|}
 end_expr_stmt
@@ -1854,16 +2042,20 @@ operator|&
 name|__y
 operator|)
 block|{
-return|return
 name|complex
 operator|<
 name|_Tp
 operator|>
-operator|(
+name|__r
+operator|=
 name|__x
-operator|)
+block|;
+name|__r
 operator|*=
 name|__y
+block|;
+return|return
+name|__r
 return|;
 block|}
 end_expr_stmt
@@ -1896,19 +2088,35 @@ operator|&
 name|__y
 operator|)
 block|{
-return|return
 name|complex
 operator|<
 name|_Tp
 operator|>
-operator|(
+name|__r
+operator|=
 name|__y
-operator|)
+block|;
+name|__r
 operator|*=
 name|__x
+block|;
+return|return
+name|__r
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|//@}
+end_comment
+
+begin_comment
+comment|//@{
+end_comment
+
+begin_comment
+comment|///  Return new complex value @a x divided by @a y.
+end_comment
 
 begin_expr_stmt
 name|template
@@ -1941,16 +2149,20 @@ operator|&
 name|__y
 operator|)
 block|{
-return|return
 name|complex
 operator|<
 name|_Tp
 operator|>
-operator|(
+name|__r
+operator|=
 name|__x
-operator|)
+block|;
+name|__r
 operator|/=
 name|__y
+block|;
+return|return
+name|__r
 return|;
 block|}
 end_expr_stmt
@@ -1983,16 +2195,20 @@ operator|&
 name|__y
 operator|)
 block|{
-return|return
 name|complex
 operator|<
 name|_Tp
 operator|>
-operator|(
+name|__r
+operator|=
 name|__x
-operator|)
+block|;
+name|__r
 operator|/=
 name|__y
+block|;
+return|return
+name|__r
 return|;
 block|}
 end_expr_stmt
@@ -2025,19 +2241,31 @@ operator|&
 name|__y
 operator|)
 block|{
-return|return
 name|complex
 operator|<
 name|_Tp
 operator|>
-operator|(
+name|__r
+operator|=
 name|__x
-operator|)
+block|;
+name|__r
 operator|/=
 name|__y
+block|;
+return|return
+name|__r
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|//@}
+end_comment
+
+begin_comment
+comment|///  Return @a x.
+end_comment
 
 begin_expr_stmt
 name|template
@@ -2067,6 +2295,10 @@ name|__x
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|///  Return complex negation of @a x.
+end_comment
 
 begin_expr_stmt
 name|template
@@ -2112,6 +2344,14 @@ operator|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|//@{
+end_comment
+
+begin_comment
+comment|///  Return true if @a x is equal to @a y.
+end_comment
 
 begin_expr_stmt
 name|template
@@ -2253,6 +2493,18 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|//@}
+end_comment
+
+begin_comment
+comment|//@{
+end_comment
+
+begin_comment
+comment|///  Return false if @a x is equal to @a y.
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -2392,6 +2644,14 @@ argument_list|()
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|//@}
+end_comment
+
+begin_comment
+comment|///  Extraction operator for complex values.
+end_comment
 
 begin_expr_stmt
 name|template
@@ -2511,18 +2771,7 @@ literal|')'
 condition|)
 name|__x
 operator|=
-name|complex
-operator|<
-name|_Tp
-operator|>
-operator|(
 name|__re_x
-operator|,
-name|_Tp
-argument_list|(
-literal|0
-argument_list|)
-operator|)
 expr_stmt|;
 end_elseif
 
@@ -2555,18 +2804,7 @@ name|__re_x
 expr_stmt|;
 name|__x
 operator|=
-name|complex
-operator|<
-name|_Tp
-operator|>
-operator|(
 name|__re_x
-operator|,
-name|_Tp
-argument_list|(
-literal|0
-argument_list|)
-operator|)
 expr_stmt|;
 block|}
 end_block
@@ -2577,8 +2815,13 @@ name|__is
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|///  Insertion operator for complex values.
+end_comment
+
 begin_expr_stmt
-unit|}    template
+unit|template
 operator|<
 name|typename
 name|_Tp
@@ -2696,6 +2939,31 @@ name|_Tp
 operator|>
 specifier|inline
 name|_Tp
+operator|&
+name|real
+argument_list|(
+argument|complex<_Tp>& __z
+argument_list|)
+block|{
+return|return
+name|__z
+operator|.
+name|real
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+specifier|inline
+specifier|const
+name|_Tp
+operator|&
 name|real
 argument_list|(
 argument|const complex<_Tp>& __z
@@ -2718,6 +2986,31 @@ name|_Tp
 operator|>
 specifier|inline
 name|_Tp
+operator|&
+name|imag
+argument_list|(
+argument|complex<_Tp>& __z
+argument_list|)
+block|{
+return|return
+name|__z
+operator|.
+name|imag
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+specifier|inline
+specifier|const
+name|_Tp
+operator|&
 name|imag
 argument_list|(
 argument|const complex<_Tp>& __z
@@ -2765,6 +3058,8 @@ specifier|const
 name|_Tp
 name|__s
 operator|=
+name|std
+operator|::
 name|max
 argument_list|(
 name|abs
@@ -2947,6 +3242,8 @@ block|{
 name|_Tp
 name|__res
 operator|=
+name|std
+operator|::
 name|abs
 argument_list|(
 name|__z
@@ -2985,7 +3282,7 @@ operator|::
 name|_M_type
 operator|&&
 operator|!
-name|_GLIBCPP_FAST_MATH
+name|_GLIBCXX_FAST_MATH
 operator|>
 operator|::
 name|_S_do_it
@@ -3225,6 +3522,8 @@ argument|const complex<_Tp>& __z
 argument_list|)
 block|{
 return|return
+name|std
+operator|::
 name|polar
 argument_list|(
 name|exp
@@ -3268,12 +3567,16 @@ operator|>
 operator|(
 name|log
 argument_list|(
+name|std
+operator|::
 name|abs
 argument_list|(
 name|__z
 argument_list|)
 argument_list|)
 operator|,
+name|std
+operator|::
 name|arg
 argument_list|(
 name|__z
@@ -3300,6 +3603,8 @@ argument|const complex<_Tp>& __z
 argument_list|)
 block|{
 return|return
+name|std
+operator|::
 name|log
 argument_list|(
 name|__z
@@ -3529,6 +3834,8 @@ argument_list|(
 literal|2
 operator|*
 operator|(
+name|std
+operator|::
 name|abs
 argument_list|(
 name|__z
@@ -3609,11 +3916,15 @@ argument|const complex<_Tp>& __z
 argument_list|)
 block|{
 return|return
+name|std
+operator|::
 name|sin
 argument_list|(
 name|__z
 argument_list|)
 operator|/
+name|std
+operator|::
 name|cos
 argument_list|(
 name|__z
@@ -3639,11 +3950,15 @@ argument|const complex<_Tp>& __z
 argument_list|)
 block|{
 return|return
+name|std
+operator|::
 name|sinh
 argument_list|(
 name|__z
 argument_list|)
 operator|/
+name|std
+operator|::
 name|cosh
 argument_list|(
 name|__z
@@ -3671,6 +3986,8 @@ argument|int __n
 argument_list|)
 block|{
 return|return
+name|std
+operator|::
 name|__pow_helper
 argument_list|(
 name|__z
@@ -3707,6 +4024,14 @@ argument_list|()
 operator|==
 name|_Tp
 argument_list|()
+operator|&&
+name|__x
+operator|.
+name|real
+argument_list|()
+operator|>
+name|_Tp
+argument_list|()
 condition|)
 return|return
 name|pow
@@ -3725,6 +4050,8 @@ name|_Tp
 operator|>
 name|__t
 operator|=
+name|std
+operator|::
 name|log
 argument_list|(
 name|__x
@@ -3734,6 +4061,8 @@ end_expr_stmt
 
 begin_return
 return|return
+name|std
+operator|::
 name|polar
 argument_list|(
 name|exp
@@ -3783,10 +4112,14 @@ operator|?
 name|_Tp
 argument_list|()
 operator|:
+name|std
+operator|::
 name|exp
 argument_list|(
 name|__y
 operator|*
+name|std
+operator|::
 name|log
 argument_list|(
 name|__x
@@ -3816,13 +4149,12 @@ argument_list|)
 block|{
 return|return
 name|__x
-operator|==
+operator|>
 name|_Tp
 argument_list|()
 operator|?
-name|_Tp
-argument_list|()
-operator|:
+name|std
+operator|::
 name|polar
 argument_list|(
 name|pow
@@ -3844,6 +4176,24 @@ name|log
 argument_list|(
 name|__x
 argument_list|)
+argument_list|)
+operator|:
+name|std
+operator|::
+name|pow
+argument_list|(
+name|complex
+operator|<
+name|_Tp
+operator|>
+operator|(
+name|__x
+operator|,
+name|_Tp
+argument_list|()
+operator|)
+argument_list|,
+name|__y
 argument_list|)
 return|;
 block|}
@@ -3889,7 +4239,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_BUGGY_COMPLEX
+name|_GLIBCXX_BUGGY_COMPLEX
 end_ifdef
 
 begin_expr_stmt
@@ -3936,16 +4286,36 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function_decl
 name|float
+modifier|&
+name|real
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+specifier|const
+name|float
+operator|&
 name|real
 argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_function_decl
 name|float
+modifier|&
+name|imag
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+specifier|const
+name|float
+operator|&
 name|imag
 argument_list|()
 specifier|const
@@ -4217,6 +4587,27 @@ begin_expr_stmt
 unit|};
 specifier|inline
 name|float
+operator|&
+name|complex
+operator|<
+name|float
+operator|>
+operator|::
+name|real
+argument_list|()
+block|{
+return|return
+name|__real__
+name|_M_value
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+specifier|const
+name|float
+operator|&
 name|complex
 operator|<
 name|float
@@ -4236,6 +4627,27 @@ end_expr_stmt
 begin_expr_stmt
 specifier|inline
 name|float
+operator|&
+name|complex
+operator|<
+name|float
+operator|>
+operator|::
+name|imag
+argument_list|()
+block|{
+return|return
+name|__imag__
+name|_M_value
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+specifier|const
+name|float
+operator|&
 name|complex
 operator|<
 name|float
@@ -4747,7 +5159,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_BUGGY_COMPLEX
+name|_GLIBCXX_BUGGY_COMPLEX
 end_ifdef
 
 begin_expr_stmt
@@ -4793,16 +5205,36 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function_decl
 name|double
+modifier|&
+name|real
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+specifier|const
+name|double
+operator|&
 name|real
 argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_function_decl
 name|double
+modifier|&
+name|imag
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+specifier|const
+name|double
+operator|&
 name|imag
 argument_list|()
 specifier|const
@@ -5070,6 +5502,27 @@ begin_expr_stmt
 unit|};
 specifier|inline
 name|double
+operator|&
+name|complex
+operator|<
+name|double
+operator|>
+operator|::
+name|real
+argument_list|()
+block|{
+return|return
+name|__real__
+name|_M_value
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+specifier|const
+name|double
+operator|&
 name|complex
 operator|<
 name|double
@@ -5089,6 +5542,27 @@ end_expr_stmt
 begin_expr_stmt
 specifier|inline
 name|double
+operator|&
+name|complex
+operator|<
+name|double
+operator|>
+operator|::
+name|imag
+argument_list|()
+block|{
+return|return
+name|__imag__
+name|_M_value
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+specifier|const
+name|double
+operator|&
 name|complex
 operator|<
 name|double
@@ -5600,7 +6074,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_BUGGY_COMPLEX
+name|_GLIBCXX_BUGGY_COMPLEX
 end_ifdef
 
 begin_expr_stmt
@@ -5644,18 +6118,40 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_function_decl
 name|long
 name|double
+modifier|&
+name|real
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+specifier|const
+name|long
+name|double
+operator|&
 name|real
 argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_function_decl
 name|long
 name|double
+modifier|&
+name|imag
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+specifier|const
+name|long
+name|double
+operator|&
 name|imag
 argument_list|()
 specifier|const
@@ -5963,6 +6459,29 @@ block|;   }
 specifier|inline
 name|long
 name|double
+operator|&
+name|complex
+operator|<
+name|long
+name|double
+operator|>
+operator|::
+name|real
+argument_list|()
+block|{
+return|return
+name|__real__
+name|_M_value
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+specifier|const
+name|long
+name|double
+operator|&
 name|complex
 operator|<
 name|long
@@ -5984,6 +6503,29 @@ begin_expr_stmt
 specifier|inline
 name|long
 name|double
+operator|&
+name|complex
+operator|<
+name|long
+name|double
+operator|>
+operator|::
+name|imag
+argument_list|()
+block|{
+return|return
+name|__imag__
+name|_M_value
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+specifier|const
+name|long
+name|double
+operator|&
 name|complex
 operator|<
 name|long
@@ -6621,7 +7163,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_COMPLEX */
+comment|/* _GLIBCXX_COMPLEX */
 end_comment
 
 end_unit

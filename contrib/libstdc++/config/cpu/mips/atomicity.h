@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// Low-level functions for atomic operations.
+comment|// Low-level functions for atomic operations: MIPS version  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -95,30 +95,17 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_BITS_ATOMICITY_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_BITS_ATOMICITY_H
-value|1
-end_define
-
-begin_typedef
-typedef|typedef
-name|int
-name|_Atomic_word
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|<bits/atomicity.h>
+end_include
 
 begin_decl_stmt
-specifier|static
-specifier|inline
-name|int
+name|namespace
+name|__gnu_cxx
+block|{
+name|_Atomic_word
 name|__attribute__
 argument_list|(
 operator|(
@@ -136,23 +123,27 @@ name|int
 name|__val
 argument_list|)
 block|{
-name|int
+name|_Atomic_word
 name|__result
 decl_stmt|,
 name|__tmp
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("/* Inline exchange& add */\n\t"      "1:\n\t"      ".set	push\n\t"      ".set	mips2\n\t"      "ll	%0,%3\n\t"      "addu	%1,%4,%0\n\t"      "sc	%1,%2\n\t"      ".set	pop\n\t"      "beqz	%1,1b\n\t"      "/* End exchange& add */"      : "=&r"(__result), "=&r"(__tmp), "=m"(*__mem)      : "m" (*__mem), "r"(__val)      : "memory");
+asm|("/* Inline exchange& add */\n\t"        "1:\n\t"        ".set	push\n\t"
+if|#
+directive|if
+name|_MIPS_SIM
+operator|==
+name|_ABIO32
+asm|".set	mips2\n\t"
+endif|#
+directive|endif
+asm|"ll	%0,%3\n\t"        "addu	%1,%4,%0\n\t"        "sc	%1,%2\n\t"        ".set	pop\n\t"        "beqz	%1,1b\n\t"        "/* End exchange& add */"        : "=&r"(__result), "=&r"(__tmp), "=m"(*__mem)        : "m" (*__mem), "r"(__val));
 return|return
 name|__result
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|inline
 name|void
 name|__attribute__
 argument_list|(
@@ -171,22 +162,27 @@ name|int
 name|__val
 argument_list|)
 block|{
-name|int
+name|_Atomic_word
 name|__result
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("/* Inline atomic add */\n\t"      "1:\n\t"      ".set	push\n\t"      ".set	mips2\n\t"      "ll	%0,%2\n\t"      "addu	%0,%3,%0\n\t"      "sc	%0,%1\n\t"      ".set	pop\n\t"      "beqz	%0,1b\n\t"      "/* End atomic add */"      : "=&r"(__result), "=m"(*__mem)      : "m" (*__mem), "r"(__val)      : "memory");
+asm|("/* Inline atomic add */\n\t"        "1:\n\t"        ".set	push\n\t"
+if|#
+directive|if
+name|_MIPS_SIM
+operator|==
+name|_ABIO32
+asm|".set	mips2\n\t"
+endif|#
+directive|endif
+asm|"ll	%0,%2\n\t"        "addu	%0,%3,%0\n\t"        "sc	%0,%1\n\t"        ".set	pop\n\t"        "beqz	%0,1b\n\t"        "/* End atomic add */"        : "=&r"(__result), "=m"(*__mem)      : "m" (*__mem), "r"(__val));
+block|}
 block|}
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* atomicity.h */
+comment|// namespace __gnu_cxx
 end_comment
 
 end_unit

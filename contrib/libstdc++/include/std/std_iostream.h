@@ -114,13 +114,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_IOSTREAM
+name|_GLIBCXX_IOSTREAM
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_IOSTREAM
+name|_GLIBCXX_IOSTREAM
 value|1
 end_define
 
@@ -177,7 +177,7 @@ decl_stmt|;
 comment|///< Linked to standard error (buffered)
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_USE_WCHAR_T
+name|_GLIBCXX_USE_WCHAR_T
 specifier|extern
 name|wistream
 name|wcin
@@ -219,6 +219,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _GLIBCXX_IOSTREAM */
+end_comment
 
 end_unit
 

@@ -114,13 +114,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_CSTDDEF
+name|_GLIBCXX_CSTDDEF
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_CSTDDEF
+name|_GLIBCXX_CSTDDEF
 value|1
 end_define
 

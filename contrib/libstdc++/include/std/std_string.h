@@ -4,7 +4,7 @@ comment|// Components for manipulating sequences of characters -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
 end_comment
 
 begin_comment
@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_STRING
+name|_GLIBCXX_STRING
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_STRING
+name|_GLIBCXX_STRING
 value|1
 end_define
 
@@ -201,11 +201,11 @@ directive|include
 file|<bits/basic_string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_NO_TEMPLATE_EXPORT
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GLIBCXX_EXPORT_TEMPLATE
+end_ifndef
 
 begin_include
 include|#
@@ -234,7 +234,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_STRING */
+comment|/* _GLIBCXX_STRING */
 end_comment
 
 end_unit

@@ -4,7 +4,7 @@ comment|// Locale support (codecvt) -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_CODECVT_H
+name|_CODECVT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_CODECVT_H
+name|_CODECVT_H
 value|1
 end_define
 
@@ -137,6 +137,10 @@ end_pragma
 
 begin_comment
 comment|//  22.2.1.5  Template class codecvt
+end_comment
+
+begin_comment
+comment|/// Base class for codecvt facet providing conversion result enum.
 end_comment
 
 begin_decl_stmt
@@ -178,6 +182,10 @@ end_comment
 
 begin_comment
 comment|// interface.
+end_comment
+
+begin_comment
+comment|/**    *  @brief  Common base for codecvt facet    *    *  This template class provides implementations of the public functions    *  that forward to the protected virtual functions.    *    *  This template also provides abstract stubs for the protected virtual    *  functions.   */
 end_comment
 
 begin_expr_stmt
@@ -237,6 +245,10 @@ end_typedef
 
 begin_comment
 comment|// 22.2.1.5.1 codecvt members
+end_comment
+
+begin_comment
+comment|/**        *  @brief  Convert from internal to external character set.        *        *  Converts input string of intern_type to output string of        *  extern_type.  This is analogous to wcsrtombs.  It does this by        *  calling codecvt::do_out.        *        *  The source and destination character sets are determined by the        *  facet's locale, internal and external types.        *        *  The characters in [from,from_end) are converted and written to        *  [to,to_end).  from_next and to_next are set to point to the        *  character following the last successfully converted character,        *  respectively.  If the result needed no conversion, from_next and        *  to_next are not affected.        *        *  The @a state argument should be intialized if the input is at the        *  beginning and carried from a previous call if continuing        *  conversion.  There are no guarantees about how @a state is used.        *        *  The result returned is a member of codecvt_base::result.  If all the        *  input is converted, returns codecvt_base::ok.  If no conversion is        *  necessary, returns codecvt_base::noconv.  If the input ends early or        *  there is insufficient space in the output, returns codecvt_base::partial.        *  Otherwise the conversion failed and codecvt_base::error is returned.        *        *  @param  state  Persistent conversion state data.        *  @param  from  Start of input.        *  @param  from_end  End of input.        *  @param  from_next  Returns start of unconverted data.        *  @param  to  Start of output buffer.        *  @param  to_end  End of output buffer.        *  @param  to_next  Returns start of unused output area.        *  @return  codecvt_base::result.       */
 end_comment
 
 begin_decl_stmt
@@ -301,6 +313,10 @@ return|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/**        *  @brief  Reset conversion state.        *        *  Writes characters to output that would restore @a state to initial        *  conditions.  The idea is that if a partial conversion occurs, then        *  the converting the characters written by this function would leave        *  the state in initial conditions, rather than partial conversion        *  state.  It does this by calling codecvt::do_unshift().        *        *  For example, if 4 external characters always converted to 1 internal        *  character, and input to in() had 6 external characters with state        *  saved, this function would write two characters to the output and        *  set the state to initialized conditions.        *        *  The source and destination character sets are determined by the        *  facet's locale, internal and external types.        *        *  The result returned is a member of codecvt_base::result.  If the        *  state could be reset and data written, returns codecvt_base::ok.  If        *  no conversion is necessary, returns codecvt_base::noconv.  If the        *  output has insufficient space, returns codecvt_base::partial.        *  Otherwise the reset failed and codecvt_base::error is returned.        *        *  @param  state  Persistent conversion state data.        *  @param  to  Start of output buffer.        *  @param  to_end  End of output buffer.        *  @param  to_next  Returns start of unused output area.        *  @return  codecvt_base::result.       */
+end_comment
+
 begin_decl_stmt
 name|result
 name|unshift
@@ -340,6 +356,10 @@ argument_list|)
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/**        *  @brief  Convert from external to internal character set.        *        *  Converts input string of extern_type to output string of        *  intern_type.  This is analogous to mbsrtowcs.  It does this by        *  calling codecvt::do_in.        *        *  The source and destination character sets are determined by the        *  facet's locale, internal and external types.        *        *  The characters in [from,from_end) are converted and written to        *  [to,to_end).  from_next and to_next are set to point to the        *  character following the last successfully converted character,        *  respectively.  If the result needed no conversion, from_next and        *  to_next are not affected.        *        *  The @a state argument should be intialized if the input is at the        *  beginning and carried from a previous call if continuing        *  conversion.  There are no guarantees about how @a state is used.        *        *  The result returned is a member of codecvt_base::result.  If all the        *  input is converted, returns codecvt_base::ok.  If no conversion is        *  necessary, returns codecvt_base::noconv.  If the input ends early or        *  there is insufficient space in the output, returns codecvt_base::partial.        *  Otherwise the conversion failed and codecvt_base::error is returned.        *        *  @param  state  Persistent conversion state data.        *  @param  from  Start of input.        *  @param  from_end  End of input.        *  @param  from_next  Returns start of unconverted data.        *  @param  to  Start of output buffer.        *  @param  to_end  End of output buffer.        *  @param  to_next  Returns start of unused output area.        *  @return  codecvt_base::result.       */
+end_comment
 
 begin_decl_stmt
 name|result
@@ -441,7 +461,6 @@ begin_decl_stmt
 name|int
 name|length
 argument_list|(
-specifier|const
 name|state_type
 operator|&
 name|__state
@@ -526,6 +545,7 @@ operator|~
 name|__codecvt_abstract_base
 argument_list|()
 block|{ }
+comment|/**        *  @brief  Convert from internal to external character set.        *        *  Converts input string of intern_type to output string of        *  extern_type.  This function is a hook for derived classes to change        *  the value returned.  @see out for more information.       */
 name|virtual
 name|result
 name|do_out
@@ -653,7 +673,6 @@ name|virtual
 name|int
 name|do_length
 argument_list|(
-specifier|const
 name|state_type
 operator|&
 argument_list|,
@@ -756,6 +775,17 @@ typedef|;
 end_typedef
 
 begin_label
+name|protected
+label|:
+end_label
+
+begin_decl_stmt
+name|__c_locale
+name|_M_c_locale_codecvt
+decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
 label|:
 end_label
@@ -795,8 +825,23 @@ operator|(
 name|__refs
 operator|)
 block|{ }
+name|explicit
+name|codecvt
+argument_list|(
+argument|__c_locale __cloc
+argument_list|,
+argument|size_t __refs =
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|protected
-operator|:
+label|:
+end_label
+
+begin_expr_stmt
 name|virtual
 operator|~
 name|codecvt
@@ -919,7 +964,6 @@ name|virtual
 name|int
 name|do_length
 argument_list|(
-specifier|const
 name|state_type
 operator|&
 argument_list|,
@@ -1032,6 +1076,17 @@ typedef|;
 end_typedef
 
 begin_label
+name|protected
+label|:
+end_label
+
+begin_decl_stmt
+name|__c_locale
+name|_M_c_locale_codecvt
+decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
 label|:
 end_label
@@ -1049,6 +1104,21 @@ begin_function_decl
 name|explicit
 name|codecvt
 parameter_list|(
+name|size_t
+name|__refs
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|explicit
+name|codecvt
+parameter_list|(
+name|__c_locale
+name|__cloc
+parameter_list|,
 name|size_t
 name|__refs
 init|=
@@ -1207,7 +1277,6 @@ name|virtual
 name|int
 name|do_length
 argument_list|(
-specifier|const
 name|state_type
 operator|&
 argument_list|,
@@ -1243,7 +1312,7 @@ begin_ifdef
 unit|};
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_USE_WCHAR_T
+name|_GLIBCXX_USE_WCHAR_T
 end_ifdef
 
 begin_comment
@@ -1298,6 +1367,17 @@ typedef|;
 end_typedef
 
 begin_label
+name|protected
+label|:
+end_label
+
+begin_decl_stmt
+name|__c_locale
+name|_M_c_locale_codecvt
+decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
 label|:
 end_label
@@ -1315,6 +1395,21 @@ begin_function_decl
 name|explicit
 name|codecvt
 parameter_list|(
+name|size_t
+name|__refs
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|explicit
+name|codecvt
+parameter_list|(
+name|__c_locale
+name|__cloc
+parameter_list|,
 name|size_t
 name|__refs
 init|=
@@ -1473,7 +1568,6 @@ name|virtual
 name|int
 name|do_length
 argument_list|(
-specifier|const
 name|state_type
 operator|&
 argument_list|,
@@ -1512,7 +1606,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|//_GLIBCPP_USE_WCHAR_T
+comment|//_GLIBCXX_USE_WCHAR_T
 end_comment
 
 begin_comment
@@ -1549,7 +1643,7 @@ operator|:
 name|explicit
 name|codecvt_byname
 argument_list|(
-argument|const char*
+argument|const char* __s
 argument_list|,
 argument|size_t __refs =
 literal|0
@@ -1566,7 +1660,54 @@ operator|>
 operator|(
 name|__refs
 operator|)
-block|{ }
+block|{
+if|if
+condition|(
+name|std
+operator|::
+name|strcmp
+argument_list|(
+name|__s
+argument_list|,
+literal|"C"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|std
+operator|::
+name|strcmp
+argument_list|(
+name|__s
+argument_list|,
+literal|"POSIX"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|this
+operator|->
+name|_S_destroy_c_locale
+argument_list|(
+name|this
+operator|->
+name|_M_c_locale_codecvt
+argument_list|)
+expr_stmt|;
+name|this
+operator|->
+name|_S_create_c_locale
+argument_list|(
+name|this
+operator|->
+name|_M_c_locale_codecvt
+argument_list|,
+name|__s
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|protected
 operator|:
 name|virtual
@@ -1574,11 +1715,10 @@ operator|~
 name|codecvt_byname
 argument_list|()
 block|{ }
-block|}
-expr_stmt|;
 end_expr_stmt
 
 begin_comment
+unit|};
 comment|// Include host and configuration specific partial specializations
 end_comment
 
@@ -1589,7 +1729,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_USE_WCHAR_T
+name|_GLIBCXX_USE_WCHAR_T
 end_ifdef
 
 begin_include
@@ -1609,7 +1749,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// _CPP_BITS_CODECVT_H
+comment|// _CODECVT_H
 end_comment
 
 end_unit

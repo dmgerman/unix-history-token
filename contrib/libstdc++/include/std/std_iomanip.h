@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_IOMANIP
+name|_GLIBCXX_IOMANIP
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_IOMANIP
+name|_GLIBCXX_IOMANIP
 value|1
 end_define
 
@@ -1000,7 +1000,7 @@ comment|// which are defined via explicit instantiations elsewhere.
 comment|// NB:  This syntax is a GNU extension.
 if|#
 directive|if
-name|_GLIBCPP_EXTERN_TEMPLATE
+name|_GLIBCXX_EXTERN_TEMPLATE
 extern|extern template ostream& operator<<(ostream&
 operator|,
 extern|_Setfill<char>
@@ -1132,7 +1132,7 @@ end_empty_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_USE_WCHAR_T
+name|_GLIBCXX_USE_WCHAR_T
 end_ifdef
 
 begin_extern
@@ -1286,6 +1286,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _GLIBCXX_IOMANIP */
+end_comment
 
 end_unit
 

@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_CSETJMP
+name|_GLIBCXX_CSETJMP
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_CSETJMP
+name|_GLIBCXX_CSETJMP
 value|1
 end_define
 

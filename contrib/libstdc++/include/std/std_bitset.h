@@ -4,7 +4,7 @@ comment|//<bitset> -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_GLIBCPP_BITSET_H
+name|_GLIBCXX_BITSET
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_BITSET_H
+name|_GLIBCXX_BITSET
+value|1
 end_define
 
 begin_pragma
@@ -129,7 +130,7 @@ file|<cstddef>
 end_include
 
 begin_comment
-comment|// for size_t
+comment|// For size_t
 end_comment
 
 begin_include
@@ -139,7 +140,17 @@ file|<cstring>
 end_include
 
 begin_comment
-comment|// for memset
+comment|// For memset
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<limits>
+end_include
+
+begin_comment
+comment|// For numeric_limits
 end_comment
 
 begin_include
@@ -155,7 +166,7 @@ file|<bits/functexcept.h>
 end_include
 
 begin_comment
-comment|// for invalid_argument, out_of_range,
+comment|// For invalid_argument, out_of_range,
 end_comment
 
 begin_comment
@@ -169,7 +180,7 @@ file|<ostream>
 end_include
 
 begin_comment
-comment|// for ostream (operator<<)
+comment|// For ostream (operator<<)
 end_comment
 
 begin_include
@@ -179,47 +190,31 @@ file|<istream>
 end_include
 
 begin_comment
-comment|// for istream (operator>>)
+comment|// For istream (operator>>)
 end_comment
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_BITSET_BITS_PER_WORD
-value|(CHAR_BIT*sizeof(unsigned long))
+name|_GLIBCXX_BITSET_BITS_PER_WORD
+value|numeric_limits<unsigned long>::digits
 end_define
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_BITSET_WORDS
+name|_GLIBCXX_BITSET_WORDS
 parameter_list|(
 name|__n
 parameter_list|)
 define|\
-value|((__n)< 1 ? 0 : ((__n) + _GLIBCPP_BITSET_BITS_PER_WORD - 1)/_GLIBCPP_BITSET_BITS_PER_WORD)
+value|((__n)< 1 ? 0 : ((__n) + _GLIBCXX_BITSET_BITS_PER_WORD - 1)/_GLIBCXX_BITSET_BITS_PER_WORD)
 end_define
 
 begin_decl_stmt
 name|namespace
-name|std
+name|_GLIBCXX_STD
 block|{
-specifier|extern
-name|unsigned
-name|char
-name|_S_bit_count
-index|[
-literal|256
-index|]
-decl_stmt|;
-specifier|extern
-name|unsigned
-name|char
-name|_S_first_one
-index|[
-literal|256
-index|]
-decl_stmt|;
 comment|/**    *  @if maint    *  Base class, general case.  It is a class inveriant that _Nw will be    *  nonnegative.    *    *  See documentation for bitset.    *  @endif   */
 name|template
 operator|<
@@ -275,7 +270,7 @@ block|{
 return|return
 name|__pos
 operator|/
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 return|;
 block|}
 specifier|static
@@ -290,10 +285,10 @@ return|return
 operator|(
 name|__pos
 operator|%
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 operator|)
 operator|/
-name|CHAR_BIT
+name|__CHAR_BIT__
 return|;
 block|}
 specifier|static
@@ -307,7 +302,7 @@ block|{
 return|return
 name|__pos
 operator|%
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 return|;
 block|}
 specifier|static
@@ -715,68 +710,50 @@ name|__result
 operator|=
 literal|0
 block|;
-specifier|const
-name|unsigned
-name|char
-operator|*
-name|__byte_ptr
-operator|=
-operator|(
-specifier|const
-name|unsigned
-name|char
-operator|*
-operator|)
-name|_M_w
-block|;
-specifier|const
-name|unsigned
-name|char
-operator|*
-name|__end_ptr
-operator|=
-operator|(
-specifier|const
-name|unsigned
-name|char
-operator|*
-operator|)
-operator|(
-name|_M_w
-operator|+
-name|_Nw
-operator|)
-block|;
-while|while
-condition|(
-name|__byte_ptr
+for|for
+control|(
+name|size_t
+name|__i
+init|=
+literal|0
+init|;
+name|__i
 operator|<
-name|__end_ptr
-condition|)
-block|{
+name|_Nw
+condition|;
+name|__i
+operator|++
+control|)
 name|__result
 operator|+=
-name|_S_bit_count
+name|__builtin_popcountl
+argument_list|(
+name|_M_w
 index|[
-operator|*
-name|__byte_ptr
+name|__i
 index|]
+argument_list|)
 expr_stmt|;
-name|__byte_ptr
-operator|++
-expr_stmt|;
-block|}
 return|return
 name|__result
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|unsigned
 name|long
 name|_M_do_to_ulong
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// find first "on" bit
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|_M_do_find_first
 argument_list|(
@@ -785,7 +762,13 @@ name|__not_found
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// find the next "on" bit that follows "prev"
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|_M_do_find_next
 argument_list|(
@@ -797,14 +780,10 @@ name|__not_found
 argument_list|)
 decl|const
 decl_stmt|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|// Definitions of non-inline functions from _Base_bitset.
 end_comment
 
@@ -843,7 +822,7 @@ name|__wshift
 init|=
 name|__shift
 operator|/
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 decl_stmt|;
 specifier|const
 name|size_t
@@ -851,7 +830,7 @@ name|__offset
 init|=
 name|__shift
 operator|%
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 decl_stmt|;
 if|if
 condition|(
@@ -893,7 +872,7 @@ specifier|const
 name|size_t
 name|__sub_offset
 init|=
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 operator|-
 name|__offset
 decl_stmt|;
@@ -955,6 +934,8 @@ operator|<<
 name|__offset
 expr_stmt|;
 block|}
+name|std
+operator|::
 name|fill
 argument_list|(
 name|_M_w
@@ -1012,7 +993,7 @@ name|__wshift
 init|=
 name|__shift
 operator|/
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 decl_stmt|;
 specifier|const
 name|size_t
@@ -1020,7 +1001,7 @@ name|__offset
 init|=
 name|__shift
 operator|%
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 decl_stmt|;
 specifier|const
 name|size_t
@@ -1070,7 +1051,7 @@ specifier|const
 name|size_t
 name|__sub_offset
 init|=
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 operator|-
 name|__offset
 decl_stmt|;
@@ -1132,6 +1113,8 @@ operator|>>
 name|__offset
 expr_stmt|;
 block|}
+name|std
+operator|::
 name|fill
 argument_list|(
 name|_M_w
@@ -1196,7 +1179,10 @@ index|]
 condition|)
 name|__throw_overflow_error
 argument_list|(
-literal|"bitset -- too large to fit in unsigned long"
+name|__N
+argument_list|(
+literal|"_Base_bitset::_M_do_to_ulong"
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1263,75 +1249,20 @@ operator|(
 literal|0
 operator|)
 condition|)
-block|{
-comment|// find byte within word
-for|for
-control|(
-name|size_t
-name|__j
-init|=
-literal|0
-init|;
-name|__j
-operator|<
-sizeof|sizeof
-argument_list|(
-name|_WordT
-argument_list|)
-condition|;
-name|__j
-operator|++
-control|)
-block|{
-name|unsigned
-name|char
-name|__this_byte
-init|=
-name|static_cast
-operator|<
-name|unsigned
-name|char
-operator|>
-operator|(
-name|__thisword
-operator|&
-operator|(
-operator|~
-operator|(
-name|unsigned
-name|char
-operator|)
-literal|0
-operator|)
-operator|)
-decl_stmt|;
-if|if
-condition|(
-name|__this_byte
-condition|)
 return|return
 name|__i
 operator|*
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 operator|+
-name|__j
-operator|*
-name|CHAR_BIT
-operator|+
-name|_S_first_one
-index|[
-name|__this_byte
-index|]
-return|;
+name|__builtin_ctzl
+argument_list|(
 name|__thisword
-operator|>>=
-name|CHAR_BIT
-expr_stmt|;
+argument_list|)
+return|;
 block|}
 end_expr_stmt
 
 begin_comment
-unit|} 	}
 comment|// not found, so return an indication of failure.
 end_comment
 
@@ -1372,7 +1303,7 @@ name|__prev
 operator|>=
 name|_Nw
 operator|*
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 condition|)
 return|return
 name|__not_found
@@ -1437,85 +1368,16 @@ operator|(
 literal|0
 operator|)
 condition|)
-block|{
-comment|// find byte within word
-comment|// get first byte into place
-name|__thisword
-operator|>>=
-name|_S_whichbyte
-argument_list|(
-name|__prev
-argument_list|)
-operator|*
-name|CHAR_BIT
-expr_stmt|;
-for|for
-control|(
-name|size_t
-name|__j
-init|=
-name|_S_whichbyte
-argument_list|(
-name|__prev
-argument_list|)
-init|;
-name|__j
-operator|<
-sizeof|sizeof
-argument_list|(
-name|_WordT
-argument_list|)
-condition|;
-name|__j
-operator|++
-control|)
-block|{
-name|unsigned
-name|char
-name|__this_byte
-init|=
-name|static_cast
-operator|<
-name|unsigned
-name|char
-operator|>
-operator|(
-name|__thisword
-operator|&
-operator|(
-operator|~
-operator|(
-name|unsigned
-name|char
-operator|)
-literal|0
-operator|)
-operator|)
-decl_stmt|;
-if|if
-condition|(
-name|__this_byte
-condition|)
 return|return
 name|__i
 operator|*
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 operator|+
-name|__j
-operator|*
-name|CHAR_BIT
-operator|+
-name|_S_first_one
-index|[
-name|__this_byte
-index|]
-return|;
+name|__builtin_ctzl
+argument_list|(
 name|__thisword
-operator|>>=
-name|CHAR_BIT
-expr_stmt|;
-block|}
-block|}
+argument_list|)
+return|;
 end_if
 
 begin_comment
@@ -1559,72 +1421,16 @@ operator|(
 literal|0
 operator|)
 condition|)
-block|{
-comment|// find byte within word
-for|for
-control|(
-name|size_t
-name|__j
-init|=
-literal|0
-init|;
-name|__j
-operator|<
-sizeof|sizeof
-argument_list|(
-name|_WordT
-argument_list|)
-condition|;
-name|__j
-operator|++
-control|)
-block|{
-name|unsigned
-name|char
-name|__this_byte
-init|=
-name|static_cast
-operator|<
-name|unsigned
-name|char
-operator|>
-operator|(
-name|__thisword
-operator|&
-operator|(
-operator|~
-operator|(
-name|unsigned
-name|char
-operator|)
-literal|0
-operator|)
-operator|)
-decl_stmt|;
-if|if
-condition|(
-name|__this_byte
-condition|)
 return|return
 name|__i
 operator|*
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 operator|+
-name|__j
-operator|*
-name|CHAR_BIT
-operator|+
-name|_S_first_one
-index|[
-name|__this_byte
-index|]
-return|;
+name|__builtin_ctzl
+argument_list|(
 name|__thisword
-operator|>>=
-name|CHAR_BIT
-expr_stmt|;
-block|}
-block|}
+argument_list|)
+return|;
 block|}
 end_for
 
@@ -1698,7 +1504,7 @@ block|{
 return|return
 name|__pos
 operator|/
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 return|;
 block|}
 end_expr_stmt
@@ -1716,10 +1522,10 @@ return|return
 operator|(
 name|__pos
 operator|%
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 operator|)
 operator|/
-name|CHAR_BIT
+name|__CHAR_BIT__
 return|;
 block|}
 end_function
@@ -1736,7 +1542,7 @@ block|{
 return|return
 name|__pos
 operator|%
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 return|;
 block|}
 end_function
@@ -2005,77 +1811,17 @@ name|_M_do_count
 argument_list|()
 specifier|const
 block|{
-name|size_t
-name|__result
-operator|=
-literal|0
-block|;
-specifier|const
-name|unsigned
-name|char
-operator|*
-name|__byte_ptr
-operator|=
-operator|(
-specifier|const
-name|unsigned
-name|char
-operator|*
-operator|)
-operator|&
-name|_M_w
-block|;
-specifier|const
-name|unsigned
-name|char
-operator|*
-name|__end_ptr
-operator|=
-operator|(
-operator|(
-specifier|const
-name|unsigned
-name|char
-operator|*
-operator|)
-operator|&
-name|_M_w
-operator|)
-operator|+
-sizeof|sizeof
+return|return
+name|__builtin_popcountl
 argument_list|(
 name|_M_w
 argument_list|)
-block|;
-while|while
-condition|(
-name|__byte_ptr
-operator|<
-name|__end_ptr
-condition|)
-block|{
-name|__result
-operator|+=
-name|_S_bit_count
-index|[
-operator|*
-name|__byte_ptr
-index|]
-expr_stmt|;
-name|__byte_ptr
-operator|++
-expr_stmt|;
+return|;
 block|}
 end_expr_stmt
 
-begin_return
-return|return
-name|__result
-return|;
-end_return
-
 begin_expr_stmt
-unit|}        unsigned
+name|unsigned
 name|long
 name|_M_do_to_ulong
 argument_list|()
@@ -2095,7 +1841,24 @@ name|size_t
 name|__not_found
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+if|if
+condition|(
+name|_M_w
+operator|!=
+literal|0
+condition|)
+return|return
+name|__builtin_ctzl
+argument_list|(
+name|_M_w
+argument_list|)
+return|;
+else|else
+return|return
+name|__not_found
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
@@ -2113,7 +1876,50 @@ name|size_t
 name|__not_found
 argument_list|)
 decl|const
+block|{
+operator|++
+name|__prev
+expr_stmt|;
+if|if
+condition|(
+name|__prev
+operator|>=
+operator|(
+operator|(
+name|size_t
+operator|)
+name|_GLIBCXX_BITSET_BITS_PER_WORD
+operator|)
+condition|)
+return|return
+name|__not_found
+return|;
+name|_WordT
+name|__x
+init|=
+name|_M_w
+operator|>>
+name|__prev
 decl_stmt|;
+if|if
+condition|(
+name|__x
+operator|!=
+literal|0
+condition|)
+return|return
+name|__builtin_ctzl
+argument_list|(
+name|__x
+argument_list|)
+operator|+
+name|__prev
+return|;
+else|else
+return|return
+name|__not_found
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
@@ -2154,7 +1960,7 @@ block|{
 return|return
 name|__pos
 operator|/
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 return|;
 block|}
 end_expr_stmt
@@ -2172,10 +1978,10 @@ return|return
 operator|(
 name|__pos
 operator|%
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 operator|)
 operator|/
-name|CHAR_BIT
+name|__CHAR_BIT__
 return|;
 block|}
 end_function
@@ -2192,7 +1998,7 @@ block|{
 return|return
 name|__pos
 operator|%
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 return|;
 block|}
 end_function
@@ -2264,7 +2070,10 @@ decl|const
 block|{
 name|__throw_out_of_range
 argument_list|(
-literal|"bitset -- zero-length"
+name|__N
+argument_list|(
+literal|"_Base_bitset::_M_getword"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2555,7 +2364,7 @@ operator|:
 name|private
 name|_Base_bitset
 operator|<
-name|_GLIBCPP_BITSET_WORDS
+name|_GLIBCXX_BITSET_WORDS
 argument_list|(
 name|_Nb
 argument_list|)
@@ -2566,7 +2375,7 @@ operator|:
 typedef|typedef
 name|_Base_bitset
 operator|<
-name|_GLIBCPP_BITSET_WORDS
+name|_GLIBCXX_BITSET_WORDS
 argument_list|(
 name|_Nb
 argument_list|)
@@ -2592,7 +2401,7 @@ name|_Sanitize
 operator|<
 name|_Nb
 operator|%
-name|_GLIBCPP_BITSET_BITS_PER_WORD
+name|_GLIBCXX_BITSET_BITS_PER_WORD
 operator|>
 operator|::
 name|_S_do_sanitize
@@ -2667,7 +2476,7 @@ operator|~
 name|reference
 argument_list|()
 block|{ }
-comment|// for b[i] = __x;
+comment|// For b[i] = __x;
 name|reference
 operator|&
 name|operator
@@ -2711,7 +2520,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// for b[i] = b[__j];
+comment|// For b[i] = b[__j];
 end_comment
 
 begin_decl_stmt
@@ -2779,7 +2588,7 @@ end_return
 
 begin_comment
 unit|}
-comment|// flips the bit
+comment|// Flips the bit
 end_comment
 
 begin_expr_stmt
@@ -2811,7 +2620,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// for __x = b[i];
+comment|// For __x = b[i];
 end_comment
 
 begin_expr_stmt
@@ -2841,7 +2650,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// for b[i].flip();
+comment|// For b[i].flip();
 end_comment
 
 begin_function
@@ -2920,7 +2729,7 @@ block|}
 end_block
 
 begin_comment
-comment|/**      *  @brief  Use a subset of a string.      *  @param  s  A string of '0' and '1' characters.      *  @param  pos  Index of the first character in @a s to use; defaults      *               to zero.      *  @throw  std::out_of_range  If @a pos is bigger the size of @a s.      *  @throw  std::invalid_argument  If a character appears in the string      *                                 which is neither '0' nor '1'.     */
+comment|/**      *  @brief  Use a subset of a string.      *  @param  s  A string of '0' and '1' characters.      *  @param  position  Index of the first character in @a s to use; defaults      *               to zero.      *  @throw  std::out_of_range  If @a pos is bigger the size of @a s.      *  @throw  std::invalid_argument  If a character appears in the string      *                                 which is neither '0' nor '1'.     */
 end_comment
 
 begin_expr_stmt
@@ -2944,7 +2753,7 @@ argument|_Traits
 argument_list|,
 argument|_Alloc>& __s
 argument_list|,
-argument|size_t __pos =
+argument|size_t __position =
 literal|0
 argument_list|)
 operator|:
@@ -2953,7 +2762,7 @@ argument_list|()
 block|{
 if|if
 condition|(
-name|__pos
+name|__position
 operator|>
 name|__s
 operator|.
@@ -2962,15 +2771,18 @@ argument_list|()
 condition|)
 name|__throw_out_of_range
 argument_list|(
-literal|"bitset -- initial position is larger than "
-literal|"the string itself"
+name|__N
+argument_list|(
+literal|"bitset::bitset initial position "
+literal|"not valid"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|_M_copy_from_string
 argument_list|(
 name|__s
 argument_list|,
-name|__pos
+name|__position
 argument_list|,
 name|basic_string
 operator|<
@@ -2988,7 +2800,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/**      *  @brief  Use a subset of a string.      *  @param  s  A string of '0' and '1' characters.      *  @param  pos  Index of the first character in @a s to use.      *  @param  n    The number of characters to copy.      *  @throw  std::out_of_range  If @a pos is bigger the size of @a s.      *  @throw  std::invalid_argument  If a character appears in the string      *                                 which is neither '0' nor '1'.     */
+comment|/**      *  @brief  Use a subset of a string.      *  @param  s  A string of '0' and '1' characters.      *  @param  position  Index of the first character in @a s to use.      *  @param  n    The number of characters to copy.      *  @throw  std::out_of_range  If @a pos is bigger the size of @a s.      *  @throw  std::invalid_argument  If a character appears in the string      *                                 which is neither '0' nor '1'.     */
 end_comment
 
 begin_expr_stmt
@@ -3011,7 +2823,7 @@ argument|_Traits
 argument_list|,
 argument|_Alloc>& __s
 argument_list|,
-argument|size_t __pos
+argument|size_t __position
 argument_list|,
 argument|size_t __n
 argument_list|)
@@ -3021,7 +2833,7 @@ argument_list|()
 block|{
 if|if
 condition|(
-name|__pos
+name|__position
 operator|>
 name|__s
 operator|.
@@ -3030,15 +2842,18 @@ argument_list|()
 condition|)
 name|__throw_out_of_range
 argument_list|(
-literal|"bitset -- initial position is larger than "
-literal|"the string itself"
+name|__N
+argument_list|(
+literal|"bitset::bitset initial position "
+literal|"not valid"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|_M_copy_from_string
 argument_list|(
 name|__s
 argument_list|,
-name|__pos
+name|__position
 argument_list|,
 name|__n
 argument_list|)
@@ -3163,7 +2978,7 @@ comment|//@{
 end_comment
 
 begin_comment
-comment|/**      *  @brief  Operations on bitsets.      *  @param  pos  The number of places to shift.      *      *  These should be self-explanatory.     */
+comment|/**      *  @brief  Operations on bitsets.      *  @param  position  The number of places to shift.      *      *  These should be self-explanatory.     */
 end_comment
 
 begin_expr_stmt
@@ -3176,14 +2991,14 @@ name|operator
 operator|<<=
 operator|(
 name|size_t
-name|__pos
+name|__position
 operator|)
 block|{
 if|if
 condition|(
 name|__builtin_expect
 argument_list|(
-name|__pos
+name|__position
 operator|<
 name|_Nb
 argument_list|,
@@ -3195,7 +3010,7 @@ name|this
 operator|->
 name|_M_do_left_shift
 argument_list|(
-name|__pos
+name|__position
 argument_list|)
 expr_stmt|;
 name|this
@@ -3232,14 +3047,14 @@ name|operator
 operator|>>=
 operator|(
 name|size_t
-name|__pos
+name|__position
 operator|)
 block|{
 if|if
 condition|(
 name|__builtin_expect
 argument_list|(
-name|__pos
+name|__position
 operator|<
 name|_Nb
 argument_list|,
@@ -3251,7 +3066,7 @@ name|this
 operator|->
 name|_M_do_right_shift
 argument_list|(
-name|__pos
+name|__position
 argument_list|)
 expr_stmt|;
 name|this
@@ -3520,7 +3335,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  @brief Sets a given bit to a particular value.      *  @param  pos  The index of the bit.      *  @param  val  Either true or false, defaults to true.      *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.     */
+comment|/**      *  @brief Sets a given bit to a particular value.      *  @param  position  The index of the bit.      *  @param  val  Either true or false, defaults to true.      *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.     */
 end_comment
 
 begin_expr_stmt
@@ -3531,20 +3346,23 @@ operator|>
 operator|&
 name|set
 argument_list|(
-argument|size_t __pos
+argument|size_t __position
 argument_list|,
 argument|bool __val = true
 argument_list|)
 block|{
 if|if
 condition|(
-name|__pos
+name|__position
 operator|>=
 name|_Nb
 condition|)
 name|__throw_out_of_range
 argument_list|(
-literal|"bitset -- set() argument too large"
+name|__N
+argument_list|(
+literal|"bitset::set"
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3553,7 +3371,7 @@ begin_return
 return|return
 name|_Unchecked_set
 argument_list|(
-name|__pos
+name|__position
 argument_list|,
 name|__val
 argument_list|)
@@ -3587,7 +3405,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  @brief Sets a given bit to false.      *  @param  pos  The index of the bit.      *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.      *      *  Same as writing @c set(pos,false).     */
+comment|/**      *  @brief Sets a given bit to false.      *  @param  position  The index of the bit.      *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.      *      *  Same as writing @c set(pos,false).     */
 end_comment
 
 begin_expr_stmt
@@ -3598,18 +3416,21 @@ operator|>
 operator|&
 name|reset
 argument_list|(
-argument|size_t __pos
+argument|size_t __position
 argument_list|)
 block|{
 if|if
 condition|(
-name|__pos
+name|__position
 operator|>=
 name|_Nb
 condition|)
 name|__throw_out_of_range
 argument_list|(
-literal|"bitset -- reset() argument too large"
+name|__N
+argument_list|(
+literal|"bitset::reset"
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3618,7 +3439,7 @@ begin_return
 return|return
 name|_Unchecked_reset
 argument_list|(
-name|__pos
+name|__position
 argument_list|)
 return|;
 end_return
@@ -3655,7 +3476,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  @brief Toggles a given bit to its opposite value.      *  @param  pos  The index of the bit.      *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.     */
+comment|/**      *  @brief Toggles a given bit to its opposite value.      *  @param  position  The index of the bit.      *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.     */
 end_comment
 
 begin_expr_stmt
@@ -3666,18 +3487,21 @@ operator|>
 operator|&
 name|flip
 argument_list|(
-argument|size_t __pos
+argument|size_t __position
 argument_list|)
 block|{
 if|if
 condition|(
-name|__pos
+name|__position
 operator|>=
 name|_Nb
 condition|)
 name|__throw_out_of_range
 argument_list|(
-literal|"bitset -- flip() argument too large"
+name|__N
+argument_list|(
+literal|"bitset::flip"
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3686,7 +3510,7 @@ begin_return
 return|return
 name|_Unchecked_flip
 argument_list|(
-name|__pos
+name|__position
 argument_list|)
 return|;
 end_return
@@ -3728,7 +3552,7 @@ comment|//@{
 end_comment
 
 begin_comment
-comment|/**      *  @brief  Array-indexing support.      *  @param  pos  Index into the %bitset.      *  @return  A bool for a 'const %bitset'.  For non-const bitsets, an      *           instance of the reference proxy class.      *  @note  These operators do no range checking and throw no exceptions,      *         as required by DR 11 to the standard.      *      *  @if maint      *  _GLIBCPP_RESOLVE_LIB_DEFECTS Note that this implementation already      *  resolves DR 11 (items 1 and 2), but does not do the range-checking      *  required by that DR's resolution.  -pme      *  The DR has since been changed:  range-checking is a precondition      *  (users' responsibility), and these functions must not throw.  -pme      *  @endif     */
+comment|/**      *  @brief  Array-indexing support.      *  @param  position  Index into the %bitset.      *  @return  A bool for a 'const %bitset'.  For non-const bitsets, an      *           instance of the reference proxy class.      *  @note  These operators do no range checking and throw no exceptions,      *         as required by DR 11 to the standard.      *      *  @if maint      *  _GLIBCXX_RESOLVE_LIB_DEFECTS Note that this implementation already      *  resolves DR 11 (items 1 and 2), but does not do the range-checking      *  required by that DR's resolution.  -pme      *  The DR has since been changed:  range-checking is a precondition      *  (users' responsibility), and these functions must not throw.  -pme      *  @endif     */
 end_comment
 
 begin_function
@@ -3737,7 +3561,7 @@ name|operator
 function|[]
 parameter_list|(
 name|size_t
-name|__pos
+name|__position
 parameter_list|)
 block|{
 return|return
@@ -3746,7 +3570,7 @@ argument_list|(
 operator|*
 name|this
 argument_list|,
-name|__pos
+name|__position
 argument_list|)
 return|;
 block|}
@@ -3758,14 +3582,14 @@ name|operator
 index|[]
 argument_list|(
 name|size_t
-name|__pos
+name|__position
 argument_list|)
 decl|const
 block|{
 return|return
 name|_Unchecked_test
 argument_list|(
-name|__pos
+name|__position
 argument_list|)
 return|;
 block|}
@@ -4008,7 +3832,7 @@ comment|//@}
 end_comment
 
 begin_comment
-comment|/**      *  @brief Tests the value of a bit.      *  @param  pos  The index of a bit.      *  @return  The value at @a pos.      *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.     */
+comment|/**      *  @brief Tests the value of a bit.      *  @param  position  The index of a bit.      *  @return  The value at @a pos.      *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.     */
 end_comment
 
 begin_decl_stmt
@@ -4016,25 +3840,28 @@ name|bool
 name|test
 argument_list|(
 name|size_t
-name|__pos
+name|__position
 argument_list|)
 decl|const
 block|{
 if|if
 condition|(
-name|__pos
+name|__position
 operator|>=
 name|_Nb
 condition|)
 name|__throw_out_of_range
 argument_list|(
-literal|"bitset -- test() argument too large"
+name|__N
+argument_list|(
+literal|"bitset::test"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
 name|_Unchecked_test
 argument_list|(
-name|__pos
+name|__position
 argument_list|)
 return|;
 block|}
@@ -4096,7 +3923,7 @@ name|operator
 operator|<<
 operator|(
 name|size_t
-name|__pos
+name|__position
 operator|)
 specifier|const
 block|{
@@ -4110,7 +3937,7 @@ operator|*
 name|this
 operator|)
 operator|<<=
-name|__pos
+name|__position
 return|;
 block|}
 end_expr_stmt
@@ -4124,7 +3951,7 @@ name|operator
 operator|>>
 operator|(
 name|size_t
-name|__pos
+name|__position
 operator|)
 specifier|const
 block|{
@@ -4138,7 +3965,7 @@ operator|*
 name|this
 operator|)
 operator|>>=
-name|__pos
+name|__position
 return|;
 block|}
 end_expr_stmt
@@ -4242,10 +4069,14 @@ specifier|const
 name|size_t
 name|__nbits
 operator|=
+name|std
+operator|::
 name|min
 argument_list|(
 name|_Nb
 argument_list|,
+name|std
+operator|::
 name|min
 argument_list|(
 name|__n
@@ -4304,8 +4135,10 @@ break|break;
 default|default:
 name|__throw_invalid_argument
 argument_list|(
-literal|"bitset -- string contains characters "
-literal|"which are neither 0 nor 1"
+name|__N
+argument_list|(
+literal|"bitset::_M_copy_from_string"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4626,9 +4459,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|// Skip whitespace
-end_comment
+begin_expr_stmt
+name|ios_base
+operator|::
+name|iostate
+name|__state
+operator|=
+name|ios_base
+operator|::
+name|goodbit
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|typename
@@ -4653,15 +4494,8 @@ condition|(
 name|__sentry
 condition|)
 block|{
-name|ios_base
-operator|::
-name|iostate
-name|__state
-operator|=
-name|ios_base
-operator|::
-name|goodbit
-expr_stmt|;
+name|try
+block|{
 name|basic_streambuf
 operator|<
 name|_CharT
@@ -4676,6 +4510,30 @@ operator|.
 name|rdbuf
 argument_list|()
 expr_stmt|;
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 303. Bitset input operator underspecified
+specifier|const
+name|char_type
+name|__zero
+init|=
+name|__is
+operator|.
+name|widen
+argument_list|(
+literal|'0'
+argument_list|)
+decl_stmt|;
+specifier|const
+name|char_type
+name|__one
+init|=
+name|__is
+operator|.
+name|widen
+argument_list|(
+literal|'1'
+argument_list|)
+decl_stmt|;
 for|for
 control|(
 name|size_t
@@ -4746,33 +4604,31 @@ argument_list|(
 name|__c1
 argument_list|)
 decl_stmt|;
-name|char_type
-name|__c
-init|=
-name|__is
-operator|.
-name|narrow
-argument_list|(
-name|__c2
-argument_list|,
-literal|'*'
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
-name|__c
+name|__c2
 operator|==
-literal|'0'
-operator|||
-name|__c
-operator|==
-literal|'1'
+name|__zero
 condition|)
 name|__tmp
 operator|.
 name|push_back
 argument_list|(
-name|__c
+literal|'0'
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|__c2
+operator|==
+name|__one
+condition|)
+name|__tmp
+operator|.
+name|push_back
+argument_list|(
+literal|'1'
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -4803,6 +4659,26 @@ break|break;
 block|}
 block|}
 block|}
+block|}
+name|catch
+argument_list|(
+argument|...
+argument_list|)
+block|{
+name|__is
+operator|.
+name|_M_setstate
+argument_list|(
+name|ios_base
+operator|::
+name|badbit
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|__tmp
@@ -4810,7 +4686,6 @@ operator|.
 name|empty
 argument_list|()
 operator|&&
-operator|!
 name|_Nb
 condition|)
 name|__state
@@ -4837,13 +4712,12 @@ argument_list|,
 name|_Nb
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|__state
-operator|!=
-name|ios_base
-operator|::
-name|goodbit
 condition|)
 name|__is
 operator|.
@@ -4852,8 +4726,6 @@ argument_list|(
 name|__state
 argument_list|)
 expr_stmt|;
-comment|// may throw an exception
-block|}
 end_if
 
 begin_return
@@ -4937,8 +4809,31 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|_GLIBCPP_BITSET_WORDS
+name|_GLIBCXX_BITSET_WORDS
 end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|_GLIBCXX_BITSET_BITS_PER_WORD
+end_undef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_GLIBCXX_DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<debug/bitset>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -4946,7 +4841,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _GLIBCPP_BITSET_H */
+comment|/* _GLIBCXX_BITSET */
 end_comment
 
 end_unit

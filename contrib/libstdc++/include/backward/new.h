@@ -8,7 +8,7 @@ comment|// Copyright (C) 2000 Free Software Foundation
 end_comment
 
 begin_comment
-comment|// This file is part of GNU CC.
+comment|// This file is part of GCC.
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// GNU CC is free software; you can redistribute it and/or modify
+comment|// GCC is free software; you can redistribute it and/or modify
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// GNU CC is distributed in the hope that it will be useful,
+comment|// GCC is distributed in the hope that it will be useful,
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// You should have received a copy of the GNU General Public License
 end_comment
 
 begin_comment
-comment|// along with GNU CC; see the file COPYING.  If not, write to
+comment|// along with GCC; see the file COPYING.  If not, write to
 end_comment
 
 begin_comment
@@ -106,13 +106,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BACKWARD_NEW_H
+name|_BACKWARD_NEW_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BACKWARD_NEW_H
+name|_BACKWARD_NEW_H
 value|1
 end_define
 

@@ -4,7 +4,7 @@ comment|// Vector implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__GLIBCPP_INTERNAL_VECTOR_H
+name|_VECTOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__GLIBCPP_INTERNAL_VECTOR_H
+name|_VECTOR_H
+value|1
 end_define
 
 begin_include
@@ -135,48 +136,95 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|std
+name|_GLIBCXX_STD
 block|{
-comment|/// @if maint Primary default version.  @endif
-comment|/**    *  @if maint    *  See bits/stl_deque.h's _Deque_alloc_base for an explanation.    *  @endif   */
+comment|/**    *  @if maint    *  See bits/stl_deque.h's _Deque_base for an explanation.    *  @endif   */
 name|template
 operator|<
 name|typename
 name|_Tp
 operator|,
 name|typename
-name|_Allocator
-operator|,
-name|bool
-name|_IsStatic
+name|_Alloc
 operator|>
-name|class
-name|_Vector_alloc_base
+expr|struct
+name|_Vector_base
+block|{       struct
+name|_Vector_impl
+operator|:
+name|public
+name|_Alloc
 block|{
+name|_Tp
+operator|*
+name|_M_start
+block|;
+name|_Tp
+operator|*
+name|_M_finish
+block|;
+name|_Tp
+operator|*
+name|_M_end_of_storage
+block|;
+name|_Vector_impl
+argument_list|(
+name|_Alloc
+specifier|const
+operator|&
+name|__a
+argument_list|)
+operator|:
+name|_Alloc
+argument_list|(
+name|__a
+argument_list|)
+block|,
+name|_M_start
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|_M_finish
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|_M_end_of_storage
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+block|}
+block|;
 name|public
 operator|:
 typedef|typedef
-name|typename
-name|_Alloc_traits
-operator|<
-name|_Tp
-operator|,
-name|_Allocator
-operator|>
-operator|::
+name|_Alloc
 name|allocator_type
-name|allocator_type
-expr_stmt|;
+typedef|;
 name|allocator_type
 name|get_allocator
 argument_list|()
 specifier|const
 block|{
 return|return
-name|_M_data_allocator
+operator|*
+name|static_cast
+operator|<
+specifier|const
+name|_Alloc
+operator|*
+operator|>
+operator|(
+operator|&
+name|this
+operator|->
+name|_M_impl
+operator|)
 return|;
 block|}
-name|_Vector_alloc_base
+name|_Vector_base
 argument_list|(
 specifier|const
 name|allocator_type
@@ -184,43 +232,92 @@ operator|&
 name|__a
 argument_list|)
 operator|:
-name|_M_data_allocator
+name|_M_impl
 argument_list|(
-name|__a
-argument_list|)
-operator|,
-name|_M_start
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|_M_finish
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|_M_end_of_storage
-argument_list|(
-literal|0
+argument|__a
 argument_list|)
 block|{ }
-name|protected
+name|_Vector_base
+argument_list|(
+argument|size_t __n
+argument_list|,
+argument|const allocator_type& __a
+argument_list|)
 operator|:
-name|allocator_type
-name|_M_data_allocator
-expr_stmt|;
-name|_Tp
-modifier|*
+name|_M_impl
+argument_list|(
+argument|__a
+argument_list|)
+block|{
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
-decl_stmt|;
-name|_Tp
-modifier|*
+operator|=
+name|this
+operator|->
+name|_M_allocate
+argument_list|(
+name|__n
+argument_list|)
+block|;
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
-decl_stmt|;
-name|_Tp
-modifier|*
+operator|=
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_start
+block|;
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_end_of_storage
-decl_stmt|;
+operator|=
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_start
+operator|+
+name|__n
+block|;       }
+operator|~
+name|_Vector_base
+argument_list|()
+block|{
+name|_M_deallocate
+argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_start
+argument_list|,
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_end_of_storage
+operator|-
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_start
+argument_list|)
+block|; }
+name|public
+operator|:
+name|_Vector_impl
+name|_M_impl
+expr_stmt|;
 name|_Tp
 modifier|*
 name|_M_allocate
@@ -230,7 +327,7 @@ name|__n
 parameter_list|)
 block|{
 return|return
-name|_M_data_allocator
+name|_M_impl
 operator|.
 name|allocate
 argument_list|(
@@ -253,7 +350,7 @@ if|if
 condition|(
 name|__p
 condition|)
-name|_M_data_allocator
+name|_M_impl
 operator|.
 name|deallocate
 argument_list|(
@@ -271,282 +368,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// @if maint Specialization for instanceless allocators.  @endif
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|_Tp
-operator|,
-name|typename
-name|_Allocator
-operator|>
-name|class
-name|_Vector_alloc_base
-operator|<
-name|_Tp
-operator|,
-name|_Allocator
-operator|,
-name|true
-operator|>
-block|{
-name|public
-operator|:
-typedef|typedef
-name|typename
-name|_Alloc_traits
-operator|<
-name|_Tp
-operator|,
-name|_Allocator
-operator|>
-operator|::
-name|allocator_type
-name|allocator_type
-expr_stmt|;
-name|allocator_type
-name|get_allocator
-argument_list|()
-specifier|const
-block|{
-return|return
-name|allocator_type
-argument_list|()
-return|;
-block|}
-name|_Vector_alloc_base
-argument_list|(
-specifier|const
-name|allocator_type
-operator|&
-argument_list|)
-operator|:
-name|_M_start
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|_M_finish
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|_M_end_of_storage
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
-name|protected
-operator|:
-name|_Tp
-operator|*
-name|_M_start
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|_Tp
-modifier|*
-name|_M_finish
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|_Tp
-modifier|*
-name|_M_end_of_storage
-decl_stmt|;
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
-name|typename
-name|_Alloc_traits
-operator|<
-name|_Tp
-operator|,
-name|_Allocator
-operator|>
-operator|::
-name|_Alloc_type
-name|_Alloc_type
-expr_stmt|;
-end_typedef
-
-begin_function
-name|_Tp
-modifier|*
-name|_M_allocate
-parameter_list|(
-name|size_t
-name|__n
-parameter_list|)
-block|{
-return|return
-name|_Alloc_type
-operator|::
-name|allocate
-argument_list|(
-name|__n
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|_M_deallocate
-parameter_list|(
-name|_Tp
-modifier|*
-name|__p
-parameter_list|,
-name|size_t
-name|__n
-parameter_list|)
-block|{
-name|_Alloc_type
-operator|::
-name|deallocate
-argument_list|(
-name|__p
-argument_list|,
-name|__n
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-unit|};
-comment|/**    *  @if maint    *  See bits/stl_deque.h's _Deque_base for an explanation.    *  @endif   */
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|_Tp
-operator|,
-name|typename
-name|_Alloc
-operator|>
-expr|struct
-name|_Vector_base
-operator|:
-name|public
-name|_Vector_alloc_base
-operator|<
-name|_Tp
-operator|,
-name|_Alloc
-operator|,
-name|_Alloc_traits
-operator|<
-name|_Tp
-operator|,
-name|_Alloc
-operator|>
-operator|::
-name|_S_instanceless
-operator|>
-block|{
-name|public
-operator|:
-typedef|typedef
-name|_Vector_alloc_base
-operator|<
-name|_Tp
-operator|,
-name|_Alloc
-operator|,
-name|_Alloc_traits
-operator|<
-name|_Tp
-operator|,
-name|_Alloc
-operator|>
-operator|::
-name|_S_instanceless
-operator|>
-name|_Base
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|typename
-name|_Base
-operator|::
-name|allocator_type
-name|allocator_type
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
-name|_Vector_base
-argument_list|(
-specifier|const
-name|allocator_type
-operator|&
-name|__a
-argument_list|)
-operator|:
-name|_Base
-argument_list|(
-argument|__a
-argument_list|)
-block|{ }
-name|_Vector_base
-argument_list|(
-argument|size_t __n
-argument_list|,
-argument|const allocator_type& __a
-argument_list|)
-operator|:
-name|_Base
-argument_list|(
-argument|__a
-argument_list|)
-block|{
-name|_M_start
-operator|=
-name|_M_allocate
-argument_list|(
-name|__n
-argument_list|)
-block|;
-name|_M_finish
-operator|=
-name|_M_start
-block|;
-name|_M_end_of_storage
-operator|=
-name|_M_start
-operator|+
-name|__n
-block|;       }
-operator|~
-name|_Vector_base
-argument_list|()
-block|{
-name|_M_deallocate
-argument_list|(
-name|_M_start
-argument_list|,
-name|_M_end_of_storage
-operator|-
-name|_M_start
-argument_list|)
-block|; }
-end_expr_stmt
-
-begin_comment
-unit|};
-comment|/**    *  @brief  A standard container which offers fixed time access to individual    *  elements in any order.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  Meets the requirements of a<a href="tables.html#65">container</a>, a    *<a href="tables.html#66">reversible container</a>, and a    *<a href="tables.html#67">sequence</a>, including the    *<a href="tables.html#68">optional sequence requirements</a> with the    *  %exception of @c push_front and @c pop_front.    *    *  In some terminology a %vector can be described as a dynamic C-style array,    *  it offers fast and efficient access to individual elements in any order    *  and saves the user from worrying about memory and size allocation.    *  Subscripting ( @c [] ) access is also provided as with C-style arrays.   */
+comment|/**    *  @brief A standard container which offers fixed time access to    *  individual elements in any order.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  Meets the requirements of a<a href="tables.html#65">container</a>, a    *<a href="tables.html#66">reversible container</a>, and a    *<a href="tables.html#67">sequence</a>, including the    *<a href="tables.html#68">optional sequence requirements</a> with the    *  %exception of @c push_front and @c pop_front.    *    *  In some terminology a %vector can be described as a dynamic    *  C-style array, it offers fast and efficient access to individual    *  elements in any order and saves the user from worrying about    *  memory and size allocation.  Subscripting ( @c [] ) access is    *  also provided as with C-style arrays.   */
 end_comment
 
 begin_expr_stmt
@@ -575,7 +397,7 @@ name|_Alloc
 operator|>
 block|{
 comment|// Concept requirements.
-name|__glibcpp_class_requires
+name|__glibcxx_class_requires
 argument_list|(
 argument|_Tp
 argument_list|,
@@ -618,19 +440,42 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|value_type
-modifier|*
+name|typename
+name|_Alloc
+operator|::
 name|pointer
-typedef|;
+name|pointer
+expr_stmt|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-specifier|const
-name|value_type
-modifier|*
+name|typename
+name|_Alloc
+operator|::
 name|const_pointer
-typedef|;
+name|const_pointer
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|typename
+name|_Alloc
+operator|::
+name|reference
+name|reference
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|typename
+name|_Alloc
+operator|::
+name|const_reference
+name|const_reference
+expr_stmt|;
 end_typedef
 
 begin_typedef
@@ -687,23 +532,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|value_type
-modifier|&
-name|reference
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-specifier|const
-name|value_type
-modifier|&
-name|const_reference
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|size_t
 name|size_type
 typedef|;
@@ -732,7 +560,7 @@ label|:
 end_label
 
 begin_comment
-comment|/** @if maint        *  These two functions and three data members are all from the        *  top-most base class, which varies depending on the type of        *  %allocator.  They should be pretty self-explanatory, as        *  %vector uses a simple contiguous allocation scheme.  @endif        */
+comment|/** @if maint        *  These two functions and three data members are all from the        *  base class.  They should be pretty self-explanatory, as        *  %vector uses a simple contiguous allocation scheme.  @endif        */
 end_comment
 
 begin_expr_stmt
@@ -755,23 +583,7 @@ begin_expr_stmt
 name|using
 name|_Base
 operator|::
-name|_M_start
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|_Base
-operator|::
-name|_M_finish
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|_Base
-operator|::
-name|_M_end_of_storage
+name|_M_impl
 expr_stmt|;
 end_expr_stmt
 
@@ -813,7 +625,7 @@ argument_list|(
 argument|__a
 argument_list|)
 block|{ }
-comment|/**        *  @brief  Create a %vector with copies of an exemplar element.        *  @param  n  The number of elements to initially create.        *  @param  value  An element to copy.        *         *  This constructor fills the %vector with @a n copies of @a value.        */
+comment|/**        *  @brief  Create a %vector with copies of an exemplar element.        *  @param  n  The number of elements to initially create.        *  @param  value  An element to copy.        *        *  This constructor fills the %vector with @a n copies of @a value.        */
 name|vector
 argument_list|(
 argument|size_type __n
@@ -830,10 +642,20 @@ argument_list|,
 argument|__a
 argument_list|)
 block|{
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|=
+name|std
+operator|::
 name|uninitialized_fill_n
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 argument_list|,
 name|__n
@@ -841,7 +663,7 @@ argument_list|,
 name|__value
 argument_list|)
 block|; }
-comment|/**        *  @brief  Create a %vector with default elements.        *  @param  n  The number of elements to initially create.        *         *  This constructor fills the %vector with @a n copies of a        *  default-constructed element.        */
+comment|/**        *  @brief  Create a %vector with default elements.        *  @param  n  The number of elements to initially create.        *        *  This constructor fills the %vector with @a n copies of a        *  default-constructed element.        */
 name|explicit
 name|vector
 argument_list|(
@@ -855,10 +677,20 @@ argument_list|,
 argument|allocator_type()
 argument_list|)
 block|{
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|=
+name|std
+operator|::
 name|uninitialized_fill_n
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 argument_list|,
 name|__n
@@ -867,7 +699,7 @@ name|value_type
 argument_list|()
 argument_list|)
 block|; }
-comment|/**        *  @brief  %Vector copy constructor.        *  @param  x  A %vector of identical element and allocator types.        *         *  The newly-created %vector uses a copy of the allocation        *  object used by @a x.  All the elements of @a x are copied,        *  but any extra memory in        *  @a x (for fast expansion) will not be copied.        */
+comment|/**        *  @brief  %Vector copy constructor.        *  @param  x  A %vector of identical element and allocator types.        *        *  The newly-created %vector uses a copy of the allocation        *  object used by @a x.  All the elements of @a x are copied,        *  but any extra memory in        *  @a x (for fast expansion) will not be copied.        */
 name|vector
 argument_list|(
 specifier|const
@@ -883,8 +715,14 @@ argument_list|,
 argument|__x.get_allocator()
 argument_list|)
 block|{
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|=
+name|std
+operator|::
 name|uninitialized_copy
 argument_list|(
 name|__x
@@ -897,10 +735,14 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 argument_list|)
-block|; }
-comment|/**        *  @brief  Builds a %vector from a range.        *  @param  first  An input iterator.        *  @param  last  An input iterator.        *         *  Create a %vector consisting of copies of the elements from        *  [first,last).        *        *  If the iterators are forward, bidirectional, or random-access, then        *  this will call the elements' copy constructor N times (where N is        *  distance(first,last)) and do no memory reallocation.  But if only        *  input iterators are used, then this will do at most 2N calls to the        *  copy constructor, and logN memory reallocations.        */
+block|;       }
+comment|/**        *  @brief  Builds a %vector from a range.        *  @param  first  An input iterator.        *  @param  last  An input iterator.        *        *  Create a %vector consisting of copies of the elements from        *  [first,last).        *        *  If the iterators are forward, bidirectional, or        *  random-access, then this will call the elements' copy        *  constructor N times (where N is distance(first,last)) and do        *  no memory reallocation.  But if only input iterators are        *  used, then this will do at most 2N calls to the copy        *  constructor, and logN memory reallocations.        */
 name|template
 operator|<
 name|typename
@@ -945,7 +787,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/**        *  The dtor only erases the elements, and note that if the elements        *  themselves are pointers, the pointed-to memory is not touched in any        *  way.  Managing the pointer is the user's responsibilty.        */
+comment|/**        *  The dtor only erases the elements, and note that if the        *  elements themselves are pointers, the pointed-to memory is        *  not touched in any way.  Managing the pointer is the user's        *  responsibilty.        */
 end_comment
 
 begin_macro
@@ -956,10 +798,20 @@ end_macro
 
 begin_block
 block|{
+name|std
+operator|::
 name|_Destroy
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 argument_list|,
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 argument_list|)
 expr_stmt|;
@@ -967,7 +819,7 @@ block|}
 end_block
 
 begin_comment
-comment|/**        *  @brief  %Vector assignment operator.        *  @param  x  A %vector of identical element and allocator types.        *         *  All the elements of @a x are copied, but any extra memory in        *  @a x (for fast expansion) will not be copied.  Unlike the        *  copy constructor, the allocator object is not copied.        */
+comment|/**        *  @brief  %Vector assignment operator.        *  @param  x  A %vector of identical element and allocator types.        *        *  All the elements of @a x are copied, but any extra memory in        *  @a x (for fast expansion) will not be copied.  Unlike the        *  copy constructor, the allocator object is not copied.        */
 end_comment
 
 begin_decl_stmt
@@ -1057,22 +909,12 @@ unit|}
 comment|/// Get a copy of the memory allocation object.
 end_comment
 
-begin_macro
-unit|allocator_type
-name|get_allocator
-argument_list|()
-end_macro
-
 begin_expr_stmt
-specifier|const
-block|{
-return|return
+unit|using
 name|_Base
 operator|::
 name|get_allocator
-argument_list|()
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -1080,7 +922,7 @@ comment|// iterators
 end_comment
 
 begin_comment
-comment|/**        *  Returns a read/write iterator that points to the first element in the        *  %vector.  Iteration is done in ordinary element order.        */
+comment|/**        *  Returns a read/write iterator that points to the first        *  element in the %vector.  Iteration is done in ordinary        *  element order.        */
 end_comment
 
 begin_function
@@ -1091,6 +933,10 @@ block|{
 return|return
 name|iterator
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 argument_list|)
 return|;
@@ -1110,6 +956,10 @@ block|{
 return|return
 name|const_iterator
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 argument_list|)
 return|;
@@ -1128,6 +978,10 @@ block|{
 return|return
 name|iterator
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 argument_list|)
 return|;
@@ -1135,7 +989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**        *  Returns a read-only (constant) iterator that points one past the last        *  element in the %vector.  Iteration is done in ordinary element order.        */
+comment|/**        *  Returns a read-only (constant) iterator that points one past        *  the last element in the %vector.  Iteration is done in        *  ordinary element order.        */
 end_comment
 
 begin_expr_stmt
@@ -1147,6 +1001,10 @@ block|{
 return|return
 name|const_iterator
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 argument_list|)
 return|;
@@ -1193,7 +1051,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**        *  Returns a read/write reverse iterator that points to one before the        *  first element in the %vector.  Iteration is done in reverse element        *  order.        */
+comment|/**        *  Returns a read/write reverse iterator that points to one        *  before the first element in the %vector.  Iteration is done        *  in reverse element order.        */
 end_comment
 
 begin_function
@@ -1359,7 +1217,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**        *  Returns the total number of elements that the %vector can hold before        *  needing to allocate more memory.        */
+comment|/**        *  Returns the total number of elements that the %vector can        *  hold before needing to allocate more memory.        */
 end_comment
 
 begin_expr_stmt
@@ -1373,6 +1231,10 @@ name|size_type
 argument_list|(
 name|const_iterator
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_end_of_storage
 argument_list|)
 operator|-
@@ -1422,7 +1284,7 @@ comment|// element access
 end_comment
 
 begin_comment
-comment|/**        *  @brief  Subscript access to the data contained in the %vector.        *  @param  n  The index of the element for which data should be accessed.        *  @return  Read/write reference to data.        *        *  This operator allows for easy, array-style, data access.        *  Note that data access with this operator is unchecked and        *  out_of_range lookups are not defined. (For checked lookups        *  see at().)        */
+comment|/**        *  @brief  Subscript access to the data contained in the %vector.        *  @param n The index of the element for which data should be        *  accessed.        *  @return  Read/write reference to data.        *        *  This operator allows for easy, array-style, data access.        *  Note that data access with this operator is unchecked and        *  out_of_range lookups are not defined. (For checked lookups        *  see at().)        */
 end_comment
 
 begin_function
@@ -1501,7 +1363,10 @@ argument_list|()
 condition|)
 name|__throw_out_of_range
 argument_list|(
-literal|"vector [] access out of range"
+name|__N
+argument_list|(
+literal|"vector::_M_range_check"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1513,7 +1378,7 @@ label|:
 end_label
 
 begin_comment
-comment|/**        *  @brief  Provides access to the data contained in the %vector.        *  @param n The index of the element for which data should be        *  accessed.        *  @return  Read/write reference to data.        *  @throw  std::out_of_range  If @a n is an invalid index.        *        *  This function provides for safer data access.  The parameter is first        *  checked that it is in the range of the vector.  The function throws        *  out_of_range if the check fails.        */
+comment|/**        *  @brief  Provides access to the data contained in the %vector.        *  @param n The index of the element for which data should be        *  accessed.        *  @return  Read/write reference to data.        *  @throw  std::out_of_range  If @a n is an invalid index.        *        *  This function provides for safer data access.  The parameter        *  is first checked that it is in the range of the vector.  The        *  function throws out_of_range if the check fails.        */
 end_comment
 
 begin_function
@@ -1607,7 +1472,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**        *  Returns a read/write reference to the data at the last element of the        *  %vector.        */
+comment|/**        *  Returns a read/write reference to the data at the last        *  element of the %vector.        */
 end_comment
 
 begin_function
@@ -1628,7 +1493,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**        *  Returns a read-only (constant) reference to the data at the last        *  element of the %vector.        */
+comment|/**        *  Returns a read-only (constant) reference to the data at the        *  last element of the %vector.        */
 end_comment
 
 begin_expr_stmt
@@ -1669,19 +1534,37 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|!=
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_end_of_storage
 condition|)
 block|{
+name|std
+operator|::
 name|_Construct
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 argument_list|,
 name|__x
 argument_list|)
 expr_stmt|;
 operator|++
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 expr_stmt|;
 block|}
@@ -1698,7 +1581,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**        *  @brief  Removes last element.        *        *  This is a typical stack operation. It shrinks the %vector by one.        *        *  Note that no data is returned, and if the last element's data is        *  needed, it should be retrieved before pop_back() is called.        */
+comment|/**        *  @brief  Removes last element.        *        *  This is a typical stack operation. It shrinks the %vector by one.        *        *  Note that no data is returned, and if the last element's        *  data is needed, it should be retrieved before pop_back() is        *  called.        */
 end_comment
 
 begin_function
@@ -1707,10 +1590,20 @@ name|pop_back
 parameter_list|()
 block|{
 operator|--
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 expr_stmt|;
+name|std
+operator|::
 name|_Destroy
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 argument_list|)
 expr_stmt|;
@@ -1736,41 +1629,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_DEPRECATED
-end_ifdef
-
-begin_comment
-comment|/**        *  @brief  Inserts an element into the %vector.        *  @param  position  An iterator into the %vector.        *  @return  An iterator that points to the inserted element.        *        *  This function will insert a default-constructed element        *  before the specified location.  You should consider using        *  insert(position,value_type()) instead.  Note that this kind        *  of operation could be expensive for a vector and if it is        *  frequently used the user should consider using std::list.        *        *  @note This was deprecated in 3.2 and will be removed in 3.4.        *  You must define @c _GLIBCPP_DEPRECATED to make this visible        *  in 3.2; see c++config.h.        */
-end_comment
-
-begin_function
-name|iterator
-name|insert
-parameter_list|(
-name|iterator
-name|__position
-parameter_list|)
-block|{
-return|return
-name|insert
-argument_list|(
-name|__position
-argument_list|,
-name|value_type
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/**        *  @brief  Inserts a number of copies of given data into the %vector.        *  @param  position  An iterator into the %vector.        *  @param  n  Number of elements to be inserted.        *  @param  x  Data to be inserted.        *        *  This function will insert a specified number of copies of        *  the given data before the location specified by @a position.        *        *  Note that this kind of operation could be expensive for a        *  %vector and if it is frequently used the user should        *  consider using std::list.        */
 end_comment
@@ -1780,7 +1638,7 @@ name|void
 name|insert
 parameter_list|(
 name|iterator
-name|__pos
+name|__position
 parameter_list|,
 name|size_type
 name|__n
@@ -1793,7 +1651,7 @@ parameter_list|)
 block|{
 name|_M_fill_insert
 argument_list|(
-name|__pos
+name|__position
 argument_list|,
 name|__n
 argument_list|,
@@ -1804,7 +1662,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**        *  @brief  Inserts a range into the %vector.        *  @param  pos  An iterator into the %vector.        *  @param  first  An input iterator.        *  @param  last   An input iterator.        *        *  This function will insert copies of the data in the range        *  [first,last) into the %vector before the location specified        *  by @a pos.        *        *  Note that this kind of operation could be expensive for a        *  %vector and if it is frequently used the user should        *  consider using std::list.        */
+comment|/**        *  @brief  Inserts a range into the %vector.        *  @param  position  An iterator into the %vector.        *  @param  first  An input iterator.        *  @param  last   An input iterator.        *        *  This function will insert copies of the data in the range        *  [first,last) into the %vector before the location specified        *  by @a pos.        *        *  Note that this kind of operation could be expensive for a        *  %vector and if it is frequently used the user should        *  consider using std::list.        */
 end_comment
 
 begin_expr_stmt
@@ -1816,7 +1674,7 @@ operator|>
 name|void
 name|insert
 argument_list|(
-argument|iterator __pos
+argument|iterator __position
 argument_list|,
 argument|_InputIterator __first
 argument_list|,
@@ -1836,7 +1694,7 @@ name|_Integral
 expr_stmt|;
 name|_M_insert_dispatch
 argument_list|(
-name|__pos
+name|__position
 argument_list|,
 name|__first
 argument_list|,
@@ -1899,9 +1757,15 @@ name|std
 operator|::
 name|swap
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 argument_list|,
 name|__x
+operator|.
+name|_M_impl
 operator|.
 name|_M_start
 argument_list|)
@@ -1910,9 +1774,15 @@ name|std
 operator|::
 name|swap
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 argument_list|,
 name|__x
+operator|.
+name|_M_impl
 operator|.
 name|_M_finish
 argument_list|)
@@ -1921,9 +1791,15 @@ name|std
 operator|::
 name|swap
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_end_of_storage
 argument_list|,
 name|__x
+operator|.
+name|_M_impl
 operator|.
 name|_M_end_of_storage
 argument_list|)
@@ -1980,6 +1856,8 @@ block|{
 name|pointer
 name|__result
 operator|=
+name|this
+operator|->
 name|_M_allocate
 argument_list|(
 name|__n
@@ -1987,6 +1865,8 @@ argument_list|)
 block|;
 name|try
 block|{
+name|std
+operator|::
 name|uninitialized_copy
 argument_list|(
 name|__first
@@ -2041,6 +1921,10 @@ argument_list|,
 argument|__true_type
 argument_list|)
 block|{
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|=
 name|_M_allocate
@@ -2048,16 +1932,34 @@ argument_list|(
 name|__n
 argument_list|)
 block|;
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_end_of_storage
 operator|=
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|+
 name|__n
 block|;
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|=
+name|std
+operator|::
 name|uninitialized_fill_n
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 argument_list|,
 name|__n
@@ -2069,14 +1971,14 @@ comment|// Called by the range constructor to implement [23.1.1]/9
 name|template
 operator|<
 name|typename
-name|_InputIter
+name|_InputIterator
 operator|>
 name|void
 name|_M_initialize_dispatch
 argument_list|(
-argument|_InputIter __first
+argument|_InputIterator __first
 argument_list|,
-argument|_InputIter __last
+argument|_InputIterator __last
 argument_list|,
 argument|__false_type
 argument_list|)
@@ -2085,7 +1987,7 @@ typedef|typedef
 name|typename
 name|iterator_traits
 operator|<
-name|_InputIter
+name|_InputIterator
 operator|>
 operator|::
 name|iterator_category
@@ -2166,6 +2068,8 @@ block|{
 name|size_type
 name|__n
 operator|=
+name|std
+operator|::
 name|distance
 argument_list|(
 name|__first
@@ -2173,27 +2077,51 @@ argument_list|,
 name|__last
 argument_list|)
 block|;
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|=
+name|this
+operator|->
 name|_M_allocate
 argument_list|(
 name|__n
 argument_list|)
 block|;
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_end_of_storage
 operator|=
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|+
 name|__n
 block|;
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|=
+name|std
+operator|::
 name|uninitialized_copy
 argument_list|(
 name|__first
 argument_list|,
 name|__last
 argument_list|,
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 argument_list|)
 block|; 	}
@@ -2238,14 +2166,14 @@ comment|// Called by the range assign to implement [23.1.1]/9
 name|template
 operator|<
 name|typename
-name|_InputIter
+name|_InputIterator
 operator|>
 name|void
 name|_M_assign_dispatch
 argument_list|(
-argument|_InputIter __first
+argument|_InputIterator __first
 argument_list|,
-argument|_InputIter __last
+argument|_InputIterator __last
 argument_list|,
 argument|__false_type
 argument_list|)
@@ -2254,7 +2182,7 @@ typedef|typedef
 name|typename
 name|iterator_traits
 operator|<
-name|_InputIter
+name|_InputIterator
 operator|>
 operator|::
 name|iterator_category
@@ -2523,31 +2451,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_DEPRECATED
-end_ifdef
-
-begin_comment
-comment|// Unused now (same situation as in deque)
-end_comment
-
-begin_function_decl
-name|void
-name|_M_insert_aux
-parameter_list|(
-name|iterator
-name|__position
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 unit|};
 comment|/**    *  @brief  Vector equality comparison.    *  @param  x  A %vector.    *  @param  y  A %vector of the same type as @a x.    *  @return  True iff the size and elements of the vectors are equal.    *    *  This is an equivalence relation.  It is linear in the size of the    *  vectors.  Vectors are considered equivalent if their sizes are equal,    *  and if corresponding elements compare equal.   */
@@ -2599,6 +2502,8 @@ operator|.
 name|size
 argument_list|()
 operator|&&
+name|std
+operator|::
 name|equal
 argument_list|(
 name|__x
@@ -2621,7 +2526,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  @brief  Vector ordering relation.    *  @param  x  A %vector.    *  @param  y  A %vector of the same type as @a x.    *  @return  True iff @a x is lexographically less than @a y.    *    *  This is a total ordering relation.  It is linear in the size of the    *  vectors.  The elements must be comparable with @c<.    *    *  See std::lexographical_compare() for how the determination is made.   */
+comment|/**    *  @brief  Vector ordering relation.    *  @param  x  A %vector.    *  @param  y  A %vector of the same type as @a x.    *  @return  True iff @a x is lexicographically less than @a y.    *    *  This is a total ordering relation.  It is linear in the size of the    *  vectors.  The elements must be comparable with @c<.    *    *  See std::lexicographical_compare() for how the determination is made.   */
 end_comment
 
 begin_expr_stmt
@@ -2660,6 +2565,8 @@ name|__y
 operator|)
 block|{
 return|return
+name|std
+operator|::
 name|lexicographical_compare
 argument_list|(
 name|__x
@@ -2929,7 +2836,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GLIBCPP_INTERNAL_VECTOR_H */
+comment|/* _VECTOR_H */
 end_comment
 
 end_unit

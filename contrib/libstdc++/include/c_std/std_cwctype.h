@@ -4,7 +4,7 @@ comment|// -*- C++ -*- forwarding header.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
 end_comment
 
 begin_comment
@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_CWCTYPE
+name|_GLIBCXX_CWCTYPE
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_CWCTYPE
+name|_GLIBCXX_CWCTYPE
 value|1
 end_define
 
@@ -144,7 +144,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|_GLIBCPP_HAVE_WCTYPE_H
+name|_GLIBCXX_HAVE_WCTYPE_H
 end_if
 
 begin_include
@@ -174,11 +174,22 @@ directive|undef
 name|iswalpha
 end_undef
 
+begin_if
+if|#
+directive|if
+name|_GLIBCXX_HAVE_ISWBLANK
+end_if
+
 begin_undef
 undef|#
 directive|undef
 name|iswblank
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -279,7 +290,7 @@ end_undef
 begin_if
 if|#
 directive|if
-name|_GLIBCPP_USE_WCHAR_T
+name|_GLIBCXX_USE_WCHAR_T
 end_if
 
 begin_decl_stmt
@@ -307,10 +318,15 @@ name|using
 operator|::
 name|iswalpha
 expr_stmt|;
+if|#
+directive|if
+name|_GLIBCXX_HAVE_ISWBLANK
 name|using
 operator|::
 name|iswblank
 expr_stmt|;
+endif|#
+directive|endif
 name|using
 operator|::
 name|iswcntrl
@@ -384,7 +400,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|//_GLIBCPP_USE_WCHAR_T
+comment|//_GLIBCXX_USE_WCHAR_T
 end_comment
 
 begin_endif

@@ -4,7 +4,11 @@ comment|// The template and inlines for the -*- C++ -*- gslice class.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2004
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +110,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_GSLICE_H
+name|_GSLICE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_GSLICE_H
+name|_GSLICE_H
 value|1
 end_define
 
@@ -127,14 +131,17 @@ begin_decl_stmt
 name|namespace
 name|std
 block|{
+comment|/**    *  @brief  Class defining multi-dimensional subset of an array.    *    *  The slice class represents a multi-dimensional subset of an array,    *  specified by three parameter sets: start offset, size array, and stride    *  array.  The start offset is the index of the first element of the array    *  that is part of the subset.  The size and stride array describe each    *  dimension of the slice.  Size is the number of elements in that    *  dimension, and stride is the distance in the array between successive    *  elements in that dimension.  Each dimension's size and stride is taken    *  to begin at an array element described by the previous dimension.  The    *  size array and stride array must be the same size.    *    *  For example, if you have offset==3, stride[0]==11, size[1]==3,    *  stride[1]==3, then slice[0,0]==array[3], slice[0,1]==array[6],    *  slice[0,2]==array[9], slice[1,0]==array[14], slice[1,1]==array[17],    *  slice[1,2]==array[20].    */
 name|class
 name|gslice
 block|{
 name|public
 label|:
+comment|///  Construct an empty slice.
 name|gslice
 argument_list|()
 expr_stmt|;
+comment|/**        *  @brief  Construct a slice.        *        *  Constructs a slice with as many dimensions as the length of the @a l        *  and @a s arrays.        *        *  @param  o  Offset in array of first element.        *  @param  l  Array of dimension lengths.        *  @param  s  Array of dimension strides between array elements.        */
 name|gslice
 argument_list|(
 name|size_t
@@ -157,6 +164,7 @@ expr_stmt|;
 comment|// XXX: the IS says the copy-ctor and copy-assignment operators are
 comment|//      synthetized by the compiler but they are just unsuitable
 comment|//      for a ref-counted semantic
+comment|///  Copy constructor.
 name|gslice
 argument_list|(
 specifier|const
@@ -164,11 +172,13 @@ name|gslice
 operator|&
 argument_list|)
 expr_stmt|;
+comment|///  Destructor.
 operator|~
 name|gslice
 argument_list|()
 expr_stmt|;
 comment|// XXX: See the note above.
+comment|///  Assignment operator.
 name|gslice
 modifier|&
 name|operator
@@ -179,11 +189,13 @@ name|gslice
 operator|&
 operator|)
 decl_stmt|;
+comment|///  Return array offset of first slice element.
 name|size_t
 name|start
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|///  Return array of sizes of slice dimensions.
 name|valarray
 operator|<
 name|size_t
@@ -192,6 +204,7 @@ name|size
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|///  Return array of array strides for each dimension.
 name|valarray
 operator|<
 name|size_t
@@ -229,6 +242,7 @@ name|size_t
 operator|>
 name|_M_index
 expr_stmt|;
+comment|// Linear array of referenced indices
 name|_Indexer
 argument_list|(
 name|size_t
@@ -493,7 +507,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_BITS_GSLICE_H */
+comment|/* _GSLICE_H */
 end_comment
 
 begin_comment

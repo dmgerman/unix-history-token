@@ -102,13 +102,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BACKWARD_DEQUE_H
+name|_BACKWARD_DEQUE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BACKWARD_DEQUE_H
+name|_BACKWARD_DEQUE_H
 value|1
 end_define
 
@@ -150,7 +150,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_BACKWARD_DEQUE_H */
+comment|/* _BACKWARD_DEQUE_H */
 end_comment
 
 begin_comment

@@ -94,13 +94,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BACKWARD_IOMANIP_H
+name|_BACKWARD_IOMANIP_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BACKWARD_IOMANIP_H
+name|_BACKWARD_IOMANIP_H
 value|1
 end_define
 

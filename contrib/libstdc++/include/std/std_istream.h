@@ -4,7 +4,11 @@ comment|// Input streams -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -114,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_ISTREAM
+name|_GLIBCXX_ISTREAM
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_ISTREAM
+name|_GLIBCXX_ISTREAM
 value|1
 end_define
 
@@ -234,22 +238,18 @@ operator|>
 name|__istream_type
 expr_stmt|;
 typedef|typedef
+name|num_get
+operator|<
+name|_CharT
+operator|,
 name|istreambuf_iterator
 operator|<
 name|_CharT
 operator|,
 name|_Traits
 operator|>
-name|__istreambuf_iter
-expr_stmt|;
-typedef|typedef
-name|num_get
-operator|<
-name|_CharT
-operator|,
-name|__istreambuf_iter
-operator|>
-name|__numget_type
+expr|>
+name|__num_get_type
 expr_stmt|;
 typedef|typedef
 name|ctype
@@ -333,11 +333,18 @@ comment|// [27.6.1.1.1] constructor/destructor
 comment|/**        *  @brief  Base constructor.        *        *  This ctor is almost never called by the user directly, rather from        *  derived classes' initialization lists, which pass a pointer to        *  their own stream buffer.       */
 name|explicit
 name|basic_istream
-parameter_list|(
+argument_list|(
 name|__streambuf_type
-modifier|*
+operator|*
 name|__sb
-parameter_list|)
+argument_list|)
+operator|:
+name|_M_gcount
+argument_list|(
+argument|streamsize(
+literal|0
+argument|)
+argument_list|)
 block|{
 name|this
 operator|->
@@ -345,15 +352,7 @@ name|init
 argument_list|(
 name|__sb
 argument_list|)
-expr_stmt|;
-name|_M_gcount
-operator|=
-name|streamsize
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|/**        *  @brief  Base destructor.        *        *  This does very little apart from providing a virtual base dtor.       */
 name|virtual
 operator|~
@@ -379,6 +378,7 @@ comment|// [27.6.1.2] formatted input
 comment|// [27.6.1.2.3] basic_istream::operator>>
 comment|//@{
 comment|/**        *  @brief  Interface for manipulators.        *        *  Manuipulators such as @c std::ws and @c std::dec use these        *  functions in constructs like "std::cin>> std::ws".  For more        *  information, see the iomanip header.       */
+specifier|inline
 name|__istream_type
 operator|&
 name|operator
@@ -396,6 +396,7 @@ operator|&
 argument_list|)
 operator|)
 expr_stmt|;
+specifier|inline
 name|__istream_type
 operator|&
 name|operator
@@ -413,6 +414,7 @@ operator|&
 argument_list|)
 operator|)
 expr_stmt|;
+specifier|inline
 name|__istream_type
 operator|&
 name|operator
@@ -510,7 +512,7 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_USE_LONG_LONG
+name|_GLIBCXX_USE_LONG_LONG
 name|__istream_type
 operator|&
 name|operator
@@ -578,7 +580,7 @@ operator|&
 name|__p
 operator|)
 expr_stmt|;
-comment|/**        *  @brief  Extracting into another streambuf.        *  @param  sb  A pointer to a streambuf        *        *  This function behaves like one of the basic arithmetic extractors,        *  in that it also constructs a sentry onject and has the same error        *  handling behavior.        *        *  If @a sb is NULL, the stream will set failbit in its error state.        *        *  Characters are extracted from this stream and inserted into the        *  @a sb streambuf until one of the following occurs:        *        *  - the input stream reaches end-of-file,        *  - insertion into the output buffer fails (in this case, the        *    character that would have been inserted is not extracted), or        *  - an exception occurs (and in this case is caught)        *        *  If the function inserts no characters, failbit is set.       */
+comment|/**        *  @brief  Extracting into another streambuf.        *  @param  sb  A pointer to a streambuf        *        *  This function behaves like one of the basic arithmetic extractors,        *  in that it also constructs a sentry object and has the same error        *  handling behavior.        *        *  If @a sb is NULL, the stream will set failbit in its error state.        *        *  Characters are extracted from this stream and inserted into the        *  @a sb streambuf until one of the following occurs:        *        *  - the input stream reaches end-of-file,        *  - insertion into the output buffer fails (in this case, the        *    character that would have been inserted is not extracted), or        *  - an exception occurs (and in this case is caught)        *        *  If the function inserts no characters, failbit is set.       */
 name|__istream_type
 operator|&
 name|operator
@@ -850,6 +852,19 @@ name|seekdir
 argument_list|)
 decl_stmt|;
 comment|//@}
+name|protected
+label|:
+name|explicit
+name|basic_istream
+argument_list|()
+operator|:
+name|_M_gcount
+argument_list|(
+argument|streamsize(
+literal|0
+argument|)
+argument_list|)
+block|{ }
 block|}
 end_decl_stmt
 
@@ -962,16 +977,17 @@ begin_comment
 comment|/**        *  @brief  Quick status checking.        *  @return  The sentry state.        *        *  For ease of use, sentries may be converted to booleans.  The        *  return value is that of the sentry state (true == okay).       */
 end_comment
 
-begin_function
+begin_expr_stmt
 name|operator
 name|bool
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|_M_ok
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_label
 name|private
@@ -1313,9 +1329,7 @@ operator|>
 block|{
 name|public
 operator|:
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_RESOLVE_LIB_DEFECTS
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
 comment|// 271. basic_iostream missing typedefs
 comment|// Types (inherited):
 typedef|typedef
@@ -1360,11 +1374,6 @@ name|_Traits
 name|traits_type
 typedef|;
 end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|// Non-standard Types:
@@ -1413,15 +1422,19 @@ name|__sb
 argument_list|)
 range|:
 name|__istream_type
-argument_list|(
-name|__sb
-argument_list|)
+argument_list|()
 decl_stmt|,
 name|__ostream_type
+argument_list|()
+block|{
+name|this
+operator|->
+name|init
 argument_list|(
 name|__sb
 argument_list|)
-block|{ }
+expr_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment
@@ -1432,6 +1445,18 @@ begin_expr_stmt
 name|virtual
 operator|~
 name|basic_iostream
+argument_list|()
+block|{ }
+name|protected
+operator|:
+name|explicit
+name|basic_iostream
+argument_list|()
+operator|:
+name|__istream_type
+argument_list|()
+operator|,
+name|__ostream_type
 argument_list|()
 block|{ }
 end_expr_stmt
@@ -1480,28 +1505,11 @@ unit|}
 comment|// namespace std
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_NO_TEMPLATE_EXPORT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|export
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_FULLY_COMPLIANT_HEADERS
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GLIBCXX_EXPORT_TEMPLATE
+end_ifndef
 
 begin_include
 include|#
@@ -1520,7 +1528,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_ISTREAM */
+comment|/* _GLIBCXX_ISTREAM */
 end_comment
 
 end_unit

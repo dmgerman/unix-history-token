@@ -4,7 +4,7 @@ comment|// nonstandard construct and destroy functions -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_STL_CONSTRUCT_H
+name|_STL_CONSTRUCT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_STL_CONSTRUCT_H
+name|_STL_CONSTRUCT_H
 value|1
 end_define
 
@@ -135,10 +135,10 @@ block|{
 comment|/**    * @if maint    * Constructs an object in existing memory by invoking an allocated    * object's constructor with an initializer.    * @endif    */
 name|template
 operator|<
-name|class
+name|typename
 name|_T1
 operator|,
-name|class
+name|typename
 name|_T2
 operator|>
 specifier|inline
@@ -150,6 +150,9 @@ argument_list|,
 argument|const _T2& __value
 argument_list|)
 block|{
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 402. wrong new expression in [some_]allocator::construct
+operator|::
 name|new
 argument_list|(
 argument|static_cast<void*>(__p)
@@ -158,11 +161,11 @@ name|_T1
 argument_list|(
 name|__value
 argument_list|)
-block|; }
+block|;     }
 comment|/**    * @if maint    * Constructs an object in existing memory by invoking an allocated    * object's default constructor (no initializers).    * @endif    */
 name|template
 operator|<
-name|class
+name|typename
 name|_T1
 operator|>
 specifier|inline
@@ -172,17 +175,39 @@ argument_list|(
 argument|_T1* __p
 argument_list|)
 block|{
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 402. wrong new expression in [some_]allocator::construct
+operator|::
 name|new
 argument_list|(
 argument|static_cast<void*>(__p)
 argument_list|)
 name|_T1
 argument_list|()
-block|; }
-comment|/**    * @if maint    * Destroy a range of objects with nontrivial destructors.      *    * This is a helper function used only by _Destroy().    * @endif    */
+block|;     }
+comment|/**    * @if maint    * Destroy the object pointed to by a pointer type.    * @endif    */
 name|template
 operator|<
-name|class
+name|typename
+name|_Tp
+operator|>
+specifier|inline
+name|void
+name|_Destroy
+argument_list|(
+argument|_Tp* __pointer
+argument_list|)
+block|{
+name|__pointer
+operator|->
+expr|~
+name|_Tp
+argument_list|()
+block|; }
+comment|/**    * @if maint    * Destroy a range of objects with nontrivial destructors.    *    * This is a helper function used only by _Destroy().    * @endif    */
+name|template
+operator|<
+name|typename
 name|_ForwardIterator
 operator|>
 specifier|inline
@@ -206,6 +231,8 @@ condition|;
 operator|++
 name|__first
 control|)
+name|std
+operator|::
 name|_Destroy
 argument_list|(
 operator|&
@@ -217,7 +244,7 @@ block|}
 comment|/**    * @if maint    * Destroy a range of objects with trivial destructors.  Since the destructors    * are trivial, there's nothing to do and hopefully this function will be    * entirely optimized away.    *    * This is a helper function used only by _Destroy().    * @endif    */
 name|template
 operator|<
-name|class
+name|typename
 name|_ForwardIterator
 operator|>
 specifier|inline
@@ -231,29 +258,10 @@ argument_list|,
 argument|__true_type
 argument_list|)
 block|{ }
-comment|/**    * @if maint    * Destroy the object pointed to by a pointer type.    * @endif    */
-name|template
-operator|<
-name|class
-name|_Tp
-operator|>
-specifier|inline
-name|void
-name|_Destroy
-argument_list|(
-argument|_Tp* __pointer
-argument_list|)
-block|{
-name|__pointer
-operator|->
-expr|~
-name|_Tp
-argument_list|()
-block|; }
 comment|/**    * @if maint    * Destroy a range of objects.  If the value_type of the object has    * a trivial destructor, the compiler should optimize all of this    * away, otherwise the objects' destructors must be invoked.    * @endif    */
 name|template
 operator|<
-name|class
+name|typename
 name|_ForwardIterator
 operator|>
 specifier|inline
@@ -285,6 +293,8 @@ operator|::
 name|has_trivial_destructor
 name|_Has_trivial_destructor
 expr_stmt|;
+name|std
+operator|::
 name|__destroy_aux
 argument_list|(
 name|__first
@@ -309,7 +319,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_BITS_STL_CONSTRUCT_H */
+comment|/* _STL_CONSTRUCT_H */
 end_comment
 
 end_unit

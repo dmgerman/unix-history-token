@@ -4,7 +4,7 @@ comment|// Deque implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__GLIBCPP_INTERNAL_DEQUE_H
+name|_DEQUE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__GLIBCPP_INTERNAL_DEQUE_H
+name|_DEQUE_H
+value|1
 end_define
 
 begin_include
@@ -135,7 +136,7 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|std
+name|_GLIBCXX_STD
 block|{
 comment|/**    *  @if maint    *  @brief This function controls the size of memory nodes.    *  @param  size  The size of an element.    *  @return   The number (not byte size) of elements per node.    *    *  This function started off as a compiler kludge from SGI, but seems to    *  be a useful wrapper around a repeated constant expression.  The '512' is    *  tuneable (and no other code needs to change), but no investigation has    *  been done since inheriting the SGI code.    *  @endif   */
 specifier|inline
@@ -425,7 +426,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}     _Self
+unit|}        _Self
 name|operator
 operator|++
 operator|(
@@ -488,7 +489,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}     _Self
+unit|}        _Self
 name|operator
 operator|--
 operator|(
@@ -521,6 +522,7 @@ name|difference_type
 name|__n
 operator|)
 block|{
+specifier|const
 name|difference_type
 name|__offset
 operator|=
@@ -552,6 +554,7 @@ name|__n
 expr_stmt|;
 else|else
 block|{
+specifier|const
 name|difference_type
 name|__node_offset
 init|=
@@ -707,7 +710,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/** @if maint      *  Prepares to traverse new_node.  Sets everything except _M_cur, which      *  should therefore be set by the caller immediately afterwards, based on      *  _M_first and _M_last.      *  @endif     */
+comment|/** @if maint        *  Prepares to traverse new_node.  Sets everything except _M_cur, which        *  should therefore be set by the caller immediately afterwards, based on        *  _M_first and _M_last.        *  @endif        */
 end_comment
 
 begin_function
@@ -1468,7 +1471,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// _GLIBCPP_RESOLVE_LIB_DEFECTS
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
 end_comment
 
 begin_comment
@@ -1542,6 +1545,7 @@ name|__y
 operator|)
 block|{
 return|return
+name|typename
 name|_Deque_iterator
 operator|<
 name|_Tp
@@ -1650,434 +1654,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// @if maint Primary default version.  @endif
-end_comment
-
-begin_comment
-comment|/**    *  @if maint    *  Deque base class.  It has two purposes.  First, its constructor    *  and destructor allocate (but don't initialize) storage.  This makes    *  %exception safety easier.  Second, the base class encapsulates all of    *  the differences between SGI-style allocators and standard-conforming    *  allocators.  (See stl_alloc.h for more on this topic.)  There are two    *  versions:  this ordinary one, and the space-saving specialization for    *  instanceless allocators.    *  @endif   */
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|_Tp
-operator|,
-name|typename
-name|_Alloc
-operator|,
-name|bool
-name|__is_static
-operator|>
-name|class
-name|_Deque_alloc_base
-block|{
-name|public
-operator|:
-typedef|typedef
-name|typename
-name|_Alloc_traits
-operator|<
-name|_Tp
-operator|,
-name|_Alloc
-operator|>
-operator|::
-name|allocator_type
-name|allocator_type
-expr_stmt|;
-name|allocator_type
-name|get_allocator
-argument_list|()
-specifier|const
-block|{
-return|return
-name|_M_node_allocator
-return|;
-block|}
-name|_Deque_alloc_base
-argument_list|(
-specifier|const
-name|allocator_type
-operator|&
-name|__a
-argument_list|)
-operator|:
-name|_M_node_allocator
-argument_list|(
-name|__a
-argument_list|)
-operator|,
-name|_M_map_allocator
-argument_list|(
-name|__a
-argument_list|)
-operator|,
-name|_M_map
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|_M_map_size
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|protected
-operator|:
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|typename
-name|_Alloc_traits
-operator|<
-name|_Tp
-operator|*
-operator|,
-name|_Alloc
-operator|>
-operator|::
-name|allocator_type
-name|_Map_allocator_type
-expr_stmt|;
-end_typedef
-
-begin_function
-name|_Tp
-modifier|*
-name|_M_allocate_node
-parameter_list|()
-block|{
-return|return
-name|_M_node_allocator
-operator|.
-name|allocate
-argument_list|(
-name|__deque_buf_size
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|_Tp
-argument_list|)
-argument_list|)
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|_M_deallocate_node
-parameter_list|(
-name|_Tp
-modifier|*
-name|__p
-parameter_list|)
-block|{
-name|_M_node_allocator
-operator|.
-name|deallocate
-argument_list|(
-name|__p
-argument_list|,
-name|__deque_buf_size
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|_Tp
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|_Tp
-modifier|*
-modifier|*
-name|_M_allocate_map
-parameter_list|(
-name|size_t
-name|__n
-parameter_list|)
-block|{
-return|return
-name|_M_map_allocator
-operator|.
-name|allocate
-argument_list|(
-name|__n
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|_M_deallocate_map
-parameter_list|(
-name|_Tp
-modifier|*
-modifier|*
-name|__p
-parameter_list|,
-name|size_t
-name|__n
-parameter_list|)
-block|{
-name|_M_map_allocator
-operator|.
-name|deallocate
-argument_list|(
-name|__p
-argument_list|,
-name|__n
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_decl_stmt
-name|allocator_type
-name|_M_node_allocator
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|_Map_allocator_type
-name|_M_map_allocator
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|_Tp
-modifier|*
-modifier|*
-name|_M_map
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|size_t
-name|_M_map_size
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};
-comment|/// @if maint Specialization for instanceless allocators.  @endif
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|_Tp
-operator|,
-name|typename
-name|_Alloc
-operator|>
-name|class
-name|_Deque_alloc_base
-operator|<
-name|_Tp
-operator|,
-name|_Alloc
-operator|,
-name|true
-operator|>
-block|{
-name|public
-operator|:
-typedef|typedef
-name|typename
-name|_Alloc_traits
-operator|<
-name|_Tp
-operator|,
-name|_Alloc
-operator|>
-operator|::
-name|allocator_type
-name|allocator_type
-expr_stmt|;
-name|allocator_type
-name|get_allocator
-argument_list|()
-specifier|const
-block|{
-return|return
-name|allocator_type
-argument_list|()
-return|;
-block|}
-name|_Deque_alloc_base
-argument_list|(
-specifier|const
-name|allocator_type
-operator|&
-argument_list|)
-operator|:
-name|_M_map
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|_M_map_size
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|protected
-operator|:
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|typename
-name|_Alloc_traits
-operator|<
-name|_Tp
-operator|,
-name|_Alloc
-operator|>
-operator|::
-name|_Alloc_type
-name|_Node_alloc_type
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|typename
-name|_Alloc_traits
-operator|<
-name|_Tp
-operator|*
-operator|,
-name|_Alloc
-operator|>
-operator|::
-name|_Alloc_type
-name|_Map_alloc_type
-expr_stmt|;
-end_typedef
-
-begin_function
-name|_Tp
-modifier|*
-name|_M_allocate_node
-parameter_list|()
-block|{
-return|return
-name|_Node_alloc_type
-operator|::
-name|allocate
-argument_list|(
-name|__deque_buf_size
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|_Tp
-argument_list|)
-argument_list|)
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|_M_deallocate_node
-parameter_list|(
-name|_Tp
-modifier|*
-name|__p
-parameter_list|)
-block|{
-name|_Node_alloc_type
-operator|::
-name|deallocate
-argument_list|(
-name|__p
-argument_list|,
-name|__deque_buf_size
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|_Tp
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|_Tp
-modifier|*
-modifier|*
-name|_M_allocate_map
-parameter_list|(
-name|size_t
-name|__n
-parameter_list|)
-block|{
-return|return
-name|_Map_alloc_type
-operator|::
-name|allocate
-argument_list|(
-name|__n
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|_M_deallocate_map
-parameter_list|(
-name|_Tp
-modifier|*
-modifier|*
-name|__p
-parameter_list|,
-name|size_t
-name|__n
-parameter_list|)
-block|{
-name|_Map_alloc_type
-operator|::
-name|deallocate
-argument_list|(
-name|__p
-argument_list|,
-name|__n
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_decl_stmt
-name|_Tp
-modifier|*
-modifier|*
-name|_M_map
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|size_t
-name|_M_map_size
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};
-comment|/**    *  @if maint    *  Deque base class.  Using _Alloc_traits in the instantiation of the parent    *  class provides the compile-time dispatching mentioned in the parent's    *  docs.  This class provides the unified face for %deque's allocation.    *    *  Nothing in this class ever constructs or destroys an actual Tp element.    *  (Deque handles that itself.)  Only/All memory management is performed    *  here.    *  @endif   */
+comment|/**    *  @if maint    *  Deque base class.  This class provides the unified face for %deque's    *  allocation.  This class's constructor and destructor allocate and    *  deallocate (but do not initialize) storage.  This makes %exception    *  safety easier.    *    *  Nothing in this class ever constructs or destroys an actual Tp element.    *  (Deque handles that itself.)  Only/All memory management is performed    *  here.    *  @endif   */
 end_comment
 
 begin_expr_stmt
@@ -2091,55 +1668,35 @@ name|_Alloc
 operator|>
 name|class
 name|_Deque_base
-operator|:
-name|public
-name|_Deque_alloc_base
-operator|<
-name|_Tp
-operator|,
-name|_Alloc
-operator|,
-name|_Alloc_traits
-operator|<
-name|_Tp
-operator|,
-name|_Alloc
-operator|>
-operator|::
-name|_S_instanceless
-operator|>
 block|{
 name|public
 operator|:
 typedef|typedef
-name|_Deque_alloc_base
-operator|<
-name|_Tp
-operator|,
 name|_Alloc
-operator|,
-name|_Alloc_traits
+name|allocator_type
+typedef|;
+name|allocator_type
+name|get_allocator
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|static_cast
 operator|<
-name|_Tp
-operator|,
+specifier|const
 name|_Alloc
+operator|*
 operator|>
-operator|::
-name|_S_instanceless
-operator|>
-name|_Base
-expr_stmt|;
+operator|(
+operator|&
+name|this
+operator|->
+name|_M_impl
+operator|)
+return|;
+block|}
 end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|typename
-name|_Base
-operator|::
-name|allocator_type
-name|allocator_type
-expr_stmt|;
-end_typedef
 
 begin_typedef
 typedef|typedef
@@ -2184,24 +1741,25 @@ argument|size_t __num_elements
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_macro
 unit|:
-name|_Base
+name|_M_impl
 argument_list|(
-name|__a
+argument|__a
 argument_list|)
-operator|,
-name|_M_start
-argument_list|()
-operator|,
-name|_M_finish
-argument_list|()
+end_macro
+
+begin_block
 block|{
 name|_M_initialize_map
 argument_list|(
 name|__num_elements
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
 name|_Deque_base
 argument_list|(
 specifier|const
@@ -2210,22 +1768,224 @@ operator|&
 name|__a
 argument_list|)
 operator|:
-name|_Base
+name|_M_impl
 argument_list|(
-name|__a
+argument|__a
 argument_list|)
-operator|,
-name|_M_start
-argument_list|()
-operator|,
-name|_M_finish
-argument_list|()
-block|{}
+block|{ }
 operator|~
 name|_Deque_base
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_label
+name|protected
+label|:
+end_label
+
+begin_comment
+comment|//This struct encapsulates the implementation of the std::deque
+end_comment
+
+begin_comment
+comment|//standard container and at the same time makes use of the EBO
+end_comment
+
+begin_comment
+comment|//for empty allocators.
+end_comment
+
+begin_decl_stmt
+name|struct
+name|_Deque_impl
+range|:
+name|public
+name|_Alloc
+block|{
+name|_Tp
+operator|*
+operator|*
+name|_M_map
+block|;
+name|size_t
+name|_M_map_size
+block|;
+name|iterator
+name|_M_start
+block|;
+name|iterator
+name|_M_finish
+block|;
+name|_Deque_impl
+argument_list|(
+specifier|const
+name|_Alloc
+operator|&
+name|__a
+argument_list|)
+operator|:
+name|_Alloc
+argument_list|(
+name|__a
+argument_list|)
+block|,
+name|_M_map
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|_M_map_size
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|_M_start
+argument_list|()
+block|,
+name|_M_finish
+argument_list|()
+block|{ }
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|_Alloc
+operator|::
+name|template
+name|rebind
+operator|<
+name|_Tp
+operator|*
+operator|>
+operator|::
+name|other
+name|_Map_alloc_type
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|_Map_alloc_type
+name|_M_get_map_allocator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_Map_alloc_type
+argument_list|(
+name|this
+operator|->
+name|get_allocator
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|_Tp
+modifier|*
+name|_M_allocate_node
+parameter_list|()
+block|{
+return|return
+name|_M_impl
+operator|.
+name|_Alloc
+operator|::
+name|allocate
+argument_list|(
+name|__deque_buf_size
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|_Tp
+argument_list|)
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|_M_deallocate_node
+parameter_list|(
+name|_Tp
+modifier|*
+name|__p
+parameter_list|)
+block|{
+name|_M_impl
+operator|.
+name|_Alloc
+operator|::
+name|deallocate
+argument_list|(
+name|__p
+argument_list|,
+name|__deque_buf_size
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|_Tp
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|_Tp
+modifier|*
+modifier|*
+name|_M_allocate_map
+parameter_list|(
+name|size_t
+name|__n
+parameter_list|)
+block|{
+return|return
+name|_M_get_map_allocator
+argument_list|()
+operator|.
+name|allocate
+argument_list|(
+name|__n
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|_M_deallocate_map
+parameter_list|(
+name|_Tp
+modifier|*
+modifier|*
+name|__p
+parameter_list|,
+name|size_t
+name|__n
+parameter_list|)
+block|{
+name|_M_get_map_allocator
+argument_list|()
+operator|.
+name|deallocate
+argument_list|(
+name|__p
+argument_list|,
+name|__n
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_label
 name|protected
@@ -2286,14 +2046,8 @@ enum|;
 end_enum
 
 begin_decl_stmt
-name|iterator
-name|_M_start
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|iterator
-name|_M_finish
+name|_Deque_impl
+name|_M_impl
 decl_stmt|;
 end_decl_stmt
 
@@ -2320,15 +2074,27 @@ argument_list|()
 block|{
 if|if
 condition|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map
 condition|)
 block|{
 name|_M_destroy_nodes
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|.
 name|_M_node
 argument_list|,
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|.
 name|_M_node
@@ -2338,8 +2104,16 @@ argument_list|)
 expr_stmt|;
 name|_M_deallocate_map
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map
 argument_list|,
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map_size
 argument_list|)
 expr_stmt|;
@@ -2388,8 +2162,14 @@ argument_list|)
 operator|+
 literal|1
 block|;
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map_size
 operator|=
+name|std
+operator|::
 name|max
 argument_list|(
 operator|(
@@ -2402,24 +2182,41 @@ operator|+
 literal|2
 argument_list|)
 block|;
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map
 operator|=
 name|_M_allocate_map
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map_size
 argument_list|)
 block|;
 comment|// For "small" maps (needing less than _M_map_size nodes), allocation
-comment|// starts in the middle elements and grows outwards.  So nstart may be the
-comment|// beginning of _M_map, but for small maps it may be as far in as _M_map+3.
+comment|// starts in the middle elements and grows outwards.  So nstart may be
+comment|// the beginning of _M_map, but for small maps it may be as far in as
+comment|// _M_map+3.
 name|_Tp
 operator|*
 operator|*
 name|__nstart
 operator|=
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map
 operator|+
 operator|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map_size
 operator|-
 name|__num_nodes
@@ -2452,21 +2249,41 @@ argument_list|)
 block|{
 name|_M_deallocate_map
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map
 argument_list|,
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map_size
 argument_list|)
 block|;
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map
 operator|=
 literal|0
 block|;
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map_size
 operator|=
 literal|0
 block|;
 name|__throw_exception_again
-block|;       }
+block|; 	}
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|.
 name|_M_set_node
@@ -2474,6 +2291,10 @@ argument_list|(
 name|__nstart
 argument_list|)
 block|;
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|.
 name|_M_set_node
@@ -2483,18 +2304,32 @@ operator|-
 literal|1
 argument_list|)
 block|;
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|.
 name|_M_cur
 operator|=
+name|_M_impl
+operator|.
 name|_M_start
 operator|.
 name|_M_first
 block|;
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|.
 name|_M_cur
 operator|=
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|.
 name|_M_first
@@ -2508,7 +2343,7 @@ argument_list|(
 name|_Tp
 argument_list|)
 argument_list|)
-block|;   }
+block|;     }
 name|template
 operator|<
 name|typename
@@ -2555,6 +2390,8 @@ control|)
 operator|*
 name|__cur
 operator|=
+name|this
+operator|->
 name|_M_allocate_node
 argument_list|()
 expr_stmt|;
@@ -2572,11 +2409,11 @@ name|__cur
 argument_list|)
 block|;
 name|__throw_exception_again
-block|;        }
+block|; 	}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}      template
+unit|}    template
 operator|<
 name|typename
 name|_Tp
@@ -2625,7 +2462,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  @brief  A standard container using fixed-size memory allocation and    *  constant-time manipulation of elements at either end.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  Meets the requirements of a<a href="tables.html#65">container</a>, a    *<a href="tables.html#66">reversible container</a>, and a    *<a href="tables.html#67">sequence</a>, including the    *<a href="tables.html#68">optional sequence requirements</a>.    *    *  In previous HP/SGI versions of deque, there was an extra template    *  parameter so users could control the node size.  This extension turned    *  out to violate the C++ standard (it can be detected using template    *  template parameters), and it was removed.    *    *  @if maint    *  Here's how a deque<Tp> manages memory.  Each deque has 4 members:    *      *  - Tp**        _M_map    *  - size_t      _M_map_size    *  - iterator    _M_start, _M_finish    *      *  map_size is at least 8.  %map is an array of map_size pointers-to-"nodes".    *  (The name %map has nothing to do with the std::map class, and "nodes"    *  should not be confused with std::list's usage of "node".)    *      *  A "node" has no specific type name as such, but it is referred to as    *  "node" in this file.  It is a simple array-of-Tp.  If Tp is very large,    *  there will be one Tp element per node (i.e., an "array" of one).    *  For non-huge Tp's, node size is inversely related to Tp size:  the    *  larger the Tp, the fewer Tp's will fit in a node.  The goal here is to    *  keep the total size of a node relatively small and constant over different    *  Tp's, to improve allocator efficiency.    *      *  **** As I write this, the nodes are /not/ allocated using the high-speed    *  memory pool.  There are 20 hours left in the year; perhaps I can fix    *  this before 2002.    *      *  Not every pointer in the %map array will point to a node.  If the initial    *  number of elements in the deque is small, the /middle/ %map pointers will    *  be valid, and the ones at the edges will be unused.  This same situation    *  will arise as the %map grows:  available %map pointers, if any, will be on    *  the ends.  As new nodes are created, only a subset of the %map's pointers    *  need to be copied "outward".    *    *  Class invariants:    * - For any nonsingular iterator i:    *    - i.node points to a member of the %map array.  (Yes, you read that    *      correctly:  i.node does not actually point to a node.)  The member of    *      the %map array is what actually points to the node.    *    - i.first == *(i.node)    (This points to the node (first Tp element).)    *    - i.last  == i.first + node_size    *    - i.cur is a pointer in the range [i.first, i.last).  NOTE:    *      the implication of this is that i.cur is always a dereferenceable    *      pointer, even if i is a past-the-end iterator.    * - Start and Finish are always nonsingular iterators.  NOTE: this means that    *   an empty deque must have one node, a deque with<N elements (where N is    *   the node buffer size) must have one node, a deque with N through (2N-1)    *   elements must have two nodes, etc.    * - For every node other than start.node and finish.node, every element in    *   the node is an initialized object.  If start.node == finish.node, then    *   [start.cur, finish.cur) are initialized objects, and the elements outside    *   that range are uninitialized storage.  Otherwise, [start.cur, start.last)    *   and [finish.first, finish.cur) are initialized objects, and [start.first,    *   start.cur) and [finish.cur, finish.last) are uninitialized storage.    * - [%map, %map + map_size) is a valid, non-empty range.      * - [start.node, finish.node] is a valid range contained within     *   [%map, %map + map_size).      * - A pointer in the range [%map, %map + map_size) points to an allocated    *   node if and only if the pointer is in the range    *   [start.node, finish.node].    *    *  Here's the magic:  nothing in deque is "aware" of the discontiguous    *  storage!    *    *  The memory setup and layout occurs in the parent, _Base, and the iterator    *  class is entirely responsible for "leaping" from one node to the next.    *  All the implementation routines for deque itself work only through the    *  start and finish iterators.  This keeps the routines simple and sane,    *  and we can use other standard algorithms as well.    *  @endif   */
+comment|/**    *  @brief  A standard container using fixed-size memory allocation and    *  constant-time manipulation of elements at either end.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  Meets the requirements of a<a href="tables.html#65">container</a>, a    *<a href="tables.html#66">reversible container</a>, and a    *<a href="tables.html#67">sequence</a>, including the    *<a href="tables.html#68">optional sequence requirements</a>.    *    *  In previous HP/SGI versions of deque, there was an extra template    *  parameter so users could control the node size.  This extension turned    *  out to violate the C++ standard (it can be detected using template    *  template parameters), and it was removed.    *    *  @if maint    *  Here's how a deque<Tp> manages memory.  Each deque has 4 members:    *    *  - Tp**        _M_map    *  - size_t      _M_map_size    *  - iterator    _M_start, _M_finish    *    *  map_size is at least 8.  %map is an array of map_size pointers-to-"nodes".    *  (The name %map has nothing to do with the std::map class, and "nodes"    *  should not be confused with std::list's usage of "node".)    *    *  A "node" has no specific type name as such, but it is referred to as    *  "node" in this file.  It is a simple array-of-Tp.  If Tp is very large,    *  there will be one Tp element per node (i.e., an "array" of one).    *  For non-huge Tp's, node size is inversely related to Tp size:  the    *  larger the Tp, the fewer Tp's will fit in a node.  The goal here is to    *  keep the total size of a node relatively small and constant over different    *  Tp's, to improve allocator efficiency.    *    *  **** As I write this, the nodes are /not/ allocated using the high-speed    *  memory pool.  There are 20 hours left in the year; perhaps I can fix    *  this before 2002.    *    *  Not every pointer in the %map array will point to a node.  If the initial    *  number of elements in the deque is small, the /middle/ %map pointers will    *  be valid, and the ones at the edges will be unused.  This same situation    *  will arise as the %map grows:  available %map pointers, if any, will be on    *  the ends.  As new nodes are created, only a subset of the %map's pointers    *  need to be copied "outward".    *    *  Class invariants:    * - For any nonsingular iterator i:    *    - i.node points to a member of the %map array.  (Yes, you read that    *      correctly:  i.node does not actually point to a node.)  The member of    *      the %map array is what actually points to the node.    *    - i.first == *(i.node)    (This points to the node (first Tp element).)    *    - i.last  == i.first + node_size    *    - i.cur is a pointer in the range [i.first, i.last).  NOTE:    *      the implication of this is that i.cur is always a dereferenceable    *      pointer, even if i is a past-the-end iterator.    * - Start and Finish are always nonsingular iterators.  NOTE: this means that    *   an empty deque must have one node, a deque with<N elements (where N is    *   the node buffer size) must have one node, a deque with N through (2N-1)    *   elements must have two nodes, etc.    * - For every node other than start.node and finish.node, every element in    *   the node is an initialized object.  If start.node == finish.node, then    *   [start.cur, finish.cur) are initialized objects, and the elements outside    *   that range are uninitialized storage.  Otherwise, [start.cur, start.last)    *   and [finish.first, finish.cur) are initialized objects, and [start.first,    *   start.cur) and [finish.cur, finish.last) are uninitialized storage.    * - [%map, %map + map_size) is a valid, non-empty range.    * - [start.node, finish.node] is a valid range contained within    *   [%map, %map + map_size).    * - A pointer in the range [%map, %map + map_size) points to an allocated    *   node if and only if the pointer is in the range    *   [start.node, finish.node].    *    *  Here's the magic:  nothing in deque is "aware" of the discontiguous    *  storage!    *    *  The memory setup and layout occurs in the parent, _Base, and the iterator    *  class is entirely responsible for "leaping" from one node to the next.    *  All the implementation routines for deque itself work only through the    *  start and finish iterators.  This keeps the routines simple and sane,    *  and we can use other standard algorithms as well.    *  @endif   */
 end_comment
 
 begin_expr_stmt
@@ -2654,7 +2491,7 @@ name|_Alloc
 operator|>
 block|{
 comment|// concept requirements
-name|__glibcpp_class_requires
+name|__glibcxx_class_requires
 argument_list|(
 argument|_Tp
 argument_list|,
@@ -2682,19 +2519,42 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|value_type
-modifier|*
+name|typename
+name|_Alloc
+operator|::
 name|pointer
-typedef|;
+name|pointer
+expr_stmt|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-specifier|const
-name|value_type
-modifier|*
+name|typename
+name|_Alloc
+operator|::
 name|const_pointer
-typedef|;
+name|const_pointer
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|typename
+name|_Alloc
+operator|::
+name|reference
+name|reference
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|typename
+name|_Alloc
+operator|::
+name|const_reference
+name|const_reference
+expr_stmt|;
 end_typedef
 
 begin_typedef
@@ -2739,23 +2599,6 @@ name|iterator
 operator|>
 name|reverse_iterator
 expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|value_type
-modifier|&
-name|reference
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-specifier|const
-name|value_type
-modifier|&
-name|const_reference
-typedef|;
 end_typedef
 
 begin_typedef
@@ -2874,38 +2717,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/** @if maint      *  A total of four data members accumulated down the heirarchy.  If the      *  _Alloc type requires separate instances, then two of them will also be      *  included in each deque.      *  @endif     */
+comment|/** @if maint        *  A total of four data members accumulated down the heirarchy.        *  May be accessed via _M_impl.*        *  @endif        */
 end_comment
 
 begin_expr_stmt
 name|using
 name|_Base
 operator|::
-name|_M_map
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|_Base
-operator|::
-name|_M_map_size
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|_Base
-operator|::
-name|_M_start
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|_Base
-operator|::
-name|_M_finish
+name|_M_impl
 expr_stmt|;
 end_expr_stmt
 
@@ -2923,7 +2742,7 @@ comment|// (assign() and get_allocator() are also listed in this section)
 end_comment
 
 begin_comment
-comment|/**      *  @brief  Default constructor creates no elements.     */
+comment|/**        *  @brief  Default constructor creates no elements.        */
 end_comment
 
 begin_macro
@@ -2949,7 +2768,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|{}
-comment|/**      *  @brief  Create a %deque with copies of an exemplar element.      *  @param  n  The number of elements to initially create.      *  @param  value  An element to copy.      *       *  This constructor fills the %deque with @a n copies of @a value.     */
+comment|/**        *  @brief  Create a %deque with copies of an exemplar element.        *  @param  n  The number of elements to initially create.        *  @param  value  An element to copy.        *        *  This constructor fills the %deque with @a n copies of @a value.        */
 name|deque
 argument_list|(
 argument|size_type __n
@@ -2971,7 +2790,7 @@ argument_list|(
 name|__value
 argument_list|)
 block|; }
-comment|/**      *  @brief  Create a %deque with default elements.      *  @param  n  The number of elements to initially create.      *       *  This constructor fills the %deque with @a n copies of a      *  default-constructed element.     */
+comment|/**        *  @brief  Create a %deque with default elements.        *  @param  n  The number of elements to initially create.        *        *  This constructor fills the %deque with @a n copies of a        *  default-constructed element.        */
 name|explicit
 name|deque
 argument_list|(
@@ -2991,7 +2810,7 @@ name|value_type
 argument_list|()
 argument_list|)
 block|; }
-comment|/**      *  @brief  %Deque copy constructor.      *  @param  x  A %deque of identical element and allocator types.      *       *  The newly-created %deque uses a copy of the allocation object used      *  by @a x.     */
+comment|/**        *  @brief  %Deque copy constructor.        *  @param  x  A %deque of identical element and allocator types.        *        *  The newly-created %deque uses a copy of the allocation object used        *  by @a x.        */
 name|deque
 argument_list|(
 specifier|const
@@ -3007,6 +2826,8 @@ argument_list|,
 argument|__x.size()
 argument_list|)
 block|{
+name|std
+operator|::
 name|uninitialized_copy
 argument_list|(
 name|__x
@@ -3019,10 +2840,14 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 argument_list|)
 block|; }
-comment|/**      *  @brief  Builds a %deque from a range.      *  @param  first  An input iterator.      *  @param  last  An input iterator.      *       *  Create a %deque consisting of copies of the elements from [first,last).      *      *  If the iterators are forward, bidirectional, or random-access, then      *  this will call the elements' copy constructor N times (where N is      *  distance(first,last)) and do no memory reallocation.  But if only      *  input iterators are used, then this will do at most 2N calls to the      *  copy constructor, and logN memory reallocations.     */
+comment|/**        *  @brief  Builds a %deque from a range.        *  @param  first  An input iterator.        *  @param  last  An input iterator.        *        *  Create a %deque consisting of copies of the elements from [first,        *  last).        *        *  If the iterators are forward, bidirectional, or random-access, then        *  this will call the elements' copy constructor N times (where N is        *  distance(first,last)) and do no memory reallocation.  But if only        *  input iterators are used, then this will do at most 2N calls to the        *  copy constructor, and logN memory reallocations.        */
 name|template
 operator|<
 name|typename
@@ -3067,7 +2892,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/**      *  The dtor only erases the elements, and note that if the elements      *  themselves are pointers, the pointed-to memory is not touched in any      *  way.  Managing the pointer is the user's responsibilty.     */
+comment|/**        *  The dtor only erases the elements, and note that if the elements        *  themselves are pointers, the pointed-to memory is not touched in any        *  way.  Managing the pointer is the user's responsibilty.        */
 end_comment
 
 begin_macro
@@ -3078,10 +2903,20 @@ end_macro
 
 begin_block
 block|{
+name|std
+operator|::
 name|_Destroy
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 argument_list|,
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 argument_list|)
 expr_stmt|;
@@ -3089,7 +2924,7 @@ block|}
 end_block
 
 begin_comment
-comment|/**      *  @brief  %Deque assignment operator.      *  @param  x  A %deque of identical element and allocator types.      *       *  All the elements of @a x are copied, but unlike the copy constructor,      *  the allocator object is not copied.     */
+comment|/**        *  @brief  %Deque assignment operator.        *  @param  x  A %deque of identical element and allocator types.        *        *  All the elements of @a x are copied, but unlike the copy constructor,        *  the allocator object is not copied.        */
 end_comment
 
 begin_decl_stmt
@@ -3107,7 +2942,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**      *  @brief  Assigns a given value to a %deque.      *  @param  n  Number of elements to be assigned.      *  @param  val  Value to be assigned.      *      *  This function fills a %deque with @a n copies of the given value.      *  Note that the assignment completely changes the %deque and that the      *  resulting %deque's size is the same as the number of elements assigned.      *  Old data may be lost.     */
+comment|/**        *  @brief  Assigns a given value to a %deque.        *  @param  n  Number of elements to be assigned.        *  @param  val  Value to be assigned.        *        *  This function fills a %deque with @a n copies of the given value.        *  Note that the assignment completely changes the %deque and that the        *  resulting %deque's size is the same as the number of elements assigned.        *  Old data may be lost.        */
 end_comment
 
 begin_function
@@ -3134,7 +2969,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**      *  @brief  Assigns a range to a %deque.      *  @param  first  An input iterator.      *  @param  last   An input iterator.      *      *  This function fills a %deque with copies of the elements in the      *  range [first,last).      *      *  Note that the assignment completely changes the %deque and that the      *  resulting %deque's size is the same as the number of elements assigned.      *  Old data may be lost.     */
+comment|/**        *  @brief  Assigns a range to a %deque.        *  @param  first  An input iterator.        *  @param  last   An input iterator.        *        *  This function fills a %deque with copies of the elements in the        *  range [first,last).        *        *  Note that the assignment completely changes the %deque and that the        *  resulting %deque's size is the same as the number of elements        *  assigned.  Old data may be lost.        */
 end_comment
 
 begin_expr_stmt
@@ -3201,7 +3036,7 @@ comment|// iterators
 end_comment
 
 begin_comment
-comment|/**      *  Returns a read/write iterator that points to the first element in the      *  %deque.  Iteration is done in ordinary element order.     */
+comment|/**        *  Returns a read/write iterator that points to the first element in the        *  %deque.  Iteration is done in ordinary element order.        */
 end_comment
 
 begin_function
@@ -3210,13 +3045,17 @@ name|begin
 parameter_list|()
 block|{
 return|return
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/**      *  Returns a read-only (constant) iterator that points to the first element      *  in the %deque.  Iteration is done in ordinary element order.     */
+comment|/**        *  Returns a read-only (constant) iterator that points to the first        *  element in the %deque.  Iteration is done in ordinary element order.        */
 end_comment
 
 begin_expr_stmt
@@ -3226,13 +3065,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  Returns a read/write iterator that points one past the last element in      *  the %deque.  Iteration is done in ordinary element order.     */
+comment|/**        *  Returns a read/write iterator that points one past the last element in        *  the %deque.  Iteration is done in ordinary element order.        */
 end_comment
 
 begin_function
@@ -3241,13 +3084,17 @@ name|end
 parameter_list|()
 block|{
 return|return
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/**      *  Returns a read-only (constant) iterator that points one past the last      *  element in the %deque.  Iteration is done in ordinary element order.     */
+comment|/**        *  Returns a read-only (constant) iterator that points one past the last        *  element in the %deque.  Iteration is done in ordinary element order.        */
 end_comment
 
 begin_expr_stmt
@@ -3257,13 +3104,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  Returns a read/write reverse iterator that points to the last element in      *  the %deque.  Iteration is done in reverse element order.     */
+comment|/**        *  Returns a read/write reverse iterator that points to the last element        *  in the %deque.  Iteration is done in reverse element order.        */
 end_comment
 
 begin_function
@@ -3274,6 +3125,10 @@ block|{
 return|return
 name|reverse_iterator
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 argument_list|)
 return|;
@@ -3281,7 +3136,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**      *  Returns a read-only (constant) reverse iterator that points to the last      *  element in the %deque.  Iteration is done in reverse element order.     */
+comment|/**        *  Returns a read-only (constant) reverse iterator that points to the        *  last element in the %deque.  Iteration is done in reverse element        *  order.        */
 end_comment
 
 begin_expr_stmt
@@ -3293,6 +3148,10 @@ block|{
 return|return
 name|const_reverse_iterator
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 argument_list|)
 return|;
@@ -3300,7 +3159,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  Returns a read/write reverse iterator that points to one before the      *  first element in the %deque.  Iteration is done in reverse element      *  order.     */
+comment|/**        *  Returns a read/write reverse iterator that points to one before the        *  first element in the %deque.  Iteration is done in reverse element        *  order.        */
 end_comment
 
 begin_function
@@ -3311,6 +3170,10 @@ block|{
 return|return
 name|reverse_iterator
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 argument_list|)
 return|;
@@ -3318,7 +3181,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**      *  Returns a read-only (constant) reverse iterator that points to one      *  before the first element in the %deque.  Iteration is done in reverse      *  element order.     */
+comment|/**        *  Returns a read-only (constant) reverse iterator that points to one        *  before the first element in the %deque.  Iteration is done in reverse        *  element order.        */
 end_comment
 
 begin_expr_stmt
@@ -3330,6 +3193,10 @@ block|{
 return|return
 name|const_reverse_iterator
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 argument_list|)
 return|;
@@ -3351,8 +3218,16 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|-
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 return|;
 block|}
@@ -3379,7 +3254,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  @brief  Resizes the %deque to the specified number of elements.      *  @param  new_size  Number of elements the %deque should contain.      *  @param  x  Data with which new elements should be populated.      *      *  This function will %resize the %deque to the specified number of      *  elements.  If the number is smaller than the %deque's current size the      *  %deque is truncated, otherwise the %deque is extended and new elements      *  are populated with given data.     */
+comment|/**        *  @brief  Resizes the %deque to the specified number of elements.        *  @param  new_size  Number of elements the %deque should contain.        *  @param  x  Data with which new elements should be populated.        *        *  This function will %resize the %deque to the specified number of        *  elements.  If the number is smaller than the %deque's current size the        *  %deque is truncated, otherwise the %deque is extended and new elements        *  are populated with given data.        */
 end_comment
 
 begin_function
@@ -3410,16 +3285,28 @@ name|__len
 condition|)
 name|erase
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|+
 name|__new_size
 argument_list|,
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 argument_list|)
 expr_stmt|;
 else|else
 name|insert
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 argument_list|,
 name|__new_size
@@ -3433,7 +3320,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**      *  @brief  Resizes the %deque to the specified number of elements.      *  @param  new_size  Number of elements the %deque should contain.      *      *  This function will resize the %deque to the specified number of      *  elements.  If the number is smaller than the %deque's current size the      *  %deque is truncated, otherwise the %deque is extended and new elements      *  are default-constructed.     */
+comment|/**        *  @brief  Resizes the %deque to the specified number of elements.        *  @param  new_size  Number of elements the %deque should contain.        *        *  This function will resize the %deque to the specified number of        *  elements.  If the number is smaller than the %deque's current size the        *  %deque is truncated, otherwise the %deque is extended and new elements        *  are default-constructed.        */
 end_comment
 
 begin_function
@@ -3456,7 +3343,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**      *  Returns true if the %deque is empty.  (Thus begin() would equal end().)     */
+comment|/**        *  Returns true if the %deque is empty.  (Thus begin() would equal end().)        */
 end_comment
 
 begin_expr_stmt
@@ -3466,8 +3353,16 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|==
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 return|;
 block|}
@@ -3478,7 +3373,7 @@ comment|// element access
 end_comment
 
 begin_comment
-comment|/**      *  @brief  Subscript access to the data contained in the %deque.      *  @param  n  The index of the element for which data should be accessed.      *  @return  Read/write reference to data.      *      *  This operator allows for easy, array-style, data access.      *  Note that data access with this operator is unchecked and out_of_range      *  lookups are not defined. (For checked lookups see at().)     */
+comment|/**        *  @brief  Subscript access to the data contained in the %deque.        *  @param  n  The index of the element for which data should be accessed.        *  @return  Read/write reference to data.        *        *  This operator allows for easy, array-style, data access.        *  Note that data access with this operator is unchecked and out_of_range        *  lookups are not defined. (For checked lookups see at().)        */
 end_comment
 
 begin_function
@@ -3491,6 +3386,10 @@ name|__n
 parameter_list|)
 block|{
 return|return
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 index|[
 name|difference_type
@@ -3503,7 +3402,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**      *  @brief  Subscript access to the data contained in the %deque.      *  @param  n  The index of the element for which data should be accessed.      *  @return  Read-only (constant) reference to data.      *      *  This operator allows for easy, array-style, data access.      *  Note that data access with this operator is unchecked and out_of_range      *  lookups are not defined. (For checked lookups see at().)     */
+comment|/**        *  @brief  Subscript access to the data contained in the %deque.        *  @param  n  The index of the element for which data should be accessed.        *  @return  Read-only (constant) reference to data.        *        *  This operator allows for easy, array-style, data access.        *  Note that data access with this operator is unchecked and out_of_range        *  lookups are not defined. (For checked lookups see at().)        */
 end_comment
 
 begin_decl_stmt
@@ -3517,6 +3416,10 @@ argument_list|)
 decl|const
 block|{
 return|return
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 index|[
 name|difference_type
@@ -3557,7 +3460,10 @@ argument_list|()
 condition|)
 name|__throw_out_of_range
 argument_list|(
-literal|"deque [] access out of range"
+name|__N
+argument_list|(
+literal|"deque::_M_range_check"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3569,7 +3475,7 @@ label|:
 end_label
 
 begin_comment
-comment|/**      *  @brief  Provides access to the data contained in the %deque.      *  @param  n  The index of the element for which data should be accessed.      *  @return  Read/write reference to data.      *  @throw  std::out_of_range  If @a n is an invalid index.      *      *  This function provides for safer data access.  The parameter is first      *  checked that it is in the range of the deque.  The function throws      *  out_of_range if the check fails.     */
+comment|/**        *  @brief  Provides access to the data contained in the %deque.        *  @param  n  The index of the element for which data should be accessed.        *  @return  Read/write reference to data.        *  @throw  std::out_of_range  If @a n is an invalid index.        *        *  This function provides for safer data access.  The parameter is first        *  checked that it is in the range of the deque.  The function throws        *  out_of_range if the check fails.        */
 end_comment
 
 begin_function
@@ -3598,7 +3504,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**      *  @brief  Provides access to the data contained in the %deque.      *  @param  n  The index of the element for which data should be accessed.      *  @return  Read-only (constant) reference to data.      *  @throw  std::out_of_range  If @a n is an invalid index.      *      *  This function provides for safer data access.  The parameter is first      *  checked that it is in the range of the deque.  The function throws      *  out_of_range if the check fails.     */
+comment|/**        *  @brief  Provides access to the data contained in the %deque.        *  @param  n  The index of the element for which data should be accessed.        *  @return  Read-only (constant) reference to data.        *  @throw  std::out_of_range  If @a n is an invalid index.        *        *  This function provides for safer data access.  The parameter is first        *  checked that it is in the range of the deque.  The function throws        *  out_of_range if the check fails.        */
 end_comment
 
 begin_decl_stmt
@@ -3628,7 +3534,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/**      *  Returns a read/write reference to the data at the first element of the      *  %deque.     */
+comment|/**        *  Returns a read/write reference to the data at the first element of the        *  %deque.        */
 end_comment
 
 begin_function
@@ -3638,13 +3544,17 @@ parameter_list|()
 block|{
 return|return
 operator|*
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/**      *  Returns a read-only (constant) reference to the data at the first      *  element of the %deque.     */
+comment|/**        *  Returns a read-only (constant) reference to the data at the first        *  element of the %deque.        */
 end_comment
 
 begin_expr_stmt
@@ -3655,13 +3565,17 @@ specifier|const
 block|{
 return|return
 operator|*
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  Returns a read/write reference to the data at the last element of the      *  %deque.     */
+comment|/**        *  Returns a read/write reference to the data at the last element of the        *  %deque.        */
 end_comment
 
 begin_function
@@ -3672,6 +3586,10 @@ block|{
 name|iterator
 name|__tmp
 init|=
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 decl_stmt|;
 operator|--
@@ -3685,7 +3603,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**      *  Returns a read-only (constant) reference to the data at the last      *  element of the %deque.     */
+comment|/**        *  Returns a read-only (constant) reference to the data at the last        *  element of the %deque.        */
 end_comment
 
 begin_expr_stmt
@@ -3697,6 +3615,10 @@ block|{
 name|const_iterator
 name|__tmp
 operator|=
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 block|;
 operator|--
@@ -3714,7 +3636,7 @@ comment|// [23.2.1.2] modifiers
 end_comment
 
 begin_comment
-comment|/**      *  @brief  Add data to the front of the %deque.      *  @param  x  Data to be added.      *      *  This is a typical stack operation.  The function creates an element at      *  the front of the %deque and assigns the given data to it.  Due to the      *  nature of a %deque this operation can be done in constant time.     */
+comment|/**        *  @brief  Add data to the front of the %deque.        *  @param  x  Data to be added.        *        *  This is a typical stack operation.  The function creates an element at        *  the front of the %deque and assigns the given data to it.  Due to the        *  nature of a %deque this operation can be done in constant time.        */
 end_comment
 
 begin_function
@@ -3729,17 +3651,31 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|.
 name|_M_cur
 operator|!=
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|.
 name|_M_first
 condition|)
 block|{
+name|std
+operator|::
 name|_Construct
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|.
 name|_M_cur
@@ -3750,6 +3686,10 @@ name|__x
 argument_list|)
 expr_stmt|;
 operator|--
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|.
 name|_M_cur
@@ -3764,61 +3704,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_DEPRECATED
-end_ifdef
-
 begin_comment
-comment|/**      *  @brief  Add data to the front of the %deque.      *      *  This is a typical stack operation.  The function creates a      *  default-constructed element at the front of the %deque.  Due to the      *  nature of a %deque this operation can be done in constant time.  You      *  should consider using push_front(value_type()) instead.      *      *  @note This was deprecated in 3.2 and will be removed in 3.4.  You must      *        define @c _GLIBCPP_DEPRECATED to make this visible in 3.2; see      *        c++config.h.     */
-end_comment
-
-begin_function
-name|void
-name|push_front
-parameter_list|()
-block|{
-if|if
-condition|(
-name|_M_start
-operator|.
-name|_M_cur
-operator|!=
-name|_M_start
-operator|.
-name|_M_first
-condition|)
-block|{
-name|_Construct
-argument_list|(
-name|_M_start
-operator|.
-name|_M_cur
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-operator|--
-name|_M_start
-operator|.
-name|_M_cur
-expr_stmt|;
-block|}
-else|else
-name|_M_push_front_aux
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/**      *  @brief  Add data to the end of the %deque.      *  @param  x  Data to be added.      *      *  This is a typical stack operation.  The function creates an element at      *  the end of the %deque and assigns the given data to it.  Due to the      *  nature of a %deque this operation can be done in constant time.     */
+comment|/**        *  @brief  Add data to the end of the %deque.        *  @param  x  Data to be added.        *        *  This is a typical stack operation.  The function creates an element at        *  the end of the %deque and assigns the given data to it.  Due to the        *  nature of a %deque this operation can be done in constant time.        */
 end_comment
 
 begin_function
@@ -3833,10 +3720,18 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|.
 name|_M_cur
 operator|!=
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|.
 name|_M_last
@@ -3844,8 +3739,14 @@ operator|-
 literal|1
 condition|)
 block|{
+name|std
+operator|::
 name|_Construct
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|.
 name|_M_cur
@@ -3854,6 +3755,10 @@ name|__x
 argument_list|)
 expr_stmt|;
 operator|++
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|.
 name|_M_cur
@@ -3868,61 +3773,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_DEPRECATED
-end_ifdef
-
 begin_comment
-comment|/**      *  @brief  Add data to the end of the %deque.      *      *  This is a typical stack operation.  The function creates a      *  default-constructed element at the end of the %deque.  Due to the nature      *  of a %deque this operation can be done in constant time.  You should      *  consider using push_back(value_type()) instead.      *      *  @note This was deprecated in 3.2 and will be removed in 3.4.  You must      *        define @c _GLIBCPP_DEPRECATED to make this visible in 3.2; see      *        c++config.h.     */
-end_comment
-
-begin_function
-name|void
-name|push_back
-parameter_list|()
-block|{
-if|if
-condition|(
-name|_M_finish
-operator|.
-name|_M_cur
-operator|!=
-name|_M_finish
-operator|.
-name|_M_last
-operator|-
-literal|1
-condition|)
-block|{
-name|_Construct
-argument_list|(
-name|_M_finish
-operator|.
-name|_M_cur
-argument_list|)
-expr_stmt|;
-operator|++
-name|_M_finish
-operator|.
-name|_M_cur
-expr_stmt|;
-block|}
-else|else
-name|_M_push_back_aux
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/**      *  @brief  Removes first element.      *      *  This is a typical stack operation.  It shrinks the %deque by one.      *      *  Note that no data is returned, and if the first element's data is      *  needed, it should be retrieved before pop_front() is called.     */
+comment|/**        *  @brief  Removes first element.        *        *  This is a typical stack operation.  It shrinks the %deque by one.        *        *  Note that no data is returned, and if the first element's data is        *  needed, it should be retrieved before pop_front() is called.        */
 end_comment
 
 begin_function
@@ -3932,10 +3784,18 @@ parameter_list|()
 block|{
 if|if
 condition|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|.
 name|_M_cur
 operator|!=
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|.
 name|_M_last
@@ -3943,14 +3803,24 @@ operator|-
 literal|1
 condition|)
 block|{
+name|std
+operator|::
 name|_Destroy
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|.
 name|_M_cur
 argument_list|)
 expr_stmt|;
 operator|++
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|.
 name|_M_cur
@@ -3964,7 +3834,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**      *  @brief  Removes last element.      *      *  This is a typical stack operation.  It shrinks the %deque by one.      *      *  Note that no data is returned, and if the last element's data is      *  needed, it should be retrieved before pop_back() is called.     */
+comment|/**        *  @brief  Removes last element.        *        *  This is a typical stack operation.  It shrinks the %deque by one.        *        *  Note that no data is returned, and if the last element's data is        *  needed, it should be retrieved before pop_back() is called.        */
 end_comment
 
 begin_function
@@ -3974,22 +3844,40 @@ parameter_list|()
 block|{
 if|if
 condition|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|.
 name|_M_cur
 operator|!=
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|.
 name|_M_first
 condition|)
 block|{
 operator|--
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|.
 name|_M_cur
 expr_stmt|;
+name|std
+operator|::
 name|_Destroy
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|.
 name|_M_cur
@@ -4004,7 +3892,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**      *  @brief  Inserts given value into %deque before specified iterator.      *  @param  position  An iterator into the %deque.      *  @param  x  Data to be inserted.      *  @return  An iterator that points to the inserted data.      *      *  This function will insert a copy of the given value before the specified      *  location.     */
+comment|/**        *  @brief  Inserts given value into %deque before specified iterator.        *  @param  position  An iterator into the %deque.        *  @param  x  Data to be inserted.        *  @return  An iterator that points to the inserted data.        *        *  This function will insert a copy of the given value before the        *  specified location.        */
 end_comment
 
 begin_function_decl
@@ -4022,43 +3910,8 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_DEPRECATED
-end_ifdef
-
 begin_comment
-comment|/**      *  @brief  Inserts an element into the %deque.      *  @param  position  An iterator into the %deque.      *  @return  An iterator that points to the inserted element.      *      *  This function will insert a default-constructed element before the      *  specified location.  You should consider using      *  insert(position,value_type()) instead.      *      *  @note This was deprecated in 3.2 and will be removed in 3.4.  You must      *        define @c _GLIBCPP_DEPRECATED to make this visible in 3.2; see      *        c++config.h.     */
-end_comment
-
-begin_function
-name|iterator
-name|insert
-parameter_list|(
-name|iterator
-name|__position
-parameter_list|)
-block|{
-return|return
-name|insert
-argument_list|(
-name|__position
-argument_list|,
-name|value_type
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/**      *  @brief  Inserts a number of copies of given data into the %deque.      *  @param  position  An iterator into the %deque.      *  @param  n  Number of elements to be inserted.      *  @param  x  Data to be inserted.      *      *  This function will insert a specified number of copies of the given data      *  before the location specified by @a position.     */
+comment|/**        *  @brief  Inserts a number of copies of given data into the %deque.        *  @param  position  An iterator into the %deque.        *  @param  n  Number of elements to be inserted.        *  @param  x  Data to be inserted.        *        *  This function will insert a specified number of copies of the given        *  data before the location specified by @a position.        */
 end_comment
 
 begin_function
@@ -4090,7 +3943,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**      *  @brief  Inserts a range into the %deque.      *  @param  pos  An iterator into the %deque.      *  @param  first  An input iterator.      *  @param  last   An input iterator.      *      *  This function will insert copies of the data in the range [first,last)      *  into the %deque before the location specified by @a pos.  This is      *  known as "range insert."     */
+comment|/**        *  @brief  Inserts a range into the %deque.        *  @param  position  An iterator into the %deque.        *  @param  first  An input iterator.        *  @param  last   An input iterator.        *        *  This function will insert copies of the data in the range [first,last)        *  into the %deque before the location specified by @a pos.  This is        *  known as "range insert."        */
 end_comment
 
 begin_expr_stmt
@@ -4102,7 +3955,7 @@ operator|>
 name|void
 name|insert
 argument_list|(
-argument|iterator __pos
+argument|iterator __position
 argument_list|,
 argument|_InputIterator __first
 argument_list|,
@@ -4122,7 +3975,7 @@ name|_Integral
 expr_stmt|;
 name|_M_insert_dispatch
 argument_list|(
-name|__pos
+name|__position
 argument_list|,
 name|__first
 argument_list|,
@@ -4136,7 +3989,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/**      *  @brief  Remove element at given position.      *  @param  position  Iterator pointing to element to be erased.      *  @return  An iterator pointing to the next element (or end()).      *      *  This function will erase the element at the given position and thus      *  shorten the %deque by one.      *      *  The user is cautioned that      *  this function only erases the element, and that if the element is itself      *  a pointer, the pointed-to memory is not touched in any way.  Managing      *  the pointer is the user's responsibilty.     */
+comment|/**        *  @brief  Remove element at given position.        *  @param  position  Iterator pointing to element to be erased.        *  @return  An iterator pointing to the next element (or end()).        *        *  This function will erase the element at the given position and thus        *  shorten the %deque by one.        *        *  The user is cautioned that        *  this function only erases the element, and that if the element is        *  itself a pointer, the pointed-to memory is not touched in any way.        *  Managing the pointer is the user's responsibilty.        */
 end_comment
 
 begin_macro
@@ -4152,7 +4005,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/**      *  @brief  Remove a range of elements.      *  @param  first  Iterator pointing to the first element to be erased.      *  @param  last  Iterator pointing to one past the last element to be      *                erased.      *  @return  An iterator pointing to the element pointed to by @a last      *           prior to erasing (or end()).      *      *  This function will erase the elements in the range [first,last) and      *  shorten the %deque accordingly.      *      *  The user is cautioned that      *  this function only erases the elements, and that if the elements      *  themselves are pointers, the pointed-to memory is not touched in any      *  way.  Managing the pointer is the user's responsibilty.     */
+comment|/**        *  @brief  Remove a range of elements.        *  @param  first  Iterator pointing to the first element to be erased.        *  @param  last  Iterator pointing to one past the last element to be        *                erased.        *  @return  An iterator pointing to the element pointed to by @a last        *           prior to erasing (or end()).        *        *  This function will erase the elements in the range [first,last) and        *  shorten the %deque accordingly.        *        *  The user is cautioned that        *  this function only erases the elements, and that if the elements        *  themselves are pointers, the pointed-to memory is not touched in any        *  way.  Managing the pointer is the user's responsibilty.        */
 end_comment
 
 begin_function_decl
@@ -4169,7 +4022,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**      *  @brief  Swaps data with another %deque.      *  @param  x  A %deque of the same element and allocator types.      *      *  This exchanges the elements between two deques in constant time.      *  (Four pointers, so it should be quite fast.)      *  Note that the global std::swap() function is specialized such that      *  std::swap(d1,d2) will feed to this function.     */
+comment|/**        *  @brief  Swaps data with another %deque.        *  @param  x  A %deque of the same element and allocator types.        *        *  This exchanges the elements between two deques in constant time.        *  (Four pointers, so it should be quite fast.)        *  Note that the global std::swap() function is specialized such that        *  std::swap(d1,d2) will feed to this function.        */
 end_comment
 
 begin_function
@@ -4185,9 +4038,15 @@ name|std
 operator|::
 name|swap
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 argument_list|,
 name|__x
+operator|.
+name|_M_impl
 operator|.
 name|_M_start
 argument_list|)
@@ -4196,10 +4055,16 @@ name|std
 operator|::
 name|swap
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 argument_list|,
 name|__x
 operator|.
+name|_M_impl
+operator|.
 name|_M_finish
 argument_list|)
 expr_stmt|;
@@ -4207,9 +4072,15 @@ name|std
 operator|::
 name|swap
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map
 argument_list|,
 name|__x
+operator|.
+name|_M_impl
 operator|.
 name|_M_map
 argument_list|)
@@ -4218,9 +4089,15 @@ name|std
 operator|::
 name|swap
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map_size
 argument_list|,
 name|__x
+operator|.
+name|_M_impl
 operator|.
 name|_M_map_size
 argument_list|)
@@ -4229,7 +4106,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**      *  Erases all the elements.  Note that this function only erases the      *  elements, and that if the elements themselves are pointers, the      *  pointed-to memory is not touched in any way.  Managing the pointer is      *  the user's responsibilty.     */
+comment|/**        *  Erases all the elements.  Note that this function only erases the        *  elements, and that if the elements themselves are pointers, the        *  pointed-to memory is not touched in any way.  Managing the pointer is        *  the user's responsibilty.        */
 end_comment
 
 begin_function_decl
@@ -4277,19 +4154,19 @@ name|_M_fill_initialize
 argument_list|(
 name|__x
 argument_list|)
-block|;       }
+block|; 	}
 comment|// called by the range constructor to implement [23.1.1]/9
 name|template
 operator|<
 name|typename
-name|_InputIter
+name|_InputIterator
 operator|>
 name|void
 name|_M_initialize_dispatch
 argument_list|(
-argument|_InputIter __first
+argument|_InputIterator __first
 argument_list|,
-argument|_InputIter __last
+argument|_InputIterator __last
 argument_list|,
 argument|__false_type
 argument_list|)
@@ -4298,7 +4175,7 @@ typedef|typedef
 name|typename
 name|iterator_traits
 operator|<
-name|_InputIter
+name|_InputIterator
 operator|>
 operator|::
 name|iterator_category
@@ -4326,7 +4203,7 @@ comment|//@{
 end_comment
 
 begin_comment
-comment|/**      *  @if maint      *  @brief Fills the deque with whatever is in [first,last).      *  @param  first  An input iterator.      *  @param  last  An input iterator.      *  @return   Nothing.      *      *  If the iterators are actually forward iterators (or better), then the      *  memory layout can be done all at once.  Else we move forward using      *  push_back on each value from the iterator.      *  @endif     */
+comment|/**        *  @if maint        *  @brief Fills the deque with whatever is in [first,last).        *  @param  first  An input iterator.        *  @param  last  An input iterator.        *  @return   Nothing.        *        *  If the iterators are actually forward iterators (or better), then the        *  memory layout can be done all at once.  Else we move forward using        *  push_back on each value from the iterator.        *  @endif        */
 end_comment
 
 begin_expr_stmt
@@ -4374,7 +4251,7 @@ comment|//@}
 end_comment
 
 begin_comment
-comment|/**      *  @if maint      *  @brief Fills the %deque with copies of value.      *  @param  value  Initial value.      *  @return   Nothing.      *  @pre _M_start and _M_finish have already been initialized, but none of      *       the %deque's elements have yet been constructed.      *      *  This function is called only when the user provides an explicit size      *  (with or without an explicit exemplar value).      *  @endif     */
+comment|/**        *  @if maint        *  @brief Fills the %deque with copies of value.        *  @param  value  Initial value.        *  @return   Nothing.        *  @pre _M_start and _M_finish have already been initialized, but none of        *       the %deque's elements have yet been constructed.        *        *  This function is called only when the user provides an explicit size        *  (with or without an explicit exemplar value).        *  @endif        */
 end_comment
 
 begin_function_decl
@@ -4435,19 +4312,19 @@ operator|(
 name|__val
 operator|)
 argument_list|)
-block|;       }
+block|; 	}
 comment|// called by the range assign to implement [23.1.1]/9
 name|template
 operator|<
 name|typename
-name|_InputIter
+name|_InputIterator
 operator|>
 name|void
 name|_M_assign_dispatch
 argument_list|(
-argument|_InputIter __first
+argument|_InputIterator __first
 argument_list|,
-argument|_InputIter __last
+argument|_InputIterator __last
 argument_list|,
 argument|__false_type
 argument_list|)
@@ -4456,7 +4333,7 @@ typedef|typedef
 name|typename
 name|iterator_traits
 operator|<
-name|_InputIter
+name|_InputIterator
 operator|>
 operator|::
 name|iterator_category
@@ -4517,9 +4394,12 @@ argument_list|,
 argument|forward_iterator_tag
 argument_list|)
 block|{
+specifier|const
 name|size_type
 name|__len
 operator|=
+name|std
+operator|::
 name|distance
 argument_list|(
 name|__first
@@ -4540,6 +4420,8 @@ name|__mid
 init|=
 name|__first
 decl_stmt|;
+name|std
+operator|::
 name|advance
 argument_list|(
 name|__mid
@@ -4548,6 +4430,8 @@ name|size
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|std
+operator|::
 name|copy
 argument_list|(
 name|__first
@@ -4575,6 +4459,8 @@ begin_else
 else|else
 name|erase
 argument_list|(
+name|std
+operator|::
 name|copy
 argument_list|(
 name|__first
@@ -4620,6 +4506,8 @@ name|size
 argument_list|()
 condition|)
 block|{
+name|std
+operator|::
 name|fill
 argument_list|(
 name|begin
@@ -4658,6 +4546,8 @@ name|end
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|std
+operator|::
 name|fill
 argument_list|(
 name|begin
@@ -4678,7 +4568,7 @@ comment|//@{
 end_comment
 
 begin_comment
-comment|/**      *  @if maint      *  @brief Helper functions for push_* and pop_*.      *  @endif     */
+comment|/**        *  @if maint        *  @brief Helper functions for push_* and pop_*.        *  @endif        */
 end_comment
 
 begin_function_decl
@@ -4702,31 +4592,6 @@ modifier|&
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_DEPRECATED
-end_ifdef
-
-begin_function_decl
-name|void
-name|_M_push_back_aux
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_M_push_front_aux
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -4796,7 +4661,7 @@ operator|(
 name|__x
 operator|)
 argument_list|)
-block|;       }
+block|; 	}
 comment|// called by the range insert to implement [23.1.1]/9
 name|template
 operator|<
@@ -4893,11 +4758,11 @@ comment|// Called by insert(p,n,x), and the range insert when it turns out to be
 end_comment
 
 begin_comment
-comment|// the same thing.  Can use fill functions in optimal situations, otherwise
+comment|// the same thing.  Can use fill functions in optimal situations,
 end_comment
 
 begin_comment
-comment|// passes off to insert_aux(p,n,x).
+comment|// otherwise passes off to insert_aux(p,n,x).
 end_comment
 
 begin_function_decl
@@ -4983,37 +4848,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_DEPRECATED
-end_ifdef
-
-begin_comment
-comment|// unused, see comment in implementation
-end_comment
-
-begin_function_decl
-name|iterator
-name|_M_insert_aux
-parameter_list|(
-name|iterator
-name|__pos
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|//@{
 end_comment
 
 begin_comment
-comment|/**      *  @if maint      *  @brief Memory-handling helpers for the previous internal insert      *         functions.      *  @endif     */
+comment|/**        *  @if maint        *  @brief Memory-handling helpers for the previous internal insert        *         functions.        *  @endif        */
 end_comment
 
 begin_function
@@ -5024,13 +4864,22 @@ name|size_type
 name|__n
 parameter_list|)
 block|{
+specifier|const
 name|size_type
 name|__vacancies
 init|=
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|.
 name|_M_cur
 operator|-
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|.
 name|_M_first
@@ -5049,6 +4898,10 @@ name|__vacancies
 argument_list|)
 expr_stmt|;
 return|return
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|-
 name|difference_type
@@ -5067,14 +4920,23 @@ name|size_type
 name|__n
 parameter_list|)
 block|{
+specifier|const
 name|size_type
 name|__vacancies
 init|=
 operator|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|.
 name|_M_last
 operator|-
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|.
 name|_M_cur
@@ -5096,6 +4958,10 @@ name|__vacancies
 argument_list|)
 expr_stmt|;
 return|return
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|+
 name|difference_type
@@ -5135,7 +5001,7 @@ comment|//@{
 end_comment
 
 begin_comment
-comment|/**      *  @if maint      *  @brief Memory-handling helpers for the major %map.      *      *  Makes sure the _M_map has space for new nodes.  Does not actually add      *  the nodes.  Can invalidate _M_map pointers.  (And consequently, %deque      *  iterators.)      *  @endif     */
+comment|/**        *  @if maint        *  @brief Memory-handling helpers for the major %map.        *        *  Makes sure the _M_map has space for new nodes.  Does not actually add        *  the nodes.  Can invalidate _M_map pointers.  (And consequently, %deque        *  iterators.)        *  @endif        */
 end_comment
 
 begin_function
@@ -5154,13 +5020,25 @@ name|__nodes_to_add
 operator|+
 literal|1
 operator|>
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map_size
 operator|-
 operator|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_finish
 operator|.
 name|_M_node
 operator|-
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map
 operator|)
 condition|)
@@ -5190,10 +5068,18 @@ name|__nodes_to_add
 operator|>
 name|size_type
 argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_start
 operator|.
 name|_M_node
 operator|-
+name|this
+operator|->
+name|_M_impl
+operator|.
 name|_M_map
 argument_list|)
 condition|)
@@ -5275,6 +5161,8 @@ operator|.
 name|size
 argument_list|()
 operator|&&
+name|std
+operator|::
 name|equal
 argument_list|(
 name|__x
@@ -5297,7 +5185,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  @brief  Deque ordering relation.    *  @param  x  A %deque.    *  @param  y  A %deque of the same type as @a x.    *  @return  True iff @a x is lexographically less than @a y.    *    *  This is a total ordering relation.  It is linear in the size of the    *  deques.  The elements must be comparable with @c<.    *    *  See std::lexographical_compare() for how the determination is made.   */
+comment|/**    *  @brief  Deque ordering relation.    *  @param  x  A %deque.    *  @param  y  A %deque of the same type as @a x.    *  @return  True iff @a x is lexicographically less than @a y.    *    *  This is a total ordering relation.  It is linear in the size of the    *  deques.  The elements must be comparable with @c<.    *    *  See std::lexicographical_compare() for how the determination is made.   */
 end_comment
 
 begin_expr_stmt
@@ -5591,7 +5479,7 @@ name|swap
 argument_list|(
 name|__y
 argument_list|)
-block|;   }
+block|; }
 end_expr_stmt
 
 begin_comment
@@ -5605,7 +5493,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GLIBCPP_INTERNAL_DEQUE_H */
+comment|/* _DEQUE_H */
 end_comment
 
 end_unit

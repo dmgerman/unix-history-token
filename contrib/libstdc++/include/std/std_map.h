@@ -106,13 +106,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_MAP
+name|_GLIBCXX_MAP
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_MAP
+name|_GLIBCXX_MAP
 value|1
 end_define
 
@@ -141,25 +141,30 @@ directive|include
 file|<bits/stl_multimap.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_GLIBCXX_DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<debug/map>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_MAP */
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:C++
-end_comment
-
-begin_comment
-comment|// End:
+comment|/* _GLIBCXX_MAP */
 end_comment
 
 end_unit

@@ -4,7 +4,7 @@ comment|// Locale support (codecvt) -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -120,13 +120,13 @@ comment|// XXX
 end_comment
 
 begin_comment
-comment|// Define this here to codecvt.cc can have _S_max_size definition.
+comment|// Define this here so codecvt.cc can have _S_max_size definition.
 end_comment
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_USE___ENC_TRAITS
+name|_GLIBCXX_USE___ENC_TRAITS
 value|1
 end_define
 
@@ -270,12 +270,12 @@ argument_list|)
 operator|,
 name|_M_ext_bom
 argument_list|(
-literal|0
+name|__ebom
 argument_list|)
 operator|,
 name|_M_int_bom
 argument_list|(
-literal|0
+argument|__ibom
 argument_list|)
 block|{
 name|strncpy
@@ -295,12 +295,18 @@ name|__ext
 argument_list|,
 name|_S_max_size
 argument_list|)
+block|;
+name|_M_init
+argument_list|()
 block|;     }
 comment|// 21.1.2 traits typedefs
 comment|// p4
 comment|// typedef STATE_T state_type
 comment|// requires: state_type shall meet the requirements of
 comment|// CopyConstructible types (20.1.3)
+comment|// NB: This does not preseve the actual state of the conversion
+comment|// descriptor member, but it does duplicate the encoding
+comment|// information.
 name|__enc_traits
 argument_list|(
 specifier|const
@@ -352,6 +358,12 @@ operator|=
 name|__obj
 operator|.
 name|_M_int_bom
+block|;
+name|_M_destroy
+argument_list|()
+block|;
+name|_M_init
+argument_list|()
 block|;     }
 comment|// Need assignment operator as well.
 name|__enc_traits
@@ -387,14 +399,6 @@ argument_list|,
 name|_S_max_size
 argument_list|)
 block|;
-name|_M_in_desc
-operator|=
-literal|0
-block|;
-name|_M_out_desc
-operator|=
-literal|0
-block|;
 name|_M_ext_bom
 operator|=
 name|__obj
@@ -406,6 +410,12 @@ operator|=
 name|__obj
 operator|.
 name|_M_int_bom
+block|;
+name|_M_destroy
+argument_list|()
+block|;
+name|_M_init
+argument_list|()
 block|;
 return|return
 operator|*
@@ -416,6 +426,94 @@ operator|~
 name|__enc_traits
 argument_list|()
 block|{
+name|_M_destroy
+argument_list|()
+block|; }
+name|void
+name|_M_init
+argument_list|()
+block|{
+specifier|const
+name|__desc_type
+name|__err
+operator|=
+name|reinterpret_cast
+operator|<
+name|iconv_t
+operator|>
+operator|(
+operator|-
+literal|1
+operator|)
+block|;
+if|if
+condition|(
+operator|!
+name|_M_in_desc
+condition|)
+block|{
+name|_M_in_desc
+operator|=
+name|iconv_open
+argument_list|(
+name|_M_int_enc
+argument_list|,
+name|_M_ext_enc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|_M_in_desc
+operator|==
+name|__err
+condition|)
+name|__throw_runtime_error
+argument_list|(
+name|__N
+argument_list|(
+literal|"__enc_traits::_M_init "
+literal|"creating iconv input descriptor failed"
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|_M_out_desc
+condition|)
+block|{
+name|_M_out_desc
+operator|=
+name|iconv_open
+argument_list|(
+name|_M_ext_enc
+argument_list|,
+name|_M_int_enc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|_M_out_desc
+operator|==
+name|__err
+condition|)
+name|__throw_runtime_error
+argument_list|(
+name|__N
+argument_list|(
+literal|"__enc_traits::_M_init "
+literal|"creating iconv output descriptor failed"
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|void
+name|_M_destroy
+argument_list|()
+block|{
+specifier|const
 name|__desc_type
 name|__err
 operator|=
@@ -436,11 +534,17 @@ name|_M_in_desc
 operator|!=
 name|__err
 condition|)
+block|{
 name|iconv_close
 argument_list|(
 name|_M_in_desc
 argument_list|)
 expr_stmt|;
+name|_M_in_desc
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|_M_out_desc
@@ -449,98 +553,26 @@ name|_M_out_desc
 operator|!=
 name|__err
 condition|)
+block|{
 name|iconv_close
 argument_list|(
 name|_M_out_desc
 argument_list|)
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_function
-name|void
-name|_M_init
-parameter_list|()
-block|{
-specifier|const
-name|__desc_type
-name|__err
-init|=
-name|reinterpret_cast
-operator|<
-name|iconv_t
-operator|>
-operator|(
-operator|-
-literal|1
-operator|)
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|_M_in_desc
-condition|)
-block|{
-name|_M_in_desc
-operator|=
-name|iconv_open
-argument_list|(
-name|_M_int_enc
-argument_list|,
-name|_M_ext_enc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|_M_in_desc
-operator|==
-name|__err
-condition|)
-name|__throw_runtime_error
-argument_list|(
-literal|"creating iconv input descriptor failed."
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|_M_out_desc
-condition|)
-block|{
 name|_M_out_desc
 operator|=
-name|iconv_open
-argument_list|(
-name|_M_ext_enc
-argument_list|,
-name|_M_int_enc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|_M_out_desc
-operator|==
-name|__err
-condition|)
-name|__throw_runtime_error
-argument_list|(
-literal|"creating iconv output descriptor failed."
-argument_list|)
+literal|0
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|bool
 name|_M_good
-parameter_list|()
+argument_list|()
 block|{
 specifier|const
 name|__desc_type
 name|__err
-init|=
+operator|=
 name|reinterpret_cast
 operator|<
 name|iconv_t
@@ -549,16 +581,16 @@ operator|(
 operator|-
 literal|1
 operator|)
-decl_stmt|;
+block|;
 name|bool
 name|__test
-init|=
+operator|=
 name|_M_in_desc
 operator|&&
 name|_M_in_desc
 operator|!=
 name|__err
-decl_stmt|;
+block|;
 name|__test
 operator|&=
 name|_M_out_desc
@@ -566,14 +598,11 @@ operator|&&
 name|_M_out_desc
 operator|!=
 name|__err
-expr_stmt|;
+block|;
 return|return
 name|__test
 return|;
 block|}
-end_function
-
-begin_function
 specifier|const
 name|__desc_type
 modifier|*
@@ -585,9 +614,6 @@ operator|&
 name|_M_in_desc
 return|;
 block|}
-end_function
-
-begin_function
 specifier|const
 name|__desc_type
 modifier|*
@@ -599,9 +625,6 @@ operator|&
 name|_M_out_desc
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|_M_get_external_bom
 parameter_list|()
@@ -610,9 +633,6 @@ return|return
 name|_M_ext_bom
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|_M_get_internal_bom
 parameter_list|()
@@ -621,9 +641,6 @@ return|return
 name|_M_int_bom
 return|;
 block|}
-end_function
-
-begin_function
 specifier|const
 name|char
 modifier|*
@@ -634,9 +651,6 @@ return|return
 name|_M_int_enc
 return|;
 block|}
-end_function
-
-begin_function
 specifier|const
 name|char
 modifier|*
@@ -647,10 +661,14 @@ return|return
 name|_M_ext_enc
 return|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|// Partial specialization
 end_comment
 
@@ -923,7 +941,6 @@ name|virtual
 name|int
 name|do_length
 argument_list|(
-specifier|const
 name|state_type
 operator|&
 argument_list|,
@@ -2159,7 +2176,7 @@ operator|>
 operator|::
 name|do_length
 argument_list|(
-argument|const state_type&
+argument|state_type&
 argument_list|,
 argument|const extern_type* __from
 argument_list|,
@@ -2170,6 +2187,8 @@ argument_list|)
 specifier|const
 block|{
 return|return
+name|std
+operator|::
 name|min
 argument_list|(
 name|__max
@@ -2188,11 +2207,9 @@ return|;
 block|}
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_RESOLVE_LIB_DEFECTS
-end_ifdef
+begin_comment
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
 
 begin_comment
 comment|// 74.  Garbled text for codecvt::do_max_length
@@ -2228,11 +2245,6 @@ literal|1
 return|;
 block|}
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

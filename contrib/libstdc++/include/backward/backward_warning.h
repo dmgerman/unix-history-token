@@ -94,13 +94,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BACKWARD_BACKWARD_WARNING_H
+name|_BACKWARD_BACKWARD_WARNING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BACKWARD_BACKWARD_WARNING_H
+name|_BACKWARD_BACKWARD_WARNING_H
 value|1
 end_define
 
@@ -113,7 +113,7 @@ end_ifdef
 begin_warning
 warning|#
 directive|warning
-warning|This file includes at least one deprecated or antiquated header. \ Please consider using one of the 32 headers found in section 17.4.1.2 of the \ C++ standard. Examples include substituting the<X> header for the<X.h> \ header for C++ includes, or<sstream> instead of the deprecated header \<strstream.h>. To disable this warning use -Wno-deprecated.
+warning|This file includes at least one deprecated or antiquated header. \ Please consider using one of the 32 headers found in section 17.4.1.2 of the \ C++ standard. Examples include substituting the<X> header for the<X.h> \ header for C++ includes, or<iostream> instead of the deprecated header \<iostream.h>. To disable this warning use -Wno-deprecated.
 end_warning
 
 begin_endif

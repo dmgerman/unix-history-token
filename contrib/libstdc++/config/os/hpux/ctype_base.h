@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -183,7 +183,11 @@ specifier|const
 name|mask
 name|graph
 init|=
-name|_ISGRAPH
+name|_ISALPHA
+operator||
+name|_ISDIGIT
+operator||
+name|_ISPUNCT
 decl_stmt|;
 specifier|static
 specifier|const
@@ -204,7 +208,9 @@ specifier|const
 name|mask
 name|alnum
 init|=
-name|_ISALNUM
+name|_ISALPHA
+operator||
+name|_ISDIGIT
 decl_stmt|;
 block|}
 struct|;

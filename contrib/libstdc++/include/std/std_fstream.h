@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_FSTREAM
+name|_GLIBCXX_FSTREAM
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_FSTREAM
+name|_GLIBCXX_FSTREAM
 value|1
 end_define
 
@@ -160,6 +160,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<cstdio>
+end_include
+
+begin_comment
+comment|// For SEEK_SET, SEEK_CUR, SEEK_END, BUFSIZ
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<bits/basic_file.h>
 end_include
 
@@ -175,6 +185,11 @@ name|std
 block|{
 comment|// [27.8.1.1] template class basic_filebuf
 comment|/**    *  @brief  The actual work of input and output (for files).    *    *  This class associates both its input and output sequence with an    *  external disk file, and maintains a joint file position for both    *  sequences.  Many of its sematics are described in terms of similar    *  behavior in the Standard C Library's @c FILE streams.   */
+comment|// Requirements on traits_type, specific to this class:
+comment|// traits_type::pos_type must be fpos<traits_type::state_type>
+comment|// traits_type::off_type must be streamoff
+comment|// traits_type::state_type must be Assignable and DefaultConstructable,
+comment|// and traits_type::state_type() must be the initial state for codecvt.
 name|template
 operator|<
 name|typename
@@ -271,13 +286,6 @@ name|__state_type
 operator|>
 name|__codecvt_type
 expr_stmt|;
-typedef|typedef
-name|ctype
-operator|<
-name|char_type
-operator|>
-name|__ctype_type
-expr_stmt|;
 comment|//@}
 name|friend
 name|class
@@ -297,30 +305,184 @@ comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|__file_type
 name|_M_file
 decl_stmt|;
-comment|// Current and beginning state type for codecvt.
+comment|/**        *  @if maint        *  Place to stash in || out || in | out settings for current filebuf.        *  @endif       */
+name|ios_base
+operator|::
+name|openmode
+name|_M_mode
+expr_stmt|;
+comment|// Beginning state type for codecvt.
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+name|__state_type
+name|_M_state_beg
+decl_stmt|;
+comment|// During output, the state that corresponds to pptr(),
+comment|// during input, the state that corresponds to egptr() and
+comment|// _M_ext_next.
 comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|__state_type
 name|_M_state_cur
 decl_stmt|;
+comment|// Not used for output. During input, the state that corresponds
+comment|// to eback() and _M_ext_buf.
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|__state_type
-name|_M_state_beg
+name|_M_state_last
+decl_stmt|;
+comment|/**        *  @if maint        *  Pointer to the beginning of internal buffer.        *  @endif       */
+name|char_type
+modifier|*
+name|_M_buf
+decl_stmt|;
+comment|/**        *  @if maint        *  Actual size of internal buffer. This number is equal to the size        *  of the put area + 1 position, reserved for the overflow char of        *  a full area.        *  @endif       */
+name|size_t
+name|_M_buf_size
 decl_stmt|;
 comment|// Set iff _M_buf is allocated memory from _M_allocate_internal_buffer.
 comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|bool
 name|_M_buf_allocated
 decl_stmt|;
-comment|// XXX Needed?
+comment|/**        *  @if maint        *  _M_reading == false&& _M_writing == false for 'uncommitted' mode;          *  _M_reading == true for 'read' mode;        *  _M_writing == true for 'write' mode;        *        *  NB: _M_reading == true&& _M_writing == true is unused.        *  @endif       */
 name|bool
-name|_M_last_overflowed
+name|_M_reading
 decl_stmt|;
-comment|// The position in the buffer corresponding to the external file
-comment|// pointer.
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+name|bool
+name|_M_writing
+decl_stmt|;
+comment|//@{
+comment|/**        *  @if maint        *  Necessary bits for putback buffer management.        *        *  @note pbacks of over one character are not currently supported.        *  @endif       */
+name|char_type
+name|_M_pback
+decl_stmt|;
 name|char_type
 modifier|*
-name|_M_filepos
+name|_M_pback_cur_save
 decl_stmt|;
+name|char_type
+modifier|*
+name|_M_pback_end_save
+decl_stmt|;
+name|bool
+name|_M_pback_init
+decl_stmt|;
+comment|//@}
+comment|// Cached codecvt facet.
+specifier|const
+name|__codecvt_type
+modifier|*
+name|_M_codecvt
+decl_stmt|;
+comment|/**        *  @if maint        *  Buffer for external characters. Used for input when        *  codecvt::always_noconv() == false. When valid, this corresponds        *  to eback().        *  @endif       */
+name|char
+modifier|*
+name|_M_ext_buf
+decl_stmt|;
+comment|/**        *  @if maint        *  Size of buffer held by _M_ext_buf.        *  @endif       */
+name|streamsize
+name|_M_ext_buf_size
+decl_stmt|;
+comment|/**        *  @if maint        *  Pointers into the buffer held by _M_ext_buf that delimit a        *  subsequence of bytes that have been read but not yet converted.        *  When valid, _M_ext_next corresponds to egptr().        *  @endif       */
+specifier|const
+name|char
+modifier|*
+name|_M_ext_next
+decl_stmt|;
+name|char
+modifier|*
+name|_M_ext_end
+decl_stmt|;
+comment|/**        *  @if maint        *  Initializes pback buffers, and moves normal buffers to safety.        *  Assumptions:        *  _M_in_cur has already been moved back        *  @endif       */
+name|void
+name|_M_create_pback
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|_M_pback_init
+condition|)
+block|{
+name|_M_pback_cur_save
+operator|=
+name|this
+operator|->
+name|gptr
+argument_list|()
+expr_stmt|;
+name|_M_pback_end_save
+operator|=
+name|this
+operator|->
+name|egptr
+argument_list|()
+expr_stmt|;
+name|this
+operator|->
+name|setg
+argument_list|(
+operator|&
+name|_M_pback
+argument_list|,
+operator|&
+name|_M_pback
+argument_list|,
+operator|&
+name|_M_pback
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|_M_pback_init
+operator|=
+name|true
+expr_stmt|;
+block|}
+block|}
+comment|/**        *  @if maint        *  Deactivates pback buffer contents, and restores normal buffer.        *  Assumptions:        *  The pback buffer has only moved forward.        *  @endif       */
+name|void
+name|_M_destroy_pback
+parameter_list|()
+function|throw
+parameter_list|()
+block|{
+if|if
+condition|(
+name|_M_pback_init
+condition|)
+block|{
+comment|// Length _M_in_cur moved in the pback buffer.
+name|_M_pback_cur_save
+operator|+=
+name|this
+operator|->
+name|gptr
+argument_list|()
+operator|!=
+name|this
+operator|->
+name|eback
+argument_list|()
+expr_stmt|;
+name|this
+operator|->
+name|setg
+argument_list|(
+name|this
+operator|->
+name|_M_buf
+argument_list|,
+name|_M_pback_cur_save
+argument_list|,
+name|_M_pback_end_save
+argument_list|)
+expr_stmt|;
+name|_M_pback_init
+operator|=
+name|false
+expr_stmt|;
+block|}
+block|}
 name|public
 label|:
 comment|// Constructors/destructor:
@@ -338,11 +500,7 @@ name|this
 operator|->
 name|close
 argument_list|()
-block|;
-name|_M_last_overflowed
-operator|=
-name|false
-block|;       }
+block|; }
 comment|// Members:
 comment|/**        *  @brief  Returns true if the external file is open.       */
 name|bool
@@ -408,20 +566,6 @@ comment|// Stroustrup, 1998, p. 628
 comment|// underflow() and uflow() functions are called to get the next
 comment|// charater from the real input source when the buffer is empty.
 comment|// Buffered input uses underflow()
-comment|// The only difference between underflow() and uflow() is that the
-comment|// latter bumps _M_in_cur after the read.  In the sync_with_stdio
-comment|// case, this is important, as we need to unget the read character in
-comment|// the underflow() case in order to maintain synchronization.  So
-comment|// instead of calling underflow() from uflow(), we create a common
-comment|// subroutine to do the real work.
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
-name|int_type
-name|_M_underflow_common
-parameter_list|(
-name|bool
-name|__bump
-parameter_list|)
-function_decl|;
 comment|// [documentation is inherited]
 name|virtual
 name|int_type
@@ -431,35 +575,7 @@ function_decl|;
 comment|// [documentation is inherited]
 name|virtual
 name|int_type
-name|uflow
-parameter_list|()
-function_decl|;
-comment|// [documentation is inherited]
-name|virtual
-name|int_type
 name|pbackfail
-parameter_list|(
-name|int_type
-name|__c
-init|=
-name|_Traits
-operator|::
-name|eof
-argument_list|()
-parameter_list|)
-function_decl|;
-comment|// NB: For what the standard expects of the overflow function,
-comment|// see _M_really_overflow(), below. Because basic_streambuf's
-comment|// sputc/sputn call overflow directly, and the complications of
-comment|// this implementation's setting of the initial pointers all
-comment|// equal to _M_buf when initializing, it seems essential to have
-comment|// this in actuality be a helper function that checks for the
-comment|// eccentricities of this implementation, and then call
-comment|// overflow() if indeed the buffer is full.
-comment|// [documentation is inherited]
-name|virtual
-name|int_type
-name|overflow
 parameter_list|(
 name|int_type
 name|__c
@@ -478,8 +594,9 @@ comment|// character c.
 comment|// 27.5.2.4.5
 comment|// Consume some sequence of the characters in the pending sequence.
 comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+name|virtual
 name|int_type
-name|_M_really_overflow
+name|overflow
 parameter_list|(
 name|int_type
 name|__c
@@ -493,19 +610,13 @@ function_decl|;
 comment|// Convert internal byte sequence to external, char-based
 comment|// sequence via codecvt.
 comment|/**        *  @if maint        *  @doctodo        *  @endif       */
-name|void
+name|bool
 name|_M_convert_to_external
 parameter_list|(
 name|char_type
 modifier|*
 parameter_list|,
 name|streamsize
-parameter_list|,
-name|streamsize
-modifier|&
-parameter_list|,
-name|streamsize
-modifier|&
 parameter_list|)
 function_decl|;
 comment|/**        *  @brief  Manipulates the buffer.        *  @param  s  Pointer to a buffer area.        *  @param  n  Size of @a s.        *  @return  @c this        *        *  If no file has been opened, and both @a s and @a n are zero, then        *  the stream becomes unbuffered.  Otherwise, @c s is used as a        *  buffer; see        *  http://gcc.gnu.org/onlinedocs/libstdc++/27_io/howto.html#2        *  for more.       */
@@ -571,93 +682,29 @@ operator|::
 name|out
 argument_list|)
 decl_stmt|;
+comment|// Common code for seekoff and seekpos
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+name|pos_type
+name|_M_seek
+argument_list|(
+name|off_type
+name|__off
+argument_list|,
+name|ios_base
+operator|::
+name|seekdir
+name|__way
+argument_list|,
+name|__state_type
+name|__state
+argument_list|)
+decl_stmt|;
 comment|// [documentation is inherited]
 name|virtual
 name|int
 name|sync
 parameter_list|()
-block|{
-name|int
-name|__ret
-init|=
-literal|0
-decl_stmt|;
-name|bool
-name|__testput
-init|=
-name|_M_out_cur
-operator|&&
-name|_M_out_beg
-operator|<
-name|_M_out_end
-decl_stmt|;
-comment|// Make sure that the internal buffer resyncs its idea of
-comment|// the file position with the external file.
-if|if
-condition|(
-name|__testput
-condition|)
-block|{
-comment|// Need to restore current position after the write.
-name|off_type
-name|__off
-init|=
-name|_M_out_cur
-operator|-
-name|_M_out_end
-decl_stmt|;
-comment|// _M_file.sync() will be called within
-if|if
-condition|(
-name|traits_type
-operator|::
-name|eq_int_type
-argument_list|(
-name|_M_really_overflow
-argument_list|()
-argument_list|,
-name|traits_type
-operator|::
-name|eof
-argument_list|()
-argument_list|)
-condition|)
-name|__ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|__off
-condition|)
-name|_M_file
-operator|.
-name|seekoff
-argument_list|(
-name|__off
-argument_list|,
-name|ios_base
-operator|::
-name|cur
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|_M_file
-operator|.
-name|sync
-argument_list|()
-expr_stmt|;
-name|_M_last_overflowed
-operator|=
-name|false
-expr_stmt|;
-return|return
-name|__ret
-return|;
-block|}
+function_decl|;
 comment|// [documentation is inherited]
 name|virtual
 name|void
@@ -682,45 +729,57 @@ name|streamsize
 name|__n
 parameter_list|)
 block|{
+comment|// Clear out pback buffer before going on to the real deal...
 name|streamsize
 name|__ret
 init|=
 literal|0
 decl_stmt|;
-comment|// Clear out pback buffer before going on to the real deal...
 if|if
 condition|(
+name|this
+operator|->
 name|_M_pback_init
 condition|)
 block|{
-while|while
+if|if
 condition|(
-name|__ret
-operator|<
 name|__n
 operator|&&
-name|_M_in_cur
-operator|<
-name|_M_in_end
+name|this
+operator|->
+name|gptr
+argument_list|()
+operator|==
+name|this
+operator|->
+name|eback
+argument_list|()
 condition|)
 block|{
 operator|*
 name|__s
+operator|++
 operator|=
 operator|*
-name|_M_in_cur
+name|this
+operator|->
+name|gptr
+argument_list|()
 expr_stmt|;
-operator|++
+name|this
+operator|->
+name|gbump
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|__ret
-expr_stmt|;
-operator|++
-name|__s
-expr_stmt|;
-operator|++
-name|_M_in_cur
+operator|=
+literal|1
 expr_stmt|;
 block|}
-name|_M_pback_destroy
+name|_M_destroy_pback
 argument_list|()
 expr_stmt|;
 block|}
@@ -760,101 +819,39 @@ parameter_list|,
 name|streamsize
 name|__n
 parameter_list|)
-block|{
-name|_M_pback_destroy
-argument_list|()
-expr_stmt|;
-return|return
-name|__streambuf_type
-operator|::
-name|xsputn
-argument_list|(
-name|__s
-argument_list|,
-name|__n
-argument_list|)
-return|;
-block|}
+function_decl|;
+comment|// Flushes output buffer, then writes unshift sequence.
 comment|/**        *  @if maint        *  @doctodo        *  @endif       */
-name|void
-name|_M_output_unshift
+name|bool
+name|_M_terminate_output
 parameter_list|()
 function_decl|;
-comment|// These three functions are used to clarify internal buffer
-comment|// maintenance. After an overflow, or after a seekoff call that
-comment|// started at beg or end, or possibly when the stream becomes
-comment|// unbuffered, and a myrid other obscure corner cases, the
-comment|// internal buffer does not truly reflect the contents of the
-comment|// external buffer. At this point, for whatever reason, it is in
-comment|// an indeterminate state.
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+comment|/**        *  @if maint         *  This function sets the pointers of the internal buffer, both get        *  and put areas. Typically:        *        *   __off == egptr() - eback() upon underflow/uflow ('read' mode);        *   __off == 0 upon overflow ('write' mode);        *   __off == -1 upon open, setbuf, seekoff/pos ('uncommitted' mode).        *         *  NB: epptr() - pbase() == _M_buf_size - 1, since _M_buf_size        *  reflects the actual allocated memory and the last cell is reserved        *  for the overflow char of a full put area.        *  @endif       */
 name|void
-name|_M_set_indeterminate
+name|_M_set_buffer
 parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|_M_mode
-operator|&
-name|ios_base
-operator|::
-name|in
-condition|)
-name|this
-operator|->
-name|setg
-argument_list|(
-name|_M_buf
-argument_list|,
-name|_M_buf
-argument_list|,
-name|_M_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|_M_mode
-operator|&
-name|ios_base
-operator|::
-name|out
-condition|)
-name|this
-operator|->
-name|setp
-argument_list|(
-name|_M_buf
-argument_list|,
-name|_M_buf
-argument_list|)
-expr_stmt|;
-name|_M_filepos
-operator|=
-name|_M_buf
-expr_stmt|;
-block|}
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
-name|void
-name|_M_set_determinate
-parameter_list|(
-name|off_type
+name|streamsize
 name|__off
 parameter_list|)
 block|{
+specifier|const
 name|bool
 name|__testin
 init|=
+name|this
+operator|->
 name|_M_mode
 operator|&
 name|ios_base
 operator|::
 name|in
 decl_stmt|;
+specifier|const
 name|bool
 name|__testout
 init|=
+name|this
+operator|->
 name|_M_mode
 operator|&
 name|ios_base
@@ -864,100 +861,91 @@ decl_stmt|;
 if|if
 condition|(
 name|__testin
+operator|&&
+name|__off
+operator|>
+literal|0
 condition|)
 name|this
 operator|->
 name|setg
 argument_list|(
+name|this
+operator|->
 name|_M_buf
 argument_list|,
+name|this
+operator|->
 name|_M_buf
 argument_list|,
+name|this
+operator|->
 name|_M_buf
 operator|+
 name|__off
+argument_list|)
+expr_stmt|;
+else|else
+name|this
+operator|->
+name|setg
+argument_list|(
+name|this
+operator|->
+name|_M_buf
+argument_list|,
+name|this
+operator|->
+name|_M_buf
+argument_list|,
+name|this
+operator|->
+name|_M_buf
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|__testout
+operator|&&
+name|__off
+operator|==
+literal|0
+operator|&&
+name|this
+operator|->
+name|_M_buf_size
+operator|>
+literal|1
 condition|)
 name|this
 operator|->
 name|setp
 argument_list|(
+name|this
+operator|->
 name|_M_buf
 argument_list|,
+name|this
+operator|->
 name|_M_buf
 operator|+
-name|__off
+name|this
+operator|->
+name|_M_buf_size
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
-name|_M_filepos
-operator|=
-name|_M_buf
-operator|+
-name|__off
+else|else
+name|this
+operator|->
+name|setp
+argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
-block|}
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
-name|bool
-name|_M_is_indeterminate
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|bool
-name|__ret
-init|=
-name|false
-decl_stmt|;
-comment|// Don't return true if unbuffered.
-if|if
-condition|(
-name|_M_buf
-condition|)
-block|{
-if|if
-condition|(
-name|_M_mode
-operator|&
-name|ios_base
-operator|::
-name|in
-condition|)
-name|__ret
-operator|=
-name|_M_in_beg
-operator|==
-name|_M_in_cur
-operator|&&
-name|_M_in_cur
-operator|==
-name|_M_in_end
-expr_stmt|;
-if|if
-condition|(
-name|_M_mode
-operator|&
-name|ios_base
-operator|::
-name|out
-condition|)
-name|__ret
-operator|=
-name|_M_out_beg
-operator|==
-name|_M_out_cur
-operator|&&
-name|_M_out_cur
-operator|==
-name|_M_out_end
-expr_stmt|;
-block|}
-return|return
-name|__ret
-return|;
 block|}
 block|}
 end_decl_stmt
@@ -965,143 +953,6 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_comment
-comment|// Explicit specialization declarations, defined in src/fstream.cc.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-operator|>
-name|basic_filebuf
-operator|<
-name|char
-operator|>
-operator|::
-name|int_type
-name|basic_filebuf
-operator|<
-name|char
-operator|>
-operator|::
-name|_M_underflow_common
-argument_list|(
-argument|bool __bump
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_USE_WCHAR_T
-end_ifdef
-
-begin_expr_stmt
-name|template
-operator|<
-operator|>
-name|basic_filebuf
-operator|<
-name|wchar_t
-operator|>
-operator|::
-name|int_type
-name|basic_filebuf
-operator|<
-name|wchar_t
-operator|>
-operator|::
-name|_M_underflow_common
-argument_list|(
-argument|bool __bump
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// Generic definitions.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|_CharT
-operator|,
-name|typename
-name|_Traits
-operator|>
-name|typename
-name|basic_filebuf
-operator|<
-name|_CharT
-operator|,
-name|_Traits
-operator|>
-operator|::
-name|int_type
-name|basic_filebuf
-operator|<
-name|_CharT
-operator|,
-name|_Traits
-operator|>
-operator|::
-name|underflow
-argument_list|()
-block|{
-return|return
-name|_M_underflow_common
-argument_list|(
-name|false
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|_CharT
-operator|,
-name|typename
-name|_Traits
-operator|>
-name|typename
-name|basic_filebuf
-operator|<
-name|_CharT
-operator|,
-name|_Traits
-operator|>
-operator|::
-name|int_type
-name|basic_filebuf
-operator|<
-name|_CharT
-operator|,
-name|_Traits
-operator|>
-operator|::
-name|uflow
-argument_list|()
-block|{
-return|return
-name|_M_underflow_common
-argument_list|(
-name|true
-argument_list|)
-return|;
-block|}
-end_expr_stmt
 
 begin_comment
 comment|// [27.8.1.5] Template class basic_ifstream
@@ -1238,9 +1089,7 @@ name|basic_ifstream
 argument_list|()
 operator|:
 name|__istream_type
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 operator|,
 name|_M_filebuf
 argument_list|()
@@ -1263,9 +1112,7 @@ argument|ios_base::openmode __mode = ios_base::in
 argument_list|)
 operator|:
 name|__istream_type
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 operator|,
 name|_M_filebuf
 argument_list|()
@@ -1548,9 +1395,7 @@ name|basic_ofstream
 argument_list|()
 operator|:
 name|__ostream_type
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 operator|,
 name|_M_filebuf
 argument_list|()
@@ -1573,9 +1418,7 @@ argument|ios_base::openmode __mode = ios_base::out|ios_base::trunc
 argument_list|)
 operator|:
 name|__ostream_type
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 operator|,
 name|_M_filebuf
 argument_list|()
@@ -1874,9 +1717,7 @@ name|basic_fstream
 argument_list|()
 operator|:
 name|__iostream_type
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 operator|,
 name|_M_filebuf
 argument_list|()
@@ -2007,6 +1848,8 @@ argument_list|,
 name|__mode
 argument_list|)
 condition|)
+name|this
+operator|->
 name|setstate
 argument_list|(
 name|ios_base
@@ -2034,6 +1877,8 @@ operator|.
 name|close
 argument_list|()
 condition|)
+name|this
+operator|->
 name|setstate
 argument_list|(
 name|ios_base
@@ -2049,28 +1894,11 @@ unit|}; }
 comment|// namespace std
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_NO_TEMPLATE_EXPORT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|export
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_FULLY_COMPLIANT_HEADERS
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GLIBCXX_EXPORT_TEMPLATE
+end_ifndef
 
 begin_include
 include|#
@@ -2087,6 +1915,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _GLIBCXX_FSTREAM */
+end_comment
 
 end_unit
 

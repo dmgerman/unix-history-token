@@ -4,7 +4,7 @@ comment|// Iterators -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__GLIBCPP_INTERNAL_ITERATOR_H
+name|_ITERATOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__GLIBCPP_INTERNAL_ITERATOR_H
+name|_ITERATOR_H
+value|1
 end_define
 
 begin_decl_stmt
@@ -217,7 +218,7 @@ expr_stmt|;
 name|public
 label|:
 comment|/**        *  The default constructor default-initializes member @p current.        *  If it is a pointer, that means it is zero-initialized.       */
-comment|// _GLIBCPP_RESOLVE_LIB_DEFECTS
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
 comment|// 235 No specification of default ctor for reverse_iterator
 name|reverse_iterator
 argument_list|()
@@ -1479,50 +1480,6 @@ name|_Container
 operator|>
 name|class
 name|__normal_iterator
-operator|:
-name|public
-name|iterator
-operator|<
-name|typename
-name|iterator_traits
-operator|<
-name|_Iterator
-operator|>
-operator|::
-name|iterator_category
-operator|,
-name|typename
-name|iterator_traits
-operator|<
-name|_Iterator
-operator|>
-operator|::
-name|value_type
-operator|,
-name|typename
-name|iterator_traits
-operator|<
-name|_Iterator
-operator|>
-operator|::
-name|difference_type
-operator|,
-name|typename
-name|iterator_traits
-operator|<
-name|_Iterator
-operator|>
-operator|::
-name|pointer
-operator|,
-name|typename
-name|iterator_traits
-operator|<
-name|_Iterator
-operator|>
-operator|::
-name|reference
-operator|>
 block|{
 name|protected
 operator|:
@@ -1531,6 +1488,26 @@ name|_M_current
 block|;
 name|public
 operator|:
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_Iterator
+operator|>
+operator|::
+name|iterator_category
+name|iterator_category
+expr_stmt|;
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_Iterator
+operator|>
+operator|::
+name|value_type
+name|value_type
+expr_stmt|;
 typedef|typedef
 name|typename
 name|iterator_traits
@@ -2488,7 +2465,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// _GLIBCPP_RESOLVE_LIB_DEFECTS
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|// Type traits implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_TYPE_TRAITS_H
+name|_TYPE_TRAITS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_TYPE_TRAITS_H
+name|_TYPE_TRAITS_H
 value|1
 end_define
 
@@ -130,7 +130,7 @@ file|<bits/c++config.h>
 end_include
 
 begin_comment
-comment|/* This header file provides a framework for allowing compile time dispatch based on type attributes. This is useful when writing template code. For example, when making a copy of an array of an unknown type, it helps to know if the type has a trivial copy constructor or not, to help decide if a memcpy can be used.  The class template __type_traits provides a series of typedefs each of which is either __true_type or __false_type. The argument to __type_traits can be any type. The typedefs within this template will attain their correct values by one of these means:     1. The general instantiation contain conservative values which work        for all types.     2. Specializations may be declared to make distinctions between types.     3. Some compilers (such as the Silicon Graphics N32 and N64 compilers)        will automatically provide the appropriate specializations for all        types.  EXAMPLE:  //Copy an array of elements which have non-trivial copy constructors template<class _Tp> void    copy(_Tp* __source,_Tp* __destination,int __n,__false_type); //Copy an array of elements which have trivial copy constructors. Use memcpy. template<class _Tp> void    copy(_Tp* __source,_Tp* __destination,int __n,__true_type);  //Copy an array of any type by using the most efficient copy mechanism template<class _Tp> inline void copy(_Tp* __source,_Tp* __destination,int __n) {    copy(__source,__destination,__n,         typename __type_traits<_Tp>::has_trivial_copy_constructor()); } */
+comment|/* This header file provides a framework for allowing compile time dispatch based on type attributes. This is useful when writing template code. For example, when making a copy of an array of an unknown type, it helps to know if the type has a trivial copy constructor or not, to help decide if a memcpy can be used.  The class template __type_traits provides a series of typedefs each of which is either __true_type or __false_type. The argument to __type_traits can be any type. The typedefs within this template will attain their correct values by one of these means:     1. The general instantiation contain conservative values which work        for all types.     2. Specializations may be declared to make distinctions between types.     3. Some compilers (such as the Silicon Graphics N32 and N64 compilers)        will automatically provide the appropriate specializations for all        types.  EXAMPLE:  //Copy an array of elements which have non-trivial copy constructors template<class _Tp> void   copy(_Tp* __source,_Tp* __destination,int __n,__false_type); //Copy an array of elements which have trivial copy constructors. Use memcpy. template<class _Tp> void   copy(_Tp* __source,_Tp* __destination,int __n,__true_type);  //Copy an array of any type by using the most efficient copy mechanism template<class _Tp> inline void copy(_Tp* __source,_Tp* __destination,int __n) {    copy(__source,__destination,__n,         typename __type_traits<_Tp>::has_trivial_copy_constructor()); } */
 end_comment
 
 begin_struct
@@ -163,11 +163,11 @@ typedef|;
 end_expr_stmt
 
 begin_comment
-comment|/* Do not remove this member. It informs a compiler which                       automatically specializes __type_traits that this                       __type_traits template is special. It just makes sure that                       things work if an implementation is using a template                       called __type_traits for something unrelated. */
+comment|/* Do not remove this member. It informs a compiler which        automatically specializes __type_traits that this        __type_traits template is special. It just makes sure that        things work if an implementation is using a template        called __type_traits for something unrelated. */
 end_comment
 
 begin_comment
-comment|/* The following restrictions should be observed for the sake of       compilers which automatically produce type specific specializations        of this class:           - You may reorder the members below if you wish           - You may remove any of the members below if you wish           - You must not rename members without making the corresponding             name change in the compiler           - Members you add will be treated like regular members unless             you add the appropriate support in the compiler. */
+comment|/* The following restrictions should be observed for the sake of       compilers which automatically produce type specific specializations       of this class:           - You may reorder the members below if you wish           - You may remove any of the members below if you wish           - You must not rename members without making the corresponding             name change in the compiler           - Members you add will be treated like regular members unless             you add the appropriate support in the compiler. */
 end_comment
 
 begin_typedef
@@ -1377,7 +1377,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_BITS_TYPE_TRAITS_H */
+comment|/* _TYPE_TRAITS_H */
 end_comment
 
 begin_comment

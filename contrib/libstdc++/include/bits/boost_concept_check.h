@@ -1,6 +1,94 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// Copyright (C) 2004 Free Software Foundation, Inc.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// This file is part of the GNU ISO C++ Library.  This library is free
+end_comment
+
+begin_comment
+comment|// software; you can redistribute it and/or modify it under the
+end_comment
+
+begin_comment
+comment|// terms of the GNU General Public License as published by the
+end_comment
+
+begin_comment
+comment|// Free Software Foundation; either version 2, or (at your option)
+end_comment
+
+begin_comment
+comment|// any later version.
+end_comment
+
+begin_comment
+comment|// This library is distributed in the hope that it will be useful,
+end_comment
+
+begin_comment
+comment|// but WITHOUT ANY WARRANTY; without even the implied warranty of
+end_comment
+
+begin_comment
+comment|// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+end_comment
+
+begin_comment
+comment|// GNU General Public License for more details.
+end_comment
+
+begin_comment
+comment|// You should have received a copy of the GNU General Public License along
+end_comment
+
+begin_comment
+comment|// with this library; see the file COPYING.  If not, write to the Free
+end_comment
+
+begin_comment
+comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+end_comment
+
+begin_comment
+comment|// USA.
+end_comment
+
+begin_comment
+comment|// As a special exception, you may use this file as part of a free software
+end_comment
+
+begin_comment
+comment|// library without restriction.  Specifically, if other files instantiate
+end_comment
+
+begin_comment
+comment|// templates or use macros or inline functions from this file, or you compile
+end_comment
+
+begin_comment
+comment|// this file and link it with other files to produce an executable, this
+end_comment
+
+begin_comment
+comment|// file does not by itself cause the resulting executable to be covered by
+end_comment
+
+begin_comment
+comment|// the GNU General Public License.  This exception does not however
+end_comment
+
+begin_comment
+comment|// invalidate any other reasons why the executable file might be covered by
+end_comment
+
+begin_comment
+comment|// the GNU General Public License.
 end_comment
 
 begin_comment
@@ -38,13 +126,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_GLIBCPP_BOOST_CONCEPT_CHECK
+name|_BOOST_CONCEPT_CHECK_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_BOOST_CONCEPT_CHECK
+name|_BOOST_CONCEPT_CHECK_H
 value|1
 end_define
 
@@ -119,10 +207,25 @@ name|_Concept
 operator|::
 name|__constraints
 block|; }
+comment|// No definition: if this is referenced, there's a problem with
+comment|// the instantiating type not being one of the required integer types.
+comment|// Unfortunately, this results in a link-time error, not a compile-time error.
+name|void
+name|__error_type_must_be_an_integer_type
+argument_list|()
+expr_stmt|;
+name|void
+name|__error_type_must_be_an_unsigned_integer_type
+parameter_list|()
+function_decl|;
+name|void
+name|__error_type_must_be_a_signed_integer_type
+parameter_list|()
+function_decl|;
 comment|// ??? Should the "concept_checking*" structs begin with more than _ ?
 define|#
 directive|define
-name|_GLIBCPP_CLASS_REQUIRES
+name|_GLIBCXX_CLASS_REQUIRES
 parameter_list|(
 name|_type_var
 parameter_list|,
@@ -134,7 +237,7 @@ define|\
 value|typedef void (_ns::_concept<_type_var>::* _func##_type_var##_concept)(); \   template<_func##_type_var##_concept _Tp1> \   struct _concept_checking##_type_var##_concept { }; \   typedef _concept_checking##_type_var##_concept< \&_ns::_concept<_type_var>::__constraints> \     _concept_checking_typedef##_type_var##_concept
 define|#
 directive|define
-name|_GLIBCPP_CLASS_REQUIRES2
+name|_GLIBCXX_CLASS_REQUIRES2
 parameter_list|(
 name|_type_var1
 parameter_list|,
@@ -148,7 +251,7 @@ define|\
 value|typedef void (_ns::_concept<_type_var1,_type_var2>::* _func##_type_var1##_type_var2##_concept)(); \   template<_func##_type_var1##_type_var2##_concept _Tp1> \   struct _concept_checking##_type_var1##_type_var2##_concept { }; \   typedef _concept_checking##_type_var1##_type_var2##_concept< \&_ns::_concept<_type_var1,_type_var2>::__constraints> \     _concept_checking_typedef##_type_var1##_type_var2##_concept
 define|#
 directive|define
-name|_GLIBCPP_CLASS_REQUIRES3
+name|_GLIBCXX_CLASS_REQUIRES3
 parameter_list|(
 name|_type_var1
 parameter_list|,
@@ -164,7 +267,7 @@ define|\
 value|typedef void (_ns::_concept<_type_var1,_type_var2,_type_var3>::* _func##_type_var1##_type_var2##_type_var3##_concept)(); \   template<_func##_type_var1##_type_var2##_type_var3##_concept _Tp1> \   struct _concept_checking##_type_var1##_type_var2##_type_var3##_concept { }; \   typedef _concept_checking##_type_var1##_type_var2##_type_var3##_concept< \&_ns::_concept<_type_var1,_type_var2,_type_var3>::__constraints>  \   _concept_checking_typedef##_type_var1##_type_var2##_type_var3##_concept
 define|#
 directive|define
-name|_GLIBCPP_CLASS_REQUIRES4
+name|_GLIBCXX_CLASS_REQUIRES4
 parameter_list|(
 name|_type_var1
 parameter_list|,
@@ -648,10 +751,10 @@ argument_list|)
 block|{
 name|_Tp
 name|__c
-argument_list|(
-argument|__a
-argument_list|)
 name|_IsUnused
+argument_list|(
+name|__a
+argument_list|)
 block|;
 comment|// require const copy constructor
 specifier|const
@@ -684,10 +787,10 @@ argument_list|()
 block|{
 name|_Tp
 name|__b
-argument_list|(
-argument|__a
-argument_list|)
 name|_IsUnused
+argument_list|(
+name|__a
+argument_list|)
 block|;
 name|__a
 operator|=
@@ -707,10 +810,10 @@ argument_list|)
 block|{
 name|_Tp
 name|__c
-argument_list|(
-argument|__b
-argument_list|)
 name|_IsUnused
+argument_list|(
+name|__b
+argument_list|)
 block|;
 name|__a
 operator|=
@@ -790,13 +893,6 @@ name|__aux_require_boolean_expr
 argument_list|(
 name|__a
 operator|==
-name|__b
-argument_list|)
-block|;
-name|__aux_require_boolean_expr
-argument_list|(
-name|__a
-operator|!=
 name|__b
 argument_list|)
 block|;     }
@@ -880,7 +976,7 @@ block|;   }
 block|;
 define|#
 directive|define
-name|_GLIBCPP_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
+name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
 parameter_list|(
 name|_OP
 parameter_list|,
@@ -890,7 +986,7 @@ define|\
 value|template<class _First, class _Second> \   struct _NAME { \     void __constraints() { (void)__constraints_(); } \     bool __constraints_() {  \       return  __a _OP __b; \     } \     _First __a; \     _Second __b; \   }
 define|#
 directive|define
-name|_GLIBCPP_DEFINE_BINARY_OPERATOR_CONSTRAINT
+name|_GLIBCXX_DEFINE_BINARY_OPERATOR_CONSTRAINT
 parameter_list|(
 name|_OP
 parameter_list|,
@@ -898,77 +994,77 @@ name|_NAME
 parameter_list|)
 define|\
 value|template<class _Ret, class _First, class _Second> \   struct _NAME { \     void __constraints() { (void)__constraints_(); } \     _Ret __constraints_() {  \       return __a _OP __b; \     } \     _First __a; \     _Second __b; \   }
-name|_GLIBCPP_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
+name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
 argument_list|(
 operator|==
 argument_list|,
 name|_EqualOpConcept
 argument_list|)
 block|;
-name|_GLIBCPP_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
+name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
 argument_list|(
 operator|!=
 argument_list|,
 name|_NotEqualOpConcept
 argument_list|)
 block|;
-name|_GLIBCPP_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
+name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
 argument_list|(
 operator|<
 argument_list|,
 name|_LessThanOpConcept
 argument_list|)
 block|;
-name|_GLIBCPP_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
+name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
 argument_list|(
 operator|<=
 argument_list|,
 name|_LessEqualOpConcept
 argument_list|)
 block|;
-name|_GLIBCPP_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
+name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
 argument_list|(
 operator|>
 argument_list|,
 name|_GreaterThanOpConcept
 argument_list|)
 block|;
-name|_GLIBCPP_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
+name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
 argument_list|(
 operator|>=
 argument_list|,
 name|_GreaterEqualOpConcept
 argument_list|)
 block|;
-name|_GLIBCPP_DEFINE_BINARY_OPERATOR_CONSTRAINT
+name|_GLIBCXX_DEFINE_BINARY_OPERATOR_CONSTRAINT
 argument_list|(
 operator|+
 argument_list|,
 name|_PlusOpConcept
 argument_list|)
 block|;
-name|_GLIBCPP_DEFINE_BINARY_OPERATOR_CONSTRAINT
+name|_GLIBCXX_DEFINE_BINARY_OPERATOR_CONSTRAINT
 argument_list|(
 operator|*
 argument_list|,
 name|_TimesOpConcept
 argument_list|)
 block|;
-name|_GLIBCPP_DEFINE_BINARY_OPERATOR_CONSTRAINT
+name|_GLIBCXX_DEFINE_BINARY_OPERATOR_CONSTRAINT
 argument_list|(
 operator|/
 argument_list|,
 name|_DivideOpConcept
 argument_list|)
 block|;
-name|_GLIBCPP_DEFINE_BINARY_OPERATOR_CONSTRAINT
+name|_GLIBCXX_DEFINE_BINARY_OPERATOR_CONSTRAINT
 argument_list|(
 operator|-
 argument_list|,
 name|_SubtractOpConcept
 argument_list|)
 block|;
-name|_GLIBCPP_DEFINE_BINARY_OPERATOR_CONSTRAINT
+name|_GLIBCXX_DEFINE_BINARY_OPERATOR_CONSTRAINT
 argument_list|(
 operator|%
 argument_list|,
@@ -977,10 +1073,10 @@ argument_list|)
 block|;
 undef|#
 directive|undef
-name|_GLIBCPP_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
+name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
 undef|#
 directive|undef
-name|_GLIBCPP_DEFINE_BINARY_OPERATOR_CONSTRAINT
+name|_GLIBCXX_DEFINE_BINARY_OPERATOR_CONSTRAINT
 comment|//===========================================================================
 comment|// Function Object Concepts
 name|template
@@ -1354,16 +1450,7 @@ name|void
 name|__constraints
 argument_list|()
 block|{
-name|__function_requires
-operator|<
-name|_DefaultConstructibleConcept
-operator|<
-name|_Tp
-operator|>
-expr|>
-operator|(
-operator|)
-block|;
+comment|//    __function_requires< _DefaultConstructibleConcept<_Tp>>();
 name|__function_requires
 operator|<
 name|_AssignableConcept
@@ -1466,9 +1553,9 @@ name|_Tp
 operator|>
 operator|::
 name|difference_type
-name|_D
+name|_Diff
 expr_stmt|;
-comment|//      __function_requires< _SignedIntegerConcept<_D>>();
+comment|//      __function_requires< _SignedIntegerConcept<_Diff>>();
 typedef|typedef
 name|typename
 name|std
@@ -1479,7 +1566,7 @@ name|_Tp
 operator|>
 operator|::
 name|reference
-name|_R
+name|_Ref
 expr_stmt|;
 typedef|typedef
 name|typename
@@ -1621,6 +1708,16 @@ operator|)
 block|;
 name|__function_requires
 operator|<
+name|_DefaultConstructibleConcept
+operator|<
+name|_Tp
+operator|>
+expr|>
+operator|(
+operator|)
+block|;
+name|__function_requires
+operator|<
 name|_ConvertibleConcept
 operator|<
 name|typename
@@ -1651,9 +1748,9 @@ name|_Tp
 operator|>
 operator|::
 name|reference
-name|_R
+name|_Ref
 expr_stmt|;
-name|_R
+name|_Ref
 name|__r
 name|_IsUnused
 operator|=
@@ -1867,7 +1964,7 @@ expr|>
 operator|(
 operator|)
 block|;
-comment|// ??? We don't use _R, are we just checking for "referenceability"?
+comment|// ??? We don't use _Ref, are we just checking for "referenceability"?
 typedef|typedef
 name|typename
 name|std
@@ -1878,7 +1975,7 @@ name|_Tp
 operator|>
 operator|::
 name|reference
-name|_R
+name|_Ref
 expr_stmt|;
 name|__i
 operator|+=
@@ -2868,26 +2965,26 @@ operator|)
 expr_stmt|;
 name|_Sequence
 name|__c
+name|_IsUnused
 argument_list|(
 name|__n
 argument_list|)
-name|_IsUnused
 decl_stmt|,
 name|__c2
+name|_IsUnused
 argument_list|(
 name|__n
 argument_list|,
 name|__t
 argument_list|)
-name|_IsUnused
 decl_stmt|,
 name|__c3
+name|_IsUnused
 argument_list|(
 name|__first
 argument_list|,
 name|__last
 argument_list|)
-name|_IsUnused
 decl_stmt|;
 name|__c
 operator|.
@@ -3507,7 +3604,6 @@ name|_MultipleAssociativeContainer
 operator|::
 name|iterator
 name|__pos
-name|_IsUnused
 block|;
 name|typename
 name|_MultipleAssociativeContainer
@@ -3578,7 +3674,7 @@ name|_Value_type
 operator|>
 operator|::
 name|_Type
-name|_Requqired
+name|_Required
 expr_stmt|;
 end_typedef
 
@@ -3706,28 +3802,28 @@ operator|)
 block|;
 name|_SortedAssociativeContainer
 name|__c
-argument_list|(
-argument|__kc
-argument_list|)
 name|_IsUnused
+argument_list|(
+name|__kc
+argument_list|)
 block|,
 name|__c2
-argument_list|(
-argument|__first
-argument_list|,
-argument|__last
-argument_list|)
 name|_IsUnused
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
 block|,
 name|__c3
-argument_list|(
-argument|__first
-argument_list|,
-argument|__last
-argument_list|,
-argument|__kc
-argument_list|)
 name|_IsUnused
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|,
+name|__kc
+argument_list|)
 block|;
 name|__p
 operator|=
@@ -3928,7 +4024,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// _GLIBCPP_BOOST_CONCEPT_CHECK
+comment|// _GLIBCXX_BOOST_CONCEPT_CHECK
 end_comment
 
 end_unit

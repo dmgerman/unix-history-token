@@ -114,13 +114,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_LOCALE
+name|_GLIBCXX_LOCALE
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_LOCALE
+name|_GLIBCXX_LOCALE
 value|1
 end_define
 
@@ -159,6 +159,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _GLIBCXX_LOCALE */
+end_comment
 
 end_unit
 

@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -111,6 +111,16 @@ begin_comment
 comment|// Information as gleaned from /usr/include/ctype.h
 end_comment
 
+begin_extern
+extern|extern
+literal|"C"
+specifier|const
+name|u_int8_t
+name|_C_ctype_
+index|[]
+decl_stmt|;
+end_extern
+
 begin_expr_stmt
 specifier|const
 name|ctype_base
@@ -128,7 +138,9 @@ name|throw
 argument_list|()
 block|{
 return|return
-literal|0
+name|_C_ctype_
+operator|+
+literal|1
 return|;
 block|}
 end_expr_stmt
@@ -150,13 +162,10 @@ argument_list|,
 argument|size_t __refs
 argument_list|)
 operator|:
-name|__ctype_abstract_base
-operator|<
-name|char
-operator|>
-operator|(
+name|facet
+argument_list|(
 name|__refs
-operator|)
+argument_list|)
 operator|,
 name|_M_del
 argument_list|(
@@ -179,10 +188,41 @@ argument_list|)
 operator|,
 name|_M_table
 argument_list|(
-argument|__table ? __table : _ctype_ +
-literal|1
+argument|__table ? __table : classic_table()
 argument_list|)
-block|{ }
+block|{
+name|memset
+argument_list|(
+name|_M_widen
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|_M_widen
+argument_list|)
+argument_list|)
+block|;
+name|_M_widen_ok
+operator|=
+literal|0
+block|;
+name|memset
+argument_list|(
+name|_M_narrow
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|_M_narrow
+argument_list|)
+argument_list|)
+block|;
+name|_M_narrow_ok
+operator|=
+literal|0
+block|;   }
 name|ctype
 operator|<
 name|char
@@ -197,13 +237,10 @@ argument_list|,
 argument|size_t __refs
 argument_list|)
 operator|:
-name|__ctype_abstract_base
-operator|<
-name|char
-operator|>
-operator|(
+name|facet
+argument_list|(
 name|__refs
-operator|)
+argument_list|)
 operator|,
 name|_M_del
 argument_list|(
@@ -226,10 +263,41 @@ argument_list|)
 operator|,
 name|_M_table
 argument_list|(
-argument|__table ? __table : _ctype_ +
-literal|1
+argument|__table ? __table : classic_table()
 argument_list|)
-block|{ }
+block|{
+name|memset
+argument_list|(
+name|_M_widen
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|_M_widen
+argument_list|)
+argument_list|)
+block|;
+name|_M_widen_ok
+operator|=
+literal|0
+block|;
+name|memset
+argument_list|(
+name|_M_narrow
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|_M_narrow
+argument_list|)
+argument_list|)
+block|;
+name|_M_narrow_ok
+operator|=
+literal|0
+block|;   }
 name|char
 name|ctype
 operator|<

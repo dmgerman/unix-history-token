@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_IOSFWD
+name|_GLIBCXX_IOSFWD
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_IOSFWD
+name|_GLIBCXX_IOSFWD
 value|1
 end_define
 
@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<bits/c++io.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cctype>
 end_include
 
@@ -170,7 +176,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<bits/fpos.h>
+file|<bits/postypes.h>
 end_include
 
 begin_include
@@ -455,15 +461,11 @@ expr|>
 name|class
 name|ostreambuf_iterator
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_RESOLVE_LIB_DEFECTS
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
 comment|// Not included.   (??? Apparently no LWG number?)
 name|class
 name|ios_base
 decl_stmt|;
-endif|#
-directive|endif
 comment|/**     *  @defgroup s27_2_iosfwd I/O Forward Declarations    *    *  Nearly all of the I/O classes are parameterized on the type of    *  characters they read and write.  (The major exception is ios_base at    *  the top of the hierarchy.)  This is a change from pre-Standard    *  streams, which were not templates.    *    *  For ease of use and compatibility, all of the basic_* I/O-related    *  classes are given typedef names for both of the builtin character    *  widths (wide and narrow).  The typedefs are the same as the    *  pre-Standard names, for example:    *    *  @code    *     typedef basic_ifstream<char>  ifstream;    *  @endcode    *    *  Because properly forward-declaring these classes can be difficult, you    *  should not do it yourself.  Instead, include the&lt;iosfwd&gt;    *  header, which contains only declarations of all the I/O classes as    *  well as the typedefs.  Trying to forward-declare the typedefs    *  themselves (e.g., "class ostream;") is not valid ISO C++.    *    *  For more specific declarations, see    *  http://gcc.gnu.org/onlinedocs/libstdc++/27_io/howto.html#10    *    *  @{   */
 typedef|typedef
 name|basic_ios
@@ -571,7 +573,7 @@ expr_stmt|;
 comment|///< @isiosfwd
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_USE_WCHAR_T
+name|_GLIBCXX_USE_WCHAR_T
 typedef|typedef
 name|basic_ios
 operator|<
@@ -690,6 +692,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _GLIBCXX_IOSFWD */
+end_comment
 
 end_unit
 

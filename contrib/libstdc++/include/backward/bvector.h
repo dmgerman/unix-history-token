@@ -4,7 +4,7 @@ comment|// Backward-compat support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -102,13 +102,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__SGI_STL_BVECTOR_H
+name|_BACKWARD_BVECTOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__SGI_STL_BVECTOR_H
+name|_BACKWARD_BVECTOR_H
+value|1
 end_define
 
 begin_include
@@ -123,13 +124,24 @@ directive|include
 file|<vector>
 end_include
 
-begin_expr_stmt
-name|using
+begin_typedef
+typedef|typedef
 name|std
 operator|::
+name|vector
+operator|<
+name|bool
+operator|,
+name|std
+operator|::
+name|allocator
+operator|<
+name|bool
+operator|>
+expr|>
 name|bit_vector
 expr_stmt|;
-end_expr_stmt
+end_typedef
 
 begin_endif
 endif|#
@@ -137,7 +149,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __SGI_STL_BVECTOR_H */
+comment|/* _BACKWARD_BVECTOR_H */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|// Low-level functions for atomic operations: Generic version  -*- C++ -
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
+comment|// Copyright (C) 1999, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -95,66 +95,38 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_BITS_ATOMICITY_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_BITS_ATOMICITY_H
-value|1
-end_define
+begin_include
+include|#
+directive|include
+file|<bits/atomicity.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|<bits/gthr.h>
+file|<bits/concurrence.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_GLIBCPP_NEED_GENERIC_MUTEX
-end_define
+begin_decl_stmt
+name|namespace
+name|__gnu_internal
+block|{
+name|__glibcxx_mutex_define_initialized
+argument_list|(
+name|atomic_mutex
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
 
-begin_typedef
-typedef|typedef
-name|int
-name|_Atomic_word
-typedef|;
-end_typedef
+begin_comment
+comment|// namespace __gnu_internal
+end_comment
 
 begin_decl_stmt
 name|namespace
 name|__gnu_cxx
 block|{
-specifier|extern
-name|__gthread_mutex_t
-name|_Atomic_add_mutex
-decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__GTHREAD_MUTEX_INIT
-specifier|extern
-name|__gthread_once_t
-name|_Atomic_add_mutex_once
-decl_stmt|;
-specifier|extern
-name|void
-name|__gthread_atomic_add_mutex_once
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|inline
 name|_Atomic_word
 name|__attribute__
 argument_list|(
@@ -173,34 +145,16 @@ name|int
 name|__val
 argument_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|__GTHREAD_MUTEX_INIT
-name|__gthread_once
+name|__glibcxx_mutex_lock
 argument_list|(
-operator|&
-name|__gnu_cxx
+name|__gnu_internal
 operator|::
-name|_Atomic_add_mutex_once
-argument_list|,
-name|__gnu_cxx
-operator|::
-name|__gthread_atomic_add_mutex_once
+name|atomic_mutex
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|_Atomic_word
 name|__result
 decl_stmt|;
-name|__gthread_mutex_lock
-argument_list|(
-operator|&
-name|__gnu_cxx
-operator|::
-name|_Atomic_add_mutex
-argument_list|)
-expr_stmt|;
 name|__result
 operator|=
 operator|*
@@ -211,23 +165,17 @@ name|__mem
 operator|+=
 name|__val
 expr_stmt|;
-name|__gthread_mutex_unlock
+name|__glibcxx_mutex_unlock
 argument_list|(
-operator|&
-name|__gnu_cxx
+name|__gnu_internal
 operator|::
-name|_Atomic_add_mutex
+name|atomic_mutex
 argument_list|)
 expr_stmt|;
 return|return
 name|__result
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|inline
 name|void
 name|__attribute__
 argument_list|(
@@ -246,9 +194,6 @@ name|int
 name|__val
 argument_list|)
 block|{
-operator|(
-name|void
-operator|)
 name|__exchange_and_add
 argument_list|(
 name|__mem
@@ -257,15 +202,11 @@ name|__val
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* atomicity.h */
+comment|// namespace __gnu_cxx
 end_comment
 
 end_unit

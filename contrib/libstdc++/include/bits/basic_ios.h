@@ -4,7 +4,7 @@ comment|// Iostreams base classes -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003
+comment|// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003, 2004
 end_comment
 
 begin_comment
@@ -106,13 +106,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_BASICIOS_H
+name|_BASIC_IOS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_BASICIOS_H
+name|_BASIC_IOS_H
 value|1
 end_define
 
@@ -211,53 +211,34 @@ operator|>
 name|__ctype_type
 expr_stmt|;
 typedef|typedef
+name|num_put
+operator|<
+name|_CharT
+operator|,
 name|ostreambuf_iterator
 operator|<
 name|_CharT
 operator|,
 name|_Traits
 operator|>
-name|__ostreambuf_iter
-expr_stmt|;
-typedef|typedef
-name|num_put
-operator|<
-name|_CharT
-operator|,
-name|__ostreambuf_iter
-operator|>
-name|__numput_type
-expr_stmt|;
-typedef|typedef
-name|istreambuf_iterator
-operator|<
-name|_CharT
-operator|,
-name|_Traits
-operator|>
-name|__istreambuf_iter
+expr|>
+name|__num_put_type
 expr_stmt|;
 typedef|typedef
 name|num_get
 operator|<
 name|_CharT
 operator|,
-name|__istreambuf_iter
+name|istreambuf_iterator
+operator|<
+name|_CharT
+operator|,
+name|_Traits
 operator|>
-name|__numget_type
+expr|>
+name|__num_get_type
 expr_stmt|;
 comment|//@}
-name|friend
-name|void
-name|ios_base
-operator|::
-name|Init
-operator|::
-name|_S_ios_create
-argument_list|(
-name|bool
-argument_list|)
-expr_stmt|;
 comment|// Data members:
 name|protected
 label|:
@@ -291,19 +272,19 @@ comment|// Cached use_facet<ctype>, which is based on the current locale info.
 specifier|const
 name|__ctype_type
 modifier|*
-name|_M_fctype
+name|_M_ctype
 decl_stmt|;
-comment|// From ostream.
+comment|// For ostream.
 specifier|const
-name|__numput_type
+name|__num_put_type
 modifier|*
-name|_M_fnumput
+name|_M_num_put
 decl_stmt|;
-comment|// From istream.
+comment|// For istream.
 specifier|const
-name|__numget_type
+name|__num_get_type
 modifier|*
-name|_M_fnumget
+name|_M_num_get
 decl_stmt|;
 name|public
 label|:
@@ -388,6 +369,34 @@ argument_list|()
 operator||
 name|__state
 argument_list|)
+expr_stmt|;
+block|}
+comment|// Flip the internal state on for the proper state bits, then re
+comment|// throws the propagated exception if bit also set in
+comment|// exceptions().
+name|void
+name|_M_setstate
+parameter_list|(
+name|iostate
+name|__state
+parameter_list|)
+block|{
+comment|// 27.6.1.2.1 Common requirements.
+comment|// Turn this on without causing an ios::failure to be thrown.
+name|_M_streambuf_state
+operator||=
+name|__state
+expr_stmt|;
+if|if
+condition|(
+name|this
+operator|->
+name|exceptions
+argument_list|()
+operator|&
+name|__state
+condition|)
+name|__throw_exception_again
 expr_stmt|;
 block|}
 comment|/**        *  @brief  Fast error checking.        *  @return  True if no error flags are set.        *        *  A wrapper around rdstate.       */
@@ -476,7 +485,7 @@ return|return
 name|_M_exception
 return|;
 block|}
-comment|/**        *  @brief  Throwing exceptions on errors.        *  @param  except  The new exceptions mask.        *        *  By default, error flags are set silently.  You can set an        *  exceptions mask for each stream; if a bit in the mask becomes set        *  in the error flags, then an exception of type        *  std::ios_base::failure is thrown.        *        *  If the error flage is already set when the exceptions mask is        *  added, the exception is immediately thrown.  Try running the        *  following under GCC 3.1 or later:        *  @code        *  #include<iostream>        *  #include<fstream>        *  #include<exception>        *          *  int main()        *  {        *      std::set_terminate (__gnu_cxx::__verbose_terminate_handler);        *          *      std::ifstream f ("/etc/motd");        *          *      std::cerr<< "Setting badbit\n";        *      f.setstate (std::ios_base::badbit);        *          *      std::cerr<< "Setting exception mask\n";        *      f.exceptions (std::ios_base::badbit);        *  }        *  @endcode       */
+comment|/**        *  @brief  Throwing exceptions on errors.        *  @param  except  The new exceptions mask.        *        *  By default, error flags are set silently.  You can set an        *  exceptions mask for each stream; if a bit in the mask becomes set        *  in the error flags, then an exception of type        *  std::ios_base::failure is thrown.        *        *  If the error flage is already set when the exceptions mask is        *  added, the exception is immediately thrown.  Try running the        *  following under GCC 3.1 or later:        *  @code        *  #include<iostream>        *  #include<fstream>        *  #include<exception>        *        *  int main()        *  {        *      std::set_terminate (__gnu_cxx::__verbose_terminate_handler);        *        *      std::ifstream f ("/etc/motd");        *        *      std::cerr<< "Setting badbit\n";        *      f.setstate (std::ios_base::badbit);        *        *      std::cerr<< "Setting exception mask\n";        *      f.exceptions (std::ios_base::badbit);        *  }        *  @endcode       */
 name|void
 name|exceptions
 parameter_list|(
@@ -514,17 +523,35 @@ range|:
 name|ios_base
 argument_list|()
 decl_stmt|,
-name|_M_fctype
+name|_M_tie
 argument_list|(
 literal|0
 argument_list|)
 decl_stmt|,
-name|_M_fnumput
+name|_M_fill
+argument_list|()
+decl_stmt|,
+name|_M_fill_init
+argument_list|(
+name|false
+argument_list|)
+decl_stmt|,
+name|_M_streambuf
 argument_list|(
 literal|0
 argument_list|)
 decl_stmt|,
-name|_M_fnumget
+name|_M_ctype
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|,
+name|_M_num_put
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|,
+name|_M_num_get
 argument_list|(
 literal|0
 argument_list|)
@@ -610,7 +637,7 @@ return|return
 name|_M_streambuf
 return|;
 block|}
-comment|/**        *  @brief  Changing the underlying buffer.        *  @param  sb  The new stream buffer.        *  @return  The previous stream buffer.        *        *  Associates a new buffer with the current stream, and clears the        *  error state.        *        *  Due to historical accidents which the LWG refuses to correct, the        *  I/O library suffers from a design error:  this function is hidden        *  in derived classes by overrides of the zero-argument @c rdbuf(),        *  which is non-virtual for hysterical raisins.  As a result, you        *  must use explicit qualifications to access this function via any        *  derived class.       */
+comment|/**        *  @brief  Changing the underlying buffer.        *  @param  sb  The new stream buffer.        *  @return  The previous stream buffer.        *        *  Associates a new buffer with the current stream, and clears the        *  error state.        *        *  Due to historical accidents which the LWG refuses to correct, the        *  I/O library suffers from a design error:  this function is hidden        *  in derived classes by overrides of the zero-argument @c rdbuf(),        *  which is non-virtual for hysterical raisins.  As a result, you        *  must use explicit qualifications to access this function via any        *  derived class.  For example:        *        *  @code        *  std::fstream     foo;         // or some other derived type        *  std::streambuf*  p = .....;        *        *  foo.ios::rdbuf(p);            // ios == basic_ios<char>        *  @endcode       */
 name|basic_streambuf
 operator|<
 name|_CharT
@@ -630,7 +657,7 @@ operator|*
 name|__sb
 argument_list|)
 expr_stmt|;
-comment|/**        *  @doctodo       */
+comment|/**        *  @brief  Copies fields of __rhs into this.        *  @param  __rhs  The source values for the copies.        *  @return  Reference to this object.        *        *  All fields of __rhs are copied into this object except that rdbuf()        *  and rdstate() remain unchanged.  All values in the pword and iword        *  arrays are copied.  Before copying, each callback is invoked with        *  erase_event.  After copying, each (new) callback is invoked with        *  copyfmt_event.  The final step is to copy exceptions().       */
 name|basic_ios
 modifier|&
 name|copyfmt
@@ -706,7 +733,7 @@ modifier|&
 name|__loc
 parameter_list|)
 function_decl|;
-comment|/**        *  @brief  Squeezes characters.        *  @param  c  The character to narrow.        *  @param  dfault  The character to narrow.        *  @return  The narrowed character.        *        *  Maps a character of @c char_type to a character of @c char,        *  if possible.        *        *  Returns the result of        *  @code        *    std::use_facet< ctype<char_type>>(getloc()).narrow(c,dfault)        *  @endcode        *        *  Additional l10n notes are at        *  http://gcc.gnu.org/onlinedocs/libstdc++/22_locale/howto.html       */
+comment|/**        *  @brief  Squeezes characters.        *  @param  c  The character to narrow.        *  @param  dfault  The character to narrow.        *  @return  The narrowed character.        *        *  Maps a character of @c char_type to a character of @c char,        *  if possible.        *        *  Returns the result of        *  @code        *    std::use_facet<ctype<char_type>>(getloc()).narrow(c,dfault)        *  @endcode        *        *  Additional l10n notes are at        *  http://gcc.gnu.org/onlinedocs/libstdc++/22_locale/howto.html       */
 name|char
 name|narrow
 argument_list|(
@@ -718,7 +745,7 @@ name|__dfault
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/**        *  @brief  Widens characters.        *  @param  c  The character to widen.        *  @return  The widened character.        *        *  Maps a character of @c char to a character of @c char_type.        *        *  Returns the result of        *  @code        *    std::use_facet< ctype<char_type>>(getloc()).widen(c)        *  @endcode        *        *  Additional l10n notes are at        *  http://gcc.gnu.org/onlinedocs/libstdc++/22_locale/howto.html       */
+comment|/**        *  @brief  Widens characters.        *  @param  c  The character to widen.        *  @return  The widened character.        *        *  Maps a character of @c char to a character of @c char_type.        *        *  Returns the result of        *  @code        *    std::use_facet<ctype<char_type>>(getloc()).widen(c)        *  @endcode        *        *  Additional l10n notes are at        *  http://gcc.gnu.org/onlinedocs/libstdc++/22_locale/howto.html       */
 name|char_type
 name|widen
 argument_list|(
@@ -736,8 +763,44 @@ argument_list|()
 operator|:
 name|ios_base
 argument_list|()
+operator|,
+name|_M_tie
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|_M_fill
+argument_list|(
+name|char_type
+argument_list|()
+argument_list|)
+operator|,
+name|_M_fill_init
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|_M_streambuf
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|_M_ctype
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|_M_num_put
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|_M_num_get
+argument_list|(
+literal|0
+argument_list|)
 block|{ }
-comment|/**        *  @brief  All setup is performed here.        *        *  This is called from the public constructor.  It is not virtual and        *  cannot be redefined.  The second argument, __cache, is used        *  to initialize the standard streams without allocating        *  memory.       */
+comment|/**        *  @brief  All setup is performed here.        *        *  This is called from the public constructor.  It is not virtual and        *  cannot be redefined.       */
 name|void
 name|init
 argument_list|(
@@ -751,30 +814,6 @@ operator|*
 name|__sb
 argument_list|)
 expr_stmt|;
-name|bool
-name|_M_check_facet
-argument_list|(
-specifier|const
-name|locale
-operator|::
-name|facet
-operator|*
-name|__f
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-operator|!
-name|__f
-condition|)
-name|__throw_bad_cast
-argument_list|()
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
 name|void
 name|_M_cache_locale
 parameter_list|(
@@ -784,35 +823,6 @@ modifier|&
 name|__loc
 parameter_list|)
 function_decl|;
-if|#
-directive|if
-literal|1
-comment|// XXX GLIBCXX_ABI Deprecated, compatibility only.
-name|void
-name|_M_cache_facets
-parameter_list|(
-specifier|const
-name|locale
-modifier|&
-name|__loc
-parameter_list|)
-function_decl|;
-endif|#
-directive|endif
-comment|// Internal state setter that won't throw, only set the state bits.
-comment|// Used to guarantee we don't throw when setting badbit.
-name|void
-name|_M_setstate
-parameter_list|(
-name|iostate
-name|__state
-parameter_list|)
-block|{
-name|_M_streambuf_state
-operator||=
-name|__state
-expr_stmt|;
-block|}
 block|}
 end_decl_stmt
 
@@ -825,17 +835,11 @@ unit|}
 comment|// namespace std
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_NO_TEMPLATE_EXPORT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|export
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GLIBCXX_EXPORT_TEMPLATE
+end_ifndef
 
 begin_include
 include|#
@@ -854,7 +858,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_BITS_BASICIOS_H */
+comment|/* _BASIC_IOS_H */
 end_comment
 
 end_unit

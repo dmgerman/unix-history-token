@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_CLIMITS
+name|_GLIBCXX_CLIMITS
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_CLIMITS
+name|_GLIBCXX_CLIMITS
 value|1
 end_define
 

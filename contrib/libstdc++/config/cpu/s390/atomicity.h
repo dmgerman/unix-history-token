@@ -4,7 +4,7 @@ comment|// Low-level functions for atomic operations: S/390 version  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -95,29 +95,16 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_BITS_ATOMICITY_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_BITS_ATOMICITY_H
-value|1
-end_define
-
-begin_typedef
-typedef|typedef
-name|int
-name|_Atomic_word
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|<bits/atomicity.h>
+end_include
 
 begin_decl_stmt
-specifier|static
-specifier|inline
+name|namespace
+name|__gnu_cxx
+block|{
 name|_Atomic_word
 name|__attribute__
 argument_list|(
@@ -144,16 +131,11 @@ name|__new_val
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("   l     %0,0(%2)\n"                         "0: lr    %1,%0\n"                         "   ar    %1,%3\n"                         "   cs    %0,%1,0(%2)\n"                         "   jl    0b"                         : "=&d" (__old_val), "=&d" (__new_val)                         : "a" (__mem), "d" (__val) : "cc", "memory" );
+asm|("   l     %0,0(%3)\n" 			  "0: lr    %1,%0\n" 			  "   ar    %1,%4\n" 			  "   cs    %0,%1,0(%3)\n" 			  "   jl    0b" 			  : "=&d" (__old_val), "=&d" (__new_val), "=m" (*__mem) 			  : "a" (__mem), "d" (__val), "m" (*__mem) : "cc");
 return|return
 name|__old_val
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|inline
 name|void
 name|__attribute__
 argument_list|(
@@ -180,15 +162,11 @@ name|__val
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* atomicity.h */
+comment|// namespace __gnu_cxx
 end_comment
 
 end_unit

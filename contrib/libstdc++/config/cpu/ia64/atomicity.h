@@ -4,7 +4,7 @@ comment|// Low-level functions for atomic operations: IA64 version  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -95,18 +95,11 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_BITS_ATOMICITY_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_BITS_ATOMICITY_H
-value|1
-end_define
+begin_include
+include|#
+directive|include
+file|<bits/atomicity.h>
+end_include
 
 begin_include
 include|#
@@ -114,16 +107,10 @@ directive|include
 file|<ia64intrin.h>
 end_include
 
-begin_typedef
-typedef|typedef
-name|int
-name|_Atomic_word
-typedef|;
-end_typedef
-
 begin_decl_stmt
-specifier|static
-specifier|inline
+name|namespace
+name|__gnu_cxx
+block|{
 name|_Atomic_word
 name|__attribute__
 argument_list|(
@@ -151,11 +138,6 @@ name|__val
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|inline
 name|void
 name|__attribute__
 argument_list|(
@@ -182,16 +164,8 @@ name|__val
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* atomicity.h */
-end_comment
 
 end_unit
 

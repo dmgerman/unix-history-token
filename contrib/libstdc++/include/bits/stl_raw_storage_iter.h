@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_STL_RAW_STORAGE_ITERATOR_H
+name|_STL_RAW_STORAGE_ITERATOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_STL_RAW_STORAGE_ITERATOR_H
+name|_STL_RAW_STORAGE_ITERATOR_H
 value|1
 end_define
 
@@ -187,6 +187,8 @@ operator|&
 name|__element
 operator|)
 block|{
+name|std
+operator|::
 name|_Construct
 argument_list|(
 operator|&

@@ -4,7 +4,7 @@ comment|// Specific definitions for GNU/Linux  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -98,13 +98,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_GLIBCPP_OS_DEFINES
+name|_GLIBCXX_OS_DEFINES
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_OS_DEFINES
+name|_GLIBCXX_OS_DEFINES
 value|1
 end_define
 
@@ -133,103 +133,9 @@ directive|include
 file|<features.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__GLIBC__
-argument_list|)
-operator|||
-operator|(
-name|__GLIBC__
-operator|==
-literal|2
-operator|&&
-name|__GLIBC_MINOR__
-operator|+
-literal|0
-operator|==
-literal|0
-operator|)
-end_if
-
 begin_comment
-comment|// The types __off_t and __off64_t are not defined through<sys/types.h>
+comment|// We must not see the optimized string functions GNU libc defines.
 end_comment
-
-begin_comment
-comment|// as _G_config assumes.  For libc5 and glibc 2.0 instead use
-end_comment
-
-begin_comment
-comment|//<gnu/types.h> and the old name for __off64_t.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<gnu/types.h>
-end_include
-
-begin_typedef
-typedef|typedef
-name|__loff_t
-name|__off64_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|// These systems have declarations mismatching those in libio.h by
-end_comment
-
-begin_comment
-comment|// omitting throw qualifiers.  Cleanest way out is to not provide
-end_comment
-
-begin_comment
-comment|// throw-qualifiers at all.  Defining it as empty here will make libio.h
-end_comment
-
-begin_comment
-comment|// not define it.
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|__THROW
-end_undef
-
-begin_define
-define|#
-directive|define
-name|__THROW
-end_define
-
-begin_comment
-comment|// Tell Glibc not to try to provide its own inline versions of
-end_comment
-
-begin_comment
-comment|// some math functions.  Those cause assembly-time clashes with
-end_comment
-
-begin_comment
-comment|// our definitions.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__NO_MATH_INLINES
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -241,10 +147,6 @@ name|__GLIBC__
 operator|>=
 literal|2
 end_if
-
-begin_comment
-comment|// We must not see the optimized string functions GNU libc defines.
-end_comment
 
 begin_define
 define|#

@@ -114,13 +114,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_STRINGFWD_H
+name|_STRINGFWD_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_STRINGFWD_H
+name|_STRINGFWD_H
 value|1
 end_define
 
@@ -199,7 +199,7 @@ name|string
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_USE_WCHAR_T
+name|_GLIBCXX_USE_WCHAR_T
 name|template
 operator|<
 operator|>
@@ -231,7 +231,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// _CPP_BITS_STRINGFWD_H
+comment|// _STRINGFWD_H
 end_comment
 
 end_unit
