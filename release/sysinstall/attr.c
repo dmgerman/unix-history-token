@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: attr.c,v 1.8.2.4 1997/03/16 20:08:20 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR THEIR PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: attr.c,v 1.8.2.5 1997/03/28 02:25:13 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR THEIR PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -124,10 +124,20 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|char
+name|buf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
 name|int
+name|bp
+decl_stmt|,
 name|n
 decl_stmt|,
 name|v
+decl_stmt|,
+name|max
 decl_stmt|;
 enum|enum
 block|{
@@ -140,12 +150,14 @@ block|,
 name|VALUE
 block|,
 name|COMMIT
+block|,
+name|FILL
+block|,
+name|STOP
 block|}
 name|state
 enum|;
 name|int
-name|lno
-decl_stmt|,
 name|num_attribs
 decl_stmt|;
 name|int
@@ -155,9 +167,11 @@ name|n
 operator|=
 name|v
 operator|=
-name|lno
-operator|=
 name|num_attribs
+operator|=
+name|bp
+operator|=
+name|max
 operator|=
 literal|0
 expr_stmt|;
@@ -168,41 +182,93 @@ expr_stmt|;
 while|while
 condition|(
 name|state
-operator|==
-name|COMMIT
-operator|||
-operator|(
-name|fread
-argument_list|(
-operator|&
-name|ch
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-name|fp
-argument_list|)
-operator|==
-literal|1
-operator|)
+operator|!=
+name|STOP
 condition|)
 block|{
-comment|/* Count lines */
 if|if
 condition|(
-name|ch
+name|bp
 operator|==
-literal|'\n'
+name|max
 condition|)
+name|state
+operator|=
+name|FILL
+expr_stmt|;
+else|else
+name|ch
+operator|=
+name|buf
+index|[
+name|bp
 operator|++
-name|lno
+index|]
 expr_stmt|;
 switch|switch
 condition|(
 name|state
 condition|)
 block|{
+case|case
+name|FILL
+case|:
+if|if
+condition|(
+operator|(
+name|max
+operator|=
+name|fread
+argument_list|(
+name|buf
+argument_list|,
+literal|1
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+name|fp
+argument_list|)
+operator|)
+operator|<=
+literal|0
+condition|)
+block|{
+name|state
+operator|=
+name|STOP
+expr_stmt|;
+break|break;
+block|}
+else|else
+block|{
+name|state
+operator|=
+name|LOOK
+expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Read %d characters from attributes file on state FILL\n"
+argument_list|,
+name|max
+argument_list|)
+expr_stmt|;
+name|ch
+operator|=
+name|buf
+index|[
+name|bp
+operator|=
+literal|0
+index|]
+expr_stmt|;
+block|}
+comment|/* Fall through deliberately since we already have a character and state == LOOK */
 case|case
 name|LOOK
 case|:
@@ -289,13 +355,11 @@ else|else
 block|{
 name|msgDebug
 argument_list|(
-literal|"Parse config: Invalid character '%c (%0x)' at line %d\n"
+literal|"Parse config: Invalid character '%c (%0x)'\n"
 argument_list|,
 name|ch
 argument_list|,
 name|ch
-argument_list|,
-name|lno
 argument_list|)
 expr_stmt|;
 name|state
@@ -327,6 +391,9 @@ condition|(
 name|ch
 operator|==
 literal|'\n'
+operator|||
+operator|!
+name|ch
 condition|)
 block|{
 name|hold_n
@@ -453,11 +520,9 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"Value length overflow at character %d, line %d\n"
+literal|"Value length overflow at character %d\n"
 argument_list|,
 name|v
-argument_list|,
-name|lno
 argument_list|)
 expr_stmt|;
 name|state
@@ -506,6 +571,9 @@ condition|(
 name|ch
 operator|==
 literal|'\n'
+operator|||
+operator|!
+name|ch
 condition|)
 block|{
 name|hold_v
@@ -537,11 +605,9 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"Value length overflow at character %d, line %d\n"
+literal|"Value length overflow at character %d\n"
 argument_list|,
 name|v
-argument_list|,
-name|lno
 argument_list|)
 expr_stmt|;
 name|state
@@ -627,9 +693,7 @@ break|break;
 default|default:
 name|msgFatal
 argument_list|(
-literal|"Unknown state at line %d??"
-argument_list|,
-name|lno
+literal|"Unknown state in attr_parse??"
 argument_list|)
 expr_stmt|;
 block|}
