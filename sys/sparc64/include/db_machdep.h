@@ -84,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|BKPT_INST
-value|(0)
+value|(0x91d03001)
 end_define
 
 begin_define
