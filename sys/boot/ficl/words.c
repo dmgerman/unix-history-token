@@ -4498,15 +4498,32 @@ begin_comment
 comment|/**************************************************************************                         i f P a r e n ** Runtime code to do "if" or "until": pop a flag from the stack, ** fall through if true, branch if false. Probably ought to be  ** called (not?branch) since it does "branch if false". **************************************************************************/
 end_comment
 
-begin_function
-specifier|static
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FICL_TRACE
+end_ifdef
+
+begin_decl_stmt
 name|void
 name|ifParen
-parameter_list|(
+argument_list|(
 name|FICL_VM
-modifier|*
+operator|*
 name|pVM
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+decl|static
+name|void
+name|ifParen
+argument_list|(
+name|FICL_VM
+operator|*
+name|pVM
+argument_list|)
+endif|#
+directive|endif
 block|{
 name|UNS32
 name|flag
@@ -4571,7 +4588,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/**************************************************************************                         e l s e C o I m **  ** IMMEDIATE -- compiles an "else"... ** 1) Compile a branch and a patch address; the address gets patched **    by "endif" to point past the "else" code. ** 2) Pop the the "if" patch address ** 3) Patch the "if" branch to point to the current compile address. ** 4) Push the "else" patch address. ("endif" patches this to jump past  **    the "else" code. **************************************************************************/
@@ -4681,15 +4698,32 @@ begin_comment
 comment|/**************************************************************************                         b r a n c h P a r e n **  ** Runtime for "(branch)" -- expects a literal offset in the next ** compilation address, and branches to that location. **************************************************************************/
 end_comment
 
-begin_function
-specifier|static
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FICL_TRACE
+end_ifdef
+
+begin_decl_stmt
 name|void
 name|branchParen
-parameter_list|(
+argument_list|(
 name|FICL_VM
-modifier|*
+operator|*
 name|pVM
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+decl|static
+name|void
+name|branchParen
+argument_list|(
+name|FICL_VM
+operator|*
+name|pVM
+argument_list|)
+endif|#
+directive|endif
 block|{
 name|vmBranchRelative
 argument_list|(
@@ -4709,7 +4743,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/**************************************************************************                         e n d i f C o I m **  **************************************************************************/
@@ -5058,15 +5092,32 @@ begin_comment
 comment|/**************************************************************************                         l i t e r a l P a r e n **  ** This is the runtime for (literal). It assumes that it is part of a colon ** definition, and that the next CELL contains a value to be pushed on the ** parameter stack at runtime. This code is compiled by "literal". ** **************************************************************************/
 end_comment
 
-begin_function
-specifier|static
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FICL_TRACE
+end_ifdef
+
+begin_decl_stmt
 name|void
 name|literalParen
-parameter_list|(
+argument_list|(
 name|FICL_VM
-modifier|*
+operator|*
 name|pVM
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+decl|static
+name|void
+name|literalParen
+argument_list|(
+name|FICL_VM
+operator|*
+name|pVM
+argument_list|)
+endif|#
+directive|endif
 block|{
 if|#
 directive|if
@@ -5111,7 +5162,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/**************************************************************************                         l i t e r a l I m **  ** IMMEDIATE code for "literal". This function gets a value from the stack  ** and compiles it into the dictionary preceded by the code for "(literal)". ** IMMEDIATE **************************************************************************/
@@ -6449,15 +6500,32 @@ return|return;
 block|}
 end_function
 
-begin_function
-specifier|static
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FICL_TRACE
+end_ifdef
+
+begin_decl_stmt
 name|void
 name|doParen
-parameter_list|(
+argument_list|(
 name|FICL_VM
-modifier|*
+operator|*
 name|pVM
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+decl|static
+name|void
+name|doParen
+argument_list|(
+name|FICL_VM
+operator|*
+name|pVM
+argument_list|)
+endif|#
+directive|endif
 block|{
 name|CELL
 name|index
@@ -6534,7 +6602,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -6599,15 +6667,32 @@ return|return;
 block|}
 end_function
 
-begin_function
-specifier|static
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FICL_TRACE
+end_ifdef
+
+begin_decl_stmt
 name|void
 name|qDoParen
-parameter_list|(
+argument_list|(
 name|FICL_VM
-modifier|*
+operator|*
 name|pVM
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+decl|static
+name|void
+name|qDoParen
+argument_list|(
+name|FICL_VM
+operator|*
+name|pVM
+argument_list|)
+endif|#
+directive|endif
 block|{
 name|CELL
 name|index
@@ -6704,7 +6789,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* ** Runtime code to break out of a do..loop construct ** Drop the loop control variables; the branch address ** past "loop" is next on the return stack. */
@@ -6871,15 +6956,32 @@ return|return;
 block|}
 end_function
 
-begin_function
-specifier|static
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FICL_TRACE
+end_ifdef
+
+begin_decl_stmt
 name|void
 name|loopParen
-parameter_list|(
+argument_list|(
 name|FICL_VM
-modifier|*
+operator|*
 name|pVM
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+decl|static
+name|void
+name|loopParen
+argument_list|(
+name|FICL_VM
+operator|*
+name|pVM
+argument_list|)
+endif|#
+directive|endif
 block|{
 name|INT32
 name|index
@@ -6970,17 +7072,34 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
-specifier|static
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FICL_TRACE
+end_ifdef
+
+begin_decl_stmt
 name|void
 name|plusLoopParen
-parameter_list|(
+argument_list|(
 name|FICL_VM
-modifier|*
+operator|*
 name|pVM
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+decl|static
+name|void
+name|plusLoopParen
+argument_list|(
+name|FICL_VM
+operator|*
+name|pVM
+argument_list|)
+endif|#
+directive|endif
 block|{
 name|INT32
 name|index
@@ -7108,7 +7227,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -8026,15 +8145,32 @@ begin_comment
 comment|/**************************************************************************                         d o t Q u o t e ** IMMEDIATE word that compiles a string literal for later display ** Compile stringLit, then copy the bytes of the string from the TIB ** to the dictionary. Backpatch the count byte and align the dictionary. ** ** stringlit: Fetch the count from the dictionary, then push the address ** and count on the stack. Finally, update ip to point to the first ** aligned address after the string text. **************************************************************************/
 end_comment
 
-begin_function
-specifier|static
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FICL_TRACE
+end_ifdef
+
+begin_decl_stmt
 name|void
 name|stringLit
-parameter_list|(
+argument_list|(
 name|FICL_VM
-modifier|*
+operator|*
 name|pVM
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+decl|static
+name|void
+name|stringLit
+argument_list|(
+name|FICL_VM
+operator|*
+name|pVM
+argument_list|)
+endif|#
+directive|endif
 block|{
 name|FICL_STRING
 modifier|*
@@ -8111,7 +8247,7 @@ name|cp
 expr_stmt|;
 return|return;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -14021,15 +14157,32 @@ begin_comment
 comment|/* ** isAFiclWord ** Vet a candidate pointer carefully to make sure ** it's not some chunk o' inline data... ** It has to have a name, and it has to look ** like it's in the dictionary address range. ** NOTE: this excludes :noname words! */
 end_comment
 
-begin_function
-specifier|static
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FICL_TRACE
+end_ifdef
+
+begin_decl_stmt
 name|int
 name|isAFiclWord
-parameter_list|(
+argument_list|(
 name|FICL_WORD
-modifier|*
+operator|*
 name|pFW
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+decl|static
+name|int
+name|isAFiclWord
+argument_list|(
+name|FICL_WORD
+operator|*
+name|pFW
+argument_list|)
+endif|#
+directive|endif
 block|{
 name|void
 modifier|*
@@ -14101,7 +14254,7 @@ operator|)
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* ** seeColon (for proctologists only) ** Walks a colon definition, decompiling ** on the fly. Knows about primitive control structures. */
@@ -16462,6 +16615,59 @@ block|}
 end_function
 
 begin_comment
+comment|/************************* freebsd added trace ***************************/
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FICL_TRACE
+end_ifdef
+
+begin_function
+specifier|static
+name|void
+name|ficlTrace
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|)
+block|{
+if|#
+directive|if
+name|FICL_ROBUST
+operator|>
+literal|1
+name|vmCheckStack
+argument_list|(
+name|pVM
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|ficl_trace
+operator|=
+name|stackPopINT32
+argument_list|(
+name|pVM
+operator|->
+name|pStack
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/**************************************************************************                         f i c l C o m p i l e C o r e ** Builds the primitive wordset and the environment-query namespace. **************************************************************************/
 end_comment
 
@@ -18138,6 +18344,22 @@ argument_list|,
 name|FW_DEFAULT
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FICL_TRACE
+name|dictAppendWord
+argument_list|(
+name|dp
+argument_list|,
+literal|"trace!"
+argument_list|,
+name|ficlTrace
+argument_list|,
+name|FW_DEFAULT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*     ** EXCEPTION word set     */
 name|dictAppendWord
 argument_list|(

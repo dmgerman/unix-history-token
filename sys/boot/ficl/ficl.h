@@ -1723,6 +1723,16 @@ modifier|*
 name|pVM
 parameter_list|)
 function_decl|;
+comment|/* ** So we can more easily debug... */
+ifdef|#
+directive|ifdef
+name|FICL_TRACE
+specifier|extern
+name|int
+name|ficl_trace
+decl_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
