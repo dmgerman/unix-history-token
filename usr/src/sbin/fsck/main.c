@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.4 (Berkeley) %G%"
+literal|"@(#)main.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -777,16 +777,17 @@ argument_list|(
 literal|"starting\n"
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|setup
 argument_list|(
 name|filesys
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
+case|case
+literal|0
+case|:
 if|if
 condition|(
 name|preen
@@ -796,6 +797,11 @@ argument_list|(
 literal|"CAN'T CHECK FILE SYSTEM."
 argument_list|)
 expr_stmt|;
+comment|/* fall through */
+case|case
+operator|-
+literal|1
+case|:
 return|return
 operator|(
 literal|0
@@ -1290,7 +1296,9 @@ argument_list|)
 expr_stmt|;
 block|}
 name|ckfini
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(

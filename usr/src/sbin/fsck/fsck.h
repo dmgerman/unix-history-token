@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fsck.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fsck.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -295,15 +295,6 @@ end_decl_stmt
 begin_comment
 comment|/* current inode block */
 end_comment
-
-begin_function_decl
-name|struct
-name|bufarea
-modifier|*
-name|getdatablk
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -1272,7 +1263,8 @@ name|ckfini
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
+name|markclean
 operator|)
 argument_list|)
 decl_stmt|;

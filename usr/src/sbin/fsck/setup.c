@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	8.9 (Berkeley) %G%"
+literal|"@(#)setup.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,6 +211,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Read in a superblock finding an alternate if necessary.  * Return 1 if successful, 0 if unsuccessful, -1 if filesystem  * is already clean (preen mode only).  */
+end_comment
+
 begin_function
 name|int
 name|setup
@@ -234,6 +238,8 @@ decl_stmt|,
 name|j
 decl_stmt|;
 name|long
+name|skipclean
+decl_stmt|,
 name|bmapsize
 decl_stmt|;
 name|struct
@@ -260,6 +266,10 @@ name|fswritefd
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|skipclean
+operator|=
+name|preen
 expr_stmt|;
 if|if
 condition|(
@@ -527,6 +537,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|skipclean
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|bflag
@@ -646,6 +660,27 @@ argument_list|,
 name|bflag
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|skipclean
+operator|&&
+name|sblock
+operator|.
+name|fs_clean
+condition|)
+block|{
+name|pwarn
+argument_list|(
+literal|"FILESYSTEM CLEAN; SKIPPING CHECKS\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 name|maxfsblock
 operator|=
@@ -1710,7 +1745,9 @@ end_label
 
 begin_expr_stmt
 name|ckfini
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 

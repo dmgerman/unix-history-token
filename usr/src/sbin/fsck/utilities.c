@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	8.4 (Berkeley) %G%"
+literal|"@(#)utilities.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1120,7 +1120,12 @@ end_function
 begin_function
 name|void
 name|ckfini
-parameter_list|()
+parameter_list|(
+name|markclean
+parameter_list|)
+name|int
+name|markclean
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1306,6 +1311,44 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|markclean
+operator|&&
+name|sblock
+operator|.
+name|fs_clean
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|pwarn
+argument_list|(
+literal|"MARKING FILE SYSTEM CLEAN\n"
+argument_list|)
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_clean
+operator|=
+literal|1
+expr_stmt|;
+name|sbdirty
+argument_list|()
+expr_stmt|;
+name|flush
+argument_list|(
+name|fswritefd
+argument_list|,
+operator|&
+name|sblk
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|debug
@@ -2383,7 +2426,9 @@ operator|!
 name|doinglevel2
 condition|)
 name|ckfini
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
