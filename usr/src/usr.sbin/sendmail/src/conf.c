@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.42 (Berkeley) %G%"
+literal|"@(#)conf.c	6.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -592,6 +592,8 @@ name|STAB
 modifier|*
 name|s
 decl_stmt|;
+comment|/* host name lookup map */
+block|{
 specifier|extern
 name|bool
 name|host_map_init
@@ -603,7 +605,6 @@ modifier|*
 name|maphostname
 parameter_list|()
 function_decl|;
-comment|/* set up host name lookup map */
 name|s
 operator|=
 name|stab
@@ -631,7 +632,48 @@ name|map_lookup
 operator|=
 name|maphostname
 expr_stmt|;
-comment|/* 	**  Set up other map classes. 	*/
+block|}
+comment|/* dequote map */
+block|{
+specifier|extern
+name|bool
+name|dequote_init
+parameter_list|()
+function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|dequote_map
+parameter_list|()
+function_decl|;
+name|s
+operator|=
+name|stab
+argument_list|(
+literal|"dequote"
+argument_list|,
+name|ST_MAPCLASS
+argument_list|,
+name|ST_ENTER
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|s_mapclass
+operator|.
+name|map_init
+operator|=
+name|dequote_init
+expr_stmt|;
+name|s
+operator|->
+name|s_mapclass
+operator|.
+name|map_lookup
+operator|=
+name|dequote_map
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|DBM_MAP
