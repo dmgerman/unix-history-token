@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.103 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.104 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -8074,7 +8074,7 @@ index|]
 expr_stmt|;
 name|vattr
 operator|.
-name|va_cflags
+name|va_vaflags
 operator||=
 name|VA_UTIMES_NULL
 expr_stmt|;

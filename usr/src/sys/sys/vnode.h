@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.66 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.67 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -460,7 +460,7 @@ name|va_filerev
 decl_stmt|;
 comment|/* file modification number */
 name|u_int
-name|va_cflags
+name|va_vaflags
 decl_stmt|;
 comment|/* operations flags, see below */
 block|}
