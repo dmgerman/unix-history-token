@@ -226,7 +226,7 @@ comment|/* struct in_addr addr; */
 define|\
 comment|/* struct ifnet *ifp; */
 define|\
-value|{ \ 	register struct in_ifaddr *ia; \ \ 	for (ia = TAILQ_FIRST(&in_ifaddrhead); \ 	    ia != NULL&& ((ia->ia_ifp->if_flags& IFF_POINTOPOINT)? \ 		IA_DSTSIN(ia):IA_SIN(ia))->sin_addr.s_addr != (addr).s_addr; \ 	    ia = TAILQ_NEXT(ia, ia_link)) \ 		 continue; \ 	if (ia == NULL) \ 	    TAILQ_FOREACH(ia,&in_ifaddrhead, ia_link) \ 		    if (ia->ia_ifp->if_flags& IFF_POINTOPOINT&& \ 			IA_SIN(ia)->sin_addr.s_addr == (addr).s_addr) \ 			    break; \ 	(ifp) = (ia == NULL) ? NULL : ia->ia_ifp; \ }
+value|{ \ 	struct in_ifaddr *ia; \ \ 	TAILQ_FOREACH(ia,&in_ifaddrhead, ia_link) \ 		if (IA_SIN(ia)->sin_addr.s_addr == (addr).s_addr) \ 			break; \ 	(ifp) = (ia == NULL) ? NULL : ia->ia_ifp; \ }
 end_define
 
 begin_comment
@@ -419,7 +419,7 @@ comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in_multi *inm; */
 define|\
-value|do { \ 	register struct ifmultiaddr *ifma; \ \ 	TAILQ_FOREACH(ifma,&((ifp)->if_multiaddrs), ifma_link) { \ 		if (ifma->ifma_addr->sa_family == AF_INET \&& ((struct sockaddr_in *)ifma->ifma_addr)->sin_addr.s_addr == \ 		    (addr).s_addr) \ 			break; \ 	} \ 	(inm) = ifma ? ifma->ifma_protospec : 0; \ } while(0)
+value|do { \ 	struct ifmultiaddr *ifma; \ \ 	TAILQ_FOREACH(ifma,&((ifp)->if_multiaddrs), ifma_link) { \ 		if (ifma->ifma_addr->sa_family == AF_INET \&& ((struct sockaddr_in *)ifma->ifma_addr)->sin_addr.s_addr == \ 		    (addr).s_addr) \ 			break; \ 	} \ 	(inm) = ifma ? ifma->ifma_protospec : 0; \ } while(0)
 end_define
 
 begin_comment
