@@ -3119,7 +3119,7 @@ argument_list|(
 expr|struct
 name|kse_mailbox
 argument_list|,
-name|kmbx_current_thread
+name|km_curthread
 argument_list|)
 argument_list|)
 expr_stmt|;
