@@ -58,7 +58,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: disklabel.c,v 1.17 1998/07/25 16:19:10 bde Exp $"
+literal|"$Id: disklabel.c,v 1.18 1998/08/17 07:43:54 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -252,17 +252,17 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__alpha__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|hp300
 argument_list|)
 operator|||
 name|defined
 argument_list|(
 name|hp800
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__alpha__
 argument_list|)
 end_if
 
@@ -1935,28 +1935,27 @@ modifier|*
 name|lp
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|vax
-specifier|register
-name|int
-name|i
-decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|flag
 decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__alpha__
-comment|/* 	 * Generate the bootblock checksum for the SRM console. 	 */
 name|u_long
 modifier|*
 name|p
 decl_stmt|,
 name|sum
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|vax
+specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2048,14 +2047,10 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 expr_stmt|;
-comment|/* 		 * write enable label sector before write (if necessary), 		 * disable after writing. 		 */
-name|flag
-operator|=
-literal|1
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__alpha__
+comment|/* 		 * Generate the bootblock checksum for the SRM console. 		 */
 for|for
 control|(
 name|p
@@ -2097,6 +2092,11 @@ name|sum
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 		 * write enable label sector before write (if necessary), 		 * disable after writing. 		 */
+name|flag
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -2683,6 +2683,20 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__alpha__
+name|u_long
+modifier|*
+name|lp
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__i386__
@@ -2695,9 +2709,6 @@ name|i
 decl_stmt|,
 name|found
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* i386 */
 endif|#
 directive|endif
 comment|/* XXX */
@@ -3366,14 +3377,13 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* !(NUMBOOT> 1) */
 ifdef|#
 directive|ifdef
 name|__alpha__
-block|{
-comment|/* 	     * On the alpha, the primary bootstrap starts at the 	     * second sector of the boot area.  The first sector 	     * contains the label and must be edited to contain the 	     * size and location of the primary bootstrap. 	     */
-name|int
+comment|/* 	 * On the alpha, the primary bootstrap starts at the 	 * second sector of the boot area.  The first sector 	 * contains the label and must be edited to contain the 	 * size and location of the primary bootstrap. 	 */
 name|n
-init|=
+operator|=
 name|read
 argument_list|(
 name|b
@@ -3391,11 +3401,7 @@ name|dp
 operator|->
 name|d_bbsize
 argument_list|)
-decl_stmt|;
-name|u_long
-modifier|*
-name|lp
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|n
@@ -3458,9 +3464,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* flags (must be zero) */
-block|}
 else|#
 directive|else
+comment|/* !__alpha__ */
 if|if
 condition|(
 name|read
@@ -3490,6 +3496,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* __alpha__ */
 if|if
 condition|(
 name|fstat
@@ -3614,6 +3621,7 @@ block|}
 block|}
 endif|#
 directive|endif
+comment|/* NUMBOOT> 1 */
 operator|(
 name|void
 operator|)
@@ -3624,6 +3632,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* NUMBOOT> 0 */
 comment|/* 	 * Make sure no part of the bootstrap is written in the area 	 * reserved for the label. 	 */
 for|for
 control|(
