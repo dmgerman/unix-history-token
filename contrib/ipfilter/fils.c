@@ -413,7 +413,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: fils.c,v 2.21.2.4 2000/05/22 12:47:38 darrenr Exp $"
+literal|"@(#)$Id: fils.c,v 2.21.2.5 2000/07/20 14:13:30 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1313,6 +1313,10 @@ break|break;
 case|case
 literal|'A'
 case|:
+name|device
+operator|=
+name|IPAUTH_NAME
+expr_stmt|;
 name|opts
 operator||=
 name|OPT_AUTHSTATS
@@ -1680,6 +1684,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|opts
+operator|&
+name|OPT_AUTHSTATS
+operator|)
+operator|&&
 name|ioctl
 argument_list|(
 name|fd

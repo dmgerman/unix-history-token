@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_auth.c,v 2.11.2.3 2000/06/17 06:24:31 darrenr Exp $"
+literal|"@(#)$Id: ip_auth.c,v 2.11.2.4 2000/08/05 14:48:50 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -304,7 +304,7 @@ literal|199802
 operator|)
 operator|||
 operator|(
-name|__FreeBSD_Version
+name|__FreeBSD_version
 operator|>=
 literal|400000
 operator|)

@@ -345,7 +345,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipnat.c,v 2.16.2.2 2000/05/15 06:54:18 darrenr Exp $"
+literal|"@(#)$Id: ipnat.c,v 2.16.2.3 2000/07/27 13:07:13 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -688,6 +688,10 @@ init|=
 literal|0
 decl_stmt|,
 name|c
+decl_stmt|,
+name|mode
+init|=
+name|O_RDWR
 decl_stmt|;
 while|while
 condition|(
@@ -759,6 +763,10 @@ name|opts
 operator||=
 name|OPT_LIST
 expr_stmt|;
+name|mode
+operator|=
+name|O_RDONLY
+expr_stmt|;
 break|break;
 case|case
 literal|'n'
@@ -766,6 +774,10 @@ case|:
 name|opts
 operator||=
 name|OPT_NODO
+expr_stmt|;
+name|mode
+operator|=
+name|O_RDONLY
 expr_stmt|;
 break|break;
 case|case
@@ -782,6 +794,10 @@ case|:
 name|opts
 operator||=
 name|OPT_STAT
+expr_stmt|;
+name|mode
+operator|=
+name|O_RDONLY
 expr_stmt|;
 break|break;
 case|case
@@ -841,7 +857,7 @@ name|open
 argument_list|(
 name|IPL_NAT
 argument_list|,
-name|O_RDWR
+name|mode
 argument_list|)
 operator|)
 operator|==
