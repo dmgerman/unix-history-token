@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.24 1996/09/03 14:22:02 bde Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.25 1996/09/10 08:27:39 bde Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -5253,6 +5253,14 @@ return|return
 name|error
 return|;
 block|}
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_data
+operator|=
+name|NULL
+expr_stmt|;
 name|file_node
 operator|->
 name|vn
@@ -6630,7 +6638,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_reclaim
+name|devfs_reclaim
 block|}
 block|,
 comment|/* reclaim */
