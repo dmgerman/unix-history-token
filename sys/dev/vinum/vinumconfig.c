@@ -8551,9 +8551,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FREEBSD5
 if|if
 condition|(
 name|isstriped
@@ -8569,8 +8566,6 @@ operator|->
 name|lockmtx
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|free_plex
 argument_list|(
 name|plexno
