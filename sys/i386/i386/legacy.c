@@ -603,9 +603,6 @@ name|child
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|PC98
 comment|/* 	 * Second, let our child driver's identify any child devices that 	 * they can find.  Once that is done attach any devices that we 	 * found. 	 */
 name|bus_generic_probe
 argument_list|(
@@ -617,6 +614,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 comment|/* 	 * If we didn't see EISA or ISA on a pci bridge, create some 	 * connection points now so they show up "on motherboard". 	 */
 if|if
 condition|(
