@@ -1249,7 +1249,9 @@ name|t
 operator|)
 return|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -1544,7 +1546,9 @@ literal|1
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|p
+operator|)
 return|;
 block|}
 end_function
