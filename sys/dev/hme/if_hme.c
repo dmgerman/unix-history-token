@@ -3993,13 +3993,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Set the current media. */
-name|mii_mediachg
-argument_list|(
-name|sc
-operator|->
-name|sc_mii
-argument_list|)
-expr_stmt|;
+comment|/* mii_mediachg(sc->sc_mii); */
 comment|/* Start the one second timer. */
 name|callout_reset
 argument_list|(
