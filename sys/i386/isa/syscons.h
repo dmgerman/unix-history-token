@@ -141,6 +141,13 @@ name|UPDATE_MOUSE
 value|0x01000
 end_define
 
+begin_define
+define|#
+directive|define
+name|UPDATE_SCREEN
+value|0x02000
+end_define
+
 begin_comment
 comment|/* configuration flags */
 end_comment
@@ -1291,7 +1298,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|set_destructive_cursor_size
+name|set_destructive_cursor
 parameter_list|(
 name|scr_stat
 modifier|*
