@@ -147,11 +147,7 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|(
 name|MAXLOGNAME
-operator|-
-literal|1
-operator|)
 operator|>
 name|UT_NAMESIZE
 end_if
@@ -172,7 +168,7 @@ begin_define
 define|#
 directive|define
 name|LOGNAMESIZE
-value|(MAXLOGNAME-1)
+value|MAXLOGNAME
 end_define
 
 begin_endif
@@ -333,7 +329,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: at.c,v 1.10 1997/02/22 19:54:04 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
