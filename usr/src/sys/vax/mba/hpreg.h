@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpreg.h	4.5	81/03/09	*/
+comment|/*	hpreg.h	4.6	81/03/09	*/
 end_comment
 
 begin_struct
@@ -794,7 +794,7 @@ begin_define
 define|#
 directive|define
 name|HPER2_SSE
-value|0000020
+value|0000040
 end_define
 
 begin_comment
