@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machparam.h 1.12 91/01/18$  *  *	@(#)param.h	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machparam.h 1.16 92/12/20$  *  *	@(#)param.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -206,7 +206,7 @@ begin_define
 define|#
 directive|define
 name|UPAGES
-value|3
+value|2
 end_define
 
 begin_comment
@@ -232,14 +232,18 @@ begin_define
 define|#
 directive|define
 name|MCLBYTES
-value|1024
+value|2048
 end_define
+
+begin_comment
+comment|/* large enough for ether MTU */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|MCLSHIFT
-value|10
+value|11
 end_define
 
 begin_define
@@ -380,6 +384,20 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((unsigned)(x)+(NBPG-1))>>PGSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LABELSECTOR
+value|(1024/DEV_BSIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LABELOFFSET
+value|0
 end_define
 
 begin_define
@@ -699,7 +717,7 @@ name|HPUXCOMPAT
 end_ifdef
 
 begin_comment
-comment|/*  * Constants/macros for HPUX multiple mapping of user address space.  * Pages in the first 256Mb are mapped in at every 256Mb segment.  *  * XXX broken in new VM XXX  */
+comment|/*  * Constants/macros for HPUX multiple mapping of user address space.  * Pages in the first 256Mb are mapped in at every 256Mb segment.  */
 end_comment
 
 begin_define
@@ -717,7 +735,7 @@ parameter_list|(
 name|v
 parameter_list|)
 define|\
-value|((curproc->p_addr->u_pcb.pcb_flags& PCB_HPUXMMAP)&& \ 	 ((unsigned)(v)& HPMMMASK) != HPMMMASK)
+value|((curproc->p_md.md_flags& MDP_HPUXMMAP)&& \ 	 ((unsigned)(v)& HPMMMASK)&& \ 	 ((unsigned)(v)& HPMMMASK) != HPMMMASK)
 end_define
 
 begin_define
