@@ -11684,7 +11684,7 @@ name|UCODE
 parameter_list|(
 name|x
 parameter_list|)
-value|x, sizeof(x)
+value|x, sizeof(x)/sizeof(u_int32_t)
 struct|struct
 name|ucode
 block|{
@@ -11820,6 +11820,9 @@ name|fxp_cb_ucode
 modifier|*
 name|cbp
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 for|for
 control|(
 name|uc
@@ -11892,19 +11895,36 @@ operator|=
 literal|0xffffffff
 expr_stmt|;
 comment|/* (no) next command */
-name|memcpy
-argument_list|(
-name|cbp
-operator|->
-name|ucode
-argument_list|,
-name|uc
-operator|->
-name|ucode
-argument_list|,
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
 name|uc
 operator|->
 name|length
+condition|;
+name|i
+operator|++
+control|)
+name|cbp
+operator|->
+name|ucode
+index|[
+name|i
+index|]
+operator|=
+name|htole32
+argument_list|(
+name|uc
+operator|->
+name|ucode
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 if|if
