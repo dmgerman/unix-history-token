@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.59 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.60 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.59 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.60 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3671,7 +3671,9 @@ name|NEED_S
 expr_stmt|;
 if|if
 condition|(
-name|SortQueueByHost
+name|QueueSortOrder
+operator|==
+name|QS_BYHOST
 operator|||
 name|QueueLimitRecipient
 operator|!=
@@ -3938,48 +3940,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|SortQueueByHost
+name|QueueSortOrder
+operator|==
+name|QS_BYHOST
 condition|)
-block|{
-extern|extern workcmpf0(
-block|)
-empty_stmt|;
-comment|/* 		**  Simple sort based on queue priority only. 		*/
-name|qsort
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|wlist
-argument_list|,
-name|wc
-argument_list|,
-sizeof|sizeof
-expr|*
-name|wlist
-argument_list|,
-name|workcmpf0
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_else
-else|else
 block|{
 extern|extern workcmpf1(
 block|)
 empty_stmt|;
-end_else
-
-begin_extern
 extern|extern workcmpf2(
-end_extern
+block|)
+end_block
 
 begin_empty_stmt
-unit|)
 empty_stmt|;
 end_empty_stmt
 
@@ -4153,6 +4126,41 @@ expr|*
 name|wlist
 argument_list|,
 name|workcmpf2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+unit|} 	else
+block|{
+extern|extern workcmpf0(
+block|)
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* 		**  Simple sort based on queue priority only. 		*/
+end_comment
+
+begin_expr_stmt
+name|qsort
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|wlist
+argument_list|,
+name|wc
+argument_list|,
+sizeof|sizeof
+expr|*
+name|wlist
+argument_list|,
+name|workcmpf0
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.54 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.55 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4823,11 +4823,11 @@ name|TRUE
 block|,
 define|#
 directive|define
-name|O_SQBH
-value|0x81
-literal|"SortQueueByHost"
+name|O_QUEUESORTORD
+value|,	0x81
+literal|"QueueSortOrder"
 block|,
-name|O_SQBH
+name|O_QUEUESORTORD
 block|,
 name|TRUE
 block|,
@@ -6997,16 +6997,48 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|O_SQBH
+name|O_QUEUESORTORD
 case|:
-comment|/* sort work queue by host first */
-name|SortQueueByHost
+comment|/* queue sorting order */
+switch|switch
+condition|(
+operator|*
+name|val
+condition|)
+block|{
+case|case
+literal|'h'
+case|:
+comment|/* Host first */
+case|case
+literal|'H'
+case|:
+name|QueueSortOrder
 operator|=
-name|atobool
+name|QS_BYHOST
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+comment|/* Priority order */
+case|case
+literal|'P'
+case|:
+name|QueueSortOrder
+operator|=
+name|QS_BYPRIORITY
+expr_stmt|;
+break|break;
+default|default:
+name|syserr
 argument_list|(
+literal|"Invalid queue sort order \"%s\""
+argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|O_DNICE

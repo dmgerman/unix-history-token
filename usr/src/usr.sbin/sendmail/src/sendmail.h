@@ -3969,6 +3969,39 @@ begin_comment
 comment|/* convert 8-bit data to MIME */
 end_comment
 
+begin_comment
+comment|/* queue sorting order algorithm */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|QueueSortOrder
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|QS_BYPRIORITY
+value|0
+end_define
+
+begin_comment
+comment|/* sort by message priority */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QS_BYHOST
+value|1
+end_define
+
+begin_comment
+comment|/* sort by first host name */
+end_comment
+
 begin_escape
 end_escape
 
@@ -5297,17 +5330,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* peers can't handle 2-line greeting */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|SortQueueByHost
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* order queue by host name first */
 end_comment
 
 begin_decl_stmt
