@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.6	81/12/07	*/
+comment|/*	if.c	4.7	82/02/03	*/
 end_comment
 
 begin_include
@@ -390,6 +390,9 @@ operator|)
 operator||
 name|host
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|vax
 name|addr
 operator|=
 name|htonl
@@ -397,6 +400,8 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|*
