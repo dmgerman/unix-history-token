@@ -275,7 +275,7 @@ argument_list|(
 name|port_index
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Ensure this port has not already been claimed already 		 * by a PCI, EISA or ISA adapter. 		 */
+comment|/* 		 * Ensure this port has not already been claimed already 		 * by another adapter. 		 */
 if|if
 condition|(
 name|aha_check_probed_iop
@@ -354,9 +354,15 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-name|I386_BUS_SPACE_IO
+name|rman_get_bustag
+argument_list|(
+name|port_res
+argument_list|)
 argument_list|,
-name|ioport
+name|rman_get_bushandle
+argument_list|(
+name|port_res
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
