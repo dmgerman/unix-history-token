@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sleep.c,v 1.22 1997/10/17 09:35:50 ache Exp $"
+literal|"$Id: sleep.c,v 1.23 1998/09/05 08:01:26 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,10 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_comment
+comment|/*  * sleep() -	attempt to sleep the specified number of seconds, returning  *		any remaining unslept time if interrupted or 0 if the entire  *		sleep completes without being interrupted.  Avoid seconds vs  *		time_t typing problems by breaking down large times with a  *		loop.  */
+end_comment
+
 begin_function
 name|unsigned
 name|int
@@ -85,6 +89,13 @@ name|int
 name|seconds
 decl_stmt|;
 block|{
+while|while
+condition|(
+name|seconds
+operator|!=
+literal|0
+condition|)
+block|{
 name|struct
 name|timespec
 name|time_to_sleep
@@ -93,29 +104,18 @@ name|struct
 name|timespec
 name|time_remaining
 decl_stmt|;
-comment|/* 	 * Avoid overflow when `seconds' is huge.  This assumes that 	 * the maximum value for a time_t is>= INT_MAX. 	 */
-if|if
-condition|(
-name|seconds
-operator|>
-name|INT_MAX
-condition|)
-return|return
-operator|(
-name|seconds
-operator|-
-name|INT_MAX
-operator|+
-name|sleep
-argument_list|(
-name|INT_MAX
-argument_list|)
-operator|)
-return|;
 name|time_to_sleep
 operator|.
 name|tv_sec
 operator|=
+operator|(
+name|seconds
+operator|>
+name|INT_MAX
+operator|)
+condition|?
+name|INT_MAX
+else|:
 name|seconds
 expr_stmt|;
 name|time_to_sleep
@@ -134,43 +134,51 @@ argument_list|,
 operator|&
 name|time_remaining
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+block|{
+comment|/* 			 * time_remaining only valid if EINTR, else assume no 			 * time elapsed. 			 */
 if|if
 condition|(
 name|errno
-operator|!=
+operator|==
 name|EINTR
 condition|)
+name|seconds
+operator|-=
+name|time_to_sleep
+operator|.
+name|tv_sec
+operator|-
+name|time_remaining
+operator|.
+name|tv_sec
+expr_stmt|;
+if|if
+condition|(
+name|time_remaining
+operator|.
+name|tv_nsec
+condition|)
+operator|++
+name|seconds
+expr_stmt|;
+break|break;
+block|}
+name|seconds
+operator|-=
+name|time_to_sleep
+operator|.
+name|tv_sec
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|seconds
 operator|)
 return|;
-comment|/* best guess */
-return|return
-operator|(
-name|time_remaining
-operator|.
-name|tv_sec
-operator|+
-operator|(
-name|time_remaining
-operator|.
-name|tv_nsec
-operator|!=
-literal|0
-operator|)
-operator|)
-return|;
-comment|/* round up */
 block|}
 end_function
 
