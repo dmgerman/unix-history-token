@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwend.c	2.1 83/07/30"
+literal|"@(#)wwend.c	2.1.1.1 83/08/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,9 +33,33 @@ end_macro
 
 begin_block
 block|{
-name|Wcleanup
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_move
+call|)
+argument_list|(
+name|tt
+operator|.
+name|tt_nrow
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_cleanup
+call|)
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wwsettty
 argument_list|(
 literal|0

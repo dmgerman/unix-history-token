@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwtty.c	2.1 83/07/30"
+literal|"@(#)wwtty.c	2.1.1.1 83/08/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,10 @@ name|d
 argument_list|,
 name|TIOCGETP
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|t
 operator|->
@@ -71,6 +75,10 @@ name|d
 argument_list|,
 name|TIOCGETC
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|t
 operator|->
@@ -91,6 +99,10 @@ name|d
 argument_list|,
 name|TIOCGLTC
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|t
 operator|->
@@ -111,6 +123,10 @@ name|d
 argument_list|,
 name|TIOCLGET
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|t
 operator|->
@@ -131,6 +147,10 @@ name|d
 argument_list|,
 name|TIOCGETD
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|t
 operator|->
@@ -151,6 +171,10 @@ name|d
 argument_list|,
 name|TIOCGPGRP
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|t
 operator|->
@@ -194,6 +218,10 @@ name|d
 argument_list|,
 name|TIOCSETP
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|t
 operator|->
@@ -214,6 +242,10 @@ name|d
 argument_list|,
 name|TIOCSETC
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|t
 operator|->
@@ -234,6 +266,10 @@ name|d
 argument_list|,
 name|TIOCSLTC
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|t
 operator|->
@@ -254,6 +290,10 @@ name|d
 argument_list|,
 name|TIOCLSET
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|t
 operator|->
@@ -274,6 +314,10 @@ name|d
 argument_list|,
 name|TIOCSETD
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|t
 operator|->
@@ -294,6 +338,10 @@ name|d
 argument_list|,
 name|TIOCSPGRP
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|t
 operator|->

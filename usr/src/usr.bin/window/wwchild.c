@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwchild.c	2.1 83/07/30"
+literal|"@(#)wwchild.c	2.1.1.1 83/08/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,7 @@ specifier|register
 name|struct
 name|ww
 modifier|*
+modifier|*
 name|wp
 decl_stmt|;
 name|union
@@ -66,6 +67,11 @@ name|WNOHANG
 operator||
 name|WUNTRACED
 argument_list|,
+operator|(
+expr|struct
+name|rusage
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|)
@@ -77,37 +83,58 @@ for|for
 control|(
 name|wp
 operator|=
-name|wwhead
+name|wwindex
 init|;
 name|wp
+operator|<
+operator|&
+name|wwindex
+index|[
+name|NWW
+index|]
 condition|;
 name|wp
-operator|=
-name|wp
-operator|->
-name|ww_next
+operator|++
 control|)
 block|{
 if|if
 condition|(
+operator|*
 name|wp
+operator|&&
+operator|(
+operator|*
+name|wp
+operator|)
+operator|->
+name|ww_state
+operator|==
+name|WWS_HASPROC
+operator|&&
+operator|(
+operator|*
+name|wp
+operator|)
 operator|->
 name|ww_pid
 operator|==
 name|pid
 condition|)
 block|{
+operator|(
+operator|*
 name|wp
+operator|)
 operator|->
 name|ww_state
 operator|=
-name|WW_DEAD
+name|WWS_DEAD
 expr_stmt|;
-comment|/* 				wwprintf(curwin, 					"\r\n%d: Died\r\n", pid); 				*/
+comment|/* 				(void) wwprintf(curwin, 					"\r\n%d: Died\r\n", pid); 				*/
 break|break;
 block|}
 block|}
-comment|/* 		if (wp == 0) 			wwprintf(curwin, "\r\n%d: No such child\r\n", pid); 		*/
+comment|/* 		if (wp>=&wwindex[NWW]) 			(void) wwprintf(curwin, "\r\n%d: No such child\r\n", pid); 		*/
 block|}
 block|}
 end_block
