@@ -157,6 +157,18 @@ begin_comment
 comment|/* Set the time of the files that is changed. */
 end_comment
 
+begin_decl_stmt
+name|int
+name|mask
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The current umask */
+end_comment
+
 begin_function_decl
 name|void
 name|apply_complete
@@ -279,6 +291,18 @@ name|fork_ctm
 init|=
 literal|0
 decl_stmt|;
+name|mask
+operator|=
+name|umask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|umask
+argument_list|(
+name|mask
+argument_list|)
+expr_stmt|;
 name|err_prog_name
 argument_list|(
 name|argv
@@ -1722,6 +1746,16 @@ operator|==
 literal|0
 condition|)
 block|{
+name|chmod
+argument_list|(
+name|dname
+argument_list|,
+literal|0666
+operator|&
+operator|~
+name|mask
+argument_list|)
+expr_stmt|;
 name|err
 argument_list|(
 literal|"%s complete"
@@ -2193,6 +2227,16 @@ return|return
 literal|0
 return|;
 block|}
+name|chmod
+argument_list|(
+name|dname
+argument_list|,
+literal|0666
+operator|&
+operator|~
+name|mask
+argument_list|)
+expr_stmt|;
 comment|/*      * Throw the pieces away.      */
 for|for
 control|(
