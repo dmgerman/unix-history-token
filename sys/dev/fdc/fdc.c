@@ -3439,6 +3439,8 @@ operator|->
 name|rid_irq
 argument_list|,
 name|RF_ACTIVE
+operator||
+name|RF_SHAREABLE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3508,10 +3510,14 @@ argument_list|,
 literal|"cannot reserve DMA request line\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|ENXIO
-return|;
+name|fdc
+operator|->
+name|flags
+operator||=
+name|FDC_NODMA
+expr_stmt|;
 block|}
+else|else
 name|fdc
 operator|->
 name|dmachan
