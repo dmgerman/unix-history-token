@@ -304,7 +304,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|inthand2_t
+name|driver_intr_t
 name|fe_intr
 decl_stmt|;
 end_decl_stmt
