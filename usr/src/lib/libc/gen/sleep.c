@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sleep.c	4.4 (Berkeley) %G%"
+literal|"@(#)sleep.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,19 +31,6 @@ include|#
 directive|include
 file|<signal.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
-begin_decl_stmt
-specifier|static
-name|jmp_buf
-name|jmp
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -67,6 +54,13 @@ parameter_list|)
 define|\
 value|vec.sv_handler = a; vec.sv_mask = vec.sv_onstack = 0
 end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ringring
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|sleep
@@ -155,52 +149,6 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|setjmp
-argument_list|(
-name|jmp
-argument_list|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|sigvec
-argument_list|(
-name|SIGALRM
-argument_list|,
-operator|&
-name|ovec
-argument_list|,
-operator|(
-expr|struct
-name|sigvec
-operator|*
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setitimer
-argument_list|(
-name|ITIMER_REAL
-argument_list|,
-operator|&
-name|oitv
-argument_list|,
-operator|(
-expr|struct
-name|itimerval
-operator|*
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|omask
 operator|=
 name|sigblock
@@ -266,7 +214,7 @@ name|oitv
 operator|.
 name|it_value
 expr_stmt|;
-comment|/* 			 * This is a hack, but we must have time to 			 * return from the setitimer after the longjmp 			 * or else it'll be restarted.  And, anyway, 			 * sleep never did anything more than this before. 			 */
+comment|/* 			 * This is a hack, but we must have time to 			 * return from the setitimer after the alarm 			 * or else it'll be restarted.  And, anyway, 			 * sleep never did anything more than this before. 			 */
 name|oitv
 operator|.
 name|it_value
@@ -306,8 +254,9 @@ operator|&
 name|ovec
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|setitimer
 argument_list|(
 name|ITIMER_REAL
@@ -321,21 +270,16 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-operator|<
-literal|0
-condition|)
-name|longjmp
-argument_list|(
-name|jmp
-argument_list|,
-literal|1
-argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
+name|ringring
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|!
+name|ringring
+condition|)
 name|sigpause
 argument_list|(
 name|omask
@@ -347,7 +291,42 @@ name|SIGALRM
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
+operator|(
+name|void
+operator|)
+name|sigvec
+argument_list|(
+name|SIGALRM
+argument_list|,
+operator|&
+name|ovec
+argument_list|,
+operator|(
+expr|struct
+name|sigvec
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setitimer
+argument_list|(
+name|ITIMER_REAL
+argument_list|,
+operator|&
+name|oitv
+argument_list|,
+operator|(
+expr|struct
+name|itimerval
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -356,12 +335,9 @@ specifier|static
 name|sleepx
 argument_list|()
 block|{
-name|longjmp
-argument_list|(
-name|jmp
-argument_list|,
+name|ringring
+operator|=
 literal|1
-argument_list|)
 block|; }
 end_expr_stmt
 
