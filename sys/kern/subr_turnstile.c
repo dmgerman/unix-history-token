@@ -3990,19 +3990,15 @@ init|=
 block|{
 literal|"Giant"
 block|,
-literal|"uidinfo hash"
-block|,
-literal|"uidinfo struct"
-block|,
-name|NULL
-block|,
-literal|"Giant"
-block|,
 literal|"proctree"
 block|,
 literal|"allproc"
 block|,
 literal|"process lock"
+block|,
+literal|"uidinfo hash"
+block|,
+literal|"uidinfo struct"
 block|,
 name|NULL
 block|,
