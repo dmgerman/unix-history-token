@@ -3845,6 +3845,41 @@ operator|)
 return|;
 comment|/* successfully parsed */
 block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|doption
+argument_list|,
+literal|"oldorder"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|TRY_NEWORDER
+name|dbg_new_order
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
+name|warnx
+argument_list|(
+literal|"NOTE: The code for 'neworder' was not compiled in."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* successfully parsed */
+block|}
 name|warnx
 argument_list|(
 literal|"Unknown -D (debug) option: '%s'"
