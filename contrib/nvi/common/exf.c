@@ -3900,6 +3900,8 @@ name|sp
 argument_list|,
 name|M_INFO
 argument_list|,
+literal|"%s"
+argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
