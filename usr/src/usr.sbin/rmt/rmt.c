@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmt.c	5.4 (Berkeley) %G%"
+literal|"@(#)rmt.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,6 +90,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_decl_stmt
@@ -162,18 +168,6 @@ name|op
 index|[
 name|SSIZE
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_extern
-extern|extern	errno;
-end_extern
-
-begin_decl_stmt
-name|char
-modifier|*
-name|sys_errlist
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -1141,10 +1135,10 @@ literal|"rmtd: E %d (%s)\n"
 argument_list|,
 name|num
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|num
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1158,10 +1152,10 @@ literal|"E%d\n%s\n"
 argument_list|,
 name|num
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|num
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
