@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.3 1997/04/21 13:53:47 ache Exp $  */
+comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.4 1997/07/12 10:51:54 peter Exp $  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<kvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
@@ -217,6 +223,20 @@ begin_decl_stmt
 specifier|static
 name|int
 name|smpmode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|namelength
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cmdlength
 decl_stmt|;
 end_decl_stmt
 
@@ -466,27 +486,16 @@ name|char
 name|smp_header
 index|[]
 init|=
-literal|"  PID X                PRI NICE SIZE   RES STATE C   TIME   WCPU    CPU COMMAND"
+literal|"  PID %-*.*s PRI NICE  SIZE    RES STATE C   TIME   WCPU    CPU COMMAND"
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 0123456   -- field to fill in starts at header+6 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMP_UNAME_START
-value|6
-end_define
 
 begin_define
 define|#
 directive|define
 name|smp_Proc_format
 define|\
-value|"%5d %-16.16s%3d%3d%7s %6s %-6.6s%1x%7s %5.2f%% %5.2f%% %.6s"
+value|"%5d %-*.*s %3d %3d%7s %6s %-6.6s%1x%7s %5.2f%% %5.2f%% %.*s"
 end_define
 
 begin_decl_stmt
@@ -495,27 +504,16 @@ name|char
 name|up_header
 index|[]
 init|=
-literal|"  PID X                PRI NICE SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
+literal|"  PID %-*.*s PRI NICE  SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 0123456   -- field to fill in starts at header+6 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UP_UNAME_START
-value|6
-end_define
 
 begin_define
 define|#
 directive|define
 name|up_Proc_format
 define|\
-value|"%5d %-16.16s%3d %3d%7s %6s %-6.6s%.0d%7s %5.2f%% %5.2f%% %.6s"
+value|"%5d %-*.*s %3d %3d%7s %6s %-6.6s%.0d%7s %5.2f%% %5.2f%% %.*s"
 end_define
 
 begin_comment
@@ -932,6 +930,11 @@ decl_stmt|;
 name|int
 name|modelen
 decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
 name|modelen
 operator|=
 sizeof|sizeof
@@ -968,6 +971,59 @@ condition|)
 name|smpmode
 operator|=
 literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|pw
+operator|=
+name|getpwent
+argument_list|()
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+operator|>
+name|namelength
+condition|)
+name|namelength
+operator|=
+name|strlen
+argument_list|(
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|namelength
+operator|<
+literal|8
+condition|)
+name|namelength
+operator|=
+literal|8
+expr_stmt|;
+if|if
+condition|(
+name|namelength
+operator|>
+literal|16
+condition|)
+name|namelength
+operator|=
+literal|16
 expr_stmt|;
 if|if
 condition|(
@@ -1314,48 +1370,48 @@ name|char
 modifier|*
 name|ptr
 decl_stmt|;
-if|if
-condition|(
-name|smpmode
-condition|)
-name|ptr
-operator|=
-name|smp_header
-operator|+
-name|SMP_UNAME_START
-expr_stmt|;
-else|else
-name|ptr
-operator|=
-name|up_header
-operator|+
-name|UP_UNAME_START
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|uname_field
-operator|!=
-literal|'\0'
-condition|)
-block|{
-operator|*
-name|ptr
-operator|++
-operator|=
-operator|*
-name|uname_field
-operator|++
-expr_stmt|;
-block|}
-return|return
-operator|(
+specifier|static
+name|char
+name|Header
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|snprintf
+argument_list|(
+name|Header
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Header
+argument_list|)
+argument_list|,
 name|smpmode
 condition|?
 name|smp_header
 else|:
 name|up_header
-operator|)
+argument_list|,
+name|namelength
+argument_list|,
+name|namelength
+argument_list|,
+name|uname_field
+argument_list|)
+expr_stmt|;
+name|cmdlength
+operator|=
+literal|80
+operator|-
+name|strlen
+argument_list|(
+name|Header
+argument_list|)
+operator|+
+literal|6
+expr_stmt|;
+return|return
+name|Header
 return|;
 block|}
 end_function
@@ -2744,6 +2800,10 @@ argument_list|,
 name|p_pid
 argument_list|)
 argument_list|,
+name|namelength
+argument_list|,
+name|namelength
+argument_list|,
 call|(
 modifier|*
 name|get_userid
@@ -2835,6 +2895,8 @@ operator|*
 name|pct
 operator|/
 name|hz
+argument_list|,
+name|cmdlength
 argument_list|,
 name|printable
 argument_list|(
