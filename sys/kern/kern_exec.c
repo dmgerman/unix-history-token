@@ -2986,10 +2986,8 @@ operator||
 name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3007,6 +3005,9 @@ operator|!=
 name|VM_PAGE_BITS_ALL
 condition|)
 block|{
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|initial_pagein
 operator|=
 name|VM_INITIAL_PAGEIN
@@ -3058,6 +3059,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3078,7 +3082,12 @@ index|]
 operator|->
 name|busy
 condition|)
+block|{
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 name|ma
@@ -3088,10 +3097,12 @@ index|]
 operator|->
 name|valid
 condition|)
-break|break;
-name|vm_page_lock_queues
+block|{
+name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+break|break;
+block|}
 name|vm_page_busy
 argument_list|(
 name|ma
@@ -3136,6 +3147,12 @@ name|initial_pagein
 operator|=
 name|i
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 name|rv
 operator|=
 name|vm_pager_get_pages
@@ -3149,6 +3166,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 name|ma
 index|[
 literal|0
@@ -3160,6 +3183,9 @@ name|object
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3198,9 +3224,6 @@ literal|0
 index|]
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|pmap_remove_all
 argument_list|(
 name|ma
@@ -3217,10 +3240,15 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -3228,8 +3256,10 @@ operator|)
 return|;
 block|}
 block|}
-name|vm_page_lock_queues
-argument_list|()
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
 expr_stmt|;
 name|vm_page_wire
 argument_list|(
