@@ -414,6 +414,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|SIS_CSR_ACCESS_MODE
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_CSR_RELOAD
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIS_CFG_BIGENDIAN
 value|0x00000001
 end_define
@@ -1788,6 +1802,20 @@ name|SIS_REV_630EA1
 value|0x0083
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIS_REV_630ET
+value|0x0083
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_REV_635
+value|0x0090
+end_define
+
 begin_comment
 comment|/*  * NatSemi vendor ID  */
 end_comment
@@ -1888,6 +1916,9 @@ name|u_int8_t
 name|sis_type
 decl_stmt|;
 name|u_int8_t
+name|sis_rev
+decl_stmt|;
+name|u_int8_t
 name|sis_link
 decl_stmt|;
 name|struct
@@ -1937,6 +1968,19 @@ name|reg
 parameter_list|)
 define|\
 value|bus_space_read_4(sc->sis_btag, sc->sis_bhandle, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_READ_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|bus_space_read_2(sc->sis_btag, sc->sis_bhandle, reg)
 end_define
 
 begin_define
