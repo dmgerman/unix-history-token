@@ -1314,13 +1314,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-specifier|static
-specifier|const
-name|size_t
-name|links_hash_initial_size
-init|=
-literal|8192
-decl_stmt|;
 struct|struct
 name|links_entry
 block|{
@@ -1346,13 +1339,11 @@ decl_stmt|;
 block|}
 struct|;
 specifier|static
-name|unsigned
-name|long
-name|number_entries
-decl_stmt|;
-specifier|static
+specifier|const
 name|size_t
-name|number_buckets
+name|links_hash_initial_size
+init|=
+literal|8192
 decl_stmt|;
 specifier|static
 name|struct
@@ -1366,6 +1357,15 @@ name|struct
 name|links_entry
 modifier|*
 name|free_list
+decl_stmt|;
+specifier|static
+name|size_t
+name|number_buckets
+decl_stmt|;
+specifier|static
+name|unsigned
+name|long
+name|number_entries
 decl_stmt|;
 specifier|static
 name|char
@@ -1385,13 +1385,16 @@ name|stat
 modifier|*
 name|st
 decl_stmt|;
-name|int
-name|hash
-decl_stmt|;
 name|size_t
 name|i
 decl_stmt|,
 name|new_size
+decl_stmt|;
+name|int
+name|count
+decl_stmt|;
+name|int
+name|hash
 decl_stmt|;
 name|st
 operator|=
@@ -1432,7 +1435,7 @@ name|buckets
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1473,9 +1476,6 @@ operator|!
 name|stop_allocating
 condition|)
 block|{
-name|int
-name|count
-decl_stmt|;
 name|new_size
 operator|=
 name|number_buckets
@@ -1562,13 +1562,9 @@ name|stop_allocating
 operator|=
 literal|1
 expr_stmt|;
-name|warnc
+name|warnx
 argument_list|(
-name|ENOMEM
-argument_list|,
-literal|"No more memory for recording "
-literal|"hard links; Remaining hard links will be "
-literal|"counted as separate files."
+literal|"No more memory for tracking hard links."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1911,13 +1907,9 @@ name|stop_allocating
 operator|=
 literal|1
 expr_stmt|;
-name|warnc
+name|warnx
 argument_list|(
-name|ENOMEM
-argument_list|,
-literal|"No more memory for recording "
-literal|"hard links; Remaining hard links will be counted "
-literal|"as separate files."
+literal|"No more memory for tracking hard links."
 argument_list|)
 expr_stmt|;
 return|return
