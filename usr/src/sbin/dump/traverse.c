@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -1886,6 +1886,12 @@ begin_block
 block|{
 name|int
 name|n
+decl_stmt|,
+name|i
+decl_stmt|;
+specifier|extern
+name|int
+name|errno
 decl_stmt|;
 name|loop
 label|:
@@ -1965,7 +1971,7 @@ goto|;
 block|}
 name|msg
 argument_list|(
-literal|"(This should not happen)bread from %s [block %d]: count=%d, got=%d\n"
+literal|"read error from %s [block %d]: count=%d, got=%d, errno=%d\n"
 argument_list|,
 name|disk
 argument_list|,
@@ -1974,6 +1980,8 @@ argument_list|,
 name|cnt
 argument_list|,
 name|n
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 if|if
@@ -2021,6 +2029,90 @@ else|else
 name|breaderrors
 operator|=
 literal|0
+expr_stmt|;
+block|}
+comment|/* 	 * Zero buffer, then try to read each sector of buffer separately. 	 */
+name|bzero
+argument_list|(
+name|ba
+argument_list|,
+name|cnt
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|cnt
+condition|;
+name|i
+operator|+=
+name|dev_bsize
+operator|,
+name|ba
+operator|+=
+name|dev_bsize
+operator|,
+name|da
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|lseek
+argument_list|(
+name|fi
+argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
+name|da
+operator|*
+name|dev_bsize
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|msg
+argument_list|(
+literal|"bread: lseek2 fails!\n"
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|read
+argument_list|(
+name|fi
+argument_list|,
+name|ba
+argument_list|,
+name|dev_bsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|!=
+name|dev_bsize
+condition|)
+name|msg
+argument_list|(
+literal|"    read error from %s [sector %d, errno %d]\n"
+argument_list|,
+name|disk
+argument_list|,
+name|da
+argument_list|,
+name|errno
+argument_list|)
 expr_stmt|;
 block|}
 block|}
