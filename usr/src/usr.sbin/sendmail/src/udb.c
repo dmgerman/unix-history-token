@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.20 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	8.21 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.20 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	8.21 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1212,6 +1212,33 @@ expr_stmt|;
 if|if
 condition|(
 name|i
+operator|<
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"udbexpand: hesiod-get %.*s stat %d"
+argument_list|,
+name|key
+operator|.
+name|size
+argument_list|,
+name|key
+operator|.
+name|data
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+return|return
+name|EX_TEMPFAIL
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|i
 operator|>
 literal|0
 operator|||
@@ -1302,13 +1329,6 @@ operator|->
 name|e_nrcpts
 operator|++
 expr_stmt|;
-name|free
-argument_list|(
-name|info
-operator|.
-name|data
-argument_list|)
-expr_stmt|;
 return|return
 name|EX_OK
 return|;
@@ -1363,13 +1383,6 @@ name|size
 index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-name|free
-argument_list|(
-name|info
-operator|.
-name|data
-argument_list|)
 expr_stmt|;
 name|message
 argument_list|(
@@ -1481,32 +1494,6 @@ operator||=
 name|QDONTSEND
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|i
-operator|<
-literal|0
-condition|)
-block|{
-name|syserr
-argument_list|(
-literal|"udbexpand: hesiod-get %.*s stat %d"
-argument_list|,
-name|key
-operator|.
-name|size
-argument_list|,
-name|key
-operator|.
-name|data
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-return|return
-name|EX_TEMPFAIL
-return|;
-block|}
 comment|/* 			**  If this address has a -request address, reflect 			**  it into the envelope. 			*/
 operator|(
 name|void
@@ -1611,13 +1598,6 @@ name|size
 index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-name|free
-argument_list|(
-name|info
-operator|.
-name|data
-argument_list|)
 expr_stmt|;
 break|break;
 endif|#
@@ -2285,13 +2265,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|free
-argument_list|(
-name|info
-operator|.
-name|data
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -2311,7 +2284,6 @@ expr_stmt|;
 return|return
 name|p
 return|;
-break|break;
 endif|#
 directive|endif
 comment|/* HESIOD */
@@ -2749,13 +2721,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|free
-argument_list|(
-name|info
-operator|.
-name|data
-argument_list|)
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -2810,13 +2775,6 @@ block|{
 comment|/* nope -- no aliasing for this user */
 continue|continue;
 block|}
-name|free
-argument_list|(
-name|info
-operator|.
-name|data
-argument_list|)
-expr_stmt|;
 comment|/* they exist -- build the actual address */
 name|p
 operator|=
@@ -3915,26 +3873,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* 		**  If there are multiple matches, just return the 		**  first one and free the others. 		** 		**  XXX These should really be returned; for example, 		**  XXX it is legal for :maildrop to be multi-valued. 		*/
-for|for
-control|(
-name|p
-operator|=
-name|hp
-index|[
-literal|1
-index|]
-init|;
-name|p
-condition|;
-name|p
-operator|++
-control|)
-name|free
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
+comment|/* 		**  If there are multiple matches, just return the 		**  first one. 		** 		**  XXX These should really be returned; for example, 		**  XXX it is legal for :maildrop to be multi-valued. 		*/
 name|info
 operator|->
 name|data
