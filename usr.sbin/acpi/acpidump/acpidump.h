@@ -956,7 +956,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Addresses to scan on ia32 for the RSD PTR.  According to section 5.2.2  * of the ACPI spec, we only consider two regions for the base address:  * 1. EBDA (0x0 - 0x3FF)  * 2. High memory (0xE0000 - 0xFFFFF)  */
+comment|/*  * Addresses to scan on ia32 for the RSD PTR.  According to section 5.2.2  * of the ACPI spec, we only consider two regions for the base address:  * 1. EBDA (1 KB area addressed to by 16 bit pointer at 0x40E)  * 2. High memory (0xE0000 - 0xFFFFF)  */
 end_comment
 
 begin_define
@@ -970,7 +970,7 @@ begin_define
 define|#
 directive|define
 name|RSDP_EBDA_SIZE
-value|(1024 - sizeof(struct ACPIrsdp))
+value|0x400
 end_define
 
 begin_define
@@ -983,8 +983,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|RSDP_HI_END
-value|(0x100000 - sizeof(struct ACPIrsdp))
+name|RSDP_HI_SIZE
+value|0x20000
 end_define
 
 begin_comment
