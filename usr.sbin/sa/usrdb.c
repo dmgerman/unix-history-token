@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: usrdb.c,v 1.1.1.1 1994/09/26 21:22:57 davidg Exp $"
+literal|"$Id: usrdb.c,v 1.2 1995/05/30 03:51:42 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +52,18 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -694,9 +706,6 @@ decl_stmt|;
 name|BTREEINFO
 name|bti
 decl_stmt|;
-name|u_long
-name|uid
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -894,8 +903,6 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-name|out
-label|:
 if|if
 condition|(
 name|DB_CLOSE
@@ -1039,7 +1046,7 @@ literal|0.0001
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%12.2lf%s "
+literal|"%12.2f%s "
 argument_list|,
 name|t
 operator|/

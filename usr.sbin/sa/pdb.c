@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pdb.c,v 1.1.1.1 1994/09/26 21:22:56 davidg Exp $"
+literal|"$Id: pdb.c,v 1.2 1995/05/30 03:51:41 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -2058,9 +2064,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%8 "
-argument_list|,
-literal|"*ignore*"
+literal|"*ignore*      "
 argument_list|)
 expr_stmt|;
 if|if

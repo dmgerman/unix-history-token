@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.1.1.1 1994/09/26 21:22:56 davidg Exp $"
+literal|"$Id: main.c,v 1.2 1995/05/30 03:51:39 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,6 +84,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -1426,7 +1432,7 @@ name|qflag
 condition|)
 name|printf
 argument_list|(
-literal|"%6u %12.2lf cpu %12quk mem %12qu io %s\n"
+literal|"%6lu %12.2f cpu %12quk mem %12qu io %s\n"
 argument_list|,
 name|ci
 operator|.
