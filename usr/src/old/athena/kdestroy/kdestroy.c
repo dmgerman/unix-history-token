@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<mit-copyright.h>
+file|<kerberos/mit-copyright.h>
 end_include
 
 begin_ifndef
@@ -40,26 +40,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<krb.h>
+file|<kerberos/krb.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BSD42
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<strings.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|BSD42
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -69,39 +57,18 @@ name|pname
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-specifier|static
-name|usage
-argument_list|()
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: %s [-f] [-q]\n"
-argument_list|,
-name|pname
-argument_list|)
-block|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-block|; }
-expr|main
-operator|(
+begin_function
+name|main
+parameter_list|(
 name|argc
-operator|,
+parameter_list|,
 name|argv
-operator|)
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|argv
 index|[]
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|int
 name|fflag
@@ -220,7 +187,7 @@ if|if
 condition|(
 name|k_errno
 operator|!=
-literal|0
+name|KSUCCESS
 operator|&&
 name|k_errno
 operator|!=
@@ -244,7 +211,7 @@ if|if
 condition|(
 name|k_errno
 operator|==
-literal|0
+name|KSUCCESS
 condition|)
 name|printf
 argument_list|(
@@ -299,7 +266,28 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
+
+begin_expr_stmt
+specifier|static
+name|usage
+argument_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Usage: %s [-f] [-q]\n"
+argument_list|,
+name|pname
+argument_list|)
+block|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+block|; }
+end_expr_stmt
 
 end_unit
 
