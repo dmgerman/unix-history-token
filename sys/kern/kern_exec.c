@@ -3947,6 +3947,12 @@ condition|)
 do|;
 block|}
 block|}
+else|else
+return|return
+operator|(
+name|EFAULT
+operator|)
+return|;
 name|imgp
 operator|->
 name|endargs
