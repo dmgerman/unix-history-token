@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c	5.4 (Berkeley) %G%"
+literal|"@(#)func.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3460,7 +3460,7 @@ operator|*
 name|cp
 operator|++
 condition|)
-name|putchar
+name|cshputchar
 argument_list|(
 name|c
 operator||
@@ -3472,7 +3472,7 @@ condition|(
 operator|*
 name|v
 condition|)
-name|putchar
+name|cshputchar
 argument_list|(
 name|sep
 operator||
@@ -3488,7 +3488,7 @@ name|nonl
 operator|==
 literal|0
 condition|)
-name|putchar
+name|cshputchar
 argument_list|(
 literal|'\n'
 argument_list|)

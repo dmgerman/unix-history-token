@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)exec.c	5.3 (Berkeley) %G%"
+literal|"@(#)exec.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1123,7 +1123,7 @@ argument_list|(
 name|t
 argument_list|)
 operator|,
-name|putchar
+name|cshputchar
 argument_list|(
 literal|'\n'
 argument_list|)

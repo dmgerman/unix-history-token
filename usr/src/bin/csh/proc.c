@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	5.9 (Berkeley) %G%"
+literal|"@(#)proc.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4064,13 +4064,13 @@ name|signum
 operator|==
 literal|16
 condition|)
-name|putchar
+name|cshputchar
 argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-name|putchar
+name|cshputchar
 argument_list|(
 literal|'\n'
 argument_list|)

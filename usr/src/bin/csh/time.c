@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)time.c	5.5 (Berkeley) %G%"
+literal|"@(#)time.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -588,7 +588,7 @@ name|cp
 operator|!=
 literal|'%'
 condition|)
-name|putchar
+name|cshputchar
 argument_list|(
 operator|*
 name|cp
@@ -898,7 +898,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|putchar
+name|cshputchar
 argument_list|(
 literal|'\n'
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)set.c	5.2 (Berkeley) %G%"
+literal|"@(#)set.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3510,7 +3510,7 @@ operator|->
 name|v_name
 argument_list|)
 expr_stmt|;
-name|putchar
+name|cshputchar
 argument_list|(
 literal|'\t'
 argument_list|)
@@ -3521,7 +3521,7 @@ name|len
 operator|!=
 literal|1
 condition|)
-name|putchar
+name|cshputchar
 argument_list|(
 literal|'('
 argument_list|)
@@ -3539,12 +3539,12 @@ name|len
 operator|!=
 literal|1
 condition|)
-name|putchar
+name|cshputchar
 argument_list|(
 literal|')'
 argument_list|)
 expr_stmt|;
-name|putchar
+name|cshputchar
 argument_list|(
 literal|'\n'
 argument_list|)

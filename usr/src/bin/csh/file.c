@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)file.c	5.7 (Berkeley) %G%"
+literal|"@(#)file.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1019,7 +1019,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|putchar
+name|cshputchar
 argument_list|(
 name|dir
 condition|?
@@ -1068,7 +1068,7 @@ condition|;
 name|w
 operator|++
 control|)
-name|putchar
+name|cshputchar
 argument_list|(
 literal|' '
 argument_list|)
@@ -1076,7 +1076,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|putchar
+name|cshputchar
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -2556,7 +2556,7 @@ name|command
 operator|==
 name|LIST
 condition|)
-name|putchar
+name|cshputchar
 argument_list|(
 literal|'\n'
 argument_list|)
