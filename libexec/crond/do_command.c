@@ -21,7 +21,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: do_command.c,v 2.1 90/07/18 00:23:38 vixie Exp $"
+literal|"$Header: /a/cvs/386BSD/src/libexec/crond/do_command.c,v 1.1.1.1 1993/06/12 14:55:03 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* $Source: /jove_u3/vixie/src/cron/RCS/do_command.c,v $  * $Revision: 2.1 $  * $Log:	do_command.c,v $  * Revision 2.1  90/07/18  00:23:38  vixie  * Baseline for 4.4BSD release  *   * Revision 2.0  88/12/10  04:57:44  vixie  * V2 Beta  *   * Revision 1.5  88/11/29  13:06:06  vixie  * seems to work on Ultrix 3.0 FT1  *   * Revision 1.4  87/05/02  17:33:35  paul  * baseline for mod.sources release  *   * Revision 1.3  87/04/09  00:03:58  paul  * improved data hiding, locality of declaration/references  * fixed a rs@mirror bug by redesigning the mailto stuff completely  *   * Revision 1.2  87/03/19  12:46:24  paul  * implemented suggestions from rs@mirror (Rich $alz):  *    MAILTO="" means no mail should be sent  *    various fixes of bugs or lint complaints  *    put a To: line in the mail message  *   * Revision 1.1  87/01/26  23:47:00  paul  * Initial revision  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00131  * --------------------         -----   ----------------------  *  * 06 Apr 93	Adam Glass	Fixes so it compiles quitely  *  */
+comment|/* $Source: /a/cvs/386BSD/src/libexec/crond/do_command.c,v $  * $Revision: 1.1.1.1 $  * $Log: do_command.c,v $  * Revision 1.1.1.1  1993/06/12  14:55:03  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 2.1  90/07/18  00:23:38  vixie  * Baseline for 4.4BSD release  *   * Revision 2.0  88/12/10  04:57:44  vixie  * V2 Beta  *   * Revision 1.5  88/11/29  13:06:06  vixie  * seems to work on Ultrix 3.0 FT1  *   * Revision 1.4  87/05/02  17:33:35  paul  * baseline for mod.sources release  *   * Revision 1.3  87/04/09  00:03:58  paul  * improved data hiding, locality of declaration/references  * fixed a rs@mirror bug by redesigning the mailto stuff completely  *   * Revision 1.2  87/03/19  12:46:24  paul  * implemented suggestions from rs@mirror (Rich $alz):  *    MAILTO="" means no mail should be sent  *    various fixes of bugs or lint complaints  *    put a To: line in the mail message  *   * Revision 1.1  87/01/26  23:47:00  paul  * Initial revision  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00131  * --------------------         -----   ----------------------  *  * 06 Apr 93	Adam Glass	Fixes so it compiles quitely  *  */
 end_comment
 
 begin_comment
@@ -54,6 +54,12 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_if
@@ -123,14 +129,6 @@ modifier|*
 name|u
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|fork
-argument_list|()
-decl_stmt|,
-name|_exit
-argument_list|()
-decl_stmt|;
 specifier|extern
 name|void
 name|child_process

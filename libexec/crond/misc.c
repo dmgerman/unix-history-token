@@ -21,7 +21,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: misc.c,v 2.1 90/07/18 00:24:33 vixie Exp $"
+literal|"$Header: /a/cvs/386BSD/src/libexec/crond/misc.c,v 1.1.1.1 1993/06/12 14:55:03 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -119,11 +125,6 @@ modifier|*
 name|str
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|strlen
-parameter_list|()
-function_decl|;
 specifier|extern
 name|char
 modifier|*
