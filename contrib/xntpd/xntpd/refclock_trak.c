@@ -71,6 +71,14 @@ directive|include
 file|"ntp_unixtime.h"
 end_include
 
+begin_function_decl
+specifier|static
+name|void
+name|gps_send
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
@@ -3606,11 +3614,19 @@ name|CEVNT_TIMEOUT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * usually trak_receive can get a timestamp every second 	 */
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|TRAKPPS
-name|&&
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|TRAKCLK
+argument_list|)
 name|gettstamp
 argument_list|(
 operator|&
