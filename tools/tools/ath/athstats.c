@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../../../sys/net80211/ieee80211_radiotap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../../../sys/dev/ath/if_athioctl.h"
 end_include
 
