@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdopen.c	5.3 (Berkeley) %G%"
+literal|"@(#)fdopen.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -84,14 +84,14 @@ modifier|*
 name|mode
 decl_stmt|;
 block|{
-specifier|static
-name|int
-name|nofile
-decl_stmt|;
 specifier|register
 name|FILE
 modifier|*
 name|fp
+decl_stmt|;
+specifier|static
+name|int
+name|nofile
 decl_stmt|;
 name|int
 name|flags
@@ -100,7 +100,7 @@ name|oflags
 decl_stmt|,
 name|fdflags
 decl_stmt|,
-name|fdmode
+name|tmp
 decl_stmt|;
 if|if
 condition|(
@@ -113,6 +113,28 @@ operator|=
 name|getdtablesize
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|=
+name|__sflags
+argument_list|(
+name|mode
+argument_list|,
+operator|&
+name|oflags
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+comment|/* Make sure the mode the user wants is a subset of the actual mode. */
 if|if
 condition|(
 operator|(
@@ -135,8 +157,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* Make sure the mode the user wants is a subset of the actual mode. */
-name|fdmode
+name|tmp
 operator|=
 name|fdflags
 operator|&
@@ -144,16 +165,18 @@ name|O_ACCMODE
 expr_stmt|;
 if|if
 condition|(
-name|fdmode
+name|tmp
 operator|!=
 name|O_RDWR
 operator|&&
-name|fdmode
+operator|(
+name|tmp
 operator|!=
 operator|(
 name|oflags
 operator|&
 name|O_ACCMODE
+operator|)
 operator|)
 condition|)
 block|{
@@ -183,29 +206,12 @@ operator|(
 name|NULL
 operator|)
 return|;
-if|if
-condition|(
-operator|(
 name|fp
 operator|->
 name|_flags
 operator|=
-name|__sflags
-argument_list|(
-name|mode
-argument_list|,
-operator|&
-name|oflags
-argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+name|flags
+expr_stmt|;
 comment|/* 	 * If opened for appending, but underlying descriptor does not have 	 * O_APPEND bit set, assert __SAPP so that __swrite() will lseek to 	 * end before each write. 	 */
 if|if
 condition|(
