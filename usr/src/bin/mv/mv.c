@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mv.c	4.1 (Berkeley) %G%"
+literal|"@(#)mv.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,11 @@ name|i
 operator|,
 name|r
 expr_stmt|;
+specifier|register
+name|char
+modifier|*
+name|arg
+decl_stmt|;
 comment|/* get the flag(s) */
 if|if
 condition|(
@@ -178,8 +183,12 @@ condition|)
 goto|goto
 name|usage
 goto|;
-if|if
+while|while
 condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
 operator|*
 name|argv
 index|[
@@ -192,24 +201,37 @@ block|{
 name|argc
 operator|--
 expr_stmt|;
+name|arg
+operator|=
+operator|*
+operator|++
+name|argv
+expr_stmt|;
+comment|/* 		 *  all files following a null option are considered file names 		 */
+if|if
+condition|(
+operator|*
+operator|(
+name|arg
+operator|+
+literal|1
+operator|)
+operator|==
+literal|'\0'
+condition|)
+break|break;
 while|while
 condition|(
 operator|*
 operator|++
-name|argv
-index|[
-literal|1
-index|]
+name|arg
 operator|!=
 literal|'\0'
 condition|)
 switch|switch
 condition|(
 operator|*
-name|argv
-index|[
-literal|1
-index|]
+name|arg
 condition|)
 block|{
 comment|/* interactive mode */
@@ -234,9 +256,6 @@ goto|goto
 name|usage
 goto|;
 block|}
-name|argv
-operator|++
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -407,7 +426,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mv f1 f2; or mv d1 d2; or mv f1 ... fn d1\n"
+literal|"usage: mv [-if] f1 f2; or mv [-if] d1 d2; or mv [-if] f1 ... fn d1\n"
 argument_list|)
 expr_stmt|;
 return|return

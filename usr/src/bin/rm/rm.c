@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rm.c	4.1 (Berkeley) %G%"
+literal|"@(#)rm.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,6 +122,19 @@ expr_stmt|;
 name|argc
 operator|--
 expr_stmt|;
+comment|/* 		 *  all files following a null option are considered file names 		 */
+if|if
+condition|(
+operator|*
+operator|(
+name|arg
+operator|+
+literal|1
+operator|)
+operator|==
+literal|'\0'
+condition|)
+break|break;
 while|while
 condition|(
 operator|*
