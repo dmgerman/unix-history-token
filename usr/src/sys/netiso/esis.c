@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*	@(#)esis.c	7.5 (Berkeley) %G% */
+comment|/*	@(#)esis.c	7.6 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -360,7 +360,7 @@ argument|m
 argument_list|,
 argument|nam
 argument_list|,
-argument|rights
+argument|control
 argument_list|)
 end_macro
 
@@ -414,12 +414,12 @@ begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
-name|rights
+name|control
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* optional rights */
+comment|/* optional control */
 end_comment
 
 begin_block
@@ -1446,6 +1446,8 @@ name|m0
 argument_list|,
 operator|&
 name|siso
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1603,6 +1605,8 @@ end_define
 begin_decl_stmt
 name|int
 name|ESHonly
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -3232,6 +3236,8 @@ name|m0
 argument_list|,
 operator|&
 name|siso
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
