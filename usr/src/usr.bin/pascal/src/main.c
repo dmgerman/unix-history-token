@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 1.6 %G%"
+literal|"@(#)main.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|"objfmt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"config.h"
 end_include
 
 begin_comment
@@ -90,15 +96,6 @@ modifier|*
 name|usageis
 init|=
 name|piusage
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|errfile
-init|=
-name|ERR_STRNGS
 decl_stmt|;
 end_decl_stmt
 
@@ -163,52 +160,6 @@ begin_endif
 endif|#
 directive|endif
 endif|PTREE
-end_endif
-
-begin_comment
-comment|/*  * Be careful changing errfile and howfile.  * There are the "magic" constants 9 and 15 immediately below.  * errfile is now defined by ERR_STRNGS, in objfmt.h,  * and its leading path name length is ERR_PATHLEN long.  * this for executing out of the current directory if running as `a.something'.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OBJ
-end_ifdef
-
-begin_decl_stmt
-name|char
-modifier|*
-name|howfile
-init|=
-name|HOW_STRNGS
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|OBJ
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC
-end_ifdef
-
-begin_decl_stmt
-name|char
-modifier|*
-name|howfile
-init|=
-name|HOW_STRNGS
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|PC
 end_endif
 
 begin_function_decl
@@ -306,13 +257,13 @@ index|]
 operator|==
 literal|'a'
 condition|)
-name|errfile
+name|err_file
 operator|+=
-name|ERR_PATHLEN
+name|err_pathlen
 operator|,
-name|howfile
+name|how_file
 operator|+=
-name|HOW_PATHLEN
+name|how_pathlen
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -355,11 +306,12 @@ name|usageis
 operator|=
 name|pixusage
 expr_stmt|;
-name|howfile
+name|how_file
 index|[
-name|HOW_PATHLEN
-operator|+
-literal|6
+name|strlen
+argument_list|(
+name|how_file
+argument_list|)
 index|]
 operator|=
 literal|'x'
@@ -443,7 +395,7 @@ literal|"/bin/cat"
 argument_list|,
 literal|"cat"
 argument_list|,
-name|howfile
+name|how_file
 argument_list|,
 literal|0
 argument_list|)
@@ -1053,7 +1005,7 @@ name|efil
 operator|=
 name|open
 argument_list|(
-name|errfile
+name|err_file
 argument_list|,
 literal|0
 argument_list|)
@@ -1066,7 +1018,7 @@ literal|0
 condition|)
 name|perror
 argument_list|(
-name|errfile
+name|err_file
 argument_list|)
 operator|,
 name|pexit
@@ -1526,7 +1478,7 @@ literal|0
 condition|)
 name|perror
 argument_list|(
-name|errfile
+name|err_file
 argument_list|)
 operator|,
 name|pexit
@@ -1546,8 +1498,8 @@ begin_block
 block|{
 specifier|extern
 name|char
+modifier|*
 name|version
-index|[]
 decl_stmt|;
 specifier|static
 name|char
@@ -1582,7 +1534,7 @@ directive|ifdef
 name|OBJ
 name|printf
 argument_list|(
-literal|"Berkeley Pascal PI -- Version 2.0 (%s)\n\n%s  %s\n\n"
+literal|"Berkeley Pascal PI -- Version %s\n\n%s  %s\n\n"
 argument_list|,
 name|version
 argument_list|,
@@ -1603,7 +1555,7 @@ directive|ifdef
 name|PC
 name|printf
 argument_list|(
-literal|"Berkeley Pascal PC -- Version 2.0 (%s)\n\n%s  %s\n\n"
+literal|"Berkeley Pascal PC -- Version %s\n\n%s  %s\n\n"
 argument_list|,
 name|version
 argument_list|,
