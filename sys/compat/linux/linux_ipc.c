@@ -2767,9 +2767,11 @@ name|LINUX_SETALL
 case|:
 comment|/* FALLTHROUGH */
 default|default:
-name|uprintf
+name|linux_msg
 argument_list|(
-literal|"linux: 'ipc' typ=%d not implemented\n"
+name|td
+argument_list|,
+literal|"ipc type %d is not implemented"
 argument_list|,
 name|args
 operator|->
@@ -4000,9 +4002,11 @@ case|case
 name|LINUX_SHM_UNLOCK
 case|:
 default|default:
-name|uprintf
+name|linux_msg
 argument_list|(
-literal|"linux: 'ipc' typ=%d not implemented\n"
+name|td
+argument_list|,
+literal|"ipc typ=%d not implemented"
 argument_list|,
 name|args
 operator|->

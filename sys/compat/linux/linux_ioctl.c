@@ -12601,9 +12601,11 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|printf
+name|linux_msg
 argument_list|(
-literal|"linux: 'ioctl' fd=%d, cmd=0x%x ('%c',%d) not implemented\n"
+name|td
+argument_list|,
+literal|"ioctl fd=%d, cmd=0x%x ('%c',%d) is not implemented"
 argument_list|,
 name|args
 operator|->

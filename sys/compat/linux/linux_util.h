@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -352,14 +358,43 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|int									\ linux_ ## s(struct thread *p, struct linux_ ## s ## _args *args)	\ {									\ 	return (unsupported_msg(p, #s));				\ }									\ struct __hack
+value|int									\ linux_ ## s(struct thread *p, struct linux_ ## s ## _args *args)	\ {									\ 	return (unimplemented_syscall(p, #s));				\ }									\ struct __hack
 end_define
+
+begin_function_decl
+name|void
+name|linux_msg
+parameter_list|(
+specifier|const
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function
 specifier|static
 name|__inline
 name|int
-name|unsupported_msg
+name|unimplemented_syscall
 parameter_list|(
 name|struct
 name|thread
@@ -369,30 +404,16 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|fname
+name|syscallname
 parameter_list|)
 block|{
-name|printf
+name|linux_msg
 argument_list|(
-literal|"linux: syscall %s is obsoleted or not implemented pid %ld "
-literal|"(%s)\n"
-argument_list|,
-name|fname
-argument_list|,
-operator|(
-name|long
-operator|)
 name|td
-operator|->
-name|td_proc
-operator|->
-name|p_pid
 argument_list|,
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_comm
+literal|"syscall %s not implemented"
+argument_list|,
+name|syscallname
 argument_list|)
 expr_stmt|;
 return|return
