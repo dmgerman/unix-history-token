@@ -348,6 +348,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|buf_maxio
+init|=
+name|DFLTPHYS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|vm_offset_t
 name|bogus_offset
@@ -370,18 +378,6 @@ decl_stmt|,
 name|hibufspace
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int maxvmiobufspace;
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -670,18 +666,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|SYSCTL_INT(_vfs, OID_AUTO, maxvmiobufspace, CTLFLAG_RW,&maxvmiobufspace, 0, "");
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1507,7 +1491,7 @@ name|b_hash
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * maxbufspace is currently calculated to support all filesystem  	 * blocks to be 8K.  If you happen to use a 16K filesystem, the size 	 * of the buffer cache is still the same as it would be for 8K  	 * filesystems.  This keeps the size of the buffer cache "in check"  	 * for big block filesystems. 	 * 	 * maxbufspace is calculated as around 50% of the KVA available in 	 * the buffer_map ( DFLTSIZE vs BKVASIZE ), I presume to reduce the  	 * effect of fragmentation. 	 */
+comment|/* 	 * maxbufspace is currently calculated to be maximally efficient 	 * when the filesystem block size is DFLTBSIZE or DFLTBSIZE*2 	 * (4K or 8K).  To reduce the number of stall points our calculation 	 * is based on DFLTBSIZE which should reduce the chances of actually 	 * running out of buffer headers.  The maxbufspace calculation is also 	 * based on DFLTBSIZE (4K) instead of BKVASIZE (8K) in order to 	 * reduce the chance that a KVA allocation will fail due to 	 * fragmentation.  While this does not usually create a stall, 	 * the KVA map allocation/free functions are O(N) rather then O(1) 	 * so running them constantly would result in inefficient O(N*M) 	 * buffer cache operation. 	 */
 name|maxbufspace
 operator|=
 operator|(
@@ -1518,35 +1502,23 @@ operator|)
 operator|*
 name|DFLTBSIZE
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|hibufspace
 operator|=
-name|maxbufspace
-operator|-
-name|MAXBSIZE
-operator|*
-literal|5
-operator|)
-operator|<=
-name|MAXBSIZE
-condition|)
-name|hibufspace
-operator|=
+name|imax
+argument_list|(
 literal|3
 operator|*
 name|maxbufspace
 operator|/
 literal|4
+argument_list|,
+name|maxbufspace
+operator|-
+name|MAXBSIZE
+operator|*
+literal|5
+argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/*  * reserve 1/3 of the buffers for metadata (VDIR) which might not be VMIO'ed  */
-block|maxvmiobufspace = 2 * hibufspace / 3;
-endif|#
-directive|endif
 comment|/*  * Limit the amount of malloc memory since it is wired permanently into  * the kernel space.  Even though this is accounted for in the buffer  * allocation, we don't want the malloced region to grow uncontrolled.  * The malloc scheme improves memory utilization significantly on average  * (small) directories.  */
 name|maxbufmallocspace
 operator|=
@@ -1575,6 +1547,83 @@ name|numdirtybuffers
 operator|=
 literal|0
 expr_stmt|;
+comment|/*  * To support extreme low-memory systems, make sure hidirtybuffers cannot  * eat up all available buffer space.  This occurs when our minimum cannot  * be met.  We try to size hidirtybuffers to 3/4 our buffer space assuming  * BKVASIZE'd (8K) buffers.  We also reduce buf_maxio in this case (used  * by the clustering code) in an attempt to further reduce the load on  * the buffer cache.  */
+while|while
+condition|(
+name|hidirtybuffers
+operator|*
+name|BKVASIZE
+operator|>
+literal|3
+operator|*
+name|hibufspace
+operator|/
+literal|4
+condition|)
+block|{
+name|lodirtybuffers
+operator|>>=
+literal|1
+expr_stmt|;
+name|hidirtybuffers
+operator|>>=
+literal|1
+expr_stmt|;
+name|buf_maxio
+operator|>>=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|lodirtybuffers
+operator|<
+literal|2
+condition|)
+block|{
+name|lodirtybuffers
+operator|=
+literal|2
+expr_stmt|;
+name|hidirtybuffers
+operator|=
+literal|4
+expr_stmt|;
+block|}
+comment|/* 	 * Temporary, BKVASIZE may be manipulated soon, make sure we don't 	 * do something illegal. XXX 	 */
+if|#
+directive|if
+name|BKVASIZE
+operator|<
+name|MAXBSIZE
+if|if
+condition|(
+name|buf_maxio
+operator|<
+name|BKVASIZE
+operator|*
+literal|2
+condition|)
+name|buf_maxio
+operator|=
+name|BKVASIZE
+operator|*
+literal|2
+expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+name|buf_maxio
+operator|<
+name|MAXBSIZE
+condition|)
+name|buf_maxio
+operator|=
+name|MAXBSIZE
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*  * Try to keep the number of free buffers in the specified range,  * and give the syncer access to an emergency reserve.  */
 name|lofreebuffers
 operator|=
@@ -2693,12 +2742,6 @@ parameter_list|)
 block|{
 if|#
 directive|if
-literal|0
-block|struct vnode *vp;
-endif|#
-directive|endif
-if|#
-directive|if
 operator|!
 name|defined
 argument_list|(
@@ -2807,13 +2850,6 @@ name|hidirtybuffers
 argument_list|)
 expr_stmt|;
 comment|/* 	 * note: we cannot initiate I/O from a bdwrite even if we wanted to, 	 * due to the softdep code. 	 */
-if|#
-directive|if
-literal|0
-comment|/* 	 * XXX The soft dependency code is not prepared to 	 * have I/O done when a bdwrite is requested. For 	 * now we just let the write be delayed if it is 	 * requested by the soft dependency code. 	 */
-block|if ((vp = bp->b_vp)&& 	    ((vp->v_type == VBLK&& vp->v_specmountpoint&& 		  (vp->v_specmountpoint->mnt_flag& MNT_SOFTDEP)) || 		 (vp->v_mount&& (vp->v_mount->mnt_flag& MNT_SOFTDEP)))) 		return;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -3145,6 +3181,11 @@ block|{
 name|int
 name|s
 decl_stmt|;
+name|int
+name|kvawakeup
+init|=
+literal|0
+decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|!
@@ -3167,12 +3208,6 @@ name|bp
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (bp->b_flags& B_CLUSTER) { 		relpbuf(bp, NULL); 		return; 	}
-endif|#
-directive|endif
 name|s
 operator|=
 name|splbio
@@ -3824,19 +3859,27 @@ name|bp
 operator|->
 name|b_kvasize
 condition|)
+block|{
 name|bp
 operator|->
 name|b_qindex
 operator|=
 name|QUEUE_EMPTYKVA
 expr_stmt|;
+name|kvawakeup
+operator|=
+literal|1
+expr_stmt|;
+block|}
 else|else
+block|{
 name|bp
 operator|->
 name|b_qindex
 operator|=
 name|QUEUE_EMPTY
 expr_stmt|;
+block|}
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
@@ -3881,15 +3924,6 @@ name|bp
 operator|->
 name|b_kvasize
 expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|b_kvasize
-condition|)
-name|kvaspacewakeup
-argument_list|()
-expr_stmt|;
 comment|/* buffers with junk contents */
 block|}
 elseif|else
@@ -3921,6 +3955,16 @@ operator|->
 name|b_qindex
 operator|=
 name|QUEUE_CLEAN
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_kvasize
+condition|)
+name|kvawakeup
+operator|=
+literal|1
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
@@ -4076,6 +4120,16 @@ argument_list|,
 name|b_freelist
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_kvasize
+condition|)
+name|kvawakeup
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 default|default:
 name|bp
@@ -4096,6 +4150,16 @@ name|bp
 argument_list|,
 name|b_freelist
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_kvasize
+condition|)
+name|kvawakeup
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 block|}
@@ -4175,6 +4239,13 @@ operator|->
 name|b_bufsize
 condition|)
 name|bufspacewakeup
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|kvawakeup
+condition|)
+name|kvaspacewakeup
 argument_list|()
 expr_stmt|;
 comment|/* unlock */
@@ -5951,8 +6022,6 @@ name|char
 modifier|*
 name|waitmsg
 decl_stmt|;
-name|dosleep
-label|:
 if|if
 condition|(
 name|defrag
@@ -6121,13 +6190,11 @@ name|restart
 goto|;
 block|}
 comment|/* 				 * Uh oh.  We couldn't seem to defragment 				 */
-name|bp
-operator|=
-name|NULL
+name|panic
+argument_list|(
+literal|"getnewbuf: unreachable code reached"
+argument_list|)
 expr_stmt|;
-goto|goto
-name|dosleep
-goto|;
 block|}
 block|}
 if|if
@@ -9769,6 +9836,10 @@ operator|=
 name|bp
 operator|->
 name|b_bcount
+operator|-
+name|bp
+operator|->
+name|b_resid
 expr_stmt|;
 if|if
 condition|(

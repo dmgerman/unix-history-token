@@ -1607,7 +1607,7 @@ condition|)
 block|{
 name|nbuf
 operator|=
-literal|30
+literal|50
 expr_stmt|;
 if|if
 condition|(

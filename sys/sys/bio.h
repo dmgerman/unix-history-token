@@ -1940,6 +1940,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|buf_maxio
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* nominal maximum I/O for buffer */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|buf
 modifier|*
