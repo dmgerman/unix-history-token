@@ -1261,7 +1261,7 @@ parameter_list|(
 name|resp
 parameter_list|)
 define|\
-value|UM_COPY ( (resp), Resp_Buf, (resp)[0] + 1 )
+value|bcopy ( (resp), Resp_Buf, (resp)[0] + 1 )
 end_define
 
 begin_comment
@@ -2299,7 +2299,7 @@ operator|++
 operator|=
 name|len
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -3120,11 +3120,7 @@ condition|(
 operator|(
 name|var
 operator|=
-operator|(
-name|Variable
-operator|*
-operator|)
-name|UM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3397,12 +3393,10 @@ condition|(
 operator|(
 name|h
 operator|=
-operator|(
-name|Snmp_Header
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Snmp_Header
@@ -3421,17 +3415,6 @@ operator|)
 name|NULL
 operator|)
 return|;
-comment|/* 	 * Ensure that we wipe the slate clean 	 */
-name|UM_ZERO
-argument_list|(
-name|h
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Snmp_Header
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * PDU has to start as SEQUENCE OF 	 */
 if|if
 condition|(
@@ -3570,7 +3553,7 @@ operator|!=
 name|ASN_INTEGER
 condition|)
 block|{
-name|UM_FREE
+name|free
 argument_list|(
 name|h
 argument_list|)
@@ -3607,7 +3590,7 @@ operator|!=
 name|ASN_INTEGER
 condition|)
 block|{
-name|UM_FREE
+name|free
 argument_list|(
 name|h
 argument_list|)
@@ -3644,7 +3627,7 @@ operator|!=
 name|ASN_INTEGER
 condition|)
 block|{
-name|UM_FREE
+name|free
 argument_list|(
 name|h
 argument_list|)
@@ -3681,7 +3664,7 @@ operator|!=
 name|ASN_SEQUENCE
 condition|)
 block|{
-name|UM_FREE
+name|free
 argument_list|(
 name|h
 argument_list|)
@@ -4193,7 +4176,7 @@ modifier|*
 name|var
 decl_stmt|;
 comment|/* 	 * Clear out the reply 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|Resp_Buf
 argument_list|,
@@ -4262,7 +4245,7 @@ operator|->
 name|community
 argument_list|)
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|hdr
 operator|->
@@ -4470,7 +4453,7 @@ operator|->
 name|ipaddr
 argument_list|)
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -4759,7 +4742,7 @@ expr_stmt|;
 name|len
 operator|++
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -4857,7 +4840,7 @@ expr_stmt|;
 name|len
 operator|++
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -5091,7 +5074,7 @@ operator|->
 name|next
 expr_stmt|;
 comment|/* Save next link */
-name|UM_FREE
+name|free
 argument_list|(
 name|hdr
 operator|->
@@ -5107,7 +5090,7 @@ name|var
 expr_stmt|;
 comment|/* Set head to next link */
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|hdr
 argument_list|)
@@ -5174,7 +5157,7 @@ name|reqid
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Replace the current Request ID with the supplied value 	 */
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -5358,11 +5341,7 @@ name|var
 decl_stmt|;
 name|hdr
 operator|=
-operator|(
-name|Snmp_Header
-operator|*
-operator|)
-name|UM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -5419,7 +5398,7 @@ name|specific_trap
 operator|=
 literal|0
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -5452,7 +5431,7 @@ operator|(
 name|Variable
 operator|*
 operator|)
-name|UM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -5466,7 +5445,7 @@ name|hdr
 operator|->
 name|head
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -5521,11 +5500,7 @@ name|hdr
 decl_stmt|;
 name|hdr
 operator|=
-operator|(
-name|Snmp_Header
-operator|*
-operator|)
-name|UM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -5616,7 +5591,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|Cfg
 argument_list|,
@@ -5626,7 +5601,7 @@ name|Cfg
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|Intf
 argument_list|,
@@ -5643,7 +5618,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Move to local storage 	 */
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|cfg_info
 argument_list|,
@@ -5667,7 +5642,7 @@ name|air_cfg_rsp
 argument_list|)
 expr_stmt|;
 comment|/* Housecleaning */
-name|UM_FREE
+name|free
 argument_list|(
 name|cfg_info
 argument_list|)
@@ -5695,7 +5670,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|Intf
 argument_list|,
@@ -5708,7 +5683,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Move to local storage 	 */
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|intf_info
 argument_list|,
@@ -5721,7 +5696,7 @@ name|buf_len
 argument_list|)
 expr_stmt|;
 comment|/* Housecleaning */
-name|UM_FREE
+name|free
 argument_list|(
 name|intf_info
 argument_list|)
@@ -6033,7 +6008,7 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/*                  * Set up destination SAP                  */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|(
 name|caddr_t
@@ -6884,7 +6859,7 @@ operator|->
 name|anp_proto_addr
 expr_stmt|;
 comment|/* 	 * Fill in answer 	 */
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -6901,7 +6876,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|net_info
 argument_list|)
@@ -7221,11 +7196,7 @@ name|PDU_Header
 operator|->
 name|head
 operator|=
-operator|(
-name|Variable
-operator|*
-operator|)
-name|UM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -7240,7 +7211,7 @@ operator|->
 name|head
 expr_stmt|;
 comment|/* Copy generic addressEntry OBJID */
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -7726,7 +7697,7 @@ name|type
 operator|=
 name|ASN_OBJID
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -7983,7 +7954,7 @@ index|]
 operator|=
 literal|6
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -8195,7 +8166,7 @@ case|case
 name|ILMI_COLDSTART
 case|:
 comment|/* 	 		 * Clear addressTable 	 		 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|(
 name|caddr_t
@@ -8259,11 +8230,7 @@ name|PDU_Header
 operator|->
 name|head
 operator|=
-operator|(
-name|Variable
-operator|*
-operator|)
-name|UM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -8277,7 +8244,7 @@ name|PDU_Header
 operator|->
 name|head
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
