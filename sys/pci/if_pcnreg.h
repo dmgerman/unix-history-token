@@ -1244,7 +1244,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCN_BCR_PCISUNSYSID
+name|PCN_BCR_PCISUBSYSID
 value|0x18
 end_define
 
