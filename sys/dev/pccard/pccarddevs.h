@@ -4,15 +4,15 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.28 2002/03/17 05:05:42 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.29 2002/04/02 05:39:07 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.159 2002/01/28 09:25:33 aymeric Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.163 2002/03/04 16:41:50 martin Exp $ */
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: pcmciadevs,v 1.71 2001/10/28 19:21:37 mickey Exp $ */
+comment|/* $OpenBSD: pcmciadevs,v 1.85 2002/03/29 18:54:07 millert Exp $ */
 end_comment
 
 begin_comment
@@ -516,6 +516,17 @@ end_define
 
 begin_comment
 comment|/* I-O DATA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_NWN
+value|0x0602
+end_define
+
+begin_comment
+comment|/* No Wires Needed */
 end_comment
 
 begin_define
@@ -2311,6 +2322,27 @@ name|PCMCIA_STR_LINKSYS2_IWN
 value|"Instant Wireless Network PC Card"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_LINKSYS2_IWN2
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_LINKSYS2_IWN2
+value|0x1613
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_LINKSYS2_IWN2
+value|"Instant Wireless Network PC Card"
+end_define
+
 begin_comment
 comment|/* Lucent WaveLAN/IEEE */
 end_comment
@@ -2759,6 +2791,27 @@ name|PCMCIA_STR_NETGEAR_FA410TXC
 value|"Netgear FA410TXC"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_NETGEAR_FA411
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NETGEAR_FA411
+value|0x0411
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NETGEAR_FA411
+value|"Netgear FA411"
+end_define
+
 begin_comment
 comment|/* National Instruments */
 end_comment
@@ -2807,6 +2860,52 @@ define|#
 directive|define
 name|PCMCIA_STR_NOKIA_C020_WLAN
 value|"Nokia C020 WLAN Card"
+end_define
+
+begin_comment
+comment|/* No Wires Needed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_NWN_WLAN_550
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NWN_WLAN_550
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NWN_WLAN_550
+value|"NWN 550 WLAN"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_NWN_WLAN_1148
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NWN_WLAN_1148
+value|0x0003
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NWN_WLAN_1148
+value|"NWN 1148 WLAN"
 end_define
 
 begin_comment
@@ -3482,6 +3581,27 @@ name|PCMCIA_STR_TDK_DFL9610
 value|"TDK DFL9610 Ethernet& Digital Cellular"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_TDK_C6500012
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_TDK_C6500012
+value|0x410a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_TDK_C6500012
+value|"TDK ELSA MicroLink MC all"
+end_define
+
 begin_comment
 comment|/* Telecom Device */
 end_comment
@@ -3958,6 +4078,17 @@ end_define
 
 begin_comment
 comment|/* Intersil */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_LANTECH
+value|-1
+end_define
+
+begin_comment
+comment|/* Lantech Computer Company */
 end_comment
 
 begin_define
@@ -4529,6 +4660,90 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_FUJITSU_FMV_J181
+value|{ "PCMCIA MBH10302", "01", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_FUJITSU_FMV_J181
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_FUJITSU_FMV_J181
+value|"FUJITSU FMV-J181 PCMCIA Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_FUJITSU_FMV_J182
+value|{ "FUJITSU", "LAN Card(FMV-J182)", "Ver.01", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_FUJITSU_FMV_J182
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_FUJITSU_FMV_J182
+value|"FUJITSU FMV-J182 PCMCIA Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_FUJITSU_FMV_J182A
+value|{ "FUJITSU", "LAN Card(FMV-J182)", "Ver.02", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_FUJITSU_FMV_J182A
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_FUJITSU_FMV_J182A
+value|"FUJITSU FMV-J182A PCMCIA Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_FUJITSU_ITCFJ182A
+value|{ "FUJITSU", "LAN Card(ITCFJ182)", "Ver.01", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_FUJITSU_ITCFJ182A
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_FUJITSU_ITCFJ182A
+value|"FUJITSU ITCFJ182A CompactCard"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_GEMTEK_WLAN
 value|{ "Intersil", "PRISM 2_5 PCMCIA ADAPTER", "ISL37300P", "Eval-RevA" }
 end_define
@@ -4634,6 +4849,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_LANTECH_FASTNETTX
+value|{ "ASIX", "AX88190", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_LANTECH_FASTNETTX
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_LANTECH_FASTNETTX
+value|"Lantech Fastnet/TX"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_LINKSYS_ECARD_2
 value|{ "LINKSYS", "E-CARD", NULL, NULL }
 end_define
@@ -4650,6 +4886,27 @@ define|#
 directive|define
 name|PCMCIA_STR_LINKSYS_ECARD_2
 value|"Linksys E-Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_LINKSYS_PCM100
+value|{ "Linksys", "EtherFast 10/100 Integrated PC Card (PCM100)", "Ver 1.0", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_LINKSYS_PCM100
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_LINKSYS_PCM100
+value|""
 end_define
 
 begin_define
@@ -5141,90 +5398,6 @@ define|#
 directive|define
 name|PCMCIA_STR_ZOOM_AIR_4000
 value|"Zoom Air-4000"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CIS_FUJITSU_FMV_J181
-value|{ "PCMCIA MBH10302", "01", NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_FUJITSU_FMV_J181
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_FUJITSU_FMV_J181
-value|"FUJITSU FMV-J181 PCMCIA Card"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CIS_FUJITSU_FMV_J182
-value|{ "FUJITSU", "LAN Card(FMV-J182)", "Ver.01", NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_FUJITSU_FMV_J182
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_FUJITSU_FMV_J182
-value|"FUJITSU FMV-J182 PCMCIA Card"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CIS_FUJITSU_FMV_J182A
-value|{ "FUJITSU", "LAN Card(FMV-J182)", "Ver.02", NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_FUJITSU_FMV_J182A
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_FUJITSU_FMV_J182A
-value|"FUJITSU FMV-J182A PCMCIA Card"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CIS_FUJITSU_ITCFJ182A
-value|{ "FUJITSU", "LAN Card(ITCFJ182)", "Ver.01", NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_FUJITSU_ITCFJ182A
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_FUJITSU_ITCFJ182A
-value|"FUJITSU ITCFJ182A CompactCard"
 end_define
 
 end_unit
