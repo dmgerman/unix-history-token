@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lastcomm.c	4.2 (Berkeley) %G%"
+literal|"@(#)lastcomm.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,6 +177,8 @@ index|]
 index|[
 literal|0
 index|]
+operator|==
+literal|0
 condition|)
 name|move
 argument_list|(
