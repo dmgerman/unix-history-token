@@ -692,6 +692,16 @@ name|NULL
 argument_list|)
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|fflag
+operator|&&
+name|errno
+operator|==
+name|ENOENT
+condition|)
+return|return;
 name|err
 argument_list|(
 literal|1
@@ -699,6 +709,7 @@ argument_list|,
 literal|"fts_open"
 argument_list|)
 expr_stmt|;
+block|}
 while|while
 condition|(
 operator|(
