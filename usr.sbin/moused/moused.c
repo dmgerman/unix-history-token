@@ -735,6 +735,15 @@ block|,
 name|MOUSE_MODEL_INTELLI
 block|}
 block|,
+comment|/* Tremon Wheel Mouse MUSD */
+block|{
+literal|"HTK0001"
+block|,
+name|MOUSE_PROTO_INTELLI
+block|,
+name|MOUSE_MODEL_INTELLI
+block|}
+block|,
 comment|/* Genius PnP Mouse */
 block|{
 literal|"KYE0001"
