@@ -7066,17 +7066,6 @@ name|sw_dev_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Page in the contents of the device and close it. 	 */
-ifndef|#
-directive|ifndef
-name|NO_SWAPPING
-name|vm_proc_swapin_all
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* !NO_SWAPPING */
 name|swap_pager_swapoff
 argument_list|(
 name|sp
