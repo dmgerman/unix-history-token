@@ -1743,6 +1743,9 @@ name|isrc
 operator|->
 name|is_pic
 decl_stmt|;
+name|int
+name|changed
+decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|!
@@ -1763,17 +1766,23 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For now we ignore any requests but do output any changes that 	 * would be made to the console it bootverbose is enabled.  The only 	 * known causes of these messages so far is a bug in acpi(4) that 	 * causes the ISA IRQs used for PCI interrupts in PIC mode to be 	 * set to level/low when they aren't being used.  There are possibly 	 * legitimate requests, so at some point when the acpi(4) driver is 	 * fixed this code can be changed to actually change the intpin as 	 * requested. 	 */
+comment|/* 	 * EISA interrupts always use active high polarity, so don't allow 	 * them to be set to active low. 	 * 	 * XXX: Should we write to the ELCR if the trigger mode changes for 	 * an EISA IRQ? 	 */
 if|if
 condition|(
-operator|!
-name|bootverbose
+name|intpin
+operator|->
+name|io_bus
+operator|==
+name|APIC_BUS_EISA
 condition|)
-return|return
-operator|(
+name|pol
+operator|=
+name|INTR_POLARITY_HIGH
+expr_stmt|;
+name|changed
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
 if|if
 condition|(
 name|intpin
@@ -1786,9 +1795,14 @@ operator|==
 name|INTR_TRIGGER_EDGE
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"ioapic%u: Request to change trigger for pin %u to %s ignored\n"
+literal|"ioapic%u: Changing trigger for pin %u to %s\n"
 argument_list|,
 name|io
 operator|->
@@ -1807,6 +1821,20 @@ else|:
 literal|"level"
 argument_list|)
 expr_stmt|;
+name|intpin
+operator|->
+name|io_edgetrigger
+operator|=
+operator|(
+name|trig
+operator|==
+name|INTR_TRIGGER_EDGE
+operator|)
+expr_stmt|;
+name|changed
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|intpin
@@ -1819,9 +1847,14 @@ operator|==
 name|INTR_POLARITY_HIGH
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"ioapic%u: Request to change polarity for pin %u to %s ignored\n"
+literal|"ioapic%u: Changing polarity for pin %u to %s\n"
 argument_list|,
 name|io
 operator|->
@@ -1838,6 +1871,29 @@ condition|?
 literal|"high"
 else|:
 literal|"low"
+argument_list|)
+expr_stmt|;
+name|intpin
+operator|->
+name|io_activehi
+operator|=
+operator|(
+name|pol
+operator|==
+name|INTR_POLARITY_HIGH
+operator|)
+expr_stmt|;
+name|changed
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|changed
+condition|)
+name|ioapic_program_intpin
+argument_list|(
+name|intpin
 argument_list|)
 expr_stmt|;
 return|return
