@@ -11,13 +11,19 @@ directive|include
 file|"../hdr/had.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)delta.c	4.10	%G%"
+literal|"@(#)delta.c	4.11	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,10 +41,10 @@ end_ifdef
 
 begin_decl_stmt
 name|char
+modifier|*
 name|LogFile
-index|[]
 init|=
-literal|"/usr/adm/sccs-log"
+name|_PATH_SCCSLOG
 decl_stmt|;
 end_decl_stmt
 
