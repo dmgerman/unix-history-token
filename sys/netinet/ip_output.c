@@ -1762,6 +1762,8 @@ name|COMPAT_IPFW
 comment|/* 	 * Check with the firewall... 	 */
 if|if
 condition|(
+name|fw_enable
+operator|&&
 name|ip_fw_chk_ptr
 condition|)
 block|{

@@ -772,6 +772,14 @@ name|ip_fw_ctl_ptr
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|fw_enable
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1882,6 +1890,8 @@ directive|ifdef
 name|COMPAT_IPFW
 if|if
 condition|(
+name|fw_enable
+operator|&&
 name|ip_fw_chk_ptr
 condition|)
 block|{

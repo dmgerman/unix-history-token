@@ -23,7 +23,7 @@ value|x
 end_define
 
 begin_comment
-comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  *  * Most important Changes:  *       * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  *  * include files marked with XXX are probably not needed  */
+comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  *  * Most important Changes:  *  * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  *  * include files marked with XXX are probably not needed  */
 end_comment
 
 begin_include
@@ -178,17 +178,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * the addresses/ports of last pkt matched by the firewall are  * in this structure. This is so that we can easily find them without  * navigating through the mbuf.  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|dn_flow_id
-name|dn_last_pkt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * we keep a private variable for the simulation time, but probably  * it would be better to use the already existing one "softticks"  * (in sys/kern/kern_timer.c)  */
 end_comment
 
@@ -230,6 +219,32 @@ decl_stmt|,
 name|search_steps
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pipe_expire
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* expire queue if empty */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dn_max_ratio
+init|=
+literal|16
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max queues/buckets ratio */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -364,7 +379,7 @@ name|OID_AUTO
 argument_list|,
 name|hash_size
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|dn_hash_size
@@ -485,6 +500,48 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_ip_dummynet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|expire
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pipe_expire
+argument_list|,
+literal|0
+argument_list|,
+literal|"Expire queue if empty"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_ip_dummynet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_chain_len
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|dn_max_ratio
+argument_list|,
+literal|0
+argument_list|,
+literal|"Max ratio between dynamic queues and buckets"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -569,7 +626,7 @@ name|rt
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return ;
 if|if
 condition|(
 name|rt
@@ -1298,7 +1355,7 @@ argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The actual mbuf is preceded by a struct dn_pkt, resembling an mbuf 	 * (NOT A REAL one, just a small block of malloc'ed memory) with 	 * m_type = MT_DUMMYNET 	 *     m_next = actual mbuf to be processed by ip_input/output 	 * m_data = the matching rule 	 * and some other fields. 	 * The block IS FREED HERE because it contains parameters passed 	 * to the called routine. 	 */
+comment|/* 	 * The actual mbuf is preceded by a struct dn_pkt, resembling an mbuf 	 * (NOT A REAL one, just a small block of malloc'ed memory) with 	 *     m_type = MT_DUMMYNET 	 *     m_next = actual mbuf to be processed by ip_input/output 	 *     m_data = the matching rule 	 * and some other fields. 	 * The block IS FREED HERE because it contains parameters passed 	 * to the called routine. 	 */
 switch|switch
 condition|(
 name|pkt
@@ -1942,7 +1999,335 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a pipe and a pkt in dn_last_pkt, find a matching queue  * after appropriate masking. The queue is moved to front  * so that further searches take less time.  * XXX if the queue is longer than some threshold should consider  * purging old unused entries. They will get in the way every time  * we have a new flow.  */
+comment|/*  * Unconditionally expire empty queues in case of shortage.  * Returns the number of queues freed.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|expire_queues
+parameter_list|(
+name|struct
+name|dn_pipe
+modifier|*
+name|pipe
+parameter_list|)
+block|{
+name|struct
+name|dn_flow_queue
+modifier|*
+name|q
+decl_stmt|,
+modifier|*
+name|prev
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|initial_elements
+init|=
+name|pipe
+operator|->
+name|rq_elements
+decl_stmt|;
+if|if
+condition|(
+name|pipe
+operator|->
+name|last_expired
+operator|==
+name|time_second
+condition|)
+return|return
+literal|0
+return|;
+name|pipe
+operator|->
+name|last_expired
+operator|=
+name|time_second
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+name|pipe
+operator|->
+name|rq_size
+condition|;
+name|i
+operator|++
+control|)
+comment|/* last one is overflow */
+for|for
+control|(
+name|prev
+operator|=
+name|NULL
+operator|,
+name|q
+operator|=
+name|pipe
+operator|->
+name|rq
+index|[
+name|i
+index|]
+init|;
+name|q
+operator|!=
+name|NULL
+condition|;
+control|)
+if|if
+condition|(
+name|q
+operator|->
+name|r
+operator|.
+name|head
+operator|!=
+name|NULL
+condition|)
+block|{
+name|prev
+operator|=
+name|q
+expr_stmt|;
+name|q
+operator|=
+name|q
+operator|->
+name|next
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* entry is idle, expire it */
+name|struct
+name|dn_flow_queue
+modifier|*
+name|old_q
+init|=
+name|q
+decl_stmt|;
+if|if
+condition|(
+name|prev
+operator|!=
+name|NULL
+condition|)
+name|prev
+operator|->
+name|next
+operator|=
+name|q
+operator|=
+name|q
+operator|->
+name|next
+expr_stmt|;
+else|else
+name|pipe
+operator|->
+name|rq
+index|[
+name|i
+index|]
+operator|=
+name|q
+operator|=
+name|q
+operator|->
+name|next
+expr_stmt|;
+name|pipe
+operator|->
+name|rq_elements
+operator|--
+expr_stmt|;
+name|free
+argument_list|(
+name|old_q
+argument_list|,
+name|M_IPFW
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|initial_elements
+operator|-
+name|pipe
+operator|->
+name|rq_elements
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * If room, create a new queue and put at head of slot i;  * otherwise, create or use the default queue.  */
+end_comment
+
+begin_function
+specifier|static
+name|struct
+name|dn_flow_queue
+modifier|*
+name|create_queue
+parameter_list|(
+name|struct
+name|dn_pipe
+modifier|*
+name|pipe
+parameter_list|,
+name|int
+name|i
+parameter_list|)
+block|{
+name|struct
+name|dn_flow_queue
+modifier|*
+name|q
+decl_stmt|;
+if|if
+condition|(
+name|pipe
+operator|->
+name|rq_elements
+operator|>
+name|pipe
+operator|->
+name|rq_size
+operator|*
+name|dn_max_ratio
+operator|&&
+name|expire_queues
+argument_list|(
+name|pipe
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 	 * No way to get room, use or create overflow queue. 	 */
+name|i
+operator|=
+name|pipe
+operator|->
+name|rq_size
+expr_stmt|;
+if|if
+condition|(
+name|pipe
+operator|->
+name|rq
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|)
+return|return
+name|pipe
+operator|->
+name|rq
+index|[
+name|i
+index|]
+return|;
+block|}
+name|q
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|q
+argument_list|)
+argument_list|,
+name|M_IPFW
+argument_list|,
+name|M_DONTWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|q
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"sorry, cannot allocate queue for new flow\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+name|bzero
+argument_list|(
+name|q
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|q
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* needed */
+name|q
+operator|->
+name|p
+operator|=
+name|pipe
+expr_stmt|;
+name|q
+operator|->
+name|hash_slot
+operator|=
+name|i
+expr_stmt|;
+name|q
+operator|->
+name|next
+operator|=
+name|pipe
+operator|->
+name|rq
+index|[
+name|i
+index|]
+expr_stmt|;
+name|pipe
+operator|->
+name|rq
+index|[
+name|i
+index|]
+operator|=
+name|q
+expr_stmt|;
+name|pipe
+operator|->
+name|rq_elements
+operator|++
+expr_stmt|;
+return|return
+name|q
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Given a pipe and a pkt in last_pkt, find a matching queue  * after appropriate masking. The queue is moved to front  * so that further searches take less time.  */
 end_comment
 
 begin_function
@@ -1995,7 +2380,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* first, do the masking */
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|dst_ip
 operator|&=
@@ -2005,7 +2390,7 @@ name|flow_mask
 operator|.
 name|dst_ip
 expr_stmt|;
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|src_ip
 operator|&=
@@ -2015,7 +2400,7 @@ name|flow_mask
 operator|.
 name|src_ip
 expr_stmt|;
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|dst_port
 operator|&=
@@ -2025,7 +2410,7 @@ name|flow_mask
 operator|.
 name|dst_port
 expr_stmt|;
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|src_port
 operator|&=
@@ -2035,7 +2420,7 @@ name|flow_mask
 operator|.
 name|src_port
 expr_stmt|;
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|proto
 operator|&=
@@ -2045,12 +2430,19 @@ name|flow_mask
 operator|.
 name|proto
 expr_stmt|;
+name|last_pkt
+operator|.
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+comment|/* we dont care about this one */
 comment|/* then, hash function */
 name|i
 operator|=
 operator|(
 operator|(
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|dst_ip
 operator|)
@@ -2060,7 +2452,7 @@ operator|)
 operator|^
 operator|(
 operator|(
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|dst_ip
 operator|>>
@@ -2072,7 +2464,7 @@ operator|)
 operator|^
 operator|(
 operator|(
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|src_ip
 operator|<<
@@ -2084,7 +2476,7 @@ operator|)
 operator|^
 operator|(
 operator|(
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|src_ip
 operator|>>
@@ -2095,7 +2487,7 @@ literal|0xffff
 operator|)
 operator|^
 operator|(
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|dst_port
 operator|<<
@@ -2103,13 +2495,13 @@ literal|1
 operator|)
 operator|^
 operator|(
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|src_port
 operator|)
 operator|^
 operator|(
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|proto
 operator|)
@@ -2143,15 +2535,6 @@ index|]
 init|;
 name|q
 condition|;
-name|prev
-operator|=
-name|q
-operator|,
-name|q
-operator|=
-name|q
-operator|->
-name|next
 control|)
 block|{
 name|search_steps
@@ -2162,7 +2545,7 @@ condition|(
 name|bcmp
 argument_list|(
 operator|&
-name|dn_last_pkt
+name|last_pkt
 argument_list|,
 operator|&
 operator|(
@@ -2183,6 +2566,82 @@ literal|0
 condition|)
 break|break ;
 comment|/* found */
+elseif|else
+if|if
+condition|(
+name|pipe_expire
+operator|&&
+name|q
+operator|->
+name|r
+operator|.
+name|head
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* entry is idle, expire it */
+name|struct
+name|dn_flow_queue
+modifier|*
+name|old_q
+init|=
+name|q
+decl_stmt|;
+if|if
+condition|(
+name|prev
+operator|!=
+name|NULL
+condition|)
+name|prev
+operator|->
+name|next
+operator|=
+name|q
+operator|=
+name|q
+operator|->
+name|next
+expr_stmt|;
+else|else
+name|pipe
+operator|->
+name|rq
+index|[
+name|i
+index|]
+operator|=
+name|q
+operator|=
+name|q
+operator|->
+name|next
+expr_stmt|;
+name|pipe
+operator|->
+name|rq_elements
+operator|--
+expr_stmt|;
+name|free
+argument_list|(
+name|old_q
+argument_list|,
+name|M_IPFW
+argument_list|)
+expr_stmt|;
+continue|continue ;
+block|}
+name|prev
+operator|=
+name|q
+expr_stmt|;
+name|q
+operator|=
+name|q
+operator|->
+name|next
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2234,96 +2693,25 @@ block|{
 comment|/* no match, need to allocate a new entry */
 name|q
 operator|=
-name|malloc
+name|create_queue
 argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|q
-argument_list|)
+name|pipe
 argument_list|,
-name|M_IPFW
-argument_list|,
-name|M_DONTWAIT
+name|i
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|q
-operator|==
+operator|!=
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"sorry, cannot allocate new flow\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
-name|bzero
-argument_list|(
-name|q
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|q
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* needed */
 name|q
 operator|->
 name|id
 operator|=
-name|dn_last_pkt
+name|last_pkt
 expr_stmt|;
-name|q
-operator|->
-name|p
-operator|=
-name|pipe
-expr_stmt|;
-name|q
-operator|->
-name|hash_slot
-operator|=
-name|i
-expr_stmt|;
-name|q
-operator|->
-name|next
-operator|=
-name|pipe
-operator|->
-name|rq
-index|[
-name|i
-index|]
-expr_stmt|;
-name|pipe
-operator|->
-name|rq
-index|[
-name|i
-index|]
-operator|=
-name|q
-expr_stmt|;
-name|pipe
-operator|->
-name|rq_elements
-operator|++
-expr_stmt|;
-name|DEB
-argument_list|(
-argument|printf(
-literal|"++ new queue (%d) for 0x%08x/0x%04x -> 0x%08x/0x%04x\n"
-argument|, 		pipe->rq_elements, 		dn_last_pkt.src_ip, dn_last_pkt.src_port, 		dn_last_pkt.dst_ip, dn_last_pkt.dst_port);
-argument_list|)
 block|}
 return|return
 name|q
@@ -2410,7 +2798,7 @@ name|DEB
 argument_list|(
 argument|printf(
 literal|"-- last_pkt dst 0x%08x/0x%04x src 0x%08x/0x%04x\n"
-argument|, 	dn_last_pkt.dst_ip, dn_last_pkt.dst_port, 	dn_last_pkt.src_ip, dn_last_pkt.src_port);
+argument|, 	last_pkt.dst_ip, last_pkt.dst_port, 	last_pkt.src_ip, last_pkt.src_port);
 argument_list|)
 name|pipe_nr
 operator|&=
@@ -2655,7 +3043,7 @@ operator|==
 name|DN_TO_IP_OUT
 condition|)
 block|{
-comment|/* 	 * We need to copy *ro because for ICMP pkts (and maybe others) 	 * the caller passed a pointer into the stack; and, dst might 	 * also be a pointer into *ro so it needs to be updated. 	 */
+comment|/* 	 * We need to copy *ro because for ICMP pkts (and maybe others) 	 * the caller passed a pointer into the stack; dst might also be 	 * a pointer into *ro so it needs to be updated. 	 */
 name|pkt
 operator|->
 name|ro
@@ -2764,7 +3152,7 @@ name|len_bytes
 operator|+=
 name|len
 expr_stmt|;
-comment|/*       * If queue was empty (this is first pkt) then call ready_event()      * now to make the pkt go out at the right time. Otherwise we are done,      * as there must be a ready event already scheduled.      */
+comment|/*      * If queue was empty (this is first pkt) then call ready_event()      * now to make the pkt go out at the right time. Otherwise we are done,      * as there must be a ready event already scheduled.      */
 if|if
 condition|(
 name|q
@@ -2818,7 +3206,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * below, the rt_unref is only needed when (pkt->dn_dir == DN_TO_IP_OUT)  * Doing this would probably save us the initial bzero of dn_pkt  */
+comment|/*  * Below, the rt_unref is only needed when (pkt->dn_dir == DN_TO_IP_OUT)  * Doing this would probably save us the initial bzero of dn_pkt  */
 end_comment
 
 begin_define
@@ -2869,7 +3257,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|pipe
 operator|->
 name|rq_size
@@ -2877,6 +3265,7 @@ condition|;
 name|i
 operator|++
 control|)
+comment|/* XXX last one is overflow */
 for|for
 control|(
 name|q
@@ -3180,7 +3569,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|p
 operator|->
 name|rq_size
@@ -3188,6 +3577,7 @@ condition|;
 name|i
 operator|++
 control|)
+comment|/* XXX last one is ovflow */
 for|for
 control|(
 name|q
@@ -3294,7 +3684,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * handler for the various dummynet socket options  * (get, flush, config, del)  */
+comment|/*  * Handler for the various dummynet socket options (get, flush, config, del)  */
 end_comment
 
 begin_function
@@ -3313,17 +3703,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|size_t
-name|size
-decl_stmt|;
-name|char
-modifier|*
-name|buf
-decl_stmt|,
-modifier|*
-name|bp
-decl_stmt|;
-comment|/* bp is the "copy-pointer" */
 name|struct
 name|dn_pipe
 modifier|*
@@ -3333,9 +3712,6 @@ name|tmp_pipe
 decl_stmt|;
 name|struct
 name|dn_pipe
-modifier|*
-name|x
-decl_stmt|,
 modifier|*
 name|a
 decl_stmt|,
@@ -3376,6 +3752,27 @@ expr_stmt|;
 case|case
 name|IP_DUMMYNET_GET
 case|:
+block|{
+name|char
+modifier|*
+name|buf
+decl_stmt|,
+modifier|*
+name|bp
+decl_stmt|;
+comment|/* bp is the "copy-pointer" */
+name|size_t
+name|size
+decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
+comment|/* to avoid thing change while we work! */
 for|for
 control|(
 name|p
@@ -3420,7 +3817,7 @@ name|size
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3433,6 +3830,11 @@ block|{
 name|error
 operator|=
 name|ENOBUFS
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 break|break ;
 block|}
@@ -3475,7 +3877,12 @@ name|dn_flow_queue
 modifier|*
 name|q
 decl_stmt|;
-comment|/* 	     * copy the pipe descriptor into *bp, convert delay back to ms, 	     * then copy the queue descriptor(s) one at a time. 	     */
+name|int
+name|copied
+init|=
+literal|0
+decl_stmt|;
+comment|/* 		 * copy pipe descriptor into *bp, convert delay back to ms, 		 * then copy the queue descriptor(s) one at a time. 		 */
 name|bcopy
 argument_list|(
 name|p
@@ -3518,7 +3925,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|p
 operator|->
 name|rq_size
@@ -3553,6 +3960,31 @@ operator|*
 name|q
 argument_list|)
 control|)
+block|{
+if|if
+condition|(
+name|q
+operator|->
+name|hash_slot
+operator|!=
+name|i
+condition|)
+name|printf
+argument_list|(
+literal|"++ at %d: wrong slot (have %d, should be %d)\n"
+argument_list|,
+name|copied
+argument_list|,
+name|q
+operator|->
+name|hash_slot
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|copied
+operator|++
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|q
@@ -3567,6 +3999,31 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|copied
+operator|!=
+name|p
+operator|->
+name|rq_elements
+condition|)
+name|printf
+argument_list|(
+literal|"++ wrong count, have %d should be %d\n"
+argument_list|,
+name|copied
+argument_list|,
+name|p
+operator|->
+name|rq_elements
+argument_list|)
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|sooptcopyout
@@ -3585,6 +4042,7 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+block|}
 break|break ;
 case|case
 name|IP_DUMMYNET_FLUSH
@@ -3623,7 +4081,7 @@ condition|(
 name|error
 condition|)
 break|break ;
-comment|/* 	 * The config program passes parameters as follows: 	 * bandwidth = bits/second (0 means no limits); 	 * delay = millisec.,   must be translated into ticks. 	 * queue_size = slots (0 means no limit) 	 * queue_size_bytes = bytes (0 means no limit) 	 *	  only one can be set, must be bound-checked 	 */
+comment|/* 	 * The config program passes parameters as follows: 	 * bw = bits/second (0 means no limits), 	 * delay = ms, must be translated into ticks. 	 * queue_size = slots (0 means no limit) 	 * queue_size_bytes = bytes (0 means no limit) 	 *	  only one can be set, must be bound-checked 	 */
 name|p
 operator|->
 name|delay
@@ -3808,9 +4266,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* completely new pipe */
+comment|/* brand new pipe */
 name|int
 name|s
+decl_stmt|;
+name|struct
+name|dn_pipe
+modifier|*
+name|x
 decl_stmt|;
 name|x
 operator|=
@@ -3989,9 +4452,13 @@ name|rq
 operator|=
 name|malloc
 argument_list|(
+operator|(
+literal|1
+operator|+
 name|x
 operator|->
 name|rq_size
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4038,9 +4505,13 @@ name|x
 operator|->
 name|rq
 argument_list|,
+operator|(
+literal|1
+operator|+
 name|x
 operator|->
 name|rq_size
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4206,7 +4677,7 @@ name|b
 operator|->
 name|next
 expr_stmt|;
-comment|/* 		 * remove references to this pipe from the ip_fw rules. 		 */
+comment|/* 	     * remove references to this pipe from the ip_fw rules. 	     */
 for|for
 control|(
 init|;
@@ -4475,7 +4946,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"DUMMYNET initialized (000106)\n"
+literal|"DUMMYNET initialized (000212)\n"
 argument_list|)
 expr_stmt|;
 name|all_pipes
