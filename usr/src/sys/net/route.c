@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -819,7 +819,7 @@ operator|=
 name|ENETUNREACH
 expr_stmt|;
 goto|goto
-name|done
+name|out
 goto|;
 block|}
 name|rt
@@ -1055,6 +1055,8 @@ name|rt
 argument_list|)
 expr_stmt|;
 block|}
+name|out
+label|:
 if|if
 condition|(
 name|error
@@ -1064,16 +1066,18 @@ operator|.
 name|rts_badredirect
 operator|++
 expr_stmt|;
-else|else
-operator|(
+elseif|else
+if|if
+condition|(
 name|stat
-operator|&&
+operator|!=
+name|NULL
+condition|)
 operator|(
 operator|*
 name|stat
 operator|)
 operator|++
-operator|)
 expr_stmt|;
 name|rt_missmsg
 argument_list|(
