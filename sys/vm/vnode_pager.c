@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  * Copyright (c) 1993,1994 John S. Dyson  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vnode_pager.c	7.5 (Berkeley) 4/20/91  *	$Id: vnode_pager.c,v 1.14 1994/10/15 13:33:09 davidg Exp $  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  * Copyright (c) 1993,1994 John S. Dyson  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vnode_pager.c	7.5 (Berkeley) 4/20/91  *	$Id: vnode_pager.c,v 1.15 1994/11/06 09:55:31 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -969,6 +969,9 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|daddr_t
+name|block
+decl_stmt|;
 comment|/* 	 * Offset beyond end of file, do not have the page 	 */
 if|if
 condition|(
@@ -978,22 +981,13 @@ name|vnp
 operator|->
 name|vnp_size
 condition|)
-block|{
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
-block|}
-comment|/* 	 * Read the index to find the disk block to read from.  If there is no 	 * block, report that we don't have this data. 	 *  	 * Assumes that the vnode has whole page or nothing. 	 */
-name|err
+name|block
 operator|=
-name|VOP_BMAP
-argument_list|(
-name|vnp
-operator|->
-name|vnp_vp
-argument_list|,
 name|offset
 operator|/
 name|vnp
@@ -1005,6 +999,31 @@ operator|->
 name|mnt_stat
 operator|.
 name|f_iosize
+expr_stmt|;
+if|if
+condition|(
+name|incore
+argument_list|(
+name|vnp
+operator|->
+name|vnp_vp
+argument_list|,
+name|block
+argument_list|)
+condition|)
+return|return
+name|TRUE
+return|;
+comment|/* 	 * Read the index to find the disk block to read from.  If there is no 	 * block, report that we don't have this data. 	 *  	 * Assumes that the vnode has whole page or nothing. 	 */
+name|err
+operator|=
+name|VOP_BMAP
+argument_list|(
+name|vnp
+operator|->
+name|vnp_vp
+argument_list|,
+name|block
 argument_list|,
 operator|(
 expr|struct
@@ -2965,6 +2984,7 @@ expr_stmt|;
 comment|/* 	 * if we can't bmap, use old VOP code 	 */
 if|if
 condition|(
+comment|/* (vp->v_mount&& vp->v_mount->mnt_stat.f_type == MOUNT_LFS) || */
 name|VOP_BMAP
 argument_list|(
 name|vp
