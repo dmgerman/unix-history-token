@@ -156,7 +156,7 @@ argument_list|(
 name|ENXIO
 argument_list|)
 expr_stmt|;
-comment|/*      * Get the PCI interrupt routing table for this bus.  If we can't      * get it, this is not an error but may reduce functionality.      */
+comment|/*      * Get the PCI interrupt routing table for this bus.  If we can't      * get it, this is not an error but may reduce functionality.  There      * are several valid bridges in the field that do not have a _PRT, so      * only warn about missing tables if bootverbose is set.      */
 name|prt
 operator|->
 name|Length
@@ -181,6 +181,14 @@ name|ACPI_FAILURE
 argument_list|(
 name|status
 argument_list|)
+operator|&&
+operator|(
+name|bootverbose
+operator|||
+name|status
+operator|!=
+name|AE_NOT_FOUND
+operator|)
 condition|)
 name|device_printf
 argument_list|(
