@@ -337,6 +337,8 @@ name|int
 name|error
 decl_stmt|,
 name|rid
+decl_stmt|,
+name|irqrid
 decl_stmt|;
 name|void
 modifier|*
@@ -498,7 +500,7 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-literal|0
+name|rid
 argument_list|,
 name|iores
 argument_list|)
@@ -537,7 +539,7 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-literal|0
+name|rid
 argument_list|,
 name|iores
 argument_list|)
@@ -621,7 +623,7 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-literal|0
+name|rid
 argument_list|,
 name|iores
 argument_list|)
@@ -702,7 +704,7 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-literal|0
+name|rid
 argument_list|,
 name|iores
 argument_list|)
@@ -757,7 +759,7 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-literal|0
+name|rid
 argument_list|,
 name|iores
 argument_list|)
@@ -900,7 +902,7 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-literal|0
+name|rid
 argument_list|,
 name|iores
 argument_list|)
@@ -984,7 +986,7 @@ operator|~
 literal|0
 expr_stmt|;
 block|}
-name|rid
+name|irqrid
 operator|=
 literal|0
 expr_stmt|;
@@ -997,7 +999,7 @@ argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
 operator|&
-name|rid
+name|irqrid
 argument_list|,
 literal|0
 argument_list|,
@@ -1047,7 +1049,7 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-literal|0
+name|rid
 argument_list|,
 name|iores
 argument_list|)
