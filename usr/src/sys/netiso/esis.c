@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*	@(#)esis.c	7.10 (Berkeley) %G% */
+comment|/*	@(#)esis.c	7.11 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -48,6 +48,12 @@ begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include
