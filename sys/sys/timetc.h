@@ -104,12 +104,17 @@ decl_stmt|;
 name|struct
 name|timecounter
 modifier|*
-name|tc_other
+name|tc_tweak
+decl_stmt|;
+comment|/* Fields not to be copied in tc_windup start with tc_generation */
+specifier|volatile
+name|unsigned
+name|tc_generation
 decl_stmt|;
 name|struct
 name|timecounter
 modifier|*
-name|tc_tweak
+name|tc_next
 decl_stmt|;
 block|}
 struct|;
