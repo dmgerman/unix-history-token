@@ -1651,6 +1651,8 @@ name|im6o
 argument_list|,
 operator|&
 name|outif
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

@@ -628,6 +628,10 @@ parameter_list|,
 name|struct
 name|ip_moptions
 modifier|*
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

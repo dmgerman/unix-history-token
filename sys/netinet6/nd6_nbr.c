@@ -2205,22 +2205,6 @@ argument_list|,
 name|icmp6len
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPSEC
-comment|/* Don't lookup socket */
-operator|(
-name|void
-operator|)
-name|ipsec_setsocket
-argument_list|(
-name|m
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ip6_output
 argument_list|(
 name|m
@@ -2240,6 +2224,8 @@ name|im6o
 argument_list|,
 operator|&
 name|outif
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -4138,22 +4124,6 @@ argument_list|,
 name|icmp6len
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPSEC
-comment|/* Don't lookup socket */
-operator|(
-name|void
-operator|)
-name|ipsec_setsocket
-argument_list|(
-name|m
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ip6_output
 argument_list|(
 name|m
@@ -4169,6 +4139,8 @@ name|im6o
 argument_list|,
 operator|&
 name|outif
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

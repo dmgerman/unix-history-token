@@ -7413,6 +7413,8 @@ argument_list|,
 name|IP_FORWARDING
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 else|else
@@ -7484,6 +7486,8 @@ name|IP_FORWARDING
 argument_list|,
 operator|&
 name|imo
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

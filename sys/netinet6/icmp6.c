@@ -2176,6 +2176,9 @@ operator|*
 name|nicmp6
 argument_list|)
 decl_stmt|;
+name|int
+name|n0len
+decl_stmt|;
 comment|/* 			 * Prepare an internal mbuf. m_pullup() doesn't 			 * always copy the length we specified. 			 */
 if|if
 condition|(
@@ -2258,7 +2261,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|M_COPY_PKTHDR
+name|n0len
+operator|=
+name|n0
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+comment|/* save for use below */
+name|M_MOVE_PKTHDR
 argument_list|(
 name|n
 argument_list|,
@@ -2324,12 +2336,7 @@ expr|struct
 name|ip6_hdr
 argument_list|)
 expr_stmt|;
-name|n
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|=
+comment|/* new mbuf contains only ipv6+icmpv6 headers */
 name|n
 operator|->
 name|m_len
@@ -2356,30 +2363,26 @@ name|icmp6_hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* recalculate complete packet size */
 name|n
 operator|->
 name|m_pkthdr
 operator|.
 name|len
-operator|+=
-name|n0
-operator|->
-name|m_pkthdr
-operator|.
-name|len
+operator|=
+name|n0len
+operator|+
+operator|(
+name|noff
+operator|-
+name|off
+operator|)
 expr_stmt|;
 name|n
 operator|->
 name|m_next
 operator|=
 name|n0
-expr_stmt|;
-name|n0
-operator|->
-name|m_flags
-operator|&=
-operator|~
-name|M_PKTHDR
 expr_stmt|;
 block|}
 else|else
@@ -2844,6 +2847,30 @@ block|}
 block|}
 if|if
 condition|(
+operator|!
+name|m_dup_pkthdr
+argument_list|(
+name|n
+argument_list|,
+name|m
+argument_list|,
+name|M_DONTWAIT
+argument_list|)
+condition|)
+block|{
+comment|/* 				 * Previous code did a blind M_COPY_PKTHDR 				 * and said "just for rcvif".  If true, then 				 * we could tolerate the dup failing (due to 				 * the deep copy of the tag chain).  For now 				 * be conservative and just fail. 				 */
+name|m_free
+argument_list|(
+name|n
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|n
 operator|==
 name|NULL
@@ -2975,14 +3002,6 @@ expr|struct
 name|ip6_hdr
 argument_list|)
 expr_stmt|;
-name|M_COPY_PKTHDR
-argument_list|(
-name|n
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* just for rcvif */
 name|n
 operator|->
 name|m_pkthdr
@@ -6029,7 +6048,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|M_COPY_PKTHDR
+name|M_MOVE_PKTHDR
 argument_list|(
 name|n
 argument_list|,
@@ -9691,23 +9710,6 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|IPSEC
-comment|/* Don't lookup socket */
-operator|(
-name|void
-operator|)
-name|ipsec_setsocket
-argument_list|(
-name|m
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*IPSEC*/
-ifdef|#
-directive|ifdef
 name|COMPAT_RFC1885
 name|ip6_output
 argument_list|(
@@ -9724,6 +9726,8 @@ name|NULL
 argument_list|,
 operator|&
 name|outif
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 else|#
@@ -9742,6 +9746,8 @@ name|NULL
 argument_list|,
 operator|&
 name|outif
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 endif|#
@@ -12417,23 +12423,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* send the packet to outside... */
-ifdef|#
-directive|ifdef
-name|IPSEC
-comment|/* Don't lookup socket */
-operator|(
-name|void
-operator|)
-name|ipsec_setsocket
-argument_list|(
-name|m
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*IPSEC*/
 name|ip6_output
 argument_list|(
 name|m
@@ -12448,6 +12437,8 @@ name|NULL
 argument_list|,
 operator|&
 name|outif
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

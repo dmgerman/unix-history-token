@@ -5923,6 +5923,8 @@ operator|&
 name|im6o
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 ifdef|#

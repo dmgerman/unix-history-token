@@ -1095,7 +1095,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|mbuf
+name|ip6aux
 modifier|*
 name|ip6_addaux
 name|__P
@@ -1111,7 +1111,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|mbuf
+name|ip6aux
 modifier|*
 name|ip6_findaux
 name|__P
@@ -1325,6 +1325,10 @@ operator|,
 expr|struct
 name|ifnet
 operator|*
+operator|*
+operator|,
+expr|struct
+name|inpcb
 operator|*
 operator|)
 argument_list|)
