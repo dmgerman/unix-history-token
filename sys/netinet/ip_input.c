@@ -222,12 +222,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ipprotosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socketvar.h>
 end_include
 
@@ -618,7 +612,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ipprotosw
+name|protosw
 name|inetsw
 index|[]
 decl_stmt|;
@@ -1168,7 +1162,7 @@ parameter_list|()
 block|{
 specifier|register
 name|struct
-name|ipprotosw
+name|protosw
 modifier|*
 name|pr
 decl_stmt|;
@@ -1184,11 +1178,6 @@ argument_list|)
 expr_stmt|;
 name|pr
 operator|=
-operator|(
-expr|struct
-name|ipprotosw
-operator|*
-operator|)
 name|pffindproto
 argument_list|(
 name|PF_INET
@@ -1235,22 +1224,12 @@ for|for
 control|(
 name|pr
 operator|=
-operator|(
-expr|struct
-name|ipprotosw
-operator|*
-operator|)
 name|inetdomain
 operator|.
 name|dom_protosw
 init|;
 name|pr
 operator|<
-operator|(
-expr|struct
-name|ipprotosw
-operator|*
-operator|)
 name|inetdomain
 operator|.
 name|dom_protoswNPROTOSW
@@ -3491,12 +3470,6 @@ name|int
 name|off
 init|=
 name|hlen
-decl_stmt|,
-name|nh
-init|=
-name|ip
-operator|->
-name|ip_p
 decl_stmt|;
 operator|(
 operator|*
@@ -3516,8 +3489,6 @@ operator|(
 name|m
 operator|,
 name|off
-operator|,
-name|nh
 operator|)
 expr_stmt|;
 ifdef|#

@@ -153,12 +153,6 @@ directive|include
 file|<netinet/ip_encap.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/ipprotosw.h>
-end_include
-
 begin_comment
 comment|/*  * TCP/IP protocol family: IP, ICMP, UDP, TCP.  */
 end_comment
@@ -271,7 +265,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ipprotosw
+name|protosw
 name|inetsw
 index|[]
 init|=
@@ -902,18 +896,8 @@ literal|0
 block|,
 literal|0
 block|,
-operator|(
-expr|struct
-name|protosw
-operator|*
-operator|)
 name|inetsw
 block|,
-operator|(
-expr|struct
-name|protosw
-operator|*
-operator|)
 operator|&
 name|inetsw
 index|[

@@ -805,8 +805,6 @@ name|mbuf
 operator|*
 operator|,
 name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -843,8 +841,6 @@ name|mbuf
 operator|*
 operator|,
 name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -859,8 +855,6 @@ operator|(
 expr|struct
 name|mbuf
 operator|*
-operator|,
-name|int
 operator|,
 name|int
 operator|)
@@ -971,8 +965,6 @@ operator|(
 expr|struct
 name|mbuf
 operator|*
-operator|,
-name|int
 operator|,
 name|int
 operator|)

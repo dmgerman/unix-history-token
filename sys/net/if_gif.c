@@ -189,12 +189,6 @@ directive|include
 file|<netinet/ip_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/ipprotosw.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -470,7 +464,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ipprotosw
+name|protosw
 name|in_gif_protosw
 init|=
 block|{

@@ -917,8 +917,6 @@ parameter_list|(
 name|m
 parameter_list|,
 name|off
-parameter_list|,
-name|proto
 parameter_list|)
 name|struct
 name|mbuf
@@ -927,9 +925,6 @@ name|m
 decl_stmt|;
 name|int
 name|off
-decl_stmt|;
-name|int
-name|proto
 decl_stmt|;
 block|{
 name|struct
@@ -950,6 +945,9 @@ decl_stmt|;
 name|u_int8_t
 name|otos
 decl_stmt|;
+name|int
+name|proto
+decl_stmt|;
 name|ip
 operator|=
 name|mtod
@@ -960,6 +958,12 @@ expr|struct
 name|ip
 operator|*
 argument_list|)
+expr_stmt|;
+name|proto
+operator|=
+name|ip
+operator|->
+name|ip_p
 expr_stmt|;
 name|gifp
 operator|=

@@ -379,9 +379,6 @@ name|m
 parameter_list|,
 name|int
 name|off
-parameter_list|,
-name|int
-name|proto
 parameter_list|)
 block|{
 name|ipstat

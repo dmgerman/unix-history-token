@@ -138,12 +138,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ipprotosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip_var.h>
 end_include
 
@@ -299,7 +293,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ipprotosw
+name|protosw
 name|in_stf_protosw
 init|=
 block|{
@@ -2424,12 +2418,16 @@ argument_list|)
 expr_stmt|;
 name|proto
 operator|=
-name|va_arg
+name|mtod
 argument_list|(
-name|ap
+name|m
 argument_list|,
-name|int
+expr|struct
+name|ip
+operator|*
 argument_list|)
+operator|->
+name|ip_p
 expr_stmt|;
 name|va_end
 argument_list|(

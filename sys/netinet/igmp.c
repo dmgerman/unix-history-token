@@ -496,8 +496,6 @@ parameter_list|(
 name|m
 parameter_list|,
 name|off
-parameter_list|,
-name|proto
 parameter_list|)
 specifier|register
 name|struct
@@ -507,8 +505,6 @@ name|m
 decl_stmt|;
 name|int
 name|off
-decl_stmt|,
-name|proto
 decl_stmt|;
 block|{
 specifier|register

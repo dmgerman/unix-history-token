@@ -1482,8 +1482,6 @@ name|m
 argument_list|,
 operator|*
 name|offp
-argument_list|,
-name|proto
 argument_list|)
 expr_stmt|;
 return|return
@@ -1504,8 +1502,6 @@ parameter_list|(
 name|m
 parameter_list|,
 name|off0
-parameter_list|,
-name|proto
 parameter_list|)
 specifier|register
 name|struct
@@ -1515,8 +1511,6 @@ name|m
 decl_stmt|;
 name|int
 name|off0
-decl_stmt|,
-name|proto
 decl_stmt|;
 block|{
 specifier|register

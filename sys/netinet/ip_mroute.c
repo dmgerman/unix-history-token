@@ -150,12 +150,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ipprotosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/udp.h>
 end_include
 
@@ -540,8 +534,6 @@ parameter_list|(
 name|m
 parameter_list|,
 name|off
-parameter_list|,
-name|proto
 parameter_list|)
 comment|/* XXX must fixup manually */
 name|struct
@@ -551,9 +543,6 @@ name|m
 decl_stmt|;
 name|int
 name|off
-decl_stmt|;
-name|int
-name|proto
 decl_stmt|;
 block|{
 comment|/* Can still get packets with rsvp_on = 0 if there is a local member      * of the group to which the RSVP packet is addressed.  But in this      * case we want to throw the packet away.      */
@@ -591,8 +580,6 @@ argument_list|(
 name|m
 argument_list|,
 name|off
-argument_list|,
-name|proto
 argument_list|)
 expr_stmt|;
 return|return;
@@ -617,9 +604,6 @@ name|m
 parameter_list|,
 name|int
 name|off
-parameter_list|,
-name|int
-name|proto
 parameter_list|)
 block|{
 comment|/* XXX must fixup manually */
@@ -628,8 +612,6 @@ argument_list|(
 name|m
 argument_list|,
 name|off
-argument_list|,
-name|proto
 argument_list|)
 expr_stmt|;
 block|}
@@ -3221,9 +3203,6 @@ name|m
 parameter_list|,
 name|int
 name|off
-parameter_list|,
-name|int
-name|proto
 parameter_list|)
 block|{
 name|struct
@@ -3341,7 +3320,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|ipprotosw
+name|protosw
 name|mroute_encap_protosw
 init|=
 block|{
@@ -9641,8 +9620,6 @@ parameter_list|(
 name|m
 parameter_list|,
 name|off
-parameter_list|,
-name|proto
 parameter_list|)
 name|struct
 name|mbuf
@@ -9651,9 +9628,6 @@ name|m
 decl_stmt|;
 name|int
 name|off
-decl_stmt|;
-name|int
-name|proto
 decl_stmt|;
 block|{
 name|int
@@ -9827,8 +9801,6 @@ argument_list|(
 name|m
 argument_list|,
 name|off
-argument_list|,
-name|proto
 argument_list|)
 expr_stmt|;
 comment|/* xxx */

@@ -127,12 +127,6 @@ directive|include
 file|<netinet/ip_encap.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/ipprotosw.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -396,7 +390,7 @@ name|d
 decl_stmt|;
 specifier|const
 name|struct
-name|ipprotosw
+name|protosw
 modifier|*
 name|psw
 decl_stmt|;
@@ -432,15 +426,6 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
-name|proto
-operator|=
-name|va_arg
-argument_list|(
-name|ap
-argument_list|,
-name|int
-argument_list|)
-expr_stmt|;
 name|va_end
 argument_list|(
 name|ap
@@ -456,6 +441,12 @@ expr|struct
 name|ip
 operator|*
 argument_list|)
+expr_stmt|;
+name|proto
+operator|=
+name|ip
+operator|->
+name|ip_p
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -654,12 +645,6 @@ block|{
 comment|/* found a match, "match" has the best one */
 name|psw
 operator|=
-operator|(
-specifier|const
-expr|struct
-name|ipprotosw
-operator|*
-operator|)
 name|match
 operator|->
 name|psw
@@ -690,8 +675,6 @@ argument_list|(
 name|m
 argument_list|,
 name|off
-argument_list|,
-name|proto
 argument_list|)
 expr_stmt|;
 block|}
@@ -703,14 +686,29 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* for backward compatibility - messy... */
+if|if
+condition|(
+name|proto
+operator|==
+name|IPPROTO_IPV4
+condition|)
+block|{
+name|ipip_input
+argument_list|(
+name|m
+argument_list|,
+name|off
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* last resort: inject to raw socket */
 name|rip_input
 argument_list|(
 name|m
 argument_list|,
 name|off
-argument_list|,
-name|proto
 argument_list|)
 expr_stmt|;
 block|}

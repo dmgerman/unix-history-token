@@ -334,8 +334,6 @@ parameter_list|(
 name|m
 parameter_list|,
 name|off
-parameter_list|,
-name|proto
 parameter_list|)
 name|struct
 name|mbuf
@@ -344,8 +342,6 @@ name|m
 decl_stmt|;
 name|int
 name|off
-decl_stmt|,
-name|proto
 decl_stmt|;
 block|{
 specifier|register
@@ -382,6 +378,13 @@ modifier|*
 name|opts
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|proto
+init|=
+name|ip
+operator|->
+name|ip_p
 decl_stmt|;
 name|ripsrc
 operator|.
