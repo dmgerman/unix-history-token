@@ -399,7 +399,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __FreeBSD__ */
+comment|/* !__FreeBSD__ */
 end_comment
 
 begin_endif
@@ -408,7 +408,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_CONFIG_H */
+comment|/* !HAVE_CONFIG_H */
 end_comment
 
 begin_comment
