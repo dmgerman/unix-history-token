@@ -71,6 +71,17 @@ name|ARM_GET_TP
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|ARM_TP_ADDRESS
+value|0xe0000000
+end_define
+
+begin_comment
+comment|/* Magic */
+end_comment
+
 begin_struct
 struct|struct
 name|arm_sync_icache_args

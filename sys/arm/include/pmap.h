@@ -580,6 +580,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pmap_kenter_user
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|,
+name|vm_paddr_t
+name|pa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pmap_kremove
 parameter_list|(
 name|vm_offset_t
