@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pte.h	1.4	87/06/06	*/
+comment|/*	pte.h	1.5	87/07/11	*/
 end_comment
 
 begin_comment
@@ -264,7 +264,7 @@ name|dirty
 parameter_list|(
 name|pte
 parameter_list|)
-value|((pte)->pg_fod == 0&& (pte)->pg_pfnum&& (pte)->pg_m)
+value|((pte)->pg_m)
 end_define
 
 begin_ifndef
