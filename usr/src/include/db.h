@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.24 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.25 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -318,6 +318,20 @@ name|DBT
 operator|*
 operator|,
 name|u_int
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*fd
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|__db
+operator|*
 operator|)
 argument_list|)
 expr_stmt|;
