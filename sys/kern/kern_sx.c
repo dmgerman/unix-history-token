@@ -1507,6 +1507,13 @@ name|int
 name|line
 parameter_list|)
 block|{
+if|if
+condition|(
+name|panicstr
+operator|!=
+name|NULL
+condition|)
+return|return;
 switch|switch
 condition|(
 name|what
@@ -1564,7 +1571,7 @@ operator|!=
 name|curthread
 operator|)
 condition|)
-name|printf
+name|panic
 argument_list|(
 literal|"Lock %s not %slocked @ %s:%d\n"
 argument_list|,
@@ -1617,7 +1624,7 @@ name|sx_xholder
 operator|!=
 name|curthread
 condition|)
-name|printf
+name|panic
 argument_list|(
 literal|"Lock %s not exclusively locked @ %s:%d\n"
 argument_list|,
@@ -1678,9 +1685,9 @@ name|sx_xholder
 operator|==
 name|curthread
 condition|)
-name|printf
+name|panic
 argument_list|(
-literal|"Lock %s locked @ %s:%d\n"
+literal|"Lock %s exclusively locked @ %s:%d\n"
 argument_list|,
 name|sx
 operator|->
