@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Driver for the 27/284X series adaptec SCSI controllers written by   * Justin T. Gibbs.  Much of this driver was taken from Julian Elischer's  * 1742 driver, so it bears his copyright.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7770.c,v 1.3 1994/11/18 09:03:09 jkh Exp $  */
+comment|/*  * Driver for the 27/284X series adaptec SCSI controllers written by   * Justin T. Gibbs.  Much of this driver was taken from Julian Elischer's  * 1742 driver, so it bears his copyright.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7770.c,v 1.4 1994/11/18 09:14:14 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -92,6 +92,12 @@ begin_include
 include|#
 directive|include
 file|<scsi/scsiconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/devconf.h>
 end_include
 
 begin_define
@@ -543,6 +549,128 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|kern_devconf
+name|kdc_ahc
+index|[
+name|NAHC
+index|]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* filled in by dev_attach */
+literal|"ahc"
+block|,
+literal|0
+block|,
+block|{
+name|MDDT_ISA
+block|,
+literal|0
+block|,
+literal|"bio"
+block|}
+block|,
+name|isa_generic_externalize
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|ISA_EXTERNALLEN
+block|,
+operator|&
+name|kdc_isa0
+block|,
+comment|/* parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_BUSY
+block|,
+comment|/* host adapters are always ``in use'' */
+literal|"Adaptec aic7770 based SCSI host adapter"
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|ahc_registerdev
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|id
+parameter_list|)
+block|{
+if|if
+condition|(
+name|id
+operator|->
+name|id_unit
+condition|)
+name|kdc_ahc
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|=
+name|kdc_ahc
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|kdc_ahc
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_unit
+operator|=
+name|id
+operator|->
+name|id_unit
+expr_stmt|;
+name|kdc_ahc
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_parentdata
+operator|=
+name|id
+expr_stmt|;
+name|dev_attach
+argument_list|(
+operator|&
+name|kdc_ahc
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * All of these should be in a separate header file shared by the sequencer  * code and the kernel level driver.  The only catch is that we would need to   * add an additional 0xc00 offset when using them in the kernel driver.  The   * aic7770 assembler must be modified to allow include files as well.  All   * page numbers refer to the Adaptec AIC-7770 Data Book availible from   * Adaptec's Technical Documents Department 1-800-634-2766  */
@@ -3095,6 +3223,11 @@ operator|=
 name|DEBUGLEVEL
 expr_stmt|;
 comment|/*  	 * Here, we should really fill in up to two different sc_links, 	 * making use of the extra fields in the sc_link structure so  	 * we can know which channel any requests are for.  Then its just 	 * a matter of doing a scsi_attachdevs to both instead of the one. 	 * This should be done when we get or write sequencer code that  	 * supports more than one channel. XXX 	 */
+name|ahc_registerdev
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/*          * ask the adapter what subunits are present          */
 name|scsi_attachdevs
 argument_list|(
