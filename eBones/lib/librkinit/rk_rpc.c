@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $Id: rk_rpc.c,v 1.1.1.1 1995/09/15 06:09:30 gibbs Exp $  * $Source: /home/ncvs/src/eBones/lib/librkinit/rk_rpc.c,v $  * $Author: gibbs $  *  * This file contains functions that are used for network communication.  * See the comment at the top of rk_lib.c for a description of the naming  * conventions used within the rkinit library.  */
+comment|/*   * $Id: rk_rpc.c,v 1.2 1995/10/05 21:29:52 gibbs Exp $  * $Source: /home/ncvs/src/eBones/lib/librkinit/rk_rpc.c,v $  * $Author: gibbs $  *  * This file contains functions that are used for network communication.  * See the comment at the top of rk_lib.c for a description of the naming  * conventions used within the rkinit library.  */
 end_comment
 
 begin_if
@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: rk_rpc.c,v 1.1.1.1 1995/09/15 06:09:30 gibbs Exp $"
+literal|"$Id: rk_rpc.c,v 1.2 1995/10/05 21:29:52 gibbs Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,14 +157,6 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|char
-modifier|*
-name|calloc
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_ifdef
 ifdef|#
