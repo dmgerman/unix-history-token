@@ -728,7 +728,6 @@ argument_list|(
 name|new_categories
 index|[
 name|i
-operator|++
 index|]
 argument_list|,
 name|locale
