@@ -3326,6 +3326,10 @@ goto|goto
 name|cleanupsend
 goto|;
 block|}
+name|dirchange
+operator|=
+literal|1
+expr_stmt|;
 name|dout
 operator|=
 name|dataconn

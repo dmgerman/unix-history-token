@@ -4961,9 +4961,8 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|command
 argument_list|(
 literal|"DELE %s"
@@ -4973,6 +4972,12 @@ index|[
 literal|1
 index|]
 argument_list|)
+operator|==
+name|COMPLETE
+condition|)
+name|dirchange
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -5119,15 +5124,20 @@ name|cp
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|command
 argument_list|(
 literal|"DELE %s"
 argument_list|,
 name|cp
 argument_list|)
+operator|==
+name|COMPLETE
+condition|)
+name|dirchange
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -5282,10 +5292,7 @@ index|]
 argument_list|)
 operator|==
 name|CONTINUE
-condition|)
-operator|(
-name|void
-operator|)
+operator|&&
 name|command
 argument_list|(
 literal|"RNTO %s"
@@ -5295,6 +5302,12 @@ index|[
 literal|2
 index|]
 argument_list|)
+operator|==
+name|COMPLETE
+condition|)
+name|dirchange
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -6662,6 +6675,9 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
+name|int
+name|r
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -6704,8 +6720,8 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
+name|r
+operator|=
 name|command
 argument_list|(
 literal|"MKD %s"
@@ -6715,6 +6731,10 @@ index|[
 literal|1
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
 operator|==
 name|ERROR
 operator|&&
@@ -6732,9 +6752,8 @@ argument_list|(
 literal|"MKD command not recognized, trying XMKD."
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|r
+operator|=
 name|command
 argument_list|(
 literal|"XMKD %s"
@@ -6746,6 +6765,16 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|r
+operator|==
+name|COMPLETE
+condition|)
+name|dirchange
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -6770,6 +6799,9 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
+name|int
+name|r
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -6812,8 +6844,8 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
+name|r
+operator|=
 name|command
 argument_list|(
 literal|"RMD %s"
@@ -6823,6 +6855,10 @@ index|[
 literal|1
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
 operator|==
 name|ERROR
 operator|&&
@@ -6840,9 +6876,8 @@ argument_list|(
 literal|"RMD command not recognized, trying XRMD."
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|r
+operator|=
 name|command
 argument_list|(
 literal|"XRMD %s"
@@ -6854,6 +6889,16 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|r
+operator|==
+name|COMPLETE
+condition|)
+name|dirchange
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -7157,6 +7202,10 @@ name|PRELIM
 condition|)
 continue|continue;
 block|}
+name|dirchange
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
