@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tio.c	4.10	(Berkeley) %G%"
+literal|"@(#)tio.c	4.11	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,7 +52,7 @@ end_include
 
 begin_function_decl
 specifier|extern
-name|int
+name|void
 name|pkfail
 parameter_list|()
 function_decl|;

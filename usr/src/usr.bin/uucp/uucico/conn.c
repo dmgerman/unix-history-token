@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conn.c	5.15	(Berkeley) %G%"
+literal|"@(#)conn.c	5.16	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -266,12 +266,10 @@ begin_comment
 comment|/*  *	catch alarm routine for "expect".  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|alarmtr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -315,7 +313,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* This template is for seismo to call ihnp4   * the 3 lines marked ---> will be overwritten for the appropriate city  */

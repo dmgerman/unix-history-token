@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.19	(Berkeley) %G%"
+literal|"@(#)cico.c	5.20	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -539,71 +539,49 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-extern|extern onintr(
-block|)
-operator|,
-function|timeout
-parameter_list|()
-operator|,
-function|dbg_signal
-parameter_list|()
-function|;
-end_function
-
-begin_function_decl
-specifier|extern
+specifier|static
+name|void
+name|onintr
+argument_list|()
+decl_stmt|,
+name|timeout
+argument_list|()
+decl_stmt|,
+name|dbg_signal
+argument_list|()
+decl_stmt|;
+specifier|static
 name|char
 modifier|*
 name|pskip
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|optarg
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|optind
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 name|rflags
 index|[
 name|MAXFULLNAME
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|NOGETPEER
-end_ifdef
-
-begin_decl_stmt
 name|u_long
 name|Hostnumber
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
 endif|NOGETPEER
-end_endif
-
-begin_expr_stmt
 name|strcpy
 argument_list|(
 name|Progname
@@ -611,33 +589,18 @@ argument_list|,
 literal|"uucico"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|BSD4_2
-end_ifdef
-
-begin_expr_stmt
 name|sigsetmask
 argument_list|(
 literal|0L
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* in case we inherit blocked signals */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
 endif|BSD4_2
-end_endif
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGINT
@@ -645,9 +608,6 @@ argument_list|,
 name|onintr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGHUP
@@ -655,9 +615,6 @@ argument_list|,
 name|onintr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -665,9 +622,6 @@ argument_list|,
 name|onintr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGTERM
@@ -675,9 +629,6 @@ argument_list|,
 name|onintr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGPIPE
@@ -685,13 +636,7 @@ argument_list|,
 name|onintr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 4.1a tcp-ip stupidity */
-end_comment
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGUSR1
@@ -699,9 +644,6 @@ argument_list|,
 name|dbg_signal
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ret
 operator|=
 name|guinfo
@@ -714,9 +656,6 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|strcpy
 argument_list|(
 name|Loginuser
@@ -724,17 +663,11 @@ argument_list|,
 name|User
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|uucpname
 argument_list|(
 name|Myname
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|ret
@@ -755,9 +688,6 @@ name|FAIL
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|setbuf
 argument_list|(
 name|stderr
@@ -765,9 +695,6 @@ argument_list|,
 name|CNULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|rflags
 index|[
 literal|0
@@ -775,17 +702,11 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|umask
 argument_list|(
 name|WFMASK
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|strcpy
 argument_list|(
 name|Rmtname
@@ -793,9 +714,6 @@ argument_list|,
 name|Myname
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|Ifn
 operator|=
 name|Ofn
@@ -803,9 +721,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 operator|(
@@ -1004,9 +919,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-end_while
-
-begin_while
 while|while
 condition|(
 name|optind
@@ -1026,9 +938,6 @@ operator|++
 index|]
 argument_list|)
 expr_stmt|;
-end_while
-
-begin_if
 if|if
 condition|(
 name|Debug
@@ -1040,26 +949,14 @@ condition|)
 name|chkdebug
 argument_list|()
 expr_stmt|;
-end_if
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SETPROCTITLE
-end_ifdef
-
-begin_comment
 comment|/* 	 *  Save start and extent of argv for setproctitle. 	 */
-end_comment
-
-begin_expr_stmt
 name|Argv
 operator|=
 name|argv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|LastArgv
 operator|=
 name|argv
@@ -1079,47 +976,26 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
 endif|SETPROCTITLE
-end_endif
-
-begin_comment
 comment|/* Try to run as uucp */
-end_comment
-
-begin_expr_stmt
 name|setgid
 argument_list|(
 name|getegid
 argument_list|()
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|setuid
 argument_list|(
 name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|TIOCNOTTY
-end_ifdef
-
-begin_comment
 comment|/* 	 * detach uucico from controlling terminal 	 * to defend against rlogind sending us a SIGKILL (!!!) 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|Role
@@ -1155,21 +1031,12 @@ name|ret
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_endif
 endif|#
 directive|endif
 endif|TIOCNOTTY
-end_endif
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|BSD4_2
-end_ifdef
-
-begin_if
 if|if
 condition|(
 name|getpgrp
@@ -1190,21 +1057,12 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|USE_SYSLOG
-end_ifdef
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|BSD4_3
-end_ifdef
-
-begin_expr_stmt
 name|openlog
 argument_list|(
 literal|"uucico"
@@ -1214,18 +1072,9 @@ argument_list|,
 name|LOG_UUCP
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|/* !BSD4_3 */
-end_comment
-
-begin_expr_stmt
 name|openlog
 argument_list|(
 literal|"uucico"
@@ -1233,60 +1082,27 @@ argument_list|,
 name|LOG_PID
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* !BSD4_3 */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* USE_SYSLOG */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
 endif|BSD4_2
-end_endif
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|BSD4_3
-end_ifdef
-
-begin_expr_stmt
 name|unsetenv
 argument_list|(
 literal|"TZ"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* We don't want him resetting our time zone */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* !BSD4_3 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|subchdir
@@ -1312,9 +1128,6 @@ name|FAIL
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|strcpy
 argument_list|(
 name|Wrkdir
@@ -1322,9 +1135,6 @@ argument_list|,
 name|Spool
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|Debug
@@ -1357,13 +1167,7 @@ literal|"DEBUG"
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* 	 * First time through: If we're the slave, do initial checking. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|Role
@@ -1893,6 +1697,11 @@ name|getpeername
 argument_list|(
 name|Ifn
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|from
 argument_list|,
@@ -1932,6 +1741,10 @@ name|hp
 operator|=
 name|gethostbyaddr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|from
 operator|.
@@ -3884,31 +3697,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|USG
-end_ifndef
-
-begin_decl_stmt
 name|struct
 name|sgttyb
 name|Hupvec
 decl_stmt|;
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/*  *	cleanup and exit with "code" status  */
-end_comment
-
-begin_expr_stmt
 name|cleanup
 argument_list|(
 name|code
@@ -3917,9 +3715,6 @@ specifier|register
 name|int
 name|code
 expr_stmt|;
-end_expr_stmt
-
-begin_block
 block|{
 name|signal
 argument_list|(
@@ -4207,14 +4002,8 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_macro
 name|do_connect_accounting
 argument_list|()
-end_macro
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -4352,7 +4141,7 @@ directive|endif
 comment|/* DO_CONNECT_ACCOUNTING */
 argument|}
 comment|/*  *	on interrupt - remove locks and exit  */
-argument|onintr(inter) register int inter; { 	char str[BUFSIZ]; 	signal(inter, SIG_IGN); 	sprintf(str,
+argument|static void onintr(inter) register int inter; { 	char str[BUFSIZ]; 	signal(inter, SIG_IGN); 	sprintf(str,
 literal|"(SIGNAL %d)"
 argument|, inter); 	logent(str,
 literal|"CAUGHT"
@@ -4362,7 +4151,7 @@ argument|, 		Bytes_Sent, Bytes_Received); 	logent(str, _FAILED); 	if (inter == S
 literal|1
 argument|); 	cleanup(inter); }
 comment|/*  * Catch a special signal  * (SIGUSR1), and toggle debugging between 0 and 30.  * Handy for looking in on long running uucicos.  */
-argument|dbg_signal() { 	Debug = (Debug ==
+argument|static void dbg_signal() { 	Debug = (Debug ==
 literal|0
 argument|) ?
 literal|30
@@ -4471,7 +4260,7 @@ argument|, buf); 		cleanup(FAIL); 	} 	setbuf(stderr, CNULL); 	auditopen =
 literal|1
 argument|; }
 comment|/*  *	catch SIGALRM routine  */
-argument|timeout() { 	extern int HaveSentHup; 	if (!HaveSentHup) { 		logent(Rmtname,
+argument|static void timeout() { 	extern int HaveSentHup; 	if (!HaveSentHup) { 		logent(Rmtname,
 literal|"TIMEOUT"
 argument|); 		if (*Rmtname&& strncmp(Rmtname, Myname, MAXBASENAME)) { 			US_SST(us_s_tmot); 			systat(Rmtname, SS_FAIL,
 literal|"TIMEOUT"
@@ -4509,7 +4298,7 @@ endif|#
 directive|endif
 endif|SETPROCTITLE
 argument|}
-end_block
+end_function
 
 end_unit
 

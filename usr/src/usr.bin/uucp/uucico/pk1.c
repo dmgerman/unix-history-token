@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pk1.c	5.11	(Berkeley) %G%"
+literal|"@(#)pk1.c	5.12	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1869,12 +1869,10 @@ name|Getjbuf
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|cgalarm
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|longjmp
 argument_list|(
@@ -1884,7 +1882,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|pkcget

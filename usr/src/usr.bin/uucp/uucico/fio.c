@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.6	(Berkeley) %G%"
+literal|"@(#)fio.c	5.7	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,10 +136,11 @@ name|Bytes_Received
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|falarm
-argument_list|()
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -147,23 +148,27 @@ name|SIGALRM
 argument_list|,
 name|falarm
 argument_list|)
-block|;
+expr_stmt|;
 name|longjmp
 argument_list|(
 name|Ffailbuf
 argument_list|,
 literal|1
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function_decl
 specifier|static
 name|void
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|fsig
-argument_list|)
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_ifndef
 ifndef|#
@@ -777,6 +782,11 @@ decl_stmt|;
 name|float
 name|ft
 decl_stmt|;
+specifier|static
+name|int
+name|fwrblk
+parameter_list|()
+function_decl|;
 name|ret
 operator|=
 name|FAIL
@@ -1216,6 +1226,11 @@ decl_stmt|;
 name|float
 name|ft
 decl_stmt|;
+specifier|static
+name|int
+name|frdblk
+parameter_list|()
+function_decl|;
 name|ret
 operator|=
 name|FAIL
