@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dirent.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dirent.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -77,27 +77,6 @@ name|DIRBLKSIZ
 value|1024
 end_define
 
-begin_define
-define|#
-directive|define
-name|NDIRHASH
-value|8
-end_define
-
-begin_comment
-comment|/* Num of hash lists, must be a power of 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOCHASH
-parameter_list|(
-name|i
-parameter_list|)
-value|((i)&(NDIRHASH-1))
-end_define
-
 begin_comment
 comment|/*  * This structure describes an open directory.  */
 end_comment
@@ -132,19 +111,6 @@ name|long
 name|dd_seek
 decl_stmt|;
 comment|/* magic cookie returned by getdirentries */
-name|long
-name|dd_loccnt
-decl_stmt|;
-comment|/* next magic cookie for seekdir */
-name|struct
-name|ddloc
-modifier|*
-name|dd_hash
-index|[
-name|NDIRHASH
-index|]
-decl_stmt|;
-comment|/* hash list heads for ddlocs */
 block|}
 name|DIR
 typedef|;
@@ -159,36 +125,6 @@ name|dirp
 parameter_list|)
 value|((dirp)->dd_fd)
 end_define
-
-begin_comment
-comment|/*  * One of these structures is malloced to describe the current directory  * position each time telldir is called. It records the current magic   * cookie returned by getdirentries and the offset within the buffer  * associated with that return value.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ddloc
-block|{
-name|struct
-name|ddloc
-modifier|*
-name|loc_next
-decl_stmt|;
-comment|/* next structure in list */
-name|long
-name|loc_index
-decl_stmt|;
-comment|/* key associated with structure */
-name|long
-name|loc_seek
-decl_stmt|;
-comment|/* magic cookie returned by getdirentries */
-name|long
-name|loc_loc
-decl_stmt|;
-comment|/* offset of entry in buffer */
-block|}
-struct|;
-end_struct
 
 begin_ifndef
 ifndef|#
