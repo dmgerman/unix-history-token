@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley Software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)char.h	5.3 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*  * Table for spotting special characters quickly  *  * Makes for very obscure but efficient coding.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley Software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)char.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_decl_stmt
@@ -20,7 +16,7 @@ begin_define
 define|#
 directive|define
 name|_Q
-value|0x01
+value|0x001
 end_define
 
 begin_comment
@@ -31,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|_Q1
-value|0x02
+value|0x002
 end_define
 
 begin_comment
@@ -42,7 +38,7 @@ begin_define
 define|#
 directive|define
 name|_SP
-value|0x04
+value|0x004
 end_define
 
 begin_comment
@@ -53,7 +49,7 @@ begin_define
 define|#
 directive|define
 name|_NL
-value|0x08
+value|0x008
 end_define
 
 begin_comment
@@ -64,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|_META
-value|0x10
+value|0x010
 end_define
 
 begin_comment
@@ -75,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|_GLOB
-value|0x20
+value|0x020
 end_define
 
 begin_comment
@@ -86,7 +82,7 @@ begin_define
 define|#
 directive|define
 name|_ESC
-value|0x40
+value|0x040
 end_define
 
 begin_comment
@@ -97,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|_DOL
-value|0x80
+value|0x080
 end_define
 
 begin_comment
@@ -206,6 +202,33 @@ parameter_list|(
 name|c
 parameter_list|)
 value|(digit(c) || letter(c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINELEN
+value|128
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|linp
+decl_stmt|,
+name|linbuf
+index|[
+name|LINELEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|CSHPUTCHAR
+value|{ \ 	if (!(ch&QUOTE)&& (ch == 0177 || ch< ' '&& ch != '\t'&& \ 	    ch != '\n')) { \ 		*linp++ = '^'; \ 		if (ch == 0177) \ 			ch = '?'; \ 		else \ 			ch |= 'A' - 1; \ 		if (linp>=&linbuf[sizeof linbuf - 2]) \ 			flush(); \ 	} \ 	ch&= TRIM; \ 	*linp++ = ch; \ 	if (ch == '\n' || linp>=&linbuf[sizeof(linbuf) - 2]) \ 		flush(); \ }
 end_define
 
 end_unit
