@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.11 1996/04/05 03:36:20 ache Exp $  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.12 1996/04/22 19:40:27 nate Exp $  */
 end_comment
 
 begin_ifndef
@@ -28,17 +28,6 @@ argument_list|(
 name|I686_CPU
 argument_list|)
 end_if
-
-begin_define
-define|#
-directive|define
-name|I586_CYCLECTR
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|__asm __volatile(".byte 0x0f, 0x31" : "=A" (x))
-end_define
 
 begin_comment
 comment|/*  * When we update the clock, we also update this bias value which is  * automatically subtracted in microtime().  We assume that CPU_THISTICKLEN()  * has been called at some point in the past, so that an appropriate value is  * set up in i586_last_tick.  (This works even if we are not being called  * from hardclock because hardclock will have run before and will made the  * call.)  */
@@ -183,6 +172,13 @@ end_if
 begin_decl_stmt
 specifier|extern
 name|unsigned
+name|i586_ctr_freq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
 name|i586_ctr_rate
 decl_stmt|;
 end_decl_stmt
@@ -255,37 +251,6 @@ name|I686_CPU
 argument_list|)
 end_if
 
-begin_decl_stmt
-name|void
-name|calibrate_cyclecounter
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-end_if
-
 begin_function
 specifier|static
 name|__inline
@@ -312,10 +277,10 @@ name|old
 operator|=
 name|i586_last_tick
 expr_stmt|;
-name|I586_CYCLECTR
-argument_list|(
 name|i586_last_tick
-argument_list|)
+operator|=
+name|rdtsc
+argument_list|()
 expr_stmt|;
 name|len
 operator|=
