@@ -2345,23 +2345,6 @@ argument_list|,
 name|rid
 argument_list|)
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|child
-argument_list|,
-literal|"type %d  rid %d  startp %p  countp %p - got %p\n"
-argument_list|,
-name|type
-argument_list|,
-name|rid
-argument_list|,
-name|startp
-argument_list|,
-name|countp
-argument_list|,
-name|rle
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
