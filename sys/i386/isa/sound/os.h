@@ -842,8 +842,7 @@ name|proc
 parameter_list|,
 name|time
 parameter_list|)
-define|\
-value|timeout((timeout_func_t)proc, 0, time);
+value|timeout(proc, 0, time)
 end_define
 
 begin_comment

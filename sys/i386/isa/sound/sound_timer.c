@@ -1236,7 +1236,9 @@ operator|=
 literal|0xffffffff
 expr_stmt|;
 name|sequencer_timer
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 block|}

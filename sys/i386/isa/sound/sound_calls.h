@@ -544,6 +544,8 @@ name|void
 name|sequencer_timer
 parameter_list|(
 name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl

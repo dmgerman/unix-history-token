@@ -7367,6 +7367,8 @@ name|void
 name|sequencer_timer
 parameter_list|(
 name|void
+modifier|*
+name|arg
 parameter_list|)
 block|{
 name|seq_startplay

@@ -163,8 +163,8 @@ specifier|static
 name|void
 name|midi_poll
 parameter_list|(
-name|unsigned
-name|long
+name|void
+modifier|*
 name|dummy
 parameter_list|)
 function_decl|;
@@ -458,8 +458,8 @@ specifier|static
 name|void
 name|midi_poll
 parameter_list|(
-name|unsigned
-name|long
+name|void
+modifier|*
 name|dummy
 parameter_list|)
 block|{

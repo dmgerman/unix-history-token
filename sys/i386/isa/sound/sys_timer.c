@@ -101,8 +101,8 @@ specifier|static
 name|void
 name|poll_def_tmr
 parameter_list|(
-name|unsigned
-name|long
+name|void
+modifier|*
 name|dummy
 parameter_list|)
 function_decl|;
@@ -184,8 +184,8 @@ specifier|static
 name|void
 name|poll_def_tmr
 parameter_list|(
-name|unsigned
-name|long
+name|void
+modifier|*
 name|dummy
 parameter_list|)
 block|{
@@ -232,7 +232,9 @@ operator|=
 literal|0xffffffff
 expr_stmt|;
 name|sequencer_timer
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 block|}

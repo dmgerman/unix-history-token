@@ -4746,7 +4746,7 @@ argument|,
 comment|/* Local device link */
 argument|mpu_timer_open,   mpu_timer_close,   mpu_timer_event,   mpu_timer_get_time,   mpu_timer_ioctl,   mpu_timer_arm };  static void mpu_timer_interrupt (void) {    if (!timer_open)     return;    if (!tmr_running)     return;    curr_clocks++;   curr_ticks = clocks2ticks (curr_clocks);    if (curr_ticks>= next_event_time)     {       next_event_time =
 literal|0xffffffff
-argument|;       sequencer_timer ();     } }  static void timer_ext_event (struct mpu_config *devc, int event, int parm) {   int             midi_dev = devc->devno;    if (!devc->timer_flag)     return;    switch (event)     {     case TMR_CLOCK:       printk (
+argument|;       sequencer_timer (NULL);     } }  static void timer_ext_event (struct mpu_config *devc, int event, int parm) {   int             midi_dev = devc->devno;    if (!devc->timer_flag)     return;    switch (event)     {     case TMR_CLOCK:       printk (
 literal|"<MIDI clk>"
 argument|);       break;      case TMR_START:       printk (
 literal|"Ext MIDI start\n"

@@ -323,8 +323,8 @@ specifier|static
 name|void
 name|poll_uart6850
 parameter_list|(
-name|unsigned
-name|long
+name|void
+modifier|*
 name|dummy
 parameter_list|)
 block|{
