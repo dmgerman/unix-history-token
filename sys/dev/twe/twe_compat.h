@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -392,11 +398,9 @@ comment|/* interrupt */
 value|\     void			*twe_intr;
 comment|/* interrupt handle */
 value|\     struct intr_config_hook	twe_ich;
-end_define
-
-begin_comment
 comment|/* delayed-startup hook */
-end_comment
+value|\     struct sysctl_ctx_list	sysctl_ctx;						\     struct sysctl_oid		*sysctl_tree;
+end_define
 
 begin_comment
 comment|/*  * FreeBSD-specific request elements  */

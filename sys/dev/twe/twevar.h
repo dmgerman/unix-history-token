@@ -552,7 +552,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* attach drive when found in twe_init */
+comment|/* attach drive when found in twe_add_unit */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|twe_detach_drive
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* detach drive */
 end_comment
 
 begin_function_decl

@@ -631,6 +631,24 @@ literal|0x2d
 block|}
 block|,
 block|{
+literal|"a replacement drive too small"
+block|,
+literal|0x2e
+block|}
+block|,
+block|{
+literal|"c array not previously initialized"
+block|,
+literal|0x2f
+block|}
+block|,
+block|{
+literal|"p drive not supported"
+block|,
+literal|0x30
+block|}
+block|,
+block|{
 literal|"a aen queue full"
 block|,
 literal|0xff
