@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_rl.c,v 1.2 1998/11/18 21:03:57 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_rl.c,v 1.16 1998/12/07 00:16:44 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * RealTek 8129/8139 PCI NIC driver  *  * Supports several extremely 
 end_comment
 
 begin_comment
-comment|/*  * The RealTek 8139 PCI NIC redefines the meaning of 'low end.' This is  * probably the worst PCI ethernet controller ever made, with the possible  * exception of the FEAST chip made by SMC. The 8139 supports bus-master  * DMA, but it has a terrible interface that nullifies any performance  * gains that bus-master DMA usually offers.  *  * For transmission, the chip offers a series of four TX descriptor  * registers. Each transmit frame must be in a contiguous buffer, aligned  * on a doubleword (32-bit) boundary. This means we almost always have to  * do mbuf copies in order to transmit a frame, except in the unlikely  * case where a) the packet fits into a single mbuf, and b) the packet  * is 32-bit aligned within the mbuf's data area. The presence of only  * four descriptor registers means that we can never have more than four  * packets queued for transmission at any one time.  *  * Reception is not much better. The driver has to allocate a single large  * buffer area (up to 64K in size) into which the chip will DMA received  * frames. Because we don't know where within this region received packets  * will begin or end, we have no choice but to copy data from the buffer  * area into mbufs in order to pass the packets up to the higher protocol  * levels.  *  * It's impossible given this rotten design to really achieve decent  * performance at 100Mbps, unless you happen to have a 400Mhz PII or  * some equally overmuscled CPU to drive it.  *  * On the bright side, the 8139 does have a built-in PHY, although  * rather than using an MDIO serial interface like most other NICs, the  * PHY registers are directly accessible through the 8139's register  * space. The 8139 supports autonegotiation, as well as a 64-bit multicast  * filter.  *  * The 8129 chip is an older version of the 8139 that uses an external PHY  * chip. The 8129 has a serial MDIO interface for accessing the MII where  * the 8139 lets you directly access the on-board PHY registers. We need  * to select which interface to use depending on the chip type.  *  * Note: beware of trying to use the Linux RealTek driver as a reference  * for information about the RealTek chip. It contains several bogosities.  * It contains definitions for several undocumented registers which it  * claims are 'required for proper operation' yet it does not use these  * registers anywhere in the code. It also refers to some undocumented  * 'Twister tuning codes' which it doesn't use anywhere. It also contains  * bit definitions for several registers which are totally ignored: magic  * numbers are used instead, making the code hard to read.  */
+comment|/*  * The RealTek 8139 PCI NIC redefines the meaning of 'low end.' This is  * probably the worst PCI ethernet controller ever made, with the possible  * exception of the FEAST chip made by SMC. The 8139 supports bus-master  * DMA, but it has a terrible interface that nullifies any performance  * gains that bus-master DMA usually offers.  *  * For transmission, the chip offers a series of four TX descriptor  * registers. Each transmit frame must be in a contiguous buffer, aligned  * on a longword (32-bit) boundary. This means we almost always have to  * do mbuf copies in order to transmit a frame, except in the unlikely  * case where a) the packet fits into a single mbuf, and b) the packet  * is 32-bit aligned within the mbuf's data area. The presence of only  * four descriptor registers means that we can never have more than four  * packets queued for transmission at any one time.  *  * Reception is not much better. The driver has to allocate a single large  * buffer area (up to 64K in size) into which the chip will DMA received  * frames. Because we don't know where within this region received packets  * will begin or end, we have no choice but to copy data from the buffer  * area into mbufs in order to pass the packets up to the higher protocol  * levels.  *  * It's impossible given this rotten design to really achieve decent  * performance at 100Mbps, unless you happen to have a 400Mhz PII or  * some equally overmuscled CPU to drive it.  *  * On the bright side, the 8139 does have a built-in PHY, although  * rather than using an MDIO serial interface like most other NICs, the  * PHY registers are directly accessible through the 8139's register  * space. The 8139 supports autonegotiation, as well as a 64-bit multicast  * filter.  *  * The 8129 chip is an older version of the 8139 that uses an external PHY  * chip. The 8129 has a serial MDIO interface for accessing the MII where  * the 8139 lets you directly access the on-board PHY registers. We need  * to select which interface to use depending on the chip type.  */
 end_comment
 
 begin_include
@@ -141,6 +141,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<machine/bus_pio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus_memio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pci/pcireg.h>
 end_include
 
@@ -178,7 +196,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_rl.c,v 1.2 1998/11/18 21:03:57 wpaul Exp $"
+literal|"$Id: if_rl.c,v 1.16 1998/12/07 00:16:44 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4375,18 +4393,44 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|sc
-operator|->
-name|iobase
-operator|=
-name|pci_conf_read
+if|if
+condition|(
+operator|!
+name|pci_map_port
 argument_list|(
 name|config_id
 argument_list|,
 name|RL_PCI_LOIO
-argument_list|)
+argument_list|,
+operator|(
+name|u_int16_t
+operator|*
+operator|)
 operator|&
-literal|0xFFFFFFFC
+operator|(
+name|sc
+operator|->
+name|rl_bhandle
+operator|)
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"rl%d: couldn't map ports\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+name|sc
+operator|->
+name|rl_btag
+operator|=
+name|I386_BUS_SPACE_IO
 expr_stmt|;
 else|#
 directive|else
@@ -4441,12 +4485,14 @@ goto|;
 block|}
 name|sc
 operator|->
-name|csr
+name|rl_btag
 operator|=
-operator|(
-specifier|volatile
-name|caddr_t
-operator|)
+name|I386_BUS_SPACE_MEM
+expr_stmt|;
+name|sc
+operator|->
+name|rl_bhandle
+operator|=
 name|vbase
 expr_stmt|;
 endif|#
@@ -4562,6 +4608,10 @@ condition|(
 name|rl_did
 operator|==
 name|RT_DEVICEID_8139
+operator|||
+name|rl_did
+operator|==
+name|ACCTON_DEVICEID_5030
 condition|)
 name|sc
 operator|->
