@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.34 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -329,6 +329,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+comment|/* The next two chunks should probably be moved to vmspace_exit. */
 ifdef|#
 directive|ifdef
 name|SYSVSHM
@@ -347,6 +348,34 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Release user portion of address space. 	 * This releases references to vnodes, 	 * which could cause I/O if the file has been unlinked. 	 * Need to do this early enough that we can still sleep. 	 * Can't free the entire vmspace as the kernel stack 	 * may be mapped within that space also. 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_vmspace
+operator|->
+name|vm_refcnt
+operator|==
+literal|1
+condition|)
+operator|(
+name|void
+operator|)
+name|vm_map_remove
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_vmspace
+operator|->
+name|vm_map
+argument_list|,
+name|VM_MIN_ADDRESS
+argument_list|,
+name|VM_MAXUSER_ADDRESS
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -508,37 +537,6 @@ argument_list|,
 name|M_SUBPROC
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|--
-name|p
-operator|->
-name|p_cred
-operator|->
-name|p_refcnt
-operator|==
-literal|0
-condition|)
-block|{
-name|crfree
-argument_list|(
-name|p
-operator|->
-name|p_cred
-operator|->
-name|pc_ucred
-argument_list|)
-expr_stmt|;
-name|FREE
-argument_list|(
-name|p
-operator|->
-name|p_cred
-argument_list|,
-name|M_SUBPROC
-argument_list|)
-expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|KTRACE
@@ -1474,6 +1472,37 @@ argument_list|,
 name|M_ZOMBIE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|--
+name|p
+operator|->
+name|p_cred
+operator|->
+name|p_refcnt
+operator|==
+literal|0
+condition|)
+block|{
+name|crfree
+argument_list|(
+name|p
+operator|->
+name|p_cred
+operator|->
+name|pc_ucred
+argument_list|)
+expr_stmt|;
+name|FREE
+argument_list|(
+name|p
+operator|->
+name|p_cred
+argument_list|,
+name|M_SUBPROC
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 			 * Finally finished with old proc entry. 			 * Unlink it from its process group and free it. 			 */
 name|leavepgrp
 argument_list|(
@@ -1556,17 +1585,12 @@ name|p
 operator|->
 name|p_osptr
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|i386
+comment|/* 			 * Give machine-dependent layer a chance 			 * to free anything that cpu_exit couldn't 			 * release while still running in process context. 			 */
 name|cpu_wait
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
-endif|#
-directive|endif
 name|FREE
 argument_list|(
 name|p
