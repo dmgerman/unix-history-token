@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3737,6 +3737,50 @@ name|cd9660_write
 value|((int (*) __P((struct  vop_write_args *)))cd9660_enotsupp)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|lease_check
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_lease_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|cd9660_lease_check
+value|lease_check
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|cd9660_lease_check
+value|((int (*) __P((struct vop_lease_args *)))nullop)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -3960,6 +4004,14 @@ name|cd9660_write
 block|}
 block|,
 comment|/* write */
+block|{
+operator|&
+name|vop_lease_desc
+block|,
+name|cd9660_lease_check
+block|}
+block|,
+comment|/* lease */
 block|{
 operator|&
 name|vop_ioctl_desc
@@ -4343,6 +4395,14 @@ name|spec_write
 block|}
 block|,
 comment|/* write */
+block|{
+operator|&
+name|vop_lease_desc
+block|,
+name|spec_lease_check
+block|}
+block|,
+comment|/* lease */
 block|{
 operator|&
 name|vop_ioctl_desc
@@ -4729,6 +4789,14 @@ name|fifo_write
 block|}
 block|,
 comment|/* write */
+block|{
+operator|&
+name|vop_lease_desc
+block|,
+name|fifo_lease_check
+block|}
+block|,
+comment|/* lease */
 block|{
 operator|&
 name|vop_ioctl_desc

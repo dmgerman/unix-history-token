@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -278,6 +278,14 @@ name|nfs_write
 block|}
 block|,
 comment|/* write */
+block|{
+operator|&
+name|vop_lease_desc
+block|,
+name|nfs_lease_check
+block|}
+block|,
+comment|/* lease */
 block|{
 operator|&
 name|vop_ioctl_desc
@@ -671,6 +679,14 @@ block|,
 comment|/* write */
 block|{
 operator|&
+name|vop_lease_desc
+block|,
+name|spec_lease_check
+block|}
+block|,
+comment|/* lease */
+block|{
+operator|&
 name|vop_ioctl_desc
 block|,
 name|spec_ioctl
@@ -1062,6 +1078,14 @@ name|nfsfifo_write
 block|}
 block|,
 comment|/* write */
+block|{
+operator|&
+name|vop_lease_desc
+block|,
+name|fifo_lease_check
+block|}
+block|,
+comment|/* lease */
 block|{
 operator|&
 name|vop_ioctl_desc
