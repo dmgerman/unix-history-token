@@ -435,7 +435,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"atm_initialize: unable to allocate attributes pool"
+literal|"atm_initialize: unable to create attributes zone"
 argument_list|)
 expr_stmt|;
 name|uma_zone_set_max
@@ -482,7 +482,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"atm_initialize: unable to allocate stackq pool"
+literal|"atm_initialize: unable to create stackq zone"
 argument_list|)
 expr_stmt|;
 name|uma_zone_set_max
