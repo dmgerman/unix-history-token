@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.23	82/02/27	*/
+comment|/*	kern_proc.c	4.24	82/03/27	*/
 end_comment
 
 begin_include
@@ -2324,7 +2324,7 @@ name|u
 operator|.
 name|u_procp
 operator|->
-name|p_siga1
+name|p_siga0
 operator|&=
 operator|~
 name|sigmask
