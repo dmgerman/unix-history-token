@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_bio.c	6.2	84/01/03	*/
+comment|/*	vfs_bio.c	6.3	84/08/07	*/
 end_comment
 
 begin_include
@@ -1412,6 +1412,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bp
+operator|->
+name|b_bcount
+operator|!=
+name|size
+operator|&&
 name|brealloc
 argument_list|(
 name|bp
