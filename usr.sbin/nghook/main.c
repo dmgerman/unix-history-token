@@ -169,6 +169,11 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|noInput
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|ch
 decl_stmt|;
 comment|/* Parse flags */
@@ -183,7 +188,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"adl"
+literal|"adln"
 argument_list|)
 operator|)
 operator|!=
@@ -222,6 +227,14 @@ case|case
 literal|'l'
 case|:
 name|loopFlag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|noInput
 operator|=
 literal|1
 expr_stmt|;
@@ -382,6 +395,16 @@ argument_list|,
 literal|"can't connect to node"
 argument_list|)
 expr_stmt|;
+comment|/* Close standard input if not reading from it */
+if|if
+condition|(
+name|noInput
+condition|)
+name|fclose
+argument_list|(
+name|stdin
+argument_list|)
+expr_stmt|;
 comment|/* Relay data */
 while|while
 condition|(
@@ -398,6 +421,11 @@ operator|&
 name|rfds
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|noInput
+condition|)
 name|FD_SET
 argument_list|(
 literal|0
@@ -1007,7 +1035,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"usage: nghook [-da] path [hookname]"
+literal|"usage: nghook [-adln] path [hookname]"
 argument_list|)
 expr_stmt|;
 block|}
