@@ -779,17 +779,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TABLDISC
-value|3
-end_define
-
-begin_comment
-comment|/* tablet discipline */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SLIPDISC
 value|4
 end_define
