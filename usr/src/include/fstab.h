@@ -1,11 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)fstab.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)fstab.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * File system table, see fstab (5)  *  * Used by dump, mount, umount, swapon, fsck, df, ...  *  * The fs_spec field is the block special name.  Programs  * that want to use the character special name must create  * that name by prepending a 'r' after the right most slash.  * Quota files are always named "quotas", so if type is "rq",  * then use concatenation of fs_file and "quotas" to locate  * quota file.  */
+comment|/*  * File system table, see fstab(5).  *  * Used by dump, mount, umount, swapon, fsck, df, ...  *  * The fs_spec field is the block special name.  Programs that want to use  * the character special name must create that name by prepending a 'r'  * after the right most slash.  Quota files are always named "quotas", so  * if type is "rq", then use concatenation of fs_file and "quotas" to locate  * quota file.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_FSTAB
+value|"/etc/fstab"
+end_define
 
 begin_define
 define|#
@@ -13,6 +20,10 @@ directive|define
 name|FSTAB
 value|"/etc/fstab"
 end_define
+
+begin_comment
+comment|/* deprecated */
+end_comment
 
 begin_define
 define|#
