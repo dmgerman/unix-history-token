@@ -3329,7 +3329,7 @@ name|up
 expr_stmt|;
 name|low
 operator|=
-literal|0
+name|extra
 expr_stmt|;
 name|de
 operator|=
@@ -3405,7 +3405,11 @@ if|if
 condition|(
 name|u
 operator|>
+operator|(
 name|unit
+operator||
+name|extra
+operator|)
 condition|)
 block|{
 name|dl
@@ -3429,6 +3433,8 @@ condition|)
 name|unit
 operator|=
 name|low
+operator|&
+name|CLONE_UNITMASK
 expr_stmt|;
 name|dev
 operator|=
