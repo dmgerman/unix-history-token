@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regalloc.c	5.4 (Berkeley) %G%"
+literal|"@(#)regalloc.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * regalloc.c  *  * Register optimization routines for f77 compiler, pass 1  *  * University of Utah CS Dept modification history:  *  * $Log:	regalloc.c,v $  * Revision 5.6  86/01/04  22:35:44  donn  * More hacking on GOTOs and loops.  Fixed a bug in rev 5.4.  Changed  * regalloc() so that sibling loops behave like nested loops, eliminating  * problems with GOTOs and different registers used for the same variable.  * This decreases the flexibility of the allocator quite a bit, but it was  * doing the job wrong before, so we come out ahead.  *   * Revision 5.5  86/01/04  19:54:28  donn  * Pick up redundant register moves when address registers (STGPREG) are  * involved.  *   * Revision 5.4  86/01/04  18:28:34  donn  * Patching over some more design problems...  If there is a GOTO that jumps  * from an inner loop into an outer loop and there is a variable which is set  * in the inner loop and is in register in the outer loop but is not in  * register in the inner loop (or is in a different register), we get into  * trouble because the register version of the variable in the outer loop  * is 'dead' and we don't maintain enough information to be able to restore  * it.  The change causes a variable that is set in an inner loop but is not  * put in register there to be ineligible for a register in the outer loop.  *   * Revision 5.3  85/09/27  19:58:16  root  * Ended PCC confusion with sizes of objects in registers by forcing SHORT  * values in registers to be converted to INT.  *   * Revision 5.2  85/09/26  19:36:22  donn  * Added a fix for a bug that allowed character variables which were  * arguments to subroutines to be made eligible to be register variables.  *   * Revision 5.1  85/08/10  03:49:35  donn  * 4.3 alpha  *   * Revision 2.9  85/03/18  21:35:05  donn  * Bob Corbett's hack to prevent conflicts between subroutine side effects  * and register assignment.  Makes the code a lot worse...  *   * Revision 2.8  85/02/22  02:14:08  donn  * In code like 'x = foo(x)', alreg() would copy the memory version of the  * variable 'x' into the register version after the assignment, clobbering  * the result.  A small change to regwrite() seems to prevent this.  *   * Revision 2.7  85/02/16  03:32:45  donn  * Fixed a bug where the loop test and increment were having register  * substitution performed twice, once in the environment of the current  * loop and once in the environment of the containing loop.  If the  * containing loop puts (say) the inner loop's index variable in register  * but the inner loop does not, havoc results.  *   * Revision 2.6  85/02/14  23:21:45  donn  * Don't permit variable references of the form 'a(i)' to be put in register  * if array 'a' is in common.  This is because there is no good way to  * identify instances of this sort without getting confused with other  * variables in the same common block which are in register.  Sigh.  *   * Revision 2.5  85/01/11  21:08:00  donn  * Made changes so that we pay attention to SAVE statements.  Added a new  * gensetreturn() function to implement this.  *   * Revision 2.4  84/09/03  22:37:28  donn  * Changed the treatment of SKRETURN in alreg() so that all variables in  * register, not just COMMON variables, get written out to memory before a  * RETURN.  This was causing the return value of a function to get lost when  * a RETURN was done from inside a loop (among other problems).  *   * Revision 2.3  84/08/04  20:52:42  donn  * Added fixes for EXTERNAL parameters from Jerry Berkman.  *   * Revision 2.2  84/08/04  20:34:29  donn  * Fixed a stupidity pointed out by Jerry Berkman -- the 'floats in register'  * stuff applies if the TARGET is a VAX, not if the local machine is a VAX.  *   * Revision 2.1  84/07/19  12:04:47  donn  * Changed comment headers for UofU.  *   * Revision 1.5  83/11/27  19:25:41  donn  * Added REAL to the list of types which may appear in registers (VAXen only).  *   * Revision 1.4  83/11/13  02:38:39  donn  * Bug fixed in alreg()'s handling of computed goto's.  A '<=' in place of a  * '<' led to core dumps when we walked off the end of the list of labels...  *   * Revision 1.3  83/11/12  01:25:57  donn  * Bug in redundant register assignment code, mistakenly carried over some old  * code that sometimes rewound a slot pointer even when a redundant slot wasn't  * deleted; this caused an infinite loop...  Seems to work now.  *   * Revision 1.2  83/11/09  14:58:12  donn  * Took out broken code dealing with redundant register initializations.  * Couldn't see what to do about redundantly initializing a DO variable but  * I did fix things so that an assignment from a register into the same  * register is always deleted.  *   */
+comment|/*  * regalloc.c  *  * Register optimization routines for f77 compiler, pass 1  *  * University of Utah CS Dept modification history:  *  * $Log:	regalloc.c,v $  * Revision 5.7  86/04/21  18:23:08  donn  * Still more hacking with GOTOs and loops!  What a mess.  This time we  * complete the illusion that adjacent loops are actually embedded loops.  * Without this hack, variables which are in one loop but not in another  * adjacent loop cause severe confusion.  A routine varloopset() is added  * to re-implement the loopset hack; I'm not certain that this is really  * needed at all, now.  *   * Revision 5.6  86/01/04  22:35:44  donn  * More hacking on GOTOs and loops.  Fixed a bug in rev 5.4.  Changed  * regalloc() so that sibling loops behave like nested loops, eliminating  * problems with GOTOs and different registers used for the same variable.  * This decreases the flexibility of the allocator quite a bit, but it was  * doing the job wrong before, so we come out ahead.  *   * Revision 5.5  86/01/04  19:54:28  donn  * Pick up redundant register moves when address registers (STGPREG) are  * involved.  *   * Revision 5.4  86/01/04  18:28:34  donn  * Patching over some more design problems...  If there is a GOTO that jumps  * from an inner loop into an outer loop and there is a variable which is set  * in the inner loop and is in register in the outer loop but is not in  * register in the inner loop (or is in a different register), we get into  * trouble because the register version of the variable in the outer loop  * is 'dead' and we don't maintain enough information to be able to restore  * it.  The change causes a variable that is set in an inner loop but is not  * put in register there to be ineligible for a register in the outer loop.  *   * Revision 5.3  85/09/27  19:58:16  root  * Ended PCC confusion with sizes of objects in registers by forcing SHORT  * values in registers to be converted to INT.  *   * Revision 5.2  85/09/26  19:36:22  donn  * Added a fix for a bug that allowed character variables which were  * arguments to subroutines to be made eligible to be register variables.  *   * Revision 5.1  85/08/10  03:49:35  donn  * 4.3 alpha  *   * Revision 2.9  85/03/18  21:35:05  donn  * Bob Corbett's hack to prevent conflicts between subroutine side effects  * and register assignment.  Makes the code a lot worse...  *   * Revision 2.8  85/02/22  02:14:08  donn  * In code like 'x = foo(x)', alreg() would copy the memory version of the  * variable 'x' into the register version after the assignment, clobbering  * the result.  A small change to regwrite() seems to prevent this.  *   * Revision 2.7  85/02/16  03:32:45  donn  * Fixed a bug where the loop test and increment were having register  * substitution performed twice, once in the environment of the current  * loop and once in the environment of the containing loop.  If the  * containing loop puts (say) the inner loop's index variable in register  * but the inner loop does not, havoc results.  *   * Revision 2.6  85/02/14  23:21:45  donn  * Don't permit variable references of the form 'a(i)' to be put in register  * if array 'a' is in common.  This is because there is no good way to  * identify instances of this sort without getting confused with other  * variables in the same common block which are in register.  Sigh.  *   * Revision 2.5  85/01/11  21:08:00  donn  * Made changes so that we pay attention to SAVE statements.  Added a new  * gensetreturn() function to implement this.  *   * Revision 2.4  84/09/03  22:37:28  donn  * Changed the treatment of SKRETURN in alreg() so that all variables in  * register, not just COMMON variables, get written out to memory before a  * RETURN.  This was causing the return value of a function to get lost when  * a RETURN was done from inside a loop (among other problems).  *   * Revision 2.3  84/08/04  20:52:42  donn  * Added fixes for EXTERNAL parameters from Jerry Berkman.  *   * Revision 2.2  84/08/04  20:34:29  donn  * Fixed a stupidity pointed out by Jerry Berkman -- the 'floats in register'  * stuff applies if the TARGET is a VAX, not if the local machine is a VAX.  *   * Revision 2.1  84/07/19  12:04:47  donn  * Changed comment headers for UofU.  *   * Revision 1.5  83/11/27  19:25:41  donn  * Added REAL to the list of types which may appear in registers (VAXen only).  *   * Revision 1.4  83/11/13  02:38:39  donn  * Bug fixed in alreg()'s handling of computed goto's.  A '<=' in place of a  * '<' led to core dumps when we walked off the end of the list of labels...  *   * Revision 1.3  83/11/12  01:25:57  donn  * Bug in redundant register assignment code, mistakenly carried over some old  * code that sometimes rewound a slot pointer even when a redundant slot wasn't  * deleted; this caused an infinite loop...  Seems to work now.  *   * Revision 1.2  83/11/09  14:58:12  donn  * Took out broken code dealing with redundant register initializations.  * Couldn't see what to do about redundantly initializing a DO variable but  * I did fix things so that an assignment from a register into the same  * register is always deleted.  *   */
 end_comment
 
 begin_include
@@ -1523,6 +1523,59 @@ block|}
 block|}
 end_function
 
+begin_function
+name|LOCAL
+name|varloopset
+parameter_list|()
+block|{
+specifier|register
+name|ADDRNODE
+modifier|*
+name|p
+decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|VARTABSIZE
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|p
+operator|=
+name|vartable
+index|[
+name|i
+index|]
+condition|)
+if|if
+condition|(
+name|p
+operator|->
+name|isset
+operator|==
+name|YES
+condition|)
+name|p
+operator|->
+name|loopset
+operator|=
+name|YES
+expr_stmt|;
+block|}
+end_function
+
 begin_escape
 end_escape
 
@@ -1882,6 +1935,36 @@ name|sp
 operator|->
 name|next
 control|)
+if|if
+condition|(
+name|docount
+operator|>
+literal|1
+condition|)
+switch|switch
+condition|(
+name|sp
+operator|->
+name|type
+condition|)
+block|{
+case|case
+name|SKDOHEAD
+case|:
+name|docount
+operator|++
+expr_stmt|;
+break|break;
+case|case
+name|SKENDDO
+case|:
+name|docount
+operator|--
+expr_stmt|;
+default|default:
+break|break;
+block|}
+else|else
 switch|switch
 condition|(
 name|sp
@@ -4589,10 +4672,7 @@ operator|--
 index|]
 argument_list|)
 expr_stmt|;
-name|freelabtab
-argument_list|()
-expr_stmt|;
-name|freevartab
+name|varloopset
 argument_list|()
 expr_stmt|;
 return|return;
@@ -10149,6 +10229,12 @@ expr_stmt|;
 name|docount
 operator|=
 literal|0
+expr_stmt|;
+name|freelabtab
+argument_list|()
+expr_stmt|;
+name|freevartab
+argument_list|()
 expr_stmt|;
 block|}
 break|break;
