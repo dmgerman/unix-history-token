@@ -3893,6 +3893,15 @@ index|[
 literal|10
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
+name|login_cap_t
+modifier|*
+name|lc
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* login(1) is only called if we execute the login shell */
 if|if
 condition|(
@@ -3913,10 +3922,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOGIN_CAP
-name|login_cap_t
-modifier|*
-name|lc
-decl_stmt|;
 name|lc
 operator|=
 name|login_getpwclass
