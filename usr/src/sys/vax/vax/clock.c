@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)clock.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)clock.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -239,7 +239,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Reset the TODR based on the time value; used when the TODR  * has a preposterous value and also when the time is reset  * by the stime system call.  Also called when the TODR goes past  * TODRZERO + 100*(SECYEAR+2*SECDAY) (e.g. on Jan 2 just after midnight)  * to wrap the TODR around.  */
+comment|/*  * Reset the TODR based on the time value; used when the TODR  * has a preposterous value, when the time is changed, and when rebooting.  * Also called when the TODR goes past TODRZERO + 100*(SECYEAR+2*SECDAY)  * (e.g. on Jan 2 just after midnight) to wrap the TODR around.  * Avoid doing this if we haven't figured out the time yet  * (e.g., when crashing during autoconfig).  */
 end_comment
 
 begin_macro
@@ -249,6 +249,12 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|time
+operator|.
+name|tv_sec
+condition|)
 call|(
 modifier|*
 name|cpuops
