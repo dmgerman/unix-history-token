@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.h	4.6	84/01/03	*/
+comment|/*	if_vv.h	4.7	85/06/03	*/
 end_comment
 
 begin_comment
-comment|/*  * Local network header for V2LNI Ring  * This is arbitrated by "V2LNI-PEOPLE@MIT-MC"  * (aka Joel N. Chiappa)  */
+comment|/*  * ECO 176-748 changed the braodcast address from 0 to 0xff, at  * CTL (p1002) serial number around 150.  * It was implemented in August, 1982. This is a field-installable ECO,  * which improves net reliability. If the broadcast address has not been  * changed, comment out the following line.  */
 end_comment
 
 begin_define
@@ -14,7 +14,11 @@ name|NEW_BROADCAST
 end_define
 
 begin_comment
-comment|/* new plas for broadcast problem */
+comment|/* new chip for broadcast problem */
+end_comment
+
+begin_comment
+comment|/*  * Local network header for proNET Ring  * This is arbitrated by "jas@proteon"  * (aka John Shriver, 617-655-3340)  */
 end_comment
 
 begin_struct
@@ -59,7 +63,7 @@ comment|/* current version of v2lni header */
 end_comment
 
 begin_comment
-comment|/*  * Packet types (protocol numbers) in v2lni header  */
+comment|/*  * Packet types (protocol numbers) in proNET protocol header  * Other types are defined, but are proprietary.  */
 end_comment
 
 begin_define
@@ -76,23 +80,110 @@ name|RING_IPTrailer
 value|2
 end_define
 
+begin_comment
+comment|/* really, 3 = 512 bytes */
+end_comment
+
+begin_comment
+comment|/*         4 = 1024 bytes */
+end_comment
+
+begin_comment
+comment|/*         5 = 1536 bytes */
+end_comment
+
+begin_comment
+comment|/* it's really very messed-up! */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RING_IPNTrailer
-value|16
+value|4
+end_define
+
+begin_comment
+comment|/* not a number, but a range */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RING_ARP
+value|3
+end_define
+
+begin_comment
+comment|/* the next three conflict with trailers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RING_HDLC
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|RING_WHOAMI
-value|0xa5
+name|RING_VAXDB
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|RING_RINGWAY
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|RING_RINGWAYM
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|RING_NOVELL
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|RING_PUP
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|RING_XNS
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|RING_DIAGNOSTICS
+value|15
 end_define
 
 begin_comment
-comment|/* insure some bit transitions */
+comment|/* protocol type for testing */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RING_ECHO
+value|16
+end_define
 
 begin_ifdef
 ifdef|#
@@ -133,7 +224,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Proteon V2LNI Hardware definitions  * register bit definitions - new style  */
+comment|/*  * Proteon proNET Hardware definitions  * register bit definitions  */
 end_comment
 
 begin_define
@@ -309,7 +400,7 @@ value|04000
 end_define
 
 begin_comment
-comment|/* Odd Byte (Achtung, mein Fuehrer) (Rcv) */
+comment|/* Odd Byte (Rcv) */
 end_comment
 
 begin_define
@@ -331,7 +422,11 @@ value|010000
 end_define
 
 begin_comment
-comment|/* Link Data Error (Rcv) */
+comment|/* Parity on 10 megabit (Rcv), */
+end_comment
+
+begin_comment
+comment|/* Link Data Error on 80 megabit (Rcv) */
 end_comment
 
 begin_define
@@ -485,12 +580,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VVIDENTSUCC
+value|5
+end_define
+
+begin_comment
+comment|/* number of successes required in self-test */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VVIDENTRETRY
 value|10
 end_define
 
 begin_comment
-comment|/* identify loop retry limit */
+comment|/* identify loop attempt limit */
 end_comment
 
 begin_define

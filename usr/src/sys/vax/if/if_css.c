@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      if_css.c     6.2     84/08/29     */
+comment|/*      if_css.c     6.3     85/06/03     */
 end_comment
 
 begin_include
@@ -603,6 +603,15 @@ index|[
 name|unit
 index|]
 expr_stmt|;
+name|sc
+operator|->
+name|css_if
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_RUNNING
+expr_stmt|;
 comment|/* must go through IMP to allow it to set state */
 call|(
 modifier|*
@@ -753,6 +762,14 @@ literal|0
 operator|)
 return|;
 block|}
+name|sc
+operator|->
+name|css_if
+operator|->
+name|if_flags
+operator||=
+name|IFF_RUNNING
+expr_stmt|;
 name|addr
 operator|=
 operator|(
