@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)radixsort.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)radixsort.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -460,6 +460,7 @@ comment|/* Unstable, in-place sort. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|r_sort_a
 parameter_list|(
@@ -937,6 +938,7 @@ comment|/* Stable sort, requiring additional memory. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|r_sort_b
 parameter_list|(
