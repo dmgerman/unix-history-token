@@ -1078,23 +1078,6 @@ block|{
 name|linker_file_t
 name|lf
 decl_stmt|;
-comment|/* Refuse to load modules if securelevel raised */
-if|if
-condition|(
-name|securelevel
-operator|>
-literal|0
-condition|)
-block|{
-name|vput
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-return|return
-name|EPERM
-return|;
-block|}
 comment|/* Only load modules for root (very important!) */
 if|if
 condition|(

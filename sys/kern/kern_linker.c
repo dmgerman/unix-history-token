@@ -1054,6 +1054,16 @@ name|koname
 init|=
 name|NULL
 decl_stmt|;
+comment|/* Refuse to load modules if securelevel raised */
+if|if
+condition|(
+name|securelevel
+operator|>
+literal|0
+condition|)
+return|return
+name|EPERM
+return|;
 name|lf
 operator|=
 name|linker_find_file_by_name
@@ -1779,6 +1789,16 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* Refuse to unload modules if securelevel raised */
+if|if
+condition|(
+name|securelevel
+operator|>
+literal|0
+condition|)
+return|return
+name|EPERM
+return|;
 name|KLD_DPF
 argument_list|(
 name|FILE
@@ -3077,6 +3097,7 @@ name|securelevel
 operator|>
 literal|0
 condition|)
+comment|/* redundant, but that's OK */
 return|return
 name|EPERM
 return|;
@@ -3257,6 +3278,7 @@ name|securelevel
 operator|>
 literal|0
 condition|)
+comment|/* redundant, but that's OK */
 return|return
 name|EPERM
 return|;
