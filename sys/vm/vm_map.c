@@ -6123,7 +6123,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_map_unwire:  *  *	Implements both kernel and user unwiring.  *  *	Ignores MAP_NOFAULT (wired_count == 0 is okay) for kernel unwiring.  */
+comment|/*  *	vm_map_unwire:  *  *	Implements both kernel and user unwiring.  */
 end_comment
 
 begin_function
@@ -6493,33 +6493,15 @@ block|}
 comment|/* 		 * If system unwiring, require that the entry is system wired. 		 */
 if|if
 condition|(
+operator|!
 name|user_unwire
-condition|?
-name|vm_map_entry_user_wired_count
-argument_list|(
-name|entry
-argument_list|)
-operator|==
-literal|0
-else|:
-operator|(
+operator|&&
 name|vm_map_entry_system_wired_count
 argument_list|(
 name|entry
 argument_list|)
 operator|==
 literal|0
-operator|&&
-operator|(
-name|entry
-operator|->
-name|eflags
-operator|&
-name|MAP_ENTRY_NOFAULT
-operator|)
-operator|==
-literal|0
-operator|)
 condition|)
 block|{
 name|end
@@ -6651,20 +6633,6 @@ operator|&=
 operator|~
 name|MAP_ENTRY_USER_WIRED
 expr_stmt|;
-if|if
-condition|(
-name|user_unwire
-operator|||
-operator|(
-name|entry
-operator|->
-name|eflags
-operator|&
-name|MAP_ENTRY_NOFAULT
-operator|)
-operator|==
-literal|0
-condition|)
 name|entry
 operator|->
 name|wired_count
@@ -6675,16 +6643,6 @@ condition|(
 name|entry
 operator|->
 name|wired_count
-operator|==
-literal|0
-operator|&&
-operator|(
-name|entry
-operator|->
-name|eflags
-operator|&
-name|MAP_ENTRY_NOFAULT
-operator|)
 operator|==
 literal|0
 condition|)
@@ -7115,48 +7073,21 @@ name|eflags
 operator||=
 name|MAP_ENTRY_IN_TRANSITION
 expr_stmt|;
-comment|/* 		 * The wired_count keeps track of zero or one user 		 * wirings.  It also keeps track of system wirings if 		 * MAP_ENTRY_NOFAULT is not set. 		 */
+comment|/* 		 * 		 */
 if|if
 condition|(
-operator|(
-name|user_wire
-condition|?
-name|vm_map_entry_user_wired_count
-argument_list|(
-name|entry
-argument_list|)
-operator|==
-literal|0
-else|:
-operator|(
-name|entry
-operator|->
-name|eflags
-operator|&
-name|MAP_ENTRY_NOFAULT
-operator|)
-operator|==
-literal|0
-operator|)
-operator|&&
 name|entry
 operator|->
 name|wired_count
-operator|++
-operator|==
-literal|0
-operator|&&
-operator|(
-name|entry
-operator|->
-name|eflags
-operator|&
-name|MAP_ENTRY_NOFAULT
-operator|)
 operator|==
 literal|0
 condition|)
 block|{
+name|entry
+operator|->
+name|wired_count
+operator|++
+expr_stmt|;
 name|saved_start
 operator|=
 name|entry
@@ -7357,6 +7288,29 @@ name|done
 goto|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|user_wire
+operator|||
+operator|(
+name|entry
+operator|->
+name|eflags
+operator|&
+name|MAP_ENTRY_USER_WIRED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|entry
+operator|->
+name|wired_count
+operator|++
+expr_stmt|;
+block|}
 comment|/* 		 * Check the map for holes in the specified region. 		 * If VM_MAP_WIRE_HOLESOK was specified, skip this check. 		 */
 if|if
 condition|(
@@ -7505,7 +7459,6 @@ operator|==
 name|KERN_SUCCESS
 condition|)
 block|{
-comment|/* 			 * The MAP_ENTRY_USER_WIRED may already have been 			 * set.  If so, this statement has no effect 			 * (and wired_count will not have changed). 			 */
 if|if
 condition|(
 name|user_wire
@@ -7540,6 +7493,7 @@ else|else
 block|{
 if|if
 condition|(
+operator|!
 name|user_wire
 operator|||
 operator|(
@@ -7547,7 +7501,7 @@ name|entry
 operator|->
 name|eflags
 operator|&
-name|MAP_ENTRY_NOFAULT
+name|MAP_ENTRY_USER_WIRED
 operator|)
 operator|==
 literal|0
@@ -7562,16 +7516,6 @@ condition|(
 name|entry
 operator|->
 name|wired_count
-operator|==
-literal|0
-operator|&&
-operator|(
-name|entry
-operator|->
-name|eflags
-operator|&
-name|MAP_ENTRY_NOFAULT
-operator|)
 operator|==
 literal|0
 condition|)
@@ -8101,27 +8045,6 @@ name|vm_map_entry_t
 name|entry
 parameter_list|)
 block|{
-name|KASSERT
-argument_list|(
-name|vm_map_entry_user_wired_count
-argument_list|(
-name|entry
-argument_list|)
-operator|==
-literal|1
-operator|&&
-name|vm_map_entry_system_wired_count
-argument_list|(
-name|entry
-argument_list|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"system/user wiring mistake"
-operator|)
-argument_list|)
-expr_stmt|;
 name|vm_fault_unwire
 argument_list|(
 name|map
@@ -8513,7 +8436,7 @@ block|{
 name|vm_map_entry_t
 name|next
 decl_stmt|;
-comment|/* 		 * Wait for wiring or unwiring of an entry to complete. 		 * Also wait for any system wirings to disappear. 		 */
+comment|/* 		 * Wait for wiring or unwiring of an entry to complete. 		 */
 if|if
 condition|(
 operator|(
@@ -8523,13 +8446,6 @@ name|eflags
 operator|&
 name|MAP_ENTRY_IN_TRANSITION
 operator|)
-operator|!=
-literal|0
-operator|||
-name|vm_map_entry_system_wired_count
-argument_list|(
-name|entry
-argument_list|)
 operator|!=
 literal|0
 condition|)
@@ -11870,6 +11786,7 @@ name|object
 operator|.
 name|vm_object
 expr_stmt|;
+comment|/* 	 * Return whether this is the only map sharing this data. 	 */
 operator|*
 name|out_prot
 operator|=
