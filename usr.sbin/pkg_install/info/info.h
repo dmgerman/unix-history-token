@@ -160,17 +160,33 @@ name|SHOW_CKSUM
 value|0x4000
 end_define
 
+begin_enum
+enum|enum
+name|_match_t
+block|{
+name|MATCH_ALL
+block|,
+name|MATCH_EXACT
+block|,
+name|MATCH_GLOB
+block|,
+name|MATCH_REGEX
+block|}
+enum|;
+end_enum
+
+begin_typedef
+typedef|typedef
+name|enum
+name|_match_t
+name|match_t
+typedef|;
+end_typedef
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|Flags
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|Boolean
-name|AllInstalled
 decl_stmt|;
 end_decl_stmt
 
@@ -202,6 +218,13 @@ specifier|extern
 name|char
 modifier|*
 name|CheckPkg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|match_t
+name|MatchType
 decl_stmt|;
 end_decl_stmt
 
