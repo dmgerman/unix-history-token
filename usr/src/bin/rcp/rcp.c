@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	4.8 83/08/12"
+literal|"@(#)rcp.c	4.9 84/01/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -648,7 +648,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"rsh %s -L %s -n %s %s '%s:%s'"
+literal|"rsh %s -l %s -n %s %s '%s.%s:%s'"
 argument_list|,
 name|argv
 index|[
@@ -668,6 +668,8 @@ operator|-
 literal|1
 index|]
 argument_list|,
+name|tuser
+argument_list|,
 name|targ
 argument_list|)
 expr_stmt|;
@@ -680,7 +682,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"rsh %s -n %s %s '%s:%s'"
+literal|"rsh %s -n %s %s '%s.%s:%s'"
 argument_list|,
 name|argv
 index|[
@@ -697,6 +699,8 @@ name|argc
 operator|-
 literal|1
 index|]
+argument_list|,
+name|tuser
 argument_list|,
 name|targ
 argument_list|)
