@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	main.c	1.11	(Berkeley) 83/10/13  *  *	This file contains the main and file system dependent routines  * for processing gremlin files into troff input.  The program watches  * input go by to standard output, only interpretting things between .GS  * and .GE lines.  Default values may be overridden, as in gprint, on the  * command line and are further overridden by commands in the input.  A  * description of the command-line options are listed below.  A space is  * NOT required for the operand of an option.  *  *	command options are:  *  *	-r ss	sets gremlin's roman font to troff font ss.  Also for -i,  *		-b and -s for italics, bold, and special fonts.  This does  *		NOT affect font changes imbedded into strings.  A \fI, for  *		instance, will get the italics font regardless of what -i  *		is set to.  *  *	-1 #	sets point size 1 to #.  also for -2, -3, -4.  Defaults  *		are 12, 16, 24, 36.  *  *	-n #	set narrow line thickness to # pixels.  Also for -m (medium)  *		and -t (thick).  Defaults are 1, 3, and 5 pixels.  *  *	-x #	scale the picture by x (integer or decimal).  *  *	-T dev	Prepare output for "dev" printer.  Default is for the varian  *		and versatec printers.  Devices acceptable are:  ver, var, ip.  *  *	-p	prompt user for fonts, sizes and thicknesses.  *  *  *		Inside the GS and GE, there are commands similar to command-  *	    line options listed above.  At most one command may reside on each  *	    line, and each command is followed by a parameter separated by white  *	    space.  The commands are as follows, and may be abbreviated down to  *	    one character (with exception of "scale" down to "sc") and may be  *	    upper or lower case.  *  *			   1, 2, 3, 4  -  set size 1, 2, 3, or 4 (followed  *	roman, italics, bold, special  -  set gremlin's fonts to any other  *					  troff font (one or two characters)  *			     scale, x  -  scale is IN ADDITION to the global  *					  scale factor from the -x option.  *		narrow, medium, thick  -  set pixel widths of lines.  *				 file  -  set the file name to read the  *					  gremlin picture from.  *			width, height  -  these two commands override any  *					  scaling factor that is in effect,  *					  and forces the picture to fit into  *					  either the height or width specified,  *					  whichever makes the picture smaller.  *					  The operand for these two commands is  *					  a floating-point number in units of  *					  inches  *  *	Troff number registers used:  g1 through g9.  g1 is the width of the  *	picture, and g2 is the height.  g3, and g4, save information, g8  *	and g9 are used for text processing and g5-g7 are reserved.  */
+comment|/*	main.c	1.12	(Berkeley) 83/11/02  *  *	This file contains the main and file system dependent routines  * for processing gremlin files into troff input.  The program watches  * input go by to standard output, only interpretting things between .GS  * and .GE lines.  Default values (font, size, scale, thickness) may be  * overridden with a "default" command and are further overridden by  * commands in the input.  A description of the command-line options are  * listed below.  A space is NOT required for the operand of an option.  *  *	command options are:  *  *	-L dir	set the library directory to dir.  If a file is not found  *		in the current directory, it is looked for in dir (default  *		is /usr/lib/gremlib).  *  *	-T dev	Prepare output for "dev" printer.  Default is for the varian  *	-P dev	and versatec printers.  Devices acceptable are:  ver, var, ip.  *  *		Inside the GS and GE, commands are accepted to reconfigure  *	    the picture.  At most one command may reside on each line, and  *	    each command is followed by a parameter separated by white space.  *	    The commands are as follows, and may be abbreviated down to one  *	    character (with exception of "scale" down to "sc") and may be  *	    upper or lower case.  *  *			      default  -  make all settings in the current  *					  .GS/.GE the global defaults.  *					  Height, width and file are NOT saved.  *			   1, 2, 3, 4  -  set size 1, 2, 3, or 4 (followed  *					  by an integer point size).  *	roman, italics, bold, special  -  set gremlin's fonts to any other  *					  troff font (one or two characters)  *			     scale, x  -  scale is IN ADDITION to the global  *					  scale factor from the default.  *			   pointscale  -  turn on scaling point sizes to  *					  match "scale" commands.  (optional  *					  operand "off" to turn it off)  *		narrow, medium, thick  -  set pixel widths of lines.  *				 file  -  set the file name to read the  *					  gremlin picture from.  If the file  *					  isn't in the current directory, the  *					  gremlin library is tried.  *			width, height  -  these two commands override any  *					  scaling factor that is in effect,  *					  and forces the picture to fit into  *					  either the height or width specified,  *					  whichever makes the picture smaller.  *					  The operand for these two commands is  *					  a floating-point number in units of  *					  inches  *  *	Troff number registers used:  g1 through g9.  g1 is the width of the  *	picture, and g2 is the height.  g3, and g4, save information, g8  *	and g9 are used for text processing and g5-g7 are reserved.  */
 end_comment
 
 begin_include
@@ -147,44 +147,11 @@ begin_define
 define|#
 directive|define
 name|BIG
-value|100000000000.0
+value|999999999999.0
 end_define
 
 begin_comment
 comment|/* unweildly large floating number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JLEFT
-value|-1
-end_define
-
-begin_comment
-comment|/* justification constants - for the */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JCENTER
-value|0
-end_define
-
-begin_comment
-comment|/*    whole picture - where it will */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JRIGHT
-value|1
-end_define
-
-begin_comment
-comment|/*    get placed within the line */
 end_comment
 
 begin_decl_stmt
@@ -192,7 +159,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"main.c	1.11	83/10/13"
+literal|"main.c	1.12	83/11/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,6 +174,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* device to look up resolution of */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|gremlib
+init|=
+name|GREMLIB
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* place to find files after current dir. */
 end_comment
 
 begin_decl_stmt
@@ -273,91 +253,53 @@ begin_comment
 comment|/* in lastyline */
 end_comment
 
-begin_decl_stmt
-name|double
-name|scale
-init|=
-name|SCREENtoINCH
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* default scale to map gremlin screen to inches 				   (modified by -x command-line option) */
+comment|/* these are the default fonts, sizes, line styles, */
 end_comment
 
 begin_comment
-comment|/* list of prompts for asking user to set default values */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|prompt
-index|[]
-init|=
-block|{
-comment|/* used only for -p option */
-literal|"Roman font name? (%s): "
-block|,
-literal|"Italic font name? (%s): "
-block|,
-literal|"Bold font name? (%s): "
-block|,
-literal|"Special font name? (%s): "
-block|,
-literal|"font size 1? (%s): "
-block|,
-literal|"font size 2? (%s): "
-block|,
-literal|"font size 3? (%s): "
-block|,
-literal|"font size 4? (%s): "
-block|, 	}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* these are the default fonts, sizes, */
+comment|/*   and thicknesses.  These can be modified from a */
 end_comment
 
 begin_comment
-comment|/*   line styles, and thicknesses.  These */
+comment|/*   "default" command and are reset each time the  */
 end_comment
 
 begin_comment
-comment|/*   can be modified from command-line */
-end_comment
-
-begin_comment
-comment|/*   options, and are reset each time the */
-end_comment
-
-begin_comment
-comment|/*   start of a picture (.GS) is found. */
+comment|/*   start of a picture (.GS) is found.		    */
 end_comment
 
 begin_decl_stmt
 name|char
 modifier|*
-name|defstring
+name|deffont
 index|[]
 init|=
 block|{
-literal|"R\0         "
+literal|"R"
 block|,
-literal|"I\0         "
+literal|"I"
 block|,
-literal|"B\0         "
+literal|"B"
 block|,
-literal|"S\0         "
+literal|"S"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|defsize
+index|[]
+init|=
+block|{
+literal|10
 block|,
-literal|"10\0        "
+literal|16
 block|,
-literal|"16\0        "
+literal|24
 block|,
-literal|"24\0        "
-block|,
-literal|"36\0        "
+literal|36
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -385,10 +327,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* defaults... */
-end_comment
-
 begin_decl_stmt
 name|int
 name|style
@@ -411,6 +349,30 @@ name|SOLID
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|double
+name|scale
+init|=
+literal|1.0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* no scaling, default */
+end_comment
+
+begin_decl_stmt
+name|int
+name|defpoint
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* flag for pointsize scaling */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -436,12 +398,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* fonts originally set to defstring values, then */
+comment|/* fonts originally set to deffont values, then */
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
+name|int
 name|tsize
 index|[
 name|SIZES
@@ -491,6 +452,26 @@ end_decl_stmt
 
 begin_comment
 comment|/* user-request height */
+end_comment
+
+begin_decl_stmt
+name|int
+name|pointscale
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* flag for pointsize scaling */
+end_comment
+
+begin_decl_stmt
+name|int
+name|setdefault
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* flag for a .GS/.GE to remember all settings */
 end_comment
 
 begin_decl_stmt
@@ -660,7 +641,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*----------------------------------------------------------------------------*  | Routine:	main (argument_count, argument_pointer)  |  | Results:	parses the command line, accumulating input file names, then  |		reads the inputs, passing it directly to output until a ".GS"  |		line is read.  Main then passes control to "conv" to do the  |		gremlin file conversions.  |  | Bugs:	a -p option ALWAYS reads standard input.  Even if the input  |		file is coming in that way.  *----------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------*  | Routine:	main (argument_count, argument_pointer)  |  | Results:	parses the command line, accumulating input file names, then  |		reads the inputs, passing it directly to output until a ".GS"  |		line is read.  Main then passes control to "conv" to do the  |		gremlin file conversions.  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -694,27 +675,17 @@ specifier|register
 name|char
 name|c
 decl_stmt|;
+specifier|register
+name|gfil
+operator|=
+literal|0
+expr_stmt|;
 name|char
 modifier|*
 name|file
 index|[
 literal|50
 index|]
-decl_stmt|,
-name|string
-index|[
-literal|50
-index|]
-decl_stmt|;
-name|float
-name|mult
-decl_stmt|;
-name|int
-name|brsh
-decl_stmt|,
-name|gfil
-init|=
-literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -760,266 +731,6 @@ index|]
 condition|)
 block|{
 case|case
-literal|'1'
-case|:
-comment|/* select sizes */
-case|case
-literal|'2'
-case|:
-case|case
-literal|'3'
-case|:
-case|case
-literal|'4'
-case|:
-name|strcpy
-argument_list|(
-name|defstring
-index|[
-name|c
-operator|+
-name|FONTS
-operator|-
-literal|'1'
-index|]
-argument_list|,
-name|operand
-argument_list|(
-operator|&
-name|argc
-argument_list|,
-operator|&
-name|argv
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'r'
-case|:
-comment|/* select Roman font */
-name|strcpy
-argument_list|(
-name|defstring
-index|[
-literal|0
-index|]
-argument_list|,
-name|operand
-argument_list|(
-operator|&
-name|argc
-argument_list|,
-operator|&
-name|argv
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'i'
-case|:
-comment|/* select italics font */
-name|strcpy
-argument_list|(
-name|defstring
-index|[
-literal|1
-index|]
-argument_list|,
-name|operand
-argument_list|(
-operator|&
-name|argc
-argument_list|,
-operator|&
-name|argv
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'b'
-case|:
-comment|/* select bold font */
-name|strcpy
-argument_list|(
-name|defstring
-index|[
-literal|2
-index|]
-argument_list|,
-name|operand
-argument_list|(
-operator|&
-name|argc
-argument_list|,
-operator|&
-name|argv
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'s'
-case|:
-comment|/* select special font */
-name|strcpy
-argument_list|(
-name|defstring
-index|[
-literal|3
-index|]
-argument_list|,
-name|operand
-argument_list|(
-operator|&
-name|argc
-argument_list|,
-operator|&
-name|argv
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'n'
-case|:
-comment|/* select narrow brush width */
-operator|(
-name|void
-operator|)
-name|sscanf
-argument_list|(
-name|operand
-argument_list|(
-operator|&
-name|argc
-argument_list|,
-operator|&
-name|argv
-argument_list|)
-argument_list|,
-literal|"%d"
-argument_list|,
-operator|&
-name|brsh
-argument_list|)
-expr_stmt|;
-name|defthick
-index|[
-literal|0
-index|]
-operator|=
-name|defthick
-index|[
-literal|1
-index|]
-operator|=
-name|defthick
-index|[
-literal|3
-index|]
-operator|=
-name|defthick
-index|[
-literal|4
-index|]
-operator|=
-name|brsh
-expr_stmt|;
-break|break;
-case|case
-literal|'t'
-case|:
-comment|/* select thick brush width */
-operator|(
-name|void
-operator|)
-name|sscanf
-argument_list|(
-name|operand
-argument_list|(
-operator|&
-name|argc
-argument_list|,
-operator|&
-name|argv
-argument_list|)
-argument_list|,
-literal|"%d"
-argument_list|,
-operator|&
-name|brsh
-argument_list|)
-expr_stmt|;
-name|defthick
-index|[
-literal|2
-index|]
-operator|=
-name|brsh
-expr_stmt|;
-break|break;
-case|case
-literal|'m'
-case|:
-comment|/* select medium brush width */
-operator|(
-name|void
-operator|)
-name|sscanf
-argument_list|(
-name|operand
-argument_list|(
-operator|&
-name|argc
-argument_list|,
-operator|&
-name|argv
-argument_list|)
-argument_list|,
-literal|"%d"
-argument_list|,
-operator|&
-name|brsh
-argument_list|)
-expr_stmt|;
-name|defthick
-index|[
-literal|5
-index|]
-operator|=
-name|brsh
-expr_stmt|;
-break|break;
-case|case
-literal|'x'
-case|:
-comment|/* select scale */
-name|sscanf
-argument_list|(
-name|operand
-argument_list|(
-operator|&
-name|argc
-argument_list|,
-operator|&
-name|argv
-argument_list|)
-argument_list|,
-literal|"%f"
-argument_list|,
-operator|&
-name|mult
-argument_list|)
-expr_stmt|;
-name|scale
-operator|*=
-name|mult
-expr_stmt|;
-break|break;
-case|case
 literal|'P'
 case|:
 case|case
@@ -1039,212 +750,25 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'p'
+literal|'L'
 case|:
-comment|/* prompt for font and size parameters */
-for|for
-control|(
-name|k
+comment|/* set library directory */
+name|gremlib
 operator|=
-literal|0
-init|;
-name|k
-operator|<
-literal|8
-condition|;
-name|k
-operator|++
-control|)
-block|{
-name|fprintf
+name|operand
 argument_list|(
-name|stderr
-argument_list|,
-name|prompt
-index|[
-name|k
-index|]
-argument_list|,
-name|defstring
-index|[
-name|k
-index|]
-argument_list|)
-expr_stmt|;
-name|gets
-argument_list|(
-name|string
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|string
-operator|!=
-literal|'\0'
-condition|)
-name|strcpy
-argument_list|(
-name|defstring
-index|[
-name|k
-index|]
-argument_list|,
-name|string
-argument_list|)
-expr_stmt|;
-block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"narrow brush size? (%d): "
-argument_list|,
-name|defthick
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|gets
-argument_list|(
-name|string
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|string
-operator|!=
-literal|'\0'
-condition|)
-block|{
-name|sscanf
-argument_list|(
-name|string
-argument_list|,
-literal|"%d"
+operator|&
+name|argc
 argument_list|,
 operator|&
-name|brsh
+name|argv
 argument_list|)
 expr_stmt|;
-name|defthick
-index|[
-literal|0
-index|]
-operator|=
-name|defthick
-index|[
-literal|1
-index|]
-operator|=
-name|defthick
-index|[
-literal|3
-index|]
-operator|=
-name|defthick
-index|[
-literal|4
-index|]
-operator|=
-name|brsh
-expr_stmt|;
-block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"medium brush size? (%d): "
-argument_list|,
-name|defthick
-index|[
-literal|5
-index|]
-argument_list|)
-expr_stmt|;
-name|gets
-argument_list|(
-name|string
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|string
-operator|!=
-literal|'\0'
-condition|)
-block|{
-name|sscanf
-argument_list|(
-name|string
-argument_list|,
-literal|"%d"
-argument_list|,
-operator|&
-name|brsh
-argument_list|)
-expr_stmt|;
-name|defthick
-index|[
-literal|5
-index|]
-operator|=
-name|brsh
-expr_stmt|;
-block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"thick brush size? (%d): "
-argument_list|,
-name|defthick
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
-name|gets
-argument_list|(
-name|string
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|string
-operator|!=
-literal|'\0'
-condition|)
-block|{
-name|sscanf
-argument_list|(
-name|string
-argument_list|,
-literal|"%d"
-argument_list|,
-operator|&
-name|brsh
-argument_list|)
-expr_stmt|;
-name|defthick
-index|[
-literal|2
-index|]
-operator|=
-name|brsh
-expr_stmt|;
-block|}
 break|break;
 default|default:
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"unknown switch: %c\n"
+literal|"unknown switch: %c"
 argument_list|,
 name|c
 argument_list|)
@@ -1320,11 +844,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"grn: can't open %s\n"
+literal|"can't open %s"
 argument_list|,
 name|file
 index|[
@@ -1394,6 +916,70 @@ block|}
 end_function
 
 begin_comment
+comment|/*----------------------------------------------------------------------------*  | Routine:	error (control_string, args, . . . )  |  | Results:	prints ("grn: ", the control_string + args, "\n") to stderr  *----------------------------------------------------------------------------*/
+end_comment
+
+begin_comment
+comment|/* VARARGS1 */
+end_comment
+
+begin_macro
+name|error
+argument_list|(
+argument|s
+argument_list|,
+argument|a1
+argument_list|,
+argument|a2
+argument_list|,
+argument|a3
+argument_list|,
+argument|a4
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"grn: "
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|s
+argument_list|,
+name|a1
+argument_list|,
+name|a2
+argument_list|,
+name|a3
+argument_list|,
+name|a4
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
 comment|/*----------------------------------------------------------------------------*  | Routine:	char  * operand (& argc,& argv)  |  | Results:	returns address of the operand given with a command-line  |		option.  It uses either "-Xoperand" or "-X operand", whichever  |		is present.  The program is terminated if no option is present.  |  | Side Efct:	argc and argv are updated as necessary.  *----------------------------------------------------------------------------*/
 end_comment
 
@@ -1450,11 +1036,9 @@ literal|0
 condition|)
 block|{
 comment|/* no operand */
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"command-line option operand missing.\n"
+literal|"command-line option operand missing."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1539,11 +1123,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"can't open tables for %s\n"
+literal|"can't open tables for %s"
 argument_list|,
 name|temp
 argument_list|)
@@ -1601,7 +1183,6 @@ modifier|*
 name|fp
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|k
@@ -1651,7 +1232,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*----------------------------------------------------------------------------*  | Routine:	initpic ( )  |  | Results:	sets all parameters to the normal defaults, possibly overridden  |		by the command line flags.  Initilaize the picture variables,  |		and output the startup commands to troff to begin the picture.  *----------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------*  | Routine:	initpic ( )  |  | Results:	sets all parameters to the normal defaults, possibly overridden  |		by a setdefault command.  Initilaize the picture variables,  |		and output the startup commands to troff to begin the picture.  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -1711,7 +1292,7 @@ index|[
 name|i
 index|]
 operator|=
-name|defstring
+name|deffont
 index|[
 name|i
 index|]
@@ -1737,10 +1318,8 @@ index|[
 name|i
 index|]
 operator|=
-name|defstring
+name|defsize
 index|[
-name|FONTS
-operator|+
 name|i
 index|]
 expr_stmt|;
@@ -1753,6 +1332,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* filename is "null" */
+name|setdefault
+operator|=
+literal|0
+expr_stmt|;
+comment|/* this is not the default settings (yet) */
 name|toppoint
 operator|=
 name|BIG
@@ -1772,6 +1356,11 @@ name|rightpoint
 operator|=
 literal|0.0
 expr_stmt|;
+name|pointscale
+operator|=
+name|defpoint
+expr_stmt|;
+comment|/* Flag for scaling point sizes default. */
 name|xscale
 operator|=
 name|scale
@@ -1905,6 +1494,13 @@ condition|)
 block|{
 if|if
 condition|(
+name|setdefault
+condition|)
+name|savestate
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|gremlinfile
 index|[
@@ -1912,11 +1508,16 @@ literal|0
 index|]
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|setdefault
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"grn: at line %d: no picture filename.\n"
+literal|"at line %d: no picture filename.\n"
 argument_list|,
 name|baseline
 argument_list|)
@@ -1953,7 +1554,7 @@ name|name
 argument_list|,
 literal|"%s%s"
 argument_list|,
-name|GREMLIB
+name|gremlib
 argument_list|,
 name|gremlinfile
 argument_list|)
@@ -1974,11 +1575,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"grn: can't open %s\n"
+literal|"can't open %s"
 argument_list|,
 name|gremlinfile
 argument_list|)
@@ -2099,11 +1698,63 @@ operator|=
 name|temp
 expr_stmt|;
 block|}
+comment|/* here, troffscale is the */
+comment|/* picture's scaling factor */
+if|if
+condition|(
+name|pointscale
+condition|)
+block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
+comment|/* do pointscaling here, when */
+comment|/* scale is known, before output */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|SIZES
+condition|;
+name|i
+operator|++
+control|)
+name|tsize
+index|[
+name|i
+index|]
+operator|=
+call|(
+name|int
+call|)
+argument_list|(
+name|troffscale
+operator|*
+operator|(
+name|double
+operator|)
+name|tsize
+index|[
+name|i
+index|]
+operator|+
+literal|0.5
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* change to device units */
 name|troffscale
 operator|*=
+name|SCREENtoINCH
+operator|*
 name|res
 expr_stmt|;
-comment|/* change to device units from inches */
+comment|/* from screen units */
 name|ytop
 operator|=
 name|toppoint
@@ -2257,6 +1908,112 @@ block|}
 end_block
 
 begin_comment
+comment|/*----------------------------------------------------------------------------*  | Routine:	savestate  ( )  |  | Results:	all the current  scaling / font size / font name / thickness /  |		pointscale  settings are saved to be the defaults.  Scaled  |		point sizes are NOT saved.  The scaling is done each time a  |		new picture is started.  |  | Side Efct:	defpoint, scale, deffont, defsize and defthick are modified.  *----------------------------------------------------------------------------*/
+end_comment
+
+begin_macro
+name|savestate
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|STYLES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/* line thickness defaults */
+name|defthick
+index|[
+name|i
+index|]
+operator|=
+name|thick
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|FONTS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/* font name defaults */
+name|deffont
+index|[
+name|i
+index|]
+operator|=
+name|tfont
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|SIZES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/* font size defaults */
+name|defsize
+index|[
+name|i
+index|]
+operator|=
+name|tsize
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
+name|scale
+operator|*=
+name|xscale
+expr_stmt|;
+comment|/* default scale of individual pictures */
+name|defpoint
+operator|=
+name|pointscale
+expr_stmt|;
+comment|/* flag for scaling pointsizes from x factors */
+block|}
+end_block
+
+begin_comment
 comment|/*----------------------------------------------------------------------------*  | Routine:	savebounds (x_coordinate, y_coordinate)  |  | Results:	keeps track of the maximum and minimum extent of a picture  |		in the global variables:  left-, right-, top- and bottompoint.  |		"savebounds" assumes that the points have been oriented to  |		the correct direction.  No scaling has taken place, though.  *----------------------------------------------------------------------------*/
 end_comment
 
@@ -2363,6 +2120,20 @@ name|char
 modifier|*
 name|chr
 decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
+name|double
+name|par
+decl_stmt|;
+name|str2
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|sscanf
 argument_list|(
 name|line
@@ -2438,6 +2209,23 @@ case|:
 case|case
 literal|'4'
 case|:
+name|i
+operator|=
+name|atoi
+argument_list|(
+name|str2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+operator|&&
+name|i
+operator|<
+literal|1000
+condition|)
 name|tsize
 index|[
 name|str1
@@ -2448,29 +2236,14 @@ operator|-
 literal|'1'
 index|]
 operator|=
-name|malloc
-argument_list|(
-name|strlen
-argument_list|(
-name|str2
-argument_list|)
-operator|+
-literal|1
-argument_list|)
+name|i
 expr_stmt|;
-name|strcpy
+else|else
+name|error
 argument_list|(
-name|tsize
-index|[
-name|str1
-index|[
-literal|0
-index|]
-operator|-
-literal|'1'
-index|]
+literal|"bad font size value at line %d"
 argument_list|,
-name|str2
+name|linenum
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2478,6 +2251,18 @@ case|case
 literal|'r'
 case|:
 comment|/* roman */
+if|if
+condition|(
+name|str2
+index|[
+literal|0
+index|]
+operator|<
+literal|'0'
+condition|)
+goto|goto
+name|nofont
+goto|;
 name|tfont
 index|[
 literal|0
@@ -2508,6 +2293,18 @@ case|case
 literal|'i'
 case|:
 comment|/* italics */
+if|if
+condition|(
+name|str2
+index|[
+literal|0
+index|]
+operator|<
+literal|'0'
+condition|)
+goto|goto
+name|nofont
+goto|;
 name|tfont
 index|[
 literal|1
@@ -2538,6 +2335,18 @@ case|case
 literal|'b'
 case|:
 comment|/* bold */
+if|if
+condition|(
+name|str2
+index|[
+literal|0
+index|]
+operator|<
+literal|'0'
+condition|)
+goto|goto
+name|nofont
+goto|;
 name|tfont
 index|[
 literal|2
@@ -2580,6 +2389,28 @@ condition|)
 goto|goto
 name|scalecommand
 goto|;
+comment|/* or scale */
+if|if
+condition|(
+name|str2
+index|[
+literal|0
+index|]
+operator|<
+literal|'0'
+condition|)
+block|{
+name|nofont
+label|:
+name|error
+argument_list|(
+literal|"no fontname specified in line %d"
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|tfont
 index|[
 literal|3
@@ -2673,8 +2504,8 @@ comment|/* x */
 name|scalecommand
 label|:
 comment|/* scale */
-name|xscale
-operator|*=
+name|par
+operator|=
 name|atof
 argument_list|(
 name|str2
@@ -2682,14 +2513,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|xscale
-operator|<
+name|par
+operator|>
 literal|0.0
 condition|)
 name|xscale
-operator|=
-operator|-
-name|xscale
+operator|*=
+name|par
+expr_stmt|;
+else|else
+name|error
+argument_list|(
+literal|"illegal scale value on line %d"
+argument_list|,
+name|linenum
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2748,6 +2586,38 @@ name|height
 operator|=
 operator|-
 name|height
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+comment|/* defaults */
+name|setdefault
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+comment|/* pointscale */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+literal|"off"
+argument_list|,
+name|str2
+argument_list|)
+condition|)
+name|pointscale
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|pointscale
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 default|default:
