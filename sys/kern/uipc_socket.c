@@ -7520,7 +7520,7 @@ condition|)
 block|{
 name|selrecord
 argument_list|(
-name|curthread
+name|td
 argument_list|,
 operator|&
 name|so
@@ -7552,7 +7552,7 @@ condition|)
 block|{
 name|selrecord
 argument_list|(
-name|curthread
+name|td
 argument_list|,
 operator|&
 name|so

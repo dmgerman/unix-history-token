@@ -1122,7 +1122,7 @@ expr_stmt|;
 else|else
 name|selrecord
 argument_list|(
-name|curthread
+name|td
 argument_list|,
 operator|&
 name|random_systat

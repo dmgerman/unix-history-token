@@ -2398,7 +2398,7 @@ expr_stmt|;
 else|else
 name|selrecord
 argument_list|(
-name|curthread
+name|td
 argument_list|,
 name|sndbuf_getsel
 argument_list|(
