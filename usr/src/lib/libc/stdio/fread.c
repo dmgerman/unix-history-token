@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fread.c	4.1 (Berkeley) %G% */
+comment|/* @(#)fread.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -48,6 +48,9 @@ block|{
 specifier|register
 name|int
 name|s
+decl_stmt|;
+name|int
+name|c
 decl_stmt|;
 name|s
 operator|=
@@ -110,9 +113,7 @@ comment|/* 			 * filbuf clobbers _cnt& _ptr, 			 * so don't waste time setting t
 if|if
 condition|(
 operator|(
-operator|*
-name|ptr
-operator|++
+name|c
 operator|=
 name|_filbuf
 argument_list|(
@@ -123,6 +124,12 @@ operator|==
 name|EOF
 condition|)
 break|break;
+operator|*
+name|ptr
+operator|++
+operator|=
+name|c
+expr_stmt|;
 name|s
 operator|--
 expr_stmt|;
