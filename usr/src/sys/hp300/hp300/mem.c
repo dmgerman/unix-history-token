@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: mem.c 1.14 90/10/12$  *  *	@(#)mem.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: mem.c 1.14 90/10/12$  *  *	@(#)mem.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -129,6 +129,9 @@ name|caddr_t
 name|zbuf
 init|=
 name|NULL
+decl_stmt|;
+name|int
+name|kernloc
 decl_stmt|;
 specifier|extern
 name|u_int
@@ -359,6 +362,12 @@ comment|/* minor device 1 is kernel memory */
 case|case
 literal|1
 case|:
+name|kernloc
+operator|=
+name|uio
+operator|->
+name|uio_offset
+expr_stmt|;
 name|c
 operator|=
 name|min
@@ -378,9 +387,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|uio
-operator|->
-name|uio_offset
+name|kernloc
 argument_list|,
 name|c
 argument_list|,
@@ -407,9 +414,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|uio
-operator|->
-name|uio_offset
+name|kernloc
 argument_list|,
 operator|(
 name|int
