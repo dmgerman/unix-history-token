@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_seq.c	5.6 (Berkeley) %G%"
+literal|"@(#)bt_seq.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,13 +46,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|<stddef.h>
 end_include
 
 begin_include
@@ -65,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stddef.h>
 end_include
 
 begin_include
@@ -1233,7 +1233,7 @@ name|BTF_DELCRSR
 argument_list|)
 condition|)
 block|{
-name|UNSET
+name|CLR
 argument_list|(
 name|t
 argument_list|,
@@ -1316,7 +1316,7 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-name|UNSET
+name|CLR
 argument_list|(
 name|t
 argument_list|,
