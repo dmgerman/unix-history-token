@@ -1461,6 +1461,83 @@ value|0x08
 end_define
 
 begin_comment
+comment|/* Cirrus Logic: Extended register Extension Control 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_EXTCTRL1
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_EC1_VCC_LOCK
+value|0x1
+end_define
+
+begin_comment
+comment|/* Vcc Power locked to s/w change */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_EC1_AUTO_POWER_CLEAR
+value|0x2
+end_define
+
+begin_comment
+comment|/* Vcc power cleared on eject? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_EC1_LED_ENABLE
+value|0x4
+end_define
+
+begin_comment
+comment|/* LED activity enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_EC1_CARD_IRQ_INV
+value|0x8
+end_define
+
+begin_comment
+comment|/* Card IRQ level inverted for pci? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_EC1_CSC_IRQ_INV
+value|0x10
+end_define
+
+begin_comment
+comment|/* CSC IRQ level inverted for pci? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_EC1_PULLUP
+value|0x20
+end_define
+
+begin_comment
+comment|/* Dis pullup when 1. */
+end_comment
+
+begin_comment
 comment|/* Vadem: Card Voltage Select register (PCIC_CVSR) */
 end_comment
 
