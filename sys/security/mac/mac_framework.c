@@ -8422,12 +8422,6 @@ name|cred
 parameter_list|)
 block|{
 comment|/* XXX freeze all other threads */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|mac_cred_mmapped_drop_perms_recurse
 argument_list|(
 name|td
@@ -8442,12 +8436,6 @@ operator|->
 name|p_vmspace
 operator|->
 name|vm_map
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* XXX allow other threads to continue */
@@ -12245,11 +12233,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|mac_cred_mmapped_drop_perms
 argument_list|(
 name|td
 argument_list|,
 name|newcred
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|crfree
