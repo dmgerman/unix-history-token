@@ -351,64 +351,71 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_MACH32
+name|DIST_XF86_SERVER_MACH8
 value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_MACH8
+name|DIST_XF86_SERVER_MACH32
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_MONO
+name|DIST_XF86_SERVER_MACH64
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_P9000
+name|DIST_XF86_SERVER_MONO
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_S3
+name|DIST_XF86_SERVER_P9000
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_SVGA
+name|DIST_XF86_SERVER_S3
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_VGA16
+name|DIST_XF86_SERVER_SVGA
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_W32
+name|DIST_XF86_SERVER_VGA16
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_NEST
+name|DIST_XF86_SERVER_W32
 value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_XF86_SERVER_NEST
+value|0x0800
 end_define
 
 begin_define
