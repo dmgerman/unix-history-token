@@ -439,7 +439,7 @@ name|socow_iodone
 argument_list|,
 name|sf
 argument_list|,
-literal|0
+name|M_RDONLY
 argument_list|,
 name|EXT_SFBUF
 argument_list|)
