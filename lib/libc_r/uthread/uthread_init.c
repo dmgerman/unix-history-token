@@ -959,6 +959,34 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* GCC_2_8_MADE_THREAD_AWARE */
+comment|/* Initialise the garbage collector mutex and condition variable. */
+if|if
+condition|(
+name|pthread_mutex_init
+argument_list|(
+operator|&
+name|_gc_mutex
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|pthread_cond_init
+argument_list|(
+operator|&
+name|_gc_cond
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Failed to initialise garbage collector mutex or condvar"
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function

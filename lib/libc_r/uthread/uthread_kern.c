@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_kern.c,v 1.11 1998/04/30 21:50:29 jb Exp $  *  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_kern.c,v 1.12 1998/09/07 21:55:01 alex Exp $  *  */
 end_comment
 
 begin_include
@@ -148,16 +148,6 @@ init|=
 name|NULL
 decl_stmt|;
 name|pthread_t
-name|pthread_nxt
-init|=
-name|NULL
-decl_stmt|;
-name|pthread_t
-name|pthread_prv
-init|=
-name|NULL
-decl_stmt|;
-name|pthread_t
 name|pthread_s
 init|=
 name|NULL
@@ -261,7 +251,6 @@ expr_stmt|;
 return|return;
 block|}
 else|else
-block|{
 comment|/* Flag the jump buffer was the last state saved: */
 name|_thread_run
 operator|->
@@ -269,175 +258,6 @@ name|sig_saved
 operator|=
 literal|0
 expr_stmt|;
-block|}
-comment|/* Point to the first dead thread (if there are any): */
-name|pthread
-operator|=
-name|_thread_dead
-expr_stmt|;
-comment|/* There is no previous dead thread: */
-name|pthread_prv
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* Enter a loop to cleanup after dead threads: */
-while|while
-condition|(
-name|pthread
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* Save a pointer to the next thread: */
-name|pthread_nxt
-operator|=
-name|pthread
-operator|->
-name|nxt
-expr_stmt|;
-comment|/* Check if this thread is one which is running: */
-if|if
-condition|(
-name|pthread
-operator|==
-name|_thread_run
-operator|||
-name|pthread
-operator|==
-name|_thread_initial
-condition|)
-block|{
-comment|/* 			 * Don't destroy the running thread or the initial 			 * thread.  			 */
-name|pthread_prv
-operator|=
-name|pthread
-expr_stmt|;
-block|}
-comment|/* 		 * Check if this thread has detached: 		 */
-elseif|else
-if|if
-condition|(
-operator|(
-name|pthread
-operator|->
-name|attr
-operator|.
-name|flags
-operator|&
-name|PTHREAD_DETACHED
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* Check if there is no previous dead thread: */
-if|if
-condition|(
-name|pthread_prv
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* 				 * The dead thread is at the head of the 				 * list:  				 */
-name|_thread_dead
-operator|=
-name|pthread_nxt
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 				 * The dead thread is not at the head of the 				 * list:  				 */
-name|pthread_prv
-operator|->
-name|nxt
-operator|=
-name|pthread
-operator|->
-name|nxt
-expr_stmt|;
-block|}
-comment|/* 			 * Check if the stack was not specified by the caller 			 * to pthread_create and has not been destroyed yet:  			 */
-if|if
-condition|(
-name|pthread
-operator|->
-name|attr
-operator|.
-name|stackaddr_attr
-operator|==
-name|NULL
-operator|&&
-name|pthread
-operator|->
-name|stack
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* Free the stack of the dead thread: */
-name|free
-argument_list|(
-name|pthread
-operator|->
-name|stack
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Free the memory allocated to the thread structure: */
-name|free
-argument_list|(
-name|pthread
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 			 * This thread has not detached, so do not destroy 			 * it:  			 */
-name|pthread_prv
-operator|=
-name|pthread
-expr_stmt|;
-comment|/* 			 * Check if the stack was not specified by the caller 			 * to pthread_create and has not been destroyed yet:  			 */
-if|if
-condition|(
-name|pthread
-operator|->
-name|attr
-operator|.
-name|stackaddr_attr
-operator|==
-name|NULL
-operator|&&
-name|pthread
-operator|->
-name|stack
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* Free the stack of the dead thread: */
-name|free
-argument_list|(
-name|pthread
-operator|->
-name|stack
-argument_list|)
-expr_stmt|;
-comment|/* 				 * NULL the stack pointer now that the memory 				 * has been freed:  				 */
-name|pthread
-operator|->
-name|stack
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-block|}
-comment|/* Point to the next thread: */
-name|pthread
-operator|=
-name|pthread_nxt
-expr_stmt|;
-block|}
 comment|/* 	 * Enter a the scheduling loop that finds the next thread that is 	 * ready to run. This loop completes when there are no more threads 	 * in the global list or when a thread has its state restored by 	 * either a sigreturn (if the state was saved as a sigcontext) or a 	 * longjmp (if the state was saved by a setjmp).  	 */
 while|while
 condition|(

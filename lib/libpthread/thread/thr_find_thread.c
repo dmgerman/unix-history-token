@@ -145,9 +145,21 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* Lock the dead thread list: */
-name|_lock_dead_thread_list
-argument_list|()
+comment|/* 	 * Lock the garbage collector mutex to ensure that the garbage 	 * collector is not using the dead thread list. 	 */
+if|if
+condition|(
+name|pthread_mutex_lock
+argument_list|(
+operator|&
+name|_gc_mutex
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot lock gc mutex"
+argument_list|)
 expr_stmt|;
 comment|/* Point to the first thread in the list: */
 name|pthread1
@@ -171,12 +183,24 @@ name|pthread1
 operator|=
 name|pthread1
 operator|->
-name|nxt
+name|nxt_dead
 expr_stmt|;
 block|}
-comment|/* Unlock the dead thread list: */
-name|_unlock_dead_thread_list
-argument_list|()
+comment|/* Unlock the garbage collector mutex: */
+if|if
+condition|(
+name|pthread_mutex_unlock
+argument_list|(
+operator|&
+name|_gc_mutex
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot lock gc mutex"
+argument_list|)
 expr_stmt|;
 comment|/* Return zero if the thread exists: */
 return|return

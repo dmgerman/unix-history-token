@@ -442,86 +442,26 @@ name|PS_RUNNING
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Lock the thread list: */
-name|_lock_thread_list
-argument_list|()
-expr_stmt|;
-comment|/* Check if the running thread is at the head of the linked list: */
+comment|/* 	 * Lock the garbage collector mutex to ensure that the garbage 	 * collector is not using the dead thread list. 	 */
 if|if
 condition|(
-name|_thread_link_list
-operator|==
-name|_thread_run
-condition|)
-block|{
-comment|/* There is no previous thread: */
-name|_thread_link_list
-operator|=
-name|_thread_run
-operator|->
-name|nxt
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Point to the first thread in the list: */
-name|pthread
-operator|=
-name|_thread_link_list
-expr_stmt|;
-comment|/* 		 * Enter a loop to find the thread in the linked list before 		 * the running thread:  		 */
-while|while
-condition|(
-name|pthread
+name|pthread_mutex_lock
+argument_list|(
+operator|&
+name|_gc_mutex
+argument_list|)
 operator|!=
-name|NULL
-operator|&&
-name|pthread
-operator|->
-name|nxt
-operator|!=
-name|_thread_run
+literal|0
 condition|)
-block|{
-comment|/* Point to the next thread: */
-name|pthread
-operator|=
-name|pthread
-operator|->
-name|nxt
+name|PANIC
+argument_list|(
+literal|"Cannot lock gc mutex"
+argument_list|)
 expr_stmt|;
-block|}
-comment|/* Check that a previous thread was found: */
-if|if
-condition|(
-name|pthread
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 			 * Point the previous thread to the one after the 			 * running thread:  			 */
-name|pthread
-operator|->
-name|nxt
-operator|=
+comment|/* Add this thread to the list of dead threads. */
 name|_thread_run
 operator|->
-name|nxt
-expr_stmt|;
-block|}
-block|}
-comment|/* Unlock the thread list: */
-name|_unlock_thread_list
-argument_list|()
-expr_stmt|;
-comment|/* Lock the dead thread list: */
-name|_lock_dead_thread_list
-argument_list|()
-expr_stmt|;
-comment|/* 	 * This thread will never run again. Add it to the list of dead 	 * threads:  	 */
-name|_thread_run
-operator|->
-name|nxt
+name|nxt_dead
 operator|=
 name|_thread_dead
 expr_stmt|;
@@ -529,11 +469,39 @@ name|_thread_dead
 operator|=
 name|_thread_run
 expr_stmt|;
-comment|/* Unlock the dead thread list: */
-name|_unlock_dead_thread_list
-argument_list|()
+comment|/* 	 * Signal the garbage collector thread that there is something 	 * to clean up. 	 */
+if|if
+condition|(
+name|pthread_cond_signal
+argument_list|(
+operator|&
+name|_gc_cond
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot signal gc cond"
+argument_list|)
 expr_stmt|;
-comment|/* 	 * The running thread is no longer in the thread link list so it will 	 * now die:  	 */
+comment|/* Unlock the garbage collector mutex: */
+if|if
+condition|(
+name|pthread_mutex_unlock
+argument_list|(
+operator|&
+name|_gc_mutex
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot lock gc mutex"
+argument_list|)
+expr_stmt|;
+comment|/* This this thread will never be re-scheduled. */
 name|_thread_kern_sched_state
 argument_list|(
 name|PS_DEAD

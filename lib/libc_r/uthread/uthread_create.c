@@ -99,6 +99,11 @@ name|arg
 parameter_list|)
 block|{
 name|int
+name|f_gc
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|i
 decl_stmt|;
 name|int
@@ -108,6 +113,9 @@ literal|0
 decl_stmt|;
 name|int
 name|status
+decl_stmt|;
+name|pthread_t
+name|gc_thread
 decl_stmt|;
 name|pthread_t
 name|new_thread
@@ -762,6 +770,15 @@ comment|/* Lock the thread list: */
 name|_lock_thread_list
 argument_list|()
 expr_stmt|;
+comment|/* 			 * Check if the garbage collector thread 			 * needs to be started. 			 */
+name|f_gc
+operator|=
+operator|(
+name|_thread_link_list
+operator|==
+name|_thread_initial
+operator|)
+expr_stmt|;
 comment|/* Add the thread to the linked list of all threads: */
 name|new_thread
 operator|->
@@ -789,6 +806,30 @@ comment|/* Schedule the new user thread: */
 name|_thread_kern_sched
 argument_list|(
 name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Start a garbage collector thread 			 * if necessary. 			 */
+if|if
+condition|(
+name|f_gc
+operator|&&
+name|pthread_create
+argument_list|(
+operator|&
+name|gc_thread
+argument_list|,
+name|NULL
+argument_list|,
+name|_thread_gc
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Can't create gc thread"
 argument_list|)
 expr_stmt|;
 block|}
