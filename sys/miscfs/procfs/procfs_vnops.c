@@ -147,6 +147,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|procfs_bmap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_bmap_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|procfs_close
 name|__P
 argument_list|(
@@ -274,6 +289,21 @@ argument_list|(
 operator|(
 expr|struct
 name|vop_readdir_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|procfs_readlink
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_readlink_args
 operator|*
 operator|)
 argument_list|)
@@ -805,6 +835,7 @@ comment|/*  * do block mapping for pfsnode (vp).  * since we don't use the buffe
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|procfs_bmap
 parameter_list|(
@@ -3125,6 +3156,7 @@ comment|/*  * readlink reads the link of `curproc'  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|procfs_readlink
 parameter_list|(

@@ -87,6 +87,18 @@ directive|include
 file|<miscfs/procfs/procfs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_extern.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef

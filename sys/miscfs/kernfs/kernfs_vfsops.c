@@ -109,6 +109,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|void
+name|kernfs_get_rrootdev
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|kernfs_init
 name|__P
@@ -274,6 +287,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|kernfs_get_rrootdev
 parameter_list|()
