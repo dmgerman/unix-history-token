@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)systm.h	8.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)systm.h	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -219,10 +219,14 @@ struct|struct
 name|sysent
 block|{
 comment|/* system call table */
-name|int
+name|short
 name|sy_narg
 decl_stmt|;
-comment|/* number of arguments */
+comment|/* number of args */
+name|short
+name|sy_argsize
+decl_stmt|;
+comment|/* total size of arguments */
 name|int
 function_decl|(
 modifier|*
@@ -236,6 +240,29 @@ name|sysent
 index|[]
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nsysent
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|SCARG
+parameter_list|(
+name|p
+parameter_list|,
+name|k
+parameter_list|)
+value|((p)->k.datum)
+end_define
+
+begin_comment
+comment|/* get arg from args pointer */
+end_comment
 
 begin_decl_stmt
 specifier|extern
