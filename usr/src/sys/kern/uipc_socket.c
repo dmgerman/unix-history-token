@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	6.10	85/04/01	*/
+comment|/*	uipc_socket.c	6.10	85/04/02	*/
 end_comment
 
 begin_include
@@ -3486,7 +3486,7 @@ name|level
 argument_list|,
 name|optname
 argument_list|,
-name|m
+name|m0
 argument_list|)
 specifier|register
 expr|struct
@@ -3505,11 +3505,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|struct
 name|mbuf
 modifier|*
-name|m
+name|m0
 decl_stmt|;
 end_decl_stmt
 
@@ -3519,6 +3518,14 @@ name|int
 name|error
 init|=
 literal|0
+decl_stmt|;
+specifier|register
+name|struct
+name|mbuf
+modifier|*
+name|m
+init|=
+name|m0
 decl_stmt|;
 if|if
 condition|(
@@ -3558,7 +3565,8 @@ name|level
 argument_list|,
 name|optname
 argument_list|,
-name|m
+operator|&
+name|m0
 argument_list|)
 operator|)
 return|;
