@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)order.c	1.4 (Berkeley) %G%"
+literal|"@(#)order.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -668,6 +668,7 @@ operator|.
 name|type
 argument_list|)
 operator|)
+condition|)
 name|p
 operator|->
 name|in
@@ -675,7 +676,7 @@ operator|.
 name|su
 operator|=
 literal|0
-empty_stmt|;
+expr_stmt|;
 return|return;
 block|}
 elseif|else
