@@ -3292,7 +3292,19 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"\n\n"
+literal|"\n          TOS:    %s\n\n"
+argument_list|,
+name|ipcp
+operator|->
+name|cfg
+operator|.
+name|urgent
+operator|.
+name|tos
+condition|?
+literal|"yes"
+else|:
+literal|"no"
 argument_list|)
 expr_stmt|;
 name|throughput_disp
@@ -3881,6 +3893,16 @@ argument_list|(
 name|u_short
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|ipcp
+operator|->
+name|cfg
+operator|.
+name|urgent
+operator|.
+name|tos
+operator|=
+literal|1
 expr_stmt|;
 name|ipcp
 operator|->
