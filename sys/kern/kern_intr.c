@@ -276,6 +276,8 @@ operator||
 name|INTR_TYPE_MISC
 operator||
 name|INTR_TYPE_CLK
+operator||
+name|INTR_TYPE_AV
 operator|)
 expr_stmt|;
 switch|switch
@@ -316,6 +318,15 @@ operator|=
 name|PI_DISK
 expr_stmt|;
 comment|/* XXX or PI_CAM? */
+break|break;
+case|case
+name|INTR_TYPE_AV
+case|:
+comment|/* Audio/video */
+name|pri
+operator|=
+name|PI_AV
+expr_stmt|;
 break|break;
 case|case
 name|INTR_TYPE_CLK

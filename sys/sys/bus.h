@@ -174,6 +174,10 @@ name|INTR_TYPE_CLK
 init|=
 literal|32
 block|,
+name|INTR_TYPE_AV
+init|=
+literal|64
+block|,
 name|INTR_FAST
 init|=
 literal|128
