@@ -1062,7 +1062,7 @@ name|sprintf
 argument_list|(
 name|np
 argument_list|,
-literal|"%sr%s%c"
+literal|"%s%s%c"
 argument_list|,
 name|_PATH_DEV
 argument_list|,
