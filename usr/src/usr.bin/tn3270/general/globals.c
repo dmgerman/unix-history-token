@@ -65,7 +65,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../keyboard/state.h"
+file|"../ascii/state.h"
 end_include
 
 begin_define
@@ -83,7 +83,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../general.h"
+file|"../general/general.h"
 end_include
 
 begin_if
