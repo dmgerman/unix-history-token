@@ -1336,11 +1336,6 @@ name|ssize_t
 name|wlen
 decl_stmt|;
 comment|/* XXX should enforce timeout */
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 name|iov
 index|[
 literal|0
@@ -1348,9 +1343,12 @@ index|]
 operator|.
 name|iov_base
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|str
 expr_stmt|;
-comment|/* XXX */
 name|iov
 index|[
 literal|0
@@ -1360,11 +1358,6 @@ name|iov_len
 operator|=
 name|len
 expr_stmt|;
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 name|iov
 index|[
 literal|1
@@ -1372,9 +1365,12 @@ index|]
 operator|.
 name|iov_base
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|ENDL
 expr_stmt|;
-comment|/* XXX */
 name|iov
 index|[
 literal|1
