@@ -49,7 +49,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"YNOhvf:p:P:c:d:i:I:k:K:r:t:X:D:m:s:o:"
+literal|"YNOhvyf:p:P:c:d:i:I:k:K:r:t:X:D:m:s:o:"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,6 +208,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|PlistOnly
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|UseBzip2
 init|=
 name|FALSE
 decl_stmt|;
@@ -452,6 +460,14 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'y'
+case|:
+name|UseBzip2
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -563,7 +579,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_create [-YNOhv] [-P pkgs] [-p prefix] [-f contents] [-i iscript]"
+literal|"usage: pkg_create [-YNOhvy] [-P pkgs] [-p prefix] [-f contents] [-i iscript]"
 argument_list|,
 literal|"                  [-I piscript] [-k dscript] [-K pdscript] [-r rscript] "
 argument_list|,

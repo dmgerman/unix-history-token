@@ -766,7 +766,7 @@ name|setenv
 argument_list|(
 literal|"PATH"
 argument_list|,
-literal|"/sbin:/usr/sbin:/bin:/usr/bin"
+literal|"/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin"
 argument_list|,
 literal|1
 argument_list|)
