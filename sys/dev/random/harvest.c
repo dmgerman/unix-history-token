@@ -344,27 +344,7 @@ name|size
 decl_stmt|,
 name|i
 decl_stmt|;
-specifier|static
-name|int
-name|initialised
-init|=
-literal|0
-decl_stmt|;
-comment|/* Try to give random(9) a half decent initialisation 	 * DO NOT make the mistake of thinking this is secure!! 	 */
-if|if
-condition|(
-operator|!
-name|initialised
-condition|)
-name|srandom
-argument_list|(
-operator|(
-name|u_long
-operator|)
-name|get_cyclecount
-argument_list|()
-argument_list|)
-expr_stmt|;
+comment|/* srandom() is called in kern/init_main.c:proc0_post() */
 comment|/* Fill buf[] with random(9) output */
 for|for
 control|(
