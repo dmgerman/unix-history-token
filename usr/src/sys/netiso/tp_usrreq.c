@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_usrreq.c	7.27 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_usrreq.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -351,7 +351,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|notdef
+comment|/* notdef */
 if|if
 condition|(
 name|n
@@ -391,8 +391,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 begin_comment
 comment|/*  * CALLED FROM:  *  tp_usrreq(), PRU_RCVOOB  * FUNCTION and ARGUMENTS:  * 	Copy data from the expedited data socket buffer into  * 	the pre-allocated mbuf m.  * 	There is an isomorphism between XPD TPDUs and expedited data TSDUs.  * 	XPD tpdus are limited to 16 bytes of data so they fit in one mbuf.  * RETURN VALUE:  *  EINVAL if debugging is on and a disaster has occurred  *  ENOTCONN if the socket isn't connected  *  EWOULDBLOCK if the socket is in non-blocking mode and there's no  *		xpd data in the buffer  *  E* whatever is returned from the fsm.  */
@@ -3045,8 +3048,11 @@ end_expr_stmt
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 begin_expr_stmt
 name|error

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.24 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -60,8 +60,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|sblock
 end_endif
+
+begin_comment
+comment|/* sblock */
+end_comment
 
 begin_comment
 comment|/* NOTE: the code depends on REF_CLOSED> REF_OPEN> the rest, and  * on REF_FREE being zero  *  * Possible improvement:  * think about merging the tp_ref w/ the tpcb and doing a search  * through the tpcb list, from tpb. This would slow down lookup  * during data transfer  * It would be a little nicer also to have something based on the  * clock (like top n bits of the reference is part of the clock, to  * minimize the likelihood  of reuse after a crash)  * also, need to keep the timer servicing part to a minimum (although  * the cost of this is probably independent of whether the timers are  * in the pcb or in an array..  * Last, would have to make the number of timers a function of the amount of  * mbufs available, plus some for the frozen references.  *  * Possible improvement:  * Might not need the ref_state stuff either...  * REF_FREE could correspond to tp_state == CLOSED or nonexistend tpcb,  * REF_OPEN to tp_state anywhere from AK_WAIT or CR_SENT to CLOSING  * REF_OPENING could correspond to LISTENING, because that's the  * way it's used, not because the correspondence is exact.  * REF_CLOSED could correspond to REFWAIT  */
@@ -715,7 +718,7 @@ name|tp_p_mbuf
 decl_stmt|;
 endif|#
 directive|endif
-endif|TP_PERF_MEAS
+comment|/* TP_PERF_MEAS */
 comment|/* addressing */
 name|u_short
 name|tp_domain
@@ -979,8 +982,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|__TP_PCB__
 end_endif
+
+begin_comment
+comment|/* __TP_PCB__ */
+end_comment
 
 end_unit
 

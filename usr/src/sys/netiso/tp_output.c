@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_output.c	7.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_output.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2496,7 +2496,7 @@ name|done
 goto|;
 endif|#
 directive|endif
-endif|TP_PERF_MEAS
+comment|/* TP_PERF_MEAS */
 case|case
 name|TPOPT_CDDATA_CLEAR
 case|:
@@ -2868,14 +2868,14 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|TP_PERF_MEAS
+comment|/* TP_PERF_MEAS */
 name|error
 operator|=
 name|EOPNOTSUPP
 expr_stmt|;
 endif|#
 directive|endif
-endif|TP_PERF_MEAS
+comment|/* TP_PERF_MEAS */
 break|break;
 default|default:
 name|error

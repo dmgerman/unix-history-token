@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_tpdu.h	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_tpdu.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -107,8 +107,11 @@ end_endif
 begin_endif
 endif|#
 directive|endif
-endif|BYTE_ORDER
 end_endif
+
+begin_comment
+comment|/* BYTE_ORDER */
+end_comment
 
 begin_comment
 comment|/* This much of a tpdu is the same for all types of tpdus  (except  * DT tpdus in class 0; their exceptions are handled by the data  * structure below  */
@@ -818,8 +821,11 @@ end_struct
 begin_endif
 endif|#
 directive|endif
-endif|__TP_TPDU__
 end_endif
+
+begin_comment
+comment|/* __TP_TPDU__ */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp_debug.c	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp_debug.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -202,8 +202,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|notdef
 end_endif
+
+begin_comment
+comment|/* notdef */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -438,8 +441,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|TESTDEBUG
 end_endif
+
+begin_comment
+comment|/* TESTDEBUG */
+end_comment
 
 begin_decl_stmt
 name|unsigned
@@ -1029,7 +1035,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|vax
+comment|/* vax */
 block|}
 block|}
 break|break;
@@ -1044,7 +1050,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-endif|notdef
+comment|/* notdef */
 operator|*
 name|cp
 operator|=
@@ -1144,8 +1150,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 end_unit
 

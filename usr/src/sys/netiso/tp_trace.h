@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_trace.h	7.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_trace.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -392,8 +392,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|defined(TP_TRACEFILE)||!defined(KERNEL)
 end_endif
+
+begin_comment
+comment|/* defined(TP_TRACEFILE)||!defined(KERNEL) */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -508,8 +511,11 @@ end_define
 begin_else
 else|#
 directive|else
-else|TPPT
 end_else
+
+begin_comment
+comment|/* TPPT */
+end_comment
 
 begin_comment
 comment|/***********************************************  * NO TPPT TRACE STUFF  **********************************************/
@@ -582,14 +588,20 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|TPPT
 end_endif
+
+begin_comment
+comment|/* TPPT */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
-endif|__TP_TRACE__
 end_endif
+
+begin_comment
+comment|/* __TP_TRACE__ */
+end_comment
 
 end_unit
 

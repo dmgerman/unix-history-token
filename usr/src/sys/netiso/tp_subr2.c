@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1113,7 +1113,7 @@ break|break;
 block|}
 else|#
 directive|else
-else|TPCONS
+comment|/* TPCONS */
 name|printf
 argument_list|(
 literal|"tp_netcmd(): X25 NOT CONFIGURED!!\n"
@@ -2408,14 +2408,14 @@ name|E
 value|e->ATTR(DT_TPDU)
 else|#
 directive|else
-else|lint
+comment|/* lint */
 define|#
 directive|define
 name|E
 value|e->ev_union.EV_DT_TPDU
 endif|#
 directive|endif
-endif|lint
+comment|/* lint */
 specifier|register
 name|struct
 name|sockbuf
@@ -2902,8 +2902,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|TP_PERF_MEAS
 end_endif
+
+begin_comment
+comment|/* TP_PERF_MEAS */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -2966,7 +2969,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-endif|ISO
+comment|/* ISO */
 default|default:
 name|printf
 argument_list|(
@@ -3191,8 +3194,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 end_unit
 

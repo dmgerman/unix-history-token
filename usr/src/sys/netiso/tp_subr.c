@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr.c	7.20 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1557,7 +1557,7 @@ name|tp_sndnxt
 decl_stmt|;
 endif|#
 directive|endif
-endif|TP_PERF_MEAS
+comment|/* TP_PERF_MEAS */
 name|idle
 operator|=
 operator|(
@@ -2293,7 +2293,7 @@ block|}
 name|ENDPERF
 endif|#
 directive|endif
-endif|TP_PERF_MEAS
+comment|/* TP_PERF_MEAS */
 name|IFTRACE
 argument_list|(
 name|D_DATA
@@ -2780,14 +2780,14 @@ name|E
 value|e->ATTR(DT_TPDU)
 else|#
 directive|else
-else|lint
+comment|/* lint */
 define|#
 directive|define
 name|E
 value|e->ev_union.EV_DT_TPDU
 endif|#
 directive|endif
-endif|lint
+comment|/* lint */
 if|if
 condition|(
 name|E

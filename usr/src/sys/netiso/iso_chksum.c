@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_chksum.c	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_chksum.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -48,8 +48,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|ISO
 end_endif
+
+begin_comment
+comment|/* ISO */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -67,8 +70,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|MNULL
 end_endif
+
+begin_comment
+comment|/* MNULL */
+end_comment
 
 begin_comment
 comment|/*  * FUNCTION:	iso_check_csum  *  * PURPOSE:		To check the checksum of the packet in the mbuf chain (m).  * 				The total length of the packet is (len).  * 				Called from tp_input() and clnp_intr()  *  * RETURNS:		 TRUE (something non-zero) if there is a checksum error,  * 			 	 FALSE if there was NO checksum error.  *  * SIDE EFFECTS:  none  *  * NOTES:		 It might be possible to gain something by optimizing  *               this routine (unrolling loops, etc). But it is such  *				 a horrible thing to fiddle with anyway, it probably  *				 isn't worth it.  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_cons.c	7.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_cons.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -48,8 +48,11 @@ end_decl_stmt
 begin_else
 else|#
 directive|else
-else|ARGO_DEBUG
 end_else
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 begin_define
 define|#
@@ -61,8 +64,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -285,8 +291,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 begin_define
 define|#
@@ -364,8 +373,11 @@ end_function_decl
 begin_endif
 endif|#
 directive|endif
-endif|PHASEONE
 end_endif
+
+begin_comment
+comment|/* PHASEONE */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -1757,8 +1769,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|KERNEL
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * NAME:	make_partial_x25_packet()  *  * FUNCTION and ARGUMENTS:  *	Makes part of an X.25 call packet, for use by x25.  *  (src) and (dst) are the NSAP-addresses of source and destination.  *	(buf) is a ptr to a buffer into which to write this partial header.  *  *	 0			Facility length (in octets)  *	 1			Facility field, which is a set of:  *	  m			facil code  *	  m+1		facil param len (for>2-byte facilities) in octets  *	  m+2..p	facil param field  *  q			user data (protocol identification octet)  *   *  * RETURNS:   *  0 if OK  *  E* if failed.  *  * SIDE EFFECTS:  * Stores facilites mbuf in X.25 control block, where the connect  * routine knows where to look for it.  */
@@ -1781,8 +1796,11 @@ end_decl_stmt
 begin_else
 else|#
 directive|else
-else|X25_1984
 end_else
+
+begin_comment
+comment|/* X25_1984  */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1795,8 +1813,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|X25_1984
 end_endif
+
+begin_comment
+comment|/* X25_1984  */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -3487,8 +3508,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|TPCONS
 end_endif
+
+begin_comment
+comment|/* TPCONS */
+end_comment
 
 end_unit
 

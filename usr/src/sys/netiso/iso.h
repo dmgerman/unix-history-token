@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.h	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -373,8 +373,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|IN_CLASSA_NET
 end_endif
+
+begin_comment
+comment|/* IN_CLASSA_NET */
+end_comment
 
 begin_comment
 comment|/* The following looks like a sockaddr  * to facilitate using tree lookup routines */
@@ -675,8 +678,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|__ISO__
 end_endif
+
+begin_comment
+comment|/* __ISO__ */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.c	7.25 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -649,8 +649,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|INET
 end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -773,8 +776,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|ISO
 end_endif
+
+begin_comment
+comment|/* ISO */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -883,8 +889,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|TPCONS
 end_endif
+
+begin_comment
+comment|/* TPCONS */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -945,7 +954,7 @@ block|}
 block|,
 endif|#
 directive|endif
-endif|ISO
+comment|/* ISO */
 comment|/* IN_CLNS */
 ifdef|#
 directive|ifdef
@@ -999,7 +1008,7 @@ block|}
 block|,
 endif|#
 directive|endif
-endif|INET
+comment|/* INET */
 comment|/* ISO_CONS */
 if|#
 directive|if
@@ -1060,7 +1069,7 @@ block|}
 block|,
 endif|#
 directive|endif
-endif|ISO_CONS
+comment|/* ISO_CONS */
 comment|/* End of protosw marker */
 block|{
 literal|0
@@ -3161,8 +3170,11 @@ end_if
 begin_endif
 endif|#
 directive|endif
-endif|TP_PERF_MEAS
 end_endif
+
+begin_comment
+comment|/* TP_PERF_MEAS */
+end_comment
 
 begin_macro
 name|IFDEBUG

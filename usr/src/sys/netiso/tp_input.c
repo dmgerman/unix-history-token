@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.31 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1166,8 +1166,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|!CONS
 end_endif
+
+begin_comment
+comment|/* !CONS */
+end_comment
 
 begin_comment
 comment|/*   * NAME: 	tp_input()  *  * CALLED FROM:  *  net layer input routine  *  * FUNCTION and ARGUMENTS:  *  Process an incoming TPDU (m), finding the associated tpcb if there  *  is one. Create the appropriate type of event and call the driver.  *  (faddr) and (laddr) are the foreign and local addresses.  *   * 	When tp_input() is called we KNOW that the ENTIRE TP HEADER  * 	has been m_pullup-ed.  *  * RETURN VALUE: Nada  *    * SIDE EFFECTS:  *	When using COSNS it may affect the state of the net-level pcb  *  * NOTE:  *  The initial value of acktime is 2 so that we will never  *  have a 0 value for tp_peer_acktime.  It gets used in the  *  computation of the retransmission timer value, and so it  *  mustn't be zero.  *  2 seems like a reasonable minimum.  */
@@ -1295,7 +1298,7 @@ name|perf_meas
 decl_stmt|;
 endif|#
 directive|endif
-endif|TP_PERF_MEAS
+comment|/* TP_PERF_MEAS */
 name|u_char
 name|fsufxlen
 decl_stmt|,
@@ -1408,7 +1411,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-endif|TP_PERF_MEAS
+comment|/* TP_PERF_MEAS */
 name|IFDEBUG
 argument_list|(
 argument|D_TPINPUT
@@ -1700,8 +1703,11 @@ end_if
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 begin_expr_stmt
 name|CHECK
@@ -2069,7 +2075,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-endif|TP_PERF_MEAS
+comment|/* TP_PERF_MEAS */
 case|case
 name|TPP_vers
 case|:
@@ -2855,7 +2861,7 @@ name|TPAO_USE_RCC
 expr_stmt|;
 endif|#
 directive|endif
-endif|notdef
+comment|/* notdef */
 name|CHECK
 argument_list|(
 argument|tp_consistency(tpcb,
@@ -3271,7 +3277,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|TP_PERF_MEAS
+comment|/* TP_PERF_MEAS */
 name|tpcb
 operator|->
 name|tp_fref
@@ -4241,8 +4247,11 @@ end_break
 begin_endif
 endif|#
 directive|endif
-endif|notdef
 end_endif
+
+begin_comment
+comment|/* notdef */
+end_comment
 
 begin_expr_stmt
 name|caseof
@@ -4623,7 +4632,7 @@ name|TPAO_USE_RCC
 expr_stmt|;
 endif|#
 directive|endif
-endif|notdef
+comment|/* notdef */
 name|CHECK
 argument_list|(
 argument|tp_consistency(tpcb, TP_FORCE,&tpp) !=
@@ -5218,7 +5227,7 @@ name|tpdu_AKseqX
 expr_stmt|;
 endif|#
 directive|endif
-endif|BYTE_ORDER
+comment|/* BYTE_ORDER */
 block|}
 else|else
 block|{
@@ -5360,7 +5369,7 @@ name|tpdu_XAKseqX
 expr_stmt|;
 endif|#
 directive|endif
-endif|BYTE_ORDER
+comment|/* BYTE_ORDER */
 block|}
 else|else
 block|{
@@ -5455,7 +5464,7 @@ name|tpdu_XPDseqX
 expr_stmt|;
 endif|#
 directive|endif
-endif|BYTE_ORDER
+comment|/* BYTE_ORDER */
 block|}
 else|else
 block|{
@@ -5659,7 +5668,7 @@ name|tpdu_DTeotX
 expr_stmt|;
 endif|#
 directive|endif
-endif|BYTE_ORDER
+comment|/* BYTE_ORDER */
 block|}
 else|else
 block|{
@@ -6805,8 +6814,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_expr_stmt
 name|IncStat

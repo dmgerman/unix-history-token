@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_param.h	7.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_param.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -768,8 +768,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|TRUE
 end_endif
+
+begin_comment
+comment|/* TRUE */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -787,8 +790,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|FALSE
 end_endif
+
+begin_comment
+comment|/* FALSE */
+end_comment
 
 begin_define
 define|#
@@ -820,8 +826,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|EOK
 end_endif
+
+begin_comment
+comment|/* EOK */
+end_comment
 
 begin_define
 define|#
@@ -888,8 +897,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|MNULL
 end_endif
+
+begin_comment
+comment|/* MNULL */
+end_comment
 
 begin_comment
 comment|/* if ../sys/mbuf.h gets MT_types up to 0x40, these will  	 * have to be changed: 	 */
@@ -1180,8 +1192,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -1271,20 +1286,29 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|tp_NSTATES
 end_endif
+
+begin_comment
+comment|/* tp_NSTATES  */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
-endif|KERNEL
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
-endif|__TP_PARAM__
 end_endif
+
+begin_comment
+comment|/* __TP_PARAM__ */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)argo_debug.h	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)argo_debug.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -59,8 +59,11 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|defined(lint)
 end_endif
+
+begin_comment
+comment|/* defined(lint) */
+end_comment
 
 begin_comment
 comment|/***********************************************  * DEBUG ON:  **********************************************/
@@ -81,8 +84,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -125,8 +131,11 @@ end_define
 begin_else
 else|#
 directive|else
-else|ARGO_DEBUG
 end_else
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 begin_comment
 comment|/***********************************************  * DEBUG OFF:  **********************************************/
@@ -148,8 +157,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|STAR
 end_endif
+
+begin_comment
+comment|/* STAR */
+end_comment
 
 begin_define
 define|#
@@ -176,8 +188,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 begin_comment
 comment|/***********************************************  * ASSERT   **********************************************/
@@ -209,8 +224,11 @@ end_define
 begin_else
 else|#
 directive|else
-else|lint
 end_else
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_define
 define|#
@@ -228,14 +246,20 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_else
 else|#
 directive|else
-else|ARGO_DEBUG
 end_else
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 begin_define
 define|#
@@ -253,8 +277,11 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 begin_comment
 comment|/***********************************************  * CLNP DEBUG OPTIONS  **********************************************/
@@ -922,8 +949,11 @@ end_define
 begin_else
 else|#
 directive|else
-else|ARGO_DEBUG
 end_else
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 begin_define
 define|#
@@ -995,14 +1025,20 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
-endif|__ARGO_DEBUG__
 end_endif
+
+begin_comment
+comment|/* __ARGO_DEBUG__ */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)idp_usrreq.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)idp_usrreq.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1013,7 +1013,7 @@ name|idp_dna
 expr_stmt|;
 endif|#
 directive|endif
-endif|ancient_history
+comment|/* ancient_history */
 if|if
 condition|(
 name|noIdpRoute
@@ -1472,7 +1472,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-endif|NSIP
+comment|/* NSIP */
 default|default:
 name|error
 operator|=

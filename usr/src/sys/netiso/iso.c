@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.c	7.22 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -635,8 +635,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|notdef
 end_endif
+
+begin_comment
+comment|/* notdef */
+end_comment
 
 begin_comment
 comment|/*  * FUNCTION:		iso_hashchar  *  * PURPOSE:			Hash all character in the buffer specified into  *					a long. Return the long.  *  * RETURNS:			The hash value.  *  * SIDE EFFECTS:	  *  * NOTES:			The hash is achieved by exclusive ORing 4 byte  *					quantities.   */
@@ -1317,8 +1320,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|notdef
 end_endif
+
+begin_comment
+comment|/* notdef */
+end_comment
 
 begin_comment
 comment|/*  * Generic iso control operations (ioctl's).  * Ifp is 0 if not an interface-specific ioctl.  */
@@ -3104,8 +3110,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|notdef
 end_endif
+
+begin_comment
+comment|/* notdef */
+end_comment
 
 begin_comment
 comment|/*  * FUNCTION:		iso_ck_addr  *  * PURPOSE:			return true if the iso_addr passed is   *					within the legal size limit for an iso address.  *  * RETURNS:			true or false  *  * SIDE EFFECTS:	  *  */
@@ -3245,8 +3254,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|notdef
 end_endif
+
+begin_comment
+comment|/* notdef */
+end_comment
 
 begin_comment
 comment|/*  * FUNCTION:		iso_localifa()  *  * PURPOSE:			Find an interface addresss having a given destination  *					or at least matching the net.  *  * RETURNS:			ptr to an interface address   *  * SIDE EFFECTS:	  *  * NOTES:			  */
@@ -3513,8 +3525,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|TPCONS
 end_endif
+
+begin_comment
+comment|/* TPCONS */
+end_comment
 
 begin_comment
 comment|/*  * FUNCTION:		iso_nlctloutput  *  * PURPOSE:			Set options at the network level  *  * RETURNS:			E*  *  * SIDE EFFECTS:	  *  * NOTES:			This could embody some of the functions of  *					rclnp_ctloutput and cons_ctloutput.  */
@@ -3747,7 +3762,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-endif|TPCONS
+comment|/* TPCONS */
 default|default:
 name|error
 operator|=
@@ -3774,8 +3789,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|ISO
 end_endif
+
+begin_comment
+comment|/* ISO */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -3922,8 +3940,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 end_unit
 
