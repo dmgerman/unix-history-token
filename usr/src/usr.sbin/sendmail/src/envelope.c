@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.49 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2387,7 +2387,7 @@ name|fdopen
 argument_list|(
 name|fd
 argument_list|,
-literal|"w"
+literal|"a"
 argument_list|)
 expr_stmt|;
 if|if
