@@ -412,6 +412,7 @@ if|if
 condition|(
 name|iflag
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%d\n"
@@ -419,6 +420,12 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|username
