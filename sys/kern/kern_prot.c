@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_prot.c	8.6 (Berkeley) 1/21/94  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 2000, 2001 Robert N. M. Watson.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_prot.c	8.6 (Berkeley) 1/21/94  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -4508,6 +4508,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * The suser_permitted MIB entry allows the determination of whether or  * not the system 'super-user' policy is in effect.  If true, an effective  * uid of 0 connotes special privilege, overriding many mandatory and  * discretionary system protections.  If false, uid 0 is offered no  * special privilege in the kernel security policy.  Setting this value  * to 0 may seriously impact the functionality of many existing userland  * programs, and should not be changed without careful consideration of  * the consequences.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -4539,7 +4543,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Test whether the specified credentials imply "super-user"  * privilege; if so, and we have accounting info, set the flag  * indicating use of super-powers.  * Returns 0 or error.  */
+comment|/*  * Test whether the specified credentials imply "super-user"  * privilege.  *  * Returns 0 or error.  */
 end_comment
 
 begin_function
@@ -4753,6 +4757,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * p_cansee(p1, p2): determine of p1 "can see" the subject specified by p2  * Arguments: processes p1 and p2  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protection p1->p_ucred and p2->p_cured must  *        be held.  Normally, p1 will be curproc, and a lock must be held  *        for p2.  * References: p1 and p2 must be valid for the lifetime of the call  */
+end_comment
+
 begin_function
 name|int
 name|p_cansee
@@ -4787,7 +4795,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Can process p1 send the signal signum to process p2?  */
+comment|/*  * p_cansignal(p1, p2, signum): determine whether p1 may deliver the  *                              specified signal to p2  * Arguments: processes p1 and p2, signal number 'signum'  * Returns: 0 on success, an errno value otherwise  * Locks: Sufficient locks to protect various components of p1 and p2 must  *        be held.  Normally, p1 will be curproc, and a lock must be held  *        for p2.  * References: p1 and p2 must be valid for the lifetime of the call  */
 end_comment
 
 begin_function
@@ -4865,7 +4873,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * UNIX uid semantics depend on the status of the P_SUGID 	 * bit on the target process.  If the bit is set, then more 	 * restricted signal sets are permitted. 	 */
+comment|/* 	 * UNIX signal semantics depend on the status of the P_SUGID 	 * bit on the target process.  If the bit is set, then additional 	 * restrictions are placed on the set of available signals. 	 */
 if|if
 condition|(
 name|p2
@@ -4880,6 +4888,7 @@ condition|(
 name|signum
 condition|)
 block|{
+comment|/* Generally permit job and terminal control signals. */
 case|case
 literal|0
 case|:
@@ -4915,7 +4924,7 @@ name|SIGUSR2
 case|:
 break|break;
 default|default:
-comment|/* Not permitted, try privilege. */
+comment|/* Not permitted, privilege is required. */
 name|error
 operator|=
 name|suser_xxx
@@ -4938,7 +4947,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Generally, the object credential's ruid or svuid must match the 	 * subject credential's ruid or euid. 	 */
+comment|/* 	 * Generally, the target credential's ruid or svuid must match the 	 * subject credential's ruid or euid. 	 */
 if|if
 condition|(
 name|p1
@@ -5019,6 +5028,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * p_cansched(p1, p2): determine whether p1 may reschedule p2  * Arguments: processes p1 and p2  * Returns: 0 on success, an errno value otherwise  * Locks: Sufficient locks to protect various components of p1 and p2  *        must be held.  Normally, p1 will be curproc, and a lock must  *        be held on p2.  * References: p1 and p2 must be valid for the lifetime of the call  */
+end_comment
 
 begin_function
 name|int
@@ -5158,6 +5171,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * The kern.unprivileged_procdebug_permitted flag may be used to disable  * a variety of unprivileged inter-process debugging services, including  * some procfs functionality, ptrace(), and ktrace().  In the past,  * inter-process debugging has been involved in a variety of security  * problems, and sites not requiring the service might choose to disable it  * when hardening systems.  *  * XXX: Should modifying and reading this variable require locking?  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -5187,6 +5204,10 @@ literal|"Unprivileged processes may use process debugging facilities"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * p_candebug(p1, p2): determine whether p1 may debug p2  * Arguments: processes p1 and p2  * Returns: 0 on success, an errno value otherwise  * Locks: Sufficient locks to protect the various components of p1 and p2  *        must be held.  Normally, p1 will be curproc, and a lock must be  *        held for p2.  * References: p1 and p2 must be valid for the lifetime of the call  */
+end_comment
 
 begin_function
 name|int
