@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.13.2.6 1995/06/05 01:56:53 jkh Exp $  *  * Return values have been sanitized:  *	-1	error, but you (still) have a session.  *	-2	error, your session is dead.  *   */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.13.2.7 1995/06/05 02:25:24 jkh Exp $  *  * Return values have been sanitized:  *	-1	error, but you (still) have a session.  *	-2	error, your session is dead.  *   */
 end_comment
 
 begin_include
@@ -1835,12 +1835,20 @@ name|i
 operator|<
 literal|0
 condition|)
+block|{
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|zap
 argument_list|(
 name|ftp
 argument_list|)
 return|;
+block|}
+elseif|else
 if|if
 condition|(
 name|i
@@ -1848,6 +1856,18 @@ operator|>
 literal|299
 condition|)
 block|{
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"FTP: No such file %s, moving on.\n"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|s
@@ -2112,6 +2132,18 @@ operator|>
 literal|299
 condition|)
 block|{
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"FTP: No such file %s, moving on.\n"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|s
