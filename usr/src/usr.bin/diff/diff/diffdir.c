@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffdir.c 4.1 %G%"
+literal|"@(#)diffdir.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2168,6 +2168,12 @@ comment|/* 	if ((status>> 8)>= 2) 		done(); */
 block|}
 end_block
 
+begin_include
+include|#
+directive|include
+file|<a.out.h>
+end_include
+
 begin_macro
 name|ascii
 argument_list|(
@@ -2221,6 +2227,45 @@ argument_list|,
 name|BUFSIZ
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cnt
+operator|>=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|exec
+argument_list|)
+condition|)
+block|{
+name|struct
+name|exec
+name|hdr
+decl_stmt|;
+name|hdr
+operator|=
+operator|*
+operator|(
+expr|struct
+name|exec
+operator|*
+operator|)
+name|buf
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|N_BADMAG
+argument_list|(
+name|hdr
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|cp
 operator|=
 name|buf
