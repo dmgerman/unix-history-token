@@ -59,12 +59,12 @@ end_struct_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 end_ifdef
 
 begin_function_decl
 name|void
-name|ddb_trap
+name|ppc_db_trap
 parameter_list|(
 name|void
 parameter_list|)
@@ -87,8 +87,8 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|DDB
-name|ddb_trap
+name|KDB
+name|ppc_db_trap
 argument_list|()
 expr_stmt|;
 endif|#
