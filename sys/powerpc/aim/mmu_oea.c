@@ -5443,6 +5443,25 @@ name|pvo_entry
 modifier|*
 name|pvo
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|UMA_MD_SMALL_ALLOC
+comment|/* 	 * Allow direct mappings 	 */
+if|if
+condition|(
+name|va
+operator|<
+name|VM_MIN_KERNEL_ADDRESS
+condition|)
+block|{
+return|return
+operator|(
+name|va
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 name|pvo
 operator|=
 name|pmap_pvo_find_va
@@ -5455,6 +5474,17 @@ operator|~
 name|ADDR_POFF
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pvo
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"pmap_kextract: no addr found"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
