@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	5.8 (Berkeley) %G%"
+literal|"@(#)ctime.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1264,7 +1264,7 @@ name|tz
 block|;
 name|char
 operator|*
-name|tztab
+name|_tztab
 argument_list|()
 block|;
 if|if
@@ -1337,7 +1337,7 @@ name|s
 operator|.
 name|chars
 argument_list|,
-name|tztab
+name|_tztab
 argument_list|(
 name|tz
 operator|.
