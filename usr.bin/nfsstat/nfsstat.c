@@ -2218,7 +2218,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: nfsstat [-M core] [-N system] [-w interval]\n"
+literal|"usage: nfsstat [-csW] [-M core] [-N system] [-w interval]\n"
 argument_list|)
 expr_stmt|;
 name|exit
