@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.9	82/02/21	*/
+comment|/*	if_imp.c	4.10	82/02/27	*/
 end_comment
 
 begin_include
@@ -284,14 +284,21 @@ name|ui
 operator|->
 name|ui_flags
 expr_stmt|;
-comment|/* this should be found by talking to the imp */
+comment|/* the host and imp fields will be filled in by the imp */
 name|ifp
 operator|->
 name|if_addr
 operator|.
 name|s_addr
 operator|=
-literal|0x4e00000a
+name|if_makeaddr
+argument_list|(
+name|ifp
+operator|->
+name|if_net
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -1395,9 +1402,6 @@ argument_list|(
 name|IMPOUTPUT
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 comment|/* 	 * Don't even try if the IMP is unavailable. 	 */
 name|x
 operator|=
@@ -1423,8 +1427,6 @@ condition|)
 goto|goto
 name|drop
 goto|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|pf
