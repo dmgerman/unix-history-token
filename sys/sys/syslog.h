@@ -25,6 +25,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_LOG_PRIV
+value|"/var/run/logpriv"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_OLDLOG
 value|"/dev/log"
 end_define
