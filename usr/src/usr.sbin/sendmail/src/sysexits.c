@@ -21,7 +21,7 @@ operator|)
 name|sysexits
 operator|.
 name|c
-literal|3.3
+literal|3.4
 operator|%
 name|G
 operator|%
@@ -40,41 +40,44 @@ name|SysExMsg
 index|[]
 init|=
 block|{
-comment|/* 64 */
+comment|/* 64 USAGE */
 literal|"Bad usage"
 block|,
-comment|/* 65 */
+comment|/* 65 DATAERR */
 literal|"Data format error"
 block|,
-comment|/* 66 */
+comment|/* 66 NOINPUT */
 literal|"Cannot open input"
 block|,
-comment|/* 67 */
+comment|/* 67 NOUSER */
 literal|"User unknown"
 block|,
-comment|/* 68 */
+comment|/* 68 NOHOST */
 literal|"Host unknown"
 block|,
-comment|/* 69 */
+comment|/* 69 UNAVAILABLE */
 literal|"Service unavailable"
 block|,
-comment|/* 70 */
+comment|/* 70 SOFTWARE */
 literal|"Internal error"
 block|,
-comment|/* 71 */
+comment|/* 71 OSERR */
 literal|"Operating system error"
 block|,
-comment|/* 72 */
+comment|/* 72 OSFILE */
 literal|"System file missing"
 block|,
-comment|/* 73 */
+comment|/* 73 CANTCREAT */
 literal|"Can't create output"
 block|,
-comment|/* 74 */
+comment|/* 74 IOERR */
 literal|"I/O error"
 block|,
-comment|/* 75 */
+comment|/* 75 TEMPFAIL */
 literal|"Temporary failure"
+block|,
+comment|/* 76 PROTOCOL */
+literal|"Remote protocol error"
 block|, }
 decl_stmt|;
 end_decl_stmt
