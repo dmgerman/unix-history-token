@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.21 (Berkeley) %G%"
+literal|"@(#)main.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -388,6 +388,11 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
+name|optind
+operator|=
+literal|1
+expr_stmt|;
+comment|/* since we're called more than once */
 name|rearg
 label|:
 while|while
