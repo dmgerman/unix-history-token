@@ -4,7 +4,7 @@ comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon 
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: db_aout.c,v $  * Revision 1.1  1992/03/25  21:44:55  pace  * Initial revision  *  * Revision 2.3  91/02/05  17:05:55  mrt  * 	Changed to new Mach copyright  * 	[91/01/31  16:16:44  mrt]  *   * Revision 2.2  90/08/27  21:48:35  dbg  * 	Created.  * 	[90/08/17            dbg]  *   */
+comment|/*  * HISTORY  * $Log: db_aout.c,v $  * Revision 1.1.1.1  1993/06/12  14:57:38  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.1  1992/03/25  21:44:55  pace  * Initial revision  *  * Revision 2.3  91/02/05  17:05:55  mrt  * 	Changed to new Mach copyright  * 	[91/01/31  16:16:44  mrt]  *   * Revision 2.2  90/08/27  21:48:35  dbg  * 	Created.  * 	[90/08/17            dbg]  *   */
 end_comment
 
 begin_comment
@@ -84,12 +84,27 @@ define|\
 value|(sp = (struct nlist *)((symtab) + 1), \ 	 ep = (struct nlist *)((char *)sp + *(symtab)))
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYMTAB_SPACE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|SYMTAB_SPACE
 value|63000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*SYMTAB_SPACE*/
+end_comment
 
 begin_decl_stmt
 name|int
