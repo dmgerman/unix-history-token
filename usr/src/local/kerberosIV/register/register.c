@@ -1,4 +1,33 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)register.c	1.5 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -533,9 +562,39 @@ expr_stmt|;
 name|type_info
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|get_user_info
 argument_list|()
+condition|)
+block|{
+name|code
+operator|=
+name|ABORT
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|des_write
+argument_list|(
+name|sock
+argument_list|,
+operator|&
+name|code
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|cleanup
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|code
 operator|=
 name|APPEND_DB
@@ -704,7 +763,7 @@ name|strncmp
 argument_list|(
 name|msgbuf
 argument_list|,
-literal|"GOTKEY"
+name|GOTKEY_MSG
 argument_list|,
 literal|6
 argument_list|)
@@ -831,12 +890,10 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_function
+name|int
 name|get_user_info
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|uid
@@ -884,11 +941,11 @@ argument_list|,
 literal|"Who are you?\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|seteuid
 argument_list|(
@@ -972,11 +1029,11 @@ condition|(
 operator|!
 name|valid
 condition|)
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|pas
 operator|=
 name|getpass
@@ -1037,14 +1094,11 @@ argument_list|,
 literal|"Password mismatch -- aborted\n"
 argument_list|)
 expr_stmt|;
-name|cleanup
-argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|iname
 index|[
@@ -1054,8 +1108,13 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* null instance name */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|setup_key
