@@ -593,8 +593,6 @@ sizeof|sizeof
 argument_list|(
 literal|"cs_disk"
 argument_list|)
-operator|+
-literal|1
 expr_stmt|;
 name|iov
 index|[
@@ -641,8 +639,6 @@ sizeof|sizeof
 argument_list|(
 literal|"cs_local"
 argument_list|)
-operator|+
-literal|1
 expr_stmt|;
 name|iov
 index|[
