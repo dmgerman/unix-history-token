@@ -723,7 +723,7 @@ literal|0
 condition|)
 name|ret
 operator|=
-name|EWOULDBLOCK
+name|EBUSY
 expr_stmt|;
 elseif|else
 if|if
@@ -858,7 +858,7 @@ literal|0
 condition|)
 name|ret
 operator|=
-name|EWOULDBLOCK
+name|EBUSY
 expr_stmt|;
 else|else
 comment|/* indicate we are locked for writing */
