@@ -157,7 +157,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|physmem
 decl_stmt|;
 end_decl_stmt
@@ -758,7 +758,7 @@ begin_function_decl
 name|void
 name|init_param2
 parameter_list|(
-name|int
+name|long
 name|physpages
 parameter_list|)
 function_decl|;

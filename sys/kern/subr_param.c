@@ -426,7 +426,7 @@ begin_function
 name|void
 name|init_param2
 parameter_list|(
-name|int
+name|long
 name|physpages
 parameter_list|)
 block|{

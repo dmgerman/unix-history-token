@@ -346,7 +346,7 @@ file|<machine/sigframe.h>
 end_include
 
 begin_decl_stmt
-name|int
+name|long
 name|physmem
 init|=
 literal|0
@@ -609,21 +609,32 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
-name|sysctl_handle_int
-argument_list|(
-name|oidp
-argument_list|,
-literal|0
-argument_list|,
+decl_stmt|;
+name|unsigned
+name|long
+name|val
+decl_stmt|;
+name|val
+operator|=
 name|ctob
 argument_list|(
 name|physmem
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|val
+argument_list|,
+literal|0
 argument_list|,
 name|req
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -641,7 +652,7 @@ name|HW_PHYSMEM
 argument_list|,
 name|physmem
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RD
 argument_list|,
@@ -651,7 +662,7 @@ literal|0
 argument_list|,
 name|sysctl_hw_physmem
 argument_list|,
-literal|"IU"
+literal|"LU"
 argument_list|,
 literal|""
 argument_list|)
@@ -659,7 +670,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|Maxmem
 init|=
 literal|0

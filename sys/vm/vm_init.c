@@ -216,7 +216,7 @@ name|size
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|long
 name|physmem_est
 decl_stmt|;
 name|vm_offset_t
@@ -271,7 +271,7 @@ else|else
 block|{
 name|physmem_est
 operator|=
-name|min
+name|lmin
 argument_list|(
 name|physmem
 argument_list|,

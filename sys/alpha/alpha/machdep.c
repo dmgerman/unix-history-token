@@ -634,7 +634,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|Maxmem
 init|=
 literal|0
@@ -642,7 +642,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|totalphysmem
 decl_stmt|;
 end_decl_stmt
@@ -652,7 +652,7 @@ comment|/* total amount of physical memory in system */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|physmem
 decl_stmt|;
 end_decl_stmt
@@ -662,7 +662,7 @@ comment|/* physical memory used by NetBSD + some rsvd */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|resvmem
 decl_stmt|;
 end_decl_stmt
@@ -672,7 +672,7 @@ comment|/* amount of memory reserved for PROM */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|unusedmem
 decl_stmt|;
 end_decl_stmt
@@ -682,7 +682,7 @@ comment|/* amount of memory for OS that we don't use */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|unknownmem
 decl_stmt|;
 end_decl_stmt
@@ -720,21 +720,32 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
-name|sysctl_handle_int
-argument_list|(
-name|oidp
-argument_list|,
-literal|0
-argument_list|,
+decl_stmt|;
+name|unsigned
+name|long
+name|val
+decl_stmt|;
+name|val
+operator|=
 name|alpha_ptob
 argument_list|(
 name|physmem
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_long
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|val
+argument_list|,
+literal|0
 argument_list|,
 name|req
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -752,7 +763,7 @@ name|HW_PHYSMEM
 argument_list|,
 name|physmem
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RD
 argument_list|,
@@ -762,7 +773,7 @@ literal|0
 argument_list|,
 name|sysctl_hw_physmem
 argument_list|,
-literal|"I"
+literal|"LU"
 argument_list|,
 literal|""
 argument_list|)
@@ -779,13 +790,13 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
-name|sysctl_handle_int
-argument_list|(
-name|oidp
-argument_list|,
-literal|0
-argument_list|,
+decl_stmt|;
+name|unsigned
+name|long
+name|val
+decl_stmt|;
+name|val
+operator|=
 name|alpha_ptob
 argument_list|(
 name|physmem
@@ -794,10 +805,21 @@ name|cnt
 operator|.
 name|v_wire_count
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_long
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|val
+argument_list|,
+literal|0
 argument_list|,
 name|req
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -815,7 +837,7 @@ name|HW_USERMEM
 argument_list|,
 name|usermem
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RD
 argument_list|,
@@ -825,7 +847,7 @@ literal|0
 argument_list|,
 name|sysctl_hw_usermem
 argument_list|,
-literal|"I"
+literal|"LU"
 argument_list|,
 literal|""
 argument_list|)

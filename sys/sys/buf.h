@@ -1896,7 +1896,7 @@ parameter_list|(
 name|caddr_t
 name|v
 parameter_list|,
-name|int
+name|long
 name|physmem_est
 parameter_list|)
 function_decl|;

@@ -1059,7 +1059,7 @@ end_function
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|totalphysmem
 decl_stmt|;
 end_decl_stmt
