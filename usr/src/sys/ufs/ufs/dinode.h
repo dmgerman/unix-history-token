@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dinode.h	6.6	84/12/20	*/
+comment|/*	dinode.h	6.7	85/01/10	*/
 end_comment
 
 begin_comment
@@ -477,7 +477,7 @@ parameter_list|(
 name|ip
 parameter_list|)
 define|\
-value|{ \ 	struct inode *xp; \ 	(ip)->i_id = ++nextinodeid; \ 	if (nextinodeid == 0) \ 		for (nextinodeid = 0, xp = inode; xp< inodeNINODE; xp++) \ 			xp->i_id = 0; \ }
+value|(ip)->i_id = ++nextinodeid; \ 	if (nextinodeid == 0) \ 		cacheinvalall();
 end_define
 
 begin_decl_stmt
