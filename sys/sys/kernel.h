@@ -741,7 +741,7 @@ parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|do {							\ 	getenv_int((path), (var));			\ } while (0)
+value|do {							\ 	getenv_int((path),&(var));			\ } while (0)
 end_define
 
 begin_define

@@ -341,7 +341,6 @@ name|TUNABLE_INT
 argument_list|(
 literal|"hw.ata.ata_dma"
 argument_list|,
-operator|&
 name|ata_dma
 argument_list|)
 expr_stmt|;
@@ -352,7 +351,6 @@ name|TUNABLE_INT
 argument_list|(
 literal|"hw.ata.wc"
 argument_list|,
-operator|&
 name|ata_wc
 argument_list|)
 expr_stmt|;
@@ -363,7 +361,6 @@ name|TUNABLE_INT
 argument_list|(
 literal|"hw.ata.tags"
 argument_list|,
-operator|&
 name|ata_tags
 argument_list|)
 expr_stmt|;

@@ -254,7 +254,6 @@ name|TUNABLE_INT
 argument_list|(
 literal|"hw.snd.unit"
 argument_list|,
-operator|&
 name|snd_unit
 argument_list|)
 expr_stmt|;

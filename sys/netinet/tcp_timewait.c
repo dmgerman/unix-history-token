@@ -797,7 +797,6 @@ name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"net.inet.tcp.tcbhashsize"
 argument_list|,
-operator|&
 name|hashsize
 argument_list|)
 expr_stmt|;

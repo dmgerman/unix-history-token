@@ -783,7 +783,6 @@ name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"net.nloop"
 argument_list|,
-operator|&
 name|nloop
 argument_list|)
 expr_stmt|;

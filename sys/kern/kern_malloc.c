@@ -2156,7 +2156,6 @@ name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"kern.vm.kmem.size"
 argument_list|,
-operator|&
 name|vm_kmem_size
 argument_list|)
 expr_stmt|;

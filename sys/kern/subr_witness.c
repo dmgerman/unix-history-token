@@ -604,7 +604,6 @@ name|TUNABLE_INT
 argument_list|(
 literal|"debug.witness_watch"
 argument_list|,
-operator|&
 name|witness_watch
 argument_list|)
 expr_stmt|;
@@ -678,7 +677,6 @@ name|TUNABLE_INT
 argument_list|(
 literal|"debug.witness_ddb"
 argument_list|,
-operator|&
 name|witness_ddb
 argument_list|)
 expr_stmt|;
@@ -751,7 +749,6 @@ name|TUNABLE_INT
 argument_list|(
 literal|"debug.witness_skipspin"
 argument_list|,
-operator|&
 name|witness_skipspin
 argument_list|)
 expr_stmt|;
