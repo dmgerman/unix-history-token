@@ -205,9 +205,19 @@ decl_stmt|;
 name|vm_map_entry_t
 name|entry
 decl_stmt|;
-name|int
+enum|enum
+block|{
+name|LSV_FALSE
+block|,
+comment|/* the lookup's lock has been dropped */
+name|LSV_TRUE
+block|,
+comment|/* the lookup's lock is still valid */
+name|LSV_UPGRADED
+comment|/* the lookup's lock is now exclusive */
+block|}
 name|lookup_still_valid
-decl_stmt|;
+enum|;
 name|struct
 name|vnode
 modifier|*
@@ -269,6 +279,8 @@ condition|(
 name|fs
 operator|->
 name|lookup_still_valid
+operator|!=
+name|LSV_FALSE
 condition|)
 block|{
 if|if
@@ -277,7 +289,7 @@ name|fs
 operator|->
 name|lookup_still_valid
 operator|==
-literal|2
+name|LSV_UPGRADED
 condition|)
 name|vm_map_lock_downgrade
 argument_list|(
@@ -301,7 +313,7 @@ name|fs
 operator|->
 name|lookup_still_valid
 operator|=
-name|FALSE
+name|LSV_FALSE
 expr_stmt|;
 block|}
 block|}
@@ -824,7 +836,7 @@ name|fs
 operator|.
 name|lookup_still_valid
 operator|=
-literal|1
+name|LSV_TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -2032,6 +2044,8 @@ operator|(
 name|fs
 operator|.
 name|lookup_still_valid
+operator|!=
+name|LSV_FALSE
 operator|||
 name|vm_map_try_lock
 argument_list|(
@@ -2050,13 +2064,13 @@ name|fs
 operator|.
 name|lookup_still_valid
 operator|==
-literal|0
+name|LSV_FALSE
 condition|)
 name|fs
 operator|.
 name|lookup_still_valid
 operator|=
-literal|2
+name|LSV_UPGRADED
 expr_stmt|;
 comment|/* 				 * get rid of the unnecessary page 				 */
 name|vm_page_protect
@@ -2205,10 +2219,11 @@ block|}
 comment|/* 	 * We must verify that the maps have not changed since our last 	 * lookup. 	 */
 if|if
 condition|(
-operator|!
 name|fs
 operator|.
 name|lookup_still_valid
+operator|==
+name|LSV_FALSE
 operator|&&
 operator|(
 name|fs
@@ -2353,7 +2368,7 @@ name|fs
 operator|.
 name|lookup_still_valid
 operator|=
-literal|1
+name|LSV_TRUE
 expr_stmt|;
 if|if
 condition|(
