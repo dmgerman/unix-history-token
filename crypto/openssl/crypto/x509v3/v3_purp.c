@@ -1845,6 +1845,19 @@ condition|)
 return|return
 literal|3
 return|;
+comment|/* If key usage present it must have certSign so tolerate it */
+elseif|else
+if|if
+condition|(
+name|x
+operator|->
+name|ex_flags
+operator|&
+name|EXFLAG_KUSAGE
+condition|)
+return|return
+literal|3
+return|;
 else|else
 return|return
 literal|2
@@ -2320,6 +2333,8 @@ argument_list|(
 name|x
 argument_list|,
 name|KU_DIGITAL_SIGNATURE
+operator||
+name|KU_NON_REPUDIATION
 argument_list|)
 condition|)
 return|return

@@ -401,8 +401,6 @@ name|inlen
 argument_list|,
 name|inform
 argument_list|,
-name|tbl
-operator|->
 name|mask
 argument_list|,
 name|tbl

@@ -738,8 +738,14 @@ operator|(
 name|ret
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|NO_DH
+comment|/* avoid 'unreferenced label' warning if NO_DH is defined */
 name|err
 label|:
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|NO_RSA

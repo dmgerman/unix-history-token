@@ -246,7 +246,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|idx
+name|ret
 operator|)
 return|;
 block|}

@@ -1291,17 +1291,6 @@ name|slen
 operator|=
 operator|*
 name|length
-operator|+
-operator|*
-operator|(
-name|c
-operator|->
-name|pp
-operator|)
-operator|-
-name|c
-operator|->
-name|p
 expr_stmt|;
 name|c
 operator|->

@@ -1556,7 +1556,7 @@ name|store_ctx
 operator|->
 name|objs
 argument_list|,
-name|i
+name|j
 argument_list|)
 expr_stmt|;
 else|else

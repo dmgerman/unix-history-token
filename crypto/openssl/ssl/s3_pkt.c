@@ -2568,6 +2568,9 @@ name|buf
 parameter_list|,
 name|int
 name|len
+parameter_list|,
+name|int
+name|peek
 parameter_list|)
 block|{
 name|int
@@ -2627,6 +2630,9 @@ if|if
 condition|(
 operator|(
 name|type
+operator|&&
+operator|(
+name|type
 operator|!=
 name|SSL3_RT_APPLICATION_DATA
 operator|)
@@ -2638,6 +2644,17 @@ name|SSL3_RT_HANDSHAKE
 operator|)
 operator|&&
 name|type
+operator|)
+operator|||
+operator|(
+name|peek
+operator|&&
+operator|(
+name|type
+operator|!=
+name|SSL3_RT_APPLICATION_DATA
+operator|)
+operator|)
 condition|)
 block|{
 name|SSLerr
@@ -2694,6 +2711,7 @@ name|unsigned
 name|int
 name|k
 decl_stmt|;
+comment|/* peek == 0 */
 name|n
 operator|=
 literal|0
@@ -2851,7 +2869,7 @@ operator|->
 name|rrec
 operator|)
 expr_stmt|;
-comment|/* get new packet */
+comment|/* get new packet if necessary */
 if|if
 condition|(
 operator|(
@@ -2924,7 +2942,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* If the other end has shutdown, throw anything we read away */
+comment|/* If the other end has shut down, throw anything we read away 	 * (even in 'peek' mode) */
 if|if
 condition|(
 name|s
@@ -3057,6 +3075,12 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|peek
+condition|)
+block|{
 name|rr
 operator|->
 name|length
@@ -3090,6 +3114,7 @@ name|off
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(

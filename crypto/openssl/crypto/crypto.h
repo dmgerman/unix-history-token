@@ -702,6 +702,12 @@ name|void
 parameter_list|)
 function_decl|;
 name|int
+name|OPENSSL_issetugid
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|int
 name|CRYPTO_get_ex_new_index
 argument_list|(
 name|int

@@ -634,6 +634,14 @@ name|CONF_R_NO_CONF
 value|105
 define|#
 directive|define
+name|CONF_R_NO_CONF_OR_ENVIRONMENT_VARIABLE
+value|106
+define|#
+directive|define
+name|CONF_R_NO_SECTION
+value|107
+define|#
+directive|define
 name|CONF_R_UNABLE_TO_CREATE_NEW_SECTION
 value|103
 define|#

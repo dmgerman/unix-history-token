@@ -359,9 +359,25 @@ argument_list|,
 argument|char *section
 argument_list|)
 block|{
+if|if
+condition|(
+name|conf
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
+end_expr_stmt
+
+begin_else
+else|else
+block|{
 name|CONF
 name|ctmp
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|default_CONF_method
@@ -381,18 +397,12 @@ operator|&
 name|ctmp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ctmp
 operator|.
 name|data
 operator|=
 name|conf
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|NCONF_get_section
 argument_list|(
@@ -402,7 +412,8 @@ argument_list|,
 name|section
 argument_list|)
 return|;
-end_return
+block|}
+end_else
 
 begin_expr_stmt
 unit|}  char
@@ -416,9 +427,32 @@ argument_list|,
 argument|char *name
 argument_list|)
 block|{
+if|if
+condition|(
+name|conf
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+name|NCONF_get_string
+argument_list|(
+name|NULL
+argument_list|,
+name|group
+argument_list|,
+name|name
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_else
+else|else
+block|{
 name|CONF
 name|ctmp
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|default_CONF_method
@@ -438,18 +472,12 @@ operator|&
 name|ctmp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ctmp
 operator|.
 name|data
 operator|=
 name|conf
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|NCONF_get_string
 argument_list|(
@@ -461,7 +489,8 @@ argument_list|,
 name|name
 argument_list|)
 return|;
-end_return
+block|}
+end_else
 
 begin_macro
 unit|}  long
@@ -476,6 +505,26 @@ argument_list|)
 end_macro
 
 begin_block
+block|{
+if|if
+condition|(
+name|conf
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+name|NCONF_get_number
+argument_list|(
+name|NULL
+argument_list|,
+name|group
+argument_list|,
+name|name
+argument_list|)
+return|;
+block|}
+else|else
 block|{
 name|CONF
 name|ctmp
@@ -516,6 +565,7 @@ argument_list|,
 name|name
 argument_list|)
 return|;
+block|}
 block|}
 end_block
 
@@ -1075,6 +1125,27 @@ return|;
 block|}
 end_expr_stmt
 
+begin_if
+if|if
+condition|(
+name|section
+operator|==
+name|NULL
+condition|)
+block|{
+name|CONFerr
+argument_list|(
+name|CONF_F_NCONF_GET_SECTION
+argument_list|,
+name|CONF_R_NO_SECTION
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+end_if
+
 begin_return
 return|return
 name|_CONF_get_section_values
@@ -1098,6 +1169,30 @@ argument_list|,
 argument|char *name
 argument_list|)
 block|{
+name|char
+operator|*
+name|s
+operator|=
+name|_CONF_get_string
+argument_list|(
+name|conf
+argument_list|,
+name|group
+argument_list|,
+name|name
+argument_list|)
+block|;
+comment|/* Since we may get a value from an environment variable even            if conf is NULL, let's check the value first */
+if|if
+condition|(
+name|s
+condition|)
+return|return
+name|s
+return|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|conf
@@ -1109,25 +1204,18 @@ name|CONFerr
 argument_list|(
 name|CONF_F_NCONF_GET_STRING
 argument_list|,
-name|CONF_R_NO_CONF
+name|CONF_R_NO_CONF_OR_ENVIRONMENT_VARIABLE
 argument_list|)
 expr_stmt|;
 return|return
 name|NULL
 return|;
 block|}
-end_expr_stmt
+end_if
 
 begin_return
 return|return
-name|_CONF_get_string
-argument_list|(
-name|conf
-argument_list|,
-name|group
-argument_list|,
-name|name
-argument_list|)
+name|NULL
 return|;
 end_return
 
@@ -1145,24 +1233,13 @@ end_macro
 
 begin_block
 block|{
-if|if
-condition|(
-name|conf
-operator|==
-name|NULL
-condition|)
-block|{
-name|CONFerr
-argument_list|(
-name|CONF_F_NCONF_GET_NUMBER
-argument_list|,
-name|CONF_R_NO_CONF
-argument_list|)
-expr_stmt|;
-return|return
+if|#
+directive|if
 literal|0
-return|;
-block|}
+comment|/* As with _CONF_get_string(), we rely on the possibility of finding          an environment variable with a suitable name.  Unfortunately, there's          no way with the current API to see if we found one or not...          The meaning of this is that if a number is not found anywhere, it          will always default to 0. */
+block|if (conf == NULL) 		{ 		CONFerr(CONF_F_NCONF_GET_NUMBER,                         CONF_R_NO_CONF_OR_ENVIRONMENT_VARIABLE); 		return 0; 		}
+endif|#
+directive|endif
 return|return
 name|_CONF_get_number
 argument_list|(

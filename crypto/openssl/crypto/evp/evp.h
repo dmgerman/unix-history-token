@@ -1411,6 +1411,9 @@ name|int
 name|en_de
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|NO_RSA
 define|#
 directive|define
 name|EVP_PKEY_assign_RSA
@@ -1420,6 +1423,11 @@ parameter_list|,
 name|rsa
 parameter_list|)
 value|EVP_PKEY_assign((pkey),EVP_PKEY_RSA,\ 					(char *)(rsa))
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|NO_DSA
 define|#
 directive|define
 name|EVP_PKEY_assign_DSA
@@ -1429,6 +1437,11 @@ parameter_list|,
 name|dsa
 parameter_list|)
 value|EVP_PKEY_assign((pkey),EVP_PKEY_DSA,\ 					(char *)(dsa))
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|NO_DH
 define|#
 directive|define
 name|EVP_PKEY_assign_DH
@@ -1438,6 +1451,8 @@ parameter_list|,
 name|dh
 parameter_list|)
 value|EVP_PKEY_assign((pkey),EVP_PKEY_DH,\ 					(char *)(dh))
+endif|#
+directive|endif
 comment|/* Add some extra combinations */
 define|#
 directive|define
@@ -2557,6 +2572,9 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|NO_MD2
 name|EVP_MD
 modifier|*
 name|EVP_md2
@@ -2564,6 +2582,11 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|NO_MD4
 name|EVP_MD
 modifier|*
 name|EVP_md4
@@ -2571,6 +2594,11 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|NO_MD5
 name|EVP_MD
 modifier|*
 name|EVP_md5
@@ -2578,6 +2606,11 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|NO_SHA
 name|EVP_MD
 modifier|*
 name|EVP_sha
@@ -2606,6 +2639,11 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|NO_MDC2
 name|EVP_MD
 modifier|*
 name|EVP_mdc2
@@ -2613,6 +2651,11 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|NO_RIPEMD
 name|EVP_MD
 modifier|*
 name|EVP_ripemd160
@@ -2620,6 +2663,8 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 name|EVP_CIPHER
 modifier|*
 name|EVP_enc_null
@@ -2628,6 +2673,9 @@ name|void
 parameter_list|)
 function_decl|;
 comment|/* does nothing :-) */
+ifndef|#
+directive|ifndef
+name|NO_DES
 name|EVP_CIPHER
 modifier|*
 name|EVP_des_ecb
@@ -2719,6 +2767,11 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|NO_RC4
 name|EVP_CIPHER
 modifier|*
 name|EVP_rc4
@@ -2733,6 +2786,11 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|NO_IDEA
 name|EVP_CIPHER
 modifier|*
 name|EVP_idea_ecb
@@ -2761,6 +2819,11 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|NO_RC2
 name|EVP_CIPHER
 modifier|*
 name|EVP_rc2_ecb
@@ -2803,6 +2866,11 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|NO_BF
 name|EVP_CIPHER
 modifier|*
 name|EVP_bf_ecb
@@ -2831,6 +2899,11 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|NO_CAST
 name|EVP_CIPHER
 modifier|*
 name|EVP_cast5_ecb
@@ -2859,6 +2932,11 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|NO_RC5
 name|EVP_CIPHER
 modifier|*
 name|EVP_rc5_32_12_16_cbc
@@ -2887,6 +2965,8 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 name|void
 name|OpenSSL_add_all_algorithms
 parameter_list|(

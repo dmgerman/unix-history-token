@@ -1055,6 +1055,9 @@ file|<socket.h>
 include|#
 directive|include
 file|<in.h>
+include|#
+directive|include
+file|<inet.h>
 else|#
 directive|else
 include|#
@@ -1072,6 +1075,9 @@ directive|endif
 include|#
 directive|include
 file|<netinet/in.h>
+include|#
+directive|include
+file|<arpa/inet.h>
 endif|#
 directive|endif
 if|#

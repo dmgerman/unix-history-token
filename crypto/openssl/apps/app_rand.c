@@ -352,6 +352,7 @@ name|tot
 operator|+=
 name|egd
 expr_stmt|;
+else|else
 name|tot
 operator|+=
 name|RAND_load_file

@@ -6283,6 +6283,15 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
+name|p
+argument_list|,
+literal|0
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 endif|#

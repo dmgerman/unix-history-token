@@ -19,6 +19,12 @@ directive|define
 name|HEADER_RAND_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -237,7 +243,7 @@ name|char
 modifier|*
 name|file
 parameter_list|,
-name|int
+name|size_t
 name|num
 parameter_list|)
 function_decl|;

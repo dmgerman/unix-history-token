@@ -55,7 +55,7 @@ name|SSL2_VERSION
 condition|)
 return|return
 operator|(
-name|SSLv23_method
+name|SSLv2_method
 argument_list|()
 operator|)
 return|;

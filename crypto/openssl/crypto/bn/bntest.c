@@ -413,18 +413,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|linux
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-comment|/* can we use GNU bc features? */
 name|BIO_puts
 argument_list|(
 name|out
@@ -446,8 +434,6 @@ argument_list|,
 literal|"\\n\"\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -490,7 +476,7 @@ sizeof|sizeof
 name|rnd_seed
 argument_list|)
 expr_stmt|;
-comment|/* or BN_rand may fail, and we don't 	                                       * even check its return value 	                                       * (which we should) */
+comment|/* or BN_generate_prime may fail */
 name|argc
 operator|--
 expr_stmt|;
@@ -1145,7 +1131,7 @@ operator|&
 name|c
 argument_list|)
 expr_stmt|;
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 operator|&
 name|a
@@ -1171,7 +1157,7 @@ name|i
 operator|++
 control|)
 block|{
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 operator|&
 name|b
@@ -1455,7 +1441,7 @@ operator|<
 name|num1
 condition|)
 block|{
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 operator|&
 name|a
@@ -1504,7 +1490,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 operator|&
 name|b
@@ -1793,7 +1779,7 @@ operator|<
 name|num1
 condition|)
 block|{
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 operator|&
 name|a
@@ -1835,7 +1821,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 operator|&
 name|b
@@ -2224,7 +2210,7 @@ operator|<
 name|num1
 condition|)
 block|{
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 operator|&
 name|a
@@ -2266,7 +2252,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 operator|&
 name|b
@@ -2705,7 +2691,7 @@ operator|<=
 name|num1
 condition|)
 block|{
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 operator|&
 name|a
@@ -2717,7 +2703,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 operator|&
 name|b
@@ -2731,7 +2717,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 operator|&
 name|b
@@ -3037,7 +3023,7 @@ name|i
 operator|++
 control|)
 block|{
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 operator|&
 name|a
@@ -3337,7 +3323,7 @@ operator|=
 name|BN_MONT_CTX_new
 argument_list|()
 expr_stmt|;
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 operator|&
 name|a
@@ -3350,7 +3336,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/**/
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 operator|&
 name|b
@@ -3399,7 +3385,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 operator|&
 name|n
@@ -3790,7 +3776,7 @@ operator|=
 name|BN_new
 argument_list|()
 expr_stmt|;
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 name|a
 argument_list|,
@@ -3816,7 +3802,7 @@ name|i
 operator|++
 control|)
 block|{
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 name|b
 argument_list|,
@@ -4079,7 +4065,7 @@ operator|=
 name|BN_new
 argument_list|()
 expr_stmt|;
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 name|c
 argument_list|,
@@ -4105,7 +4091,7 @@ name|i
 operator|++
 control|)
 block|{
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 name|a
 argument_list|,
@@ -4121,7 +4107,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/**/
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 name|b
 argument_list|,
@@ -4418,7 +4404,7 @@ operator|=
 name|BN_new
 argument_list|()
 expr_stmt|;
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 name|c
 argument_list|,
@@ -4444,7 +4430,7 @@ name|i
 operator|++
 control|)
 block|{
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 name|a
 argument_list|,
@@ -4460,7 +4446,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/**/
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 name|b
 argument_list|,
@@ -4729,7 +4715,7 @@ name|i
 operator|++
 control|)
 block|{
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 name|a
 argument_list|,
@@ -4745,7 +4731,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/**/
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 name|b
 argument_list|,
@@ -5000,7 +4986,7 @@ operator|=
 name|BN_new
 argument_list|()
 expr_stmt|;
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 name|a
 argument_list|,
@@ -5280,7 +5266,7 @@ operator|=
 name|BN_new
 argument_list|()
 expr_stmt|;
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 name|a
 argument_list|,
@@ -5501,7 +5487,7 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 name|a
 argument_list|,
@@ -5724,7 +5710,7 @@ operator|=
 name|BN_new
 argument_list|()
 expr_stmt|;
-name|BN_rand
+name|BN_bntest_rand
 argument_list|(
 name|a
 argument_list|,

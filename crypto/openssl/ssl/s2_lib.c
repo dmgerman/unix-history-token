@@ -534,13 +534,18 @@ name|s
 parameter_list|)
 block|{
 return|return
-operator|(
+name|SSL_in_init
+argument_list|(
+name|s
+argument_list|)
+condition|?
+literal|0
+else|:
 name|s
 operator|->
 name|s2
 operator|->
 name|ract_data_length
-operator|)
 return|;
 block|}
 end_function
@@ -587,6 +592,20 @@ expr|*
 name|s2
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|SSL2_MAX_RECORD_LENGTH_3_BYTE_HEADER
+operator|+
+literal|3
+operator|>
+name|SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER
+operator|+
+literal|2
+error|#
+directive|error
+literal|"assertion failed"
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -607,6 +626,7 @@ condition|)
 goto|goto
 name|err
 goto|;
+comment|/* wbuf needs one byte more because when using two-byte headers, 	 * we leave the first byte unused in do_ssl_write (s2_pkt.c) */
 if|if
 condition|(
 operator|(
@@ -618,7 +638,7 @@ name|OPENSSL_malloc
 argument_list|(
 name|SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER
 operator|+
-literal|2
+literal|3
 argument_list|)
 operator|)
 operator|==

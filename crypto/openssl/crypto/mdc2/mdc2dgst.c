@@ -540,7 +540,7 @@ argument_list|,
 name|k
 argument_list|)
 expr_stmt|;
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 name|d
 argument_list|,
@@ -567,7 +567,7 @@ argument_list|,
 name|k
 argument_list|)
 expr_stmt|;
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 name|dd
 argument_list|,

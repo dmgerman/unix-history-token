@@ -149,7 +149,7 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|int
+name|long
 name|dl_ctrl
 parameter_list|(
 name|DSO
@@ -227,6 +227,47 @@ begin_comment
 comment|/* For this DSO_METHOD, our meth_data STACK will contain;  * (i) the handle (shl_t) returned from shl_load().  * NB: I checked on HPUX11 and shl_t is itself a pointer  * type so the cast is safe.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|extension
+index|[]
+init|=
+literal|".sl"
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|extension
+index|[]
+init|=
+literal|".so"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -261,6 +302,11 @@ name|strlen
 argument_list|(
 name|filename
 argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|extension
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -275,7 +321,7 @@ operator|&&
 operator|(
 name|len
 operator|+
-literal|6
+literal|3
 operator|<
 name|DSO_MAX_TRANSLATED_SIZE
 operator|)
@@ -296,9 +342,11 @@ name|sprintf
 argument_list|(
 name|translated
 argument_list|,
-literal|"lib%s.so"
+literal|"lib%s%s"
 argument_list|,
 name|filename
+argument_list|,
+name|extension
 argument_list|)
 expr_stmt|;
 name|ptr
@@ -618,6 +666,7 @@ if|if
 condition|(
 name|shl_findsym
 argument_list|(
+operator|&
 name|ptr
 argument_list|,
 name|symname
@@ -772,6 +821,7 @@ if|if
 condition|(
 name|shl_findsym
 argument_list|(
+operator|&
 name|ptr
 argument_list|,
 name|symname
@@ -811,7 +861,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|long
 name|dl_ctrl
 parameter_list|(
 name|DSO
@@ -870,9 +920,6 @@ name|dso
 operator|->
 name|flags
 operator|=
-operator|(
-name|int
-operator|)
 name|larg
 expr_stmt|;
 return|return
@@ -887,9 +934,6 @@ name|dso
 operator|->
 name|flags
 operator||=
-operator|(
-name|int
-operator|)
 name|larg
 expr_stmt|;
 return|return

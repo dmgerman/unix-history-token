@@ -15,7 +15,7 @@ end_include
 
 begin_function
 name|void
-name|des_encrypt
+name|des_encrypt1
 parameter_list|(
 name|DES_LONG
 modifier|*

@@ -93,7 +93,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* hash-table of memory requests (address as key) */
+comment|/* hash-table of memory requests (address as key);                         * access requires MALLOC2 lock */
 end_comment
 
 begin_typedef
@@ -144,7 +144,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* hash-table with those app_mem_info_st's                           * that are at the top of their thread's stack                           * (with `thread' as key) */
+comment|/* hash-table with those app_mem_info_st's                           * that are at the top of their thread's stack                           * (with `thread' as key);                           * access requires MALLOC2 lock */
 end_comment
 
 begin_typedef
@@ -231,12 +231,30 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|unsigned
+name|int
+name|num_disable
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* num_disable> 0                                       *     iff                                       * mh_mode == CRYPTO_MEM_CHECK_ON (w/o ..._ENABLE)                                       */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
 name|long
 name|disabling_thread
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Valid iff num_disable> 0.                                             * CRYPTO_LOCK_MALLOC2 is locked                                             * exactly in this case (by the                                             * thread named in disabling_thread).                                             */
+end_comment
 
 begin_function
 name|int
@@ -261,7 +279,7 @@ condition|(
 name|mode
 condition|)
 block|{
-comment|/* for applications: */
+comment|/* for applications (not to be called while multiple threads 	 * use the library): */
 case|case
 name|CRYPTO_MEM_CHECK_ON
 case|:
@@ -272,7 +290,7 @@ name|CRYPTO_MEM_CHECK_ON
 operator||
 name|CRYPTO_MEM_CHECK_ENABLE
 expr_stmt|;
-name|disabling_thread
+name|num_disable
 operator|=
 literal|0
 expr_stmt|;
@@ -285,10 +303,11 @@ name|mh_mode
 operator|=
 literal|0
 expr_stmt|;
-name|disabling_thread
+name|num_disable
 operator|=
 literal|0
 expr_stmt|;
+comment|/* should be true *before* MemCheck_stop is used, 		                    or there'll be a lot of confusion */
 break|break;
 comment|/* switch off temporarily (for library-internal use): */
 case|case
@@ -302,17 +321,17 @@ operator|&
 name|CRYPTO_MEM_CHECK_ON
 condition|)
 block|{
-name|mh_mode
-operator|&=
-operator|~
-name|CRYPTO_MEM_CHECK_ENABLE
-expr_stmt|;
 if|if
 condition|(
+operator|!
+name|num_disable
+operator|||
+operator|(
 name|disabling_thread
 operator|!=
 name|CRYPTO_thread_id
 argument_list|()
+operator|)
 condition|)
 comment|/* otherwise we already have the MALLOC2 lock */
 block|{
@@ -333,12 +352,20 @@ argument_list|(
 name|CRYPTO_LOCK_MALLOC
 argument_list|)
 expr_stmt|;
+name|mh_mode
+operator|&=
+operator|~
+name|CRYPTO_MEM_CHECK_ENABLE
+expr_stmt|;
 name|disabling_thread
 operator|=
 name|CRYPTO_thread_id
 argument_list|()
 expr_stmt|;
 block|}
+name|num_disable
+operator|++
+expr_stmt|;
 block|}
 break|break;
 case|case
@@ -352,26 +379,32 @@ operator|&
 name|CRYPTO_MEM_CHECK_ON
 condition|)
 block|{
-name|mh_mode
-operator||=
-name|CRYPTO_MEM_CHECK_ENABLE
+if|if
+condition|(
+name|num_disable
+condition|)
+comment|/* always true, or something is going wrong */
+block|{
+name|num_disable
+operator|--
 expr_stmt|;
 if|if
 condition|(
-name|disabling_thread
-operator|!=
+name|num_disable
+operator|==
 literal|0
 condition|)
 block|{
-name|disabling_thread
-operator|=
-literal|0
+name|mh_mode
+operator||=
+name|CRYPTO_MEM_CHECK_ENABLE
 expr_stmt|;
 name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_MALLOC2
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 break|break;
@@ -410,7 +443,7 @@ operator|&
 name|CRYPTO_MEM_CHECK_ON
 condition|)
 block|{
-name|CRYPTO_w_lock
+name|CRYPTO_r_lock
 argument_list|(
 name|CRYPTO_LOCK_MALLOC
 argument_list|)
@@ -422,13 +455,15 @@ name|mh_mode
 operator|&
 name|CRYPTO_MEM_CHECK_ENABLE
 operator|)
-operator|&&
+operator|||
+operator|(
 name|disabling_thread
 operator|!=
 name|CRYPTO_thread_id
 argument_list|()
+operator|)
 expr_stmt|;
-name|CRYPTO_w_unlock
+name|CRYPTO_r_unlock
 argument_list|(
 name|CRYPTO_LOCK_MALLOC
 argument_list|)
@@ -846,7 +881,7 @@ block|{
 name|MemCheck_off
 argument_list|()
 expr_stmt|;
-comment|/* obtains CRYPTO_LOCK_MALLOC2 */
+comment|/* obtain MALLOC2 lock */
 if|if
 condition|(
 operator|(
@@ -1021,7 +1056,7 @@ label|:
 name|MemCheck_on
 argument_list|()
 expr_stmt|;
-comment|/* releases CRYPTO_LOCK_MALLOC2 */
+comment|/* release MALLOC2 lock */
 block|}
 return|return
 operator|(
@@ -1053,7 +1088,7 @@ block|{
 name|MemCheck_off
 argument_list|()
 expr_stmt|;
-comment|/* obtains CRYPTO_LOCK_MALLOC2 */
+comment|/* obtain MALLOC2 lock */
 name|ret
 operator|=
 operator|(
@@ -1066,7 +1101,7 @@ expr_stmt|;
 name|MemCheck_on
 argument_list|()
 expr_stmt|;
-comment|/* releases CRYPTO_LOCK_MALLOC2 */
+comment|/* release MALLOC2 lock */
 block|}
 return|return
 operator|(
@@ -1098,7 +1133,7 @@ block|{
 name|MemCheck_off
 argument_list|()
 expr_stmt|;
-comment|/* obtains CRYPTO_LOCK_MALLOC2 */
+comment|/* obtain MALLOC2 lock */
 while|while
 condition|(
 name|pop_info
@@ -1112,7 +1147,7 @@ expr_stmt|;
 name|MemCheck_on
 argument_list|()
 expr_stmt|;
-comment|/* releases CRYPTO_LOCK_MALLOC2 */
+comment|/* release MALLOC2 lock */
 block|}
 return|return
 operator|(
@@ -1198,7 +1233,7 @@ block|{
 name|MemCheck_off
 argument_list|()
 expr_stmt|;
-comment|/* obtains CRYPTO_LOCK_MALLOC2 */
+comment|/* make sure we hold MALLOC2 lock */
 if|if
 condition|(
 operator|(
@@ -1228,7 +1263,7 @@ expr_stmt|;
 name|MemCheck_on
 argument_list|()
 expr_stmt|;
-comment|/* releases CRYPTO_LOCK_MALLOC2 */
+comment|/* release MALLOC2 lock 				                * if num_disabled drops to 0 */
 return|return;
 block|}
 if|if
@@ -1502,7 +1537,7 @@ label|:
 name|MemCheck_on
 argument_list|()
 expr_stmt|;
-comment|/* releases CRYPTO_LOCK_MALLOC2 */
+comment|/* release MALLOC2 lock 			                * if num_disabled drops to 0 */
 block|}
 break|break;
 block|}
@@ -1558,6 +1593,7 @@ block|{
 name|MemCheck_off
 argument_list|()
 expr_stmt|;
+comment|/* make sure we hold MALLOC2 lock */
 name|m
 operator|.
 name|addr
@@ -1639,7 +1675,7 @@ block|}
 name|MemCheck_on
 argument_list|()
 expr_stmt|;
-comment|/* releases CRYPTO_LOCK_MALLOC2 */
+comment|/* release MALLOC2 lock 			                * if num_disabled drops to 0 */
 block|}
 break|break;
 case|case
@@ -1759,7 +1795,7 @@ block|{
 name|MemCheck_off
 argument_list|()
 expr_stmt|;
-comment|/* obtains CRYPTO_LOCK_MALLOC2 */
+comment|/* make sure we hold MALLOC2 lock */
 name|m
 operator|.
 name|addr
@@ -1846,7 +1882,7 @@ block|}
 name|MemCheck_on
 argument_list|()
 expr_stmt|;
-comment|/* releases CRYPTO_LOCK_MALLOC2 */
+comment|/* release MALLOC2 lock 			                * if num_disabled drops to 0 */
 block|}
 break|break;
 block|}
@@ -2301,6 +2337,10 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|MemCheck_off
+argument_list|()
+expr_stmt|;
+comment|/* obtain MALLOC2 lock */
 name|ml
 operator|.
 name|bio
@@ -2319,10 +2359,6 @@ name|chunks
 operator|=
 literal|0
 expr_stmt|;
-name|MemCheck_off
-argument_list|()
-expr_stmt|;
-comment|/* obtains CRYPTO_LOCK_MALLOC2 */
 if|if
 condition|(
 name|mh
@@ -2385,10 +2421,22 @@ block|}
 else|else
 block|{
 comment|/* Make sure that, if we found no leaks, memory-leak debugging itself 		 * does not introduce memory leaks (which might irritate 		 * external debugging tools). 		 * (When someone enables leak checking, but does not call 		 * this function, we declare it to be their fault.) 		 * 		 * XXX    This should be in CRYPTO_mem_leaks_cb, 		 * and CRYPTO_mem_leaks should be implemented by 		 * using CRYPTO_mem_leaks_cb. 		 * (Also their should be a variant of lh_doall_arg 		 * that takes a function pointer instead of a void *; 		 * this would obviate the ugly and illegal 		 * void_fn_to_char kludge in CRYPTO_mem_leaks_cb. 		 * Otherwise the code police will come and get us.) 		 */
+name|int
+name|old_mh_mode
+decl_stmt|;
 name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_MALLOC
 argument_list|)
+expr_stmt|;
+comment|/* avoid deadlock when lh_free() uses CRYPTO_dbg_free(), 		 * which uses CRYPTO_is_mem_check_on */
+name|old_mh_mode
+operator|=
+name|mh_mode
+expr_stmt|;
+name|mh_mode
+operator|=
+name|CRYPTO_MEM_CHECK_OFF
 expr_stmt|;
 if|if
 condition|(
@@ -2435,6 +2483,10 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+name|mh_mode
+operator|=
+name|old_mh_mode
+expr_stmt|;
 name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_MALLOC
@@ -2444,13 +2496,7 @@ block|}
 name|MemCheck_on
 argument_list|()
 expr_stmt|;
-comment|/* releases CRYPTO_LOCK_MALLOC2 */
-if|#
-directive|if
-literal|0
-block|lh_stats_bio(mh,b); 	lh_node_stats_bio(mh,b); 	lh_node_usage_stats_bio(mh,b);
-endif|#
-directive|endif
+comment|/* release MALLOC2 lock */
 block|}
 end_function
 

@@ -113,7 +113,7 @@ argument_list|,
 name|i2d_ASN1_TIME
 argument_list|)
 expr_stmt|;
-name|M_ASN1_I2D_len_SEQUENCE_opt_type
+name|M_ASN1_I2D_len_SEQUENCE_opt_ex_type
 argument_list|(
 name|X509_EXTENSION
 argument_list|,
@@ -145,7 +145,7 @@ argument_list|,
 name|i2d_ASN1_TIME
 argument_list|)
 expr_stmt|;
-name|M_ASN1_I2D_put_SEQUENCE_opt_type
+name|M_ASN1_I2D_put_SEQUENCE_opt_ex_type
 argument_list|(
 name|X509_EXTENSION
 argument_list|,
@@ -410,7 +410,7 @@ argument_list|,
 name|i2d_X509_REVOKED
 argument_list|)
 expr_stmt|;
-name|M_ASN1_I2D_len_EXP_SEQUENCE_opt_type
+name|M_ASN1_I2D_len_EXP_SEQUENCE_opt_ex_type
 argument_list|(
 name|X509_EXTENSION
 argument_list|,
@@ -514,7 +514,7 @@ argument_list|,
 name|i2d_X509_REVOKED
 argument_list|)
 expr_stmt|;
-name|M_ASN1_I2D_put_EXP_SEQUENCE_opt_type
+name|M_ASN1_I2D_put_EXP_SEQUENCE_opt_ex_type
 argument_list|(
 name|X509_EXTENSION
 argument_list|,
@@ -1134,14 +1134,11 @@ argument_list|,
 name|sk_X509_REVOKED_new_null
 argument_list|)
 expr_stmt|;
-name|M_ASN1_New
-argument_list|(
 name|ret
 operator|->
 name|extensions
-argument_list|,
-name|sk_X509_EXTENSION_new_null
-argument_list|)
+operator|=
+name|NULL
 expr_stmt|;
 name|sk_X509_REVOKED_set_cmp_func
 argument_list|(

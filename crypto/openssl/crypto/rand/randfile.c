@@ -96,7 +96,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<openssl/e_os.h>
+file|"openssl/e_os.h"
 end_include
 
 begin_include
@@ -133,6 +133,10 @@ end_define
 
 begin_comment
 comment|/* #define RFILE ".rnd" - defined in ../../e_os.h */
+end_comment
+
+begin_comment
+comment|/* Note that these functions are intended for seed files only.  * Entropy devices and EGD sockets are handled in rand_unix.c */
 end_comment
 
 begin_function
@@ -329,7 +333,7 @@ expr_stmt|;
 if|if
 condition|(
 name|bytes
-operator|==
+operator|<=
 literal|0
 condition|)
 break|break;
@@ -658,13 +662,15 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|size_t
 name|size
 parameter_list|)
 block|{
 name|char
 modifier|*
 name|s
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -672,6 +678,13 @@ name|ret
 init|=
 name|NULL
 decl_stmt|;
+if|if
+condition|(
+name|OPENSSL_issetugid
+argument_list|()
+operator|==
+literal|0
+condition|)
 name|s
 operator|=
 name|getenv
@@ -713,6 +726,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|OPENSSL_issetugid
+argument_list|()
+operator|==
+literal|0
+condition|)
 name|s
 operator|=
 name|getenv
@@ -723,21 +743,10 @@ expr_stmt|;
 if|if
 condition|(
 name|s
-operator|==
+operator|!=
 name|NULL
-condition|)
-return|return
+operator|&&
 operator|(
-name|RFILE
-operator|)
-return|;
-if|if
-condition|(
-operator|(
-call|(
-name|int
-call|)
-argument_list|(
 name|strlen
 argument_list|(
 name|s
@@ -749,16 +758,11 @@ name|RFILE
 argument_list|)
 operator|+
 literal|2
-argument_list|)
-operator|)
-operator|>
+operator|<
 name|size
-condition|)
-return|return
-operator|(
-name|RFILE
 operator|)
-return|;
+condition|)
+block|{
 name|strcpy
 argument_list|(
 name|buf
@@ -789,6 +793,16 @@ name|ret
 operator|=
 name|buf
 expr_stmt|;
+block|}
+else|else
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* no file name */
 block|}
 return|return
 operator|(

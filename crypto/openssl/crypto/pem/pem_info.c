@@ -1443,7 +1443,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* copy from wierdo names into more normal things */
+comment|/* copy from weirdo names into more normal things */
 name|iv
 operator|=
 name|xi

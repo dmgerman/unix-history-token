@@ -4429,6 +4429,16 @@ name|ERR_clear_error
 argument_list|()
 expr_stmt|;
 comment|/* but we keep s->verify_result */
+name|s
+operator|->
+name|session
+operator|->
+name|verify_result
+operator|=
+name|s
+operator|->
+name|verify_result
+expr_stmt|;
 comment|/* server's cert for this session */
 name|sc
 operator|=

@@ -1616,8 +1616,6 @@ parameter_list|)
 block|{
 name|int
 name|ret
-decl_stmt|,
-name|err
 decl_stmt|;
 name|ret
 operator|=
@@ -1635,11 +1633,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|long
 name|err
-operator|=
+init|=
 name|ERR_peek_error
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|ERR_GET_LIB

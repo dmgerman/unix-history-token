@@ -191,7 +191,7 @@ index|]
 operator|=
 name|m1
 expr_stmt|;
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -274,7 +274,7 @@ index|]
 operator|=
 name|tin1
 expr_stmt|;
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -297,7 +297,7 @@ index|]
 operator|^=
 name|m1
 expr_stmt|;
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -320,7 +320,7 @@ index|]
 operator|^=
 name|m1
 expr_stmt|;
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -475,7 +475,7 @@ index|]
 operator|=
 name|m1
 expr_stmt|;
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -534,7 +534,7 @@ index|]
 operator|=
 name|tin1
 expr_stmt|;
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -557,7 +557,7 @@ index|]
 operator|^=
 name|m1
 expr_stmt|;
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -580,7 +580,7 @@ index|]
 operator|^=
 name|m1
 expr_stmt|;
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 name|tin
 argument_list|,

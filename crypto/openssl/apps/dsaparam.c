@@ -1330,7 +1330,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\treturn(NULL);\n"
+literal|"\t\t{ DSA_free(dsa); return(NULL); }\n"
 argument_list|)
 expr_stmt|;
 name|printf
