@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.3 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1163,7 +1163,25 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
+name|Debug
+condition|?
 name|die
+else|:
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|Debug
+condition|?
+name|die
+else|:
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3031,6 +3049,9 @@ name|cfd
 argument_list|)
 expr_stmt|;
 block|}
+name|untty
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 for|for
