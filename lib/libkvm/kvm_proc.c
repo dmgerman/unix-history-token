@@ -1347,6 +1347,8 @@ block|}
 if|if
 condition|(
 name|mainthread
+operator|&&
+name|mainthread
 operator|.
 name|td_wmesg
 condition|)
@@ -1614,6 +1616,8 @@ block|}
 if|if
 condition|(
 name|mainthread
+operator|&&
+name|mainthread
 operator|.
 name|td_blocked
 operator|!=
@@ -1733,6 +1737,11 @@ name|proc
 operator|.
 name|p_acflag
 expr_stmt|;
+if|if
+condition|(
+name|mainthread
+condition|)
+block|{
 name|kp
 operator|->
 name|ki_pctcpu
@@ -1743,7 +1752,6 @@ name|p_kse
 operator|.
 name|ke_pctcpu
 expr_stmt|;
-comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_estcpu
@@ -1754,7 +1762,6 @@ name|p_ksegrp
 operator|.
 name|kg_estcpu
 expr_stmt|;
-comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_slptime
@@ -1765,7 +1772,6 @@ name|p_kse
 operator|.
 name|ke_slptime
 expr_stmt|;
-comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_swtime
@@ -1782,7 +1788,6 @@ name|proc
 operator|.
 name|p_flag
 expr_stmt|;
-comment|/* WILDLY INNACURATE XXXKSE */
 name|kp
 operator|->
 name|ki_sflag
@@ -1799,7 +1804,6 @@ name|mainthread
 operator|.
 name|td_wchan
 expr_stmt|;
-comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_traceflag
@@ -1817,7 +1821,6 @@ operator|==
 name|PRS_NORMAL
 condition|)
 block|{
-comment|/*  XXXKSE very aproximate */
 if|if
 condition|(
 operator|(
@@ -1905,23 +1908,6 @@ name|SWAIT
 expr_stmt|;
 block|}
 block|}
-elseif|else
-if|if
-condition|(
-name|proc
-operator|.
-name|p_state
-operator|==
-name|PRS_ZOMBIE
-condition|)
-block|{
-name|kp
-operator|->
-name|ki_stat
-operator|=
-name|SZOMB
-expr_stmt|;
-block|}
 else|else
 block|{
 name|kp
@@ -1943,7 +1929,6 @@ name|p_ksegrp
 operator|.
 name|kg_pri_class
 expr_stmt|;
-comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_pri
@@ -1956,7 +1941,6 @@ name|p_ksegrp
 operator|.
 name|kg_user_pri
 expr_stmt|;
-comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_pri
@@ -1967,7 +1951,6 @@ name|mainthread
 operator|.
 name|td_priority
 expr_stmt|;
-comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_pri
@@ -1978,7 +1961,6 @@ name|mainthread
 operator|.
 name|td_base_pri
 expr_stmt|;
-comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_nice
@@ -1989,7 +1971,6 @@ name|p_ksegrp
 operator|.
 name|kg_nice
 expr_stmt|;
-comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_lock
@@ -2008,7 +1989,6 @@ name|p_kse
 operator|.
 name|ke_rqindex
 expr_stmt|;
-comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_oncpu
@@ -2019,7 +1999,6 @@ name|p_kse
 operator|.
 name|ke_oncpu
 expr_stmt|;
-comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_lastcpu
@@ -2028,7 +2007,16 @@ name|mainthread
 operator|.
 name|td_lastcpu
 expr_stmt|;
-comment|/* XXXKSE */
+block|}
+else|else
+block|{
+name|kp
+operator|->
+name|ki_stat
+operator|=
+name|SZOMB
+expr_stmt|;
+block|}
 name|bcopy
 argument_list|(
 operator|&
