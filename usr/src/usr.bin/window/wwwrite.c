@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwwrite.c	3.5 83/08/18"
+literal|"@(#)wwwrite.c	3.6 83/08/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,11 @@ name|oldn
 init|=
 name|n
 decl_stmt|;
+name|char
+name|hascursor
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|w
@@ -83,6 +88,21 @@ expr_stmt|;
 name|wwnwritec
 operator|+=
 name|n
+expr_stmt|;
+if|if
+condition|(
+name|hascursor
+operator|=
+name|w
+operator|->
+name|ww_hascursor
+condition|)
+name|wwcursor
+argument_list|(
+name|w
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1021,6 +1041,17 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|hascursor
+condition|)
+name|wwcursor
+argument_list|(
+name|w
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 name|oldn
 operator|-

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.8 83/08/18	  */
+comment|/*  *	@(#)ww.h	3.9 83/08/19	  */
 end_comment
 
 begin_include
@@ -111,6 +111,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* has pty */
+name|char
+name|ww_hascursor
+range|:
+literal|1
+decl_stmt|;
+comment|/* has fake cursor */
 name|char
 name|ww_index
 decl_stmt|;
@@ -628,6 +634,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* actually supported modes */
+end_comment
+
+begin_decl_stmt
+name|char
+name|wwcursormodes
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the modes for the fake cursor */
 end_comment
 
 begin_decl_stmt

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	3.6 83/08/17"
+literal|"@(#)wwinit.c	3.7 83/08/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -290,6 +290,31 @@ operator|.
 name|tt_init
 call|)
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|wwavailmodes
+operator|&
+name|WWM_REV
+condition|)
+name|wwcursormodes
+operator|=
+name|WWM_REV
+operator||
+name|wwavailmodes
+operator|&
+name|WWM_BLK
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|wwavailmodes
+operator|&
+name|WWM_UL
+condition|)
+name|wwcursormodes
+operator|=
+name|WWM_UL
 expr_stmt|;
 if|if
 condition|(

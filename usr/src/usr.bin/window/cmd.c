@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.3 83/08/18"
+literal|"@(#)cmd.c	3.4 83/08/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,19 @@ operator|&
 name|wwhead
 argument_list|)
 expr_stmt|;
-comment|/* 	if (selwin != 0) 		Woncursor(selwin->ww_win, 1); 	*/
+if|if
+condition|(
+name|selwin
+operator|!=
+literal|0
+condition|)
+name|wwcursor
+argument_list|(
+name|selwin
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|top
 label|:
 while|while
@@ -837,7 +849,19 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/* 	if (selwin != 0) 		Woncursor(selwin->ww_win, 0); 	*/
+if|if
+condition|(
+name|selwin
+operator|!=
+literal|0
+condition|)
+name|wwcursor
+argument_list|(
+name|selwin
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -1037,9 +1061,7 @@ operator|->
 name|ww_back
 argument_list|)
 expr_stmt|;
-comment|/* 		Woncursor(w->ww_win, 1); 		*/
 block|}
-comment|/* 	if (oldselwin) { 		Woncursor(oldselwin->ww_win, 0); 	} 	*/
 name|reframe
 argument_list|()
 expr_stmt|;

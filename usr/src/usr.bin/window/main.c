@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.3 83/08/18"
+literal|"@(#)main.c	3.4 83/08/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -513,7 +513,13 @@ name|curwin
 operator|=
 name|selwin
 expr_stmt|;
-comment|/* 			Woncursor(selwin->ww_win, 0); 			*/
+name|wwcursor
+argument_list|(
+name|selwin
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	3.5 83/08/18"
+literal|"@(#)cmd1.c	3.6 83/08/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -828,6 +828,13 @@ operator|->
 name|ww_hasframe
 operator|=
 literal|1
+expr_stmt|;
+name|wwcursor
+argument_list|(
+name|w
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|wwadd
 argument_list|(
