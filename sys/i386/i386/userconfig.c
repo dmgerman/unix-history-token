@@ -1180,16 +1180,6 @@ name|CLS_STORAGE
 block|}
 block|,
 block|{
-literal|"wd"
-block|,
-literal|"IDE or ST506 compatible storage device"
-block|,
-name|FLG_INVISIBLE
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
 literal|"ad"
 block|,
 literal|"ATA/ATAPI compatible storage device"
