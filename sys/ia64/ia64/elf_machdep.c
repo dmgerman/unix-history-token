@@ -152,11 +152,12 @@ argument_list|)
 block|,
 name|sendsig
 block|,
-name|sigcode
+name|NULL
 block|,
-operator|&
-name|szsigcode
+comment|/* sigcode */
+name|NULL
 block|,
+comment|/*&szsigcode */
 name|NULL
 block|,
 literal|"FreeBSD ELF64"
@@ -1078,7 +1079,7 @@ name|p_vaddr
 operator|+
 name|reloc
 expr_stmt|;
-name|ia64_add_unwind_table
+name|unw_table_add
 argument_list|(
 operator|(
 name|vm_offset_t
@@ -1117,7 +1118,7 @@ name|linker_file_t
 name|lf
 parameter_list|)
 block|{
-name|ia64_delete_unwind_table
+name|unw_table_remove
 argument_list|(
 operator|(
 name|vm_offset_t

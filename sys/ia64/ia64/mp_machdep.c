@@ -165,6 +165,14 @@ directive|include
 file|<i386/include/specialreg.h>
 end_include
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_PMAP
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 name|void
 name|ia64_ap_startup
@@ -242,14 +250,13 @@ comment|/* Variables used by os_boot_rendez */
 end_comment
 
 begin_decl_stmt
-specifier|volatile
-name|vm_offset_t
+name|void
+modifier|*
 name|ap_stack
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|volatile
 name|struct
 name|pcpu
 modifier|*
@@ -281,18 +288,6 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|void
-name|ipi_send
-parameter_list|(
-name|u_int64_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|cpu_mp_unleash
 parameter_list|(
 name|void
@@ -308,6 +303,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|ap_awake
+operator|=
+literal|1
+expr_stmt|;
+name|ap_delay
+operator|=
+literal|0
+expr_stmt|;
 asm|__asm __volatile("mov cr.pta=%0;; srlz.i;;" ::
 literal|"r"
 operator|(
@@ -332,51 +335,46 @@ function|;
 end_function
 
 begin_expr_stmt
+name|pcpup
+operator|=
+name|ap_pcpu
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ia64_set_k4
+argument_list|(
+operator|(
+name|intptr_t
+operator|)
+name|pcpup
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|map_pal_code
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|map_port_space
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|map_gateway_page
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ia64_set_fpsr
 argument_list|(
 name|IA64_FPSR_DEFAULT
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* 	 * Set ia32 control registers. 	 */
-end_comment
-
-begin_expr_stmt
-name|ia64_set_cflg
-argument_list|(
-name|CR0_PE
-operator||
-name|CR0_PG
-operator||
-operator|(
-call|(
-name|long
-call|)
-argument_list|(
-name|CR4_XMM
-operator||
-name|CR4_FXSR
-argument_list|)
-operator|<<
-literal|32
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ap_awake
-operator|=
-literal|1
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ap_delay
-operator|=
-literal|0
 expr_stmt|;
 end_expr_stmt
 
@@ -394,7 +392,7 @@ empty_stmt|;
 end_while
 
 begin_asm
-asm|__asm __volatile("ssm psr.ic|psr.i;; srlz.i;;");
+asm|__asm __volatile("ssm psr.i;; srlz.d;;");
 end_asm
 
 begin_comment
@@ -511,17 +509,18 @@ end_expr_stmt
 
 begin_expr_stmt
 name|cpu_throw
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|panic
 argument_list|(
-literal|"ia64_ap_startup: cpu_throw() returned"
+name|NULL
+argument_list|,
+name|choosethread
+argument_list|()
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* NOTREACHED */
+end_comment
 
 begin_macro
 unit|}  int
@@ -841,53 +840,17 @@ operator|>
 literal|0
 condition|)
 block|{
-name|void
-modifier|*
-name|ks
-decl_stmt|;
-comment|/* 			 * Use contigmalloc for stack so that we can 			 * use a region 7 address for it which makes 			 * it impossible to accidentally lose when 			 * recording a trapframe. 			 */
-name|ks
+name|ap_stack
 operator|=
-name|contigmalloc
+name|malloc
 argument_list|(
 name|KSTACK_PAGES
 operator|*
 name|PAGE_SIZE
 argument_list|,
-name|M_TEMP
+name|M_PMAP
 argument_list|,
 name|M_WAITOK
-argument_list|,
-literal|0ul
-argument_list|,
-literal|256
-operator|*
-literal|1024
-operator|*
-literal|1024
-operator|-
-literal|1
-argument_list|,
-name|PAGE_SIZE
-argument_list|,
-literal|256
-operator|*
-literal|1024
-operator|*
-literal|1024
-argument_list|)
-expr_stmt|;
-name|ap_stack
-operator|=
-name|IA64_PHYS_TO_RR7
-argument_list|(
-name|ia64_tpa
-argument_list|(
-operator|(
-name|u_int64_t
-operator|)
-name|ks
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|ap_pcpu
@@ -1257,7 +1220,6 @@ comment|/*  * Send an IPI to the specified processor. The lid parameter holds th
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|ipi_send
 parameter_list|(

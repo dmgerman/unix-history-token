@@ -28,7 +28,7 @@ comment|/*  * Machine dependent constants for ia64.  */
 end_comment
 
 begin_comment
-comment|/*  * USRTEXT is the start of the user text/data space, while USRSTACK  * is the top (end) of the user stack.  Immediately above the user stack  * resides the user structure, which is UPAGES long and contains the  * kernel stack.  */
+comment|/*  * USRTEXT is the start of the user text/data space, while USRSTACK  * is the top (end) of the user stack.  Immediately above the user stack  * resides the syscall gateway page.  */
 end_comment
 
 begin_define
@@ -42,7 +42,7 @@ begin_define
 define|#
 directive|define
 name|USRSTACK
-value|VM_MAXUSER_ADDRESS
+value|VM_MAX_ADDRESS
 end_define
 
 begin_comment
@@ -323,22 +323,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_MAXUSER_ADDRESS
+name|VM_MAX_ADDRESS
 value|IA64_RR_BASE(5)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_MAX_ADDRESS
-value|VM_MAXUSER_ADDRESS
+name|VM_GATEWAY_SIZE
+value|PAGE_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAXUSER_ADDRESS
+value|(VM_MAX_ADDRESS + VM_GATEWAY_SIZE)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MIN_KERNEL_ADDRESS
-value|IA64_RR_BASE(5)
+value|VM_MAXUSER_ADDRESS
 end_define
 
 begin_define
@@ -352,7 +359,7 @@ begin_define
 define|#
 directive|define
 name|KERNBASE
-value|(VM_MIN_KERNEL_ADDRESS)
+value|VM_MAX_ADDRESS
 end_define
 
 begin_comment

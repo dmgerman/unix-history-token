@@ -118,7 +118,7 @@ name|PC_REGS
 parameter_list|(
 name|regs
 parameter_list|)
-value|((db_addr_t)(regs)->tf_cr_iip \ 			 + (((regs)->tf_cr_ipsr>> 41)& 3))
+value|((db_addr_t)(regs)->tf_special.iip + \ 	(((regs)->tf_special.psr>> 41)& 3))
 end_define
 
 begin_define
@@ -166,7 +166,7 @@ name|db_clear_single_step
 parameter_list|(
 name|regs
 parameter_list|)
-value|ddb_regs.tf_cr_ipsr&= ~IA64_PSR_SS
+value|ddb_regs.tf_special.psr&= ~IA64_PSR_SS
 end_define
 
 begin_define
@@ -176,7 +176,7 @@ name|db_set_single_step
 parameter_list|(
 name|regs
 parameter_list|)
-value|ddb_regs.tf_cr_ipsr |= IA64_PSR_SS
+value|ddb_regs.tf_special.psr |= IA64_PSR_SS
 end_define
 
 begin_define

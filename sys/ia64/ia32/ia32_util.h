@@ -66,8 +66,22 @@ end_struct
 begin_define
 define|#
 directive|define
+name|IA32_MINSIGSTKSZ
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA32_PAGE_SIZE
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
 name|IA32_USRSTACK
-value|(4L*1024*1024*1024 - PAGE_SIZE)
+value|(2L*1024*1024*1024 - IA32_PAGE_SIZE*2)
 end_define
 
 begin_define
@@ -75,6 +89,13 @@ define|#
 directive|define
 name|IA32_PS_STRINGS
 value|(IA32_USRSTACK - sizeof(struct ia32_ps_strings))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA32_USRSPACE
+value|IA32_PAGE_SIZE
 end_define
 
 begin_function_decl
@@ -115,10 +136,7 @@ directive|define
 name|szsigcode
 value|(*(curproc->p_sysent->sv_szsigcode))
 return|return
-call|(
-name|caddr_t
-call|)
-argument_list|(
+operator|(
 operator|(
 operator|(
 name|caddr_t
@@ -128,8 +146,8 @@ operator|)
 operator|-
 name|szsigcode
 operator|-
-name|SPARE_USRSPACE
-argument_list|)
+name|IA32_USRSPACE
+operator|)
 return|;
 undef|#
 directive|undef

@@ -23,28 +23,14 @@ directive|define
 name|_MACHINE_CPU_H_
 end_define
 
-begin_comment
-comment|/*  * Exported definitions unique to Alpha cpu support.  */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<machine/frame.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|cpu_getstack
-parameter_list|(
-name|td
-parameter_list|)
-value|((td)->td_frame->tf_r[FRAME_SP])
-end_define
-
 begin_comment
-comment|/*  * Arguments to hardclock and gatherstats encapsulate the previous  * machine state in an opaque clockframe.  One the Alpha, we use  * what we push on an interrupt (a trapframe).  */
+comment|/*  * Arguments to hardclock and gatherstats encapsulate the previous machine  * state in an opaque clockframe.  */
 end_comment
 
 begin_struct
@@ -62,22 +48,11 @@ end_struct
 begin_define
 define|#
 directive|define
-name|TRAPF_USERMODE
+name|CLKF_PC
 parameter_list|(
-name|framep
+name|cf
 parameter_list|)
-define|\
-value|(((framep)->tf_cr_ipsr& IA64_PSR_CPL) == IA64_PSR_CPL_USER)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRAPF_PC
-parameter_list|(
-name|framep
-parameter_list|)
-value|((framep)->tf_cr_iip)
+value|((cf)->cf_tf.tf_special.iip)
 end_define
 
 begin_define
@@ -85,19 +60,48 @@ define|#
 directive|define
 name|CLKF_USERMODE
 parameter_list|(
-name|framep
+name|cf
 parameter_list|)
-value|TRAPF_USERMODE(&(framep)->cf_tf)
+value|((CLKF_PC(cf)>> 61)< 5)
+end_define
+
+begin_comment
+comment|/* Used by signaling code. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cpu_getstack
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_frame->tf_special.sp)
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRAPF_PC
+parameter_list|(
+name|tf
+parameter_list|)
+value|((tf)->tf_special.iip)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLKF_PC
+name|TRAPF_USERMODE
 parameter_list|(
 name|framep
 parameter_list|)
-value|TRAPF_PC(&(framep)->cf_tf)
+define|\
+value|(((framep)->tf_special.psr& IA64_PSR_CPL) == IA64_PSR_CPL_USER)
 end_define
 
 begin_comment
@@ -317,10 +321,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|do_sir
+name|int
+name|do_ast
 parameter_list|(
-name|void
+name|struct
+name|trapframe
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -333,19 +339,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|void
-name|exception_restore
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* MAGIC */
-end_comment
 
 begin_function_decl
 name|void
@@ -377,9 +370,33 @@ end_comment
 
 begin_function_decl
 name|int
-name|ia64_pa_access
+name|ia64_highfp_drop
 parameter_list|(
-name|u_long
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ia64_highfp_load
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ia64_highfp_save
+parameter_list|(
+name|struct
+name|thread
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -396,52 +413,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|ia64_fpstate_check
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ia64_fpstate_save
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|p
-parameter_list|,
 name|int
-name|write
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ia64_fpstate_drop
+name|ia64_pa_access
 parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ia64_fpstate_switch
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|p
+name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -567,14 +542,9 @@ comment|/* MAGIC */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|syscall
 parameter_list|(
-name|int
-parameter_list|,
-name|u_int64_t
-modifier|*
-parameter_list|,
 name|struct
 name|trapframe
 modifier|*
@@ -588,9 +558,6 @@ name|trap
 parameter_list|(
 name|int
 name|vector
-parameter_list|,
-name|int
-name|imm
 parameter_list|,
 name|struct
 name|trapframe
@@ -612,6 +579,15 @@ end_function_decl
 begin_function_decl
 name|int
 name|ia64_count_cpus
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|map_gateway_page
 parameter_list|(
 name|void
 parameter_list|)

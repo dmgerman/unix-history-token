@@ -277,7 +277,6 @@ name|SYSCALLNUM
 parameter_list|(
 name|name
 parameter_list|)
-define|\
 value|SYS_ ## name
 end_define
 
@@ -289,7 +288,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|mov	r15=SYSCALLNUM(name);		\ 	break	0x100000 ;;
+value|{	.mmi ;							\ 	alloc		r9 = ar.pfs, 0, 0, 8, 0 ;		\ 	mov		r31 = ar.k5 ;				\ 	mov		r10 = b0 ;; }				\ {	.mib ;							\ 	mov		r8 = SYSCALLNUM(name) ;			\ 	mov		b7 = r31 ; 				\ 	br.call.sptk	b0 = b7 ;; }
 end_define
 
 begin_comment

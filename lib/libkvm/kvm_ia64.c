@@ -644,7 +644,7 @@ index|]
 operator|.
 name|n_name
 operator|=
-literal|"kptdir"
+literal|"ia64_kptdir"
 expr_stmt|;
 name|nlist
 index|[

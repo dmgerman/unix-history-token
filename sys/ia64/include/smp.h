@@ -39,7 +39,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPI_MCA_RENDEZ
+name|IPI_HIGH_FP
 value|1
 end_define
 
@@ -53,8 +53,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPI_TEST
+name|IPI_MCA_RENDEZ
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_TEST
+value|4
 end_define
 
 begin_comment
@@ -65,28 +72,28 @@ begin_define
 define|#
 directive|define
 name|IPI_AST
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPI_RENDEZVOUS
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|IPI_STOP
+name|IPI_RENDEZVOUS
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|IPI_COUNT
+name|IPI_STOP
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_COUNT
+value|8
 end_define
 
 begin_ifndef
@@ -140,6 +147,19 @@ begin_function_decl
 name|void
 name|ipi_self
 parameter_list|(
+name|int
+name|ipi
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ipi_send
+parameter_list|(
+name|u_int64_t
+name|lid
+parameter_list|,
 name|int
 name|ipi
 parameter_list|)
