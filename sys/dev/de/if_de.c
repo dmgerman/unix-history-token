@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.80 1998/09/25 18:06:53 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.94 1999/01/27 23:45:41 dillon Exp $ */
+comment|/*	$Id: if_de.c,v 1.95 1999/01/28 00:57:52 dillon Exp $ */
 end_comment
 
 begin_comment
@@ -12160,7 +12160,7 @@ comment|/*      * Save the hardware address.      */
 name|bcopy
 argument_list|(
 operator|(
-name|v_caddr_t
+name|c_caddr_t
 operator|)
 name|shp
 operator|->
