@@ -314,5 +314,22 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|infohandler
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
+block|{
+name|got_siginfo
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

@@ -519,6 +519,13 @@ argument_list|,
 name|catchquit
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINFO
+argument_list|,
+name|infohandler
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Push up our allowed memory limit so we can cope 	 * with huge filesystems. 	 */
 if|if
 condition|(
