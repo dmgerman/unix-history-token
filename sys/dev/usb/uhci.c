@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.155 2002/02/27 12:42:41 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.156 2002/03/04 00:53:33 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -7375,7 +7375,9 @@ name|abort_task
 argument_list|,
 name|uhci_timeout_task
 argument_list|,
-name|addr
+name|ii
+operator|->
+name|xfer
 argument_list|)
 expr_stmt|;
 name|usb_add_task
