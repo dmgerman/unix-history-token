@@ -362,42 +362,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KTR_MASK
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|KTR_MASK
-value|(KTR_GEN)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KTR_CPUMASK
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|KTR_CPUMASK
-value|(~0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|LOCORE
 end_ifndef
 
@@ -515,6 +479,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|ktr_verbose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 specifier|volatile
 name|int
 name|ktr_idx
@@ -569,66 +540,88 @@ directive|ifdef
 name|KTR_EXTEND
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_TR_CPU
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_TR_CPU
-value|cpuid
-end_define
+begin_function_decl
+name|void
+name|ktr_tracepoint
+parameter_list|(
+name|u_int
+name|mask
+parameter_list|,
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|u_int
+name|line
+parameter_list|,
+name|char
+modifier|*
+name|format
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
 directive|else
 end_else
 
+begin_function_decl
+name|void
+name|ktr_tracepoint
+parameter_list|(
+name|u_int
+name|mask
+parameter_list|,
+name|char
+modifier|*
+name|format
+parameter_list|,
+name|u_long
+name|arg1
+parameter_list|,
+name|u_long
+name|arg2
+parameter_list|,
+name|u_long
+name|arg3
+parameter_list|,
+name|u_long
+name|arg4
+parameter_list|,
+name|u_long
+name|arg5
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KTR_EXTEND
+end_ifdef
+
 begin_define
 define|#
 directive|define
-name|_TR_CPU
-value|0
+name|CTR
+parameter_list|(
+name|m
+parameter_list|,
+name|format
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+value|do {					\ 	if (KTR_COMPILE& (m))						\ 		ktr_tracepoint((m), __FILE__, __LINE__, format , ##args); \ 	} while(0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_TR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_TR
-parameter_list|()
-define|\
-value|struct ktr_entry *_ktrptr;				\ 	int _ktr_newidx, _ktr_saveidx;				\ 	int _tr_intrsave = save_intr();				\ 	disable_intr();						\ 	do {							\ 		_ktr_saveidx = ktr_idx;				\ 		_ktr_newidx = (ktr_idx + 1)& (KTR_ENTRIES - 1); \ 	} while (atomic_cmpset_int(&ktr_idx, _ktr_saveidx, _ktr_newidx) == 0); \ 	_ktrptr =&ktr_buf[_ktr_saveidx];			\ 	restore_intr(_tr_intrsave);				\ 	nanotime(&_ktrptr->ktr_tv);				\ 	snprintf (_ktrptr->ktr_filename, KTRFILENAMESIZE, "%s", __FILE__); \         _ktrptr->ktr_line = __LINE__;				\ 	_ktrptr->ktr_cpu = _TR_CPU;
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -637,10 +630,9 @@ name|CTR0
 parameter_list|(
 name|m
 parameter_list|,
-name|_desc
+name|format
 parameter_list|)
-define|\
-value|if (KTR_COMPILE& (m)) {				\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			memcpy (_ktrptr->ktr_desc, _desc, KTRDESCSIZE);	\ 		}						\ 	}
+value|CTR(m, format)
 end_define
 
 begin_define
@@ -650,12 +642,11 @@ name|CTR1
 parameter_list|(
 name|m
 parameter_list|,
-name|_desc
+name|format
 parameter_list|,
-name|_p1
+name|p1
 parameter_list|)
-define|\
-value|if (KTR_COMPILE& (m)) {				\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			snprintf (_ktrptr->ktr_desc, KTRDESCSIZE, _desc, _p1);	\ 		}						\ 	}
+value|CTR(m, format, p1)
 end_define
 
 begin_define
@@ -665,14 +656,13 @@ name|CTR2
 parameter_list|(
 name|m
 parameter_list|,
-name|_desc
+name|format
 parameter_list|,
-name|_p1
+name|p1
 parameter_list|,
-name|_p2
+name|p2
 parameter_list|)
-define|\
-value|if (KTR_COMPILE& (m)) {				\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			snprintf (_ktrptr->ktr_desc, KTRDESCSIZE, _desc, _p1, _p2);	\ 		}						\ 	}
+value|CTR(m, format, p1, p2)
 end_define
 
 begin_define
@@ -682,16 +672,15 @@ name|CTR3
 parameter_list|(
 name|m
 parameter_list|,
-name|_desc
+name|format
 parameter_list|,
-name|_p1
+name|p1
 parameter_list|,
-name|_p2
+name|p2
 parameter_list|,
-name|_p3
+name|p3
 parameter_list|)
-define|\
-value|if (KTR_COMPILE& (m)) {				\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			snprintf (_ktrptr->ktr_desc, KTRDESCSIZE, _desc, _p1, _p2, _p3);	\ 		}						\ 	}
+value|CTR(m, format, p1, p2, p3)
 end_define
 
 begin_define
@@ -701,18 +690,17 @@ name|CTR4
 parameter_list|(
 name|m
 parameter_list|,
-name|_desc
+name|format
 parameter_list|,
-name|_p1
+name|p1
 parameter_list|,
-name|_p2
+name|p2
 parameter_list|,
-name|_p3
+name|p3
 parameter_list|,
-name|_p4
+name|p4
 parameter_list|)
-define|\
-value|if (KTR_COMPILE& (m)) {				\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			snprintf (_ktrptr->ktr_desc, KTRDESCSIZE, _desc, _p1, _p2, _p3, _p4);	\ 		}						\ 	}
+value|CTR(m, format, p1, p2, p3, p4)
 end_define
 
 begin_define
@@ -722,20 +710,20 @@ name|CTR5
 parameter_list|(
 name|m
 parameter_list|,
-name|_desc
+name|format
 parameter_list|,
-name|_p1
+name|p1
 parameter_list|,
-name|_p2
+name|p2
 parameter_list|,
-name|_p3
+name|p3
 parameter_list|,
-name|_p4
+name|p4
 parameter_list|,
-name|_p5
+name|p5
 parameter_list|)
 define|\
-value|if (KTR_COMPILE& (m)) {					\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			snprintf (_ktrptr->ktr_desc, KTRDESCSIZE, _desc, _p1, _p2, _p3, _p4, _p5);	\ 		}						\ 	}
+value|CTR(m, format, p1, p2, p3, p4, p5)
 end_define
 
 begin_else
@@ -747,27 +735,27 @@ begin_comment
 comment|/* not extended */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_TR
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_TR
+name|CTR5
 parameter_list|(
-name|_desc
+name|m
+parameter_list|,
+name|format
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|,
+name|p5
 parameter_list|)
-define|\
-value|struct ktr_entry *_ktrptr;				\ 	int _ktr_newidx, _ktr_saveidx;				\ 	do {							\ 		_ktr_saveidx = ktr_idx;				\ 		_ktr_newidx = (ktr_idx + 1)& (KTR_ENTRIES - 1); \ 	} while (atomic_cmpset_int(&ktr_idx, _ktr_saveidx, _ktr_newidx) == 0); \ 	_ktrptr =&ktr_buf[_ktr_saveidx];			\ 	nanotime(&_ktrptr->ktr_tv);				\ 	_ktrptr->ktr_desc = (_desc);
+value|do {			\ 	if (KTR_COMPILE& (m))						\ 		ktr_tracepoint((m), format, (u_long)p1, (u_long)p2,	\ 		    (u_long)p3, (u_long)p4, (u_long)p5);		\ 	} while(0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -776,10 +764,9 @@ name|CTR0
 parameter_list|(
 name|m
 parameter_list|,
-name|_desc
+name|format
 parameter_list|)
-define|\
-value|if (KTR_COMPILE& (m)) {				\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 		}						\ 	}
+value|CTR5(m, format, 0, 0, 0, 0, 0)
 end_define
 
 begin_define
@@ -789,12 +776,11 @@ name|CTR1
 parameter_list|(
 name|m
 parameter_list|,
-name|_desc
+name|format
 parameter_list|,
-name|_p1
+name|p1
 parameter_list|)
-define|\
-value|if (KTR_COMPILE& (m)) {				\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 			_ktrptr->ktr_parm1 = (u_long)(_p1);	\ 		}						\ 	}
+value|CTR5(m, format, p1, 0, 0, 0, 0)
 end_define
 
 begin_define
@@ -804,14 +790,13 @@ name|CTR2
 parameter_list|(
 name|m
 parameter_list|,
-name|_desc
+name|format
 parameter_list|,
-name|_p1
+name|p1
 parameter_list|,
-name|_p2
+name|p2
 parameter_list|)
-define|\
-value|if (KTR_COMPILE& (m)) {				\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 			_ktrptr->ktr_parm1 = (u_long)(_p1);	\ 			_ktrptr->ktr_parm2 = (u_long)(_p2);	\ 		}						\ 	}
+value|CTR5(m, format, p1, p2, 0, 0, 0)
 end_define
 
 begin_define
@@ -821,16 +806,15 @@ name|CTR3
 parameter_list|(
 name|m
 parameter_list|,
-name|_desc
+name|format
 parameter_list|,
-name|_p1
+name|p1
 parameter_list|,
-name|_p2
+name|p2
 parameter_list|,
-name|_p3
+name|p3
 parameter_list|)
-define|\
-value|if (KTR_COMPILE& (m)) {				\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 			_ktrptr->ktr_parm1 = (u_long)(_p1);	\ 			_ktrptr->ktr_parm2 = (u_long)(_p2);	\ 			_ktrptr->ktr_parm3 = (u_long)(_p3);	\ 		}						\ 	}
+value|CTR5(m, format, p1, p2, p3, 0, 0)
 end_define
 
 begin_define
@@ -840,47 +824,27 @@ name|CTR4
 parameter_list|(
 name|m
 parameter_list|,
-name|_desc
+name|format
 parameter_list|,
-name|_p1
+name|p1
 parameter_list|,
-name|_p2
+name|p2
 parameter_list|,
-name|_p3
+name|p3
 parameter_list|,
-name|_p4
+name|p4
 parameter_list|)
-define|\
-value|if (KTR_COMPILE& (m)) {				\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 			_ktrptr->ktr_parm1 = (u_long)(_p1);	\ 			_ktrptr->ktr_parm2 = (u_long)(_p2);	\ 			_ktrptr->ktr_parm3 = (u_long)(_p3);	\ 			_ktrptr->ktr_parm4 = (u_long)(_p4);	\ 		}						\ 	}
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTR5
-parameter_list|(
-name|m
-parameter_list|,
-name|_desc
-parameter_list|,
-name|_p1
-parameter_list|,
-name|_p2
-parameter_list|,
-name|_p3
-parameter_list|,
-name|_p4
-parameter_list|,
-name|_p5
-parameter_list|)
-define|\
-value|if (KTR_COMPILE& (m)) {				\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 			_ktrptr->ktr_parm1 = (u_long)(_p1);	\ 			_ktrptr->ktr_parm2 = (u_long)(_p2);	\ 			_ktrptr->ktr_parm3 = (u_long)(_p3);	\ 			_ktrptr->ktr_parm4 = (u_long)(_p4);	\ 			_ktrptr->ktr_parm5 = (u_long)(_p5);	\ 		}						\ 	}
+value|CTR5(m, format, p1, p2, p3, p4, 0)
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KTR_EXTEND */
+end_comment
 
 begin_else
 else|#
