@@ -528,6 +528,15 @@ directive|endif
 name|critical_enter
 argument_list|()
 expr_stmt|;
+comment|/* Rearm so we get the next clock interrupt */
+name|ia64_set_itm
+argument_list|(
+name|ia64_get_itc
+argument_list|()
+operator|+
+name|itm_reload
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -553,14 +562,6 @@ condition|)
 block|{
 endif|#
 directive|endif
-name|ia64_set_itm
-argument_list|(
-name|ia64_get_itc
-argument_list|()
-operator|+
-name|itm_reload
-argument_list|)
-expr_stmt|;
 name|hardclock
 argument_list|(
 operator|(
@@ -599,14 +600,6 @@ name|SMP
 block|}
 else|else
 block|{
-name|ia64_set_itm
-argument_list|(
-name|ia64_get_itc
-argument_list|()
-operator|+
-name|itm_reload
-argument_list|)
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
