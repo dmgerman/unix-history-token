@@ -4972,6 +4972,22 @@ name|cp
 operator|++
 expr_stmt|;
 block|}
+comment|/* 		     * Replacing the empty string for something else when 		     * done globally causes an infinite loop. The only 		     * meaningful substitution of the empty string would 		     * be those anchored by '^' or '$'. Thus, we can 		     * safely turn the substitution into a non-global one 		     * if the LHS is the empty string. 		     */
+if|if
+condition|(
+name|pattern
+operator|.
+name|leftLen
+operator|==
+literal|0
+condition|)
+name|pattern
+operator|.
+name|flags
+operator|&=
+operator|~
+name|VAR_SUB_GLOBAL
+expr_stmt|;
 name|termc
 operator|=
 operator|*
