@@ -3141,7 +3141,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"%x:%x:%x:%x:%x:%x"
+literal|"%02x:%02x:%02x:%02x:%02x:%02x"
 argument_list|,
 name|cp
 index|[
