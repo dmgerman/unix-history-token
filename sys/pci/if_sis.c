@@ -364,6 +364,7 @@ operator|,
 expr|struct
 name|mbuf
 operator|*
+operator|*
 operator|,
 name|u_int32_t
 operator|*
@@ -7631,6 +7632,7 @@ decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
+modifier|*
 name|m_head
 decl_stmt|;
 name|u_int32_t
@@ -7686,6 +7688,7 @@ for|for
 control|(
 name|m
 operator|=
+operator|*
 name|m_head
 init|;
 name|m
@@ -7734,6 +7737,7 @@ name|m
 operator|=
 name|m_defrag
 argument_list|(
+operator|*
 name|m_head
 argument_list|,
 name|M_DONTWAIT
@@ -7750,6 +7754,7 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
+operator|*
 name|m_head
 operator|=
 name|m
@@ -7758,6 +7763,7 @@ block|}
 comment|/*  	 * Start packing the mbufs in this chain into 	 * the fragment pointers. Stop when we run out  	 * of fragments or hit the end of the mbuf chain. 	 */
 name|m
 operator|=
+operator|*
 name|m_head
 expr_stmt|;
 name|cur
@@ -7771,6 +7777,7 @@ for|for
 control|(
 name|m
 operator|=
+operator|*
 name|m_head
 init|;
 name|m
@@ -7902,6 +7909,7 @@ index|]
 operator|.
 name|sis_mbuf
 operator|=
+operator|*
 name|m_head
 expr_stmt|;
 name|sc
@@ -8055,6 +8063,7 @@ name|sis_encap
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|m_head
 argument_list|,
 operator|&
