@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.21 1996/02/24 13:39:46 phk Exp $  *  */
+comment|/*  * Copyright (c) 1996 Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.22 1996/04/02 11:43:28 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -300,7 +300,7 @@ name|IP_FW_F_ACCEPT
 condition|)
 name|printf
 argument_list|(
-literal|"accept"
+literal|"allow"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1167,6 +1167,20 @@ condition|(
 name|chain
 operator|->
 name|fw_tcpf
+operator|&
+name|IP_FW_TCPF_ESTAB
+condition|)
+name|printf
+argument_list|(
+literal|" established"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|chain
+operator|->
+name|fw_tcpf
 operator|==
 name|IP_FW_TCPF_SYN
 operator|&&
@@ -1179,25 +1193,6 @@ condition|)
 name|printf
 argument_list|(
 literal|" setup"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|chain
-operator|->
-name|fw_tcpnf
-operator|==
-name|IP_FW_TCPF_SYN
-operator|&&
-operator|!
-name|chain
-operator|->
-name|fw_tcpf
-condition|)
-name|printf
-argument_list|(
-literal|" established"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2692,6 +2687,40 @@ argument_list|(
 operator|*
 name|av
 argument_list|,
+literal|"allow"
+argument_list|,
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|rule
+operator|.
+name|fw_flg
+operator||=
+name|IP_FW_F_ACCEPT
+expr_stmt|;
+name|av
+operator|++
+expr_stmt|;
+name|ac
+operator|--
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ac
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
 literal|"pass"
 argument_list|,
 name|strlen
@@ -3546,9 +3575,9 @@ condition|)
 block|{
 name|rule
 operator|.
-name|fw_tcpnf
+name|fw_tcpf
 operator||=
-name|IP_FW_TCPF_SYN
+name|IP_FW_TCPF_ESTAB
 expr_stmt|;
 name|av
 operator|++
