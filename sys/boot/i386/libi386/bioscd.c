@@ -16,13 +16,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/reboot.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/param.h>
+file|<sys/reboot.h>
 end_include
 
 begin_include
