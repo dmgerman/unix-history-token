@@ -2015,18 +2015,6 @@ if|if
 condition|(
 operator|!
 name|ifaces
-operator|||
-operator|(
-name|ifaces
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|ifaces
-argument_list|,
-literal|"auto"
-argument_list|)
-operator|)
 condition|)
 name|variable_set2
 argument_list|(
@@ -2040,8 +2028,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Only add it if it's not there already */
+operator|+
 if|if
 condition|(
+name|strcmp
+argument_list|(
+name|ifaces
+argument_list|,
+literal|"auto"
+argument_list|)
+operator|&&
 operator|!
 name|strstr
 argument_list|(
