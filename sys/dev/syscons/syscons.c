@@ -779,6 +779,8 @@ directive|if
 name|__i386__
 operator|||
 name|__ia64__
+operator|||
+name|__amd64__
 end_if
 
 begin_function_decl
@@ -7846,6 +7848,8 @@ directive|if
 name|__i386__
 operator|||
 name|__ia64__
+operator|||
+name|__amd64__
 name|int
 name|unit
 decl_stmt|;
@@ -7917,7 +7921,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __i386__ || __ia64__ */
+comment|/* __i386__ || __ia64__ || __amd64__ */
 if|#
 directive|if
 name|__alpha__
@@ -7950,6 +7954,8 @@ directive|if
 name|__i386__
 operator|||
 name|__ia64__
+operator|||
+name|__amd64__
 name|int
 name|unit
 decl_stmt|;
@@ -7997,7 +8003,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __i386__ */
+comment|/* __i386__ || __ia64__ || __amd64__ */
 if|#
 directive|if
 name|__alpha__
@@ -8033,6 +8039,8 @@ directive|if
 name|__i386__
 operator|||
 name|__ia64__
+operator|||
+name|__amd64__
 if|#
 directive|if
 literal|0
@@ -8058,7 +8066,7 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __i386__ */
+comment|/* __i386__ || __ia64__ || __amd64__ */
 if|#
 directive|if
 name|__alpha__
@@ -15288,6 +15296,8 @@ directive|if
 name|__i386__
 operator|||
 name|__ia64__
+operator|||
+name|__amd64__
 end_if
 
 begin_function
@@ -15555,6 +15565,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __i386__ || __ia64__ || __amd64__ */
+end_comment
 
 begin_function
 specifier|static
