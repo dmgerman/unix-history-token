@@ -469,6 +469,7 @@ name|cicmp
 parameter_list|(
 name|cp
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cp

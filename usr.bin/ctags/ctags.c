@@ -337,6 +337,7 @@ name|argv
 decl_stmt|;
 block|{
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|outfile
@@ -748,6 +749,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*

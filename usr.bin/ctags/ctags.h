@@ -368,6 +368,7 @@ name|cicmp
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -395,6 +396,7 @@ name|pfnote
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
