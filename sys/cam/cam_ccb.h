@@ -1932,11 +1932,11 @@ name|u_int8_t
 name|tag_action
 decl_stmt|;
 comment|/* What to do for tag queueing */
-name|u_int8_t
+name|u_int
 name|tag_id
 decl_stmt|;
 comment|/* tag id from initator (target mode) */
-name|u_int8_t
+name|u_int
 name|init_id
 decl_stmt|;
 comment|/* initiator id of who selected */
