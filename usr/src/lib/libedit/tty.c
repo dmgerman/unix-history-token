@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.3 (Berkeley) %G%"
+literal|"@(#)tty.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4381,6 +4381,10 @@ name|el
 argument_list|,
 name|map
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|old
 argument_list|)
 expr_stmt|;
@@ -4406,6 +4410,10 @@ name|el
 argument_list|,
 name|map
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|new
 argument_list|)
 expr_stmt|;
@@ -4440,6 +4448,10 @@ name|el
 argument_list|,
 name|alt
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|old
 argument_list|)
 expr_stmt|;
@@ -4465,6 +4477,10 @@ name|el
 argument_list|,
 name|alt
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|new
 argument_list|)
 expr_stmt|;
