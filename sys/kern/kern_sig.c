@@ -5669,7 +5669,7 @@ comment|/* COMPAT_43 || COMPAT_SUNOS */
 end_comment
 
 begin_comment
-comment|/*  * Suspend process until signal, providing mask to be set  * in the meantime.  Note nonstandard calling convention:  * libc stub passes mask, not pointer, to save a copyin.  ***** XXXKSE this doesn't make sense under KSE.  ***** Do we suspend the thread or all threads in the process?  ***** How do we suspend threads running NOW on another processor?  */
+comment|/*  * Suspend process until signal, providing mask to be set  * in the meantime.   ***** XXXKSE this doesn't make sense under KSE.  ***** Do we suspend the thread or all threads in the process?  ***** How do we suspend threads running NOW on another processor?  */
 end_comment
 
 begin_ifndef
@@ -5874,6 +5874,10 @@ end_ifdef
 
 begin_comment
 comment|/* XXX - COMPAT_FBSD3 */
+end_comment
+
+begin_comment
+comment|/*  * Compatibility sigsuspend call for old binaries.  Note nonstandard calling  * convention: libc stub passes mask, not pointer, to save a copyin.  */
 end_comment
 
 begin_ifndef
