@@ -15,27 +15,6 @@ directive|define
 name|_AIC7XXX_FREEBSD_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CAM_NEW_TRAN_CODE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|AHC_NEW_TRAN_SETTINGS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CAM_NEW_TRAN_CODE */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -242,6 +221,27 @@ include|#
 directive|include
 file|<cam/scsi/scsi_message.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CAM_NEW_TRAN_CODE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|AHC_NEW_TRAN_SETTINGS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CAM_NEW_TRAN_CODE */
+end_comment
 
 begin_comment
 comment|/****************************** Platform Macros *******************************/
