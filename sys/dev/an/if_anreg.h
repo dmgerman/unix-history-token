@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|AN_TIMEOUT
-value|600000
+value|65536
 end_define
 
 begin_comment
@@ -1946,10 +1946,9 @@ decl_stmt|;
 name|struct
 name|an_ltv_key
 name|an_temp_keys
-decl_stmt|;
-name|struct
-name|an_ltv_key
-name|an_perm_keys
+index|[
+literal|4
+index|]
 decl_stmt|;
 name|int
 name|an_tx_rate
@@ -2157,6 +2156,18 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|an_shutdown
+name|__P
+argument_list|(
+operator|(
+name|device_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|an_resume
 name|__P
 argument_list|(
 operator|(
