@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Qlogic Target Mode Structure and Flag Definitions  *  * Copyright (c) 1997, 1998  * Patrick Stirling  * pms@psconsult.com  * All rights reserved.  *  * Additional Copyright (c) 1999  * Matthew Jacob  * mjacob@feral.com  * All rights reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Qlogic Target Mode Structure and Flag Definitions  *  * Copyright (c) 1997, 1998  * Patrick Stirling  * pms@psconsult.com  * All rights reserved.  *  * Additional Copyright (c) 1999, 2000  * Matthew Jacob  * mjacob@feral.com  * All rights reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -1979,7 +1979,7 @@ parameter_list|,
 name|vsrc
 parameter_list|)
 define|\
-value|{									\ 	ct_entry_t *source = (ct_entry-t *) vsrc;			\ 	ct_entry_t *local, *vdst;					\ 	if ((void *)dest == (void *)vsrc) {				\ 		MEMCPY(vsrc,&local, sizeof (ct_entry_t));		\ 		vdst =&local;						\ 	} else {							\ 		vdst = dest;						\ 	}								\ 	vdst->ct_header = source->ct_header;				\ 	vdst->ct_reserved = source->ct_reserved;			\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_lun, ct_iid);		\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_rsvd, ct_tgt);		\ 	vdst->ct_flags = source->ct_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_status, ct_scsi_status);	\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_tag_val, ct_tag_type);	\ 	vdst->ct_xfrlen = source->ct_xfrlen;				\ 	vdst->ct_resid = source->ct_resid;				\ 	vdst->ct_timeout = source->ct_timeout;				\ 	vdst->ct_seg_count = source->ct_seg_count;			\ 	MEMCPY(vdst->ct_cdb, source->ct_cdb, ATIO_CDBLEN);		\ 	MEMCPY(vdst->ct_sense, source->ct_sense, QLTM_SENSELEN);	\ 	vdst->ct_dataseg = source->ct_dataseg;				\ }
+value|{									\ 	ct_entry_t *source = (ct_entry_t *) vsrc;			\ 	ct_entry_t *local, *vdst;					\ 	if ((void *)dest == (void *)vsrc) {				\ 		MEMCPY(vsrc,&local, sizeof (ct_entry_t));		\ 		vdst =&local;						\ 	} else {							\ 		vdst = dest;						\ 	}								\ 	vdst->ct_header = source->ct_header;				\ 	vdst->ct_reserved = source->ct_reserved;			\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_lun, ct_iid);		\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_rsvd, ct_tgt);		\ 	vdst->ct_flags = source->ct_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_status, ct_scsi_status);	\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_tag_val, ct_tag_type);	\ 	vdst->ct_xfrlen = source->ct_xfrlen;				\ 	vdst->ct_resid = source->ct_resid;				\ 	vdst->ct_timeout = source->ct_timeout;				\ 	vdst->ct_seg_count = source->ct_seg_count;			\ 	MEMCPY(vdst->ct_cdb, source->ct_cdb, ATIO_CDBLEN);		\ 	MEMCPY(vdst->ct_sense, source->ct_sense, QLTM_SENSELEN);	\ 	vdst->ct_dataseg = source->ct_dataseg;				\ }
 end_define
 
 begin_define
@@ -2193,13 +2193,6 @@ begin_comment
 comment|/*  * Debug macros  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|isp_tdebug
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -2214,19 +2207,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|if (isp_tdebug> 3) isp_print_qentry(isp, msg, idx, arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ITDEBUG
-parameter_list|(
-name|level
-parameter_list|,
-name|msg
-parameter_list|)
-value|if (isp_tdebug>= level) PRINTF msg
+value|if (isp->isp_dblev& ISP_LOGTDEBUG2) isp_print_qentry(isp, msg, idx, arg)
 end_define
 
 begin_comment
@@ -2265,8 +2246,12 @@ begin_define
 define|#
 directive|define
 name|DFLT_CMD_CNT
-value|(RESULT_QUEUE_LEN>> 1)
+value|32
 end_define
+
+begin_comment
+comment|/* XX */
+end_comment
 
 begin_define
 define|#

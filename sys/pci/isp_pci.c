@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * PCI specific probe and attach routines for Qlogic ISP SCSI adapters.  * FreeBSD Version.  *  *---------------------------------------  * Copyright (c) 1997, 1998, 1999 by Matthew Jacob  * NASA/Ames Research Center  * All rights reserved.  *---------------------------------------  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * PCI specific probe and attach routines for Qlogic ISP SCSI adapters.  * FreeBSD Version.  *  *---------------------------------------  * Copyright (c) 1997, 1998, 1999 by Matthew Jacob  * NASA/Ames Research Center  * All rights reserved.  *---------------------------------------  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -195,7 +195,7 @@ expr|struct
 name|ispsoftc
 operator|*
 operator|,
-name|ISP_SCSI_XFER_T
+name|XS_T
 operator|*
 operator|,
 name|ispreq_t
@@ -221,7 +221,7 @@ expr|struct
 name|ispsoftc
 operator|*
 operator|,
-name|ISP_SCSI_XFER_T
+name|XS_T
 operator|*
 operator|,
 name|u_int32_t
@@ -254,6 +254,10 @@ argument_list|(
 operator|(
 expr|struct
 name|ispsoftc
+operator|*
+operator|,
+specifier|const
+name|char
 operator|*
 operator|)
 argument_list|)
@@ -303,17 +307,9 @@ name|isp_pci_dumpregs
 block|,
 name|NULL
 block|,
-literal|0
-block|,
-name|ISP_CODE_ORG
-block|,
-literal|0
-block|,
 name|BIU_BURST_ENABLE
 operator||
 name|BIU_PCI_CONF1_FIFO_64
-block|,
-literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -343,17 +339,9 @@ name|isp_pci_dumpregs
 block|,
 name|NULL
 block|,
-literal|0
-block|,
-name|ISP_CODE_ORG
-block|,
-literal|0
-block|,
 name|BIU_BURST_ENABLE
 operator||
 name|BIU_PCI_CONF1_FIFO_64
-block|,
-literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -383,17 +371,9 @@ name|isp_pci_dumpregs
 block|,
 name|NULL
 block|,
-literal|0
-block|,
-name|NULL
-block|,
-literal|0
-block|,
 name|BIU_BURST_ENABLE
 operator||
 name|BIU_PCI_CONF1_FIFO_64
-block|,
-literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -420,18 +400,6 @@ block|,
 name|isp_pci_reset1
 block|,
 name|isp_pci_dumpregs
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-name|ISP_CODE_ORG
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -458,18 +426,6 @@ block|,
 name|isp_pci_reset1
 block|,
 name|isp_pci_dumpregs
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-name|ISP_CODE_ORG
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -866,54 +822,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* This distinguishing define is not right, but it does work */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IO_SPACE_MAPPING
-value|ALPHA_BUS_SPACE_IO
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEM_SPACE_MAPPING
-value|ALPHA_BUS_SPACE_MEM
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|IO_SPACE_MAPPING
-value|I386_BUS_SPACE_IO
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEM_SPACE_MAPPING
-value|I386_BUS_SPACE_MEM
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|isp_pcisoftc
@@ -1047,6 +955,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|isp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -1167,9 +1085,11 @@ name|dev
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|bootverbose
 condition|)
 block|{
-name|CFGPRINTF
+name|printf
 argument_list|(
 literal|"Qlogic ISP Driver, FreeBSD Version %d.%d, "
 literal|"Core Version %d.%d\n"
@@ -1226,6 +1146,8 @@ decl_stmt|,
 name|m2
 decl_stmt|,
 name|s
+decl_stmt|,
+name|isp_debug
 decl_stmt|;
 name|u_int32_t
 name|data
@@ -2217,13 +2139,13 @@ name|data
 operator|=
 name|PCI_DFLT_LNSZ
 expr_stmt|;
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: set PCI line size to %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+literal|"set PCI line size to %d"
 argument_list|,
 name|data
 argument_list|)
@@ -2263,13 +2185,13 @@ name|data
 operator|=
 name|PCI_DFLT_LTNCY
 expr_stmt|;
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: set PCI latency to %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+literal|"set PCI latency to %d"
 argument_list|,
 name|data
 argument_list|)
@@ -2708,7 +2630,7 @@ name|i
 index|]
 expr_stmt|;
 block|}
-comment|/* 		 * Make sure the top nibble has something vaguely sensible. 		 */
+comment|/* 		 * Make sure the top nibble has something vaguely sensible 		 * (NAA == Locally Administered) 		 */
 name|isp
 operator|->
 name|isp_osinfo
@@ -2716,7 +2638,7 @@ operator|.
 name|default_wwn
 operator||=
 operator|(
-literal|4LL
+literal|3LL
 operator|<<
 literal|60
 operator|)
@@ -2733,6 +2655,10 @@ operator||=
 name|ISP_CFG_OWNWWN
 expr_stmt|;
 block|}
+name|isp_debug
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2744,22 +2670,6 @@ operator|&
 name|isp_debug
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-operator|(
-name|void
-operator|)
-name|getenv_int
-argument_list|(
-literal|"isp_tdebug"
-argument_list|,
-operator|&
-name|isp_tdebug
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|bus_setup_intr
@@ -2807,6 +2717,40 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* 	 * Set up logging levels. 	 */
+if|if
+condition|(
+name|isp_debug
+condition|)
+block|{
+name|isp
+operator|->
+name|isp_dblev
+operator|=
+name|isp_debug
+expr_stmt|;
+block|}
+else|else
+block|{
+name|isp
+operator|->
+name|isp_dblev
+operator|=
+name|ISP_LOGWARN
+operator||
+name|ISP_LOGERR
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|isp
+operator|->
+name|isp_dblev
+operator||=
+name|ISP_LOGCONFIG
+expr_stmt|;
 comment|/* 	 * Make sure we're in reset state. 	 */
 name|isp_reset
 argument_list|(
@@ -4029,7 +3973,7 @@ name|len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|ISP_SCSI_XFER_T
+name|XS_T
 operator|*
 operator|*
 argument_list|)
@@ -4043,7 +3987,7 @@ operator|->
 name|isp_xflist
 operator|=
 operator|(
-name|ISP_SCSI_XFER_T
+name|XS_T
 operator|*
 operator|*
 operator|)
@@ -4065,13 +4009,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: can't alloc xflist array\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"cannot alloc xflist array"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4126,13 +4070,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: can't alloc dma maps\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"can't alloc dma maps"
 argument_list|)
 expr_stmt|;
 name|free
@@ -4181,6 +4125,9 @@ operator|=
 name|ISP_QUEUE_SIZE
 argument_list|(
 name|RQUEST_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|len
@@ -4188,6 +4135,9 @@ operator|+=
 name|ISP_QUEUE_SIZE
 argument_list|(
 name|RESULT_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4370,6 +4320,9 @@ argument_list|,
 name|ISP_QUEUE_SIZE
 argument_list|(
 name|RQUEST_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
 argument_list|)
 argument_list|,
 name|isp_map_rquest
@@ -4439,6 +4392,9 @@ operator|+
 name|ISP_QUEUE_SIZE
 argument_list|(
 name|RQUEST_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|im
@@ -4464,6 +4420,9 @@ argument_list|,
 name|ISP_QUEUE_SIZE
 argument_list|(
 name|RESULT_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
 argument_list|)
 argument_list|,
 name|isp_map_result
@@ -4635,11 +4594,17 @@ operator|+
 name|ISP_QUEUE_SIZE
 argument_list|(
 name|RQUEST_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
 argument_list|)
 operator|+
 name|ISP_QUEUE_SIZE
 argument_list|(
 name|RESULT_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|im
@@ -4980,21 +4945,15 @@ argument_list|,
 name|cto
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|isp_tdebug
-condition|)
-block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s:CTIO lun %d->iid%d flgs 0x%x sts 0x%x ssts "
-literal|"0x%x res %d\n"
-argument_list|,
 name|mp
 operator|->
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGTDEBUG1
+argument_list|,
+literal|"CTIO lun %d->iid%d flgs 0x%x sts 0x%x ssts 0x%x res %d"
 argument_list|,
 name|csio
 operator|->
@@ -5023,7 +4982,6 @@ operator|->
 name|ct_resid
 argument_list|)
 expr_stmt|;
-block|}
 name|ISP_SWIZ_CTIO
 argument_list|(
 name|mp
@@ -5408,21 +5366,19 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|isp_tdebug
-operator|&&
 name|send_status
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s:CTIO lun%d for ID%d ct_flags 0x%x "
-literal|"scsi_status 0x%x res %d\n"
-argument_list|,
 name|mp
 operator|->
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGTDEBUG1
+argument_list|,
+literal|"CTIO lun%d for ID %d ct_flags 0x%x scsi "
+literal|"status %x resid %d"
 argument_list|,
 name|csio
 operator|->
@@ -5448,21 +5404,17 @@ name|ct_resid
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|isp_tdebug
-condition|)
+else|else
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s:CTIO lun%d for ID%d ct_flags 0x%x\n"
-argument_list|,
 name|mp
 operator|->
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGTDEBUG1
+argument_list|,
+literal|"CTIO lun%d for ID%d ct_flags 0x%x"
 argument_list|,
 name|csio
 operator|->
@@ -5531,20 +5483,15 @@ name|rqs_seqno
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|isp_tdebug
-condition|)
-block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s:CTIO lun%d for ID%d ct_flags 0x%x\n"
-argument_list|,
 name|mp
 operator|->
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGTDEBUG1
+argument_list|,
+literal|"CTIO lun%d for ID%d ct_flags 0x%x"
 argument_list|,
 name|csio
 operator|->
@@ -5561,7 +5508,6 @@ operator|->
 name|ct_flags
 argument_list|)
 expr_stmt|;
-block|}
 name|ISP_TDQE
 argument_list|(
 name|mp
@@ -5612,6 +5558,9 @@ operator|->
 name|iptrp
 argument_list|,
 name|RQUEST_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6018,31 +5967,16 @@ argument_list|,
 name|cto
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|isp_tdebug
-condition|)
-block|{
-name|scsi_status
-operator|=
-name|cto
-operator|->
-name|rsp
-operator|.
-name|m1
-operator|.
-name|ct_scsi_status
-expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s:CTIO2 RX_ID 0x%x lun %d->iid%d flgs 0x%x "
-literal|"sts 0x%x ssts 0x%x res %d\n"
-argument_list|,
 name|mp
 operator|->
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGTDEBUG1
+argument_list|,
+literal|"CTIO2 RX_ID 0x%x lun %d->iid%d flgs 0x%x sts 0x%x ssts "
+literal|"0x%x res %d"
 argument_list|,
 name|cto
 operator|->
@@ -6079,7 +6013,6 @@ operator|->
 name|ct_resid
 argument_list|)
 expr_stmt|;
-block|}
 name|ISP_SWIZ_CTIO2
 argument_list|(
 name|isp
@@ -6660,21 +6593,16 @@ argument_list|,
 name|cto
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|isp_tdebug
-condition|)
-block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s:CTIO2 RX_ID 0x%x lun %d->iid%d flgs"
-literal|"0x%x sts 0x%x ssts 0x%x res %d\n"
-argument_list|,
 name|mp
 operator|->
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGTDEBUG1
+argument_list|,
+literal|"CTIO2 RX_ID 0x%x lun %d->iid%d flgs 0x%x sts 0x%x"
+literal|" ssts 0x%x res %d"
 argument_list|,
 name|cto
 operator|->
@@ -6714,7 +6642,6 @@ operator|->
 name|ct_resid
 argument_list|)
 expr_stmt|;
-block|}
 name|ISP_SWIZ_CTIO2
 argument_list|(
 name|isp
@@ -6764,21 +6691,15 @@ argument_list|,
 name|cto
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|isp_tdebug
-condition|)
-block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s:CTIO2 RX_ID 0x%x lun %d->iid%d flgs"
-literal|"0x%x\n"
-argument_list|,
 name|mp
 operator|->
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGTDEBUG1
+argument_list|,
+literal|"CTIO2 RX_ID 0x%x lun %d->iid%d flgs 0x%x"
 argument_list|,
 name|cto
 operator|->
@@ -6802,7 +6723,6 @@ operator|->
 name|ct_flags
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 			 * Get a new CTIO2 			 */
 name|cto
 operator|=
@@ -6837,6 +6757,9 @@ operator|->
 name|iptrp
 argument_list|,
 name|RQUEST_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -7512,6 +7435,9 @@ operator|->
 name|iptrp
 argument_list|,
 name|RQUEST_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8374,7 +8300,7 @@ name|ispsoftc
 modifier|*
 name|isp
 parameter_list|,
-name|ISP_SCSI_XFER_T
+name|XS_T
 modifier|*
 name|xs
 parameter_list|,
@@ -8504,6 +8430,11 @@ name|struct
 name|ispsoftc
 modifier|*
 name|isp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|msg
 parameter_list|)
 block|{
 name|struct
@@ -8518,15 +8449,239 @@ operator|*
 operator|)
 name|isp
 decl_stmt|;
+if|if
+condition|(
+name|msg
+condition|)
 name|printf
 argument_list|(
-literal|"%s: PCI Status Command/Status=%x\n"
+literal|"%s: %s\n"
 argument_list|,
-name|pci
+name|isp
 operator|->
-name|pci_isp
-operator|.
 name|isp_name
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|IS_SCSI
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"    biu_conf1=%x"
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|BIU_CONF1
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"    biu_csr=%x"
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|BIU2100_CSR
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" biu_icr=%x biu_isr=%x biu_sema=%x "
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|BIU_ICR
+argument_list|)
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|BIU_ISR
+argument_list|)
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|BIU_SEMA
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"risc_hccr=%x\n"
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|HCCR
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|IS_SCSI
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+block|{
+name|ISP_WRITE
+argument_list|(
+name|isp
+argument_list|,
+name|HCCR
+argument_list|,
+name|HCCR_CMD_PAUSE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    cdma_conf=%x cdma_sts=%x cdma_fifostat=%x\n"
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|CDMA_CONF
+argument_list|)
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|CDMA_STATUS
+argument_list|)
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|CDMA_FIFO_STS
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    ddma_conf=%x ddma_sts=%x ddma_fifostat=%x\n"
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|DDMA_CONF
+argument_list|)
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|DDMA_STATUS
+argument_list|)
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|DDMA_FIFO_STS
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    sxp_int=%x sxp_gross=%x sxp(scsi_ctrl)=%x\n"
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|SXP_INTERRUPT
+argument_list|)
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|SXP_GROSS_ERR
+argument_list|)
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|SXP_PINS_CTRL
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ISP_WRITE
+argument_list|(
+name|isp
+argument_list|,
+name|HCCR
+argument_list|,
+name|HCCR_CMD_RELEASE
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"    mbox regs: %x %x %x %x %x\n"
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|OUTMAILBOX0
+argument_list|)
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|OUTMAILBOX1
+argument_list|)
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|OUTMAILBOX2
+argument_list|)
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|OUTMAILBOX3
+argument_list|)
+argument_list|,
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|OUTMAILBOX4
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    PCI Status Command/Status=%x\n"
 argument_list|,
 name|pci_read_config
 argument_list|(
