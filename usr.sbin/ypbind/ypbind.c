@@ -2128,9 +2128,8 @@ name|yp_restricted_mode
 argument_list|(
 name|argv
 index|[
+operator|++
 name|i
-operator|+
-literal|1
 index|]
 argument_list|)
 expr_stmt|;
