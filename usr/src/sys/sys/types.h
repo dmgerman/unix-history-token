@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -376,6 +376,30 @@ begin_undef
 undef|#
 directive|undef
 name|_SIZE_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SSIZE_T_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_SSIZE_T_
+name|ssize_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_SSIZE_T_
 end_undef
 
 begin_endif
