@@ -199,7 +199,19 @@ value|4
 block|{
 name|CMD_INFO
 block|,
-literal|"Info"
+literal|"INFo"
+block|,
+literal|""
+block|, }
+block|,
+define|#
+directive|define
+name|CMD_INJECT
+value|5
+block|{
+name|CMD_INJECT
+block|,
+literal|"INJect"
 block|,
 literal|""
 block|, }
@@ -207,7 +219,7 @@ block|,
 define|#
 directive|define
 name|CMD_PAUSE
-value|5
+value|6
 block|{
 name|CMD_PAUSE
 block|,
@@ -219,11 +231,11 @@ block|,
 define|#
 directive|define
 name|CMD_PLAY
-value|6
+value|7
 block|{
 name|CMD_PLAY
 block|,
-literal|"Play"
+literal|"PLay"
 block|,
 literal|"min1:sec1[.fr1] [min2:sec2[.fr2]]"
 block|, }
@@ -231,7 +243,7 @@ block|,
 block|{
 name|CMD_PLAY
 block|,
-literal|"Play"
+literal|"PLay"
 block|,
 literal|"track1[.index1] [track2.[index2]]"
 block|, }
@@ -239,7 +251,7 @@ block|,
 block|{
 name|CMD_PLAY
 block|,
-literal|"Play"
+literal|"PLay"
 block|,
 literal|"[#block [len]]"
 block|, }
@@ -247,7 +259,7 @@ block|,
 define|#
 directive|define
 name|CMD_QUIT
-value|7
+value|8
 block|{
 name|CMD_QUIT
 block|,
@@ -259,7 +271,7 @@ block|,
 define|#
 directive|define
 name|CMD_RESUME
-value|8
+value|9
 block|{
 name|CMD_RESUME
 block|,
@@ -271,7 +283,7 @@ block|,
 define|#
 directive|define
 name|CMD_STOP
-value|9
+value|10
 block|{
 name|CMD_STOP
 block|,
@@ -283,7 +295,7 @@ block|,
 define|#
 directive|define
 name|CMD_VOLUME
-value|10
+value|11
 block|{
 name|CMD_VOLUME
 block|,
@@ -1009,7 +1021,7 @@ name|verbose
 condition|)
 name|perror
 argument_list|(
-literal|"cdplay"
+literal|"cdcontrol"
 argument_list|)
 expr_stmt|;
 name|close
@@ -1298,6 +1310,49 @@ argument_list|(
 name|fd
 argument_list|,
 name|CDIOCEJECT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|rc
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|CMD_INJECT
+case|:
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+operator|&&
+operator|!
+name|open_cd
+argument_list|()
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|rc
+operator|=
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|CDIOCCLOSE
 argument_list|)
 expr_stmt|;
 if|if
