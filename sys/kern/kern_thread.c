@@ -1210,10 +1210,6 @@ name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|td
-operator|->
-name|td_proc
 decl_stmt|;
 name|struct
 name|ksegrp
@@ -1233,6 +1229,18 @@ decl_stmt|;
 name|ucontext_t
 name|uc
 decl_stmt|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
+name|kg
+operator|=
+name|td
+operator|->
+name|td_ksegrp
+expr_stmt|;
 comment|/* Export the user/machine context. */
 if|#
 directive|if
@@ -1358,12 +1366,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Put the saved address of the previous first 	 * entry into this one 	 */
-name|kg
-operator|=
-name|td
-operator|->
-name|td_ksegrp
-expr_stmt|;
 for|for
 control|(
 init|;
