@@ -515,6 +515,8 @@ name|struct
 name|in_ifaddr
 modifier|*
 name|ia
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|isbroadcast
@@ -839,6 +841,12 @@ argument_list|)
 operator|<<
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|ro
+operator|->
+name|ro_rt
+condition|)
 name|ia
 operator|=
 name|ifatoia
