@@ -201,6 +201,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|kdb_dbbe_select
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|kdb_enter
 parameter_list|(
