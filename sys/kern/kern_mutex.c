@@ -142,7 +142,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MUTEX_DEBUG
+name|WITNESS
 end_ifdef
 
 begin_decl_stmt
@@ -213,7 +213,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* MUTEX_DEBUG */
+comment|/* WITNESS */
 end_comment
 
 begin_decl_stmt
@@ -259,7 +259,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* MUTEX_DEBUG */
+comment|/* WITNESS */
 end_comment
 
 begin_decl_stmt
@@ -2365,7 +2365,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|MUTEX_DEBUG
+name|WITNESS
 name|struct
 name|mtx_debug
 modifier|*
@@ -2398,6 +2398,11 @@ argument_list|)
 condition|)
 comment|/* diagnostic and error correction */
 return|return;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|WITNESS
 if|if
 condition|(
 name|flag
@@ -2500,7 +2505,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|MUTEX_DEBUG
+name|WITNESS
 name|m
 operator|->
 name|mtx_debug
@@ -2741,6 +2746,11 @@ name|mtx_prev
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|WITNESS
 name|free
 argument_list|(
 name|m
@@ -2773,24 +2783,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The non-inlined versions of the mtx_*() functions are always built (above),  * but the witness code depends on the MUTEX_DEBUG and WITNESS kernel options  * being specified.  */
+comment|/*  * The non-inlined versions of the mtx_*() functions are always built (above),  * but the witness code depends on the WITNESS kernel option being specified.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|MUTEX_DEBUG
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|WITNESS
-argument_list|)
-operator|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -6725,7 +6725,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* (defined(MUTEX_DEBUG)&& defined(WITNESS)) */
+comment|/* WITNESS */
 end_comment
 
 end_unit

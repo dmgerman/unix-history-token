@@ -300,7 +300,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MUTEX_DEBUG
+name|WITNESS
 end_ifdef
 
 begin_struct
@@ -377,6 +377,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* WITNESS */
+end_comment
+
+begin_comment
 comment|/*  * Sleep/spin mutex  */
 end_comment
 
@@ -400,7 +404,7 @@ decl_stmt|;
 comment|/* saved flags (for spin locks) */
 ifdef|#
 directive|ifdef
-name|MUTEX_DEBUG
+name|WITNESS
 name|struct
 name|mtx_debug
 modifier|*
@@ -446,7 +450,7 @@ end_struct
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MUTEX_DEBUG
+name|WITNESS
 end_ifdef
 
 begin_define
@@ -928,27 +932,6 @@ ifdef|#
 directive|ifdef
 name|WITNESS
 end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MUTEX_DEBUG
-end_ifndef
-
-begin_error
-error|#
-directive|error
-error|WITNESS requires MUTEX_DEBUG
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MUTEX_DEBUG */
-end_comment
 
 begin_define
 define|#
@@ -2139,7 +2122,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|MUTEX_DEBUG
+name|WITNESS
 if|if
 condition|(
 name|rval
@@ -2174,6 +2157,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* WITNESS */
 name|CTR5
 argument_list|(
 name|KTR_LOCK
