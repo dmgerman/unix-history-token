@@ -350,22 +350,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Retrieve the status of the specified I/O request.  */
-end_comment
-
-begin_function_decl
-name|int
-name|aio_error
-parameter_list|(
-specifier|const
-name|struct
-name|aiocb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 name|int
 name|aio_waitcomplete
