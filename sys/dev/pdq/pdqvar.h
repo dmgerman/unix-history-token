@@ -355,6 +355,32 @@ parameter_list|)
 value|(vtophys((vm_offset_t)p) | (pdq->pdq_type == PDQ_DEFTA ? 0 : 0x40000000))
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|PDQ_OS_VA_TO_PA
+parameter_list|(
+name|pdq
+parameter_list|,
+name|p
+parameter_list|)
+value|(vtophys((vm_offset_t)p) | (pdq->pdq_type == PDQ_DEFTA ? 0 : alpha_XXX_dmamap_or))
+end_define
+
 begin_else
 else|#
 directive|else
@@ -482,6 +508,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
 end_include
 
 begin_include
@@ -1091,7 +1123,7 @@ name|base
 parameter_list|,
 name|offset
 parameter_list|)
-value|(0 + *((base) + (offset)))
+value|readl((base) + (offset))
 end_define
 
 begin_define
@@ -1107,7 +1139,7 @@ name|offset
 parameter_list|,
 name|data
 parameter_list|)
-value|do *((base) + (offset)) = (data); while (0)
+value|writel((base) + (offset), data)
 end_define
 
 begin_endif
