@@ -20,7 +20,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../general.h"
+file|"../general/general.h"
 end_include
 
 begin_include

@@ -43,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../general.h"
+file|"../general/general.h"
 end_include
 
 begin_include
@@ -91,13 +91,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../keyboard/map3270.ext"
+file|"../ascii/map3270.ext"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../system/globals.h"
+file|"../general/globals.h"
 end_include
 
 begin_include

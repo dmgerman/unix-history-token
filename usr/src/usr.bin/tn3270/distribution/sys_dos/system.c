@@ -8,6 +8,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../general/general.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../api/api.h"
 end_include
 
