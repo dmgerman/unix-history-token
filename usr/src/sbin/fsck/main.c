@@ -10,7 +10,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c	2.29 (Berkeley) %G%"
+literal|"@(#)main.c	2.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6224,6 +6224,9 @@ name|inumber
 decl_stmt|,
 name|orphan
 decl_stmt|;
+name|int
+name|loopcnt
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -6301,6 +6304,10 @@ name|id_parent
 operator|=
 name|inumber
 expr_stmt|;
+name|loopcnt
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 name|orphan
@@ -6363,6 +6370,20 @@ operator|==
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+name|loopcnt
+operator|>=
+name|sblock
+operator|.
+name|fs_cstotal
+operator|.
+name|cs_ndir
+condition|)
+break|break;
+name|loopcnt
+operator|++
+expr_stmt|;
 block|}
 do|while
 condition|(
