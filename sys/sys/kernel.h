@@ -290,31 +290,36 @@ init|=
 literal|0x2200000
 block|,
 comment|/* proc 0*/
-name|SI_SUB_DEVFS
+name|SI_SUB_VM_CONF
 init|=
 literal|0x2300000
+block|,
+comment|/* config VM, set limits*/
+name|SI_SUB_RUN_QUEUE
+init|=
+literal|0x2400000
+block|,
+comment|/* the run queue*/
+name|SI_SUB_CREATE_INIT
+init|=
+literal|0x2500000
+block|,
+comment|/* create the init process */
+name|SI_SUB_DEVFS
+init|=
+literal|0x3000000
 block|,
 comment|/* get DEVFS ready */
 name|SI_SUB_DRIVERS
 init|=
-literal|0x2400000
+literal|0x3100000
 block|,
 comment|/* Let Drivers initialize */
 name|SI_SUB_CONFIGURE
 init|=
-literal|0x2500000
-block|,
-comment|/* Configure devices */
-name|SI_SUB_RUN_QUEUE
-init|=
-literal|0x3000000
-block|,
-comment|/* the run queue*/
-name|SI_SUB_VM_CONF
-init|=
 literal|0x3800000
 block|,
-comment|/* config VM, set limits*/
+comment|/* Configure devices */
 name|SI_SUB_VFS
 init|=
 literal|0x4000000
@@ -415,16 +420,16 @@ init|=
 literal|0xb300000
 block|,
 comment|/* Configure vinum */
+name|SI_SUB_RAID
+init|=
+literal|0xb380000
+block|,
+comment|/* Configure RAIDframe */
 name|SI_SUB_MOUNT_ROOT
 init|=
 literal|0xb400000
 block|,
 comment|/* root mount*/
-name|SI_SUB_ROOT_FDTAB
-init|=
-literal|0xb800000
-block|,
-comment|/* root vnode in fd table...*/
 name|SI_SUB_SWAP
 init|=
 literal|0xc000000

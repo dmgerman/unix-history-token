@@ -190,16 +190,7 @@ operator|!
 name|proc0
 operator|.
 name|p_stats
-operator|||
-name|proc0
-operator|.
-name|p_stats
-operator|->
-name|p_start
-operator|.
-name|tv_sec
-operator|==
-literal|0
+comment|/* || proc0.p_stats->p_start.tv_sec == 0 */
 condition|)
 block|{
 name|panic
