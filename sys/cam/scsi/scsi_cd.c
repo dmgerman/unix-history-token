@@ -13282,6 +13282,27 @@ name|ccb
 operator|->
 name|csio
 expr_stmt|;
+comment|/* Preserve old behavior: units in multiples of CDROM speed */
+if|if
+condition|(
+name|rdspeed
+operator|<
+literal|177
+condition|)
+name|rdspeed
+operator|*=
+literal|177
+expr_stmt|;
+if|if
+condition|(
+name|wrspeed
+operator|<
+literal|177
+condition|)
+name|wrspeed
+operator|*=
+literal|177
+expr_stmt|;
 name|cam_fill_csio
 argument_list|(
 name|csio
