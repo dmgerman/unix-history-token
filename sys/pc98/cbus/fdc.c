@@ -7273,6 +7273,16 @@ operator|!=
 literal|2
 condition|)
 return|return;
+if|if
+condition|(
+name|u
+operator|!=
+name|fd
+operator|->
+name|fdu
+condition|)
+comment|/* unit # mismatch */
+return|return;
 name|l
 operator|=
 name|strlen
