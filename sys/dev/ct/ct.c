@@ -1480,7 +1480,7 @@ literal|20
 expr_stmt|;
 name|regv
 operator|=
-name|IDR_FS_15_20
+name|IDR_FS_16_20
 expr_stmt|;
 break|break;
 default|default:

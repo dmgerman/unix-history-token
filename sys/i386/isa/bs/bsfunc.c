@@ -3495,7 +3495,7 @@ name|bsc
 operator|->
 name|sc_cspeed
 operator|&
-name|IDR_FS_15_20
+name|IDR_FS_16_20
 operator|)
 condition|?
 literal|100

@@ -1613,7 +1613,7 @@ operator|~
 operator|(
 name|IDR_FS_12_15
 operator||
-name|IDR_FS_15_20
+name|IDR_FS_16_20
 operator|)
 expr_stmt|;
 break|break;
@@ -1628,7 +1628,7 @@ operator|~
 operator|(
 name|IDR_FS_12_15
 operator||
-name|IDR_FS_15_20
+name|IDR_FS_16_20
 operator|)
 expr_stmt|;
 name|bsc
@@ -1649,14 +1649,14 @@ operator|~
 operator|(
 name|IDR_FS_12_15
 operator||
-name|IDR_FS_15_20
+name|IDR_FS_16_20
 operator|)
 expr_stmt|;
 name|bsc
 operator|->
 name|sc_cspeed
 operator||=
-name|IDR_FS_15_20
+name|IDR_FS_16_20
 expr_stmt|;
 break|break;
 block|}
