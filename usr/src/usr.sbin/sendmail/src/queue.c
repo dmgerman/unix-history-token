@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.12 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.13 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.12 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.13 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3470,6 +3470,13 @@ condition|)
 endif|#
 directive|endif
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EWOULDBLOCK
+condition|)
+block|{
 comment|/* being processed by another queuer */
 if|if
 condition|(
@@ -3507,6 +3514,19 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* LOG */
+block|}
+else|else
+block|{
+name|syserr
+argument_list|(
+literal|"%s: flock failure"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
