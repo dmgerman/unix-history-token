@@ -32,7 +32,7 @@ file|<sys/callout.h>
 end_include
 
 begin_comment
-comment|/* For struct callout_handle. */
+comment|/* For struct callout. */
 end_comment
 
 begin_include
@@ -461,11 +461,6 @@ argument_list|)
 name|p_children
 expr_stmt|;
 comment|/* Pointer to list of children. */
-name|struct
-name|callout_handle
-name|p_ithandle
-decl_stmt|;
-comment|/* 					      * Callout handle for scheduling 					      * p_realtimer. 					      */
 comment|/* The following fields are all zeroed upon creation in fork. */
 define|#
 directive|define
@@ -498,6 +493,11 @@ name|fixpt_t
 name|p_pctcpu
 decl_stmt|;
 comment|/* %cpu for this process during p_swtime */
+name|struct
+name|callout
+name|p_slpcallout
+decl_stmt|;
+comment|/* Callout for sleep. */
 name|void
 modifier|*
 name|p_wchan
@@ -517,6 +517,11 @@ name|u_int
 name|p_slptime
 decl_stmt|;
 comment|/* Time since last blocked. */
+name|struct
+name|callout
+name|p_itcallout
+decl_stmt|;
+comment|/* Interval timer callout. */
 name|struct
 name|itimerval
 name|p_realtimer

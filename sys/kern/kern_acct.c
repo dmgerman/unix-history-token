@@ -131,20 +131,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Accounting callout handle used for periodic scheduling of  * acctwatch.  */
+comment|/*  * Accounting callout used for periodic scheduling of acctwatch.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|callout_handle
-name|acctwatch_handle
-init|=
-name|CALLOUT_HANDLE_INITIALIZER
-argument_list|(
-operator|&
-name|acctwatch_handle
-argument_list|)
+name|callout
+name|acctwatch_callout
 decl_stmt|;
 end_decl_stmt
 
@@ -458,13 +452,10 @@ operator|!=
 name|NULLVP
 condition|)
 block|{
-name|untimeout
+name|callout_stop
 argument_list|(
-name|acctwatch
-argument_list|,
-name|NULL
-argument_list|,
-name|acctwatch_handle
+operator|&
+name|acctwatch_callout
 argument_list|)
 expr_stmt|;
 name|error
@@ -519,6 +510,14 @@ operator|=
 name|nd
 operator|.
 name|ni_vp
+expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|acctwatch_callout
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|acctwatch
 argument_list|(
@@ -1326,17 +1325,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|acctwatch_handle
-operator|=
-name|timeout
+name|callout_reset
 argument_list|(
-name|acctwatch
-argument_list|,
-name|NULL
+operator|&
+name|acctwatch_callout
 argument_list|,
 name|acctchkfreq
 operator|*
 name|hz
+argument_list|,
+name|acctwatch
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

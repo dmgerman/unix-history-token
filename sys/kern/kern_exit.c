@@ -591,18 +591,12 @@ operator|.
 name|it_value
 argument_list|)
 condition|)
-name|untimeout
+name|callout_stop
 argument_list|(
-name|realitexpire
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|p
-argument_list|,
+operator|&
 name|p
 operator|->
-name|p_ithandle
+name|p_itcallout
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Reset any sigio structures pointing to us as a result of 	 * F_SETOWN with our pid. 	 */

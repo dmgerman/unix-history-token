@@ -1109,6 +1109,26 @@ literal|"swapper"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_itcallout
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_slpcallout
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Create credentials. */
 name|cred0
 operator|.
