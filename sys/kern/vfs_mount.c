@@ -3201,7 +3201,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Silently enforce MNT_NODEV, MNT_NOSUID and MNT_USER for 	 * unprivileged users. 	 */
+comment|/* 	 * Silently enforce MNT_NOSUID and MNT_USER for 	 * unprivileged users. 	 */
 if|if
 condition|(
 name|suser
@@ -3213,8 +3213,6 @@ literal|0
 condition|)
 name|fsflags
 operator||=
-name|MNT_NODEV
-operator||
 name|MNT_NOSUID
 operator||
 name|MNT_USER
