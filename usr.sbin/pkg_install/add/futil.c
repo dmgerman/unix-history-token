@@ -279,7 +279,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"cd %s&& chown -R %s.%s %s"
+literal|"cd %s&& chown -R %s:%s %s"
 argument_list|,
 name|cd_to
 argument_list|,
@@ -292,7 +292,7 @@ argument_list|)
 condition|)
 name|warnx
 argument_list|(
-literal|"couldn't change owner/group of '%s' to '%s.%s'"
+literal|"couldn't change owner/group of '%s' to '%s:%s'"
 argument_list|,
 name|arg
 argument_list|,
