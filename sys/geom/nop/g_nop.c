@@ -2546,7 +2546,11 @@ decl_stmt|;
 if|if
 condition|(
 name|pp
-operator|==
+operator|!=
+name|NULL
+operator|||
+name|cp
+operator|!=
 name|NULL
 condition|)
 return|return;
@@ -2560,7 +2564,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<offset>%jd</offset>\n"
+literal|"%s<Offset>%jd</Offset>\n"
 argument_list|,
 name|indent
 argument_list|,
@@ -2576,7 +2580,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<failprob>%u</failprob>\n"
+literal|"%s<Failprob>%u</Failprob>\n"
 argument_list|,
 name|indent
 argument_list|,
