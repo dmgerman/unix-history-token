@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.8 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2541,7 +2541,12 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-return|return;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 continue|continue;
 block|}
 name|bufp
