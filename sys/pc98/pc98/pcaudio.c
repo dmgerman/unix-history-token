@@ -1129,6 +1129,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|cdevsw_add
+argument_list|(
+operator|&
+name|pca_cdevsw
+argument_list|)
+expr_stmt|;
 name|pca_status
 operator|.
 name|open
@@ -2741,7 +2747,7 @@ directive|else
 asm|"outb %0,$0x42"
 endif|#
 directive|endif
-asm|: : "a" ((char)pca_status.buffer[pca_status.index]), 			    "b" (volume_table) ); 		enable_intr(); 		pca_status.counter += pca_status.scale; 		pca_status.index = (pca_status.counter>> 8); 	} 	if (pca_status.index>= pca_status.in_use[pca_status.current]) { 		pca_status.index = pca_status.counter = 0; 		pca_status.in_use[pca_status.current] = 0; 		pca_status.current++;  		if (pca_status.current> 2)  			pca_status.current = 0; 		pca_status.buffer = pca_status.buf[pca_status.current];                 if (pca_sleep) 			wakeup(&pca_sleep); 		if (pca_status.wsel.si_pid) { 			selwakeup((struct selinfo *)&pca_status.wsel.si_pid); 			pca_status.wsel.si_pid = 0; 			pca_status.wsel.si_flags = 0; 		} 	} }   static int pcapoll(dev_t dev, int events, struct proc *p) {  	int s;  	struct proc *p1; 	int revents = 0;   	s = spltty();  	if (events& (POLLOUT | POLLWRNORM)) {  		if (!pca_status.in_use[0] || !pca_status.in_use[1] ||  		    !pca_status.in_use[2])  			revents |= events& (POLLOUT | POLLWRNORM);  		else { 			if (pca_status.wsel.si_pid&& 			    (p1=pfind(pca_status.wsel.si_pid))&& p1->p_wchan == (caddr_t)&selwait) 				pca_status.wsel.si_flags = SI_COLL; 			else 				pca_status.wsel.si_pid = p->p_pid; 		} 	} 	splx(s); 	return (revents); }  static int pca_devsw_installed;  static void 	pca_drvinit(void *unused) {  	if( ! pca_devsw_installed ) { 		cdevsw_add(&pca_cdevsw); 		pca_devsw_installed = 1;     	} }  SYSINIT(pcadev,SI_SUB_DRIVERS,SI_ORDER_MIDDLE+CDEV_MAJOR,pca_drvinit,NULL)
+asm|: : "a" ((char)pca_status.buffer[pca_status.index]), 			    "b" (volume_table) ); 		enable_intr(); 		pca_status.counter += pca_status.scale; 		pca_status.index = (pca_status.counter>> 8); 	} 	if (pca_status.index>= pca_status.in_use[pca_status.current]) { 		pca_status.index = pca_status.counter = 0; 		pca_status.in_use[pca_status.current] = 0; 		pca_status.current++;  		if (pca_status.current> 2)  			pca_status.current = 0; 		pca_status.buffer = pca_status.buf[pca_status.current];                 if (pca_sleep) 			wakeup(&pca_sleep); 		if (pca_status.wsel.si_pid) { 			selwakeup((struct selinfo *)&pca_status.wsel.si_pid); 			pca_status.wsel.si_pid = 0; 			pca_status.wsel.si_flags = 0; 		} 	} }   static int pcapoll(dev_t dev, int events, struct proc *p) {  	int s;  	struct proc *p1; 	int revents = 0;   	s = spltty();  	if (events& (POLLOUT | POLLWRNORM)) {  		if (!pca_status.in_use[0] || !pca_status.in_use[1] ||  		    !pca_status.in_use[2])  			revents |= events& (POLLOUT | POLLWRNORM);  		else { 			if (pca_status.wsel.si_pid&& 			    (p1=pfind(pca_status.wsel.si_pid))&& p1->p_wchan == (caddr_t)&selwait) 				pca_status.wsel.si_flags = SI_COLL; 			else 				pca_status.wsel.si_pid = p->p_pid; 		} 	} 	splx(s); 	return (revents); }
 end_function
 
 begin_endif
