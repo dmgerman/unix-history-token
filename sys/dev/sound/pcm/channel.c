@@ -1696,7 +1696,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * user read routine - trigger if necessary, uiomove data from secondary bufhard  * if blocking, sleep, rinse and repeat.  *  * called externally, so must handle locking  */
+comment|/*  * user read routine - trigger if necessary, uiomove data from secondary buffer  * if blocking, sleep, rinse and repeat.  *  * called externally, so must handle locking  */
 end_comment
 
 begin_function
@@ -2560,7 +2560,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * this routine tries to flush the dma transfer. It is called  * on a close. We immediately abort any read DMA  * operation, and then wait for the play bufhard to drain.  *  * called from: dsp_close  */
+comment|/*  * this routine tries to flush the dma transfer. It is called  * on a close. We immediately abort any read DMA  * operation, and then wait for the play buffer to drain.  *  * called from: dsp_close  */
 end_comment
 
 begin_function
@@ -4731,7 +4731,7 @@ name|blksz
 operator|>>=
 literal|1
 expr_stmt|;
-comment|/* round down to fit hw bufhard size */
+comment|/* round down to fit hw buffer size */
 name|RANGE
 argument_list|(
 name|blksz
