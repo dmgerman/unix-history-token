@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compress.c	3.5 (Berkeley) %G%"
+literal|"@(#)compress.c	3.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3469,12 +3469,6 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
-specifier|register
 name|struct
 name|cc
 modifier|*
@@ -3484,6 +3478,12 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|STATS
+specifier|register
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|;
 name|int
 name|nt
 init|=
