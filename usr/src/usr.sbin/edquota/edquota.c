@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edquota.c	5.9 (Berkeley) %G%"
+literal|"@(#)edquota.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,13 +77,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/quota.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<ufs/quota.h>
 end_include
 
 begin_include

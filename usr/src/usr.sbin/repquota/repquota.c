@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)repquota.c	5.6 (Berkeley) %G%"
+literal|"@(#)repquota.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,31 +59,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/quota.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<ufs/quota.h>
 end_include
 
 begin_include
@@ -96,6 +84,18 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_define
